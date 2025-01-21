@@ -1,0 +1,17 @@
+---
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+    const posts = await getCollection("forum");
+    return posts.map((post) => ({
+        params: { id: post.id },
+        props: { post },
+    }));
+}
+
+const { post } = Astro.props;
+---
+
+<h2>{post.data.Topic.Title}</h2>
+
+{post.data.Posts.map((post) => <div set:html={post.HTML} />)}
