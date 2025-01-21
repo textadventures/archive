@@ -1,0 +1,191 @@
+{
+  "Topic": {
+    "TopicId": "3650",
+    "ForumId": "10",
+    "Title": "While loop that loops until the user types the right thing?",
+    "LastUpdated": "2013-05-02T00:07:41+01:00",
+    "ReplyCount": 14
+  },
+  "Posts": [
+    {
+      "PostId": "24320",
+      "UserId": 0,
+      "Username": "herb191",
+      "UserAvatar": null,
+      "UserGravatar": "e40f0d3bcdee898600a79ba2ed936eab",
+      "EditableText": "I am playing around with well loops and I can't get it to work right with a get input. It keeps giving an error that says: &quot;Error running script&#058; Only one 'get input' can be in progress at a time&quot;. Then it seems to kick me out of the loop. I have attached my test code. To test type start loop. If it was working right typing exit into the input would exit the loop.\n\nThanks in advance for the help.",
+      "EditableFormat": "bbcode",
+      "HTML": "I am playing around with well loops and I can't get it to work right with a get input. It keeps giving an error that says: &quot;Error running script&#058; Only one 'get input' can be in progress at a time&quot;. Then it seems to kick me out of the loop. I have attached my test code. To test type start loop. If it was working right typing exit into the input would exit the loop.<br/><br/>Thanks in advance for the help.<div><a href=\"/attachment/599\">test.aslx</a></div>",
+      "PostDate": "2013-04-27T22:40:47+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24321",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "The problem is that &quot;get input&quot; is not blocking. In other words, &quot;get input&quot; just sets up conditions for the input to be gotten, but it then returns right away, with the associated script being executed once the input has been entered. It all happens asynchronously. Also, the player code won't be able to actually get the input until your script has returned. So blocking &quot;while&quot; loops are bad in Quest.\n\nIn other words, you can't do it the way you're trying to do it. Your script must exit. You can't block on input. It will grind things to a halt.",
+      "EditableFormat": "bbcode",
+      "HTML": "The problem is that &quot;get input&quot; is not blocking. In other words, &quot;get input&quot; just sets up conditions for the input to be gotten, but it then returns right away, with the associated script being executed once the input has been entered. It all happens asynchronously. Also, the player code won't be able to actually get the input until your script has returned. So blocking &quot;while&quot; loops are bad in Quest.<br/><br/>In other words, you can't do it the way you're trying to do it. Your script must exit. You can't block on input. It will grind things to a halt.",
+      "PostDate": "2013-04-27T23:37:42+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24322",
+      "UserId": 0,
+      "Username": "herb191",
+      "UserAvatar": null,
+      "UserGravatar": "e40f0d3bcdee898600a79ba2ed936eab",
+      "EditableText": "[quote=&quot;jaynabonne&quot;:1rauow4b]The problem is that &quot;get input&quot; is not blocking.[/quote:1rauow4b]\n\nI see. Thank you for the explanation Jaynabonne. I will find a workaround for what I am trying to do.",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>jaynabonne wrote:</cite>The problem is that &quot;get input&quot; is not blocking.</blockquote><br/><br/>I see. Thank you for the explanation Jaynabonne. I will find a workaround for what I am trying to do.",
+      "PostDate": "2013-04-28T00:11:45+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24340",
+      "UserId": 0,
+      "Username": "Sora574",
+      "UserAvatar": null,
+      "UserGravatar": "5691c27a3aa3e56e879a3f8545b28ef2",
+      "EditableText": "If you still haven't gotten what you're looking for, you could try something along the lines of this\n[code:3m5rlivq]this&#46;inputscript =&gt; {\n  get input {\n    if (result = &quot;blah&quot;) {\n      this&#46;inputscript = null\n      // Run script\n    }\n    else {\n      do (this, &quot;inputscript&quot;)\n    }\n  }\n}\ndo (this, &quot;inputscript&quot;)[/code:3m5rlivq]\nThis puts it in an endless loop until the player types the word 'blah'.",
+      "EditableFormat": "bbcode",
+      "HTML": "If you still haven't gotten what you're looking for, you could try something along the lines of this<br/><pre><code>this&#46;inputscript =&gt; {<br/>  get input {<br/>    if (result = &quot;blah&quot;) {<br/>      this&#46;inputscript = null<br/>      // Run script<br/>    }<br/>    else {<br/>      do (this, &quot;inputscript&quot;)<br/>    }<br/>  }<br/>}<br/>do (this, &quot;inputscript&quot;)</code></pre><br/>This puts it in an endless loop until the player types the word 'blah'.",
+      "PostDate": "2013-04-29T02:44:06+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24344",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Slick! <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> One thing to keep in mind, though: if you have any code after the outer &quot;do&quot; (e.g. a msg or anything), then it will be executed right away, not after the input is gotten (I'm not sure if that's what the OP was trying to do.)",
+      "EditableFormat": "bbcode",
+      "HTML": "Slick! <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> One thing to keep in mind, though: if you have any code after the outer &quot;do&quot; (e.g. a msg or anything), then it will be executed right away, not after the input is gotten (I'm not sure if that's what the OP was trying to do.)",
+      "PostDate": "2013-04-29T10:32:01+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24347",
+      "UserId": 0,
+      "Username": "Sora574",
+      "UserAvatar": null,
+      "UserGravatar": "5691c27a3aa3e56e879a3f8545b28ef2",
+      "EditableText": "Hmm...\nI guess if you really wanted to keep it separate, you could just put something like 'this.boolean=true' in the 'Run script' place.\nThen, you could make an endless loop that checks for the boolean. And then continues the script outside.\nI'm not sure if that would throw any errors or not, though, and it seems to stack up complication, but you [i:zvgnwmlj]could[/i:zvgnwmlj] do it.",
+      "EditableFormat": "bbcode",
+      "HTML": "Hmm...<br/>I guess if you really wanted to keep it separate, you could just put something like 'this.boolean=true' in the 'Run script' place.<br/>Then, you could make an endless loop that checks for the boolean. And then continues the script outside.<br/>I'm not sure if that would throw any errors or not, though, and it seems to stack up complication, but you <span style=\"font-style:italic;\">could</span> do it.",
+      "PostDate": "2013-04-29T17:02:31+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24348",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "That's what I was trying to say in my responses above - you can't do that. There is no way in Quest to block. As a test, I put an endless while loop in a command script, and not only did the game freeze, but the entire Quest UI locked up. Your scripts must complete, and you have to process things asynchronously, as painful as that is (and believe me, I know - I'm going through it right now in my own code).",
+      "EditableFormat": "bbcode",
+      "HTML": "That's what I was trying to say in my responses above - you can't do that. There is no way in Quest to block. As a test, I put an endless while loop in a command script, and not only did the game freeze, but the entire Quest UI locked up. Your scripts must complete, and you have to process things asynchronously, as painful as that is (and believe me, I know - I'm going through it right now in my own code).",
+      "PostDate": "2013-04-29T17:08:28+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24352",
+      "UserId": 0,
+      "Username": "Sora574",
+      "UserAvatar": null,
+      "UserGravatar": "5691c27a3aa3e56e879a3f8545b28ef2",
+      "EditableText": "Okay, so I tried it a few different ways, and you're absolutely right...\nEach time, I successfully managed to crash Quest completely.\n\nI wonder if there's a way around this\n\nEDIT: It seems that no matter what you do, or how you change it, everything has to run at the same time.\nI don't know if this would be considered a flaw, but I think there should definitely be a way to stop all scripts until a variable is found. I tried doing this myself with JavaScript, but I'm just not that good of a programmer.",
+      "EditableFormat": "bbcode",
+      "HTML": "Okay, so I tried it a few different ways, and you're absolutely right...<br/>Each time, I successfully managed to crash Quest completely.<br/><br/>I wonder if there's a way around this<br/><br/>EDIT: It seems that no matter what you do, or how you change it, everything has to run at the same time.<br/>I don't know if this would be considered a flaw, but I think there should definitely be a way to stop all scripts until a variable is found. I tried doing this myself with JavaScript, but I'm just not that good of a programmer.",
+      "PostDate": "2013-04-29T17:35:26+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24356",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "Can't you use &quot;on ready&quot; ??? <!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/On_ready\">http://quest5.net/wiki/On_ready</a><!-- m -->\n\nor, does on ready not work for this situation that you're discussing ???\n\n[code:1ekxdq46]this&#46;inputscript =&gt; {\n  get input {\n    if (result = &quot;blah&quot;) {\n      this&#46;inputscript = null\n      // Run script\n    }\n    else {\n      do (this, &quot;inputscript&quot;)\n    }\n  }\n}\non ready {\n  do (this, &quot;inputscript&quot;)\n}\n\nOR\n\nthis&#46;inputscript =&gt; {\n  get input {\n    if (result = &quot;blah&quot;) {\n      this&#46;inputscript = null\n      // Run script\n    }\n    else {\n      do (this, &quot;inputscript&quot;)\n    }\n  }\n}\ndo (this, &quot;inputscript&quot;)\non ready {\n  (whatever)\n}\n\nOR\n\non ready {\n  this&#46;inputscript =&gt; {\n    get input {\n      if (result = &quot;blah&quot;) {\n        this&#46;inputscript = null\n        // Run script\n      }\n      else {\n        do (this, &quot;inputscript&quot;)\n      }\n    }\n  }\n}\ndo (this, &quot;inputscript&quot;)\n\nOR\n\non ready {\n  this&#46;inputscript =&gt; {\n    get input {\n      if (result = &quot;blah&quot;) {\n        this&#46;inputscript = null\n        // Run script\n      }\n      else {\n        do (this, &quot;inputscript&quot;)\n      }\n    }\n  }\n  do (this, &quot;inputscript&quot;)\n}\n\n~I can't remember and always get confused off the top of my head on the correct format~syntax for how to use &quot;on ready&quot;, lol[/code:1ekxdq46]",
+      "EditableFormat": "bbcode",
+      "HTML": "Can't you use &quot;on ready&quot; ??? <!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/On_ready\">http://quest5.net/wiki/On_ready</a><!-- m --><br/><br/>or, does on ready not work for this situation that you're discussing ???<br/><br/><pre><code>this&#46;inputscript =&gt; {<br/>  get input {<br/>    if (result = &quot;blah&quot;) {<br/>      this&#46;inputscript = null<br/>      // Run script<br/>    }<br/>    else {<br/>      do (this, &quot;inputscript&quot;)<br/>    }<br/>  }<br/>}<br/>on ready {<br/>  do (this, &quot;inputscript&quot;)<br/>}<br/><br/>OR<br/><br/>this&#46;inputscript =&gt; {<br/>  get input {<br/>    if (result = &quot;blah&quot;) {<br/>      this&#46;inputscript = null<br/>      // Run script<br/>    }<br/>    else {<br/>      do (this, &quot;inputscript&quot;)<br/>    }<br/>  }<br/>}<br/>do (this, &quot;inputscript&quot;)<br/>on ready {<br/>  (whatever)<br/>}<br/><br/>OR<br/><br/>on ready {<br/>  this&#46;inputscript =&gt; {<br/>    get input {<br/>      if (result = &quot;blah&quot;) {<br/>        this&#46;inputscript = null<br/>        // Run script<br/>      }<br/>      else {<br/>        do (this, &quot;inputscript&quot;)<br/>      }<br/>    }<br/>  }<br/>}<br/>do (this, &quot;inputscript&quot;)<br/><br/>OR<br/><br/>on ready {<br/>  this&#46;inputscript =&gt; {<br/>    get input {<br/>      if (result = &quot;blah&quot;) {<br/>        this&#46;inputscript = null<br/>        // Run script<br/>      }<br/>      else {<br/>        do (this, &quot;inputscript&quot;)<br/>      }<br/>    }<br/>  }<br/>  do (this, &quot;inputscript&quot;)<br/>}<br/><br/>~I can't remember and always get confused off the top of my head on the correct format~syntax for how to use &quot;on ready&quot;, lol</code></pre>",
+      "PostDate": "2013-04-30T03:33:32+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24358",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "&quot;on ready&quot; holds off scripts while a get input, wait, etc is in progress. You can't use it as a general purpose blocking mechanism. Basically, the code inside the &quot;on ready&quot; won't trigger until a pending input call is complete. So in the example you gave, the &quot;on ready&quot; would fire after the first &quot;get input&quot; was completed, whether the result met your conditions or not.\n\nIf you want it to be based on conditions you set, then you have to do it yourself. The most straightforward is to put the subsequent code in the &quot;if (result = &quot;blah&quot;)&quot; block. The alternative is set up a script variable somewhere and then invoke it when done (but still within that block). I did that in some menu code I wrote, which was similar to what Alex has with the new ShowMenu except it actually required a valid response. For that, I passed in an object and an attribute name, and when the option chosen was valid, it did &quot;do(object, attribute&quot;) after setting up the result param to let the object know things were done.",
+      "EditableFormat": "bbcode",
+      "HTML": "&quot;on ready&quot; holds off scripts while a get input, wait, etc is in progress. You can't use it as a general purpose blocking mechanism. Basically, the code inside the &quot;on ready&quot; won't trigger until a pending input call is complete. So in the example you gave, the &quot;on ready&quot; would fire after the first &quot;get input&quot; was completed, whether the result met your conditions or not.<br/><br/>If you want it to be based on conditions you set, then you have to do it yourself. The most straightforward is to put the subsequent code in the &quot;if (result = &quot;blah&quot;)&quot; block. The alternative is set up a script variable somewhere and then invoke it when done (but still within that block). I did that in some menu code I wrote, which was similar to what Alex has with the new ShowMenu except it actually required a valid response. For that, I passed in an object and an attribute name, and when the option chosen was valid, it did &quot;do(object, attribute&quot;) after setting up the result param to let the object know things were done.",
+      "PostDate": "2013-04-30T09:38:14+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24359",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Here's a useless example (but shows a possible form):\n\n[code:1ymh4gnc]&lt;function name=&quot;Expect&quot; parameters=&quot;expected,postscript&quot;&gt;\n  get input {\n    if (result = expected) {\n      params = NewDictionary()\n      dictionary add(params, &quot;result&quot;, result)\n      do(postscript, params)\n    } else {\n      msg(&quot;Try again&#46;&#46;&#46;&quot;)\n      Expect(expected, postscript)\n    }\n  }\n&lt;/function&gt;[/code:1ymh4gnc]\nAnd call with:\n\n[code:1ymh4gnc]Expect(&quot;Hello&quot;) {\n    msg(&quot;You typed Hello!&quot;)\n    msg(&quot;See&#58; the result is &quot; + result)\n}[/code:1ymh4gnc]\n\n(Note: the above code has not been tested and might not run due to any number of typos or oversights. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> )",
+      "EditableFormat": "bbcode",
+      "HTML": "Here's a useless example (but shows a possible form):<br/><br/><pre><code>&lt;function name=&quot;Expect&quot; parameters=&quot;expected,postscript&quot;&gt;<br/>  get input {<br/>    if (result = expected) {<br/>      params = NewDictionary()<br/>      dictionary add(params, &quot;result&quot;, result)<br/>      do(postscript, params)<br/>    } else {<br/>      msg(&quot;Try again&#46;&#46;&#46;&quot;)<br/>      Expect(expected, postscript)<br/>    }<br/>  }<br/>&lt;/function&gt;</code></pre><br/>And call with:<br/><br/><pre><code>Expect(&quot;Hello&quot;) {<br/>    msg(&quot;You typed Hello!&quot;)<br/>    msg(&quot;See&#58; the result is &quot; + result)<br/>}</code></pre><br/><br/>(Note: the above code has not been tested and might not run due to any number of typos or oversights. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> )",
+      "PostDate": "2013-04-30T09:48:20+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24371",
+      "UserId": 0,
+      "Username": "herb191",
+      "UserAvatar": null,
+      "UserGravatar": "e40f0d3bcdee898600a79ba2ed936eab",
+      "EditableText": "I didn't realize people were still commenting on this thread. The workaround I came up with was using a turn script to keep calling a function. It work well for what I needed in my game. I have attached an example for anyone who might find it useful.",
+      "EditableFormat": "bbcode",
+      "HTML": "I didn't realize people were still commenting on this thread. The workaround I came up with was using a turn script to keep calling a function. It work well for what I needed in my game. I have attached an example for anyone who might find it useful.<div><a href=\"/attachment/601\">loop.aslx</a></div>",
+      "PostDate": "2013-05-01T07:43:07+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24373",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Actually, since you're invoking loop1 in the default of the switch statement, you don't need the turn script at all as far as I can see. I deleted it, and your code worked fine without it. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> What you have in your code without the turn script is the basic pattern - call get input, and if it's not the right input, invoke the input function again.\n\n(And as far as people still commenting - some threads take on lives of their own!)",
+      "EditableFormat": "bbcode",
+      "HTML": "Actually, since you're invoking loop1 in the default of the switch statement, you don't need the turn script at all as far as I can see. I deleted it, and your code worked fine without it. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> What you have in your code without the turn script is the basic pattern - call get input, and if it's not the right input, invoke the input function again.<br/><br/>(And as far as people still commenting - some threads take on lives of their own!)",
+      "PostDate": "2013-05-01T09:00:28+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24383",
+      "UserId": 0,
+      "Username": "herb191",
+      "UserAvatar": null,
+      "UserGravatar": "e40f0d3bcdee898600a79ba2ed936eab",
+      "EditableText": "[quote=&quot;jaynabonne&quot;:2icotqwk]Actually, since you're invoking loop1 in the default of the switch statement, you don't need the turn script at all as far as I can see.[/quote:2icotqwk]\n\nGood call. I took another looked at the code and your are right.  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->  I also removed the code for setting the player.keep_looping variable since its not need. I have attached updated code.",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>jaynabonne wrote:</cite>Actually, since you're invoking loop1 in the default of the switch statement, you don't need the turn script at all as far as I can see.</blockquote><br/><br/>Good call. I took another looked at the code and your are right.  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->  I also removed the code for setting the player.keep_looping variable since its not need. I have attached updated code.<div><a href=\"/attachment/602\">loop.aslx</a></div>",
+      "PostDate": "2013-05-01T22:59:00+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24385",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Looks good! <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->\n\nOne thing you might be interested to know (and I mention since it's not obvious): you can replace something like this\n\n[code:330ep0rv]        case (&quot;exit loop&quot;) {\n          msg (&quot;You have left the loop&#46;&quot;)\n        }\n        case (&quot;leave loop&quot;) {\n          msg (&quot;You have left the loop&#46;&quot;)\n        }[/code:330ep0rv]\nwith this:\n\n[code:330ep0rv]        case (&quot;exit loop&quot;, &quot;leave loop&quot;) {\n          msg (&quot;You have left the loop&#46;&quot;)\n        }[/code:330ep0rv]\n\nIt's a handy thing in Quest.",
+      "EditableFormat": "bbcode",
+      "HTML": "Looks good! <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --><br/><br/>One thing you might be interested to know (and I mention since it's not obvious): you can replace something like this<br/><br/><pre><code>        case (&quot;exit loop&quot;) {<br/>          msg (&quot;You have left the loop&#46;&quot;)<br/>        }<br/>        case (&quot;leave loop&quot;) {<br/>          msg (&quot;You have left the loop&#46;&quot;)<br/>        }</code></pre><br/>with this:<br/><br/><pre><code>        case (&quot;exit loop&quot;, &quot;leave loop&quot;) {<br/>          msg (&quot;You have left the loop&#46;&quot;)<br/>        }</code></pre><br/><br/>It's a handy thing in Quest.",
+      "PostDate": "2013-05-02T00:07:41+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

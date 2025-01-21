@@ -1,0 +1,143 @@
+{
+  "Topic": {
+    "TopicId": "3774",
+    "ForumId": "10",
+    "Title": "Breadcrumbs",
+    "LastUpdated": "2013-07-05T22:51:53+01:00",
+    "ReplyCount": 10
+  },
+  "Posts": [
+    {
+      "PostId": "25285",
+      "UserId": 0,
+      "Username": "Carrot",
+      "UserAvatar": null,
+      "UserGravatar": "12db43b39ade4bc3e479fc45c24e4f23",
+      "EditableText": "I am trying to create a use script on a piece of chalk that will allow me to mark several different rooms with an increasing number.\n\nSo far I have this, which isn't working\n\n[code:11ff36rs]&lt;object name=&quot;chalk&quot;&gt;\n  &lt;inherit name=&quot;editor_object&quot; /&gt;\n  &lt;look&gt;A lump of chalk, it could come in handy if you need to mark something&#46;&lt;/look&gt;\n  &lt;take /&gt;\n  &lt;drop type=&quot;boolean&quot;&gt;false&lt;/drop&gt;\n  &lt;dropmsg&gt;You feel this is too useful an item to leave behind, you might need to mark something with it&#46;&lt;/dropmsg&gt;\n  &lt;use type=&quot;script&quot;&gt;\n    if ((GetBoolean(game&#46;pov&#46;parent, &quot;BaseRoom&quot;))) {\n      msg (&quot;You leave a mark upon the stone floor&#46;&quot;)\n    }\n    else {\n      msg (&quot;You see no reason to mark anything here&#46;&quot;)\n    }\n  &lt;/use&gt;\n&lt;/object&gt;[/code:11ff36rs]\n\nI have gotten as far as the first if statement so far, and obviously got it wrong <!-- s:( --><img src=\"{SMILIES_PATH}/icon_sad.gif\" alt=\":(\" title=\"Sad\" /><!-- s:( -->.\n\nSomehow I need to set an attribute to rooms that are &quot;markable&quot;.  It just so happens that all rooms that I have deemed markable, inherit the name &quot;BaseRoom&quot; - jaynabonne will know why that is <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->.\n\nThere are 2 if statements that need to be returned before the room can be marked\n[list=1:11ff36rs][*:11ff36rs]is the room markable? and[/*:m:11ff36rs][*:11ff36rs]has it already been marked?[/*:m:11ff36rs][/list:o:11ff36rs]\nPresuming the answer to 1 is true and 2 false, we can mark the room.\n\nI am envisaging this will be done by creating an object &quot;a chalk mark&quot;, but also numbering that object so that when the room description is displayed, it will also say &quot;a number &quot;[i:11ff36rs]n[/i:11ff36rs]&quot; has been scratched on the floor in chalk&quot;.  This number will be taken from a counter associated with the chalk.\n\nThis number once marked, cannot be used again so the counter on the chalk is increased by 1.\n\nThe important thing is that when the chalks counter increase - the numbers already scribed do not.\n\nHELP",
+      "EditableFormat": "bbcode",
+      "HTML": "I am trying to create a use script on a piece of chalk that will allow me to mark several different rooms with an increasing number.<br/><br/>So far I have this, which isn't working<br/><br/><pre><code>&lt;object name=&quot;chalk&quot;&gt;<br/>  &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>  &lt;look&gt;A lump of chalk, it could come in handy if you need to mark something&#46;&lt;/look&gt;<br/>  &lt;take /&gt;<br/>  &lt;drop type=&quot;boolean&quot;&gt;false&lt;/drop&gt;<br/>  &lt;dropmsg&gt;You feel this is too useful an item to leave behind, you might need to mark something with it&#46;&lt;/dropmsg&gt;<br/>  &lt;use type=&quot;script&quot;&gt;<br/>    if ((GetBoolean(game&#46;pov&#46;parent, &quot;BaseRoom&quot;))) {<br/>      msg (&quot;You leave a mark upon the stone floor&#46;&quot;)<br/>    }<br/>    else {<br/>      msg (&quot;You see no reason to mark anything here&#46;&quot;)<br/>    }<br/>  &lt;/use&gt;<br/>&lt;/object&gt;</code></pre><br/><br/>I have gotten as far as the first if statement so far, and obviously got it wrong <!-- s:( --><img src=\"{SMILIES_PATH}/icon_sad.gif\" alt=\":(\" title=\"Sad\" /><!-- s:( -->.<br/><br/>Somehow I need to set an attribute to rooms that are &quot;markable&quot;.  It just so happens that all rooms that I have deemed markable, inherit the name &quot;BaseRoom&quot; - jaynabonne will know why that is <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->.<br/><br/>There are 2 if statements that need to be returned before the room can be marked<br/>[list=1][*]is the room markable? and[/*:m][*]has it already been marked?[/*:m][/list:o]<br/>Presuming the answer to 1 is true and 2 false, we can mark the room.<br/><br/>I am envisaging this will be done by creating an object &quot;a chalk mark&quot;, but also numbering that object so that when the room description is displayed, it will also say &quot;a number &quot;<span style=\"font-style:italic;\">n</span>&quot; has been scratched on the floor in chalk&quot;.  This number will be taken from a counter associated with the chalk.<br/><br/>This number once marked, cannot be used again so the counter on the chalk is increased by 1.<br/><br/>The important thing is that when the chalks counter increase - the numbers already scribed do not.<br/><br/>HELP",
+      "PostDate": "2013-07-04T01:26:22+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25287",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "just the concepts of what you're asking for, you'll have to do the scripting yourself though, as I'm doing this in quasi code:\n\n[code:1bkcyzpk]global attribute&#58; marked_count=1\n\n&lt;useon room&gt;\n  if (game&#46;pov&#46;parent&#46;markable=true) {\n    if (game&#46;pov&#46;parent&#46;marked=false) {\n      game&#46;pov&#46;parent&#46;marking=global_attribute&#46;marked_count\n      msg (&quot;You make the mark &quot; + game&#46;pov&#46;parent&#46;marking)\n      set global_attribute&#46;marked_count = global_attribute&#46;marked_count + 1\n      set game&#46;pov&#46;parent&#46;marked=true\n    } else {\n      msg (&quot;The room is already marked &quot; + game&#46;pov&#46;parent&#46;marking)\n    }\n  } else {\n    msg (&quot;You can't make any markings in this room&#46;&quot;)\n  }\n&lt;useon room&gt;\n\n&lt;look~lookat room&gt;\n  if (this&#46;marked=true) {\n    this&#46;description_marked = msg (&quot;The room has the marking &quot; + this&#46;marking)\n  } else {\n    this&#46;description_normal = msg (&quot;this is an ordinary room&quot;)\n  }\n&lt;/look~lookat room&gt;[/code:1bkcyzpk]",
+      "EditableFormat": "bbcode",
+      "HTML": "just the concepts of what you're asking for, you'll have to do the scripting yourself though, as I'm doing this in quasi code:<br/><br/><pre><code>global attribute&#58; marked_count=1<br/><br/>&lt;useon room&gt;<br/>  if (game&#46;pov&#46;parent&#46;markable=true) {<br/>    if (game&#46;pov&#46;parent&#46;marked=false) {<br/>      game&#46;pov&#46;parent&#46;marking=global_attribute&#46;marked_count<br/>      msg (&quot;You make the mark &quot; + game&#46;pov&#46;parent&#46;marking)<br/>      set global_attribute&#46;marked_count = global_attribute&#46;marked_count + 1<br/>      set game&#46;pov&#46;parent&#46;marked=true<br/>    } else {<br/>      msg (&quot;The room is already marked &quot; + game&#46;pov&#46;parent&#46;marking)<br/>    }<br/>  } else {<br/>    msg (&quot;You can't make any markings in this room&#46;&quot;)<br/>  }<br/>&lt;useon room&gt;<br/><br/>&lt;look~lookat room&gt;<br/>  if (this&#46;marked=true) {<br/>    this&#46;description_marked = msg (&quot;The room has the marking &quot; + this&#46;marking)<br/>  } else {<br/>    this&#46;description_normal = msg (&quot;this is an ordinary room&quot;)<br/>  }<br/>&lt;/look~lookat room&gt;</code></pre>",
+      "PostDate": "2013-07-04T01:52:10+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25305",
+      "UserId": 0,
+      "Username": "Carrot",
+      "UserAvatar": null,
+      "UserGravatar": "12db43b39ade4bc3e479fc45c24e4f23",
+      "EditableText": "OK.\n\nBut what do I actually put in the code for each room (or preferably in a global code for &quot;BaseRoom&quot;) that marks the room as markable.  \n\nThat's where I am falling over at the moment, I am just not sure how to set that attribute (and I know it will be something stupidly simple) - I am no programmer, and certainly not an XML one - but I am trying to learn.",
+      "EditableFormat": "bbcode",
+      "HTML": "OK.<br/><br/>But what do I actually put in the code for each room (or preferably in a global code for &quot;BaseRoom&quot;) that marks the room as markable.  <br/><br/>That's where I am falling over at the moment, I am just not sure how to set that attribute (and I know it will be something stupidly simple) - I am no programmer, and certainly not an XML one - but I am trying to learn.",
+      "PostDate": "2013-07-04T09:23:47+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25310",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "For the first part, the magic you're looking for is the DoesInherit function:\n\n[code:3v4uy4cw]if (DoesInherit(game&#46;pov&#46;parent, &quot;BaseRoom&quot;)) {\n  // the current room is markable&#46;\n} else {\n  // it's not\n}[/code:3v4uy4cw]\n\nFor marking, that's up to you. You could have an attribute which is the marked number. Put an int &quot;marked&quot; attribute in the BaseRoom type, and default it to 0, which would mean unmarked. Also, create an attribute in the chalk of type int with a name like &quot;count&quot; and value of 0. Then when you go to mark a room (use chalk), just do something like: \n\n[code:3v4uy4cw]chalk&#46;count = chalk&#46;count + 1\ngame&#46;pov&#46;parent&#46;marked = chalk&#46; count[/code:3v4uy4cw]\n\nYou can check for a room being marked by its marked attribute being non-zero.",
+      "EditableFormat": "bbcode",
+      "HTML": "For the first part, the magic you're looking for is the DoesInherit function:<br/><br/><pre><code>if (DoesInherit(game&#46;pov&#46;parent, &quot;BaseRoom&quot;)) {<br/>  // the current room is markable&#46;<br/>} else {<br/>  // it's not<br/>}</code></pre><br/><br/>For marking, that's up to you. You could have an attribute which is the marked number. Put an int &quot;marked&quot; attribute in the BaseRoom type, and default it to 0, which would mean unmarked. Also, create an attribute in the chalk of type int with a name like &quot;count&quot; and value of 0. Then when you go to mark a room (use chalk), just do something like: <br/><br/><pre><code>chalk&#46;count = chalk&#46;count + 1<br/>game&#46;pov&#46;parent&#46;marked = chalk&#46; count</code></pre><br/><br/>You can check for a room being marked by its marked attribute being non-zero.",
+      "PostDate": "2013-07-04T09:53:13+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25313",
+      "UserId": 0,
+      "Username": "Carrot",
+      "UserAvatar": null,
+      "UserGravatar": "12db43b39ade4bc3e479fc45c24e4f23",
+      "EditableText": "Cheers, I'll play around with that and see where I get.\n\nIs there meant to be a space between [b:3hksk9b8]chalk. count[/b:3hksk9b8] in that last line?",
+      "EditableFormat": "bbcode",
+      "HTML": "Cheers, I'll play around with that and see where I get.<br/><br/>Is there meant to be a space between <span style=\"font-weight:bold;\">chalk. count</span> in that last line?",
+      "PostDate": "2013-07-04T10:33:41+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25314",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "No. Sorry about that. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "No. Sorry about that. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2013-07-04T10:36:00+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25337",
+      "UserId": 0,
+      "Username": "Carrot",
+      "UserAvatar": null,
+      "UserGravatar": "12db43b39ade4bc3e479fc45c24e4f23",
+      "EditableText": "I'm almost there - I will demonstrate shortly, but I have one further question for the time being:\n\nI am trying to automate the value of my chalk mark, and was hoping that I could somehow use the alias to show this so I didn't have to type LOOK AT CHALKMARK each time.\n\nthis is my current object:\n[code:2k45aq3w]    &lt;object name=&quot;chalkmark&quot;&gt;\n      &lt;inherit name=&quot;editor_object&quot; /&gt;\n      &lt;alias type=&quot;script&quot;&gt;\n        msg (&quot;The number &quot; + game&#46;pov&#46;parent&#46;marked + &quot; has been scratched on to the wall in chalk&#46;&quot;)\n      &lt;/alias&gt;\n      &lt;displayverbs type=&quot;stringlist&quot;&gt;\n        &lt;value&gt;Look at&lt;/value&gt;\n      &lt;/displayverbs&gt;\n      &lt;scenery type=&quot;boolean&quot;&gt;false&lt;/scenery&gt;\n      &lt;visible /&gt;\n      &lt;look type=&quot;script&quot;&gt;\n        msg (&quot;The number &quot; + game&#46;pov&#46;parent&#46;marked + &quot; has been scratched on to the wall in chalk&#46;&quot;)\n      &lt;/look&gt;\n    &lt;/object&gt;[/code:2k45aq3w]\n\nBut all I see in the room description is &quot;chalkmark&quot;.  The LOOK AT script works perfectly though.\n\nAny ideas?",
+      "EditableFormat": "bbcode",
+      "HTML": "I'm almost there - I will demonstrate shortly, but I have one further question for the time being:<br/><br/>I am trying to automate the value of my chalk mark, and was hoping that I could somehow use the alias to show this so I didn't have to type LOOK AT CHALKMARK each time.<br/><br/>this is my current object:<br/><pre><code>    &lt;object name=&quot;chalkmark&quot;&gt;<br/>      &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>      &lt;alias type=&quot;script&quot;&gt;<br/>        msg (&quot;The number &quot; + game&#46;pov&#46;parent&#46;marked + &quot; has been scratched on to the wall in chalk&#46;&quot;)<br/>      &lt;/alias&gt;<br/>      &lt;displayverbs type=&quot;stringlist&quot;&gt;<br/>        &lt;value&gt;Look at&lt;/value&gt;<br/>      &lt;/displayverbs&gt;<br/>      &lt;scenery type=&quot;boolean&quot;&gt;false&lt;/scenery&gt;<br/>      &lt;visible /&gt;<br/>      &lt;look type=&quot;script&quot;&gt;<br/>        msg (&quot;The number &quot; + game&#46;pov&#46;parent&#46;marked + &quot; has been scratched on to the wall in chalk&#46;&quot;)<br/>      &lt;/look&gt;<br/>    &lt;/object&gt;</code></pre><br/><br/>But all I see in the room description is &quot;chalkmark&quot;.  The LOOK AT script works perfectly though.<br/><br/>Any ideas?",
+      "PostDate": "2013-07-05T00:34:53+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25338",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "The BaseRoom type has a description script, where it shows the exits. My initial thought was that you could just add a marked attribute to the room (with value) and then in that script, print out the value with appropriate description, rather than have an actual object. That way it's an automatic part of the look command. You could probably do both (have an object *and* dump out the chalkmark value when someone does &quot;look&quot;).\n\nJust a thought <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "The BaseRoom type has a description script, where it shows the exits. My initial thought was that you could just add a marked attribute to the room (with value) and then in that script, print out the value with appropriate description, rather than have an actual object. That way it's an automatic part of the look command. You could probably do both (have an object *and* dump out the chalkmark value when someone does &quot;look&quot;).<br/><br/>Just a thought <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2013-07-05T00:43:20+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25350",
+      "UserId": 0,
+      "Username": "Carrot",
+      "UserAvatar": null,
+      "UserGravatar": "12db43b39ade4bc3e479fc45c24e4f23",
+      "EditableText": "Well I kind-of wanted it to be a non-takable object, but I have gone with your suggestion for now, and it seems to be working.\n\nI would appreciate your (and any other peoples) views on this.",
+      "EditableFormat": "bbcode",
+      "HTML": "Well I kind-of wanted it to be a non-takable object, but I have gone with your suggestion for now, and it seems to be working.<br/><br/>I would appreciate your (and any other peoples) views on this.<div><a href=\"/attachment/659\">Amazing Maze.aslx</a></div>",
+      "PostDate": "2013-07-05T11:13:46+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25352",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "I find it an interesting puzzle. You have to be able to recognize different orientations of the same room. It helps to map it out. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> \n\nTwo things:\n\n1) In the first room, it says the passage leads south, but you can only go east (besides up).\n2) &quot;peice of chalk&quot; should be &quot;piece of chalk&quot;.\n\nI liked the variations in rooms, including the &quot;very long passage.&quot; I think you have a winner.",
+      "EditableFormat": "bbcode",
+      "HTML": "I find it an interesting puzzle. You have to be able to recognize different orientations of the same room. It helps to map it out. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> <br/><br/>Two things:<br/><br/>1) In the first room, it says the passage leads south, but you can only go east (besides up).<br/>2) &quot;peice of chalk&quot; should be &quot;piece of chalk&quot;.<br/><br/>I liked the variations in rooms, including the &quot;very long passage.&quot; I think you have a winner.",
+      "PostDate": "2013-07-05T21:13:18+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25355",
+      "UserId": 0,
+      "Username": "Carrot",
+      "UserAvatar": null,
+      "UserGravatar": "12db43b39ade4bc3e479fc45c24e4f23",
+      "EditableText": "I'm glad you like it.\n\nI forgot to change the description of the entrance room when I changed the exit - will sort that out.\n\nWill sort the spelling mistake too.\n\nCurrently working on using the HasExit(n) script to automate the room descriptions.\n\nAlso thinking that I can use the script that works out the orientation, and put it against the standard cardinal points and use that to have a player hold a compass that will tell them which direction they are facing <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->\n\nLots to do.",
+      "EditableFormat": "bbcode",
+      "HTML": "I'm glad you like it.<br/><br/>I forgot to change the description of the entrance room when I changed the exit - will sort that out.<br/><br/>Will sort the spelling mistake too.<br/><br/>Currently working on using the HasExit(n) script to automate the room descriptions.<br/><br/>Also thinking that I can use the script that works out the orientation, and put it against the standard cardinal points and use that to have a player hold a compass that will tell them which direction they are facing <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D --><br/><br/>Lots to do.",
+      "PostDate": "2013-07-05T22:51:53+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

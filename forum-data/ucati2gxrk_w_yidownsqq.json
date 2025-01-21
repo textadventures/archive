@@ -1,0 +1,50 @@
+{
+  "Topic": {
+    "TopicId": "ucati2gxrk_w_yidownsqq",
+    "ForumId": "10",
+    "Title": "true third person",
+    "LastUpdated": "2016-07-18T20:28:01.6807078Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "fb18bbf6-52d0-4181-a609-1d25ee55b3f2",
+      "UserId": 252588,
+      "Username": "epicanthical",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/55846e9ec5518f174a1ad3c967c4783a?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm aware of resources that allow for basic third person view shifts a la \"you/I\" to \"he/she/name.\"  I'm interested to know the best way to take that a step further, where the game pov can actually see and interact with a player object as if it were not a pov object.\r\n\r\ni.e., something like:\r\nRoom Description\r\nNPC A is here.\r\nNPC B is here.\r\n\r\nbecomes:\r\n\r\nRoom Description\r\nNPC A is here.\r\nNPC B is here.\r\nPlayerPov is here.\r\n\r\nWhere interaction options are the same as well, e.g., PlayerPov is clickable and lookable.\r\n\r\nI can see how this can be done by using a doppleganger object to follow and represent the player but isn't strictly game.pov, but I'm wondering if there's  a more elegant way to just change Quest output to include game.pov directly.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm aware of resources that allow for basic third person view shifts a la \"you/I\" to \"he/she/name.\"  I'm interested to know the best way to take that a step further, where the game pov can actually see and interact with a player object as if it were not a pov object.</p>\n<p>i.e., something like:<br>\nRoom Description<br>\nNPC A is here.<br>\nNPC B is here.</p>\n<p>becomes:</p>\n<p>Room Description<br>\nNPC A is here.<br>\nNPC B is here.<br>\nPlayerPov is here.</p>\n<p>Where interaction options are the same as well, e.g., PlayerPov is clickable and lookable.</p>\n<p>I can see how this can be done by using a doppleganger object to follow and represent the player but isn't strictly game.pov, but I'm wondering if there's  a more elegant way to just change Quest output to include game.pov directly.</p>\n\n",
+      "PostDate": "2016-07-18T20:28:01.6807078Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "d9219830-5a78-4c53-ad32-87191b3e3025",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "briefly:\r\n\r\nObjects can be a Player Object ('Player' Tab -> 'look at' text box options: pov_look, and the other Attributes are: pov_alias, pov_gender, pov_article, pov_alt) and a non-player Object ('Setup' Tab -> 'look at' text box options), but not at the same time, of course. So when the Object is the 'game.pov' (the currently controlled Player Object), then its 'pov_XXX' Attributes are used, and when the Object is not the 'game.pov', then its 'pov_XXX' Attributes are not used.\r\n\r\nso you can script, by using the 'game.pov' Object Attribute as the checking mechanism, for example (using Commands for quickness):\r\n\r\n```\r\n<game name=\"example\">\r\n  <attr name=\"pov\" type=\"object\">player</attr>\r\n  <attr name=\"start\" type=\"script\">\r\n    msg (\"Type: changepovto ('player' or 'player_2'), to change your character\")\r\n    msg (\"Type: viewpovinfo ('player' or 'player_2'), to see that character's info, be its 'pov' or 'non-pov' info\")\r\n    wait {\r\n      msg (\"\")\r\n    }\r\n  </attr>\r\n</game>\r\n\r\n<object name=\"player\">\r\n  <attr name=\"feature_player\" type=\"boolean\">true</attr>\r\n  <attr name=\"alias\" type=\"string\">john</attr>\r\n  <attr name=\"pov_alias\" type=\"string\">jeff</attr>\r\n</object>\r\n\r\n<object name=\"player_2\">\r\n  <attr name=\"feature_player\" type=\"boolean\">true</attr>\r\n  <attr name=\"alias\" type=\"string\">matt</attr>\r\n  <attr name=\"pov_alias\" type=\"string\">mike</attr>\r\n</object>\r\n\r\n<command name=\"change_pov_command\">\r\n  <pattern>changepovto #object_parameter#</pattern>\r\n  <script>\r\n    if (HasBoolean (object_parameter, \"feature_player\")) {\r\n      ChangePov (object_parameter)\r\n    } else {\r\n      msg (\"Your inputted Object is not able to become a Player object, try again.\")\r\n    }\r\n  </script>\r\n</command>\r\n\r\n<command name=\"character_information_screen_command\">\r\n  <pattern>viewpovinfo #object_parameter#</pattern>\r\n  <script>\r\n    if (object_parameter = game.pov) {\r\n      msg (\"Name: \" + object_parameter.pov_alias)\r\n    } else {\r\n      msg (\"Name: \" + object_parameter.alias)\r\n    }\r\n  </script>\r\n</command>\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>briefly:</p>\n<p>Objects can be a Player Object ('Player' Tab -&gt; 'look at' text box options: pov_look, and the other Attributes are: pov_alias, pov_gender, pov_article, pov_alt) and a non-player Object ('Setup' Tab -&gt; 'look at' text box options), but not at the same time, of course. So when the Object is the 'game.pov' (the currently controlled Player Object), then its 'pov_XXX' Attributes are used, and when the Object is not the 'game.pov', then its 'pov_XXX' Attributes are not used.</p>\n<p>so you can script, by using the 'game.pov' Object Attribute as the checking mechanism, for example (using Commands for quickness):</p>\n<pre><code>&lt;game name=\"example\"&gt;\n  &lt;attr name=\"pov\" type=\"object\"&gt;player&lt;/attr&gt;\n  &lt;attr name=\"start\" type=\"script\"&gt;\n    msg (\"Type: changepovto ('player' or 'player_2'), to change your character\")\n    msg (\"Type: viewpovinfo ('player' or 'player_2'), to see that character's info, be its 'pov' or 'non-pov' info\")\n    wait {\n      msg (\"\")\n    }\n  &lt;/attr&gt;\n&lt;/game&gt;\n\n&lt;object name=\"player\"&gt;\n  &lt;attr name=\"feature_player\" type=\"boolean\"&gt;true&lt;/attr&gt;\n  &lt;attr name=\"alias\" type=\"string\"&gt;john&lt;/attr&gt;\n  &lt;attr name=\"pov_alias\" type=\"string\"&gt;jeff&lt;/attr&gt;\n&lt;/object&gt;\n\n&lt;object name=\"player_2\"&gt;\n  &lt;attr name=\"feature_player\" type=\"boolean\"&gt;true&lt;/attr&gt;\n  &lt;attr name=\"alias\" type=\"string\"&gt;matt&lt;/attr&gt;\n  &lt;attr name=\"pov_alias\" type=\"string\"&gt;mike&lt;/attr&gt;\n&lt;/object&gt;\n\n&lt;command name=\"change_pov_command\"&gt;\n  &lt;pattern&gt;changepovto #object_parameter#&lt;/pattern&gt;\n  &lt;script&gt;\n    if (HasBoolean (object_parameter, \"feature_player\")) {\n      ChangePov (object_parameter)\n    } else {\n      msg (\"Your inputted Object is not able to become a Player object, try again.\")\n    }\n  &lt;/script&gt;\n&lt;/command&gt;\n\n&lt;command name=\"character_information_screen_command\"&gt;\n  &lt;pattern&gt;viewpovinfo #object_parameter#&lt;/pattern&gt;\n  &lt;script&gt;\n    if (object_parameter = game.pov) {\n      msg (\"Name: \" + object_parameter.pov_alias)\n    } else {\n      msg (\"Name: \" + object_parameter.alias)\n    }\n  &lt;/script&gt;\n&lt;/command&gt;\n</code></pre>\n\n",
+      "PostDate": "2016-07-19T05:09:01.5772185Z",
+      "LastEditDate": "2016-07-19T05:24:50.4055474Z"
+    },
+    {
+      "PostId": "553c2a26-11d6-45ef-90dc-5262be61a400",
+      "UserId": 9112,
+      "Username": "Jay Nabonne",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/379859a7f1952a65399fc63997e68f0b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "epicanthical, you have an example with \"is here\" for the various objects, but I don't think that's standard Quest. Is that script you have written or are going to write? If so, then you can include the player object as you see fit in that output.\r\n\r\nIf it's more hypothetical, and you can plan to use the Quest standard output, you can look in the core code and see where (for example) the room description building code is stripping the player out. In fact,  in the room description where it builds the object list, this function is stripping the player object out:\r\n\r\n```\r\n<function name=\"RemoveSceneryObjects\" type=\"objectlist\" parameters=\"list\">\r\n    <![CDATA[\r\n    result = NewObjectList()\r\n    foreach (obj, list) {\r\n      if (not obj.scenery and obj <> game.pov and obj.visible) {\r\n        list add (result, obj)\r\n      }\r\n    }\r\n    return (result)\r\n    ]]>\r\n  </function>\r\n```\r\n(I don't know if I'd consider the player object \"scenery\", but...)\r\n\r\nIf you were to drop that into your game and remove the \"and obj <> game.pov\" part, then your player would show up as an object. I don't know what other ramifications there would be to that, but that's where I'd start.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>epicanthical, you have an example with \"is here\" for the various objects, but I don't think that's standard Quest. Is that script you have written or are going to write? If so, then you can include the player object as you see fit in that output.</p>\n<p>If it's more hypothetical, and you can plan to use the Quest standard output, you can look in the core code and see where (for example) the room description building code is stripping the player out. In fact,  in the room description where it builds the object list, this function is stripping the player object out:</p>\n<pre><code>&lt;function name=\"RemoveSceneryObjects\" type=\"objectlist\" parameters=\"list\"&gt;\n    &lt;![CDATA[\n    result = NewObjectList()\n    foreach (obj, list) {\n      if (not obj.scenery and obj &lt;&gt; game.pov and obj.visible) {\n        list add (result, obj)\n      }\n    }\n    return (result)\n    ]]&gt;\n  &lt;/function&gt;\n</code></pre>\n<p>(I don't know if I'd consider the player object \"scenery\", but...)</p>\n<p>If you were to drop that into your game and remove the \"and obj &lt;&gt; game.pov\" part, then your player would show up as an object. I don't know what other ramifications there would be to that, but that's where I'd start.</p>\n\n",
+      "PostDate": "2016-07-20T06:45:43.243353Z",
+      "LastEditDate": null
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "5145",
+    "ForumId": "10",
+    "Title": "Can only list visible exits",
+    "LastUpdated": "2015-04-06T20:44:55+01:00",
+    "ReplyCount": 6
+  },
+  "Posts": [
+    {
+      "PostId": "35656",
+      "UserId": 0,
+      "Username": "xordevoreaux",
+      "UserAvatar": null,
+      "UserGravatar": "7429ebfb6f14ed642c7649e6f5e8abca",
+      "EditableText": "I'm creating an ability in my game for people to find their way from one dark room to another by FEEL AROUND.\n\nI couldn't get it to work by traversing across the ScopeExitsForRoom(player.parent), and couldn't figure out why.\nSo, I added something that prints out ListCount(ScopeExitsForRoom(player.parent)) when I type FEEL AROUND, and lo and behold, it's only returning a count of visible exits.\n\nWhen I was in a dark room, ListCount(ScopeExitsForRoom(player.parent)) = 0\nWhen  I light the room up with a candle, ListCount(ScopeExitsForRoom(player.parent)) = 1 (there is one exit to the room).\n\nI was trying to make it so when the player typed FEEL AROUND, that it would list the exits (and do some other, unrelated things).\n\nWhy would we as game creators not have available the ability to manipulate / expose all exits to the player, just because they're not visible?",
+      "EditableFormat": "bbcode",
+      "HTML": "I'm creating an ability in my game for people to find their way from one dark room to another by FEEL AROUND.<br/><br/>I couldn't get it to work by traversing across the ScopeExitsForRoom(player.parent), and couldn't figure out why.<br/>So, I added something that prints out ListCount(ScopeExitsForRoom(player.parent)) when I type FEEL AROUND, and lo and behold, it's only returning a count of visible exits.<br/><br/>When I was in a dark room, ListCount(ScopeExitsForRoom(player.parent)) = 0<br/>When  I light the room up with a candle, ListCount(ScopeExitsForRoom(player.parent)) = 1 (there is one exit to the room).<br/><br/>I was trying to make it so when the player typed FEEL AROUND, that it would list the exits (and do some other, unrelated things).<br/><br/>Why would we as game creators not have available the ability to manipulate / expose all exits to the player, just because they're not visible?",
+      "PostDate": "2015-04-06T04:49:45+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35657",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "You do. You have several possibilities (I assume you're seeking a solution and not just asking a &quot;why&quot; question):\n\n1) Make the exit a weak light source. That keeps it visible even in the dark room. (That may not work for you, as then the exits would probably show up in a default room description, though I haven't tried it, so I can't say for sure.)\n\n2) Copy the ScopeExitsForRoom function into your game and make it do what you wish (ignore darkness state). However, other code uses ScopeExitsForRoom, including (probably) the room description code, which means you might have the same problem as in case 1.\n\n3) Copy the ScopeExitsForRoom function into your game, rename it to something else so only you are using it, and then change it to not pay attention to darkness. \n\nWith Quest, game creators have the ability to do change much of what the core code does by copying it into their games and modifying it. Or there can be even more power in writing your own code - the object model is exposed for you to manipulate as you wish.\n\n(To answer your question of &quot;why&quot;: the &quot;scope&quot; functions generally have to do with the higher level concept of what the player is directly able to manipulate in the current situation, and they tie into much of how the engine works. Given your scenario above, I'm sure you're quite happy that exits are excluded from the current room description when dark, for example. The function you're looking for - getting all exits for a room regardless of current state - is a valid need, but it's not a &quot;Scope&quot; type function. And given it doesn't exist in the core code, it probably has not been asked for before. So you can make your own!)",
+      "EditableFormat": "bbcode",
+      "HTML": "You do. You have several possibilities (I assume you're seeking a solution and not just asking a &quot;why&quot; question):<br/><br/>1) Make the exit a weak light source. That keeps it visible even in the dark room. (That may not work for you, as then the exits would probably show up in a default room description, though I haven't tried it, so I can't say for sure.)<br/><br/>2) Copy the ScopeExitsForRoom function into your game and make it do what you wish (ignore darkness state). However, other code uses ScopeExitsForRoom, including (probably) the room description code, which means you might have the same problem as in case 1.<br/><br/>3) Copy the ScopeExitsForRoom function into your game, rename it to something else so only you are using it, and then change it to not pay attention to darkness. <br/><br/>With Quest, game creators have the ability to do change much of what the core code does by copying it into their games and modifying it. Or there can be even more power in writing your own code - the object model is exposed for you to manipulate as you wish.<br/><br/>(To answer your question of &quot;why&quot;: the &quot;scope&quot; functions generally have to do with the higher level concept of what the player is directly able to manipulate in the current situation, and they tie into much of how the engine works. Given your scenario above, I'm sure you're quite happy that exits are excluded from the current room description when dark, for example. The function you're looking for - getting all exits for a room regardless of current state - is a valid need, but it's not a &quot;Scope&quot; type function. And given it doesn't exist in the core code, it probably has not been asked for before. So you can make your own!)",
+      "PostDate": "2015-04-06T08:00:44+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35658",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Here is a simple copy/modify of ScopeExitsForRoom that ignores darkness:\n\n[code:2a2wn0xl]  &lt;function name=&quot;MyScopeExitsForRoom&quot; type=&quot;objectlist&quot; parameters=&quot;room&quot;&gt;\n    &lt;!&#91;CDATA&#91;\n    result = NewObjectList()\n    foreach (exit, AllExits()) {\n      if (exit&#46;parent = room) {\n        if (exit&#46;visible) {\n            list add(result, exit)\n        }\n      }\n    }\n    return (result)\n    &#93;&#93;&gt;\n  &lt;/function&gt;[/code:2a2wn0xl]\n\nNote I renamed the function so the core code won't use it, but you can call it directly. You can also remove the &quot;visible&quot; check if you want to list invisible exits in the room as well.",
+      "EditableFormat": "bbcode",
+      "HTML": "Here is a simple copy/modify of ScopeExitsForRoom that ignores darkness:<br/><br/><pre><code>  &lt;function name=&quot;MyScopeExitsForRoom&quot; type=&quot;objectlist&quot; parameters=&quot;room&quot;&gt;<br/>    &lt;!&#91;CDATA&#91;<br/>    result = NewObjectList()<br/>    foreach (exit, AllExits()) {<br/>      if (exit&#46;parent = room) {<br/>        if (exit&#46;visible) {<br/>            list add(result, exit)<br/>        }<br/>      }<br/>    }<br/>    return (result)<br/>    &#93;&#93;&gt;<br/>  &lt;/function&gt;</code></pre><br/><br/>Note I renamed the function so the core code won't use it, but you can call it directly. You can also remove the &quot;visible&quot; check if you want to list invisible exits in the room as well.",
+      "PostDate": "2015-04-06T08:02:55+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35659",
+      "UserId": 0,
+      "Username": "xordevoreaux",
+      "UserAvatar": null,
+      "UserGravatar": "7429ebfb6f14ed642c7649e6f5e8abca",
+      "EditableText": "Thank you, the function that you extracted and adapted worked as desired.  What you did is definitely a step up from what I'm capable of on my own at the moment.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thank you, the function that you extracted and adapted worked as desired.  What you did is definitely a step up from what I'm capable of on my own at the moment.",
+      "PostDate": "2015-04-06T14:17:55+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35660",
+      "UserId": 0,
+      "Username": "xordevoreaux",
+      "UserAvatar": null,
+      "UserGravatar": "7429ebfb6f14ed642c7649e6f5e8abca",
+      "EditableText": "Here is the result, where the &quot;gloomy&quot; room is the dark room.  Again, thank you.\n\nYou are in a room.\n\n&gt; test\nYou have been moved to the testing center.\n\nYou are in a Testing Center.\nThe room is gloomy.\n\n&gt; feel candle\nThe candle feels ordinary.\n\n&gt; feel south\nYou make your way south, feeling your way.\n\nYou are in a Testing Center, South Room.\nYou can go north.\n\n&gt; n\n\nYou are in a Testing Center.\nThe room is gloomy.\n\n&gt; feel around\nYou feel your way around in the dark and find a way out leading:\nsouth\n\n&gt; feel south\nYou make your way south, feeling your way.\n\nYou are in a Testing Center, South Room.\nYou can go north.\n\n&gt; n\n\nYou are in a Testing Center.\nThe room is gloomy.",
+      "EditableFormat": "bbcode",
+      "HTML": "Here is the result, where the &quot;gloomy&quot; room is the dark room.  Again, thank you.<br/><br/>You are in a room.<br/><br/>&gt; test<br/>You have been moved to the testing center.<br/><br/>You are in a Testing Center.<br/>The room is gloomy.<br/><br/>&gt; feel candle<br/>The candle feels ordinary.<br/><br/>&gt; feel south<br/>You make your way south, feeling your way.<br/><br/>You are in a Testing Center, South Room.<br/>You can go north.<br/><br/>&gt; n<br/><br/>You are in a Testing Center.<br/>The room is gloomy.<br/><br/>&gt; feel around<br/>You feel your way around in the dark and find a way out leading:<br/>south<br/><br/>&gt; feel south<br/>You make your way south, feeling your way.<br/><br/>You are in a Testing Center, South Room.<br/>You can go north.<br/><br/>&gt; n<br/><br/>You are in a Testing Center.<br/>The room is gloomy.",
+      "PostDate": "2015-04-06T14:24:03+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35663",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "here's a guide on using lists and dictionaries, if you're interested:\n\n<!-- l --><a class=\"postlink-local\" href=\"http://forum.textadventures.co.uk/viewtopic.php?f=18&amp;t=5137\">viewtopic.php?f=18&amp;t=5137</a><!-- l -->\n\nif you need any help with anything, let me know, and I'll help you.",
+      "EditableFormat": "bbcode",
+      "HTML": "here's a guide on using lists and dictionaries, if you're interested:<br/><br/><!-- l --><a class=\"postlink-local\" href=\"http://forum.textadventures.co.uk/viewtopic.php?f=18&amp;t=5137\">viewtopic.php?f=18&amp;t=5137</a><!-- l --><br/><br/>if you need any help with anything, let me know, and I'll help you.",
+      "PostDate": "2015-04-06T19:48:34+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35664",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "[quote=&quot;xordevoreaux&quot;:1j32v37h]Thank you, the function that you extracted and adapted worked as desired.  [/quote:1j32v37h]\n\nGreat! I'm glad it worked for you. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>xordevoreaux wrote:</cite>Thank you, the function that you extracted and adapted worked as desired.  </blockquote><br/><br/>Great! I'm glad it worked for you. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2015-04-06T20:44:55+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

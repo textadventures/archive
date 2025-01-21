@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "4069",
+    "ForumId": "10",
+    "Title": "Changing Status Attributes in Game",
+    "LastUpdated": "2013-12-23T20:40:21+00:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "27199",
+      "UserId": 0,
+      "Username": "brano3000",
+      "UserAvatar": null,
+      "UserGravatar": "a6266c07d1d79f91701c3249fee42fe6",
+      "EditableText": "In my text adventure game, I want to have it where the currently worn armor is displayed in the status bar.\nI think I have set up the attributes right, but I do not understand how to change it in game.\nFor Example:\n*On the status bar* &quot;You are wearing nothing&quot;\nPlayer types: equip armor\n*ON the status bar* &quot;You are wearing armor&quot;\n\nHow would I do this? Thanks.",
+      "EditableFormat": "bbcode",
+      "HTML": "In my text adventure game, I want to have it where the currently worn armor is displayed in the status bar.<br/>I think I have set up the attributes right, but I do not understand how to change it in game.<br/>For Example:<br/>*On the status bar* &quot;You are wearing nothing&quot;<br/>Player types: equip armor<br/>*ON the status bar* &quot;You are wearing armor&quot;<br/><br/>How would I do this? Thanks.",
+      "PostDate": "2013-12-23T07:01:44+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27200",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Have an attribute called &quot;armourstatus&quot; that is a string, and is set to be &quot;You are wearing nothing&quot;. Set it to be a status attribute, with just &quot;!&quot; as the second parameter. In the WEAR command, have a line:\n\n[code:19zkktf3]armourstatus = &quot;You are wearing armor&quot;[/code:19zkktf3]\n\nor maybe:\n\n[code:19zkktf3]armourstatus = &quot;You are wearing &quot; + armour&#46;alias[/code:19zkktf3]\n\nand in the REMOVE command:\n\n[code:19zkktf3]armourstatus = &quot;You are wearing nothing&quot;[/code:19zkktf3]",
+      "EditableFormat": "bbcode",
+      "HTML": "Have an attribute called &quot;armourstatus&quot; that is a string, and is set to be &quot;You are wearing nothing&quot;. Set it to be a status attribute, with just &quot;!&quot; as the second parameter. In the WEAR command, have a line:<br/><br/><pre><code>armourstatus = &quot;You are wearing armor&quot;</code></pre><br/><br/>or maybe:<br/><br/><pre><code>armourstatus = &quot;You are wearing &quot; + armour&#46;alias</code></pre><br/><br/>and in the REMOVE command:<br/><br/><pre><code>armourstatus = &quot;You are wearing nothing&quot;</code></pre>",
+      "PostDate": "2013-12-23T09:58:27+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27204",
+      "UserId": 0,
+      "Username": "brano3000",
+      "UserAvatar": null,
+      "UserGravatar": "a6266c07d1d79f91701c3249fee42fe6",
+      "EditableText": "I tried doing what you said to do but it isn't seeming to work. I have pictures of how I am doing it attached below. Tell me where I messing up. Thanks for the quick response last time.",
+      "EditableFormat": "bbcode",
+      "HTML": "I tried doing what you said to do but it isn't seeming to work. I have pictures of how I am doing it attached below. Tell me where I messing up. Thanks for the quick response last time.<div><img src=\"/attachment/813\" alt=\"Quest Help 1.png\" /></div><div><img src=\"/attachment/812\" alt=\"Quest help 3.png\" /></div><div><img src=\"/attachment/811\" alt=\"Help 2.png\" /></div>",
+      "PostDate": "2013-12-23T15:38:05+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27205",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "You're missing the Object (which would be the &quot;player&quot; Player Object) of your &quot;armorstatus&quot; String Attribute in your &quot;Rag Clothes' &quot; Object's Verb's &quot;Set&quot; script&#058;\n\nif you want to use &quot;Set&quot;, this is how it looks in code:\n\n<!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/Set\">http://quest5.net/wiki/Set</a><!-- m -->\n\nyou'll have to figure out how to set up (lol) the &quot;Set&quot; script in the GUI~Editor.\n\npersonally, you should use this script inside (it's easier to work with, and is used for A LOT of stuff too):\n\nAdd a~new script -&gt; Variables -&gt; Set a variable or attribute -&gt;\n\n-&gt; and the proper form~format~syntax that you use is this -&gt;\n\nObject.Attribute=Value_or_Expression\n\nsome examples of this are:\n\nplayer.strength=100\nplayer.strength=player.strength + 5\nplayer.dead=false\nplayer.right_hand=wooden_sword\ngame.turns=game.turns + 1\nwooden_sword.physical_damage=10.6\n\nfor your case, using the GUI~Editor:\n\nRag Clothes (Object) -&gt; Verb (Tab) -&gt; Add a~new script -&gt; Variables -&gt; Set a variable or attribute -&gt;\n\n(the quotes are needed to tell the game engine that the value is a String Type, so it matches up with the attribute being a String Type, as you setup~created~added via your &quot;player&quot; Player's Attribute)\n\n(the equal sign is already there within the GUI~Editor, so you don't need ~ can't as it'll cause an error ~ to type in the equal sign)\n\nplayer.armorstatus=&quot;You're wearing the armor that you just equipped.&quot;\n\nwhereas, in your &quot;Set&quot; script, you've just got:\n\n(Set) armorstatus=&quot;You're wearing the armor that you just equipped.&quot;\n\nyou're missing the Object:\n\n&quot;player&quot; Player Object\n\n(Set) [b:4xkmjvs9]player[/b:4xkmjvs9].armorstatus=&quot;You're wearing the armor that you just equipped.&quot;\n\n-----------------\n\nyou must have attributes &quot;attached&quot; to an Object, as because:\n\nokay, I've got this &quot;armorstatus&quot; attribute, but WHAT IS IT AN ATTRIBUTE OF... ????\n\nQuest game engine: &quot;ERROR !!! ERROR !!! Can not compute !!!! &quot;\n\nIs it an attribute of the &quot;player&quot; Player Object, the &quot;HK&quot; Player Object, the &quot;orc&quot; (monster) Object, the Game Object, the &quot;rag clothes&quot; (equipment) Object, the &quot;castle&quot; Room Object, etc... etc... etc...",
+      "EditableFormat": "bbcode",
+      "HTML": "You're missing the Object (which would be the &quot;player&quot; Player Object) of your &quot;armorstatus&quot; String Attribute in your &quot;Rag Clothes' &quot; Object's Verb's &quot;Set&quot; script&#058;<br/><br/>if you want to use &quot;Set&quot;, this is how it looks in code:<br/><br/><!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/Set\">http://quest5.net/wiki/Set</a><!-- m --><br/><br/>you'll have to figure out how to set up (lol) the &quot;Set&quot; script in the GUI~Editor.<br/><br/>personally, you should use this script inside (it's easier to work with, and is used for A LOT of stuff too):<br/><br/>Add a~new script -&gt; Variables -&gt; Set a variable or attribute -&gt;<br/><br/>-&gt; and the proper form~format~syntax that you use is this -&gt;<br/><br/>Object.Attribute=Value_or_Expression<br/><br/>some examples of this are:<br/><br/>player.strength=100<br/>player.strength=player.strength + 5<br/>player.dead=false<br/>player.right_hand=wooden_sword<br/>game.turns=game.turns + 1<br/>wooden_sword.physical_damage=10.6<br/><br/>for your case, using the GUI~Editor:<br/><br/>Rag Clothes (Object) -&gt; Verb (Tab) -&gt; Add a~new script -&gt; Variables -&gt; Set a variable or attribute -&gt;<br/><br/>(the quotes are needed to tell the game engine that the value is a String Type, so it matches up with the attribute being a String Type, as you setup~created~added via your &quot;player&quot; Player's Attribute)<br/><br/>(the equal sign is already there within the GUI~Editor, so you don't need ~ can't as it'll cause an error ~ to type in the equal sign)<br/><br/>player.armorstatus=&quot;You're wearing the armor that you just equipped.&quot;<br/><br/>whereas, in your &quot;Set&quot; script, you've just got:<br/><br/>(Set) armorstatus=&quot;You're wearing the armor that you just equipped.&quot;<br/><br/>you're missing the Object:<br/><br/>&quot;player&quot; Player Object<br/><br/>(Set) <span style=\"font-weight:bold;\">player</span>.armorstatus=&quot;You're wearing the armor that you just equipped.&quot;<br/><br/>-----------------<br/><br/>you must have attributes &quot;attached&quot; to an Object, as because:<br/><br/>okay, I've got this &quot;armorstatus&quot; attribute, but WHAT IS IT AN ATTRIBUTE OF... ????<br/><br/>Quest game engine: &quot;ERROR !!! ERROR !!! Can not compute !!!! &quot;<br/><br/>Is it an attribute of the &quot;player&quot; Player Object, the &quot;HK&quot; Player Object, the &quot;orc&quot; (monster) Object, the Game Object, the &quot;rag clothes&quot; (equipment) Object, the &quot;castle&quot; Room Object, etc... etc... etc...",
+      "PostDate": "2013-12-23T19:50:20+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27206",
+      "UserId": 0,
+      "Username": "brano3000",
+      "UserAvatar": null,
+      "UserGravatar": "a6266c07d1d79f91701c3249fee42fe6",
+      "EditableText": "Thank You to both of you!!!!! I got it to work thanks to you!!",
+      "EditableFormat": "bbcode",
+      "HTML": "Thank You to both of you!!!!! I got it to work thanks to you!!",
+      "PostDate": "2013-12-23T20:40:21+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

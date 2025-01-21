@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "f-i-soal_0cgxnhakvcjxq",
+    "ForumId": "10",
+    "Title": "Show \"Empty\" in the inventory panel",
+    "LastUpdated": "2022-11-10T20:56:02.0068695Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "f7f69fe8-bf19-4cc6-aef8-d2ad330db094",
+      "UserId": 611054,
+      "Username": "LoveMeTende",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/83b995e443c044fd460c3d89dfd2adb0?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "So, I tried to figure it out by myself but I think it's out of my noob possibilities at this point.\r\nWhen the player has no items in its inventory, I want the game to display \"empty\" in the pannel. My idea was to create an \"Empty\" object which would be not droppable nor usable in any way. Then I thought to use some kind of change script to check if the inventory is empty everytime it updates. If so, I would add the \"Empty\" object. Then, whenever the player takes something, I would remove th \"Empty\".\r\nI am missing the part of the change script, I cant find an \"inventory attribute\" on the player object to work with.\r\nPlease, anybody have an idea how to solve this?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>So, I tried to figure it out by myself but I think it's out of my noob possibilities at this point.<br>\nWhen the player has no items in its inventory, I want the game to display \"empty\" in the pannel. My idea was to create an \"Empty\" object which would be not droppable nor usable in any way. Then I thought to use some kind of change script to check if the inventory is empty everytime it updates. If so, I would add the \"Empty\" object. Then, whenever the player takes something, I would remove th \"Empty\".<br>\nI am missing the part of the change script, I cant find an \"inventory attribute\" on the player object to work with.<br>\nPlease, anybody have an idea how to solve this?</p>\n\n",
+      "PostDate": "2022-11-10T20:56:02.0068695Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "b7d604ee-221c-40b9-89e5-bb0fca9800a4",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "There isn't an inventory object. You would probably want to make this run as a turnscript, so that it's done after every command.\r\n\r\nAlternatively, I might suggest using CSS. It's a long time since I played with this, but I think you could add something like this to your stylesheet:\r\n```\r\n#lstInventory:not(:has(li)) {\r\n  content: \"<li>empty</li>\";\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>There isn't an inventory object. You would probably want to make this run as a turnscript, so that it's done after every command.</p>\n<p>Alternatively, I might suggest using CSS. It's a long time since I played with this, but I think you could add something like this to your stylesheet:</p>\n<pre><code>#lstInventory:not(:has(li)) {\n  content: \"&lt;li&gt;empty&lt;/li&gt;\";\n}\n</code></pre>\n\n",
+      "PostDate": "2022-11-11T08:55:34.1682507Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "d3e7d1cd-9ebf-48a5-88a9-c1d8ace5b355",
+      "UserId": 611054,
+      "Username": "LoveMeTende",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/83b995e443c044fd460c3d89dfd2adb0?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thank you for the reply!\r\nI really don't know how to edit the style sheet or where can i find it. Is there a guide somewhere? \r\nI found this: https://docs.textadventures.co.uk/quest/ui-javascript2.html\r\nI enabled DevMode and opened the HTML Tools, but I cant figure out where and how to put the code you kindly provide. I'm sorry, I'm very noob at this.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thank you for the reply!<br>\nI really don't know how to edit the style sheet or where can i find it. Is there a guide somewhere?<br>\nI found this: https://docs.textadventures.co.uk/quest/ui-javascript2.html<br>\nI enabled DevMode and opened the HTML Tools, but I cant figure out where and how to put the code you kindly provide. I'm sorry, I'm very noob at this.</p>\n\n",
+      "PostDate": "2022-11-11T10:08:22.3506385Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "93bc2bfc-6ee7-49dc-b566-61319128f753",
+      "UserId": 611054,
+      "Username": "LoveMeTende",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/83b995e443c044fd460c3d89dfd2adb0?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Meanwhile, I tried using a turn script as you kindly suggested.\r\nThis is the code I used. I set a variable with the result of a function, which I found it gives the number of items in the inventory.\r\nThe player starts the game with the \"empty\" obj in its inventory. So, each turn, the code checks the number of items the player is holding. If there are more than 1 (so basically when the player picks up a new item) and the player is holding the \"empty\" obj,   then I remove it. But when the invcount is null (when the last item is dropped) then the \"empty\" obj is added.\r\n```\r\ninvcount = ListCount(GetAllChildObjects (player))\r\nif (invcount > 1) {\r\n  if (Got(empty)) {\r\n    RemoveObject (empty)\r\n  }\r\n}\r\nelse if (invcount = 0) {\r\n  AddToInventory (empty)\r\n}\r\n```\r\nI'm curious to know more about CSS. However, I feel like this turn script solution might be useful for someone else, so I'm posting and explaining it. I tested it and it seems to work fine ^^",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Meanwhile, I tried using a turn script as you kindly suggested.<br>\nThis is the code I used. I set a variable with the result of a function, which I found it gives the number of items in the inventory.<br>\nThe player starts the game with the \"empty\" obj in its inventory. So, each turn, the code checks the number of items the player is holding. If there are more than 1 (so basically when the player picks up a new item) and the player is holding the \"empty\" obj,   then I remove it. But when the invcount is null (when the last item is dropped) then the \"empty\" obj is added.</p>\n<pre><code>invcount = ListCount(GetAllChildObjects (player))\nif (invcount &gt; 1) {\n  if (Got(empty)) {\n    RemoveObject (empty)\n  }\n}\nelse if (invcount = 0) {\n  AddToInventory (empty)\n}\n</code></pre>\n<p>I'm curious to know more about CSS. However, I feel like this turn script solution might be useful for someone else, so I'm posting and explaining it. I tested it and it seems to work fine ^^</p>\n\n",
+      "PostDate": "2022-11-11T11:30:05.8828135Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "07c4be00-663a-4b22-ab1e-34506650d864",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I suspect the easiest way to handle the CSS would be to put it in the UI Initialisation script (on the game's \"Advanced Scripts\" tab), so it runs whenever the game starts. You could just output the CSS, although that's a bit inelegant.\r\n```\r\nmsg (\"<style>#lstInventory:not(:has(li))::after {  content: \\\"empty\\\"; }</style>\")\r\n```\r\n\r\nI forgot the `::after` initially; but it seems to kind of work now (although in this case the \"Empty\" is just text, not an item, and so can't be selected)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I suspect the easiest way to handle the CSS would be to put it in the UI Initialisation script (on the game's \"Advanced Scripts\" tab), so it runs whenever the game starts. You could just output the CSS, although that's a bit inelegant.</p>\n<pre><code>msg (\"&lt;style&gt;#lstInventory:not(:has(li))::after {  content: \\\"empty\\\"; }&lt;/style&gt;\")\n</code></pre>\n<p>I forgot the <code>::after</code> initially; but it seems to kind of work now (although in this case the \"Empty\" is just text, not an item, and so can't be selected)</p>\n\n",
+      "PostDate": "2022-11-11T13:48:51.3187469Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

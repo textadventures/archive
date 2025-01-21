@@ -1,0 +1,39 @@
+{
+  "Topic": {
+    "TopicId": "mk4zijt6f0m7_dl1abqg9a",
+    "ForumId": "10",
+    "Title": "Scope is still beyond me",
+    "LastUpdated": "2017-08-14T01:02:28.5520438Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "204cdf60-c750-44e8-8884-34af68788ef4",
+      "UserId": 318253,
+      "Username": "K.V.",
+      "AvatarUrl": "http://i.imgur.com/FOIjtApb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Okay...\r\n\r\nHere's what I (think) I've got figured out:\r\n1. I make a command.\r\n2. I use #object# (rather than #text#) in the pattern. (The object is in another room.)\r\n3. If I know the name of the specific parent object which the command will ALWAYS refer to, I simply enter the parent object's name in the Scope field.\r\n\r\n---\r\nHere's what I'd very much like to figure out:\r\n1. How do I make a command that will work for each and every object in the game without knowing the specifics up front?\r\n     - I've tried setting up an attribute that equaled ```AllObjects()```. I tried it as a script, a string, a list, a dictionary... I couldn't figure it out.\r\n2. It says I can use an attribute in the Scope field. How does that work? I can't get anything out of it...\r\n\r\n---\r\nMy wish is to interact with any given NPC in any given room via two-way radio.\r\n\r\nNPC, COME IN\r\n\r\nThat's the command I'm after. I'm trying not to clone or move anything around and only work with the ask attribute on each NPC.\r\n\r\n\r\nOVER AND OUT would 'disconnect', placing the NPC back out of scope.\r\n\r\nIs this possible?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Okay...</p>\n<p>Here's what I (think) I've got figured out:</p>\n<ol>\n<li>I make a command.</li>\n<li>I use #object# (rather than #text#) in the pattern. (The object is in another room.)</li>\n<li>If I know the name of the specific parent object which the command will ALWAYS refer to, I simply enter the parent object's name in the Scope field.</li>\n</ol>\n<hr>\n<p>Here's what I'd very much like to figure out:</p>\n<ol>\n<li>How do I make a command that will work for each and every object in the game without knowing the specifics up front?\n<ul>\n<li>I've tried setting up an attribute that equaled <code>AllObjects()</code>. I tried it as a script, a string, a list, a dictionary... I couldn't figure it out.</li>\n</ul>\n</li>\n<li>It says I can use an attribute in the Scope field. How does that work? I can't get anything out of it...</li>\n</ol>\n<hr>\n<p>My wish is to interact with any given NPC in any given room via two-way radio.</p>\n<p>NPC, COME IN</p>\n<p>That's the command I'm after. I'm trying not to clone or move anything around and only work with the ask attribute on each NPC.</p>\n<p>OVER AND OUT would 'disconnect', placing the NPC back out of scope.</p>\n<p>Is this possible?</p>\n\n",
+      "PostDate": "2017-08-14T01:02:28.5520438Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "b7ab108c-7a39-4f3e-b2ba-b8a1cdb3567f",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I believe that Commands, with an '#object#' Parameter, it is just/only searching the parent room that you're in. So, you got to use the '#text#' Parameter instead, to handle it:\r\n\r\n(you may be able to use the '#object#' Parameter, but I think the built-in stuff for it, will do the Command's 'default' String Attribute, upon not finding the Object within the parent Room Object of the Player Object, so you might have to change the built-in scripting for it... but maybe not too... not tested if your Command's scripting will over-ride the built-in scripting of it)\r\n\r\n(this is also going to include extra coding, credit to Pertex as it's his coding, for handling the person entering in the 'alias', as usually this is what the person playing the game is knowing about, and not the Object's name, which is often hidden, used for the game maker's organization and structure)\r\n\r\n```\r\n<command name=\"example_command\">\r\n  <pattern>example #text_parameter#</pattern>\r\n  <script>\r\n    input_object_variable = GetObject (text_parameter)\r\n    if (input_object_parameter = null) {\r\n      foreach (object_variable, AllObjects ()) {\r\n        if (object_variable.alias = text_parameter) {\r\n          input_object_variable = object_variable\r\n        }\r\n      }\r\n    }\r\n    if (input_object_variable = null) {\r\n      msg (\"Your inputted Object doesn't exist in the game, wrong input, try again\")\r\n    } else {\r\n      // your scripting for whatever you want to do with the inputted Object\r\n    }\r\n  </script>\r\n</command>\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I believe that Commands, with an '#object#' Parameter, it is just/only searching the parent room that you're in. So, you got to use the '#text#' Parameter instead, to handle it:</p>\n<p>(you may be able to use the '#object#' Parameter, but I think the built-in stuff for it, will do the Command's 'default' String Attribute, upon not finding the Object within the parent Room Object of the Player Object, so you might have to change the built-in scripting for it... but maybe not too... not tested if your Command's scripting will over-ride the built-in scripting of it)</p>\n<p>(this is also going to include extra coding, credit to Pertex as it's his coding, for handling the person entering in the 'alias', as usually this is what the person playing the game is knowing about, and not the Object's name, which is often hidden, used for the game maker's organization and structure)</p>\n<pre><code>&lt;command name=\"example_command\"&gt;\n  &lt;pattern&gt;example #text_parameter#&lt;/pattern&gt;\n  &lt;script&gt;\n    input_object_variable = GetObject (text_parameter)\n    if (input_object_parameter = null) {\n      foreach (object_variable, AllObjects ()) {\n        if (object_variable.alias = text_parameter) {\n          input_object_variable = object_variable\n        }\n      }\n    }\n    if (input_object_variable = null) {\n      msg (\"Your inputted Object doesn't exist in the game, wrong input, try again\")\n    } else {\n      // your scripting for whatever you want to do with the inputted Object\n    }\n  &lt;/script&gt;\n&lt;/command&gt;\n</code></pre>\n\n",
+      "PostDate": "2017-08-14T01:24:49.1071156Z",
+      "LastEditDate": "2017-08-14T01:25:28.0899996Z",
+      "link": null
+    }
+  ]
+}

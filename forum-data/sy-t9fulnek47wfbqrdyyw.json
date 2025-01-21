@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "sy-t9fulnek47wfbqrdyyw",
+    "ForumId": "10",
+    "Title": "Attribute Variable not working...",
+    "LastUpdated": "2019-11-02T03:31:46.0849761Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "3b7b6ae2-023f-4ca1-ba0c-1d8250df0ff4",
+      "UserId": 442103,
+      "Username": "Boflather",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/631a97b8dd9243d62a417b971dce8dab?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I am making a short maze game as a companion with some programming at my child care centre. They have robots they made that have different ATK, DEF and BATTERY  life. I am running an Initialization script  where they can enter their names and the values of their robots.\r\nUnfortunately,  when I start trying to remove from those values when they get damaged in the first room I get this error: Error running script: Error compiling expression 'player.Battery -1': ArithmeticElement: Operation 'Subtract' is not defined for types 'String' and 'Int32'\r\nFrom what I read this means it doesn't recognize player.Battery. My Initialization looks like this:\r\n\r\nmsg (\"What is your name?\")\r\nget input {\r\n  set (player, \"alias\", result)\r\n  msg (\"What is your Attack power?\")\r\n  get input {\r\n    set (player, \"Attack\", result)\r\n    msg (\"What is your Defense power?\")\r\n    get input {\r\n      set (player, \"Defense\", result)\r\n      msg (\"What is your Battery power?\")\r\n      get input {\r\n        set (player, \"Battery\", result)\r\n        msg (\"Welcome to the maze, \" + player.alias + \"!\")\r\n        MakeExitVisible (ENTER)\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\nI tried adding set variable in front, but it kept deleting \"variable\". I am an incredible noob at this. Any and all help is greatly appreciated. To recap: I want to be able to subtract from values the player enters at the beginning of the game.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I am making a short maze game as a companion with some programming at my child care centre. They have robots they made that have different ATK, DEF and BATTERY  life. I am running an Initialization script  where they can enter their names and the values of their robots.<br>\nUnfortunately,  when I start trying to remove from those values when they get damaged in the first room I get this error: Error running script: Error compiling expression 'player.Battery -1': ArithmeticElement: Operation 'Subtract' is not defined for types 'String' and 'Int32'<br>\nFrom what I read this means it doesn't recognize player.Battery. My Initialization looks like this:</p>\n<p>msg (\"What is your name?\")<br>\nget input {<br>\nset (player, \"alias\", result)<br>\nmsg (\"What is your Attack power?\")<br>\nget input {<br>\nset (player, \"Attack\", result)<br>\nmsg (\"What is your Defense power?\")<br>\nget input {<br>\nset (player, \"Defense\", result)<br>\nmsg (\"What is your Battery power?\")<br>\nget input {<br>\nset (player, \"Battery\", result)<br>\nmsg (\"Welcome to the maze, \" + player.alias + \"!\")<br>\nMakeExitVisible (ENTER)<br>\n}<br>\n}<br>\n}<br>\n}</p>\n<p>I tried adding set variable in front, but it kept deleting \"variable\". I am an incredible noob at this. Any and all help is greatly appreciated. To recap: I want to be able to subtract from values the player enters at the beginning of the game.</p>\n\n",
+      "PostDate": "2019-11-02T03:31:46.0849761Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "89649087-6987-44d1-9b83-c464fea2a522",
+      "UserId": 277074,
+      "Username": "Dcoder",
+      "AvatarUrl": "https://i.imgur.com/O07mlRtb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "By default, ```result``` has a string value.  But you want an integer value for ```player.Battery```.  ```ToInt(result)``` will convert a string (e.g., \"five\") into the integer ```5```.  But what if the player inputs something that is not an integer?  ```IsInt(result)``` can test for that.\r\n\r\nTry this:\r\n```\r\nmsg (\"What is your Battery power?\")\r\nget input {\r\n  if (IsInt(result)) {     // if \"result\" can be converted to integer, then equals \"true\"\r\n    if (ToInt(result) < 0) {     // if \"result\" is a negative integer...\r\n      msg (\"Please enter a positive number...\")\r\n    }\r\n    else {\r\n      player.Battery = ToInt(result)\r\n    }\r\n  }\r\n  else {     // \"result\" is a string that cannot be converted to an integer\r\n    msg (\"Please enter a whole number...\")\r\n  }\r\n}\r\n```\r\nOh, and official documentation for all the Quest functions:  http://docs.textadventures.co.uk/quest/functions/",
+      "EditableFormat": "markdown",
+      "HTML": "<p>By default, <code>result</code> has a string value.  But you want an integer value for <code>player.Battery</code>.  <code>ToInt(result)</code> will convert a string (e.g., \"five\") into the integer <code>5</code>.  But what if the player inputs something that is not an integer?  <code>IsInt(result)</code> can test for that.</p>\n<p>Try this:</p>\n<pre><code>msg (\"What is your Battery power?\")\nget input {\n  if (IsInt(result)) {     // if \"result\" can be converted to integer, then equals \"true\"\n    if (ToInt(result) &lt; 0) {     // if \"result\" is a negative integer...\n      msg (\"Please enter a positive number...\")\n    }\n    else {\n      player.Battery = ToInt(result)\n    }\n  }\n  else {     // \"result\" is a string that cannot be converted to an integer\n    msg (\"Please enter a whole number...\")\n  }\n}\n</code></pre>\n<p>Oh, and official documentation for all the Quest functions:  http://docs.textadventures.co.uk/quest/functions/</p>\n\n",
+      "PostDate": "2019-11-02T06:01:15.7914227Z",
+      "LastEditDate": "2019-11-02T06:02:43.1243665Z",
+      "link": null
+    },
+    {
+      "PostId": "cc5f5182-963f-48ec-a42c-ed71986b18ca",
+      "UserId": 442103,
+      "Username": "Boflather",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/631a97b8dd9243d62a417b971dce8dab?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks Dcoder! \r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks Dcoder!</p>\n\n",
+      "PostDate": "2019-11-02T15:55:59.5439216Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "Topic": {
+    "TopicId": "3672",
+    "ForumId": "10",
+    "Title": "Conversations, Script Dictionaries, And The Ask/Tell Feature",
+    "LastUpdated": "2013-05-12T23:44:50+01:00",
+    "ReplyCount": 9
+  },
+  "Posts": [
+    {
+      "PostId": "24488",
+      "UserId": 0,
+      "Username": "Liam315",
+      "UserAvatar": null,
+      "UserGravatar": "ded290a24d340d761d42c897d08111aa",
+      "EditableText": "Me again, I'm starting to implement my conversation code and I'm having trouble with using script dictionaries which I haven't used before.\n\nWhat I want to do is simplify the ask/tell system by condensing both into one command &quot;talk to [character] about [topic],&quot; which I have done by editing the commands. Ask and Tell no longer exist, but the new &quot;talk to&quot; command still calls the function &quot;DoAskTell&quot; so that I can use the ask tab to organise all the scripts for the different topics.\n\nSo the expression for the command is-\n\n^talk to (?&lt;object&gt;.*) about (?&lt;text&gt;.*)$\n\nWhich runs the script-\n[code:6vozckl8]DoAskTell (object, text, &quot;ask&quot;, &quot;askdefault&quot;, &quot;DefaultAsk&quot;)[/code:6vozckl8]\n\nThat all works fine.\n\nIn the interest of keeping things simple, I also want to include responses to the command &quot;talk to (character)&quot; used by itself without any topic. What I am trying to do, is include the topic key &quot;default&quot; so that typing &quot;talk to (character)&quot; is the same as typing &quot;talk to (character) about default.&quot; The point of this is to keep the conversation responses in one place (the ask/tell tab) rather than adding a verb for every character.\n\nPutting it together in one command I have-\n\n^talk to (?&lt;object&gt;.*) about (?&lt;text&gt;.*)$|^talk to (?&lt;object&gt;.*)$\n\n[code:6vozckl8]if (not IsDefined(&quot;text&quot;)) {\n  if (HasAttribute(object, &quot;ask&quot;)) {\n    invoke (object&#46;ask, default) -----&gt; ?\n    do (object, &quot;ask&quot;, default) ----&gt; ?\n  }\n  else {\n    msg (&quot;There's no point talking to inanimate objects&#46;&quot;)\n  }\n}\nelse {\n  DoAskTell (object, text, &quot;ask&quot;, &quot;askdefault&quot;, &quot;DefaultAsk&quot;)\n}[/code:6vozckl8]\n\nAll of the code works fine except for the lines marked with ----&gt;? (I included both to show what I'd tried). From reading the forum I got the impression that you need to use invoke rather than do for script dictionaries, but I can't get either to work and run the script I've set to the key &quot;default.&quot;",
+      "EditableFormat": "bbcode",
+      "HTML": "Me again, I'm starting to implement my conversation code and I'm having trouble with using script dictionaries which I haven't used before.<br/><br/>What I want to do is simplify the ask/tell system by condensing both into one command &quot;talk to [character] about [topic],&quot; which I have done by editing the commands. Ask and Tell no longer exist, but the new &quot;talk to&quot; command still calls the function &quot;DoAskTell&quot; so that I can use the ask tab to organise all the scripts for the different topics.<br/><br/>So the expression for the command is-<br/><br/>^talk to (?&lt;object&gt;.*) about (?&lt;text&gt;.*)$<br/><br/>Which runs the script-<br/><pre><code>DoAskTell (object, text, &quot;ask&quot;, &quot;askdefault&quot;, &quot;DefaultAsk&quot;)</code></pre><br/><br/>That all works fine.<br/><br/>In the interest of keeping things simple, I also want to include responses to the command &quot;talk to (character)&quot; used by itself without any topic. What I am trying to do, is include the topic key &quot;default&quot; so that typing &quot;talk to (character)&quot; is the same as typing &quot;talk to (character) about default.&quot; The point of this is to keep the conversation responses in one place (the ask/tell tab) rather than adding a verb for every character.<br/><br/>Putting it together in one command I have-<br/><br/>^talk to (?&lt;object&gt;.*) about (?&lt;text&gt;.*)$|^talk to (?&lt;object&gt;.*)$<br/><br/><pre><code>if (not IsDefined(&quot;text&quot;)) {<br/>  if (HasAttribute(object, &quot;ask&quot;)) {<br/>    invoke (object&#46;ask, default) -----&gt; ?<br/>    do (object, &quot;ask&quot;, default) ----&gt; ?<br/>  }<br/>  else {<br/>    msg (&quot;There's no point talking to inanimate objects&#46;&quot;)<br/>  }<br/>}<br/>else {<br/>  DoAskTell (object, text, &quot;ask&quot;, &quot;askdefault&quot;, &quot;DefaultAsk&quot;)<br/>}</code></pre><br/><br/>All of the code works fine except for the lines marked with ----&gt;? (I included both to show what I'd tried). From reading the forum I got the impression that you need to use invoke rather than do for script dictionaries, but I can't get either to work and run the script I've set to the key &quot;default.&quot;",
+      "PostDate": "2013-05-09T11:11:07+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24489",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "Try putting &quot;default&quot; in quotes, as there's no object or variable called default.\n\nAlso you probably don't need to combine the two commands as one. You can set up a separate command &quot;talk to #object#&quot; - it won't clash with &quot;talk to ... about ...&quot;.",
+      "EditableFormat": "bbcode",
+      "HTML": "Try putting &quot;default&quot; in quotes, as there's no object or variable called default.<br/><br/>Also you probably don't need to combine the two commands as one. You can set up a separate command &quot;talk to #object#&quot; - it won't clash with &quot;talk to ... about ...&quot;.",
+      "PostDate": "2013-05-09T11:14:39+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24490",
+      "UserId": 0,
+      "Username": "Liam315",
+      "UserAvatar": null,
+      "UserGravatar": "ded290a24d340d761d42c897d08111aa",
+      "EditableText": "Putting default in quotes doesn't help, I still get the same error message.\n\nFor invoke:\nError compiling expression 'object.ask': RootExpressionElement: Cannot convert type 'QuestDictionary`1' to expression result of 'IScript'\n\nFor do:\nError running script&#058; Error compiling expression '&quot;default&quot;': RootExpressionElement: Cannot convert type 'String' to expression result of 'IDictionary'\n\n\n(I know I don't need to join the commands but I only just learned about IsDefined and wanted to experiment with it.)",
+      "EditableFormat": "bbcode",
+      "HTML": "Putting default in quotes doesn't help, I still get the same error message.<br/><br/>For invoke:<br/>Error compiling expression 'object.ask': RootExpressionElement: Cannot convert type 'QuestDictionary`1' to expression result of 'IScript'<br/><br/>For do:<br/>Error running script&#058; Error compiling expression '&quot;default&quot;': RootExpressionElement: Cannot convert type 'String' to expression result of 'IDictionary'<br/><br/><br/>(I know I don't need to join the commands but I only just learned about IsDefined and wanted to experiment with it.)",
+      "PostDate": "2013-05-09T12:03:57+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24491",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "All the information you need is in the error message. For the &quot;invoke&quot; error, you're passing an entire dictionary, but the function only expects a script. So, you need to get the script item out of the dictionary before you can invoke it - using DictionaryItem.\n\nFor &quot;do&quot;, you're passing in a string &quot;default&quot;, but the three parameter version of &quot;do&quot; expects a dictionary (of parameters) as the third parameter. <!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/Do\">http://quest5.net/wiki/Do</a><!-- m --> - I think you don't want &quot;do&quot; for this anyway, as you're not running a script attribute.",
+      "EditableFormat": "bbcode",
+      "HTML": "All the information you need is in the error message. For the &quot;invoke&quot; error, you're passing an entire dictionary, but the function only expects a script. So, you need to get the script item out of the dictionary before you can invoke it - using DictionaryItem.<br/><br/>For &quot;do&quot;, you're passing in a string &quot;default&quot;, but the three parameter version of &quot;do&quot; expects a dictionary (of parameters) as the third parameter. <!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/Do\">http://quest5.net/wiki/Do</a><!-- m --> - I think you don't want &quot;do&quot; for this anyway, as you're not running a script attribute.",
+      "PostDate": "2013-05-09T12:35:28+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24492",
+      "UserId": 0,
+      "Username": "Liam315",
+      "UserAvatar": null,
+      "UserGravatar": "ded290a24d340d761d42c897d08111aa",
+      "EditableText": "Thanks Alex! Got it working. I'd tried using ScriptDictionaryItem before but couldn't because I didn't understand how to refer to the dictionary, that it is actually object.ask seems so obvious in hindsight.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks Alex! Got it working. I'd tried using ScriptDictionaryItem before but couldn't because I didn't understand how to refer to the dictionary, that it is actually object.ask seems so obvious in hindsight.",
+      "PostDate": "2013-05-09T13:16:12+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24533",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "Has the syntax~format changed for dictionaries? If not, then could someone explain how to get &quot;ScriptDictionaryItem&quot; to be recognized as a command, as it wants to read it as a function instead (which doesn't exist and thus the error message). I tried putting msg before it, so it looks like this: msg (ScriptDictionaryItem (object.scriptdictionary,&quot;key&quot;), which causes a seemingly strange result:\n\nScript&#058; msg (&quot;my_scriptdictionary's_key's_script&quot;)\n\nI'm just started working on trying to create a &quot;pedia&quot;, but am having trouble with the dictionary coding, sighs.\n\nhere's my code, as maybe I'm completely not setting up the code correctly:\n\n[code:ox91yqgm]&lt;asl version=&quot;540&quot;&gt;\n  &lt;include ref=&quot;English&#46;aslx&quot;/&gt;\n  &lt;include ref=&quot;Core&#46;aslx&quot;/&gt;\n  &lt;game name=&quot;HK Testing Stuff&quot;&gt;\n    &lt;gameid&gt;85a24707-e27e-4071-b111-1d37d7f6f0d1&lt;/gameid&gt;\n    &lt;version&gt;1&#46;0&lt;/version&gt;\n    &lt;firstpublished&gt;2013&lt;/firstpublished&gt;\n  &lt;/game&gt;\n  &lt;object name=&quot;room&quot;&gt;\n    &lt;inherit name=&quot;editor_room&quot; /&gt;\n    &lt;object name=&quot;player&quot;&gt;\n      &lt;inherit name=&quot;editor_object&quot; /&gt;\n      &lt;inherit name=&quot;editor_player&quot; /&gt;\n    &lt;/object&gt;\n  &lt;/object&gt;\n  &lt;object name=&quot;species_structure&quot;&gt;\n    &lt;species_scriptdictionary type=&quot;scriptdictionary&quot;&gt;\n      &lt;item key=&quot;human_species&quot;&gt;\n        msg (&quot;Humans are a sentient species blah blah blah&quot;)\n      &lt;/item&gt;\n    &lt;/species_scriptdictionary&gt;\n  &lt;/object&gt;\n  &lt;command name=&quot;pedia_command&quot;&gt;\n    &lt;pattern&gt;pedia&lt;/pattern&gt;\n    &lt;script&gt;\n      pedia_function\n    &lt;/script&gt;\n  &lt;/command&gt;\n  &lt;function name=&quot;pedia_function&quot;&gt;\n    show menu (&quot;What category?&quot;, split (&quot;species&quot;,&quot;;&quot;), true) {\n      switch (result) {\n        case (&quot;species&quot;) {\n          show menu (&quot;What species?&quot;, split (&quot;humans&quot;,&quot;;&quot;), true) {\n            switch (result) {\n              case (&quot;humans&quot;) {\n                ScriptDictionaryItem (species_structure&#46;species_scriptdictionary,&quot;human_species&quot;)\n              }\n            }\n          }\n        }\n      }\n    }\n  &lt;/function&gt;\n&lt;/asl&gt;[/code:ox91yqgm]",
+      "EditableFormat": "bbcode",
+      "HTML": "Has the syntax~format changed for dictionaries? If not, then could someone explain how to get &quot;ScriptDictionaryItem&quot; to be recognized as a command, as it wants to read it as a function instead (which doesn't exist and thus the error message). I tried putting msg before it, so it looks like this: msg (ScriptDictionaryItem (object.scriptdictionary,&quot;key&quot;), which causes a seemingly strange result:<br/><br/>Script&#058; msg (&quot;my_scriptdictionary's_key's_script&quot;)<br/><br/>I'm just started working on trying to create a &quot;pedia&quot;, but am having trouble with the dictionary coding, sighs.<br/><br/>here's my code, as maybe I'm completely not setting up the code correctly:<br/><br/><pre><code>&lt;asl version=&quot;540&quot;&gt;<br/>  &lt;include ref=&quot;English&#46;aslx&quot;/&gt;<br/>  &lt;include ref=&quot;Core&#46;aslx&quot;/&gt;<br/>  &lt;game name=&quot;HK Testing Stuff&quot;&gt;<br/>    &lt;gameid&gt;85a24707-e27e-4071-b111-1d37d7f6f0d1&lt;/gameid&gt;<br/>    &lt;version&gt;1&#46;0&lt;/version&gt;<br/>    &lt;firstpublished&gt;2013&lt;/firstpublished&gt;<br/>  &lt;/game&gt;<br/>  &lt;object name=&quot;room&quot;&gt;<br/>    &lt;inherit name=&quot;editor_room&quot; /&gt;<br/>    &lt;object name=&quot;player&quot;&gt;<br/>      &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>      &lt;inherit name=&quot;editor_player&quot; /&gt;<br/>    &lt;/object&gt;<br/>  &lt;/object&gt;<br/>  &lt;object name=&quot;species_structure&quot;&gt;<br/>    &lt;species_scriptdictionary type=&quot;scriptdictionary&quot;&gt;<br/>      &lt;item key=&quot;human_species&quot;&gt;<br/>        msg (&quot;Humans are a sentient species blah blah blah&quot;)<br/>      &lt;/item&gt;<br/>    &lt;/species_scriptdictionary&gt;<br/>  &lt;/object&gt;<br/>  &lt;command name=&quot;pedia_command&quot;&gt;<br/>    &lt;pattern&gt;pedia&lt;/pattern&gt;<br/>    &lt;script&gt;<br/>      pedia_function<br/>    &lt;/script&gt;<br/>  &lt;/command&gt;<br/>  &lt;function name=&quot;pedia_function&quot;&gt;<br/>    show menu (&quot;What category?&quot;, split (&quot;species&quot;,&quot;;&quot;), true) {<br/>      switch (result) {<br/>        case (&quot;species&quot;) {<br/>          show menu (&quot;What species?&quot;, split (&quot;humans&quot;,&quot;;&quot;), true) {<br/>            switch (result) {<br/>              case (&quot;humans&quot;) {<br/>                ScriptDictionaryItem (species_structure&#46;species_scriptdictionary,&quot;human_species&quot;)<br/>              }<br/>            }<br/>          }<br/>        }<br/>      }<br/>    }<br/>  &lt;/function&gt;<br/>&lt;/asl&gt;</code></pre>",
+      "PostDate": "2013-05-12T04:58:50+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24534",
+      "UserId": 0,
+      "Username": "Sora574",
+      "UserAvatar": null,
+      "UserGravatar": "5691c27a3aa3e56e879a3f8545b28ef2",
+      "EditableText": "@HK:\nAre you trying to run the script from the dictionary?\nIf so, you should be using\n[code:3dwhxwh9]invoke (ScriptDictionaryItem (species_structure&#46;species_scriptdictionary,&quot;human_species&quot;))[/code:3dwhxwh9]\nas this runs the script. Keep in mind that ScriptDictionaryItem actually is just a glorified function with the return value of a script, so trying to call it without using it would be the same as:\n[code:3dwhxwh9]game&#46;script =&gt; {\n  msg (blah)\n}\ngame&#46;script[/code:3dwhxwh9]\n\nAs for putting it into a message, the 'Script&#058; msg (&quot;my_scriptdictionary's_key's_script&quot;)' message happens because something tells Quest that what you're trying to get is a script, and then it says what the script is (this is most likely FLEE or something. I don't know, I'm still learning, I might be wrong about it even)\nWhen you try to put that into a message, it's almost the same as using a 'ToString()'... Does that make sense?",
+      "EditableFormat": "bbcode",
+      "HTML": "@HK:<br/>Are you trying to run the script from the dictionary?<br/>If so, you should be using<br/><pre><code>invoke (ScriptDictionaryItem (species_structure&#46;species_scriptdictionary,&quot;human_species&quot;))</code></pre><br/>as this runs the script. Keep in mind that ScriptDictionaryItem actually is just a glorified function with the return value of a script, so trying to call it without using it would be the same as:<br/><pre><code>game&#46;script =&gt; {<br/>  msg (blah)<br/>}<br/>game&#46;script</code></pre><br/><br/>As for putting it into a message, the 'Script&#058; msg (&quot;my_scriptdictionary's_key's_script&quot;)' message happens because something tells Quest that what you're trying to get is a script, and then it says what the script is (this is most likely FLEE or something. I don't know, I'm still learning, I might be wrong about it even)<br/>When you try to put that into a message, it's almost the same as using a 'ToString()'... Does that make sense?",
+      "PostDate": "2013-05-12T05:19:34+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24535",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "This brings us back to expressions: there are certain functions in Quest which are not functions in the same sense as functions we create with a &quot;&lt;function&gt;&quot; tag. These are &quot;expression&quot; functions, and they can only be used in an expression. (In other words, they are hooked into the expression parser, not into Quest in general.) These are typically built-in Quest functions that return a value. Since they return a value, they are expected to be used in the context of an expression (that is, an assignment operation - like: script = ScriptDictionaryItem(dict, &quot;lookat&quot;)). They are simply not visible when called otherwise.\n\nBesides ScriptDictionaryItem, the same goes for functions like HasString, TypeOf, NewList, etc. Even functions like SafeXML and ShowMenu *must* be used in an expression (typically an assignment, if, switch statement, etc).\n\n(If it would be useful, I could start up another thread that lists these. But basically, if a function returns a value, you're pretty much expected to use it somehow.)\n\nAs Sora said, ScriptDictionaryItem returns a script for you to invoke or do something else with (assign to an attribute, pass to some function, etc). And he explained how to call the script (using &quot;invoke&quot;). I hope the above sheds some light on the error message you got.",
+      "EditableFormat": "bbcode",
+      "HTML": "This brings us back to expressions: there are certain functions in Quest which are not functions in the same sense as functions we create with a &quot;&lt;function&gt;&quot; tag. These are &quot;expression&quot; functions, and they can only be used in an expression. (In other words, they are hooked into the expression parser, not into Quest in general.) These are typically built-in Quest functions that return a value. Since they return a value, they are expected to be used in the context of an expression (that is, an assignment operation - like: script = ScriptDictionaryItem(dict, &quot;lookat&quot;)). They are simply not visible when called otherwise.<br/><br/>Besides ScriptDictionaryItem, the same goes for functions like HasString, TypeOf, NewList, etc. Even functions like SafeXML and ShowMenu *must* be used in an expression (typically an assignment, if, switch statement, etc).<br/><br/>(If it would be useful, I could start up another thread that lists these. But basically, if a function returns a value, you're pretty much expected to use it somehow.)<br/><br/>As Sora said, ScriptDictionaryItem returns a script for you to invoke or do something else with (assign to an attribute, pass to some function, etc). And he explained how to call the script (using &quot;invoke&quot;). I hope the above sheds some light on the error message you got.",
+      "PostDate": "2013-05-12T10:21:18+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24537",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "thank you to both of you, I understand now! (my apologizes for not having tried &quot;invoke&quot; yet, and only having tried using the &quot;msg&quot; instead)\n\nwould these, get input ~ show menu ~ etc, also be &quot;expression functions&quot; ??? or are &quot;expression functions&quot; literally (I'm not sure if this would be correct usage of literally, lol) an (or used within an) expression, such as: (some label) = ScriptDictionaryItem (scriptdictionary,&quot;key item's script&quot;, which I would~could~maybe then use the &quot;some label&quot; as the &quot;call function&quot; or not (wrong format or usage) ???\n\nI had assumed that since it was a function which returned the dictionary's item key's script, I didn't need to apply any command to~upon it, not realizing that there's the ' &lt;function name=&quot;blah&quot;&gt; ' and &quot;expression functions&quot;.\n\nit still seems a bit redundant though (probably in my code ignorance), as couldn't you just then &quot;invoke the script itself&quot;, why then the reason or purpose of having a script dictionary, if there's not a quest function-command that works directly upon it, as I had wrongly thought the &quot;scriptdictionaryitem&quot; had done ???",
+      "EditableFormat": "bbcode",
+      "HTML": "thank you to both of you, I understand now! (my apologizes for not having tried &quot;invoke&quot; yet, and only having tried using the &quot;msg&quot; instead)<br/><br/>would these, get input ~ show menu ~ etc, also be &quot;expression functions&quot; ??? or are &quot;expression functions&quot; literally (I'm not sure if this would be correct usage of literally, lol) an (or used within an) expression, such as: (some label) = ScriptDictionaryItem (scriptdictionary,&quot;key item's script&quot;, which I would~could~maybe then use the &quot;some label&quot; as the &quot;call function&quot; or not (wrong format or usage) ???<br/><br/>I had assumed that since it was a function which returned the dictionary's item key's script, I didn't need to apply any command to~upon it, not realizing that there's the ' &lt;function name=&quot;blah&quot;&gt; ' and &quot;expression functions&quot;.<br/><br/>it still seems a bit redundant though (probably in my code ignorance), as couldn't you just then &quot;invoke the script itself&quot;, why then the reason or purpose of having a script dictionary, if there's not a quest function-command that works directly upon it, as I had wrongly thought the &quot;scriptdictionaryitem&quot; had done ???",
+      "PostDate": "2013-05-12T23:33:53+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24538",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "&quot;get input&quot; and &quot;show menu&quot; are not, as you would never say &quot;something = get input { ... }&quot;. Rather, you just say &quot;get input {...}&quot; and the result shows up in the script.\n\nWhat a script dictionary gives you (as with any dictionary) is a level of indirection; it allows you to look up a script via a name, as opposed to directly. That means that different scripts can be assigned to the name, even within the course of a single program, which means that the code invoking the script doesn't have to know what the script will be, and it can change dynamically if desired. What you do with the script once you look it up (invoke it, assign it to an attribute, pass it to a function, etc) is up to you, just as is the case with any other sort of variable you look up. (Imagine if you had a string dictionary, and when you called StringDictionaryItem, it just automatically printed the item instead of returning it for you to decide what needed to be done with it. It would not be very useful.)",
+      "EditableFormat": "bbcode",
+      "HTML": "&quot;get input&quot; and &quot;show menu&quot; are not, as you would never say &quot;something = get input { ... }&quot;. Rather, you just say &quot;get input {...}&quot; and the result shows up in the script.<br/><br/>What a script dictionary gives you (as with any dictionary) is a level of indirection; it allows you to look up a script via a name, as opposed to directly. That means that different scripts can be assigned to the name, even within the course of a single program, which means that the code invoking the script doesn't have to know what the script will be, and it can change dynamically if desired. What you do with the script once you look it up (invoke it, assign it to an attribute, pass it to a function, etc) is up to you, just as is the case with any other sort of variable you look up. (Imagine if you had a string dictionary, and when you called StringDictionaryItem, it just automatically printed the item instead of returning it for you to decide what needed to be done with it. It would not be very useful.)",
+      "PostDate": "2013-05-12T23:44:50+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "Topic": {
+    "TopicId": "64uquehqbkc6xddmvyxcvq",
+    "ForumId": "10",
+    "Title": "Making An Area Accessible ONLY If Wearing A Certain Item",
+    "LastUpdated": "2020-08-18T02:52:21.2816658Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "58419353-cea5-4ba1-9f11-8d63106afca4",
+      "UserId": 496536,
+      "Username": "fiveforty",
+      "AvatarUrl": "https://i.imgur.com/gUI8CFcb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Is it possible to have someone not be able to access an area unless they are wearing something specific?\r\n\r\nFor example, you can't walk NORTH into the water unless you are wearing the SCUBA SUIT.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Is it possible to have someone not be able to access an area unless they are wearing something specific?</p>\n<p>For example, you can't walk NORTH into the water unless you are wearing the SCUBA SUIT.</p>\n\n",
+      "PostDate": "2020-08-18T02:52:21.2816658Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "82acbeb1-d02a-43a9-a11d-ecbbb813474e",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Yes.\r\n\r\nYou need to think about the problem like a programmer. So here's the thought process that leads me to a solution.\r\n\r\nWhen do you want this code to run? It seems to be when the player tries to enter a particular area.\r\n\r\nYou *could* use the \"on entering the room\" script for the water, but that happens after the player moves, so you'd have to let them enter and then move them back again.\r\n\r\nSo you'd have a script that checks if the player is wearing the scuba suit, and if not it returns them to the beach. It would look something like:\r\n```\r\nif (not GetBoolean (SCUBA SUIT, \"worn\")) {\r\n  msg (\"You try to swim out, but you have to give up and go back because the water is so cold. Maybe you need proper equipment.\")\r\n  MoveObject (game.pov, beach)\r\n}\r\n```\r\n(in this version, the player enters the water and is then immediately moved back. It has some problems, especially if either room has other enter/exit scripts, but it can be useful)\r\nIn this one, `SCUBA SUIT` and `beach` are the names of objects, you'll need to change them to make them match what your object is actually called. (name, not alias. Code uses the name, the player sees the alias)\r\n\r\n**OR** you could put a script on the exit that leads into the water. Every exit has a place where you can add a script, so that script is run instead of just moving the player. In this case, the script would look like:\r\n```\r\nif (GetBoolean (SCUBA SUIT, \"worn\")) {\r\n  msg (\"You swim out into the water.\")\r\n  MoveObject (game.pov, this.to)\r\n}\r\nelse {\r\n  msg (\"The water's too cold to swim out without a proper suit.\")\r\n}\r\n```\r\n(you don't need to use the room name in the code this time; it uses the special attributes `game.pov` to mean the player, and `this.to` to mean the exit's destination)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Yes.</p>\n<p>You need to think about the problem like a programmer. So here's the thought process that leads me to a solution.</p>\n<p>When do you want this code to run? It seems to be when the player tries to enter a particular area.</p>\n<p>You <em>could</em> use the \"on entering the room\" script for the water, but that happens after the player moves, so you'd have to let them enter and then move them back again.</p>\n<p>So you'd have a script that checks if the player is wearing the scuba suit, and if not it returns them to the beach. It would look something like:</p>\n<pre><code>if (not GetBoolean (SCUBA SUIT, \"worn\")) {\n  msg (\"You try to swim out, but you have to give up and go back because the water is so cold. Maybe you need proper equipment.\")\n  MoveObject (game.pov, beach)\n}\n</code></pre>\n<p>(in this version, the player enters the water and is then immediately moved back. It has some problems, especially if either room has other enter/exit scripts, but it can be useful)<br>\nIn this one, <code>SCUBA SUIT</code> and <code>beach</code> are the names of objects, you'll need to change them to make them match what your object is actually called. (name, not alias. Code uses the name, the player sees the alias)</p>\n<p><strong>OR</strong> you could put a script on the exit that leads into the water. Every exit has a place where you can add a script, so that script is run instead of just moving the player. In this case, the script would look like:</p>\n<pre><code>if (GetBoolean (SCUBA SUIT, \"worn\")) {\n  msg (\"You swim out into the water.\")\n  MoveObject (game.pov, this.to)\n}\nelse {\n  msg (\"The water's too cold to swim out without a proper suit.\")\n}\n</code></pre>\n<p>(you don't need to use the room name in the code this time; it uses the special attributes <code>game.pov</code> to mean the player, and <code>this.to</code> to mean the exit's destination)</p>\n\n",
+      "PostDate": "2020-08-18T12:35:45.645011Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

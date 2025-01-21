@@ -1,0 +1,25 @@
+{
+  "Topic": {
+    "TopicId": "6--o2brrhuy4xyf5q-lqdq",
+    "ForumId": "10",
+    "Title": "Maybe useful - preventing infinite recursion",
+    "LastUpdated": "2017-10-05T11:23:16.8161805Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "b3756b36-4cde-46b5-88e0-a44497ea8575",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi!\r\n\r\nI've been playing around (again) with my random forest script; adding more realism. Now, I've got all the exits set up so that changing their parent or destination will adjust the exit in the other direction too; and will call a `changedexits` script on the rooms at either side.\r\n\r\nNow, I've got a room whose `changedexits` script can move its exits around; calling the scripts on its neighbours. But if two of these rooms sit next to each other, they could end up calling each other recursively. But I found what I think is a fairly neat way to arrange it so that it doesn't call itself more than once.\r\n\r\nIn the initialisation script for a certain room:\r\n```\r\nthis.realchangedexits => {\r\n  this.changedexits => {\r\n    debug (\" * skipping \"+this.name+\".changedexits - called recursively\")\r\n  }\r\n\r\n  // do some stuff\r\n  // ...\r\n  // move around my neighbours' exits\r\n  // ...\r\n  // do some more stuff\r\n  // update my description based on my current exits\r\n  // ...\r\n\r\n  this.changedexits = this.realchangedexits\r\n}\r\ndo (this, \"realchangedexits\")\r\n```\r\n\r\nI know I could do this by setting a boolean flag and nesting the whole function in an 'if' block; but this way seems a bit neater. And also reduces (slightly) the problem of code being unmanageable in the GUI view due to too many levels of indentation (and also seems to render slightly faster in the web editor, so less of my editing time is spent waiting for the thing to load)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi!</p>\n<p>I've been playing around (again) with my random forest script; adding more realism. Now, I've got all the exits set up so that changing their parent or destination will adjust the exit in the other direction too; and will call a <code>changedexits</code> script on the rooms at either side.</p>\n<p>Now, I've got a room whose <code>changedexits</code> script can move its exits around; calling the scripts on its neighbours. But if two of these rooms sit next to each other, they could end up calling each other recursively. But I found what I think is a fairly neat way to arrange it so that it doesn't call itself more than once.</p>\n<p>In the initialisation script for a certain room:</p>\n<pre><code>this.realchangedexits =&gt; {\n  this.changedexits =&gt; {\n    debug (\" * skipping \"+this.name+\".changedexits - called recursively\")\n  }\n\n  // do some stuff\n  // ...\n  // move around my neighbours' exits\n  // ...\n  // do some more stuff\n  // update my description based on my current exits\n  // ...\n\n  this.changedexits = this.realchangedexits\n}\ndo (this, \"realchangedexits\")\n</code></pre>\n<p>I know I could do this by setting a boolean flag and nesting the whole function in an 'if' block; but this way seems a bit neater. And also reduces (slightly) the problem of code being unmanageable in the GUI view due to too many levels of indentation (and also seems to render slightly faster in the web editor, so less of my editing time is spent waiting for the thing to load)</p>\n\n",
+      "PostDate": "2017-10-05T11:23:16.8161805Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

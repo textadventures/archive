@@ -1,0 +1,63 @@
+{
+  "Topic": {
+    "TopicId": "ph7zk-ycvewcei9nltph-a",
+    "ForumId": "24",
+    "Title": "Manual saving - how best to accomplish?",
+    "LastUpdated": "2017-04-28T09:18:20.2016331Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "1f99ff71-9fb4-4336-a120-a77be26fefaf",
+      "UserId": 262022,
+      "Username": "thetruespin",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/dc591017d34e833aceb21f01abe265e1?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I have disabled automatic saving in Squiffy by commenting our the various calls to the save function in the main Squiffy template. \r\n\r\nI'd like to manually call the save function at specific points in my story, but I'm running into the following problem.\r\n\r\nWhilst I can call the save function using...\r\n\r\n    squiffy.story.save();\r\n\r\nIt doesn't really work because  (I think) my command is executed before the new section text is loaded, meaning that the previous passage is saved instead, with all links disabled.\r\n\r\nNow as I see it I have two options, one of which I'm not sure will work.\r\n\r\n<b>Option one:</b> Try and delay the calling of the save function using setTimeout\r\n\r\n    setTimeout(function() { squiffy.story.save(); }, 1000);\r\n\r\nI'm wondering whether this might solve the issue of calling the save function before the new section text has been loaded? I haven't been able to try it yet but I have my suspicions this might not work.\r\n\r\n<b>Option two:</b>  Get down and dirty with the main Squiffy template file, and add some conditional logic to the save function so it only triggers when certain conditions are met - a simple boolean variable would suffice. That way I can set the variable to on for the passages where I want Squiffy to save. \r\n\r\nAny other suggestions?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I have disabled automatic saving in Squiffy by commenting our the various calls to the save function in the main Squiffy template.</p>\n<p>I'd like to manually call the save function at specific points in my story, but I'm running into the following problem.</p>\n<p>Whilst I can call the save function using...</p>\n<pre><code>squiffy.story.save();\n</code></pre>\n<p>It doesn't really work because  (I think) my command is executed before the new section text is loaded, meaning that the previous passage is saved instead, with all links disabled.</p>\n<p>Now as I see it I have two options, one of which I'm not sure will work.</p>\n<p><b>Option one:</b> Try and delay the calling of the save function using setTimeout</p>\n<pre><code>setTimeout(function() { squiffy.story.save(); }, 1000);\n</code></pre>\n<p>I'm wondering whether this might solve the issue of calling the save function before the new section text has been loaded? I haven't been able to try it yet but I have my suspicions this might not work.</p>\n<p><b>Option two:</b>  Get down and dirty with the main Squiffy template file, and add some conditional logic to the save function so it only triggers when certain conditions are met - a simple boolean variable would suffice. That way I can set the variable to on for the passages where I want Squiffy to save.</p>\n<p>Any other suggestions?</p>\n\n",
+      "PostDate": "2017-04-28T09:18:20.2016331Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42bf91fe-0d22-4850-8cb9-08702671cdd7",
+      "UserId": 262022,
+      "Username": "thetruespin",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/dc591017d34e833aceb21f01abe265e1?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Option one seems to have worked. It's actually a good workaround generally to execute Javascript post-section load.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Option one seems to have worked. It's actually a good workaround generally to execute Javascript post-section load.</p>\n\n",
+      "PostDate": "2017-04-28T19:50:44.5512962Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "43333353-2cbd-4f87-9376-3c09f46e8c3d",
+      "UserId": 262022,
+      "Username": "thetruespin",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/dc591017d34e833aceb21f01abe265e1?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hmmm, this sort of works, but there remains an issue. I thought the save function dealt with saving in it's entirety, but looking at the code it only appears to deal with passage text. Attributes are saved separately, seemingly after each modification. So a real danger that things could become out of sync. \r\n\r\nFurther modifications needed. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hmmm, this sort of works, but there remains an issue. I thought the save function dealt with saving in it's entirety, but looking at the code it only appears to deal with passage text. Attributes are saved separately, seemingly after each modification. So a real danger that things could become out of sync.</p>\n<p>Further modifications needed.</p>\n\n",
+      "PostDate": "2017-04-30T07:15:35.4959846Z",
+      "LastEditDate": "2017-04-30T10:24:17.6974529Z"
+    },
+    {
+      "PostId": "eaee60fd-2e63-4f89-96bb-95d443cc5f85",
+      "UserId": 262022,
+      "Username": "thetruespin",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/dc591017d34e833aceb21f01abe265e1?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "So I think I've worked out a solution. A re-write of the core Squiffy functions would be too time consuming but this is a reasonable workaround. \r\n\r\nI'm not going to go into too much detail as I appreciate very few people will be interested. But in a nutshell I'm doing the following:\r\n\r\nSince I'm saving section progress at specific points, I need a way of capturing all my attribute states at the same time and writing them to memory. As ordinarily they would be overwritten by any subsequent attribute changes, I need to create a duplicate set that will automatically be reloaded if the user resumes from the checkpoint. \r\n\r\nThis should be pretty easy to do. Will report if it works or not. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>So I think I've worked out a solution. A re-write of the core Squiffy functions would be too time consuming but this is a reasonable workaround.</p>\n<p>I'm not going to go into too much detail as I appreciate very few people will be interested. But in a nutshell I'm doing the following:</p>\n<p>Since I'm saving section progress at specific points, I need a way of capturing all my attribute states at the same time and writing them to memory. As ordinarily they would be overwritten by any subsequent attribute changes, I need to create a duplicate set that will automatically be reloaded if the user resumes from the checkpoint.</p>\n<p>This should be pretty easy to do. Will report if it works or not.</p>\n\n",
+      "PostDate": "2017-04-30T12:11:15.3642107Z",
+      "LastEditDate": null
+    }
+  ]
+}

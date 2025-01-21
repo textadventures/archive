@@ -1,0 +1,109 @@
+{
+  "Topic": {
+    "TopicId": "8wsyjxdxakkipwudglg7_g",
+    "ForumId": "10",
+    "Title": "\"put\" command not working as intended [solved]",
+    "LastUpdated": "2018-06-21T04:32:28.9603966Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "cdc816f1-bb79-4841-ad54-2e7d389272aa",
+      "UserId": 364533,
+      "Username": "Nimsay Ramsey",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/24944896c4fae6085fba95dd5269a3c1?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I have it set up so that you have a side bag that rests in your inventory and you can put things in it and take them out. I also set it up so that if you drop anything it goes straight to the bag. for some reason the put command stopped working. as an example, there is a desk in my game with a note on it. you can take the note and drop it. dropping it places it in your bag, but typing put note in side bag just returns with nothing. no response at all. and it's still in the inventory. when I turn dropping off for the note it says I can't place it in the bag, which means the script works, but isn't. I have a command that goes by the same name but it started to not work a while after I had the command up and running. what is the problem?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I have it set up so that you have a side bag that rests in your inventory and you can put things in it and take them out. I also set it up so that if you drop anything it goes straight to the bag. for some reason the put command stopped working. as an example, there is a desk in my game with a note on it. you can take the note and drop it. dropping it places it in your bag, but typing put note in side bag just returns with nothing. no response at all. and it's still in the inventory. when I turn dropping off for the note it says I can't place it in the bag, which means the script works, but isn't. I have a command that goes by the same name but it started to not work a while after I had the command up and running. what is the problem?</p>\n\n",
+      "PostDate": "2018-06-21T04:32:28.9603966Z",
+      "LastEditDate": "2018-06-22T22:18:17.8152392Z",
+      "link": null
+    },
+    {
+      "PostId": "de434614-0806-4c64-92c3-185c32579583",
+      "UserId": 924,
+      "Username": "Pertex",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4cc1e52f99452e841ecf4cbee9eadde9?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Could you provide us with a test game where we can see the problem",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Could you provide us with a test game where we can see the problem</p>\n\n",
+      "PostDate": "2018-06-21T06:08:38.6983075Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "1ed70bd9-aa99-4831-b53f-126271040ea1",
+      "UserId": 362613,
+      "Username": "Mr. Parser",
+      "AvatarUrl": "https://i.imgur.com/Fz7sf1Pb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The beginning of the ```put``` command's script:\r\n\r\n```\r\n// put object1 in/on object 2\r\ncanbedropped = true\r\nif (HasBoolean(object1, \"drop\")) {\r\n  if (not object1.drop) {\r\n    canbedropped = false\r\n  }\r\n}\r\nif (object1.parent = object2) {\r\n  msg (DynamicTemplate(\"AlreadyThere\", object1))\r\n}\r\nelse if (not ListContains(ScopeInventory(), object1)) {\r\n  msg (DynamicTemplate(\"NotCarrying\", object1))\r\n}\r\nelse if (not canbedropped) {\r\n  msg (DynamicTemplate(\"ObjectCannotBeStored\", object1))\r\n}\r\n```\r\n\r\n---\r\n...and later in that same script:\r\n\r\n```\r\n  else if (HasScript(object1, \"drop\")) {\r\n    do (object1, \"drop\", params)\r\n  }\r\n```\r\n\r\n---\r\nThe ```drop``` attribute directly effects ```put```.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The beginning of the <code>put</code> command's script:</p>\n<pre><code>// put object1 in/on object 2\ncanbedropped = true\nif (HasBoolean(object1, \"drop\")) {\n  if (not object1.drop) {\n    canbedropped = false\n  }\n}\nif (object1.parent = object2) {\n  msg (DynamicTemplate(\"AlreadyThere\", object1))\n}\nelse if (not ListContains(ScopeInventory(), object1)) {\n  msg (DynamicTemplate(\"NotCarrying\", object1))\n}\nelse if (not canbedropped) {\n  msg (DynamicTemplate(\"ObjectCannotBeStored\", object1))\n}\n</code></pre>\n<hr>\n<p>...and later in that same script:</p>\n<pre><code>  else if (HasScript(object1, \"drop\")) {\n    do (object1, \"drop\", params)\n  }\n</code></pre>\n<hr>\n<p>The <code>drop</code> attribute directly effects <code>put</code>.</p>\n\n",
+      "PostDate": "2018-06-21T08:25:00.5192005Z",
+      "LastEditDate": "2018-06-21T08:26:25.1489484Z",
+      "link": null
+    },
+    {
+      "PostId": "6b345b18-d1f2-40b5-bd5e-ff2eb36f081e",
+      "UserId": 199273,
+      "Username": "DavyB",
+      "AvatarUrl": "http://i.imgur.com/8BcaZCyb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "In every game I've ever worked on I have ended up overriding the PUT command. The main reasons have been that I wanted to (i) allow 'into' as well as 'in' (e.g. put 'toy into box' is what I would normally say); (ii) add synonyms for 'put' such as 'insert'; and (iii) make sure that 'put' didn't work unexpectedly with random objects and containers, giving the impression it was meaningful.\r\n\r\nFrom the discussion in this thread and a little experimentation, I can probably add three more reasons for overriding PUT: (iv) prevent use of 'on' ('put toy on box' and 'put toy in box' seem different to me?); (v) provide more specific messages when objects can't be dropped (could use drop message if one has been provided?); and (vi) allow objects to be taken and put into containers in one operation, rather than having to pick them up first (e.g. 'put apple into knapsack' when the player is carrying the knapsack and enters a location where there is an apple).",
+      "EditableFormat": "markdown",
+      "HTML": "<p>In every game I've ever worked on I have ended up overriding the PUT command. The main reasons have been that I wanted to (i) allow 'into' as well as 'in' (e.g. put 'toy into box' is what I would normally say); (ii) add synonyms for 'put' such as 'insert'; and (iii) make sure that 'put' didn't work unexpectedly with random objects and containers, giving the impression it was meaningful.</p>\n<p>From the discussion in this thread and a little experimentation, I can probably add three more reasons for overriding PUT: (iv) prevent use of 'on' ('put toy on box' and 'put toy in box' seem different to me?); (v) provide more specific messages when objects can't be dropped (could use drop message if one has been provided?); and (vi) allow objects to be taken and put into containers in one operation, rather than having to pick them up first (e.g. 'put apple into knapsack' when the player is carrying the knapsack and enters a location where there is an apple).</p>\n\n",
+      "PostDate": "2018-06-22T07:29:16.663068Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "5fb2fcf6-e6dd-4d18-bba8-818835cea327",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> The `drop` attribute directly effects `put`.\r\n\r\nThis is because the drop script may not allow the object to be dropped.\r\n\r\nSuppose there is a cursed ring that cannot be dropped until the curse is lifted. You could handle that with a \"drop\" script on the ring; if the curse has been lifted the ring is dropped, otherwise not. So far so good.\r\n\r\nWhat if the player puts the ring in a chest in the room? Should Quest just allow it? No - that would let the player avoid the curse. Instead, Quest lets you the author handle it, by running the \"drop\" script.\r\n\r\nIf the script is set up properly, then when the curse is lifted, the ring is not automatically put in the room, but is moved to the object specified by \"destination\":\r\n\r\n```\r\nif (player.curselifted) {\r\n  this.parent = destination\r\n  msg (Template(\"Done\"))\r\n}\r\nelse {\r\n  msg(\"Some arcane power is stopping you let go on the ring.\")\r\n}\r\n```\r\n\r\nExactly what is happening in your case I am not sure, but PUT is working as it is designed to.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>The <code>drop</code> attribute directly effects <code>put</code>.</p>\n</blockquote>\n<p>This is because the drop script may not allow the object to be dropped.</p>\n<p>Suppose there is a cursed ring that cannot be dropped until the curse is lifted. You could handle that with a \"drop\" script on the ring; if the curse has been lifted the ring is dropped, otherwise not. So far so good.</p>\n<p>What if the player puts the ring in a chest in the room? Should Quest just allow it? No - that would let the player avoid the curse. Instead, Quest lets you the author handle it, by running the \"drop\" script.</p>\n<p>If the script is set up properly, then when the curse is lifted, the ring is not automatically put in the room, but is moved to the object specified by \"destination\":</p>\n<pre><code>if (player.curselifted) {\n  this.parent = destination\n  msg (Template(\"Done\"))\n}\nelse {\n  msg(\"Some arcane power is stopping you let go on the ring.\")\n}\n</code></pre>\n<p>Exactly what is happening in your case I am not sure, but PUT is working as it is designed to.</p>\n\n",
+      "PostDate": "2018-06-22T10:51:00.8222971Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "ac437273-2ed5-4d10-b0ca-50a9b5bf1245",
+      "UserId": 364533,
+      "Username": "Nimsay Ramsey",
+      "AvatarUrl": "https://i.imgur.com/1FbWWwCb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I tried to put the note in the bag when it's on the table and it said you are not carrying the note, so it must be running into a problem with something when attempting to move the object into the bag.  I'm new to quest but I have some knowledge of programming. the bag cannot be dropped, but the note can. it has nothing to do with the type of container the bag is, since I switched it from container to surface and got the same results. I don't know how to make a test game without publishing it and I can't copy the game, so i'll give you all some info about the bag and command.\r\n\r\nThe bag command is named SideBag and the command is \"side bag #text#\". This is it's code:\r\n```\r\nif (text = \"progress\") {\r\n}\r\nelse if (text = \"help\") {\r\n  msg (\"<u>Side Bag Commands</u><br/> - progress: lets you see what chapter you are on<br/> - achievements: shows your Achievements<br/> - journal: lets you save your game<br/> - pocket watch: shows you how long you have been playing for.<br/> - items: Shows you what is in the bag without the description\")\r\n}\r\nelse if (text = \"journal\") {\r\n}\r\nelse if (text = \"achievements\") {\r\n}\r\nelse if (text = \"items\") {\r\n  msg (\"My bag contains\" + GetDirectChildren(SideBag1))\r\n}\r\nelse if (text = \"pocket watch\") {\r\n  msg (\"not working at the moment\")\r\n}\r\nelse {\r\n  msg (\"I don't understand your command. Type \\\"side bag help\\\" for commands. note that the commands are case sensitive, so commands should be all lowercase.\")\r\n}\r\n```\r\nthe bag is named SideBag1 and it's alias is Side Bag. it's an open container that cannot be opened or closed and doesn't lock.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I tried to put the note in the bag when it's on the table and it said you are not carrying the note, so it must be running into a problem with something when attempting to move the object into the bag.  I'm new to quest but I have some knowledge of programming. the bag cannot be dropped, but the note can. it has nothing to do with the type of container the bag is, since I switched it from container to surface and got the same results. I don't know how to make a test game without publishing it and I can't copy the game, so i'll give you all some info about the bag and command.</p>\n<p>The bag command is named SideBag and the command is \"side bag #text#\". This is it's code:</p>\n<pre><code>if (text = \"progress\") {\n}\nelse if (text = \"help\") {\n  msg (\"&lt;u&gt;Side Bag Commands&lt;/u&gt;&lt;br/&gt; - progress: lets you see what chapter you are on&lt;br/&gt; - achievements: shows your Achievements&lt;br/&gt; - journal: lets you save your game&lt;br/&gt; - pocket watch: shows you how long you have been playing for.&lt;br/&gt; - items: Shows you what is in the bag without the description\")\n}\nelse if (text = \"journal\") {\n}\nelse if (text = \"achievements\") {\n}\nelse if (text = \"items\") {\n  msg (\"My bag contains\" + GetDirectChildren(SideBag1))\n}\nelse if (text = \"pocket watch\") {\n  msg (\"not working at the moment\")\n}\nelse {\n  msg (\"I don't understand your command. Type \\\"side bag help\\\" for commands. note that the commands are case sensitive, so commands should be all lowercase.\")\n}\n</code></pre>\n<p>the bag is named SideBag1 and it's alias is Side Bag. it's an open container that cannot be opened or closed and doesn't lock.</p>\n\n",
+      "PostDate": "2018-06-22T18:31:34.8120937Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "1a6ee38d-5016-4004-82bf-98a0d51dfade",
+      "UserId": 364533,
+      "Username": "Nimsay Ramsey",
+      "AvatarUrl": "https://i.imgur.com/5vajXhSb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "nevermind i'm removing the bag. please do not respond to this topic",
+      "EditableFormat": "markdown",
+      "HTML": "<p>nevermind i'm removing the bag. please do not respond to this topic</p>\n\n",
+      "PostDate": "2018-06-22T22:17:48.9340375Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

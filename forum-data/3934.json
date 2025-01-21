@@ -1,0 +1,191 @@
+{
+  "Topic": {
+    "TopicId": "3934",
+    "ForumId": "10",
+    "Title": "Issues with put verb",
+    "LastUpdated": "2013-09-30T22:55:59+01:00",
+    "ReplyCount": 14
+  },
+  "Posts": [
+    {
+      "PostId": "26401",
+      "UserId": 0,
+      "Username": "tbritton",
+      "UserAvatar": null,
+      "UserGravatar": "aa3d953baab30b778c1351a982d82eb8",
+      "EditableText": "I'm finding disparities with the put verb between the command line and the hyperlink interface.  I've attached my game file with a test room that will show what I'm describing.\n\nThe room has a player, two containers (barrel and bowl) and two objects (apple and orange).  For the apple all I did was add put to the inventory verb list.  For the orange I added the put verb (with a script) to the object.  With the script, you can put the orange in the barrel, but not the bowl and you get 10 points if you put it in the barrel.  I selected disable automatically generated display verb list for this object.\n\nFirst the apple.  With the links  if I select apple-&gt;put it says, &quot;you can't put it.&quot;  I do not get a list of objects to select from, which I would think would be the default behavior.  If I type &quot;put apple&quot; it says, &quot;you can't put it.&quot;  If I type &quot;put apple in barrel&quot; it says, &quot;done&quot; and moves the apple.\n\nNow the orange.  If I use the links I can select put (it provides a list of objects) and can put it in the barrel, but not the bowl.  Which is according to my rules, and I get 10 points.\n\nIf I type &quot;put orange&quot; I then get a list of objects and when clicking on an object everything works as it should.\n\nIf I type &quot;put orange in barrel,&quot; it puts the orange in the barrel, but does not give the points.  If I type &quot;put the orange in the bowl&quot; it allows me to do so, but according to my rules it should not allow this.    I presume it is using the default verb instead of the one I created.\n\nI would think the links and command line for the apple should act the same.  Ditto for the orange.  Is this behavior a bug or a feature?  Also, I would think put should be part of the use/give tab since there will typically be an object required.  I have not played with use/give yet so don't know if this would solve the issues.\n\nI presume the solution is to modify the default verb, but also wanted to raise the issue of the inconsistencies in behavior.",
+      "EditableFormat": "bbcode",
+      "HTML": "I'm finding disparities with the put verb between the command line and the hyperlink interface.  I've attached my game file with a test room that will show what I'm describing.<br/><br/>The room has a player, two containers (barrel and bowl) and two objects (apple and orange).  For the apple all I did was add put to the inventory verb list.  For the orange I added the put verb (with a script) to the object.  With the script, you can put the orange in the barrel, but not the bowl and you get 10 points if you put it in the barrel.  I selected disable automatically generated display verb list for this object.<br/><br/>First the apple.  With the links  if I select apple-&gt;put it says, &quot;you can't put it.&quot;  I do not get a list of objects to select from, which I would think would be the default behavior.  If I type &quot;put apple&quot; it says, &quot;you can't put it.&quot;  If I type &quot;put apple in barrel&quot; it says, &quot;done&quot; and moves the apple.<br/><br/>Now the orange.  If I use the links I can select put (it provides a list of objects) and can put it in the barrel, but not the bowl.  Which is according to my rules, and I get 10 points.<br/><br/>If I type &quot;put orange&quot; I then get a list of objects and when clicking on an object everything works as it should.<br/><br/>If I type &quot;put orange in barrel,&quot; it puts the orange in the barrel, but does not give the points.  If I type &quot;put the orange in the bowl&quot; it allows me to do so, but according to my rules it should not allow this.    I presume it is using the default verb instead of the one I created.<br/><br/>I would think the links and command line for the apple should act the same.  Ditto for the orange.  Is this behavior a bug or a feature?  Also, I would think put should be part of the use/give tab since there will typically be an object required.  I have not played with use/give yet so don't know if this would solve the issues.<br/><br/>I presume the solution is to modify the default verb, but also wanted to raise the issue of the inconsistencies in behavior.<div><a href=\"/attachment/731\">New Zork.aslx</a></div>",
+      "PostDate": "2013-09-27T20:00:16+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26402",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "So many issues... I hope I get them all.\n\nFirst, I see you have created a &quot;put&quot; verb. I'm not really sure how a pattern of just &quot;put&quot; works (usually it would be something like &quot;put #object#&quot;), but there must be something built into Quest to flesh out the pattern. \n\nNow, there is also a default *command* for put, which has pattern &quot;^put (?&lt;object1&gt;.*) (on|in) (?&lt;object2&gt;.*)$&quot;, which means it matches things like &quot;put apple in bowl&quot;, &quot;put apple on bowl&quot;, &quot;put orange on apple&quot;, etc, but not something like &quot;put apple&quot;. So when you use the &quot;in&quot; variant, it is matching that command and bypassing your code altogether.\n\nIf you change your verb to this, then it will override the command:\n\n[code:1h7ohk47]  &lt;verb&gt;\n    &lt;property&gt;put&lt;/property&gt;\n    &lt;defaultexpression&gt;&quot;You can't put &quot; + object&#46;article + &quot;&#46;&quot;&lt;/defaultexpression&gt;\n    &lt;pattern type=&quot;string&quot;&gt;&lt;!&#91;CDATA&#91;^put (?&lt;object&gt;&#46;*) (on|in) (?&lt;object2&gt;&#46;*)$|^put (?&lt;object&gt;&#46;*)$&#93;&#93;&gt;&lt;/pattern&gt;\n  &lt;/verb&gt;[/code:1h7ohk47]\n\nTo do that in the editor, click on the verb, change Pattern to &quot;Regular expression&quot; instead of &quot;Command pattern&quot;, and then input:\n\n^put (?&lt;object&gt;.*) (on|in) (?&lt;object2&gt;.*)$|^put (?&lt;object&gt;.*)$\n\nThis will force both cases to go through your verb. You do need to actually provide a &quot;put&quot; implementation for the apple object, though. Otherwise, it's not put-able, regardless of what the display verbs say. (It used to sort of work before because the put *command* didn't care and just put things for you.)",
+      "EditableFormat": "bbcode",
+      "HTML": "So many issues... I hope I get them all.<br/><br/>First, I see you have created a &quot;put&quot; verb. I'm not really sure how a pattern of just &quot;put&quot; works (usually it would be something like &quot;put #object#&quot;), but there must be something built into Quest to flesh out the pattern. <br/><br/>Now, there is also a default *command* for put, which has pattern &quot;^put (?&lt;object1&gt;.*) (on|in) (?&lt;object2&gt;.*)$&quot;, which means it matches things like &quot;put apple in bowl&quot;, &quot;put apple on bowl&quot;, &quot;put orange on apple&quot;, etc, but not something like &quot;put apple&quot;. So when you use the &quot;in&quot; variant, it is matching that command and bypassing your code altogether.<br/><br/>If you change your verb to this, then it will override the command:<br/><br/><pre><code>  &lt;verb&gt;<br/>    &lt;property&gt;put&lt;/property&gt;<br/>    &lt;defaultexpression&gt;&quot;You can't put &quot; + object&#46;article + &quot;&#46;&quot;&lt;/defaultexpression&gt;<br/>    &lt;pattern type=&quot;string&quot;&gt;&lt;!&#91;CDATA&#91;^put (?&lt;object&gt;&#46;*) (on|in) (?&lt;object2&gt;&#46;*)$|^put (?&lt;object&gt;&#46;*)$&#93;&#93;&gt;&lt;/pattern&gt;<br/>  &lt;/verb&gt;</code></pre><br/><br/>To do that in the editor, click on the verb, change Pattern to &quot;Regular expression&quot; instead of &quot;Command pattern&quot;, and then input:<br/><br/>^put (?&lt;object&gt;.*) (on|in) (?&lt;object2&gt;.*)$|^put (?&lt;object&gt;.*)$<br/><br/>This will force both cases to go through your verb. You do need to actually provide a &quot;put&quot; implementation for the apple object, though. Otherwise, it's not put-able, regardless of what the display verbs say. (It used to sort of work before because the put *command* didn't care and just put things for you.)",
+      "PostDate": "2013-09-27T21:47:42+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26403",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "By the way, thank you *very* much for providing the sample file. That made it so much easier to work out. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "By the way, thank you *very* much for providing the sample file. That made it so much easier to work out. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2013-09-27T22:02:15+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26404",
+      "UserId": 0,
+      "Username": "tbritton",
+      "UserAvatar": null,
+      "UserGravatar": "aa3d953baab30b778c1351a982d82eb8",
+      "EditableText": "Thanks jaynabonne.  I'll give that a try and see how it works.  I was just surprised that in both cases the command line and the links worked differently.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks jaynabonne.  I'll give that a try and see how it works.  I was just surprised that in both cases the command line and the links worked differently.",
+      "PostDate": "2013-09-27T22:37:51+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26405",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "They work the same for me in both cases.\n\n[quote:23sxo0ij] With the links if I select apple-&gt;put it says, &quot;you can't put it.&quot; I do not get a list of objects to select from, which I would think would be the default behavior. If I type &quot;put apple&quot; it says, &quot;you can't put it.&quot;[/quote:23sxo0ij] \n\nThat sounds like the apple works the same for you as well. And you don't say what the orange does, but I suspect it's the same as well. It basically must be - it just causes &quot;put X&quot; to be input as if you had typed it.",
+      "EditableFormat": "bbcode",
+      "HTML": "They work the same for me in both cases.<br/><br/><blockquote><p> With the links if I select apple-&gt;put it says, &quot;you can't put it.&quot; I do not get a list of objects to select from, which I would think would be the default behavior. If I type &quot;put apple&quot; it says, &quot;you can't put it.&quot;</p></blockquote> <br/><br/>That sounds like the apple works the same for you as well. And you don't say what the orange does, but I suspect it's the same as well. It basically must be - it just causes &quot;put X&quot; to be input as if you had typed it.",
+      "PostDate": "2013-09-27T23:00:23+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26406",
+      "UserId": 0,
+      "Username": "tbritton",
+      "UserAvatar": null,
+      "UserGravatar": "aa3d953baab30b778c1351a982d82eb8",
+      "EditableText": "Works perfect.  Thanks again.",
+      "EditableFormat": "bbcode",
+      "HTML": "Works perfect.  Thanks again.",
+      "PostDate": "2013-09-27T23:01:18+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26418",
+      "UserId": 0,
+      "Username": "tbritton",
+      "UserAvatar": null,
+      "UserGravatar": "aa3d953baab30b778c1351a982d82eb8",
+      "EditableText": "One last (I hope) small issue.  Can I prevent items from being put unless they are in the players inventory?",
+      "EditableFormat": "bbcode",
+      "HTML": "One last (I hope) small issue.  Can I prevent items from being put unless they are in the players inventory?",
+      "PostDate": "2013-09-29T00:57:32+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26420",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "You could add an &quot;if&quot; for object.parent = player. Else spit out some message.",
+      "EditableFormat": "bbcode",
+      "HTML": "You could add an &quot;if&quot; for object.parent = player. Else spit out some message.",
+      "PostDate": "2013-09-29T01:33:59+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26450",
+      "UserId": 0,
+      "Username": "tbritton",
+      "UserAvatar": null,
+      "UserGravatar": "aa3d953baab30b778c1351a982d82eb8",
+      "EditableText": "I've dug into this a little more and it appears when you add put as a verb (as you described above) it kind of breaks the put command in regards to that object.  For example, the default put command only works if you are holding the object but once I add the put verb this no longer works.  I tried the else statement to the object as you described and that doesn't work.\n\nI've read through the put command logic and other parts of it also break once you add a put verb to an object.\n\nAt this point I've got it working by copying the default put command into my game and modifying it.  Just want to make sure that I'm not missing a better way to solve the problem.  By the time I get done with the game I'll have an extremely complex put command.\n\nAlso is there a way to control what can be put into a given container other than modifying the put command, which I can get to work but want to make sure I'm not missing something obvious.",
+      "EditableFormat": "bbcode",
+      "HTML": "I've dug into this a little more and it appears when you add put as a verb (as you described above) it kind of breaks the put command in regards to that object.  For example, the default put command only works if you are holding the object but once I add the put verb this no longer works.  I tried the else statement to the object as you described and that doesn't work.<br/><br/>I've read through the put command logic and other parts of it also break once you add a put verb to an object.<br/><br/>At this point I've got it working by copying the default put command into my game and modifying it.  Just want to make sure that I'm not missing a better way to solve the problem.  By the time I get done with the game I'll have an extremely complex put command.<br/><br/>Also is there a way to control what can be put into a given container other than modifying the put command, which I can get to work but want to make sure I'm not missing something obvious.",
+      "PostDate": "2013-09-30T00:23:09+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26453",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "I'm sure I've seen someone code a way to have both a Command and Verb of the same action work at the same time...\n\nboth the Command and Verb has to have this Attribute, &quot;property&quot;, if I did see this done by someone:\n\n[code:1qsxd6cc]&lt;command name=&quot;play_video_games_command&quot;&gt;\n  &lt;property&gt;play_video_games&lt;/property&gt;\n  &lt;pattern&gt;pvg&lt;/pattern&gt;\n  &lt;script&gt;\n    // blah coding\n  &lt;/script&gt;\n&lt;/command&gt;\n\n&lt;verb name=&quot;play_video_games_verb&quot;&gt;\n  // blah coding\n  &lt;property&gt;play_video_games&lt;/property&gt;\n  // blah coding\n&lt;/verb&gt;\n\n&lt;object name=&quot;blah&quot;&gt;\n  &lt;inherit name=&quot;editor+object&quot; /&gt;\n  // blah coding\n  // see your Verb below\n  &lt;play_video_games_script type=&quot;script&quot;&gt;\n    // blah coding\n  &lt;/play_video_games_script&gt;\n  &lt;displayverbs type=&quot;simplestringlist&quot;&gt;play_video_games_script&lt;/displayverbs&gt;\n&lt;/object&gt;[/code:1qsxd6cc]\n\n[quote=&quot;tbritton&quot;:1qsxd6cc]Also is there a way to control what can be put into a given container other than modifying the put command, which I can get to work but want to make sure I'm not missing something obvious.[/quote:1qsxd6cc]\n\nI don't think so, your &quot;rules&quot; scripts have to be apart (scripts of) the action (&quot;put&quot; verb~command~script) itself. The only other way I can think of is this:\n\nThe Object that you don't want to put the Object inside of:\n\nforeach (object_x, object.objectlist) {\n-&gt; if (Contains~HasAttribute (object.child, &quot;attribute&quot;) {\n-&gt;-&gt;  MoveObject (object.child, object.parent)\n-&gt; }\n}\n\nthough this would be after the object is a child (within) of the object that you don't want it to be in or added to... meh...\n\nI'll have to think on this a bit more... lol",
+      "EditableFormat": "bbcode",
+      "HTML": "I'm sure I've seen someone code a way to have both a Command and Verb of the same action work at the same time...<br/><br/>both the Command and Verb has to have this Attribute, &quot;property&quot;, if I did see this done by someone:<br/><br/><pre><code>&lt;command name=&quot;play_video_games_command&quot;&gt;<br/>  &lt;property&gt;play_video_games&lt;/property&gt;<br/>  &lt;pattern&gt;pvg&lt;/pattern&gt;<br/>  &lt;script&gt;<br/>    // blah coding<br/>  &lt;/script&gt;<br/>&lt;/command&gt;<br/><br/>&lt;verb name=&quot;play_video_games_verb&quot;&gt;<br/>  // blah coding<br/>  &lt;property&gt;play_video_games&lt;/property&gt;<br/>  // blah coding<br/>&lt;/verb&gt;<br/><br/>&lt;object name=&quot;blah&quot;&gt;<br/>  &lt;inherit name=&quot;editor+object&quot; /&gt;<br/>  // blah coding<br/>  // see your Verb below<br/>  &lt;play_video_games_script type=&quot;script&quot;&gt;<br/>    // blah coding<br/>  &lt;/play_video_games_script&gt;<br/>  &lt;displayverbs type=&quot;simplestringlist&quot;&gt;play_video_games_script&lt;/displayverbs&gt;<br/>&lt;/object&gt;</code></pre><br/><br/><blockquote><cite>tbritton wrote:</cite>Also is there a way to control what can be put into a given container other than modifying the put command, which I can get to work but want to make sure I'm not missing something obvious.</blockquote><br/><br/>I don't think so, your &quot;rules&quot; scripts have to be apart (scripts of) the action (&quot;put&quot; verb~command~script) itself. The only other way I can think of is this:<br/><br/>The Object that you don't want to put the Object inside of:<br/><br/>foreach (object_x, object.objectlist) {<br/>-&gt; if (Contains~HasAttribute (object.child, &quot;attribute&quot;) {<br/>-&gt;-&gt;  MoveObject (object.child, object.parent)<br/>-&gt; }<br/>}<br/><br/>though this would be after the object is a child (within) of the object that you don't want it to be in or added to... meh...<br/><br/>I'll have to think on this a bit more... lol",
+      "PostDate": "2013-09-30T01:00:29+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26454",
+      "UserId": 0,
+      "Username": "tbritton",
+      "UserAvatar": null,
+      "UserGravatar": "aa3d953baab30b778c1351a982d82eb8",
+      "EditableText": "Thanks HegemonKhan, I'll play around with the code you provided on using verb and command with same name.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks HegemonKhan, I'll play around with the code you provided on using verb and command with same name.",
+      "PostDate": "2013-09-30T01:07:10+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26457",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "I may not have the syntax~format correct, and it might not work at all, but I was sure I saw someone code for being able to have a verb and command work independently for the same action.\n\nhere's some links:\n\n<!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/Command_element\">http://quest5.net/wiki/Command_element</a><!-- m -->\n<!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/Verb_element\">http://quest5.net/wiki/Verb_element</a><!-- m -->\n<!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/Object_element\">http://quest5.net/wiki/Object_element</a><!-- m -->\n<!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/Displayverbs\">http://quest5.net/wiki/Displayverbs</a><!-- m -->\n<!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/Inventoryverbs\">http://quest5.net/wiki/Inventoryverbs</a><!-- m -->\n\nThere's a (default) &quot;put&quot; Command, but there's no (default) &quot;put&quot; Verb, so you have to create a Verb yourself, and I believe that it is the &quot;property&quot; attribute (attribute name), which is the &quot;connector&quot; of a Command and a Verb, along with the &quot;displayverbs&quot; and~or &quot;inventoryverbs&quot; stringlist attributes of the parent Object, which also contains the script attribute of the action of the Verb and Command. Also, maybe it's the &quot;pattern&quot; attribute being set~added within the Verb Element, that connects it with the Command Element too, for them to both work... I'm sure there's some way to do it, one of these ways, lol\n\nCommand -&gt; Script\nCommand -&gt; property\nCommand -&gt; pattern\nVerb -&gt; Script\nVerb -&gt; pattern\nVerb -&gt; property\nObject -&gt; Script\nObject -&gt; displayverbs and~or inventoryverbs",
+      "EditableFormat": "bbcode",
+      "HTML": "I may not have the syntax~format correct, and it might not work at all, but I was sure I saw someone code for being able to have a verb and command work independently for the same action.<br/><br/>here's some links:<br/><br/><!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/Command_element\">http://quest5.net/wiki/Command_element</a><!-- m --><br/><!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/Verb_element\">http://quest5.net/wiki/Verb_element</a><!-- m --><br/><!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/Object_element\">http://quest5.net/wiki/Object_element</a><!-- m --><br/><!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/Displayverbs\">http://quest5.net/wiki/Displayverbs</a><!-- m --><br/><!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/Inventoryverbs\">http://quest5.net/wiki/Inventoryverbs</a><!-- m --><br/><br/>There's a (default) &quot;put&quot; Command, but there's no (default) &quot;put&quot; Verb, so you have to create a Verb yourself, and I believe that it is the &quot;property&quot; attribute (attribute name), which is the &quot;connector&quot; of a Command and a Verb, along with the &quot;displayverbs&quot; and~or &quot;inventoryverbs&quot; stringlist attributes of the parent Object, which also contains the script attribute of the action of the Verb and Command. Also, maybe it's the &quot;pattern&quot; attribute being set~added within the Verb Element, that connects it with the Command Element too, for them to both work... I'm sure there's some way to do it, one of these ways, lol<br/><br/>Command -&gt; Script<br/>Command -&gt; property<br/>Command -&gt; pattern<br/>Verb -&gt; Script<br/>Verb -&gt; pattern<br/>Verb -&gt; property<br/>Object -&gt; Script<br/>Object -&gt; displayverbs and~or inventoryverbs",
+      "PostDate": "2013-09-30T01:51:48+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26461",
+      "UserId": 0,
+      "Username": "tbritton",
+      "UserAvatar": null,
+      "UserGravatar": "aa3d953baab30b778c1351a982d82eb8",
+      "EditableText": "By default when a verb is added with the name put it is given the property of &quot;Put.&quot;  According to the wiki it should then inherit any scripts from the command Put.  I can get this to work, but as mentioned in my first post the behavior is different between using links or the command line.\n\nI have attached a sample file with the verb put added for the apple.  The script allows you to put the apple in the barrel, but not the bowl.  If you put the apple in the barrel, you get a custom message and the owl disappears.\n\nHere's the differences between the links and the command line.\n\nType put apple in bowl.\nGame says Done and moves the apple to the bowl. (incorrect behavior, should not allow)\n\nType: put apple\nGame responds with object list.\nClick on bowl and game says &quot;The bowl is full.&quot; (correct)\n\nClick on apple, select put and you get object list.\nClick on bowl and game says &quot;The bowl is full.&quot; (correct)\n\nType put apple in barrel.\nGame says Done, moves apple to barrel, but does not remove owl. (incorrect, owl should be removed and custom message displayed)\n\nClick on apple, select put and you get object list.\nClick on barrel and game says &quot;You put the apple in the barrel,&quot; moves the apple to the barrel and removes the owl. (correct)\n\nTo me this seems like a bug in that typing put apple in bowl should work the same as using the links to do the same thing.  Ditto for the barrel.  If I only used links everything works as expected.  If I use only the command line things break.",
+      "EditableFormat": "bbcode",
+      "HTML": "By default when a verb is added with the name put it is given the property of &quot;Put.&quot;  According to the wiki it should then inherit any scripts from the command Put.  I can get this to work, but as mentioned in my first post the behavior is different between using links or the command line.<br/><br/>I have attached a sample file with the verb put added for the apple.  The script allows you to put the apple in the barrel, but not the bowl.  If you put the apple in the barrel, you get a custom message and the owl disappears.<br/><br/>Here's the differences between the links and the command line.<br/><br/>Type put apple in bowl.<br/>Game says Done and moves the apple to the bowl. (incorrect behavior, should not allow)<br/><br/>Type: put apple<br/>Game responds with object list.<br/>Click on bowl and game says &quot;The bowl is full.&quot; (correct)<br/><br/>Click on apple, select put and you get object list.<br/>Click on bowl and game says &quot;The bowl is full.&quot; (correct)<br/><br/>Type put apple in barrel.<br/>Game says Done, moves apple to barrel, but does not remove owl. (incorrect, owl should be removed and custom message displayed)<br/><br/>Click on apple, select put and you get object list.<br/>Click on barrel and game says &quot;You put the apple in the barrel,&quot; moves the apple to the barrel and removes the owl. (correct)<br/><br/>To me this seems like a bug in that typing put apple in bowl should work the same as using the links to do the same thing.  Ditto for the barrel.  If I only used links everything works as expected.  If I use only the command line things break.<div><a href=\"/attachment/733\">Testing 2.aslx</a></div>",
+      "PostDate": "2013-09-30T18:33:28+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26464",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "The reason why is because with the links you're going through the &quot;put&quot; verb. When you type, you're going through a command. It may look the same, but it's not. If you type &quot;put x in y&quot; that is not using the put verb. If you choose &quot;put&quot; on an object from the links, it is going through the put verb, period, regardless of whether you choose a target object or not. There is no &quot;put in&quot; verb on an object.\n\nTry this:\n\n- Add this line to your game file:\n\n[code:343siowa]&lt;command name=&quot;put&quot; /&gt;[/code:343siowa]\n\nThis will gut the default &quot;put x in y&quot; command.\n\n- Go to your &quot;put&quot; verb, and change &quot;with; using&quot; in the &quot;Object separator&quot; field to &quot;in&quot;. That way, it will match &quot;put x in y&quot;.\n\nThat will route all commands through your verb. The basic problem has always been that the default &quot;put x in y&quot; command does not do what you want (or does things you don't want). The only way to have it be consistent is to get rid of that. You may have to code some things yourself in your put verb, but... that's life. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->\n\n(I suspect this is akin to what I suggested you do before. It will have the same effect. You simply can't use the default command if you want to prevent things in certain cases. That means you will have to make sure you are carrying the object, etc if that's what you want.)",
+      "EditableFormat": "bbcode",
+      "HTML": "The reason why is because with the links you're going through the &quot;put&quot; verb. When you type, you're going through a command. It may look the same, but it's not. If you type &quot;put x in y&quot; that is not using the put verb. If you choose &quot;put&quot; on an object from the links, it is going through the put verb, period, regardless of whether you choose a target object or not. There is no &quot;put in&quot; verb on an object.<br/><br/>Try this:<br/><br/>- Add this line to your game file:<br/><br/><pre><code>&lt;command name=&quot;put&quot; /&gt;</code></pre><br/><br/>This will gut the default &quot;put x in y&quot; command.<br/><br/>- Go to your &quot;put&quot; verb, and change &quot;with; using&quot; in the &quot;Object separator&quot; field to &quot;in&quot;. That way, it will match &quot;put x in y&quot;.<br/><br/>That will route all commands through your verb. The basic problem has always been that the default &quot;put x in y&quot; command does not do what you want (or does things you don't want). The only way to have it be consistent is to get rid of that. You may have to code some things yourself in your put verb, but... that's life. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --><br/><br/>(I suspect this is akin to what I suggested you do before. It will have the same effect. You simply can't use the default command if you want to prevent things in certain cases. That means you will have to make sure you are carrying the object, etc if that's what you want.)",
+      "PostDate": "2013-09-30T19:01:51+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26465",
+      "UserId": 0,
+      "Username": "tbritton",
+      "UserAvatar": null,
+      "UserGravatar": "aa3d953baab30b778c1351a982d82eb8",
+      "EditableText": "[quote=&quot;jaynabonne&quot;:1a502hbw]The reason why is because with the links you're going through the &quot;put&quot; verb. When you type, you're going through a command. It may look the same, but it's not. If you type &quot;put x in y&quot; that is not using the put verb. If you choose &quot;put&quot; on an object from the links, it is going through the put verb, period, regardless of whether you choose a target object or not. There is no &quot;put in&quot; verb on an object.[/quote:1a502hbw]\n\nThat explains the behavior I'm seeing.  Thanks for the explanation.\n\nSince there is no way to add/modify a verb and maintain (IMHO) a consistent user interface, I will continue down the path of copying the put command and then adding the additional rules I need.\n\nI should add that yes I could probably gut the put command, then use a verb and get what I want, but that doesn't really sound any easier or less intrusive than what I'm doing.\n\nThanks again for all the help.",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>jaynabonne wrote:</cite>The reason why is because with the links you're going through the &quot;put&quot; verb. When you type, you're going through a command. It may look the same, but it's not. If you type &quot;put x in y&quot; that is not using the put verb. If you choose &quot;put&quot; on an object from the links, it is going through the put verb, period, regardless of whether you choose a target object or not. There is no &quot;put in&quot; verb on an object.</blockquote><br/><br/>That explains the behavior I'm seeing.  Thanks for the explanation.<br/><br/>Since there is no way to add/modify a verb and maintain (IMHO) a consistent user interface, I will continue down the path of copying the put command and then adding the additional rules I need.<br/><br/>I should add that yes I could probably gut the put command, then use a verb and get what I want, but that doesn't really sound any easier or less intrusive than what I'm doing.<br/><br/>Thanks again for all the help.",
+      "PostDate": "2013-09-30T22:55:59+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

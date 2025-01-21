@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "2576",
+    "ForumId": "10",
+    "Title": "Running a script for all exits",
+    "LastUpdated": "2011-08-11T08:41:56+01:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "18587",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Is there a simple way to have a script run when an exit is used that can be applied across the whole map? I appreciate I can set each exit individually to run a script which can call a single function; I want to set this for all exits in one go (I also want to the script to know what exit it is, and to optionally stop it working).\n\nSpecifically, I want to increment time when the player moves from one room to another, say by 5 minutes, unless the exit has a time attribute, in which case it uses that. Also, if an exit has an opening_hours attribute, I want it to be locked at some time of the day. I can do this setting each exit individually to call a function; how do I get calling the function to be the default behaviour?\n\nI hope this makes sense.",
+      "EditableFormat": "bbcode",
+      "HTML": "Is there a simple way to have a script run when an exit is used that can be applied across the whole map? I appreciate I can set each exit individually to run a script which can call a single function; I want to set this for all exits in one go (I also want to the script to know what exit it is, and to optionally stop it working).<br/><br/>Specifically, I want to increment time when the player moves from one room to another, say by 5 minutes, unless the exit has a time attribute, in which case it uses that. Also, if an exit has an opening_hours attribute, I want it to be locked at some time of the day. I can do this setting each exit individually to call a function; how do I get calling the function to be the default behaviour?<br/><br/>I hope this makes sense.",
+      "PostDate": "2011-08-10T09:44:41+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "18588",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "You could modify the &quot;defaultexit&quot; type (use the Filter button to show library elements, then copy it into your game), but then all exits would suddenly become script exits, so your script would have to move the player itself, and then any exit that was actually a script exit would override the script from the type.\n\nProbably a better idea would be to modify &quot;defaultplayer&quot; instead. This has a &quot;changedparent&quot; attribute which is a script that runs every time the player moves room - it's what prints the room description. You could add some code in there. All that code currently does is run the OnEnterRoom function, so alternatively you could modify that function instead.\n\n(In fact this might be a nice little Core library feature - it might be good to expose the ability to run a script every time the player changes room. The OnEnterRoom function could be updated to run a script attribute on the &quot;player&quot; object, which could be exposed via one of the CoreEditorObject*.aslx files to show a &quot;When the player moves&quot; script editor.)",
+      "EditableFormat": "bbcode",
+      "HTML": "You could modify the &quot;defaultexit&quot; type (use the Filter button to show library elements, then copy it into your game), but then all exits would suddenly become script exits, so your script would have to move the player itself, and then any exit that was actually a script exit would override the script from the type.<br/><br/>Probably a better idea would be to modify &quot;defaultplayer&quot; instead. This has a &quot;changedparent&quot; attribute which is a script that runs every time the player moves room - it's what prints the room description. You could add some code in there. All that code currently does is run the OnEnterRoom function, so alternatively you could modify that function instead.<br/><br/>(In fact this might be a nice little Core library feature - it might be good to expose the ability to run a script every time the player changes room. The OnEnterRoom function could be updated to run a script attribute on the &quot;player&quot; object, which could be exposed via one of the CoreEditorObject*.aslx files to show a &quot;When the player moves&quot; script editor.)",
+      "PostDate": "2011-08-10T09:59:38+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "18594",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "I do not think changing default player will work, because I want to have access to the exit. I will be more specific so this is clearer. I want to have a game clock, with time increasing by 5 minutes whenever the player moves to another room, unless that exit has a time attribute, in which case it increase by that instead. To do that, the script needs to know what exit was used.\n\nI am hoping to put this in a library, and the modification to defaultexit sounds to drastic for a general purpose library (though might work for what I need).",
+      "EditableFormat": "bbcode",
+      "HTML": "I do not think changing default player will work, because I want to have access to the exit. I will be more specific so this is clearer. I want to have a game clock, with time increasing by 5 minutes whenever the player moves to another room, unless that exit has a time attribute, in which case it increase by that instead. To do that, the script needs to know what exit was used.<br/><br/>I am hoping to put this in a library, and the modification to defaultexit sounds to drastic for a general purpose library (though might work for what I need).",
+      "PostDate": "2011-08-10T22:59:18+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "18597",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "You could do this by using a turnscript. You need a global variable &quot;oldplace&quot; to save the actual room of the player. Within the turnscript you compare oldplace with player.parent. If they are different, the player has changed the room. \nTo have different times, you can use a dictionary.\n\nHere is an example what I mean:\n\nroom1 with exit to room2 takes 10 minutes\nroom1 with exit to room3 takes 23 minutes\n\n[code:1bvmq3n1]&lt;times type=&quot;stringdictionary&quot;&gt;\nroom1_room2=10\nroom1_room3=23\n&lt;/times&gt;[/code:1bvmq3n1]\n\nWith oldplace and player_parent you can create the key of an entry of the dictionary",
+      "EditableFormat": "bbcode",
+      "HTML": "You could do this by using a turnscript. You need a global variable &quot;oldplace&quot; to save the actual room of the player. Within the turnscript you compare oldplace with player.parent. If they are different, the player has changed the room. <br/>To have different times, you can use a dictionary.<br/><br/>Here is an example what I mean:<br/><br/>room1 with exit to room2 takes 10 minutes<br/>room1 with exit to room3 takes 23 minutes<br/><br/><pre><code>&lt;times type=&quot;stringdictionary&quot;&gt;<br/>room1_room2=10<br/>room1_room3=23<br/>&lt;/times&gt;</code></pre><br/><br/>With oldplace and player_parent you can create the key of an entry of the dictionary",
+      "PostDate": "2011-08-11T08:41:56+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "-wghg15az0k1we-10xohiq",
+    "ForumId": "10",
+    "Title": "Newbie question about containers",
+    "LastUpdated": "2018-01-13T10:21:02.9558205Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "9d066c07-4c18-455b-85c8-f61bec2b0403",
+      "UserId": 340291,
+      "Username": "Foamhead",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/51f3eacc6d11f401b0d87b6f914b4806?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I have a container, a medicine cabinet and inside is a bottle of painkillers. I want the painkillers to only be visible when the cabinet is open. I have it set so it makes the painkillers visible when the cabinet is open, and disappears when it's closed.\r\n\r\nProblem is when I click to close the medicine cabinet the parser says it's already closed. Huh?\r\n\r\nWhen it is telling me the container is closed when I never closed it?\r\n\r\nHow do I make this work.\r\n\r\nAlso, I want to have a limited number of uses for the bottle of painkillers. How might I accomplish this? Thanks in advance for any help.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I have a container, a medicine cabinet and inside is a bottle of painkillers. I want the painkillers to only be visible when the cabinet is open. I have it set so it makes the painkillers visible when the cabinet is open, and disappears when it's closed.</p>\n<p>Problem is when I click to close the medicine cabinet the parser says it's already closed. Huh?</p>\n<p>When it is telling me the container is closed when I never closed it?</p>\n<p>How do I make this work.</p>\n<p>Also, I want to have a limited number of uses for the bottle of painkillers. How might I accomplish this? Thanks in advance for any help.</p>\n\n",
+      "PostDate": "2018-01-13T10:21:02.9558205Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "57f97d29-d02c-4ce9-9a98-2d9a29b85c26",
+      "UserId": 56551,
+      "Username": "XanMag",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4b45a3afd18077f76f6569225c422bdb?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Make sure you manually add “open object” script.  If you use a script of your own you must also add the open script on your own.  Same when you close object manually.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Make sure you manually add “open object” script.  If you use a script of your own you must also add the open script on your own.  Same when you close object manually.</p>\n\n",
+      "PostDate": "2018-01-13T15:50:35.1517736Z",
+      "LastEditDate": "2018-01-13T15:51:20.2303389Z",
+      "link": null
+    },
+    {
+      "PostId": "b47dc59e-e2ea-4ef8-ac53-26a7e5282c84",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "the built-in 'helper' Scripts/Functions (such as: 'open', 'close', 'onopen', 'onclose',etc) really confuse things up, at least for myself anyways...\r\n\r\nwhat actually controls ' being open vs being closed' is the built-in 'isopen' Boolean Attribute, an example in/as code scripting:\r\n\r\nmedicine_cabinet.isopen = true // it's open\r\nmedicine_cabinet.isopen = false // it's closed\r\n\r\nso, in your 'open' and 'close' Verbs' scripting, you need to add these lines, an example:\r\n\r\n```\r\n<object name=\"medicine_cabinet\">\r\n\r\n  <inherit name=\"container_closed\" />\r\n\r\n  <attr name=\"isopen\" type=\"boolean\">false</attr>\r\n\r\n  <attr name=\"open\" type=\"script\">\r\n    if (this.isopen) {\r\n      msg (this.name + \" is already open, silly\")\r\n    } else {\r\n      this.isopen = true\r\n      msg (\"You open the \" + this.name + \" up.\")\r\n    }\r\n  </attr>\r\n\r\n  <attr name=\"close\" type=\"script\">\r\n    if (this.isopen) {\r\n      this.isopen = false\r\n      msg (\"You close the \" + this.name + \".\")\r\n    } else {\r\n      msg (this.name + \" is already closed, silly\")\r\n    }\r\n  </attr>\r\n\r\n</object>\r\n\r\n<verb>\r\n  <property>open</property>\r\n  <pattern>open</pattern>\r\n  <defaultexpression>You can't open that!</defaultexpression>\r\n</verb>\r\n\r\n<verb>\r\n  <property>close</property>\r\n  <pattern>close</pattern>\r\n  <defaultexpression>You can't open that!</defaultexpression>\r\n</verb>\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>the built-in 'helper' Scripts/Functions (such as: 'open', 'close', 'onopen', 'onclose',etc) really confuse things up, at least for myself anyways...</p>\n<p>what actually controls ' being open vs being closed' is the built-in 'isopen' Boolean Attribute, an example in/as code scripting:</p>\n<p>medicine_cabinet.isopen = true // it's open<br>\nmedicine_cabinet.isopen = false // it's closed</p>\n<p>so, in your 'open' and 'close' Verbs' scripting, you need to add these lines, an example:</p>\n<pre><code>&lt;object name=\"medicine_cabinet\"&gt;\n\n  &lt;inherit name=\"container_closed\" /&gt;\n\n  &lt;attr name=\"isopen\" type=\"boolean\"&gt;false&lt;/attr&gt;\n\n  &lt;attr name=\"open\" type=\"script\"&gt;\n    if (this.isopen) {\n      msg (this.name + \" is already open, silly\")\n    } else {\n      this.isopen = true\n      msg (\"You open the \" + this.name + \" up.\")\n    }\n  &lt;/attr&gt;\n\n  &lt;attr name=\"close\" type=\"script\"&gt;\n    if (this.isopen) {\n      this.isopen = false\n      msg (\"You close the \" + this.name + \".\")\n    } else {\n      msg (this.name + \" is already closed, silly\")\n    }\n  &lt;/attr&gt;\n\n&lt;/object&gt;\n\n&lt;verb&gt;\n  &lt;property&gt;open&lt;/property&gt;\n  &lt;pattern&gt;open&lt;/pattern&gt;\n  &lt;defaultexpression&gt;You can't open that!&lt;/defaultexpression&gt;\n&lt;/verb&gt;\n\n&lt;verb&gt;\n  &lt;property&gt;close&lt;/property&gt;\n  &lt;pattern&gt;close&lt;/pattern&gt;\n  &lt;defaultexpression&gt;You can't open that!&lt;/defaultexpression&gt;\n&lt;/verb&gt;\n</code></pre>\n\n",
+      "PostDate": "2018-01-13T15:58:42.0571401Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "197ce678-c981-4108-a894-b3232c351e89",
+      "UserId": 340291,
+      "Username": "Foamhead",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/51f3eacc6d11f401b0d87b6f914b4806?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Non-coder here, so you just hurt my head :)\r\n\r\nThanks for the help guys. I finally figured out what I was doing wrong.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Non-coder here, so you just hurt my head :)</p>\n<p>Thanks for the help guys. I finally figured out what I was doing wrong.</p>\n\n",
+      "PostDate": "2018-01-13T17:27:02.4232779Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "8e217d72-62af-491d-b96b-5c3cd01811f3",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You should not need to do any scripting at all. Just select it as aclosed container, and tick the transparent checkbox.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You should not need to do any scripting at all. Just select it as aclosed container, and tick the transparent checkbox.</p>\n\n",
+      "PostDate": "2018-01-13T17:32:51.2301233Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "d319a3db-5aa8-450a-8730-e3c88233e152",
+      "UserId": 340291,
+      "Username": "Foamhead",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/51f3eacc6d11f401b0d87b6f914b4806?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I found it. Now to figure out a way to have a bottle of painkillers that run out.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I found it. Now to figure out a way to have a bottle of painkillers that run out.</p>\n\n",
+      "PostDate": "2018-01-13T17:36:25.6680219Z",
+      "LastEditDate": "2018-01-13T17:36:56.5990204Z",
+      "link": null
+    }
+  ]
+}

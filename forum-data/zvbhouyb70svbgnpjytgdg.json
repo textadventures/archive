@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "zvbhouyb70svbgnpjytgdg",
+    "ForumId": "10",
+    "Title": "How to create a menu on using an item, preferably using the dropdown menu rather than code?",
+    "LastUpdated": "2021-05-11T12:29:56.9667008Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "d2a562cb-bd62-433f-847b-e53d23c4ce15",
+      "UserId": 546065,
+      "Username": "TwistedEmpress",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/0d141d5cbdc987a5f4ba3388e842adb8?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "As title says:\r\n\r\nI want to create a choice menu when using an item. A good example of this would be applying something to the player's body, such as suncream on a beach.\r\n\r\nI'd want it to have multiple options (right arm, left arm, right leg, left leg, etc) but I also want it to _not show_ (**alternatively, telling the player that clothing is in the way would work too**) options depending on whether the player is wearing certain clothing. \r\nExample given: Give the option to put suncream on the player's back, but that option doesn't show provided your character is wearing anything that, well, conceals their back.\r\n\r\nCurrently my idea is to use flags for whether or not the bodyparts are concealed and have each clothing specify which part it conceals, and then work with that - have the choice menu checks which of these flags is on concealed or not, and then give the choices. Example given: A shirt conceals the back and stomach area, a bikini would not.\r\n\r\nHow exactly would I need to go about this when using the drop-down menus?\r\n\r\nApologies if this question is fairly rudimentary - albeit I have a general idea on what I want to make thanks to months of thinking, I only really started to try and work with Quest quite literally yesterday.\r\n\r\nFor context: I am making a TextAdventure (TA), on the windows desktop app.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>As title says:</p>\n<p>I want to create a choice menu when using an item. A good example of this would be applying something to the player's body, such as suncream on a beach.</p>\n<p>I'd want it to have multiple options (right arm, left arm, right leg, left leg, etc) but I also want it to <em>not show</em> (<strong>alternatively, telling the player that clothing is in the way would work too</strong>) options depending on whether the player is wearing certain clothing.<br>\nExample given: Give the option to put suncream on the player's back, but that option doesn't show provided your character is wearing anything that, well, conceals their back.</p>\n<p>Currently my idea is to use flags for whether or not the bodyparts are concealed and have each clothing specify which part it conceals, and then work with that - have the choice menu checks which of these flags is on concealed or not, and then give the choices. Example given: A shirt conceals the back and stomach area, a bikini would not.</p>\n<p>How exactly would I need to go about this when using the drop-down menus?</p>\n<p>Apologies if this question is fairly rudimentary - albeit I have a general idea on what I want to make thanks to months of thinking, I only really started to try and work with Quest quite literally yesterday.</p>\n<p>For context: I am making a TextAdventure (TA), on the windows desktop app.</p>\n\n",
+      "PostDate": "2021-05-11T12:29:56.9667008Z",
+      "LastEditDate": "2021-05-11T12:31:13.0830248Z",
+      "link": null
+    },
+    {
+      "PostId": "6deb9dba-91a7-4158-a3ec-6908bd7f36c6",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "If you're using the advanced wearables feature, there is already an option for 'slots' to represent body parts. The default use of this is to make sure that you can only wear multiple garments on the same location if they are different layers. But the same slots could probably work for body parts.\r\n\r\nYou could give your command a script something like:\r\n```\r\nbare_slots = NewStringList()\r\nforeach (slot, Slots()) {\r\n  if (GetOuterFor (game.pov, slot) = null) {\r\n    list add (bare_slots, slot)\r\n  }\r\n}\r\nif (ListCount (bare_slots) = 0) {\r\n  msg (\"You need to remove some clothes before applying sunscreen\")\r\n}\r\nelse {\r\n  ShowMenu (\"Where would you like to apply it?\", bare_slots, true) {\r\n    msg (\"You apply sunscreen to your \" + result + \".\")\r\n  }\r\n}\r\n```\r\n\r\nIn case it's not clear how this works:\r\n* `Slots()` returns a list of all slots for all clothes in the game\r\n     * If you want to only allow certain options, you could replace `Slots()` with `Split (\"chest;back;legs;arms\")` or similar\r\n* `GetOuterFor(character, slot)` returns the outermost garment on a slot, or `null` if the slot is bare; so we check for null.\r\n* `ShowMenu` asks the player to choose one item from a list.\r\n    * The option the player chooses will be in the variable `result`\r\n\r\nDoes that make sense?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>If you're using the advanced wearables feature, there is already an option for 'slots' to represent body parts. The default use of this is to make sure that you can only wear multiple garments on the same location if they are different layers. But the same slots could probably work for body parts.</p>\n<p>You could give your command a script something like:</p>\n<pre><code>bare_slots = NewStringList()\nforeach (slot, Slots()) {\n  if (GetOuterFor (game.pov, slot) = null) {\n    list add (bare_slots, slot)\n  }\n}\nif (ListCount (bare_slots) = 0) {\n  msg (\"You need to remove some clothes before applying sunscreen\")\n}\nelse {\n  ShowMenu (\"Where would you like to apply it?\", bare_slots, true) {\n    msg (\"You apply sunscreen to your \" + result + \".\")\n  }\n}\n</code></pre>\n<p>In case it's not clear how this works:</p>\n<ul>\n<li><code>Slots()</code> returns a list of all slots for all clothes in the game\n<ul>\n<li>If you want to only allow certain options, you could replace <code>Slots()</code> with <code>Split (\"chest;back;legs;arms\")</code> or similar</li>\n</ul>\n</li>\n<li><code>GetOuterFor(character, slot)</code> returns the outermost garment on a slot, or <code>null</code> if the slot is bare; so we check for null.</li>\n<li><code>ShowMenu</code> asks the player to choose one item from a list.\n<ul>\n<li>The option the player chooses will be in the variable <code>result</code></li>\n</ul>\n</li>\n</ul>\n<p>Does that make sense?</p>\n\n",
+      "PostDate": "2021-05-11T12:58:54.2674797Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "2daf479b-764b-47e0-9485-49367a719107",
+      "UserId": 546065,
+      "Username": "TwistedEmpress",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/0d141d5cbdc987a5f4ba3388e842adb8?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "It does! I'll have to figure out where to put that, but that shouldn't be too much of trouble. Thanks for the quicker-than-expected answer, mrangel!\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>It does! I'll have to figure out where to put that, but that shouldn't be too much of trouble. Thanks for the quicker-than-expected answer, mrangel!</p>\n\n",
+      "PostDate": "2021-05-11T20:15:16.0062989Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

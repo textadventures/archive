@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "4zqfaxtmgkihuxydtysukw",
+    "ForumId": "10",
+    "Title": "Hyperlinks in room description after moving the player",
+    "LastUpdated": "2020-04-15T20:19:30.4331255Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "97ec9d13-0835-475b-a5f3-b2e7aa1e1393",
+      "UserId": 470228,
+      "Username": "Mmaarten",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi there!\r\n\r\nI have an elevator in game that has the following code: \r\n```if (TownHallElevatorKeyCard.parent = player) {\r\n  msg (\"You insert your keycard and call the elevator.\")\r\n  SetTimeout (2) {\r\n    MoveObject (player, TownHall)\r\n  }\r\n}\r\nelse {\r\n  msg (\"You approach the elevator but there is no call button. Only a slot for a keycard.\")\r\n}\r\n```\r\n\r\nBasically: it teleports the player to a room that is \"on top\" (as seen by the map).\r\n\r\nThis all works fine but as soon as I enter the new room, I cannot click any hyperlinks in the room description/ the \"you can see\"/ \"you can go\" Until I take a turn (enter something in the command line)\r\n\r\nI tried clearing the screen and reprinting the descriptions but that doesn't work\r\n\r\nAny ideas?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi there!</p>\n<p>I have an elevator in game that has the following code:</p>\n<pre><code>  msg (\"You insert your keycard and call the elevator.\")\n  SetTimeout (2) {\n    MoveObject (player, TownHall)\n  }\n}\nelse {\n  msg (\"You approach the elevator but there is no call button. Only a slot for a keycard.\")\n}\n</code></pre>\n<p>Basically: it teleports the player to a room that is \"on top\" (as seen by the map).</p>\n<p>This all works fine but as soon as I enter the new room, I cannot click any hyperlinks in the room description/ the \"you can see\"/ \"you can go\" Until I take a turn (enter something in the command line)</p>\n<p>I tried clearing the screen and reprinting the descriptions but that doesn't work</p>\n<p>Any ideas?</p>\n\n",
+      "PostDate": "2020-04-15T20:19:30.4331255Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "aa70d3ee-1e16-4112-b734-3e9cf5989304",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I think you might need to call `FinishTurn` to update the command links after moving the player.\r\n\r\n`FinishTurn` used to be called every time data is sent from the Quest backend to the browser frontend, to update the object lists in the sidebar, disable object links for objects that are no longer visible (and put the right verbs into the menu for those that are), and run turnscripts.\r\n\r\nIn Quest 5.8, it was changed so that `FinishTurn` runs once per command entered; so it doesn't run automatically if a timer moves the player, or if the player interacts with a custom UI element. This makes sense for some turnscripts; not for all the other things that FinishTurn does.\r\n\r\nI suspect that adding a line `FinishTurn()` immediately after  your `MoveObject` line will resolve this issue.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I think you might need to call <code>FinishTurn</code> to update the command links after moving the player.</p>\n<p><code>FinishTurn</code> used to be called every time data is sent from the Quest backend to the browser frontend, to update the object lists in the sidebar, disable object links for objects that are no longer visible (and put the right verbs into the menu for those that are), and run turnscripts.</p>\n<p>In Quest 5.8, it was changed so that <code>FinishTurn</code> runs once per command entered; so it doesn't run automatically if a timer moves the player, or if the player interacts with a custom UI element. This makes sense for some turnscripts; not for all the other things that FinishTurn does.</p>\n<p>I suspect that adding a line <code>FinishTurn()</code> immediately after  your <code>MoveObject</code> line will resolve this issue.</p>\n\n",
+      "PostDate": "2020-04-15T21:48:31.1090011Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "f61d7f5f-6c23-46ac-b3e1-7f612582997f",
+      "UserId": 470228,
+      "Username": "Mmaarten",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "It gives inconsistent results :/\r\n\r\nit works about 75% of the time. Calling it twice right after each other does the job though...\r\n\r\nThanks for the help <3",
+      "EditableFormat": "markdown",
+      "HTML": "<p>It gives inconsistent results :/</p>\n<p>it works about 75% of the time. Calling it twice right after each other does the job though...</p>\n<p>Thanks for the help &lt;3</p>\n\n",
+      "PostDate": "2020-04-15T22:35:07.4640701Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

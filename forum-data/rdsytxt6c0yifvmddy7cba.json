@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "rdsytxt6c0yifvmddy7cba",
+    "ForumId": "10",
+    "Title": "Running a command/verb via a script",
+    "LastUpdated": "2018-07-01T13:38:45.9668152Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "0a870358-4686-45fe-9833-ace937aacfa2",
+      "UserId": 354327,
+      "Username": "JacobStack",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/c84a56d2b80be35a70cd305fb32cf615?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi all,\r\nThis is either a very simple or very difficult request, I'm not sure which. Essentially I want to be able to do the following:\r\n\r\nIf the player types 'use hat' it will present a question: Do you mean you want to wear the hat? Yes/No and if you click yes it calls the verb: wear hat. Making the question is straight forward but I don't know how to call a verb. I can simply set hat.worn=True but it doesn't run the text 'You put on the hat'. I can add this manually but it seems like clumsy programming. I've tried the do, eval and invoke commands but not getting anywhere...\r\n\r\nThanks in advance!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi all,<br>\nThis is either a very simple or very difficult request, I'm not sure which. Essentially I want to be able to do the following:</p>\n<p>If the player types 'use hat' it will present a question: Do you mean you want to wear the hat? Yes/No and if you click yes it calls the verb: wear hat. Making the question is straight forward but I don't know how to call a verb. I can simply set hat.worn=True but it doesn't run the text 'You put on the hat'. I can add this manually but it seems like clumsy programming. I've tried the do, eval and invoke commands but not getting anywhere...</p>\n<p>Thanks in advance!</p>\n\n",
+      "PostDate": "2018-07-01T13:38:45.9668152Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "19afb6d4-bbae-46a5-8f48-aae99a40ec58",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Quest's built-in wearables system provides a function to make it easier to do this:\r\n```\r\n_DoWear (hat)\r\nUpdateArmour()\r\n```\r\n(you don't need to UpdateArmour unless you're using the armour feature of wearables)\r\nSeveral of the built-in commands have functions like this to make it easier to do them from code, like `TryOpenClose (door, true)` or `DoDrop (object, false)`. But not all of them do. And I figure that while you asked about \"Running a command/verb via a script\", I should also give you an answer that you can use for any command:\r\n \r\nThere's a few ways to do it; useful in different situations.\r\n\r\nMethod 1 will nearly always work, but if there's more than one hat around it will give the player a menu asking which one they meant. Just as if they'd typed that command. Methods 2-4 don't have this problem, but which one you use will be different for different commands. (For example, in my current game, method 2 will work for \"eat\", method 3 will work for \"wear\", and method 4 will work for \"stab\". It depends how the command was originally coded)\r\n\r\n1. To send a command as if the player typed it, you can do:\r\n\r\n```\r\nHandleSingleCommand (\"wear hat\")\r\n```\r\n\r\n2. If you know the name of the command, you can put the hat into a dictionary and pass that to the command:\r\n```\r\nparams = NewDictionary()\r\ndictionary add (params, \"object\", hat)\r\ndo (lookat, \"script\", params)\r\n```\r\n(this runs the 'script' attribute of the command 'lookat', putting the hat into that script's 'object' parameter. I'm using \"lookat\" in this example, because this method doesn't work for the default implementation of \"wear\")\r\n\r\n3. Note that for some commands you might have to make a list of objects first, even if the list only has 1 item on it, so you'd do:\r\n```\r\nobjects_to_wear = NewObjectList()\r\nlist add (objects_to_wear, hat)\r\ndictionary add (params, \"object\", objects_to_wear)\r\ndo (wear, \"script\", params)\r\n```\r\n(This is the method that will work for \"wear\" or \"take\", I believe. It's for commands that can understand multiple objects)\r\n\r\n4. If the command you want to execute is a verb, you can run it directly:\r\n```\r\ndo (hat, \"wear\")\r\n```\r\n(This will work if you see the verb on the \"Verbs\" tab when looking at the object)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Quest's built-in wearables system provides a function to make it easier to do this:</p>\n<pre><code>_DoWear (hat)\nUpdateArmour()\n</code></pre>\n<p>(you don't need to UpdateArmour unless you're using the armour feature of wearables)<br>\nSeveral of the built-in commands have functions like this to make it easier to do them from code, like <code>TryOpenClose (door, true)</code> or <code>DoDrop (object, false)</code>. But not all of them do. And I figure that while you asked about \"Running a command/verb via a script\", I should also give you an answer that you can use for any command:</p>\n<p>There's a few ways to do it; useful in different situations.</p>\n<p>Method 1 will nearly always work, but if there's more than one hat around it will give the player a menu asking which one they meant. Just as if they'd typed that command. Methods 2-4 don't have this problem, but which one you use will be different for different commands. (For example, in my current game, method 2 will work for \"eat\", method 3 will work for \"wear\", and method 4 will work for \"stab\". It depends how the command was originally coded)</p>\n<ol>\n<li>To send a command as if the player typed it, you can do:</li>\n</ol>\n<pre><code>HandleSingleCommand (\"wear hat\")\n</code></pre>\n<ol start=\"2\">\n<li>If you know the name of the command, you can put the hat into a dictionary and pass that to the command:</li>\n</ol>\n<pre><code>params = NewDictionary()\ndictionary add (params, \"object\", hat)\ndo (lookat, \"script\", params)\n</code></pre>\n<p>(this runs the 'script' attribute of the command 'lookat', putting the hat into that script's 'object' parameter. I'm using \"lookat\" in this example, because this method doesn't work for the default implementation of \"wear\")</p>\n<ol start=\"3\">\n<li>Note that for some commands you might have to make a list of objects first, even if the list only has 1 item on it, so you'd do:</li>\n</ol>\n<pre><code>objects_to_wear = NewObjectList()\nlist add (objects_to_wear, hat)\ndictionary add (params, \"object\", objects_to_wear)\ndo (wear, \"script\", params)\n</code></pre>\n<p>(This is the method that will work for \"wear\" or \"take\", I believe. It's for commands that can understand multiple objects)</p>\n<ol start=\"4\">\n<li>If the command you want to execute is a verb, you can run it directly:</li>\n</ol>\n<pre><code>do (hat, \"wear\")\n</code></pre>\n<p>(This will work if you see the verb on the \"Verbs\" tab when looking at the object)</p>\n\n",
+      "PostDate": "2018-07-01T14:19:27.796323Z",
+      "LastEditDate": "2018-07-01T14:55:41.9859673Z",
+      "link": null
+    },
+    {
+      "PostId": "5cb28ee3-fa3e-433f-9280-123dce7dbfeb",
+      "UserId": 354327,
+      "Username": "JacobStack",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/c84a56d2b80be35a70cd305fb32cf615?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thank you so much for such a detailed reply. I wish I'd known some of this when I started programming a few months ago, my code would be a lot neater! Method 1 works perfectly, method 4 is the one I tried before but I just got the error message:\r\n\r\nError running script: Object reference not set to an instance of an object.\r\n\r\nNot sure why. Anyway, thanks again! I'll try the other methods down the line if required.\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thank you so much for such a detailed reply. I wish I'd known some of this when I started programming a few months ago, my code would be a lot neater! Method 1 works perfectly, method 4 is the one I tried before but I just got the error message:</p>\n<p>Error running script: Object reference not set to an instance of an object.</p>\n<p>Not sure why. Anyway, thanks again! I'll try the other methods down the line if required.</p>\n\n",
+      "PostDate": "2018-07-01T14:27:42.6333087Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "c17a12bb-83bb-4c21-9ffc-a5538efc9061",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Maybe worth mentioning that method 2 is the one you want if you're doing a command that has more than one parameter. For example, if you want to programatically call the command `put #object1# in #object2#`, you would use:\r\n```\r\nparams = NewDictionary()\r\ndictionary add (params, \"object1\", bunny)\r\ndictionary add (params, \"object2\", box)\r\ndo (put, \"script\", params)\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Maybe worth mentioning that method 2 is the one you want if you're doing a command that has more than one parameter. For example, if you want to programatically call the command <code>put #object1# in #object2#</code>, you would use:</p>\n<pre><code>params = NewDictionary()\ndictionary add (params, \"object1\", bunny)\ndictionary add (params, \"object2\", box)\ndo (put, \"script\", params)\n</code></pre>\n\n",
+      "PostDate": "2018-07-01T15:02:57.4477453Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

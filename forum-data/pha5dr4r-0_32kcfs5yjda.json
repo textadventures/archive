@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "pha5dr4r-0_32kcfs5yjda",
+    "ForumId": "10",
+    "Title": "The Places and Objects pane",
+    "LastUpdated": "2020-04-28T10:10:23.2579778Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "1b28943e-774e-456e-8883-b0505b65f4c1",
+      "UserId": 142763,
+      "Username": "Forgewright",
+      "AvatarUrl": "http://i.imgur.com/Ea6HecZb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I decided long ago to have the items in the places and objects pane and inventory pane be capitalized. Now, I found that when I sell an item to a shop, which shows in the objects pane, it is in lower case and if I buy it back it is still in lower case. \r\nI can't add the CapsFirst function to it because many items have two words in the name.\r\n\r\nIn this custom sell command, how can I get the desired effect I need?\r\n```\r\nif (not HasAttribute(game.pov.parent, \"stock\")) {\r\n  ClearTurn\r\n  msg (\"You can't sell stuff here.\")\r\n}\r\nelse if (not object.parent = game.pov) {\r\n  ClearTurn\r\n  msg (\"You're not carrying \" + object.article + \".\")\r\n}\r\nelse if (HasAttribute(object, \"burned\")) {\r\n  if (object.burned = true) {\r\n    ClearTurn\r\n    msg (player.parent.owner.alias + \" says,<br><i>I have no use for a used torch.\")\r\n  }\r\n}\r\nelse if (HasAttribute(object, \"sell\")) {\r\n  ClearTurn\r\n  game.selling_object = object\r\n  Ask (\"I will give you \" + game.selling_object.price + \" gold. OK?\") {\r\n    object = game.selling_object\r\n    if (result) {\r\n      msg (\"You sell \" + object.article + \" for \" + object.price + \" gold.\")\r\n      game.pov.money = game.pov.money + object.price\r\n      if (GetBoolean(object, \"cloneme\")) {\r\n        RemoveObject (object)\r\n      }\r\n      else {\r\n        object.parent = game.pov.parent.stock\r\n        SetUpMerchandise (object)\r\n      }\r\n    }\r\n    else {\r\n      msg (\"You turn down the offer of \" + object.price + \" gold.\")\r\n    }\r\n  }\r\n}\r\n```\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I decided long ago to have the items in the places and objects pane and inventory pane be capitalized. Now, I found that when I sell an item to a shop, which shows in the objects pane, it is in lower case and if I buy it back it is still in lower case.<br>\nI can't add the CapsFirst function to it because many items have two words in the name.</p>\n<p>In this custom sell command, how can I get the desired effect I need?</p>\n<pre><code>if (not HasAttribute(game.pov.parent, \"stock\")) {\n  ClearTurn\n  msg (\"You can't sell stuff here.\")\n}\nelse if (not object.parent = game.pov) {\n  ClearTurn\n  msg (\"You're not carrying \" + object.article + \".\")\n}\nelse if (HasAttribute(object, \"burned\")) {\n  if (object.burned = true) {\n    ClearTurn\n    msg (player.parent.owner.alias + \" says,&lt;br&gt;&lt;i&gt;I have no use for a used torch.\")\n  }\n}\nelse if (HasAttribute(object, \"sell\")) {\n  ClearTurn\n  game.selling_object = object\n  Ask (\"I will give you \" + game.selling_object.price + \" gold. OK?\") {\n    object = game.selling_object\n    if (result) {\n      msg (\"You sell \" + object.article + \" for \" + object.price + \" gold.\")\n      game.pov.money = game.pov.money + object.price\n      if (GetBoolean(object, \"cloneme\")) {\n        RemoveObject (object)\n      }\n      else {\n        object.parent = game.pov.parent.stock\n        SetUpMerchandise (object)\n      }\n    }\n    else {\n      msg (\"You turn down the offer of \" + object.price + \" gold.\")\n    }\n  }\n}\n</code></pre>\n\n",
+      "PostDate": "2020-04-28T10:10:23.2579778Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "4e344a16-56e1-4a62-a837-2977a9ce3f9b",
+      "UserId": 142763,
+      "Username": "Forgewright",
+      "AvatarUrl": "http://i.imgur.com/Ea6HecZb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Actually, I think it needs to be done in the ```SetUpMerchandise``` function.\r\n```\r\nif (not HasString(obj, \"alias\")) {\r\n  obj.alias = obj.name\r\n}\r\nobj.listalias = obj.alias + \" (\" + DisplayMoney(BuyingPrice(obj)) + \")\"\r\nobj.cloneme = false\r\nobj.take => {\r\n  StealObject (this)\r\n}\r\nobj.buy => {\r\n  BuyObject (this)\r\n}\r\n```\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Actually, I think it needs to be done in the <code>SetUpMerchandise</code> function.</p>\n<pre><code>if (not HasString(obj, \"alias\")) {\n  obj.alias = obj.name\n}\nobj.listalias = obj.alias + \" (\" + DisplayMoney(BuyingPrice(obj)) + \")\"\nobj.cloneme = false\nobj.take =&gt; {\n  StealObject (this)\n}\nobj.buy =&gt; {\n  BuyObject (this)\n}\n</code></pre>\n\n",
+      "PostDate": "2020-04-28T17:34:57.244353Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e0997580-79cc-473f-8f34-eb674f9aa25a",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I was going to ask.\r\n\r\nSo, am I right in assuming that the alias is lowercase, but the listalias has capitals?\r\n\r\nIn that case, I'd suggest replacing\r\n`obj.listalias = obj.alias + \" (\" + DisplayMoney(BuyingPrice(obj)) + \")\"`\r\nwith something like:\r\n```\r\nlistalias = \"\"\r\nforeach (word, Split (GetDisplayAlias (obj), \" \")) {\r\n  listalias = listalias + \" \" + CapFirst (word)\r\n}\r\nobj.listalias = Mid (listalias, 2) + \" (\" + DisplayMoney(BuyingPrice(obj)) + \")\"\r\n```\r\n\r\nThis is one place I really wish Quest had a regexp replace function. Doing the same thing in JS would be as simple as:\r\n```\r\nobject.listalias = object.alias.replace (/\\d\\w/g, letter => letter.toUpperCase());\r\n```\r\n\r\nI notice that this function adds the price to the object's listalias… you'll probably need to do the same (in BuyObject?) when the price is removed.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I was going to ask.</p>\n<p>So, am I right in assuming that the alias is lowercase, but the listalias has capitals?</p>\n<p>In that case, I'd suggest replacing<br>\n<code>obj.listalias = obj.alias + \" (\" + DisplayMoney(BuyingPrice(obj)) + \")\"</code><br>\nwith something like:</p>\n<pre><code>listalias = \"\"\nforeach (word, Split (GetDisplayAlias (obj), \" \")) {\n  listalias = listalias + \" \" + CapFirst (word)\n}\nobj.listalias = Mid (listalias, 2) + \" (\" + DisplayMoney(BuyingPrice(obj)) + \")\"\n</code></pre>\n<p>This is one place I really wish Quest had a regexp replace function. Doing the same thing in JS would be as simple as:</p>\n<pre><code>object.listalias = object.alias.replace (/\\d\\w/g, letter =&gt; letter.toUpperCase());\n</code></pre>\n<p>I notice that this function adds the price to the object's listalias… you'll probably need to do the same (in BuyObject?) when the price is removed.</p>\n\n",
+      "PostDate": "2020-04-28T17:51:23.8722362Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "ed55fd53-de0f-42ff-95b0-40e65f05faed",
+      "UserId": 142763,
+      "Username": "Forgewright",
+      "AvatarUrl": "http://i.imgur.com/Ea6HecZb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "This worked for the buy command. I had added an attribute called  ```orignalalias``` to sellable objects which returns  ```listalias ``` back.\r\n\r\n```\r\nif (object.price > game.pov.money) {\r\n  msg (\"You can't afford that!\")\r\n}\r\nelse {\r\n  object.take = true\r\n  object.parent = game.pov\r\n  object.buy = null\r\n  list remove (object.inventoryverbs, \"Buy\")\r\n  player.money = game.pov.money - BuyingPrice(object)\r\n  object.listalias = object.orignalalias\r\n  msg (\"You decide to buy \" + object.article + \" for \" + DisplayMoney(BuyingPrice(object)) + \".\")\r\n}\r\n```\r\nThe buy attribute script for the object is now\r\n```\r\nif (object.price > game.pov.money) {\r\n  msg (\"You can't afford that!\")\r\n}\r\nelse {\r\n  object.take = true\r\n  object.parent = game.pov\r\n  object.buy = null\r\n  list remove (object.inventoryverbs, \"Buy\")\r\n  player.money = game.pov.money - BuyingPrice(object)\r\n  object.listalias = object.orignalalias\r\n  msg (\"You decide to buy \" + object.article + \" for \" + DisplayMoney(BuyingPrice(object)) + \".\")\r\n}\r\n```\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>This worked for the buy command. I had added an attribute called  <code>orignalalias</code> to sellable objects which returns  <code>listalias</code> back.</p>\n<pre><code>if (object.price &gt; game.pov.money) {\n  msg (\"You can't afford that!\")\n}\nelse {\n  object.take = true\n  object.parent = game.pov\n  object.buy = null\n  list remove (object.inventoryverbs, \"Buy\")\n  player.money = game.pov.money - BuyingPrice(object)\n  object.listalias = object.orignalalias\n  msg (\"You decide to buy \" + object.article + \" for \" + DisplayMoney(BuyingPrice(object)) + \".\")\n}\n</code></pre>\n<p>The buy attribute script for the object is now</p>\n<pre><code>if (object.price &gt; game.pov.money) {\n  msg (\"You can't afford that!\")\n}\nelse {\n  object.take = true\n  object.parent = game.pov\n  object.buy = null\n  list remove (object.inventoryverbs, \"Buy\")\n  player.money = game.pov.money - BuyingPrice(object)\n  object.listalias = object.orignalalias\n  msg (\"You decide to buy \" + object.article + \" for \" + DisplayMoney(BuyingPrice(object)) + \".\")\n}\n</code></pre>\n\n",
+      "PostDate": "2020-04-28T20:37:23.4104628Z",
+      "LastEditDate": "2020-04-28T20:41:43.0583039Z",
+      "link": null
+    }
+  ]
+}

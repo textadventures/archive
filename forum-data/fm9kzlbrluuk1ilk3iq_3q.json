@@ -1,0 +1,109 @@
+{
+  "Topic": {
+    "TopicId": "fm9kzlbrluuk1ilk3iq_3q",
+    "ForumId": "10",
+    "Title": "Remove a certain clone with random name?",
+    "LastUpdated": "2018-08-20T08:17:08.4616507Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "cfbb9c40-6a3d-48d5-82b6-4abda6937f68",
+      "UserId": 348994,
+      "Username": "CheeseMyBaby",
+      "AvatarUrl": "https://i.imgur.com/c5nBbAgb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hey,\r\n\r\nso I've been looking around for different solutions but haven't found the one that's juuuuust right for me.\r\n\r\n<h1>Here's what I need to happen:</h1>\r\n\r\nSomeone throws a grenade (the grenade object gets cloned from Void and moved to wherever the player is currently)\r\nAfter a second it goes boom and <b>then it should disappear.</b>\r\n\r\nEverything is working except for the disappearing part.\r\nI've tried lots of things but I just don't know how to make the grenade disappear after detonation.\r\n\r\nThis is what I have at the moment...\r\n(this is working, I just need to add the part with removing the grenade... the part I have no idea how to)\r\n```\r\nl1 = ScopeReachable()\r\nl2 = FilterByAttribute (l1, \"alias\", \"grenade\")\r\nif (ListCount (l2) < 1) {\r\n}\r\nelse {\r\n  foreach (obj, l2) {\r\n    SetTimeout (1) {\r\n      msg (\"B O O M !\")\r\n      msg (ListCount(l2))\r\n    }\r\n  }\r\n}\r\n```\r\n\r\nEDIT:\r\nIf I remove the object \"grenade\" the 'original' disappear but not the clone and since the game is set during war time there'lll be flying grenades left right and center and it's impossible for me to keep track of the name of the clones.\r\nHope I'm being clear enough about my problem?\r\n\r\n/Cheese\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hey,</p>\n<p>so I've been looking around for different solutions but haven't found the one that's juuuuust right for me.</p>\n<h1>Here's what I need to happen:</h1>\n<p>Someone throws a grenade (the grenade object gets cloned from Void and moved to wherever the player is currently)<br>\nAfter a second it goes boom and <b>then it should disappear.</b></p>\n<p>Everything is working except for the disappearing part.<br>\nI've tried lots of things but I just don't know how to make the grenade disappear after detonation.</p>\n<p>This is what I have at the moment...<br>\n(this is working, I just need to add the part with removing the grenade... the part I have no idea how to)</p>\n<pre><code>l1 = ScopeReachable()\nl2 = FilterByAttribute (l1, \"alias\", \"grenade\")\nif (ListCount (l2) &lt; 1) {\n}\nelse {\n  foreach (obj, l2) {\n    SetTimeout (1) {\n      msg (\"B O O M !\")\n      msg (ListCount(l2))\n    }\n  }\n}\n</code></pre>\n<p>EDIT:<br>\nIf I remove the object \"grenade\" the 'original' disappear but not the clone and since the game is set during war time there'lll be flying grenades left right and center and it's impossible for me to keep track of the name of the clones.<br>\nHope I'm being clear enough about my problem?</p>\n<p>/Cheese</p>\n\n",
+      "PostDate": "2018-08-20T08:17:08.4616507Z",
+      "LastEditDate": "2018-08-20T08:25:15.8160307Z",
+      "link": null
+    },
+    {
+      "PostId": "361b244d-ab92-4a31-9a75-4376a2d8b825",
+      "UserId": 348994,
+      "Username": "CheeseMyBaby",
+      "AvatarUrl": "https://i.imgur.com/c5nBbAgb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Oh, the ```  msg (ListCount(l2)) ``` is there for debugging, so nevermind that.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Oh, the <code>msg (ListCount(l2))</code> is there for debugging, so nevermind that.</p>\n\n",
+      "PostDate": "2018-08-20T08:48:17.6011997Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "549bbf63-b1a1-41e6-914c-1b735e9bc958",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "SetTimeout creates a script attribute which will be executed later; it doesn't have your l2 list.\r\n\r\nDoes the grenade always go boom after 1 second? Can there be multiple grenades in play at the same time?\r\n\r\nI think this is probably what you want:\r\n```\r\nSetTimeout (1) {\r\n  all_grenades = FilterByAttribute (AllObjects(), \"alias\", \"grenade\")\r\n  // If there will be grenades around that haven't been thrown, in the \r\n  //    inventory or similar, then you'd need to add another\r\n  //    FilterByAttribute here to check their \"thrown\" flag\r\n  if (ListCount (all_grenades) = 0) {\r\n    error (\"Grenade not found\")\r\n  }\r\n  first_grenade = ListItem (all_grenades, 0)\r\n  msg (\"B O O M!\")\r\n  destroy (first_grenade.name)\r\n}\r\n```\r\nIf this script is running more than once at the same time (another grenade is thrown before the first one goes boom) then you will have multiple copies of the timeout running at the same time, and each timeout will remove the first (oldest) grenade in play.\r\n\r\nIf you have grenades in your inventory, then you need a way to distinguish which one has been thrown. I'd suggest setting a flag on them.\r\n\r\nIf you're using the latest version of the CloneObject function, then you could change the first filter line to:\r\n`all_grenades = FilterByAttribute (AllObjects(), \"prototype\", grenade)`\r\nwhich I think is slightly more efficient. (and will also work if you have grenades with different aliases)\r\n\r\nNow, if you had multiple grenades and they can have different timers, it would be a little more complex, because they won't all be going boom in the order they were thrown. The same applies if the grenades sit around in your inventory, and you don't want to destroy them in the same order they were cloned.\r\n\r\nThen you'd want to… let me think about this.\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>SetTimeout creates a script attribute which will be executed later; it doesn't have your l2 list.</p>\n<p>Does the grenade always go boom after 1 second? Can there be multiple grenades in play at the same time?</p>\n<p>I think this is probably what you want:</p>\n<pre><code>SetTimeout (1) {\n  all_grenades = FilterByAttribute (AllObjects(), \"alias\", \"grenade\")\n  // If there will be grenades around that haven't been thrown, in the \n  //    inventory or similar, then you'd need to add another\n  //    FilterByAttribute here to check their \"thrown\" flag\n  if (ListCount (all_grenades) = 0) {\n    error (\"Grenade not found\")\n  }\n  first_grenade = ListItem (all_grenades, 0)\n  msg (\"B O O M!\")\n  destroy (first_grenade.name)\n}\n</code></pre>\n<p>If this script is running more than once at the same time (another grenade is thrown before the first one goes boom) then you will have multiple copies of the timeout running at the same time, and each timeout will remove the first (oldest) grenade in play.</p>\n<p>If you have grenades in your inventory, then you need a way to distinguish which one has been thrown. I'd suggest setting a flag on them.</p>\n<p>If you're using the latest version of the CloneObject function, then you could change the first filter line to:<br>\n<code>all_grenades = FilterByAttribute (AllObjects(), \"prototype\", grenade)</code><br>\nwhich I think is slightly more efficient. (and will also work if you have grenades with different aliases)</p>\n<p>Now, if you had multiple grenades and they can have different timers, it would be a little more complex, because they won't all be going boom in the order they were thrown. The same applies if the grenades sit around in your inventory, and you don't want to destroy them in the same order they were cloned.</p>\n<p>Then you'd want to… let me think about this.</p>\n\n",
+      "PostDate": "2018-08-20T09:15:38.5133236Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e005ab4e-070a-4575-b35a-7e2381f13324",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Simple solution: Create a list attribute on the `game` element. Add a new grenade to the list when it is thrown, and have the timeout remove the first grenade from the list when it detonates it.\r\n\r\n<hr/>\r\n\r\nMore complex solution that allows grenades with different timers and lets them go boom in a sane order. Here's a function that should work. Its parameters are a cloned grenade object, and the number of seconds it's going to wait before going boom.\r\n```\r\n<function name=\"ThrowGrenade\" parameters=\"grenade, time\"><![CDATA[\r\n  timer = GetTimer(\"grenade_timer\")\r\n  if (timer = null) {\r\n    create timer (\"grenade_timer\")\r\n    timer = GetTimer(\"grenade_timer\")\r\n    timer.grenades = NewObjectList()\r\n    timer.script => {\r\n      this.enabled = false\r\n      nexttrigger = 0\r\n      remaining = NewObjectList()\r\n      foreach (grenade, this.grenades) {\r\n        if (grenade.triggertime <= game.timeelapsed) {\r\n          grename = grenade.name\r\n          if (HasScript (grenade, \"detonate\")) {\r\n            do (grenade, \"detonate\")\r\n          }\r\n          else if (ListContains (ScopeReachable(), grenade)) {\r\n            msg (\"B O O M!\")\r\n          }\r\n          else {\r\n            msg (\"<small>b o o m</small>\")\r\n          }\r\n          if (not GetObject(grename) = null) {\r\n            destroy (grename)\r\n          }\r\n        }\r\n        else {\r\n          list add (remaining, grenade)\r\n          if (nexttrigger = 0 or grenade.triggertime < nexttrigger) {\r\n            nexttrigger = grenade.triggertime\r\n          }\r\n        }\r\n      }\r\n      this.grenades = remaining\r\n      if (nexttrigger > 0) {\r\n        this.trigger = nexttrigger\r\n        this.enabled = true\r\n      }\r\n    }\r\n  }\r\n  grenade.triggertime = game.timeelapsed + time\r\n  list add (timer, \"grenades\", grenade)\r\n  do (timer, \"script\")\r\n]]></function>\r\n```\r\n\r\nThis one will display \"B O O M!\" if the player is still in the room and \"<small>boom</small>\" otherwise. If a grenade has a \"detonate\" script attribute (or verb?!), that will run instead, allowing you to make fancy custom grenades, like smoke bombs or something, and use the same timer for them.\r\n\r\n\r\nI know this is probably overkill for a simple game, but once I've started thinking about a problem I find it hard to let it drop without solving it.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Simple solution: Create a list attribute on the <code>game</code> element. Add a new grenade to the list when it is thrown, and have the timeout remove the first grenade from the list when it detonates it.</p>\n<hr>\n<p>More complex solution that allows grenades with different timers and lets them go boom in a sane order. Here's a function that should work. Its parameters are a cloned grenade object, and the number of seconds it's going to wait before going boom.</p>\n<pre><code>&lt;function name=\"ThrowGrenade\" parameters=\"grenade, time\"&gt;&lt;![CDATA[\n  timer = GetTimer(\"grenade_timer\")\n  if (timer = null) {\n    create timer (\"grenade_timer\")\n    timer = GetTimer(\"grenade_timer\")\n    timer.grenades = NewObjectList()\n    timer.script =&gt; {\n      this.enabled = false\n      nexttrigger = 0\n      remaining = NewObjectList()\n      foreach (grenade, this.grenades) {\n        if (grenade.triggertime &lt;= game.timeelapsed) {\n          grename = grenade.name\n          if (HasScript (grenade, \"detonate\")) {\n            do (grenade, \"detonate\")\n          }\n          else if (ListContains (ScopeReachable(), grenade)) {\n            msg (\"B O O M!\")\n          }\n          else {\n            msg (\"&lt;small&gt;b o o m&lt;/small&gt;\")\n          }\n          if (not GetObject(grename) = null) {\n            destroy (grename)\n          }\n        }\n        else {\n          list add (remaining, grenade)\n          if (nexttrigger = 0 or grenade.triggertime &lt; nexttrigger) {\n            nexttrigger = grenade.triggertime\n          }\n        }\n      }\n      this.grenades = remaining\n      if (nexttrigger &gt; 0) {\n        this.trigger = nexttrigger\n        this.enabled = true\n      }\n    }\n  }\n  grenade.triggertime = game.timeelapsed + time\n  list add (timer, \"grenades\", grenade)\n  do (timer, \"script\")\n]]&gt;&lt;/function&gt;\n</code></pre>\n<p>This one will display \"B O O M!\" if the player is still in the room and \"<small>boom</small>\" otherwise. If a grenade has a \"detonate\" script attribute (or verb?!), that will run instead, allowing you to make fancy custom grenades, like smoke bombs or something, and use the same timer for them.</p>\n<p>I know this is probably overkill for a simple game, but once I've started thinking about a problem I find it hard to let it drop without solving it.</p>\n\n",
+      "PostDate": "2018-08-20T09:47:52.5426951Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "d5957313-0c92-4ccd-ba18-585e128a72fe",
+      "UserId": 348994,
+      "Username": "CheeseMyBaby",
+      "AvatarUrl": "https://i.imgur.com/c5nBbAgb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> I know this is probably overkill for a simple game, but ...\r\n\r\nThere's no such thing as overkill MrA!\r\n<b>Thanks a lot!</b>",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>I know this is probably overkill for a simple game, but ...</p>\n</blockquote>\n<p>There's no such thing as overkill MrA!<br>\n<b>Thanks a lot!</b></p>\n\n",
+      "PostDate": "2018-08-20T10:05:24.4807065Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "f7081be8-aab3-41ba-ab45-a90f47113db7",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "@ Cheesemybaby:\r\n\r\nhere's the data structure concept ('stack', like a literal stack of plates or pancakes, and/or queues, a bit more advanced application of the 'stack' concept) in detail:\r\n\r\nhttps://en.wikipedia.org/wiki/Stack_(abstract_data_type)\r\n\r\nhttps://www.tutorialspoint.com/data_structures_algorithms/stack_algorithm.htm\r\n\r\nhttps://www.cs.cmu.edu/~adamchik/15-121/lectures/Stacks%20and%20Queues/Stacks%20and%20Queues.html\r\n\r\nFI: first in\r\nFO: first out\r\nLI: last in\r\nLO: last out\r\n\r\nyou can do whatever viable combination that you want:\r\n\r\nFIFO: first in first out\r\nFILO: first in last out\r\nLIFO: last in first out\r\nLILO: last in last out\r\n\r\n-----------\r\n\r\nit gets a bit more complicated in its various applications, but the basic concept is really just to imagine you're storing a bunch of plates on top of each other, but you can only easily/safely remove either the top or bottom plate, as trying to remove a plate from the middle is too risky/dangerous of dropping/breaking the plates, and it's not easy to remove/add a plate out-of/into the middle of a stack of plates.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>@ Cheesemybaby:</p>\n<p>here's the data structure concept ('stack', like a literal stack of plates or pancakes, and/or queues, a bit more advanced application of the 'stack' concept) in detail:</p>\n<p>https://en.wikipedia.org/wiki/Stack_(abstract_data_type)</p>\n<p>https://www.tutorialspoint.com/data_structures_algorithms/stack_algorithm.htm</p>\n<p>https://www.cs.cmu.edu/~adamchik/15-121/lectures/Stacks%20and%20Queues/Stacks%20and%20Queues.html</p>\n<p>FI: first in<br>\nFO: first out<br>\nLI: last in<br>\nLO: last out</p>\n<p>you can do whatever viable combination that you want:</p>\n<p>FIFO: first in first out<br>\nFILO: first in last out<br>\nLIFO: last in first out<br>\nLILO: last in last out</p>\n<hr>\n<p>it gets a bit more complicated in its various applications, but the basic concept is really just to imagine you're storing a bunch of plates on top of each other, but you can only easily/safely remove either the top or bottom plate, as trying to remove a plate from the middle is too risky/dangerous of dropping/breaking the plates, and it's not easy to remove/add a plate out-of/into the middle of a stack of plates.</p>\n\n",
+      "PostDate": "2018-08-25T09:56:30.8546102Z",
+      "LastEditDate": "2018-08-25T10:07:43.9347566Z",
+      "link": null
+    },
+    {
+      "PostId": "14346631-ecbf-4177-84a8-c1242af43ba4",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I was about to say that you can't easily construct a stack in Quest, due to the inability to remove elements from the end of a list.\r\nBut then I realised you could make a DLL easily enough, making it an object. And because it's an object, assigning it to an attribute wouldn't make a silent deep copy (whether this is a good thing or not is a matter of opinion).",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I was about to say that you can't easily construct a stack in Quest, due to the inability to remove elements from the end of a list.<br>\nBut then I realised you could make a DLL easily enough, making it an object. And because it's an object, assigning it to an attribute wouldn't make a silent deep copy (whether this is a good thing or not is a matter of opinion).</p>\n\n",
+      "PostDate": "2018-08-25T11:20:51.5431848Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

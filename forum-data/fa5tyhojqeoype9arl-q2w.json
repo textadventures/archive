@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "fa5tyhojqeoype9arl-q2w",
+    "ForumId": "10",
+    "Title": "Quest map: why does it show hidden exits?",
+    "LastUpdated": "2019-04-26T13:56:01.2960129Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "06dd91b1-3400-4b1e-b02a-61e29dd76c99",
+      "UserId": 339977,
+      "Username": "thanos",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/9c35eed21321227222cd2ae31913ba08?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "OK, I'm now convinced that it's a bug/overlooked issue. Quest map shows exits, even if they are hidden. \r\n\r\nI guess it will need some kind of re-writing for the mapping module, making it more dynamic, but it is quite a common issue, having hidden exits,  so it would be worth it. I would be willing to help with the programming, if sb orients me around the code.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>OK, I'm now convinced that it's a bug/overlooked issue. Quest map shows exits, even if they are hidden.</p>\n<p>I guess it will need some kind of re-writing for the mapping module, making it more dynamic, but it is quite a common issue, having hidden exits,  so it would be worth it. I would be willing to help with the programming, if sb orients me around the code.</p>\n\n",
+      "PostDate": "2019-04-26T13:56:01.2960129Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "22dca797-6970-4aa0-a9b6-e44fa06bb5d4",
+      "UserId": 277074,
+      "Username": "Dcoder",
+      "AvatarUrl": "https://i.imgur.com/XIlYPQ9b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Make the hidden exit's grid_length attribute 0, until it is visible and then make it 1 or whatever.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Make the hidden exit's grid_length attribute 0, until it is visible and then make it 1 or whatever.</p>\n\n",
+      "PostDate": "2019-04-26T15:33:57.1365843Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "dab7d947-5e9f-4bc1-ae32-2f757b94a5fa",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Good point.\r\n\r\nIn the function `Grid_CalculateMapCoordinates` it checks to see if exits are look only, but doesn't check if they're hidden.\r\n\r\nRight at the end of that function (inside the outermost foreach loop and the if statement) you want to override the grid_render property.\r\n\r\nChanging:\r\n```\r\n         exit.to.grid_render = true\r\n        }\r\n      }\r\n    }\r\n    ]]>\r\n  </function>\r\n```\r\nto\r\n```\r\n         exit.to.grid_render = true\r\n        }\r\n        if (not GetBoolean (exit, \"visible\")) {\r\n          exit.grid_render = false\r\n          // also hide the room the exit leads to, \r\n          if (not Grid_GetRoomBooleanForPlayer(game.pov, exit.to, \"grid_isdrawn\")) {\r\n            exit.to.grid_render = false\r\n          }\r\n        }\r\n      }\r\n    }\r\n    ]]>\r\n  </function>\r\n```\r\n\r\nBut you'd want to redraw an exit when it becomes visible.\r\nI suggest the best way to do this would be by giving exits a `changedvisible` script.\r\n\r\nTo drawn an exit on the map when it becomes unhidden:\r\n```\r\nif (Grid_GetRoomBooleanForPlayer(game.pov, this.parent, \"grid_isdrawn\")) {\r\n  this.grid_render = true\r\n  Grid_DrawRoom (this.parent, true, game.pov)\r\n}\r\n```\r\nor to show the now-visible exit on the map only when the player next visits that room:\r\n```\r\nif (Grid_GetRoomBooleanForPlayer(game.pov, this.parent, \"grid_isdrawn\")) {\r\n  this.grid_render = true\r\n  if (Contains (this.parent, game.pov)) {\r\n    Grid_DrawRoom (this.parent, true, game.pov)\r\n  }\r\n  else {\r\n    Grid_SetRoomBooleanForPlayer(game.pov, this.parent, \"grid_isdrawn\", false)\r\n  }\r\n}\r\n```\r\n(clearing the \"we've already drawn this room\" flag forces it to be redrawn when the player enters it, I think?)\r\n\r\nI'd suggest putting either of these in a `changedvisible` script attribute for the `defaultexit` type; so that they apply to any exit whose visibility changes.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Good point.</p>\n<p>In the function <code>Grid_CalculateMapCoordinates</code> it checks to see if exits are look only, but doesn't check if they're hidden.</p>\n<p>Right at the end of that function (inside the outermost foreach loop and the if statement) you want to override the grid_render property.</p>\n<p>Changing:</p>\n<pre><code>         exit.to.grid_render = true\n        }\n      }\n    }\n    ]]&gt;\n  &lt;/function&gt;\n</code></pre>\n<p>to</p>\n<pre><code>         exit.to.grid_render = true\n        }\n        if (not GetBoolean (exit, \"visible\")) {\n          exit.grid_render = false\n          // also hide the room the exit leads to, \n          if (not Grid_GetRoomBooleanForPlayer(game.pov, exit.to, \"grid_isdrawn\")) {\n            exit.to.grid_render = false\n          }\n        }\n      }\n    }\n    ]]&gt;\n  &lt;/function&gt;\n</code></pre>\n<p>But you'd want to redraw an exit when it becomes visible.<br>\nI suggest the best way to do this would be by giving exits a <code>changedvisible</code> script.</p>\n<p>To drawn an exit on the map when it becomes unhidden:</p>\n<pre><code>if (Grid_GetRoomBooleanForPlayer(game.pov, this.parent, \"grid_isdrawn\")) {\n  this.grid_render = true\n  Grid_DrawRoom (this.parent, true, game.pov)\n}\n</code></pre>\n<p>or to show the now-visible exit on the map only when the player next visits that room:</p>\n<pre><code>if (Grid_GetRoomBooleanForPlayer(game.pov, this.parent, \"grid_isdrawn\")) {\n  this.grid_render = true\n  if (Contains (this.parent, game.pov)) {\n    Grid_DrawRoom (this.parent, true, game.pov)\n  }\n  else {\n    Grid_SetRoomBooleanForPlayer(game.pov, this.parent, \"grid_isdrawn\", false)\n  }\n}\n</code></pre>\n<p>(clearing the \"we've already drawn this room\" flag forces it to be redrawn when the player enters it, I think?)</p>\n<p>I'd suggest putting either of these in a <code>changedvisible</code> script attribute for the <code>defaultexit</code> type; so that they apply to any exit whose visibility changes.</p>\n\n",
+      "PostDate": "2019-04-26T22:55:40.8186031Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "26329e6c-03b7-4b2e-a088-213393c23080",
+      "UserId": 339977,
+      "Username": "thanos",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/9c35eed21321227222cd2ae31913ba08?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Woa. Thanks, I guess you did all the work, already. Mind putting that in the source code?  ;)\r\n\r\nHere is the previous discussion we had on the issue:\r\n\r\nhttp://textadventures.co.uk/forum/quest/topic/hdobhw5ccuadimijerwnpg/map-how-to-show-newly-created-exit",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Woa. Thanks, I guess you did all the work, already. Mind putting that in the source code?  ;)</p>\n<p>Here is the previous discussion we had on the issue:</p>\n<p>http://textadventures.co.uk/forum/quest/topic/hdobhw5ccuadimijerwnpg/map-how-to-show-newly-created-exit</p>\n\n",
+      "PostDate": "2019-04-27T17:54:50.963614Z",
+      "LastEditDate": "2019-04-27T18:03:10.4474586Z",
+      "link": null
+    },
+    {
+      "PostId": "aa1ae4e8-2f75-4c90-b5a7-22b1620b6ba3",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "If this was to go into the source code (and I am not sure when that would be updated), is that going to break existing games?\r\n\r\nI think most authors would expect this behaviour anyway. Can anyone think of a situation where the author would desire the original behaviour?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>If this was to go into the source code (and I am not sure when that would be updated), is that going to break existing games?</p>\n<p>I think most authors would expect this behaviour anyway. Can anyone think of a situation where the author would desire the original behaviour?</p>\n\n",
+      "PostDate": "2019-04-29T06:57:31.3924368Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

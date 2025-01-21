@@ -1,0 +1,123 @@
+{
+  "Topic": {
+    "TopicId": "rfffwfk54ekfid8u9xen8w",
+    "ForumId": "10",
+    "Title": "Changing text color of actions",
+    "LastUpdated": "2019-09-28T18:36:26.1894118Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "580adc05-a4e0-4f2d-9177-38afcbc19b86",
+      "UserId": 438211,
+      "Username": "Ray Angelo V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi guys, \r\n\r\nI don't know if this has been asked before, so I apologize in advance. I found a similar topic but it didn't really answer my question + it had been closed already. (I don't even know if this is possible at all, but I thought I'd give it a shot.)\r\n\r\nIs there a way to change the color of the actions (if I formulate this right)\r\n\r\nlike\r\n\r\n>* look at object (a different color)\r\nYou're looking at an object (color defined in display tab)\r\n\r\n> * take object (a different color)\r\nYou take the object and put it in inventory (color defined in display tab)\r\n\r\nI think in my game it would help the player differentiate better what she/he is doing and the text result since the command bar is disabled and it solely relies on mouse input.\r\n\r\ncan it be done?\r\n\r\nthanks in advance,\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi guys,</p>\n<p>I don't know if this has been asked before, so I apologize in advance. I found a similar topic but it didn't really answer my question + it had been closed already. (I don't even know if this is possible at all, but I thought I'd give it a shot.)</p>\n<p>Is there a way to change the color of the actions (if I formulate this right)</p>\n<p>like</p>\n<blockquote>\n<ul>\n<li>look at object (a different color)<br>\nYou're looking at an object (color defined in display tab)</li>\n</ul>\n</blockquote>\n<blockquote>\n<ul>\n<li>take object (a different color)<br>\nYou take the object and put it in inventory (color defined in display tab)</li>\n</ul>\n</blockquote>\n<p>I think in my game it would help the player differentiate better what she/he is doing and the text result since the command bar is disabled and it solely relies on mouse input.</p>\n<p>can it be done?</p>\n<p>thanks in advance,</p>\n\n",
+      "PostDate": "2019-09-28T18:36:26.1894118Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "f58afe3a-c046-466f-a204-2c42bf0bb9e3",
+      "UserId": 418279,
+      "Username": "Zesc",
+      "AvatarUrl": "https://i.imgur.com/bGcfC7sb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "So you want to change the colour of the ```{command:}```  links, did i understood you right?\r\n\r\n```SetLinkForegroundColour``` is probably what you are looking for. It's used just like ``` SetForegroundColour``` with an RGB value or a colour name, and after it was called, all new links should be in that colour.\r\n\r\nYou may have to rapidly change it between printing out new commands, or use a style template or something.\r\n\r\nIt defenitly can be done.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>So you want to change the colour of the <code>{command:}</code>  links, did i understood you right?</p>\n<p><code>SetLinkForegroundColour</code> is probably what you are looking for. It's used just like <code>SetForegroundColour</code> with an RGB value or a colour name, and after it was called, all new links should be in that colour.</p>\n<p>You may have to rapidly change it between printing out new commands, or use a style template or something.</p>\n<p>It defenitly can be done.</p>\n\n",
+      "PostDate": "2019-09-30T08:19:03.4129741Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "32d133fb-6bea-43e0-9a89-d8f0bd2bb6c7",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I thought the OP was asking for the ability to change the colour of echoed commands. If that's not what you're after, feel free to ignore me.\r\n\r\nThe obvious way to do that would be to find the line that prints out those commands. Find the core function `HandleCommand` (it's in your game, but will be hidden by default; ask someone who's more familiar with the desktop version of quest if you need help finding it), and in that function look for the lines:\r\n* `msg (\"&gt; \" + Left(command, LengthOf(command) - LengthOf(key)) + \"{object:\" + object.name + \"}\" )`\r\nand\r\n* `OutputTextRaw (\"&gt; \" + SafeXML(command))`\r\n\r\nYou could change those lines to make the output text a different colour.\r\n\r\n<hr />\r\n**Or** an alternate way to do it if you're using the web editor (which can't be made to show the core functions).\r\n\r\nInstead of making changes in Quest, we override the javascript function instead:\r\n<pre><code>addText = function(text) {\r\n    if (getCurrentDiv() == null) {\r\n        createNewDiv(\"left\");\r\n    }\r\n    if (savingTranscript) {\r\n        SaveTranscript(text);\r\n        ASLEvent(\"UpdateTranscriptString\", text);\r\n    }\r\n    getCurrentDiv().append(text)<b>.children('span').each(function () {\r\n      if ($(this).text().match(/^&gt; /)) { $(this).css({<em style=\"color: #ffaa00\">color: '#ffaa00'</em>});}\r\n    });</b>\r\n    $(\"#divOutput\").css(\"min-height\", $('#divOutput').height());\r\n}</code></pre>\r\nThat will modify the output as it's sent to the screen, causing any lines starting with `> ` to change to color `#ffaa00`. In most cases, this will only affect the echoed commands.\r\n\r\nIf you're on the web editor, the easiest way to add the javascript would be putting it in the \"UI Initialisation\" script (on the \"Advanced Scripts\" tab of the game object; you might have to enable it on the \"Features\" tab first). You'd wrap it in Quest code like this:\r\n<pre><code>JS.eval(\"$(function(){addText=function(t){null==getCurrentDiv()&&createNewDiv('left'),savingTranscript&&(SaveTranscript(t),ASLEvent('UpdateTranscriptString',t)),getCurrentDiv().append(t).children('span').each(function(){$(this).text().match(/^&gt; /)&&$(this).css({color:'<b style=\"color:#ffaa00\">#ffaa00</b>'})}),$('#divOutput').css('min-height',$('#divOutput').height())};});\")</code></pre>\r\n\r\n<hr />\r\n\r\nAnd a slight tangent… can we please make this easier?\r\n\r\nI've looked into this before, and been somewhat confused by the way echoing commands is handled. Seems to me it would make sense to have it made into a function, rather than having this code in `CoreParser.aslx`. The inconsistent creation of object links in the command is also kind of weird; only if they're in the `metadata` dictionary, and only if they're at the end of the command?\r\n\r\nI'd suggest that it would be easier to have a function for echoing the user's command, and call it either before running the actual command (in `ResolveNextName`) or before reporting that the command wasn't matched. This would allow the function to include object links for all matched objects, as well as some kind of syntax highlighting (like turning the unresolved object red).\r\nPossibly even have it check for a script attribute to run instead, allowing the user to override the behaviour of the echo.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I thought the OP was asking for the ability to change the colour of echoed commands. If that's not what you're after, feel free to ignore me.</p>\n<p>The obvious way to do that would be to find the line that prints out those commands. Find the core function <code>HandleCommand</code> (it's in your game, but will be hidden by default; ask someone who's more familiar with the desktop version of quest if you need help finding it), and in that function look for the lines:</p>\n<ul>\n<li><code>msg (\"&amp;gt; \" + Left(command, LengthOf(command) - LengthOf(key)) + \"{object:\" + object.name + \"}\" )</code><br>\nand</li>\n<li><code>OutputTextRaw (\"&amp;gt; \" + SafeXML(command))</code></li>\n</ul>\n<p>You could change those lines to make the output text a different colour.</p>\n<hr>\n**Or** an alternate way to do it if you're using the web editor (which can't be made to show the core functions).\n<p>Instead of making changes in Quest, we override the javascript function instead:</p>\n<pre><code>addText = function(text) {\n    if (getCurrentDiv() == null) {\n        createNewDiv(\"left\");\n    }\n    if (savingTranscript) {\n        SaveTranscript(text);\n        ASLEvent(\"UpdateTranscriptString\", text);\n    }\n    getCurrentDiv().append(text)<b>.children('span').each(function () {\n      if ($(this).text().match(/^&gt; /)) { $(this).css({<em style=\"color: #ffaa00\">color: '#ffaa00'</em>});}\n    });</b>\n    $(\"#divOutput\").css(\"min-height\", $('#divOutput').height());\n}</code></pre>\n<p>That will modify the output as it's sent to the screen, causing any lines starting with <code>&gt;</code> to change to color <code>#ffaa00</code>. In most cases, this will only affect the echoed commands.</p>\n<p>If you're on the web editor, the easiest way to add the javascript would be putting it in the \"UI Initialisation\" script (on the \"Advanced Scripts\" tab of the game object; you might have to enable it on the \"Features\" tab first). You'd wrap it in Quest code like this:</p>\n<pre><code>JS.eval(\"$(function(){addText=function(t){null==getCurrentDiv()&amp;&amp;createNewDiv('left'),savingTranscript&amp;&amp;(SaveTranscript(t),ASLEvent('UpdateTranscriptString',t)),getCurrentDiv().append(t).children('span').each(function(){$(this).text().match(/^&gt; /)&amp;&amp;$(this).css({color:'<b style=\"color: #ffaa00\">#ffaa00</b>'})}),$('#divOutput').css('min-height',$('#divOutput').height())};});\")</code></pre>\n<hr>\n<p>And a slight tangent… can we please make this easier?</p>\n<p>I've looked into this before, and been somewhat confused by the way echoing commands is handled. Seems to me it would make sense to have it made into a function, rather than having this code in <code>CoreParser.aslx</code>. The inconsistent creation of object links in the command is also kind of weird; only if they're in the <code>metadata</code> dictionary, and only if they're at the end of the command?</p>\n<p>I'd suggest that it would be easier to have a function for echoing the user's command, and call it either before running the actual command (in <code>ResolveNextName</code>) or before reporting that the command wasn't matched. This would allow the function to include object links for all matched objects, as well as some kind of syntax highlighting (like turning the unresolved object red).<br>\nPossibly even have it check for a script attribute to run instead, allowing the user to override the behaviour of the echo.</p>\n\n",
+      "PostDate": "2019-09-30T09:14:37.0464283Z",
+      "LastEditDate": "2019-10-03T14:38:28.6931897Z",
+      "link": null
+    },
+    {
+      "PostId": "8a50bedb-16ef-4b47-ae61-3d21e96b180e",
+      "UserId": 438211,
+      "Username": "Ray Angelo V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks for the reply everyone,\r\n\r\nI took a look at your code mrangel and to be honest I'm still a complete beginner when it comes to this stuff. I just started a few weeks ago and this goes beyond me as of right now :) I did print out your reply, perhaps some day in the future when I'm a bit more experienced in coding I will give it a try. I do think it's an interesting feature to have various colors, but as of right now I'll stick to what I already learned.\r\n\r\nNevertheless, thank you for your time, I do appreciate it!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks for the reply everyone,</p>\n<p>I took a look at your code mrangel and to be honest I'm still a complete beginner when it comes to this stuff. I just started a few weeks ago and this goes beyond me as of right now :) I did print out your reply, perhaps some day in the future when I'm a bit more experienced in coding I will give it a try. I do think it's an interesting feature to have various colors, but as of right now I'll stick to what I already learned.</p>\n<p>Nevertheless, thank you for your time, I do appreciate it!</p>\n\n",
+      "PostDate": "2019-10-03T13:51:45.9337773Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "1716ae45-c62b-487a-8990-a3229127a950",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "That's why I tried to include both an explanation of what I'm doing, and a line of code that you can paste in without needing to understand it.\r\n\r\nUnfortunately, I made a silly mistake, so as posted it wouldn't work. I've now edited the post to fix that.\r\nIf you go to the features tab and tick the box for \"Show advanced scripts for the game object\", and then on the \"Advanced Scripts\" tab look at the first script (\"User interface initialisation script\"), you can go to code view and paste the script I included above:\r\n> <pre><code>JS.eval(\"$(function(){addText=function(t){null==getCurrentDiv()&&createNewDiv('left'),savingTranscript&&(SaveTranscript(t),ASLEvent('UpdateTranscriptString',t)),getCurrentDiv().append(t).children('span').each(function(){$(this).text().match(/^&gt; /)&&$(this).css({color:'<b style=\"color:orange\">orange</b>'})}),$('#divOutput').css('min-height',$('#divOutput').height())};});\")</code></pre>\r\n\r\nThat should be all you need. You can change 'orange' to whichever colour you prefer.\r\n\r\nSometimes, understanding the script is necessary to use it. But in this case, it should just work.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>That's why I tried to include both an explanation of what I'm doing, and a line of code that you can paste in without needing to understand it.</p>\n<p>Unfortunately, I made a silly mistake, so as posted it wouldn't work. I've now edited the post to fix that.<br>\nIf you go to the features tab and tick the box for \"Show advanced scripts for the game object\", and then on the \"Advanced Scripts\" tab look at the first script (\"User interface initialisation script\"), you can go to code view and paste the script I included above:</p>\n<blockquote>\n<pre><code>JS.eval(\"$(function(){addText=function(t){null==getCurrentDiv()&amp;&amp;createNewDiv('left'),savingTranscript&amp;&amp;(SaveTranscript(t),ASLEvent('UpdateTranscriptString',t)),getCurrentDiv().append(t).children('span').each(function(){$(this).text().match(/^&gt; /)&amp;&amp;$(this).css({color:'<b style=\"color: orange\">orange</b>'})}),$('#divOutput').css('min-height',$('#divOutput').height())};});\")</code></pre>\n</blockquote>\n<p>That should be all you need. You can change 'orange' to whichever colour you prefer.</p>\n<p>Sometimes, understanding the script is necessary to use it. But in this case, it should just work.</p>\n\n",
+      "PostDate": "2019-10-03T14:50:27.6394724Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "440802f0-9fa3-4562-9c1d-635f9564b8dc",
+      "UserId": 438211,
+      "Username": "Ray Angelo V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Aah, nice! I do understand that. Thanks! I'm going to try that.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Aah, nice! I do understand that. Thanks! I'm going to try that.</p>\n\n",
+      "PostDate": "2019-10-03T17:30:06.6875532Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "660ef272-f131-4a70-911c-521eae88d5f3",
+      "UserId": 438211,
+      "Username": "Ray Angelo V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Just tried it and it works wonderful! Thanks again for all the help!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Just tried it and it works wonderful! Thanks again for all the help!</p>\n\n",
+      "PostDate": "2019-10-03T17:33:52.245098Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "dcef3835-5db7-4211-81c7-064432ee1f3c",
+      "UserId": 438211,
+      "Username": "Ray Angelo V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Seriously, my game looks 10 times better now somehow! Very cool!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Seriously, my game looks 10 times better now somehow! Very cool!</p>\n\n",
+      "PostDate": "2019-10-03T17:38:12.2615983Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

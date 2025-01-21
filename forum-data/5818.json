@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "5818",
+    "ForumId": "10",
+    "Title": "Setting Alts on Clones",
+    "LastUpdated": "2016-01-06T20:22:48+00:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "40281",
+      "UserId": 0,
+      "Username": "Unadept",
+      "UserAvatar": null,
+      "UserGravatar": "056668dd85038941e105836c3cc35d03",
+      "EditableText": "Hey, All,\n\nI've been asking for a lot of help recently, and I appreciate your assistance.\n\nI've learned how to sequentially clone objects, and to do so without having to repeat the rules for each new object.  Setting the item.alt for a known clone, like key1, is easy.  I'm having trouble creating an alt for an unknown clone.\n\nI have an attribute of player.stuff that's an integer.  I would like, each time a clone of any object is created, to set the current player.stuff integer as an alt for that clone.\n\n[code:2x4qkmpt]this&#46;listalias = player&#46;stuff + &quot;&#58; &quot; + this&#46;realname\nthis&#46;alt = player&#46;stuff\nCloneObjectAndMove (this, player)\nmsg (this&#46;realname + &quot; added to cart&#46;&quot;)\nthis&#46;listalias = this&#46;realname\nthis&#46;alt = this&#46;realname\nIncreaseObjectCounter (player, &quot;stuff&quot;)[/code:2x4qkmpt]\n\nThis is what I have, as a script on an object type, where realname is an attribute on each object that I want to be the listalias of each item.\n\nHowever, after I 'verb' the item in question, I can't seem to 'look at' either the original object or the clone using either the original name or the alt.  I get this error, &quot;Error running script&#058; Cannot foreach over '7mm Longarm' as it is not a list&quot;.\n\nI THINK what's happening is that it no longer recognizes item.alt as a list... but I don't know how to fix it.\n\nCan you guys help me?\n\nThanks.",
+      "EditableFormat": "bbcode",
+      "HTML": "Hey, All,<br/><br/>I've been asking for a lot of help recently, and I appreciate your assistance.<br/><br/>I've learned how to sequentially clone objects, and to do so without having to repeat the rules for each new object.  Setting the item.alt for a known clone, like key1, is easy.  I'm having trouble creating an alt for an unknown clone.<br/><br/>I have an attribute of player.stuff that's an integer.  I would like, each time a clone of any object is created, to set the current player.stuff integer as an alt for that clone.<br/><br/><pre><code>this&#46;listalias = player&#46;stuff + &quot;&#58; &quot; + this&#46;realname<br/>this&#46;alt = player&#46;stuff<br/>CloneObjectAndMove (this, player)<br/>msg (this&#46;realname + &quot; added to cart&#46;&quot;)<br/>this&#46;listalias = this&#46;realname<br/>this&#46;alt = this&#46;realname<br/>IncreaseObjectCounter (player, &quot;stuff&quot;)</code></pre><br/><br/>This is what I have, as a script on an object type, where realname is an attribute on each object that I want to be the listalias of each item.<br/><br/>However, after I 'verb' the item in question, I can't seem to 'look at' either the original object or the clone using either the original name or the alt.  I get this error, &quot;Error running script&#058; Cannot foreach over '7mm Longarm' as it is not a list&quot;.<br/><br/>I THINK what's happening is that it no longer recognizes item.alt as a list... but I don't know how to fix it.<br/><br/>Can you guys help me?<br/><br/>Thanks.",
+      "PostDate": "2016-01-06T13:13:54+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40283",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "The alt attribute is a string list, not a string (unlike listalias, which is not a list), as you suspect. The easiest way to do it is to use the Split function:\n[code:2x524exi]this&#46;alt = Split(&quot;this&#46;realname&quot;, &quot;;&quot;)[/code:2x524exi]\nThat said, you seem to be changing the original, not the clone (assuming this is in a script on the original). Perhaps like this:\n[code:2x524exi]copy = CloneObjectAndMove (this, player)\ncopy&#46;listalias = player&#46;stuff + &quot;&#58; &quot; + this&#46;realname\ncopy&#46;alt = Split(&quot;this&#46;realname;&quot; + player&#46;stuff, &quot;;&quot;)\nIncreaseObjectCounter (player, &quot;stuff&quot;)\nmsg (this&#46;realname + &quot; added to cart&#46;&quot;)[/code:2x524exi]",
+      "EditableFormat": "bbcode",
+      "HTML": "The alt attribute is a string list, not a string (unlike listalias, which is not a list), as you suspect. The easiest way to do it is to use the Split function:<br/><pre><code>this&#46;alt = Split(&quot;this&#46;realname&quot;, &quot;;&quot;)</code></pre><br/>That said, you seem to be changing the original, not the clone (assuming this is in a script on the original). Perhaps like this:<br/><pre><code>copy = CloneObjectAndMove (this, player)<br/>copy&#46;listalias = player&#46;stuff + &quot;&#58; &quot; + this&#46;realname<br/>copy&#46;alt = Split(&quot;this&#46;realname;&quot; + player&#46;stuff, &quot;;&quot;)<br/>IncreaseObjectCounter (player, &quot;stuff&quot;)<br/>msg (this&#46;realname + &quot; added to cart&#46;&quot;)</code></pre>",
+      "PostDate": "2016-01-06T15:33:44+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40286",
+      "UserId": 0,
+      "Username": "Unadept",
+      "UserAvatar": null,
+      "UserGravatar": "056668dd85038941e105836c3cc35d03",
+      "EditableText": "Awesome, it was the Split function I was missing.\n\nIf the copy function lets me target the clone rather than the original, then that's great, that's a lot faster and cleaner.  What I was doing was trying to change the original, clone it, then change it back.\n\nMany Thanks",
+      "EditableFormat": "bbcode",
+      "HTML": "Awesome, it was the Split function I was missing.<br/><br/>If the copy function lets me target the clone rather than the original, then that's great, that's a lot faster and cleaner.  What I was doing was trying to change the original, clone it, then change it back.<br/><br/>Many Thanks",
+      "PostDate": "2016-01-06T17:32:36+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40290",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Sorry, I might have confused you there. &quot;copy&quot; is the name of a local variable, it is the copy of the original. The CloneObjectAndMove function returns an object, and that is assigned to this variable. The attributes are then set on that object.",
+      "EditableFormat": "bbcode",
+      "HTML": "Sorry, I might have confused you there. &quot;copy&quot; is the name of a local variable, it is the copy of the original. The CloneObjectAndMove function returns an object, and that is assigned to this variable. The attributes are then set on that object.",
+      "PostDate": "2016-01-06T20:22:48+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

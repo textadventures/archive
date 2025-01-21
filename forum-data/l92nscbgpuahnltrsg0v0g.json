@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "l92nscbgpuahnltrsg0v0g",
+    "ForumId": "10",
+    "Title": "Why does SetFontName set game.defautwebfont to \"\"?",
+    "LastUpdated": "2024-11-03T18:11:24.8683244Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "5cb9064f-839d-44e5-afcd-52241df6dd32",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://i.imgur.com/Odr8Efkb.jpeg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "```\r\n  <function name=\"SetFontName\" parameters=\"font\">\r\n    game.defaultfont = font\r\n    game.defaultwebfont = \"\"\r\n  </function>\r\n```\r\n\r\nWhy does this set game.defautwebfont to an empty string?\r\n\r\nI am guessing it was coded this way because of the way the editor controls add and \"remove\" attributes. (The editor will create an attribute that doesn't exist, but it will not delete an attribute -- it will make a string empty, or a boolean false, or what have you. It does this to avoid errors due to undefined attributes during play.)",
+      "EditableFormat": "markdown",
+      "HTML": "<pre><code>  &lt;function name=\"SetFontName\" parameters=\"font\"&gt;\n    game.defaultfont = font\n    game.defaultwebfont = \"\"\n  &lt;/function&gt;\n</code></pre>\n<p>Why does this set game.defautwebfont to an empty string?</p>\n<p>I am guessing it was coded this way because of the way the editor controls add and \"remove\" attributes. (The editor will create an attribute that doesn't exist, but it will not delete an attribute -- it will make a string empty, or a boolean false, or what have you. It does this to avoid errors due to undefined attributes during play.)</p>\n\n",
+      "PostDate": "2024-11-03T18:11:24.8683244Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "a94f39bf-9c06-44e3-9f50-c44f33cbaca8",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://i.imgur.com/Odr8Efkb.jpeg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The only place I find `SetFontName()` used is in the editor controls code.\r\n\r\nThe same goes for `SetWebFontName()`.\r\n\r\n```\r\n  <editor>\r\n    <appliesto>(function)SetFontName</appliesto>\r\n    <display>Change font to #0</display>\r\n    <category>[EditorScriptsOutputOutput]</category>\r\n    <create>SetFontName (\"Georgia, serif\")</create>\r\n    <add>[EditorScriptsOutputChangefont]</add>\r\n\r\n    <control>\r\n      <controltype>label</controltype>\r\n      <caption>[EditorScriptsOutputChangethefont]</caption>\r\n    </control>\r\n\r\n    <control>\r\n      <controltype>expression</controltype>\r\n      <simple>name</simple>\r\n      <simpleeditor>dropdown</simpleeditor>\r\n      <attribute>0</attribute>\r\n      <source>basefonts</source>\r\n      <freetext/>\r\n    </control>\r\n  </editor>\r\n\r\n  <editor>\r\n    <appliesto>(function)SetWebFontName</appliesto>\r\n    <display>Change font to #0</display>\r\n    <category>[EditorScriptsOutputOutput]</category>\r\n    <create>SetWebFontName (\"\")</create>\r\n    <add>[EditorScriptsOutputChangefontWeb]</add>\r\n```\r\n\r\n---\r\n`SetWebFontName` doesn't modify `game.defaultfont` at all.\r\n\r\n```\r\n  <function name=\"SetWebFontName\" parameters=\"font\">\r\n    AddExternalStylesheet (\"https://fonts.googleapis.com/css?family=\" + Replace(font, \" \", \"+\"))\r\n    game.defaultwebfont = font\r\n  </function>\r\n```\r\n\r\n---\r\nBut I can't find where it sets the fallback fonts anywhere in the code.\r\n\r\n---\r\n```\r\n  <function name=\"GetCurrentTextFormat\" type=\"string\" parameters=\"colour\">\r\n    style = \"\"\r\n    \r\n    if (UIOptionUseGameFont()) {\r\n      font = GetCurrentFontFamily()\r\n    }\r\n    else {\r\n      font = GetUIOption(\"OverrideFontName\")\r\n    }\r\n    \r\n    if (LengthOf(font) > 0) {\r\n      style = style + \"font-family:\" + font + \";\"\r\n    }\r\n```\r\n\r\n---\r\n```\r\n  <function name=\"OutputTextNoBr\" parameters=\"text\">\r\n    <![CDATA[\r\n    OutputTextRawNoBr(ProcessText(text))\r\n    ]]>\r\n  </function>\r\n\r\n\r\n  <function name=\"OutputTextRawNoBr\" parameters=\"text\">\r\n    <![CDATA[\r\n    JS.addText(\"<span style=\\\"\" + GetCurrentTextFormat(\"\") + \"\\\">\" + text + \"</span>\")\r\n    RequestSpeak (text)\r\n    ]]>\r\n  </function>\r\n```\r\n\r\n---\r\nIt does it somewhere. In a real example, I run this script:\r\n```\r\nSetWebFontName (\"Della Respira\")\r\ngame.defaultfont = \"Times New Roman, serif\"\r\n```\r\n\r\nThat will output this now: `<span style=\"font-family:'Della Respira', Times New Roman, serif;color:Black;font-size:12pt;\">Hello, forum!</span>`\r\n\r\nIt behaves the same way without that script, and just adding \"Della Respira\" as the web font in the editor.\r\n\r\nBUT here is the point: this script will leave you with Georgia as the font:\r\n```\r\nSetWebFontName(\"Della Respira\")\r\nSetFontName(\"Georgia, serif\")\r\n```\r\n\r\n`<span style=\"font-family:Georgia, serif;color:Black;font-size:12pt;\">Hello, forum!</span>`\r\n\r\n---\r\nAnd this script will leave you with 'Della Respira' as the font, and with \"Georgia\" and \"serif\" as  fallback fonts:\r\n```\r\nSetFontName(\"Times New Roman, serif\")\r\nSetWebFontName(\"Della Respira\")\r\n```\r\n\r\n`<span style=\"font-family:'Della Respira', Georgia, serif;color:Black;font-size:12pt;\">Hello, forum!</span>`",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The only place I find <code>SetFontName()</code> used is in the editor controls code.</p>\n<p>The same goes for <code>SetWebFontName()</code>.</p>\n<pre><code>  &lt;editor&gt;\n    &lt;appliesto&gt;(function)SetFontName&lt;/appliesto&gt;\n    &lt;display&gt;Change font to #0&lt;/display&gt;\n    &lt;category&gt;[EditorScriptsOutputOutput]&lt;/category&gt;\n    &lt;create&gt;SetFontName (\"Georgia, serif\")&lt;/create&gt;\n    &lt;add&gt;[EditorScriptsOutputChangefont]&lt;/add&gt;\n\n    &lt;control&gt;\n      &lt;controltype&gt;label&lt;/controltype&gt;\n      &lt;caption&gt;[EditorScriptsOutputChangethefont]&lt;/caption&gt;\n    &lt;/control&gt;\n\n    &lt;control&gt;\n      &lt;controltype&gt;expression&lt;/controltype&gt;\n      &lt;simple&gt;name&lt;/simple&gt;\n      &lt;simpleeditor&gt;dropdown&lt;/simpleeditor&gt;\n      &lt;attribute&gt;0&lt;/attribute&gt;\n      &lt;source&gt;basefonts&lt;/source&gt;\n      &lt;freetext/&gt;\n    &lt;/control&gt;\n  &lt;/editor&gt;\n\n  &lt;editor&gt;\n    &lt;appliesto&gt;(function)SetWebFontName&lt;/appliesto&gt;\n    &lt;display&gt;Change font to #0&lt;/display&gt;\n    &lt;category&gt;[EditorScriptsOutputOutput]&lt;/category&gt;\n    &lt;create&gt;SetWebFontName (\"\")&lt;/create&gt;\n    &lt;add&gt;[EditorScriptsOutputChangefontWeb]&lt;/add&gt;\n</code></pre>\n<hr>\n<p><code>SetWebFontName</code> doesn't modify <code>game.defaultfont</code> at all.</p>\n<pre><code>  &lt;function name=\"SetWebFontName\" parameters=\"font\"&gt;\n    AddExternalStylesheet (\"https://fonts.googleapis.com/css?family=\" + Replace(font, \" \", \"+\"))\n    game.defaultwebfont = font\n  &lt;/function&gt;\n</code></pre>\n<hr>\n<p>But I can't find where it sets the fallback fonts anywhere in the code.</p>\n<hr>\n<pre><code>  &lt;function name=\"GetCurrentTextFormat\" type=\"string\" parameters=\"colour\"&gt;\n    style = \"\"\n    \n    if (UIOptionUseGameFont()) {\n      font = GetCurrentFontFamily()\n    }\n    else {\n      font = GetUIOption(\"OverrideFontName\")\n    }\n    \n    if (LengthOf(font) &gt; 0) {\n      style = style + \"font-family:\" + font + \";\"\n    }\n</code></pre>\n<hr>\n<pre><code>  &lt;function name=\"OutputTextNoBr\" parameters=\"text\"&gt;\n    &lt;![CDATA[\n    OutputTextRawNoBr(ProcessText(text))\n    ]]&gt;\n  &lt;/function&gt;\n\n\n  &lt;function name=\"OutputTextRawNoBr\" parameters=\"text\"&gt;\n    &lt;![CDATA[\n    JS.addText(\"&lt;span style=\\\"\" + GetCurrentTextFormat(\"\") + \"\\\"&gt;\" + text + \"&lt;/span&gt;\")\n    RequestSpeak (text)\n    ]]&gt;\n  &lt;/function&gt;\n</code></pre>\n<hr>\n<p>It does it somewhere. In a real example, I run this script:</p>\n<pre><code>SetWebFontName (\"Della Respira\")\ngame.defaultfont = \"Times New Roman, serif\"\n</code></pre>\n<p>That will output this now: <code>&lt;span style=\"font-family:'Della Respira', Times New Roman, serif;color:Black;font-size:12pt;\"&gt;Hello, forum!&lt;/span&gt;</code></p>\n<p>It behaves the same way without that script, and just adding \"Della Respira\" as the web font in the editor.</p>\n<p>BUT here is the point: this script will leave you with Georgia as the font:</p>\n<pre><code>SetWebFontName(\"Della Respira\")\nSetFontName(\"Georgia, serif\")\n</code></pre>\n<p><code>&lt;span style=\"font-family:Georgia, serif;color:Black;font-size:12pt;\"&gt;Hello, forum!&lt;/span&gt;</code></p>\n<hr>\n<p>And this script will leave you with 'Della Respira' as the font, and with \"Georgia\" and \"serif\" as  fallback fonts:</p>\n<pre><code>SetFontName(\"Times New Roman, serif\")\nSetWebFontName(\"Della Respira\")\n</code></pre>\n<p><code>&lt;span style=\"font-family:'Della Respira', Georgia, serif;color:Black;font-size:12pt;\"&gt;Hello, forum!&lt;/span&gt;</code></p>\n\n",
+      "PostDate": "2024-11-03T18:12:11.5484811Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "4c884cfb-f81a-46db-9e6b-a74762003d53",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://i.imgur.com/Odr8Efkb.jpeg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Okay, now I see the line of code I was missing. It's the last line:\r\n\r\n```\r\n  <function name=\"GetCurrentFontFamily\" type=\"string\">\r\n    if (game.defaultwebfont = null) {\r\n      return (game.defaultfont)\r\n    }\r\n    else {\r\n      if (game.defaultwebfont = \"\") {\r\n        return (game.defaultfont)\r\n      }\r\n      else {\r\n        return (\"'\" + game.defaultwebfont + \"', \" + game.defaultfont)\r\n      }\r\n    }\r\n  </function>\r\n```\r\n\r\n---\r\nTo me, it seems that `SetFontName` shouldn't modify `game.defaultwebfont`.\r\n\r\nBut, there might be a good reason it does. So...\r\n\r\nWhat is the best practice when using a script to alter the font family to use a web font when available with custom fallback fonts?\r\n\r\nThe only way I can get it to work with fallbacks other than \"Georgia, serif\" is like this:\r\n```\r\nSetWebFontName (\"Della Respira\")\r\ngame.defaultfont = \"Times New Roman, serif\"\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Okay, now I see the line of code I was missing. It's the last line:</p>\n<pre><code>  &lt;function name=\"GetCurrentFontFamily\" type=\"string\"&gt;\n    if (game.defaultwebfont = null) {\n      return (game.defaultfont)\n    }\n    else {\n      if (game.defaultwebfont = \"\") {\n        return (game.defaultfont)\n      }\n      else {\n        return (\"'\" + game.defaultwebfont + \"', \" + game.defaultfont)\n      }\n    }\n  &lt;/function&gt;\n</code></pre>\n<hr>\n<p>To me, it seems that <code>SetFontName</code> shouldn't modify <code>game.defaultwebfont</code>.</p>\n<p>But, there might be a good reason it does. So...</p>\n<p>What is the best practice when using a script to alter the font family to use a web font when available with custom fallback fonts?</p>\n<p>The only way I can get it to work with fallbacks other than \"Georgia, serif\" is like this:</p>\n<pre><code>SetWebFontName (\"Della Respira\")\ngame.defaultfont = \"Times New Roman, serif\"\n</code></pre>\n\n",
+      "PostDate": "2024-11-03T18:31:05.6900651Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "1705253a-a6d1-401b-80b9-51e83a74596f",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://i.imgur.com/Odr8Efkb.jpeg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "```C#\r\n// The first line loads the font from Google\r\nSetWebFontName(\"Della Respira\")\r\n// This second line doesn't load the web font without first line.\r\nSetFontName(\"Della Respira, Times New Roman, serif\")\r\n```\r\n\r\nThat script has the same end result as this:\r\n```C#\r\nSetWebFontName(\"Della Respira\")\r\ngame.defaultfont = \"Times New Roman, serif\"\r\n```\r\n\r\nAnd this works in the desktop player, but it doesn't load the web font online:\r\n```C#\r\ngame.defaultwebfont = \"Della Respira\"\r\ngame.defaultfont = \"Times New Roman, serif\"\r\n```\r\n\r\n---\r\nThe important bit seems to be having your desired web font set as the value of `game.defaultwebfont` by calling `SetWebFontName` before any other code, so Quest knows to load the font from Google.\r\n\r\nAfter testing,  I find that using `SetFontName` alone will not download the font from Google, even if you do this (which you can't do in the online editor): `SetFontName(\"Della Respira, Times New Roman, serif\")`",
+      "EditableFormat": "markdown",
+      "HTML": "<pre><code>// The first line loads the font from Google\nSetWebFontName(\"Della Respira\")\n// This second line doesn't load the web font without first line.\nSetFontName(\"Della Respira, Times New Roman, serif\")\n</code></pre>\n<p>That script has the same end result as this:</p>\n<pre><code>SetWebFontName(\"Della Respira\")\ngame.defaultfont = \"Times New Roman, serif\"\n</code></pre>\n<p>And this works in the desktop player, but it doesn't load the web font online:</p>\n<pre><code>game.defaultwebfont = \"Della Respira\"\ngame.defaultfont = \"Times New Roman, serif\"\n</code></pre>\n<hr>\n<p>The important bit seems to be having your desired web font set as the value of <code>game.defaultwebfont</code> by calling <code>SetWebFontName</code> before any other code, so Quest knows to load the font from Google.</p>\n<p>After testing,  I find that using <code>SetFontName</code> alone will not download the font from Google, even if you do this (which you can't do in the online editor): <code>SetFontName(\"Della Respira, Times New Roman, serif\")</code></p>\n\n",
+      "PostDate": "2024-11-03T18:57:46.8205617Z",
+      "LastEditDate": "2024-11-03T18:59:52.1008074Z",
+      "link": null
+    },
+    {
+      "PostId": "e6e38cc6-626e-4f02-bbde-57021bc5a19f",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> Why does this set game.defautwebfont to an empty string?\r\n\r\nIt's a long time since I looked at this, and I never really played with it because I don't generally think too much about UI stuff. But I got the impression that the game renders using `game.defaultwebfont` if it exists, and `game.defaultfont` otherwise. So if a user wants to switch from a webfont to one of the default font families, you'd need `SetFontName` to unset the webfont.\r\n\r\nSomething like that?",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>Why does this set game.defautwebfont to an empty string?</p>\n</blockquote>\n<p>It's a long time since I looked at this, and I never really played with it because I don't generally think too much about UI stuff. But I got the impression that the game renders using <code>game.defaultwebfont</code> if it exists, and <code>game.defaultfont</code> otherwise. So if a user wants to switch from a webfont to one of the default font families, you'd need <code>SetFontName</code> to unset the webfont.</p>\n<p>Something like that?</p>\n\n",
+      "PostDate": "2024-11-04T09:30:56.717432Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "c8109b6f-91e1-46a9-8116-b4c3fdefa8e5",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://i.imgur.com/Odr8Efkb.jpeg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "That makes sense. I bet that's the reasoning behind it.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>That makes sense. I bet that's the reasoning behind it.</p>\n\n",
+      "PostDate": "2024-11-04T14:09:13.4561882Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

@@ -1,0 +1,179 @@
+{
+  "Topic": {
+    "TopicId": "4892",
+    "ForumId": "10",
+    "Title": "Story changes based on gender",
+    "LastUpdated": "2014-12-14T20:20:59+00:00",
+    "ReplyCount": 13
+  },
+  "Posts": [
+    {
+      "PostId": "32835",
+      "UserId": 0,
+      "Username": "sillyEnthusiast",
+      "UserAvatar": null,
+      "UserGravatar": "ad64f42da7733cea5498dffab7629594",
+      "EditableText": "I've just started the creation of a Gorean Sburb session (if that means anything to anyone) and I'm having some trouble with what I consider to be an important game feature. On the planet of Gor, there are very defined gender roles, and as such male and female characters would have a different experience. I cannot for the life of me figure out how to change certain things based solely on the player's gender chosen at the beginning. If you look at the game script, you will see where I am trying to change the caste set for a female vs. a male character. Obviously I have gone awry somewhere and any help would be greatly appreciated because I am incredibly stuck.\n\nMany thanks in advance!  <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "I've just started the creation of a Gorean Sburb session (if that means anything to anyone) and I'm having some trouble with what I consider to be an important game feature. On the planet of Gor, there are very defined gender roles, and as such male and female characters would have a different experience. I cannot for the life of me figure out how to change certain things based solely on the player's gender chosen at the beginning. If you look at the game script, you will see where I am trying to change the caste set for a female vs. a male character. Obviously I have gone awry somewhere and any help would be greatly appreciated because I am incredibly stuck.<br/><br/>Many thanks in advance!  <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --><div><a href=\"/attachment/1113\">Gorstuck.aslx</a></div>",
+      "PostDate": "2014-12-13T16:31:59+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32837",
+      "UserId": 0,
+      "Username": "sillyEnthusiast",
+      "UserAvatar": null,
+      "UserGravatar": "ad64f42da7733cea5498dffab7629594",
+      "EditableText": "Oh, I should probably have just posted the code for that, huh? This is my first go at this so sorry about not doing the obvious thing here.\n\n[code:1i4zvd9g] msg (&quot;You sit up in your furs and yawn, squinting in the morning sunlight&#46; Now what were you supposed to do today? You sigh, you can barely remember your own name in the mornings&#46; &quot;)\n      msg (&quot;What was your name again?&quot;)\n      get input {\n        player&#46;alias = result\n        msg (&quot;That's right, it's &quot; +player&#46;alias)\n        ShowMenu (&quot;Your gender?&quot;, Split (&quot;Male;Female&quot;, &quot;;&quot;), false) {\n          player&#46;gender = result\n          if (player&#46;gender=Female) {\n            ShowMenu (&quot;Your caste?&quot;, Split (&quot;Merchant;Builder;Scribe&quot;, &quot;;&quot;), false) {[/code:1i4zvd9g]",
+      "EditableFormat": "bbcode",
+      "HTML": "Oh, I should probably have just posted the code for that, huh? This is my first go at this so sorry about not doing the obvious thing here.<br/><br/><pre><code> msg (&quot;You sit up in your furs and yawn, squinting in the morning sunlight&#46; Now what were you supposed to do today? You sigh, you can barely remember your own name in the mornings&#46; &quot;)<br/>      msg (&quot;What was your name again?&quot;)<br/>      get input {<br/>        player&#46;alias = result<br/>        msg (&quot;That's right, it's &quot; +player&#46;alias)<br/>        ShowMenu (&quot;Your gender?&quot;, Split (&quot;Male;Female&quot;, &quot;;&quot;), false) {<br/>          player&#46;gender = result<br/>          if (player&#46;gender=Female) {<br/>            ShowMenu (&quot;Your caste?&quot;, Split (&quot;Merchant;Builder;Scribe&quot;, &quot;;&quot;), false) {</code></pre>",
+      "PostDate": "2014-12-13T16:56:41+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32840",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Sounds like an interesting project.\n\nYou have a line:\n[code:1vt5iq8c]if (player&#46;gender=Female) {[/code:1vt5iq8c]\nYou need to change it to:\n[code:1vt5iq8c]if (player&#46;gender=&quot;Female&quot;) {[/code:1vt5iq8c]\nI.e., Female needs to be in double quotes (so Quest knows it is a string; otherwise it will look for a variable called Female, and complain because there is not one). \n\nThat is kind of what you need to do elsewhere. Anywhere in your game there is a difference, you do:\n[code:1vt5iq8c]if (player&#46;gender=&quot;Female&quot;) {\n  &#46;&#46;&#46; do some girly stuff\n}\nelse {\n  &#46;&#46;&#46; do some macho stuff\n}[/code:1vt5iq8c]\nIs that clear? I appreciate that if you are not used to [url=http&#58;//forum&#46;textadventures&#46;co&#46;uk/viewtopic&#46;php?f=18&amp;t=4771:1vt5iq8c]code view[/url:1vt5iq8c] that might not mean anything to you, so I hope that is clear.\n\nBy the way, you might want to have a special room the player starts in, and then move him/her to the start room once you have done the character creation stuff. Bits of room description appear scattered through it otherwise",
+      "EditableFormat": "bbcode",
+      "HTML": "Sounds like an interesting project.<br/><br/>You have a line:<br/><pre><code>if (player&#46;gender=Female) {</code></pre><br/>You need to change it to:<br/><pre><code>if (player&#46;gender=&quot;Female&quot;) {</code></pre><br/>I.e., Female needs to be in double quotes (so Quest knows it is a string; otherwise it will look for a variable called Female, and complain because there is not one). <br/><br/>That is kind of what you need to do elsewhere. Anywhere in your game there is a difference, you do:<br/><pre><code>if (player&#46;gender=&quot;Female&quot;) {<br/>  &#46;&#46;&#46; do some girly stuff<br/>}<br/>else {<br/>  &#46;&#46;&#46; do some macho stuff<br/>}</code></pre><br/>Is that clear? I appreciate that if you are not used to <a href=\"http&#58;//forum&#46;textadventures&#46;co&#46;uk/viewtopic&#46;php?f=18&amp;t=4771\" rel=\"nofollow\">code view</a> that might not mean anything to you, so I hope that is clear.<br/><br/>By the way, you might want to have a special room the player starts in, and then move him/her to the start room once you have done the character creation stuff. Bits of room description appear scattered through it otherwise",
+      "PostDate": "2014-12-13T17:45:03+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32841",
+      "UserId": 0,
+      "Username": "sillyEnthusiast",
+      "UserAvatar": null,
+      "UserGravatar": "ad64f42da7733cea5498dffab7629594",
+      "EditableText": "Thanks so much! The code makes a little sense, I just have to get more familiar with it. And yes, I'm going to go back and fix the room thing, I was just getting really frustrated with that. I can't believe it was that simple, but at least I was on the right track!",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks so much! The code makes a little sense, I just have to get more familiar with it. And yes, I'm going to go back and fix the room thing, I was just getting really frustrated with that. I can't believe it was that simple, but at least I was on the right track!",
+      "PostDate": "2014-12-13T17:48:13+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32843",
+      "UserId": 0,
+      "Username": "Marzipan",
+      "UserAvatar": null,
+      "UserGravatar": "96db8d4d178365a7065b1872e874bc83",
+      "EditableText": "No offense dude but I just find everything about this idea intensely creepy.  <!-- s:? --><img src=\"{SMILIES_PATH}/icon_confused.gif\" alt=\":?\" title=\"Confused\" /><!-- s:? -->\n\ne: though inevitable I suppose considering the nature of both fandoms.",
+      "EditableFormat": "bbcode",
+      "HTML": "No offense dude but I just find everything about this idea intensely creepy.  <!-- s:? --><img src=\"{SMILIES_PATH}/icon_confused.gif\" alt=\":?\" title=\"Confused\" /><!-- s:? --><br/><br/>e: though inevitable I suppose considering the nature of both fandoms.",
+      "PostDate": "2014-12-13T19:12:54+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32847",
+      "UserId": 0,
+      "Username": "Silver",
+      "UserAvatar": null,
+      "UserGravatar": "13024be5ccbb463906b024d5bd3cb5e8",
+      "EditableText": "I had to google it.  <!-- s:? --><img src=\"{SMILIES_PATH}/icon_confused.gif\" alt=\":?\" title=\"Confused\" /><!-- s:? --> \n\nIt'd get hackles to rise, certainly on Intfiction. Perhaps that's its intention.",
+      "EditableFormat": "bbcode",
+      "HTML": "I had to google it.  <!-- s:? --><img src=\"{SMILIES_PATH}/icon_confused.gif\" alt=\":?\" title=\"Confused\" /><!-- s:? --> <br/><br/>It'd get hackles to rise, certainly on Intfiction. Perhaps that's its intention.",
+      "PostDate": "2014-12-13T20:50:54+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32848",
+      "UserId": 0,
+      "Username": "Marzipan",
+      "UserAvatar": null,
+      "UserGravatar": "96db8d4d178365a7065b1872e874bc83",
+      "EditableText": "Much like Homestuck itself (what 'Sburb' is a reference too). Gorean crap seems to eventually leak into every fan community out there, no matter how out of place or inappropriate.   \n\nWith the former it's usually 'what if the setting of [random book/movie/game] was exactly the same, except my self-insert character and a group of friends (grey face paint optional) got to play a game that destroys and recreates the universe!''\n\nWhile Gorean fans instead ask the question 'what if this setting (World of Warcraft? The Sims? My Little Pony? Doesn't matter!) was exactly the same, except all the women are property and exist solely to fulfill our bondage fetish?'  <!-- s:roll: --><img src=\"{SMILIES_PATH}/icon_rolleyes.gif\" alt=\":roll:\" title=\"Rolling Eyes\" /><!-- s:roll: --> \n\nThat said, between the two fandoms I'm sure the OP will get enough enthusiastic players he really won't care [i:2screk54]what[/i:2screk54] the intfiction community thinks...",
+      "EditableFormat": "bbcode",
+      "HTML": "Much like Homestuck itself (what 'Sburb' is a reference too). Gorean crap seems to eventually leak into every fan community out there, no matter how out of place or inappropriate.   <br/><br/>With the former it's usually 'what if the setting of [random book/movie/game] was exactly the same, except my self-insert character and a group of friends (grey face paint optional) got to play a game that destroys and recreates the universe!''<br/><br/>While Gorean fans instead ask the question 'what if this setting (World of Warcraft? The Sims? My Little Pony? Doesn't matter!) was exactly the same, except all the women are property and exist solely to fulfill our bondage fetish?'  <!-- s:roll: --><img src=\"{SMILIES_PATH}/icon_rolleyes.gif\" alt=\":roll:\" title=\"Rolling Eyes\" /><!-- s:roll: --> <br/><br/>That said, between the two fandoms I'm sure the OP will get enough enthusiastic players he really won't care <span style=\"font-style:italic;\">what</span> the intfiction community thinks...",
+      "PostDate": "2014-12-13T21:27:45+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32854",
+      "UserId": 0,
+      "Username": "sillyEnthusiast",
+      "UserAvatar": null,
+      "UserGravatar": "ad64f42da7733cea5498dffab7629594",
+      "EditableText": "@Marzipan: First off, I am a woman. Sorry to burst your bubble there. Second, the most adult content or even suggestive content will be some light swearing. \n\nLet me make it clear that I am sincerely not trying to start trouble or rustle jimmies or whatever. I just want to clear up that my intent is far from what you think. Long story short, when these people play Sburb (or ya know, whatever Gorean Sburb ends up being called) at the behest of the Priest-Kings in an attempt to destroy the evil that is trying to destroy the universe (AKA Lord English), the planet is destroyed, as all planets with Sburb players are, and with nobody to enforce their societal norms, nor the time to worry about them, the players learn to see past gender and their culture's view of it out of necessity.\n\nThat isn't to say there won't be moments. People don't just drop everything they've known their whole life in a heartbeat, BUT I promise that by the end all will be right with the world and all will be equal. \n\nActually, the whole point of this project is to draw away from trolls, slaves, bondage, etc. and show the brilliance of a properly played Sburb session as well as the badassery and honor codes of Gor, both of which are often sadly overlooked.\n\nHope this cleared some things up for you!",
+      "EditableFormat": "bbcode",
+      "HTML": "@Marzipan: First off, I am a woman. Sorry to burst your bubble there. Second, the most adult content or even suggestive content will be some light swearing. <br/><br/>Let me make it clear that I am sincerely not trying to start trouble or rustle jimmies or whatever. I just want to clear up that my intent is far from what you think. Long story short, when these people play Sburb (or ya know, whatever Gorean Sburb ends up being called) at the behest of the Priest-Kings in an attempt to destroy the evil that is trying to destroy the universe (AKA Lord English), the planet is destroyed, as all planets with Sburb players are, and with nobody to enforce their societal norms, nor the time to worry about them, the players learn to see past gender and their culture's view of it out of necessity.<br/><br/>That isn't to say there won't be moments. People don't just drop everything they've known their whole life in a heartbeat, BUT I promise that by the end all will be right with the world and all will be equal. <br/><br/>Actually, the whole point of this project is to draw away from trolls, slaves, bondage, etc. and show the brilliance of a properly played Sburb session as well as the badassery and honor codes of Gor, both of which are often sadly overlooked.<br/><br/>Hope this cleared some things up for you!",
+      "PostDate": "2014-12-14T03:19:28+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32857",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "ah, gender equality...\n\nall civilizations are the source of female oppression, whereas with tribals, there's no female oppression, and even rape is non-existentant.\n\nif you're interested in a good read:\n\n(I'm a history buff, and I love the mongols, the most powerful force that humanity has ever formed, grins)\n\n<!-- m --><a class=\"postlink\" href=\"http://www.coldsiberia.org/\">http://www.coldsiberia.org/</a><!-- m -->\n<!-- m --><a class=\"postlink\" href=\"http://www.coldsiberia.org/monwomen.htm\">http://www.coldsiberia.org/monwomen.htm</a><!-- m -->\nand all the other links",
+      "EditableFormat": "bbcode",
+      "HTML": "ah, gender equality...<br/><br/>all civilizations are the source of female oppression, whereas with tribals, there's no female oppression, and even rape is non-existentant.<br/><br/>if you're interested in a good read:<br/><br/>(I'm a history buff, and I love the mongols, the most powerful force that humanity has ever formed, grins)<br/><br/><!-- m --><a class=\"postlink\" href=\"http://www.coldsiberia.org/\">http://www.coldsiberia.org/</a><!-- m --><br/><!-- m --><a class=\"postlink\" href=\"http://www.coldsiberia.org/monwomen.htm\">http://www.coldsiberia.org/monwomen.htm</a><!-- m --><br/>and all the other links",
+      "PostDate": "2014-12-14T06:26:06+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32858",
+      "UserId": 0,
+      "Username": "sillyEnthusiast",
+      "UserAvatar": null,
+      "UserGravatar": "ad64f42da7733cea5498dffab7629594",
+      "EditableText": "You know if I were a different kind of person, I'd say that is proof that when you oppress the females things get done, haha. I don't actually think that, just a way of looking at that information. I will have to check that out when I'm not fighting tooth and nail with these scripts!",
+      "EditableFormat": "bbcode",
+      "HTML": "You know if I were a different kind of person, I'd say that is proof that when you oppress the females things get done, haha. I don't actually think that, just a way of looking at that information. I will have to check that out when I'm not fighting tooth and nail with these scripts!",
+      "PostDate": "2014-12-14T07:35:00+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32870",
+      "UserId": 0,
+      "Username": "Marzipan",
+      "UserAvatar": null,
+      "UserGravatar": "96db8d4d178365a7065b1872e874bc83",
+      "EditableText": "Well kudos for trying something different at least, though I'd recommend making all that very clear in the game's description...otherwise with the reputation Gorean stuff has, you're going to have some people automatically avoiding it, and other people getting disappointed it didn't have what they expected. \n\nAnd fwiw, the 'intensely creeped out' comment was an exaggeration, compared to the rest of the dark alleys of the internet I'm sure Gor stuff is relatively tame, it's more that I get annoyed at the way it tends to worm its way in to everything else. Just like Homestuck and MLP. (Both of which I enjoy but damn do their batsh*t fans make me not want to admit that, ever.)   \n\nAnyway, good luck with your game, though it does sound pretty ambitious for a first project. Just curious, have you played/written any IF games before this?  \n\n[quote=&quot;HegemonKhan&quot;:2yr5g941]ah, gender equality...\n\nall civilizations are the source of female oppression, whereas with tribals, there's no female oppression, and even rape is non-existentant.\n[/quote:2yr5g941]\n\nNo time to get into a big debate here, but I'd have to disagree with you. The idea of the 'noble savage' living in harmony with nature and each other and yadda yadda is an attractive but usually completely fictional one. Human beings are still human beings no matter what society they're living in.\n\nThough what defines a 'civilization' anyway? You used Mongols as an example...they didn't count? Because they were nomadic, or what? \n\nEither way, while it's true the upper-class women had more rights than women in other cultures at the time, that wasn't exactly considered some fundamental right, and I don't think anyone would try to argue that the Mongols didn't take slaves or do their fair share of raping along with all the conquering and killing.\n\nThe Comanche were similar to the Mongols in a some ways and they were also big fans of slavery and rape. Boys and men would hunt and fight and practice horse riding while women were expected to do all the actual work. And let's not forget all the tribes still around today where women aren't valued to the point that newborn baby girls are often abandoned to die of exposure. Large parts of India are still tribal, and a very bad place to be a woman, especially if your husband dies. (Though being ostracized by your family and community is still much better than being burned alive...that's at least [i:2yr5g941]one[/i:2yr5g941] good change 'civilization' brought about, right?)     \n\n...dang, didn't mean to write this much, I guess this [i:2yr5g941]did[/i:2yr5g941] turn into a big debate.  <!-- s:roll: --><img src=\"{SMILIES_PATH}/icon_rolleyes.gif\" alt=\":roll:\" title=\"Rolling Eyes\" /><!-- s:roll: -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Well kudos for trying something different at least, though I'd recommend making all that very clear in the game's description...otherwise with the reputation Gorean stuff has, you're going to have some people automatically avoiding it, and other people getting disappointed it didn't have what they expected. <br/><br/>And fwiw, the 'intensely creeped out' comment was an exaggeration, compared to the rest of the dark alleys of the internet I'm sure Gor stuff is relatively tame, it's more that I get annoyed at the way it tends to worm its way in to everything else. Just like Homestuck and MLP. (Both of which I enjoy but damn do their batsh*t fans make me not want to admit that, ever.)   <br/><br/>Anyway, good luck with your game, though it does sound pretty ambitious for a first project. Just curious, have you played/written any IF games before this?  <br/><br/><blockquote><cite>HegemonKhan wrote:</cite>ah, gender equality...<br/><br/>all civilizations are the source of female oppression, whereas with tribals, there's no female oppression, and even rape is non-existentant.<br/></blockquote><br/><br/>No time to get into a big debate here, but I'd have to disagree with you. The idea of the 'noble savage' living in harmony with nature and each other and yadda yadda is an attractive but usually completely fictional one. Human beings are still human beings no matter what society they're living in.<br/><br/>Though what defines a 'civilization' anyway? You used Mongols as an example...they didn't count? Because they were nomadic, or what? <br/><br/>Either way, while it's true the upper-class women had more rights than women in other cultures at the time, that wasn't exactly considered some fundamental right, and I don't think anyone would try to argue that the Mongols didn't take slaves or do their fair share of raping along with all the conquering and killing.<br/><br/>The Comanche were similar to the Mongols in a some ways and they were also big fans of slavery and rape. Boys and men would hunt and fight and practice horse riding while women were expected to do all the actual work. And let's not forget all the tribes still around today where women aren't valued to the point that newborn baby girls are often abandoned to die of exposure. Large parts of India are still tribal, and a very bad place to be a woman, especially if your husband dies. (Though being ostracized by your family and community is still much better than being burned alive...that's at least <span style=\"font-style:italic;\">one</span> good change 'civilization' brought about, right?)     <br/><br/>...dang, didn't mean to write this much, I guess this <span style=\"font-style:italic;\">did</span> turn into a big debate.  <!-- s:roll: --><img src=\"{SMILIES_PATH}/icon_rolleyes.gif\" alt=\":roll:\" title=\"Rolling Eyes\" /><!-- s:roll: -->",
+      "PostDate": "2014-12-14T16:30:02+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32873",
+      "UserId": 0,
+      "Username": "Silver",
+      "UserAvatar": null,
+      "UserGravatar": "13024be5ccbb463906b024d5bd3cb5e8",
+      "EditableText": "&quot;Tribes&quot; is too large and general a term. There have been tribes that have been run along matriarchal lines, for instance. But that certainly isnt true of all of them or even a majority afaik.",
+      "EditableFormat": "bbcode",
+      "HTML": "&quot;Tribes&quot; is too large and general a term. There have been tribes that have been run along matriarchal lines, for instance. But that certainly isnt true of all of them or even a majority afaik.",
+      "PostDate": "2014-12-14T17:43:19+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32874",
+      "UserId": 0,
+      "Username": "Marzipan",
+      "UserAvatar": null,
+      "UserGravatar": "96db8d4d178365a7065b1872e874bc83",
+      "EditableText": "Agreed that it's hard to even have a discussion with all the terms being so vague. How big and organized does a tribe have to get before it's considered a civilization? The Iroquois for example, they were matriarchal and I think it'd be insulting to say they weren't civilized.",
+      "EditableFormat": "bbcode",
+      "HTML": "Agreed that it's hard to even have a discussion with all the terms being so vague. How big and organized does a tribe have to get before it's considered a civilization? The Iroquois for example, they were matriarchal and I think it'd be insulting to say they weren't civilized.",
+      "PostDate": "2014-12-14T18:15:51+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32875",
+      "UserId": 0,
+      "Username": "sillyEnthusiast",
+      "UserAvatar": null,
+      "UserGravatar": "ad64f42da7733cea5498dffab7629594",
+      "EditableText": "[quote=&quot;Marzipan&quot;:2l5r0z5d]Well kudos for trying something different at least, though I'd recommend making all that very clear in the game's description...otherwise with the reputation Gorean stuff has, you're going to have some people automatically avoiding it, and other people getting disappointed it didn't have what they expected. \n\nAnd fwiw, the 'intensely creeped out' comment was an exaggeration, compared to the rest of the dark alleys of the internet I'm sure Gor stuff is relatively tame, it's more that I get annoyed at the way it tends to worm its way in to everything else. Just like Homestuck and MLP. (Both of which I enjoy but damn do their batsh*t fans make me not want to admit that, ever.)   \n\nAnyway, good luck with your game, though it does sound pretty ambitious for a first project. Just curious, have you played/written any IF games before this?  \n[/quote:2l5r0z5d]\n\nIt's all good, I actually always get a giggle when people assume I'm a creepy pervy man the moment I mention Gor. But yes, I probably should have made that clear to begin with. I will definitely be sure to do that when I put in the description.\nWhat part of the internet have you been to where Gor is crossed over with things? I've never seen it so I'm genuinely surprised to hear that. As far as the Homestuck and MLP fandoms, yeah as much as I like both, the fandoms are awful. Same for Doctor Who and Sherlock. Though the talent within the fandoms is astounding to be sure.\n\nThis is my first IF game, and it's probably silly to start with such a large project, but I figure I might as well make it a point to have to learn the complicated things so the next one, if I decide I like doing this, is less painful.",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>Marzipan wrote:</cite>Well kudos for trying something different at least, though I'd recommend making all that very clear in the game's description...otherwise with the reputation Gorean stuff has, you're going to have some people automatically avoiding it, and other people getting disappointed it didn't have what they expected. <br/><br/>And fwiw, the 'intensely creeped out' comment was an exaggeration, compared to the rest of the dark alleys of the internet I'm sure Gor stuff is relatively tame, it's more that I get annoyed at the way it tends to worm its way in to everything else. Just like Homestuck and MLP. (Both of which I enjoy but damn do their batsh*t fans make me not want to admit that, ever.)   <br/><br/>Anyway, good luck with your game, though it does sound pretty ambitious for a first project. Just curious, have you played/written any IF games before this?  <br/></blockquote><br/><br/>It's all good, I actually always get a giggle when people assume I'm a creepy pervy man the moment I mention Gor. But yes, I probably should have made that clear to begin with. I will definitely be sure to do that when I put in the description.<br/>What part of the internet have you been to where Gor is crossed over with things? I've never seen it so I'm genuinely surprised to hear that. As far as the Homestuck and MLP fandoms, yeah as much as I like both, the fandoms are awful. Same for Doctor Who and Sherlock. Though the talent within the fandoms is astounding to be sure.<br/><br/>This is my first IF game, and it's probably silly to start with such a large project, but I figure I might as well make it a point to have to learn the complicated things so the next one, if I decide I like doing this, is less painful.",
+      "PostDate": "2014-12-14T20:20:59+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

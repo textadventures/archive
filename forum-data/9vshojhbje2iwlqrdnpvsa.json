@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "9vshojhbje2iwlqrdnpvsa",
+    "ForumId": "10",
+    "Title": "Multistate Attributes Bug",
+    "LastUpdated": "2018-08-25T20:01:07.6304549Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "b55c5385-3d86-41c1-94b4-bae0e3ad85d1",
+      "UserId": 328485,
+      "Username": "docemoon145",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cda498b2f81e381cb5387db3b548dc8b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I made a garment in Quest that had multiple states. I thought I had everything working just fine, until I noticed something subtle but devastating.\r\nOnce the cursed garment reaches its highest multistate setting, the player's max health decreases by 1. That attribute \"bonus\" is only supposed to last as long as the garment is in the right state and worn, right? But when I take the garment off, the player's health is still decreased by 1.  And if I put it on again, it goes down another point! The cursed item is supposed to be annoying, but this could literally kill the player. Is this the way quest is supposed to handle multistate bonus attributes? It feels like a bug to me.\r\n\r\nIf it is a bug, then the player could also just re-wear an armor with good bonuses until their stats are game-breakingly high. I would really appreciate some sort of fix for this.\r\n\r\nThanks in advance.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I made a garment in Quest that had multiple states. I thought I had everything working just fine, until I noticed something subtle but devastating.<br>\nOnce the cursed garment reaches its highest multistate setting, the player's max health decreases by 1. That attribute \"bonus\" is only supposed to last as long as the garment is in the right state and worn, right? But when I take the garment off, the player's health is still decreased by 1.  And if I put it on again, it goes down another point! The cursed item is supposed to be annoying, but this could literally kill the player. Is this the way quest is supposed to handle multistate bonus attributes? It feels like a bug to me.</p>\n<p>If it is a bug, then the player could also just re-wear an armor with good bonuses until their stats are game-breakingly high. I would really appreciate some sort of fix for this.</p>\n<p>Thanks in advance.</p>\n\n",
+      "PostDate": "2018-08-25T20:01:07.6304549Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "366cbeff-4c84-45e9-b563-42ec4459b625",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "It should remove the \"bonus\" without problem. I just walked through the code for this, and I can't see how a bug could occur.\r\n\r\nIs the player removing the garment using the remove command, or are you calling RemoveGarment from a script?\r\n\r\n(If you are setting `somegarment.worn = false`, that's the problem. To remove a garment from a script, you need to call either `_DoRemove(garment)` (which checks to see if they're actually wearing it and are allowed to remove it, as if they'd used the remove command), or `RemoveGarment(garment)` (which doesn't check, so will subtract the bonuses from the player's stats even if the garment wasn't worn to start with))",
+      "EditableFormat": "markdown",
+      "HTML": "<p>It should remove the \"bonus\" without problem. I just walked through the code for this, and I can't see how a bug could occur.</p>\n<p>Is the player removing the garment using the remove command, or are you calling RemoveGarment from a script?</p>\n<p>(If you are setting <code>somegarment.worn = false</code>, that's the problem. To remove a garment from a script, you need to call either <code>_DoRemove(garment)</code> (which checks to see if they're actually wearing it and are allowed to remove it, as if they'd used the remove command), or <code>RemoveGarment(garment)</code> (which doesn't check, so will subtract the bonuses from the player's stats even if the garment wasn't worn to start with))</p>\n\n",
+      "PostDate": "2018-08-25T21:19:44.0267715Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "9da7715b-cdec-48af-935e-ea94037ddaf5",
+      "UserId": 328485,
+      "Username": "docemoon145",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cda498b2f81e381cb5387db3b548dc8b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm using RemoveGarment() from the object's verb list.\r\n\r\nOkay, I have an idea where the issue may be coming from, so it's probably not a bug. See, I allow the garment's curse multistate status to change without the player's direct control. So, every time they use a different cursed object, I call WearGarment() again to reset the multistate value and the alias and all that. But every time I do that, it must be reapplying all the bonuses too. The reason I didn't notice sooner is probably because only the max multistate setting decreases the player's max health.\r\n\r\nIn other words, one call to RemoveGarment() isn't enough to remove all the stacked bonuses. I can probably fix the issue if I make a special function, say UpdateGarment(), that removes the old bonuses before applying the new ones. I hope that will work.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm using RemoveGarment() from the object's verb list.</p>\n<p>Okay, I have an idea where the issue may be coming from, so it's probably not a bug. See, I allow the garment's curse multistate status to change without the player's direct control. So, every time they use a different cursed object, I call WearGarment() again to reset the multistate value and the alias and all that. But every time I do that, it must be reapplying all the bonuses too. The reason I didn't notice sooner is probably because only the max multistate setting decreases the player's max health.</p>\n<p>In other words, one call to RemoveGarment() isn't enough to remove all the stacked bonuses. I can probably fix the issue if I make a special function, say UpdateGarment(), that removes the old bonuses before applying the new ones. I hope that will work.</p>\n\n",
+      "PostDate": "2018-08-26T18:38:31.1116029Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "09125eb1-0e1b-48ac-88fb-4530b1e6841e",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I suggested a way to fix this issue in another thread yesterday. Haven't tested it, but it might help you.\r\n\r\nBasically, I changed the `SetBonuses()` function to do nothing; made a new function `ApplyBonuses()`, and added 3 script attributes (`changedparent`, `changedworn`, and `changedbonusatts`) to the `wearable` type.\r\n\r\nThese scripts call `ApplyBonuses` to add bonuses to the player's stats whenever its \"worn\" attribute becomes true, regardless of whether that's because of a verb or a fuinction call; to remove the bonuses when \"worn\" becomes false; and to remove the old bonuses and apply the new ones (if it is worn) whenever the `bonusatts` is changed, whether that's because its multistate has changed or because a script has changed the bonuses of a wearable for some other reason. It also removes the bonuses and sets \"worn\" to be false if a script teleports some garment away from the player.\r\n\r\nI think this is the way it should have been implemented in the first place, because it fixes a lot of edge cases so it just works. Unfortunately, I can't propose moving this into the Quest core in the next version, because it would introduce bugs for anyone who's modified both the `SetBonuses` and `WearGarment` functions already.\r\n\r\nMy suggestion was here: <a href=\"http://textadventures.co.uk/forum/quest/topic/ptisw1hvzkmmfbnipqr12a/thoughts-on-wearables#9a491127-878c-4d0a-b94e-21487c956956\">[link]</a> - not tested, but might be a decent point to start if you're having to mess around with the wearables system anyway.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I suggested a way to fix this issue in another thread yesterday. Haven't tested it, but it might help you.</p>\n<p>Basically, I changed the <code>SetBonuses()</code> function to do nothing; made a new function <code>ApplyBonuses()</code>, and added 3 script attributes (<code>changedparent</code>, <code>changedworn</code>, and <code>changedbonusatts</code>) to the <code>wearable</code> type.</p>\n<p>These scripts call <code>ApplyBonuses</code> to add bonuses to the player's stats whenever its \"worn\" attribute becomes true, regardless of whether that's because of a verb or a fuinction call; to remove the bonuses when \"worn\" becomes false; and to remove the old bonuses and apply the new ones (if it is worn) whenever the <code>bonusatts</code> is changed, whether that's because its multistate has changed or because a script has changed the bonuses of a wearable for some other reason. It also removes the bonuses and sets \"worn\" to be false if a script teleports some garment away from the player.</p>\n<p>I think this is the way it should have been implemented in the first place, because it fixes a lot of edge cases so it just works. Unfortunately, I can't propose moving this into the Quest core in the next version, because it would introduce bugs for anyone who's modified both the <code>SetBonuses</code> and <code>WearGarment</code> functions already.</p>\n<p>My suggestion was here: <a href=\"http://textadventures.co.uk/forum/quest/topic/ptisw1hvzkmmfbnipqr12a/thoughts-on-wearables#9a491127-878c-4d0a-b94e-21487c956956\">[link]</a> - not tested, but might be a decent point to start if you're having to mess around with the wearables system anyway.</p>\n\n",
+      "PostDate": "2018-08-26T19:23:31.2971899Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "69e8bf61-f424-4e6b-b049-fd4c3e0feea3",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> I can probably fix the issue if I make a special function, say UpdateGarment(), that removes the old bonuses before applying the new ones.\r\n\r\nIsn't that what `SetMultistate(garment, state)` does?",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>I can probably fix the issue if I make a special function, say UpdateGarment(), that removes the old bonuses before applying the new ones.</p>\n</blockquote>\n<p>Isn't that what <code>SetMultistate(garment, state)</code> does?</p>\n\n",
+      "PostDate": "2018-08-26T19:35:08.980321Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "c72b874f-1139-4850-bed2-c4d85205f17d",
+      "UserId": 328485,
+      "Username": "docemoon145",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cda498b2f81e381cb5387db3b548dc8b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Oh wow! It's almost exactly the function I was about to write! I'm glad you brought it up because I didn't know it existed. I'll have to tweak a few things for my purposes, but this should speed things up quite a bit.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Oh wow! It's almost exactly the function I was about to write! I'm glad you brought it up because I didn't know it existed. I'll have to tweak a few things for my purposes, but this should speed things up quite a bit.</p>\n\n",
+      "PostDate": "2018-08-27T00:28:40.326902Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

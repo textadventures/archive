@@ -1,0 +1,191 @@
+{
+  "Topic": {
+    "TopicId": "3772",
+    "ForumId": "10",
+    "Title": "The Eval function and other issues in 5.4",
+    "LastUpdated": "2013-07-13T13:37:41+01:00",
+    "ReplyCount": 14
+  },
+  "Posts": [
+    {
+      "PostId": "25256",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "As of Quest 5.4, the eval function requires a dictionary as a second parameter; previously this was optional. Consequently this will no longer work:\n\n[code:10mnq1x4]&lt;!--Saved by Quest 5&#46;4&#46;4873&#46;16527--&gt;\n&lt;asl version=&quot;540&quot;&gt;\n  &lt;include ref=&quot;English&#46;aslx&quot; /&gt;\n  &lt;include ref=&quot;Core&#46;aslx&quot; /&gt;\n  &lt;game name=&quot;test_eval&quot;&gt;\n    &lt;gameid&gt;d2528707-4046-43a3-a019-fdcbb3832ab9&lt;/gameid&gt;\n    &lt;version&gt;1&#46;0&lt;/version&gt;\n    &lt;firstpublished&gt;2013&lt;/firstpublished&gt;\n    &lt;start type=&quot;script&quot;&gt;\n      val = Eval(&quot;2 + 2&quot;)\n      msg (&quot;val is &quot; + val)\n    &lt;/start&gt;\n  &lt;/game&gt;\n  &lt;object name=&quot;room&quot;&gt;\n    &lt;inherit name=&quot;editor_room&quot; /&gt;\n    &lt;object name=&quot;player&quot;&gt;\n      &lt;inherit name=&quot;editor_object&quot; /&gt;\n      &lt;inherit name=&quot;editor_player&quot; /&gt;\n    &lt;/object&gt;\n  &lt;/object&gt;\n&lt;/asl&gt;[/code:10mnq1x4]\n\nIs this a bug? I do not even know what the required dictionary even does. The documentation should at least be updated, hopefully to explain how to use that dictionary.\n\nOne work around is to send an empty dictionary:\n\n[code:10mnq1x4]&lt;!--Saved by Quest 5&#46;4&#46;4873&#46;16527--&gt;\n&lt;asl version=&quot;540&quot;&gt;\n  &lt;include ref=&quot;English&#46;aslx&quot; /&gt;\n  &lt;include ref=&quot;Core&#46;aslx&quot; /&gt;\n  &lt;game name=&quot;test_eval&quot;&gt;\n    &lt;gameid&gt;d2528707-4046-43a3-a019-fdcbb3832ab9&lt;/gameid&gt;\n    &lt;version&gt;1&#46;0&lt;/version&gt;\n    &lt;firstpublished&gt;2013&lt;/firstpublished&gt;\n    &lt;start type=&quot;script&quot;&gt;\n      val = Eval(&quot;2 + 2&quot;, game&#46;empty)\n      msg (&quot;val is &quot; + val)\n    &lt;/start&gt;\n    &lt;empty type=&quot;stringdictionary&quot; /&gt;\n  &lt;/game&gt;\n  &lt;object name=&quot;room&quot;&gt;\n    &lt;inherit name=&quot;editor_room&quot; /&gt;\n    &lt;object name=&quot;player&quot;&gt;\n      &lt;inherit name=&quot;editor_object&quot; /&gt;\n      &lt;inherit name=&quot;editor_player&quot; /&gt;\n    &lt;/object&gt;\n  &lt;/object&gt;\n&lt;/asl&gt;[/code:10mnq1x4]\n\nA second is to define your own functions that will add the empty dictionary. As far as I can see, you need one per return type, though Eval itself gets around that\n\n[code:10mnq1x4]&lt;!--Saved by Quest 5&#46;4&#46;4873&#46;16527--&gt;\n&lt;asl version=&quot;540&quot;&gt;\n  &lt;include ref=&quot;English&#46;aslx&quot; /&gt;\n  &lt;include ref=&quot;Core&#46;aslx&quot; /&gt;\n  &lt;game name=&quot;test_eval&quot;&gt;\n    &lt;gameid&gt;d2528707-4046-43a3-a019-fdcbb3832ab9&lt;/gameid&gt;\n    &lt;version&gt;1&#46;0&lt;/version&gt;\n    &lt;firstpublished&gt;2013&lt;/firstpublished&gt;\n    &lt;empty type=&quot;stringdictionary&quot; /&gt;\n    &lt;start type=&quot;script&quot;&gt;\n      val = IntEval(&quot;2 + 2&quot;)\n      msg (&quot;val is &quot; + val)\n    &lt;/start&gt;\n  &lt;/game&gt;\n  &lt;object name=&quot;room&quot;&gt;\n    &lt;inherit name=&quot;editor_room&quot; /&gt;\n    &lt;object name=&quot;player&quot;&gt;\n      &lt;inherit name=&quot;editor_object&quot; /&gt;\n      &lt;inherit name=&quot;editor_player&quot; /&gt;\n    &lt;/object&gt;\n  &lt;/object&gt;\n  &lt;function name=&quot;StrEval&quot; parameters=&quot;s&quot; type=&quot;string&quot;&gt;\n    return (Eval (s, game&#46;empty))\n  &lt;/function&gt;\n  &lt;function name=&quot;IntEval&quot; parameters=&quot;s&quot; type=&quot;int&quot;&gt;\n    return (Eval (s, game&#46;empty))\n  &lt;/function&gt;\n&lt;/asl&gt;[/code:10mnq1x4]\n\nIt is a strange function, Eval, as Quest seems to be happy if you call it &quot;eval&quot; or &quot;EVAL&quot;; most functions (and script commands) you need to get the capitalisation spot on.",
+      "EditableFormat": "bbcode",
+      "HTML": "As of Quest 5.4, the eval function requires a dictionary as a second parameter; previously this was optional. Consequently this will no longer work:<br/><br/><pre><code>&lt;!--Saved by Quest 5&#46;4&#46;4873&#46;16527--&gt;<br/>&lt;asl version=&quot;540&quot;&gt;<br/>  &lt;include ref=&quot;English&#46;aslx&quot; /&gt;<br/>  &lt;include ref=&quot;Core&#46;aslx&quot; /&gt;<br/>  &lt;game name=&quot;test_eval&quot;&gt;<br/>    &lt;gameid&gt;d2528707-4046-43a3-a019-fdcbb3832ab9&lt;/gameid&gt;<br/>    &lt;version&gt;1&#46;0&lt;/version&gt;<br/>    &lt;firstpublished&gt;2013&lt;/firstpublished&gt;<br/>    &lt;start type=&quot;script&quot;&gt;<br/>      val = Eval(&quot;2 + 2&quot;)<br/>      msg (&quot;val is &quot; + val)<br/>    &lt;/start&gt;<br/>  &lt;/game&gt;<br/>  &lt;object name=&quot;room&quot;&gt;<br/>    &lt;inherit name=&quot;editor_room&quot; /&gt;<br/>    &lt;object name=&quot;player&quot;&gt;<br/>      &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>      &lt;inherit name=&quot;editor_player&quot; /&gt;<br/>    &lt;/object&gt;<br/>  &lt;/object&gt;<br/>&lt;/asl&gt;</code></pre><br/><br/>Is this a bug? I do not even know what the required dictionary even does. The documentation should at least be updated, hopefully to explain how to use that dictionary.<br/><br/>One work around is to send an empty dictionary:<br/><br/><pre><code>&lt;!--Saved by Quest 5&#46;4&#46;4873&#46;16527--&gt;<br/>&lt;asl version=&quot;540&quot;&gt;<br/>  &lt;include ref=&quot;English&#46;aslx&quot; /&gt;<br/>  &lt;include ref=&quot;Core&#46;aslx&quot; /&gt;<br/>  &lt;game name=&quot;test_eval&quot;&gt;<br/>    &lt;gameid&gt;d2528707-4046-43a3-a019-fdcbb3832ab9&lt;/gameid&gt;<br/>    &lt;version&gt;1&#46;0&lt;/version&gt;<br/>    &lt;firstpublished&gt;2013&lt;/firstpublished&gt;<br/>    &lt;start type=&quot;script&quot;&gt;<br/>      val = Eval(&quot;2 + 2&quot;, game&#46;empty)<br/>      msg (&quot;val is &quot; + val)<br/>    &lt;/start&gt;<br/>    &lt;empty type=&quot;stringdictionary&quot; /&gt;<br/>  &lt;/game&gt;<br/>  &lt;object name=&quot;room&quot;&gt;<br/>    &lt;inherit name=&quot;editor_room&quot; /&gt;<br/>    &lt;object name=&quot;player&quot;&gt;<br/>      &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>      &lt;inherit name=&quot;editor_player&quot; /&gt;<br/>    &lt;/object&gt;<br/>  &lt;/object&gt;<br/>&lt;/asl&gt;</code></pre><br/><br/>A second is to define your own functions that will add the empty dictionary. As far as I can see, you need one per return type, though Eval itself gets around that<br/><br/><pre><code>&lt;!--Saved by Quest 5&#46;4&#46;4873&#46;16527--&gt;<br/>&lt;asl version=&quot;540&quot;&gt;<br/>  &lt;include ref=&quot;English&#46;aslx&quot; /&gt;<br/>  &lt;include ref=&quot;Core&#46;aslx&quot; /&gt;<br/>  &lt;game name=&quot;test_eval&quot;&gt;<br/>    &lt;gameid&gt;d2528707-4046-43a3-a019-fdcbb3832ab9&lt;/gameid&gt;<br/>    &lt;version&gt;1&#46;0&lt;/version&gt;<br/>    &lt;firstpublished&gt;2013&lt;/firstpublished&gt;<br/>    &lt;empty type=&quot;stringdictionary&quot; /&gt;<br/>    &lt;start type=&quot;script&quot;&gt;<br/>      val = IntEval(&quot;2 + 2&quot;)<br/>      msg (&quot;val is &quot; + val)<br/>    &lt;/start&gt;<br/>  &lt;/game&gt;<br/>  &lt;object name=&quot;room&quot;&gt;<br/>    &lt;inherit name=&quot;editor_room&quot; /&gt;<br/>    &lt;object name=&quot;player&quot;&gt;<br/>      &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>      &lt;inherit name=&quot;editor_player&quot; /&gt;<br/>    &lt;/object&gt;<br/>  &lt;/object&gt;<br/>  &lt;function name=&quot;StrEval&quot; parameters=&quot;s&quot; type=&quot;string&quot;&gt;<br/>    return (Eval (s, game&#46;empty))<br/>  &lt;/function&gt;<br/>  &lt;function name=&quot;IntEval&quot; parameters=&quot;s&quot; type=&quot;int&quot;&gt;<br/>    return (Eval (s, game&#46;empty))<br/>  &lt;/function&gt;<br/>&lt;/asl&gt;</code></pre><br/><br/>It is a strange function, Eval, as Quest seems to be happy if you call it &quot;eval&quot; or &quot;EVAL&quot;; most functions (and script commands) you need to get the capitalisation spot on.",
+      "PostDate": "2013-07-03T08:52:18+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25259",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Yes, eval is a bit odd. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->\n\nThe dictionary allows you to pass additional parameters into the eval context. They show up as variables when eval executes. A lame example:\n\n[code:1sqa06uj]      params = NewDictionary()\n      dictionary add(params, &quot;x&quot;, 50)\n      dictionary add(params, &quot;y&quot;, 100)\n      msg(eval (&quot;x + y&quot;, params))[/code:1sqa06uj]\n\nyields 150. It might seem pointless there, but I have found it useful where I've varied the string being eval'd and use the parameters to provide context variables the different eval strings can choose from (e.g. when evaluating conditions or building output strings, where the eval string is a varying format).\n\nFor no parameters, you can do:\n\n[code:1sqa06uj]val = Eval(&quot;2 + 2&quot;, NewDictionary())[/code:1sqa06uj]\n\nI think &quot;eval&quot; is a function of FLEE. I, too, have been confused about which is the correct casing. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Yes, eval is a bit odd. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --><br/><br/>The dictionary allows you to pass additional parameters into the eval context. They show up as variables when eval executes. A lame example:<br/><br/><pre><code>      params = NewDictionary()<br/>      dictionary add(params, &quot;x&quot;, 50)<br/>      dictionary add(params, &quot;y&quot;, 100)<br/>      msg(eval (&quot;x + y&quot;, params))</code></pre><br/><br/>yields 150. It might seem pointless there, but I have found it useful where I've varied the string being eval'd and use the parameters to provide context variables the different eval strings can choose from (e.g. when evaluating conditions or building output strings, where the eval string is a varying format).<br/><br/>For no parameters, you can do:<br/><br/><pre><code>val = Eval(&quot;2 + 2&quot;, NewDictionary())</code></pre><br/><br/>I think &quot;eval&quot; is a function of FLEE. I, too, have been confused about which is the correct casing. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2013-07-03T09:52:32+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25260",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "I can see where the bug is, so I've just checked in a fix.",
+      "EditableFormat": "bbcode",
+      "HTML": "I can see where the bug is, so I've just checked in a fix.",
+      "PostDate": "2013-07-03T10:15:01+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25267",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Thanks.\n\nJay, why don't you put that example into the Wiki document?",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks.<br/><br/>Jay, why don't you put that example into the Wiki document?",
+      "PostDate": "2013-07-03T12:20:10+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25268",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Done!",
+      "EditableFormat": "bbcode",
+      "HTML": "Done!",
+      "PostDate": "2013-07-03T12:47:48+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25269",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Okay, here is another for you. I worked out what was wrong eventually, but instead of seeing a list of exits, you see the same number repeated each time:\n\n[code:2q6lhtfg]&lt;!--Saved by Quest 5&#46;4&#46;4873&#46;16527--&gt;\n&lt;asl version=&quot;540&quot;&gt;\n  &lt;include ref=&quot;English&#46;aslx&quot; /&gt;\n  &lt;include ref=&quot;Core&#46;aslx&quot; /&gt;\n  &lt;game name=&quot;test_allexits&quot;&gt;\n    &lt;gameid&gt;2de3fb94-7205-4a1a-a1ca-177befc7756b&lt;/gameid&gt;\n    &lt;version&gt;1&#46;0&lt;/version&gt;\n    &lt;firstpublished&gt;2013&lt;/firstpublished&gt;\n    &lt;start type=&quot;script&quot;&gt;\n      foreach (e, AllExits()) {\n        msg (&quot;e is &quot; + e + &quot;, a &quot; + TypeOf(e))\n      }\n    &lt;/start&gt;\n  &lt;/game&gt;\n  &lt;object name=&quot;room&quot;&gt;\n    &lt;inherit name=&quot;editor_room&quot; /&gt;\n    &lt;object name=&quot;player&quot;&gt;\n      &lt;inherit name=&quot;editor_object&quot; /&gt;\n      &lt;inherit name=&quot;editor_player&quot; /&gt;\n    &lt;/object&gt;\n    &lt;exit alias=&quot;east&quot; to=&quot;room2&quot;&gt;\n      &lt;inherit name=&quot;eastdirection&quot; /&gt;\n    &lt;/exit&gt;\n    &lt;exit alias=&quot;north&quot; to=&quot;room2&quot;&gt;\n      &lt;inherit name=&quot;northdirection&quot; /&gt;\n    &lt;/exit&gt;\n  &lt;/object&gt;\n  &lt;object name=&quot;room2&quot;&gt;\n    &lt;inherit name=&quot;editor_room&quot; /&gt;\n    &lt;exit alias=&quot;west&quot; to=&quot;room&quot;&gt;\n      &lt;inherit name=&quot;westdirection&quot; /&gt;\n    &lt;/exit&gt;\n    &lt;exit alias=&quot;south&quot; to=&quot;room&quot;&gt;\n      &lt;inherit name=&quot;southdirection&quot; /&gt;\n    &lt;/exit&gt;\n  &lt;/object&gt;\n&lt;/asl&gt;[/code:2q6lhtfg]\n\nI will post why it fails in a little while...",
+      "EditableFormat": "bbcode",
+      "HTML": "Okay, here is another for you. I worked out what was wrong eventually, but instead of seeing a list of exits, you see the same number repeated each time:<br/><br/><pre><code>&lt;!--Saved by Quest 5&#46;4&#46;4873&#46;16527--&gt;<br/>&lt;asl version=&quot;540&quot;&gt;<br/>  &lt;include ref=&quot;English&#46;aslx&quot; /&gt;<br/>  &lt;include ref=&quot;Core&#46;aslx&quot; /&gt;<br/>  &lt;game name=&quot;test_allexits&quot;&gt;<br/>    &lt;gameid&gt;2de3fb94-7205-4a1a-a1ca-177befc7756b&lt;/gameid&gt;<br/>    &lt;version&gt;1&#46;0&lt;/version&gt;<br/>    &lt;firstpublished&gt;2013&lt;/firstpublished&gt;<br/>    &lt;start type=&quot;script&quot;&gt;<br/>      foreach (e, AllExits()) {<br/>        msg (&quot;e is &quot; + e + &quot;, a &quot; + TypeOf(e))<br/>      }<br/>    &lt;/start&gt;<br/>  &lt;/game&gt;<br/>  &lt;object name=&quot;room&quot;&gt;<br/>    &lt;inherit name=&quot;editor_room&quot; /&gt;<br/>    &lt;object name=&quot;player&quot;&gt;<br/>      &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>      &lt;inherit name=&quot;editor_player&quot; /&gt;<br/>    &lt;/object&gt;<br/>    &lt;exit alias=&quot;east&quot; to=&quot;room2&quot;&gt;<br/>      &lt;inherit name=&quot;eastdirection&quot; /&gt;<br/>    &lt;/exit&gt;<br/>    &lt;exit alias=&quot;north&quot; to=&quot;room2&quot;&gt;<br/>      &lt;inherit name=&quot;northdirection&quot; /&gt;<br/>    &lt;/exit&gt;<br/>  &lt;/object&gt;<br/>  &lt;object name=&quot;room2&quot;&gt;<br/>    &lt;inherit name=&quot;editor_room&quot; /&gt;<br/>    &lt;exit alias=&quot;west&quot; to=&quot;room&quot;&gt;<br/>      &lt;inherit name=&quot;westdirection&quot; /&gt;<br/>    &lt;/exit&gt;<br/>    &lt;exit alias=&quot;south&quot; to=&quot;room&quot;&gt;<br/>      &lt;inherit name=&quot;southdirection&quot; /&gt;<br/>    &lt;/exit&gt;<br/>  &lt;/object&gt;<br/>&lt;/asl&gt;</code></pre><br/><br/>I will post why it fails in a little while...",
+      "PostDate": "2013-07-03T13:50:28+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25270",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Yep... don't name your variable &quot;pi&quot; either. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Yep... don't name your variable &quot;pi&quot; either. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2013-07-03T14:01:51+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25271",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "I had a problem once before, as well, where I tried to have a variable named &quot;cast&quot;. It turns out that that is a FLEE built-in function, so it gave me odd errors. At least in that case it did give errors. This one you ran into seems wrong - it shouldn't be silent about assigning to a built-in constant if that's not going to work.",
+      "EditableFormat": "bbcode",
+      "HTML": "I had a problem once before, as well, where I tried to have a variable named &quot;cast&quot;. It turns out that that is a FLEE built-in function, so it gave me odd errors. At least in that case it did give errors. This one you ran into seems wrong - it shouldn't be silent about assigning to a built-in constant if that's not going to work.",
+      "PostDate": "2013-07-03T14:20:24+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25278",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Oops, my mistake. Ignore that.",
+      "EditableFormat": "bbcode",
+      "HTML": "Oops, my mistake. Ignore that.",
+      "PostDate": "2013-07-03T19:57:28+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25279",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Okay, what has happened to ListCombine? Still documented, but no sign of it.",
+      "EditableFormat": "bbcode",
+      "HTML": "Okay, what has happened to ListCombine? Still documented, but no sign of it.",
+      "PostDate": "2013-07-03T20:08:30+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25302",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Actually ListCombine is there, Quest just says it is not if you try to use it like this:\n\n[code:26rmhpxr]ListCombine (list1, list2)[/code:26rmhpxr]\n\nRather than like this:\n\n[code:26rmhpxr]list3 = ListCombine (list1, list2)[/code:26rmhpxr]\n\nThis is the error generated:\n\n[code:26rmhpxr]Error&#58; Error adding script attribute 'start' to element 'game'&#58; Function not found&#58; 'ListCombine'[/code:26rmhpxr]\n\nCan I suggest a more informative error message?",
+      "EditableFormat": "bbcode",
+      "HTML": "Actually ListCombine is there, Quest just says it is not if you try to use it like this:<br/><br/><pre><code>ListCombine (list1, list2)</code></pre><br/><br/>Rather than like this:<br/><br/><pre><code>list3 = ListCombine (list1, list2)</code></pre><br/><br/>This is the error generated:<br/><br/><pre><code>Error&#58; Error adding script attribute 'start' to element 'game'&#58; Function not found&#58; 'ListCombine'</code></pre><br/><br/>Can I suggest a more informative error message?",
+      "PostDate": "2013-07-04T07:47:53+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25303",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "It looks as though Quest 5.4 will preserve XML comments in the code (which is something I have wanted to see for some time). Can someone confirm that before I write a whole bunch of text that then disappears?\n\nAlso, for me the really big improvement in 5.4 is that you can edit code from within the GUI, saving you from switching from one view to the other. Big time saver.",
+      "EditableFormat": "bbcode",
+      "HTML": "It looks as though Quest 5.4 will preserve XML comments in the code (which is something I have wanted to see for some time). Can someone confirm that before I write a whole bunch of text that then disappears?<br/><br/>Also, for me the really big improvement in 5.4 is that you can edit code from within the GUI, saving you from switching from one view to the other. Big time saver.",
+      "PostDate": "2013-07-04T07:59:09+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25309",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "ListCombine is one of those built-in &quot;expression functions&quot;. (My words.) It is hooked into FLEE rather than as a standard ASLX function. As such, it only exists within the context of an expression (e.g. an assignment expression). From the Quest compiler's point of view, the function actually doesn't exist, because it exists only for the expression evaluator.\n\nFor example, that's the difference between rundelegate and RunDelegateFunction. The former can be used outside of an expression (it has no return value). The latter has a return value and exists only in expressions, and it will come up &quot;not found&quot; if not used that way. That caused me some confusion initially...",
+      "EditableFormat": "bbcode",
+      "HTML": "ListCombine is one of those built-in &quot;expression functions&quot;. (My words.) It is hooked into FLEE rather than as a standard ASLX function. As such, it only exists within the context of an expression (e.g. an assignment expression). From the Quest compiler's point of view, the function actually doesn't exist, because it exists only for the expression evaluator.<br/><br/>For example, that's the difference between rundelegate and RunDelegateFunction. The former can be used outside of an expression (it has no return value). The latter has a return value and exists only in expressions, and it will come up &quot;not found&quot; if not used that way. That caused me some confusion initially...",
+      "PostDate": "2013-07-04T09:43:46+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25400",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "This one is an example of an unhelpful error message (and probably predates 5.4):\n\nError running script&#058; An item with the same key has already been added.\n\nCaused by two cases in a switch statement having the same value. Took me a while to get that one.\n\nswitch (n) {\n  case (0) {}\n  case (0) {}\n}",
+      "EditableFormat": "bbcode",
+      "HTML": "This one is an example of an unhelpful error message (and probably predates 5.4):<br/><br/>Error running script&#058; An item with the same key has already been added.<br/><br/>Caused by two cases in a switch statement having the same value. Took me a while to get that one.<br/><br/>switch (n) {<br/>  case (0) {}<br/>  case (0) {}<br/>",
+      "PostDate": "2013-07-12T13:51:32+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25403",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "Please log these kinds of issues as bugs on the issue tracker and they'll be fixed.",
+      "EditableFormat": "bbcode",
+      "HTML": "Please log these kinds of issues as bugs on the issue tracker and they'll be fixed.",
+      "PostDate": "2013-07-13T13:37:41+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "c8oou5xfw0s2jmhqemcijq",
+    "ForumId": "10",
+    "Title": "Is there a way to check for multible objects in a players inventory",
+    "LastUpdated": "2021-03-11T18:03:14.8660696Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "123a5a99-01f9-4401-a7da-9943ddeaae11",
+      "UserId": 528049,
+      "Username": "Atokrad",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cf78b93345acd10a7319b23dee5e8655?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I need to have a player leave a room with many different objects, I want to have the exit be locked until the player has them. Is there any way to do this?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I need to have a player leave a room with many different objects, I want to have the exit be locked until the player has them. Is there any way to do this?</p>\n\n",
+      "PostDate": "2021-03-11T18:03:14.8660696Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "6915a333-40af-4e43-a24e-04c03dfe6b08",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You could do it just using the `and` operator. For example:\r\n```\r\nif (ListContains (ScopeInventory(), brush) and ListContains (ScopeInventory(), spoon) and ListContains (ScopeInventory(), weasel dentures)) {\r\n```\r\nhowever, this is really inefficient.\r\n\r\nA better way to do it is to make an attribute somewhere to contain a list of the objects you need. For example, if you have a door that the player can't pass through until they have all those objects, you could give the door an attribute named `objects_needed` that is an *objectlist* containing all the needed objects.\r\n\r\nI think in the desktop version of Quest you can do this on the door's 'Attributes' tab. (I've not tested this as I don't have the desktop version). In the online version, you'd have to give it an initialisation script instead. Something like:\r\n```\r\nthis.objects_needed = NewObjectList()\r\nlist add (this.objects_needed, knife)\r\nlist add (this.objects_needed, spork)\r\nlist add (this.objects_needed, spoon)\r\nlist add (this.objects_needed, dentures)\r\n```\r\nYou could put the attribute on whichever object you want; whether it's a door, a room, or whichever object has the script that needs to check for the presence of these items.\r\n\r\nThen when you want to check if they have all the objects, you'd do:\r\n```\r\nobjects_missing = ListExclude (this.objects_needed, ScopeInventory())\r\nif (ListCount (objects_missing) = 0) {\r\n  msg (\"You have all the objects!\")\r\n}\r\nelse {\r\n  msg (\"You can't go through! You haven't got \" + FormatList (objects_needed, \", \", \", or\", \"\") + \".\")\r\n}\r\n```\r\n(obviously, either or both sides of the if statement would do something more than display a message; I'm just showing you how to test if the player has them)\r\n\r\nThis works because `ListExclude (this.objects_needed, ScopeInventory())` gets a list of all objects that are in the objects_needed attribute but are not in the inventory. So if `ListCount` for that list is zero, they have them all.\r\n\r\nHope that makes sense; let me know if you need any more explanation.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You could do it just using the <code>and</code> operator. For example:</p>\n<pre><code>if (ListContains (ScopeInventory(), brush) and ListContains (ScopeInventory(), spoon) and ListContains (ScopeInventory(), weasel dentures)) {\n</code></pre>\n<p>however, this is really inefficient.</p>\n<p>A better way to do it is to make an attribute somewhere to contain a list of the objects you need. For example, if you have a door that the player can't pass through until they have all those objects, you could give the door an attribute named <code>objects_needed</code> that is an <em>objectlist</em> containing all the needed objects.</p>\n<p>I think in the desktop version of Quest you can do this on the door's 'Attributes' tab. (I've not tested this as I don't have the desktop version). In the online version, you'd have to give it an initialisation script instead. Something like:</p>\n<pre><code>this.objects_needed = NewObjectList()\nlist add (this.objects_needed, knife)\nlist add (this.objects_needed, spork)\nlist add (this.objects_needed, spoon)\nlist add (this.objects_needed, dentures)\n</code></pre>\n<p>You could put the attribute on whichever object you want; whether it's a door, a room, or whichever object has the script that needs to check for the presence of these items.</p>\n<p>Then when you want to check if they have all the objects, you'd do:</p>\n<pre><code>objects_missing = ListExclude (this.objects_needed, ScopeInventory())\nif (ListCount (objects_missing) = 0) {\n  msg (\"You have all the objects!\")\n}\nelse {\n  msg (\"You can't go through! You haven't got \" + FormatList (objects_needed, \", \", \", or\", \"\") + \".\")\n}\n</code></pre>\n<p>(obviously, either or both sides of the if statement would do something more than display a message; I'm just showing you how to test if the player has them)</p>\n<p>This works because <code>ListExclude (this.objects_needed, ScopeInventory())</code> gets a list of all objects that are in the objects_needed attribute but are not in the inventory. So if <code>ListCount</code> for that list is zero, they have them all.</p>\n<p>Hope that makes sense; let me know if you need any more explanation.</p>\n\n",
+      "PostDate": "2021-03-11T22:40:14.6772544Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "6f1635dd-b59f-4051-9251-aa2a56f229d9",
+      "UserId": 528049,
+      "Username": "Atokrad",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cf78b93345acd10a7319b23dee5e8655?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "So for an exit how would I check it so it unlocks the exit, so the exit stays locked until the player has the exit?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>So for an exit how would I check it so it unlocks the exit, so the exit stays locked until the player has the exit?</p>\n\n",
+      "PostDate": "2021-03-11T23:25:04.2138146Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e5b23ef3-c9d3-4ca2-a777-6842a3ce208b",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Using this to unlock an exit would probably be unnecessarily complex. I think you'd have to put the check on a turnscript, and put the function to unlock the exit inside the if block.\r\n\r\nWhat most people would do, I think, is instead make the exit so that it checks the items when the player tries to go through it. In this case, you wouldn't lock the exit (as locked exits can't run scripts), but you'd give the exit a script to run when the player goes through it:\r\n```\r\nobjects_missing = ListExclude (this.objects_needed, ScopeInventory())\r\nif (ListCount (objects_missing) = 0) {\r\n  msg (\"You go through the door.\")\r\n  game.pov.parent = this.to\r\n}\r\nelse {\r\n  msg (\"You can't go through, the door seems to be locked.\")\r\n}\r\n```\r\nYou could do this with or without the `FormatList` line to tell the player what items they need.\r\n\r\nThe line `game.pov.parent = this.to` means that the player is allowed through the exit.\r\nYou could also add the line `this.script = null` if you want to make it stop checking after the player has gone through the exit once.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Using this to unlock an exit would probably be unnecessarily complex. I think you'd have to put the check on a turnscript, and put the function to unlock the exit inside the if block.</p>\n<p>What most people would do, I think, is instead make the exit so that it checks the items when the player tries to go through it. In this case, you wouldn't lock the exit (as locked exits can't run scripts), but you'd give the exit a script to run when the player goes through it:</p>\n<pre><code>objects_missing = ListExclude (this.objects_needed, ScopeInventory())\nif (ListCount (objects_missing) = 0) {\n  msg (\"You go through the door.\")\n  game.pov.parent = this.to\n}\nelse {\n  msg (\"You can't go through, the door seems to be locked.\")\n}\n</code></pre>\n<p>You could do this with or without the <code>FormatList</code> line to tell the player what items they need.</p>\n<p>The line <code>game.pov.parent = this.to</code> means that the player is allowed through the exit.<br>\nYou could also add the line <code>this.script = null</code> if you want to make it stop checking after the player has gone through the exit once.</p>\n\n",
+      "PostDate": "2021-03-12T01:02:56.8183313Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "27428578-8a21-479b-89ba-9342af5fd3cd",
+      "UserId": 528049,
+      "Username": "Atokrad",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cf78b93345acd10a7319b23dee5e8655?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Would the object list be the same as a string list, that's the closest I can find besides object on the attributes tab.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Would the object list be the same as a string list, that's the closest I can find besides object on the attributes tab.</p>\n\n",
+      "PostDate": "2021-03-12T03:01:30.1969787Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "5482d458-4287-4b04-9d01-ce9fd427bb86",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Unfortunately not. Although you might be able to create it as a stringlist (containing the names of the objects) and then go to code view and change `type=\"stringlist\"` to `type=\"objectlist\"`.\r\n\r\n(it's a little frustrating sometimes that the Quest editor doesn't always provide an easy way to set things up)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Unfortunately not. Although you might be able to create it as a stringlist (containing the names of the objects) and then go to code view and change <code>type=\"stringlist\"</code> to <code>type=\"objectlist\"</code>.</p>\n<p>(it's a little frustrating sometimes that the Quest editor doesn't always provide an easy way to set things up)</p>\n\n",
+      "PostDate": "2021-03-12T09:19:03.8164042Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

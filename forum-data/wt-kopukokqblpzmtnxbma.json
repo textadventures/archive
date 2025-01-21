@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "wt-kopukokqblpzmtnxbma",
+    "ForumId": "10",
+    "Title": "Global Before Enter Script",
+    "LastUpdated": "2020-04-18T18:32:21.7363164Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "3b7217ad-3a3f-4d04-b71d-09374a8ba89f",
+      "UserId": 142763,
+      "Username": "Forgewright",
+      "AvatarUrl": "http://i.imgur.com/Ea6HecZb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I need to add ```player.lastroom = player.parent ``` to all room's 'before enter script'\r\nat one time.\r\nIs there a room list saved by Quest?\r\noh wait...\r\nIn Start Script I add:\r\n\r\n```\r\nforeach (obj, AllRooms ()) {\r\n  obj.beforeenter => {\r\n    player.lastroom = player.parent\r\n  }\r\n}\r\n```\r\nI know we've hashed this out years ago but I can't find it. \r\nIsn't this the easiest way to store the last room the player was in?\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I need to add <code>player.lastroom = player.parent</code> to all room's 'before enter script'<br>\nat one time.<br>\nIs there a room list saved by Quest?<br>\noh wait...<br>\nIn Start Script I add:</p>\n<pre><code>foreach (obj, AllRooms ()) {\n  obj.beforeenter =&gt; {\n    player.lastroom = player.parent\n  }\n}\n</code></pre>\n<p>I know we've hashed this out years ago but I can't find it.<br>\nIsn't this the easiest way to store the last room the player was in?</p>\n\n",
+      "PostDate": "2020-04-18T18:32:21.7363164Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "9c253a76-d0c3-4e31-a5a9-6f217daad425",
+      "UserId": 277074,
+      "Username": "Dcoder",
+      "AvatarUrl": "https://i.imgur.com/O07mlRtb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Just put it in the ```player.changedparent``` script.  Something like:\r\n```\r\nplayer.lastroom = oldvalue\r\n```\r\nThen, every time the player moves, ```player.lastroom``` will automatically record the previous room (oldvalue contains the change script's previous object value).",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Just put it in the <code>player.changedparent</code> script.  Something like:</p>\n<pre><code>player.lastroom = oldvalue\n</code></pre>\n<p>Then, every time the player moves, <code>player.lastroom</code> will automatically record the previous room (oldvalue contains the change script's previous object value).</p>\n\n",
+      "PostDate": "2020-04-18T19:27:52.1548952Z",
+      "LastEditDate": "2020-04-18T19:29:40.8250299Z",
+      "link": null
+    },
+    {
+      "PostId": "714b07cc-cce2-4abb-aab5-756218664fc6",
+      "UserId": 142763,
+      "Username": "Forgewright",
+      "AvatarUrl": "http://i.imgur.com/Ea6HecZb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I saw the changedparent script but still didn't understand exactly what it was doing.  I will try it. \r\n**EDIT:** Indeed that works.\r\nThanks",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I saw the changedparent script but still didn't understand exactly what it was doing.  I will try it.<br>\n<strong>EDIT:</strong> Indeed that works.<br>\nThanks</p>\n\n",
+      "PostDate": "2020-04-18T20:23:53.5154977Z",
+      "LastEditDate": "2020-04-18T20:30:41.5609291Z",
+      "link": null
+    },
+    {
+      "PostId": "1f94d8ea-feba-4fbc-a9e4-aff72c57138f",
+      "UserId": 142763,
+      "Username": "Forgewright",
+      "AvatarUrl": "http://i.imgur.com/Ea6HecZb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "So if I want the last value of any object.attribute that changed in the game I can add a \"changedwhatever\" attribute to that object and store that value?  I understood that Quest recognized any attribute that started with \"changed\", but never new exactly what it did.\r\nSimply saves old values...Hmm",
+      "EditableFormat": "markdown",
+      "HTML": "<p>So if I want the last value of any object.attribute that changed in the game I can add a \"changedwhatever\" attribute to that object and store that value?  I understood that Quest recognized any attribute that started with \"changed\", but never new exactly what it did.<br>\nSimply saves old values...Hmm</p>\n\n",
+      "PostDate": "2020-04-18T20:38:14.5601186Z",
+      "LastEditDate": "2020-04-18T20:41:35.7376075Z",
+      "link": null
+    },
+    {
+      "PostId": "3ba7603c-f96b-4b21-b675-856d2dbb135f",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Might be worth noting that there is a script `game.roomenter` which is run whenever the player changes room. It triggers after the room description, but before the room's enter script.\r\n\r\nHowever, in this case `changedparent` is a lot better because that script has access to the previous value of the variable.\r\n\r\n(Actually, that's something I should suggest for the next version of Quest: the old and new rooms should be passed to any scripts that are run. It would be extremely simple to do, and make it a lot easier to do stuff like this)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Might be worth noting that there is a script <code>game.roomenter</code> which is run whenever the player changes room. It triggers after the room description, but before the room's enter script.</p>\n<p>However, in this case <code>changedparent</code> is a lot better because that script has access to the previous value of the variable.</p>\n<p>(Actually, that's something I should suggest for the next version of Quest: the old and new rooms should be passed to any scripts that are run. It would be extremely simple to do, and make it a lot easier to do stuff like this)</p>\n\n",
+      "PostDate": "2020-04-18T22:09:22.9743359Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "9c48b50a-b905-4d65-87e4-a38d2c908676",
+      "UserId": 277074,
+      "Username": "Dcoder",
+      "AvatarUrl": "https://i.imgur.com/O07mlRtb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "@Forgewright -\r\nA change script just kicks in immediately whenever its underlying attribute changes values, e.g., when the value of ```player.parent``` changes, then the ```player.changedparent``` script automatically runs.  ```oldvalue``` is a Quest special variable that temporarily (within that change script) records the value of that attribute before the change.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>@Forgewright -<br>\nA change script just kicks in immediately whenever its underlying attribute changes values, e.g., when the value of <code>player.parent</code> changes, then the <code>player.changedparent</code> script automatically runs.  <code>oldvalue</code> is a Quest special variable that temporarily (within that change script) records the value of that attribute before the change.</p>\n\n",
+      "PostDate": "2020-04-18T22:54:40.2944626Z",
+      "LastEditDate": "2020-04-18T22:59:47.5671336Z",
+      "link": null
+    }
+  ]
+}

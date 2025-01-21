@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "4419",
+    "ForumId": "10",
+    "Title": "Adding Menu Functionality to a Gamebook",
+    "LastUpdated": "2014-06-24T21:27:08+01:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "29175",
+      "UserId": 0,
+      "Username": "fogmike",
+      "UserAvatar": null,
+      "UserGravatar": "e0643fe31e6c5910ee8e1c089f300fdc",
+      "EditableText": "Hi there, I'd like to add menu functionality into gamebook mode if possible. I'm already using this piece of code that was helpfully provided to me for the ShowMenu function, which is slightly modified since I don't want it to display the numbers: \n[code:u6jsra3m] &lt;function name=&quot;ShowMenu&quot; parameters=&quot;caption, options, allowCancel, callback&quot;&gt;&lt;!&#91;CDATA&#91;\n    outputsection = StartNewOutputSection()\n    msg (caption)\n    count = 0\n    game&#46;menuoptionskeys = NewStringList()\n    foreach (option, options) {\n      list add (game&#46;menuoptionskeys, option)\n      count = count + 1\n      if (TypeOf(options) = &quot;stringlist&quot;) {\n        optionText = option\n      }\n      else {\n        optionText = StringDictionaryItem(options, option)\n      }\n      msg (&quot;&lt;a class=\\&quot;cmdlink\\&quot; style=\\&quot;&quot; + GetCurrentLinkTextFormat() + &quot;\\&quot; onclick=\\&quot;ASLEvent('ShowMenuResponse','&quot; + option + &quot;')\\&quot;&gt;&quot; + optionText + &quot;&lt;/a&gt;&quot;)\n    }\n    EndOutputSection (outputsection)\n    game&#46;menuoptions = options\n    game&#46;menuallowcancel = allowCancel\n    game&#46;menucallback = callback\n    game&#46;menuoutputsection = outputsection\n  &#93;&#93;&gt;&lt;/function&gt;[/code:u6jsra3m]\nHowever, I'm missing the helper functions (the one it complains at is ShowMenuResponse), and can't seem to open the Core file in Quest like I thought you could to find them myself to copy over into my gamebook file. Anyone able to help?",
+      "EditableFormat": "bbcode",
+      "HTML": "Hi there, I'd like to add menu functionality into gamebook mode if possible. I'm already using this piece of code that was helpfully provided to me for the ShowMenu function, which is slightly modified since I don't want it to display the numbers: <br/><pre><code> &lt;function name=&quot;ShowMenu&quot; parameters=&quot;caption, options, allowCancel, callback&quot;&gt;&lt;!&#91;CDATA&#91;<br/>    outputsection = StartNewOutputSection()<br/>    msg (caption)<br/>    count = 0<br/>    game&#46;menuoptionskeys = NewStringList()<br/>    foreach (option, options) {<br/>      list add (game&#46;menuoptionskeys, option)<br/>      count = count + 1<br/>      if (TypeOf(options) = &quot;stringlist&quot;) {<br/>        optionText = option<br/>      }<br/>      else {<br/>        optionText = StringDictionaryItem(options, option)<br/>      }<br/>      msg (&quot;&lt;a class=\\&quot;cmdlink\\&quot; style=\\&quot;&quot; + GetCurrentLinkTextFormat() + &quot;\\&quot; onclick=\\&quot;ASLEvent('ShowMenuResponse','&quot; + option + &quot;')\\&quot;&gt;&quot; + optionText + &quot;&lt;/a&gt;&quot;)<br/>    }<br/>    EndOutputSection (outputsection)<br/>    game&#46;menuoptions = options<br/>    game&#46;menuallowcancel = allowCancel<br/>    game&#46;menucallback = callback<br/>    game&#46;menuoutputsection = outputsection<br/>  &#93;&#93;&gt;&lt;/function&gt;</code></pre><br/>However, I'm missing the helper functions (the one it complains at is ShowMenuResponse), and can't seem to open the Core file in Quest like I thought you could to find them myself to copy over into my gamebook file. Anyone able to help?",
+      "PostDate": "2014-06-24T16:45:44+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "29178",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Here is ShowMenuResponse and a function it calls called ClearMenu. They live in Core.aslx.\n\n[code:shg7i98m]  &lt;function name=&quot;ShowMenuResponse&quot; parameters=&quot;option&quot;&gt;\n    if (game&#46;menucallback = null) {\n      error (&quot;Unexpected menu response&quot;)\n    }\n    else {\n      parameters = NewStringDictionary()\n      dictionary add (parameters, &quot;result&quot;, option)\n      script = game&#46;menucallback\n      ClearMenu\n      invoke (script, parameters)\n    }\n  &lt;/function&gt;\n\n  &lt;function name=&quot;ClearMenu&quot;&gt;\n    HideOutputSection(game&#46;menuoutputsection)\n    game&#46;menuoutputsection = null\n    game&#46;menuoptions = null\n    game&#46;menucallback = null\n  &lt;/function&gt;[/code:shg7i98m]",
+      "EditableFormat": "bbcode",
+      "HTML": "Here is ShowMenuResponse and a function it calls called ClearMenu. They live in Core.aslx.<br/><br/><pre><code>  &lt;function name=&quot;ShowMenuResponse&quot; parameters=&quot;option&quot;&gt;<br/>    if (game&#46;menucallback = null) {<br/>      error (&quot;Unexpected menu response&quot;)<br/>    }<br/>    else {<br/>      parameters = NewStringDictionary()<br/>      dictionary add (parameters, &quot;result&quot;, option)<br/>      script = game&#46;menucallback<br/>      ClearMenu<br/>      invoke (script, parameters)<br/>    }<br/>  &lt;/function&gt;<br/><br/>  &lt;function name=&quot;ClearMenu&quot;&gt;<br/>    HideOutputSection(game&#46;menuoutputsection)<br/>    game&#46;menuoutputsection = null<br/>    game&#46;menuoptions = null<br/>    game&#46;menucallback = null<br/>  &lt;/function&gt;</code></pre>",
+      "PostDate": "2014-06-24T20:26:33+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "29180",
+      "UserId": 0,
+      "Username": "fogmike",
+      "UserAvatar": null,
+      "UserGravatar": "e0643fe31e6c5910ee8e1c089f300fdc",
+      "EditableText": "Thank you very much! That's exactly what I needed. I thought you could open Core.aslx in Quest, but mine threw an error when I tried to.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thank you very much! That's exactly what I needed. I thought you could open Core.aslx in Quest, but mine threw an error when I tried to.",
+      "PostDate": "2014-06-24T21:06:19+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "29181",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "You can't open it in Quest as it's a library file instead of a game file. But you can open it in any text editor (e.g. Notepad or Notepad++).",
+      "EditableFormat": "bbcode",
+      "HTML": "You can't open it in Quest as it's a library file instead of a game file. But you can open it in any text editor (e.g. Notepad or Notepad++).",
+      "PostDate": "2014-06-24T21:27:08+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

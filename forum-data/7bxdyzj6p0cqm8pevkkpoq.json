@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "7bxdyzj6p0cqm8pevkkpoq",
+    "ForumId": "10",
+    "Title": "Help with making a menu for using an item on another item?",
+    "LastUpdated": "2021-05-11T17:16:55.3167553Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "e43bccac-4030-4ba6-9afb-265f9b84db0c",
+      "UserId": 545958,
+      "Username": "Qball101",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/66697160a0d0c35b4ad85955406fbe48?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm fairly new to Quest, and after having finished the tutorial I wanted to get a bit of practice by making a small one room escape puzzle. However, I'm running into some issues with how I want \"using an item\" to work.\r\n\r\nSo the basic idea for what I want is that if the player selects the \"Use\" option from the little drop down menu when clicking on a hyperlink for something that's in their inventory, I want the game to display a menu of all the potential objects they can use the item on. I know there's a built in box you can tick under the \"Use/Give\" tab, but I didn't like how disorganized it looked so I wanted to try and make my own instead, and make it easier to implement for each object by making it a function I could just call at anytime.\r\n\r\nI've been testing this on the first item you can use in my game, which is a drawer from the table that the player can remove. Specifically the player has the option to reinsert the drawer into the table if they want to. The idea here is, if the player wants to, they can select \"use\" from the drop down table of the drawer's hyperlink, the game will prompt them with a menu/list of all the object in the room, they select \"table\", and they then \"use\" the drawer on the table by reinserting the former into the latter. The problem I'm having is with the function I'm making for the menu itself.\r\n\r\nHere's what I have so far:\r\n```\r\nmsg (\"Use \" +useditem.alias+ \" on what?\") //useditem is the only parameter for the function.\r\nNowhere.objectforuse = useditem \r\nroomobjectlist = NewObjectList() \r\nlist add (roomobjectlist, table) // table is the only option to pick from the menu right now\r\nShowMenu (\"Room:\", roomobjectlist, true) {\r\n  Nowhere.objectusedon = result\r\n  msg (\"\" + Nowhere.objectusedon+ \".\" + Nowhere.objectforuse + \".\")\r\n  HandleUseOn (Nowhere.objectforuse, Nowhere.objectusedon)\r\n}\r\n```\r\nThe problem I'm running into is that the HandleUseOn function needs two objects for its parameters, but ShowMenu always returns a string no matter what I do. Is there any way to have ShowMenu return an object? Or at the very least is there a way for Quest to grab a specified object based on what the string is? I think it might be possible with a foreach loop or something, but I don't really understand how to use those yet.\r\n\r\nAny help is greatly appreciated.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm fairly new to Quest, and after having finished the tutorial I wanted to get a bit of practice by making a small one room escape puzzle. However, I'm running into some issues with how I want \"using an item\" to work.</p>\n<p>So the basic idea for what I want is that if the player selects the \"Use\" option from the little drop down menu when clicking on a hyperlink for something that's in their inventory, I want the game to display a menu of all the potential objects they can use the item on. I know there's a built in box you can tick under the \"Use/Give\" tab, but I didn't like how disorganized it looked so I wanted to try and make my own instead, and make it easier to implement for each object by making it a function I could just call at anytime.</p>\n<p>I've been testing this on the first item you can use in my game, which is a drawer from the table that the player can remove. Specifically the player has the option to reinsert the drawer into the table if they want to. The idea here is, if the player wants to, they can select \"use\" from the drop down table of the drawer's hyperlink, the game will prompt them with a menu/list of all the object in the room, they select \"table\", and they then \"use\" the drawer on the table by reinserting the former into the latter. The problem I'm having is with the function I'm making for the menu itself.</p>\n<p>Here's what I have so far:</p>\n<pre><code>msg (\"Use \" +useditem.alias+ \" on what?\") //useditem is the only parameter for the function.\nNowhere.objectforuse = useditem \nroomobjectlist = NewObjectList() \nlist add (roomobjectlist, table) // table is the only option to pick from the menu right now\nShowMenu (\"Room:\", roomobjectlist, true) {\n  Nowhere.objectusedon = result\n  msg (\"\" + Nowhere.objectusedon+ \".\" + Nowhere.objectforuse + \".\")\n  HandleUseOn (Nowhere.objectforuse, Nowhere.objectusedon)\n}\n</code></pre>\n<p>The problem I'm running into is that the HandleUseOn function needs two objects for its parameters, but ShowMenu always returns a string no matter what I do. Is there any way to have ShowMenu return an object? Or at the very least is there a way for Quest to grab a specified object based on what the string is? I think it might be possible with a foreach loop or something, but I don't really understand how to use those yet.</p>\n<p>Any help is greatly appreciated.</p>\n\n",
+      "PostDate": "2021-05-11T17:16:55.3167553Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "8d300816-134e-4e7a-91a6-ebb2e3105396",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello.\r\n\r\nThis should handle it:\r\n\r\n```\r\n    msg (\"Use \" +useditem.alias+ \" on what?\")\r\n    game.tempobject1 = useditem\r\n    roomobjectlist = NewObjectList()\r\n    list add (roomobjectlist, table)\r\n    ShowMenu (\"Room:\", roomobjectlist, true) {\r\n      object2 = GetObject(result)\r\n      //msg (\"object2: \" + object2 + \". object1: \" + game.tempobject1 + \".\")\r\n      HandleUseOn (game.tempobject1, object2)\r\n      game.tempobject1 = null\r\n    }\r\n```\r\n\r\n---\r\n**EDIT**\r\n\r\nHere it is with all the items and attributes your code is using:\r\n\r\n```\r\nmsg (\"Use \" +useditem.alias+ \" on what?\")\r\nNowhere.objectforuse = useditem\r\nroomobjectlist = NewObjectList()\r\nlist add (roomobjectlist, table)\r\nShowMenu (\"Room:\", roomobjectlist, true) {\r\n  Nowhere.objectusedon = GetObject(result)\r\n  msg (\"\" + Nowhere.objectusedon+ \".\" + Nowhere.objectforuse + \".\")\r\n  HandleUseOn (Nowhere.objectforuse, Nowhere.objectusedon)\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello.</p>\n<p>This should handle it:</p>\n<pre><code>    msg (\"Use \" +useditem.alias+ \" on what?\")\n    game.tempobject1 = useditem\n    roomobjectlist = NewObjectList()\n    list add (roomobjectlist, table)\n    ShowMenu (\"Room:\", roomobjectlist, true) {\n      object2 = GetObject(result)\n      //msg (\"object2: \" + object2 + \". object1: \" + game.tempobject1 + \".\")\n      HandleUseOn (game.tempobject1, object2)\n      game.tempobject1 = null\n    }\n</code></pre>\n<hr>\n<p><strong>EDIT</strong></p>\n<p>Here it is with all the items and attributes your code is using:</p>\n<pre><code>msg (\"Use \" +useditem.alias+ \" on what?\")\nNowhere.objectforuse = useditem\nroomobjectlist = NewObjectList()\nlist add (roomobjectlist, table)\nShowMenu (\"Room:\", roomobjectlist, true) {\n  Nowhere.objectusedon = GetObject(result)\n  msg (\"\" + Nowhere.objectusedon+ \".\" + Nowhere.objectforuse + \".\")\n  HandleUseOn (Nowhere.objectforuse, Nowhere.objectusedon)\n}\n</code></pre>\n\n",
+      "PostDate": "2021-05-11T17:44:38.6654643Z",
+      "LastEditDate": "2021-05-11T17:49:47.9776597Z",
+      "link": null
+    },
+    {
+      "PostId": "644258a5-e2f0-4485-87a1-ee4e139e4477",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "From the [documentation](https://docs.textadventures.co.uk/quest/):\r\n\r\n## [ShowMenu](https://docs.textadventures.co.uk/quest/functions/showmenu.html)\r\n> *As of Quest 5.7*\r\n>\r\n>ShowMenu will also take an object list, or a list of objects and strings. If the object has a link colour specified, this will be used. Note that result will always be a string, in the case of an object, it will be the object’s name.\r\n>\r\n```\r\nShowMenu (\"Select\", ScopeInventory(), true) {\r\n  obj = GetObject(result)\r\n  RemoveObject(obj)\r\n  msg (\"You smash the \" + obj.name + \" to bits.\")\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>From the <a href=\"https://docs.textadventures.co.uk/quest/\">documentation</a>:</p>\n<h2><a href=\"https://docs.textadventures.co.uk/quest/functions/showmenu.html\">ShowMenu</a></h2>\n<blockquote>\n<p><em>As of Quest 5.7</em></p>\n<p>ShowMenu will also take an object list, or a list of objects and strings. If the object has a link colour specified, this will be used. Note that result will always be a string, in the case of an object, it will be the object’s name.</p>\n</blockquote>\n<pre><code>ShowMenu (\"Select\", ScopeInventory(), true) {\n  obj = GetObject(result)\n  RemoveObject(obj)\n  msg (\"You smash the \" + obj.name + \" to bits.\")\n}\n</code></pre>\n\n",
+      "PostDate": "2021-05-11T17:55:44.7759872Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "6a52a808-924c-4461-bdde-8814578aa955",
+      "UserId": 545958,
+      "Username": "Qball101",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/66697160a0d0c35b4ad85955406fbe48?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Ah, I should've known something like GetObject existed. I was over-complicating the whole process it seems. Thanks for your help; everything works perfectly now!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Ah, I should've known something like GetObject existed. I was over-complicating the whole process it seems. Thanks for your help; everything works perfectly now!</p>\n\n",
+      "PostDate": "2021-05-12T12:23:46.3023231Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

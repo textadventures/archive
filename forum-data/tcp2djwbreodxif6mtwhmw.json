@@ -1,0 +1,76 @@
+{
+  "Topic": {
+    "TopicId": "tcp2djwbreodxif6mtwhmw",
+    "ForumId": "10",
+    "Title": "Show object description on custom command",
+    "LastUpdated": "2016-08-22T06:26:46.4414906Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "da4f980d-cf25-4e4c-be86-9ebd17e8ac94",
+      "UserId": 260125,
+      "Username": "RodionGork",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/fd6ead3aa4b13714ddf677ef7d1fb45c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Friends, Hi!\r\n\r\nI can use **look at** and **examine** predefined commands to see the object's description (which I carefully type in the text editor when creating object). However this won't work with simple **look**.\r\n\r\nI want to add `look #object#` command which does the same. I think it should call script. However I failed to find out what to write in the script. So far I've tried\r\n\r\n    msg(object.description)\r\n\r\nBut it was a wrong guess. Can please anyone guide me for I'm completely novice to Quest and regretfully could not find such info with search (probably I'm using wrong keywords).\r\n\r\nThanks in advance,\r\nRodion",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Friends, Hi!</p>\n<p>I can use <strong>look at</strong> and <strong>examine</strong> predefined commands to see the object's description (which I carefully type in the text editor when creating object). However this won't work with simple <strong>look</strong>.</p>\n<p>I want to add <code>look #object#</code> command which does the same. I think it should call script. However I failed to find out what to write in the script. So far I've tried</p>\n<pre><code>msg(object.description)\n</code></pre>\n<p>But it was a wrong guess. Can please anyone guide me for I'm completely novice to Quest and regretfully could not find such info with search (probably I'm using wrong keywords).</p>\n<p>Thanks in advance,<br>\nRodion</p>\n\n",
+      "PostDate": "2016-08-22T06:26:46.4414906Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "300124e2-9eec-4384-aea7-b85e84c38969",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "It is the \"look\" attribute you need to use:\r\n```\r\nmsg(object.look)\r\n```\r\nRooms use \"description\", items use \"look\". To cover all eventualities, you would be better using this (which I have just copied from the LOOK AT command):\r\n```\r\nif (GetBoolean(object, \"hidechildren\")) {\r\n  object.hidechildren = false\r\n}\r\nif (TypeOf(object, \"look\") = \"script\") {\r\n  do (object, \"look\")\r\n}\r\nelse {\r\n  lookdesc = \"\"\r\n  if (HasString(object, \"look\")) {\r\n    lookdesc = object.look\r\n  }\r\n  if (LengthOf(lookdesc) = 0) {\r\n    lookdesc = Template(\"DefaultObjectDescription\")\r\n  }\r\n  if (GetBoolean(object, \"switchedon\")) {\r\n    if (HasString(object, \"switchedondesc\")) {\r\n      lookdesc = lookdesc + \" \" + object.switchedondesc\r\n    }\r\n  }\r\n  else {\r\n    if (HasString(object, \"switchedoffdesc\")) {\r\n      lookdesc = lookdesc + \" \" + object.switchedoffdesc\r\n    }\r\n  }\r\n  isDark = CheckDarkness()\r\n  if (isDark and not GetBoolean(object, \"lightsource\")) {\r\n    lookdesc = DynamicTemplate(\"LookAtDarkness\", object)\r\n  }\r\n  msg (lookdesc)\r\n}\r\nListObjectContents (object)\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>It is the \"look\" attribute you need to use:</p>\n<pre><code>msg(object.look)\n</code></pre>\n<p>Rooms use \"description\", items use \"look\". To cover all eventualities, you would be better using this (which I have just copied from the LOOK AT command):</p>\n<pre><code>if (GetBoolean(object, \"hidechildren\")) {\n  object.hidechildren = false\n}\nif (TypeOf(object, \"look\") = \"script\") {\n  do (object, \"look\")\n}\nelse {\n  lookdesc = \"\"\n  if (HasString(object, \"look\")) {\n    lookdesc = object.look\n  }\n  if (LengthOf(lookdesc) = 0) {\n    lookdesc = Template(\"DefaultObjectDescription\")\n  }\n  if (GetBoolean(object, \"switchedon\")) {\n    if (HasString(object, \"switchedondesc\")) {\n      lookdesc = lookdesc + \" \" + object.switchedondesc\n    }\n  }\n  else {\n    if (HasString(object, \"switchedoffdesc\")) {\n      lookdesc = lookdesc + \" \" + object.switchedoffdesc\n    }\n  }\n  isDark = CheckDarkness()\n  if (isDark and not GetBoolean(object, \"lightsource\")) {\n    lookdesc = DynamicTemplate(\"LookAtDarkness\", object)\n  }\n  msg (lookdesc)\n}\nListObjectContents (object)\n</code></pre>\n\n",
+      "PostDate": "2016-08-22T08:48:40.1813922Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "1184593b-71d3-4c9a-9e3e-a7b86be6592a",
+      "UserId": 260125,
+      "Username": "RodionGork",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/fd6ead3aa4b13714ddf677ef7d1fb45c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks a lot, verily that works!\r\n\r\nBy the way, where you were able to see the source of \"look at\" command? For me it is not shown anywhere... Though perhaps it is because I use web-version?\r\n\r\nUPD: and is there any way to just call the \"Look At\" command? I've tried hopelessly\r\n\r\n    LookAt()\r\n\r\nbut surely this do not work :)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks a lot, verily that works!</p>\n<p>By the way, where you were able to see the source of \"look at\" command? For me it is not shown anywhere... Though perhaps it is because I use web-version?</p>\n<p>UPD: and is there any way to just call the \"Look At\" command? I've tried hopelessly</p>\n<pre><code>LookAt()\n</code></pre>\n<p>but surely this do not work :)</p>\n\n",
+      "PostDate": "2016-08-22T13:53:44.8474662Z",
+      "LastEditDate": "2016-08-22T14:36:37.9226942Z"
+    },
+    {
+      "PostId": "d4d10bb9-825d-4e81-8273-833c491ce443",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "No,  you cannot on the web version. For the off-line version, there is an option at the bottom left to see all library elements.\r\n\r\nThere is no `LookAt` command or equivalent. You can invoke commands with `HandleSingleCommand`, so this might work (and if it does, would be a neater way to do it):\r\n```\r\nHandleSingleCommand(\"look at \" + object)\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>No,  you cannot on the web version. For the off-line version, there is an option at the bottom left to see all library elements.</p>\n<p>There is no <code>LookAt</code> command or equivalent. You can invoke commands with <code>HandleSingleCommand</code>, so this might work (and if it does, would be a neater way to do it):</p>\n<pre><code>HandleSingleCommand(\"look at \" + object)\n</code></pre>\n\n",
+      "PostDate": "2016-08-22T15:02:20.8594243Z",
+      "LastEditDate": "2016-08-22T15:02:36.7038277Z"
+    },
+    {
+      "PostId": "3ce8f70a-d6f1-44aa-883d-4d911af83da8",
+      "UserId": 260125,
+      "Username": "RodionGork",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/fd6ead3aa4b13714ddf677ef7d1fb45c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Ah, greath! Thanks once more - for some reason I've failed to look for it among \"Functions\". The only correction is I need \"name\" attribute I guess:\r\n\r\n    HandleSingleCommand(\"look at \" + object.name)\r\n\r\nthis really work, thanks once more!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Ah, greath! Thanks once more - for some reason I've failed to look for it among \"Functions\". The only correction is I need \"name\" attribute I guess:</p>\n<pre><code>HandleSingleCommand(\"look at \" + object.name)\n</code></pre>\n<p>this really work, thanks once more!</p>\n\n",
+      "PostDate": "2016-08-22T15:11:35.4839154Z",
+      "LastEditDate": null
+    }
+  ]
+}

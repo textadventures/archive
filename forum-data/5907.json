@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "5907",
+    "ForumId": "10",
+    "Title": "executing commands after GET INPUT within the same script",
+    "LastUpdated": "2016-01-25T02:00:23+00:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "40912",
+      "UserId": 0,
+      "Username": "Buddy Bishop",
+      "UserAvatar": null,
+      "UserGravatar": "cec13829fa44a780e8e7caf9fec1f261",
+      "EditableText": "I have a command that gets user input from the prompt and sets an attribute. I can't put any other code past the GET INPUT in the script because it runs those subsequent script statements BEFORE it actually is ready to get the input from the command box in the user interface. The subsequent statements fail because they depend on the GET INPUT information.  At least that's what I think I'm seeing happen.\nHow can I use GET INPUT successfully, and then immediately run another command that use the supplied (and processed/manipulated) input and then return to the script?\n\nEven without GET INPUT, I'd also like to know how to have a script run one or more custom commands (with parameters), do them in series and return to the script when completed.\n\nI guess an event driven environment might make this impossible without having some jscript or additional engine capability, but I'm not sure.",
+      "EditableFormat": "bbcode",
+      "HTML": "I have a command that gets user input from the prompt and sets an attribute. I can't put any other code past the GET INPUT in the script because it runs those subsequent script statements BEFORE it actually is ready to get the input from the command box in the user interface. The subsequent statements fail because they depend on the GET INPUT information.  At least that's what I think I'm seeing happen.<br/>How can I use GET INPUT successfully, and then immediately run another command that use the supplied (and processed/manipulated) input and then return to the script?<br/><br/>Even without GET INPUT, I'd also like to know how to have a script run one or more custom commands (with parameters), do them in series and return to the script when completed.<br/><br/>I guess an event driven environment might make this impossible without having some jscript or additional engine capability, but I'm not sure.",
+      "PostDate": "2016-01-23T21:13:48+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40920",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "You need to put the command inside the get input. in code it looks like this:\n[code:34vhmhj9]get input {\n  DoStuffHere()\n}[/code:34vhmhj9]\nIn the GUI, you need to click the &quot;Add new script&quot; that is directly under it, and indented to the right.",
+      "EditableFormat": "bbcode",
+      "HTML": "You need to put the command inside the get input. in code it looks like this:<br/><pre><code>get input {<br/>  DoStuffHere()<br/>}</code></pre><br/>In the GUI, you need to click the &quot;Add new script&quot; that is directly under it, and indented to the right.",
+      "PostDate": "2016-01-24T10:19:11+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40942",
+      "UserId": 0,
+      "Username": "Buddy Bishop",
+      "UserAvatar": null,
+      "UserGravatar": "cec13829fa44a780e8e7caf9fec1f261",
+      "EditableText": "Thanks.  That of course works!\nI've only been using Quest a few days, so I'be have a bit of a curve.\nIve been writing .vbs and .cmd for years, but this language structure is different enough to make me feel really lost on some basic stuff.\n\nI'll mention a few things I've picked up along the way so far. (don't laugh too much - or correct me if I'm wrong))\nThe GET INPUT block is best to be the last thing in a script and logic simply has to be made to accomodate it for best results.\nVariables aren't designed to be global, so using object attributes overcomes that.\nThe proper return syntax in a Boolean function is return (true) /or/ return (false) \nTo have a script call a command as though te user typed it: HandleCommand(&quot;take apple&quot;, null) - (thanks jaynabonne!)\nTo make a comment in a script preceed it by //\nThe forum and the moderators are great.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks.  That of course works!<br/>I've only been using Quest a few days, so I'be have a bit of a curve.<br/>Ive been writing .vbs and .cmd for years, but this language structure is different enough to make me feel really lost on some basic stuff.<br/><br/>I'll mention a few things I've picked up along the way so far. (don't laugh too much - or correct me if I'm wrong))<br/>The GET INPUT block is best to be the last thing in a script and logic simply has to be made to accomodate it for best results.<br/>Variables aren't designed to be global, so using object attributes overcomes that.<br/>The proper return syntax in a Boolean function is return (true) /or/ return (false) <br/>To have a script call a command as though te user typed it: HandleCommand(&quot;take apple&quot;, null) - (thanks jaynabonne!)<br/>To make a comment in a script preceed it by //<br/>The forum and the moderators are great.",
+      "PostDate": "2016-01-24T19:55:03+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40955",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "for scripting, imagine an outline format, in how it works~runs (order of operations):\n\nI. xxx\n-&gt; A. xxx\n-&gt;-&gt; 1. xxx\n-&gt;-&gt;-&gt; a. xxx\n-&gt;-&gt;-&gt; b. xxx\n-&gt;-&gt; 2. xxx\n-&gt;-&gt;-&gt; a. xxx\n-&gt; B. xxx\nII. xxx\n\nI -&gt; A -&gt; 1 -&gt; a -&gt; b -&gt; 2 -&gt; a -&gt; B -&gt; II (in general: ignoring a lot of exceptions/complexity of the order of operations, of course)\n\nwhereas, cmd (the computer's command promp anyways, not sure if this is the same as your '.cmd' language):\n\n1. :start\n2. goto end  \n3. :middle\n4. goto end2\n5. :end\n6.  goto middle\n7. :end2\n8. goto start (infinite loop, I know, lol: don't do this!)\n\nthe new languages allow for indenting (nesting: layers of scripts: scripts within scripts), functions and 'while/do-while' loops (all 3 handle looping), and etc.",
+      "EditableFormat": "bbcode",
+      "HTML": "for scripting, imagine an outline format, in how it works~runs (order of operations):<br/><br/>I. xxx<br/>-&gt; A. xxx<br/>-&gt;-&gt; 1. xxx<br/>-&gt;-&gt;-&gt; a. xxx<br/>-&gt;-&gt;-&gt; b. xxx<br/>-&gt;-&gt; 2. xxx<br/>-&gt;-&gt;-&gt; a. xxx<br/>-&gt; B. xxx<br/>II. xxx<br/><br/>I -&gt; A -&gt; 1 -&gt; a -&gt; b -&gt; 2 -&gt; a -&gt; B -&gt; II (in general: ignoring a lot of exceptions/complexity of the order of operations, of course)<br/><br/>whereas, cmd (the computer's command promp anyways, not sure if this is the same as your '.cmd' language):<br/><br/>1. :start<br/>2. goto end  <br/>3. :middle<br/>4. goto end2<br/>5. :end<br/>6.  goto middle<br/>7. :end2<br/>8. goto start (infinite loop, I know, lol: don't do this!)<br/><br/>the new languages allow for indenting (nesting: layers of scripts: scripts within scripts), functions and 'while/do-while' loops (all 3 handle looping), and etc.",
+      "PostDate": "2016-01-25T02:00:23+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

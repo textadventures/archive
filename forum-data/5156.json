@@ -1,0 +1,47 @@
+{
+  "Topic": {
+    "TopicId": "5156",
+    "ForumId": "10",
+    "Title": "text command alignment problem after using showmenu()",
+    "LastUpdated": "2015-04-11T18:06:28+01:00",
+    "ReplyCount": 2
+  },
+  "Posts": [
+    {
+      "PostId": "35704",
+      "UserId": 0,
+      "Username": "Satoh",
+      "UserAvatar": null,
+      "UserGravatar": "9394f3e18dda87f542bcdbea67632812",
+      "EditableText": "I have a ShowMenu function with a fairly long list(about 9 choices)\nAfter making a choice, the text command box doesn't fully retract to its original position before the menu was drawn.\n\nIs there a better way to present a finite number of options without having to manually text parse each one for validity?\nOr a way to fix the command bar position? \n\nI'm trying to avoid a lot of reckless screen clearing.\n\nEDIT:\nI added this to function HideOutputSection (the function that gets called to removed completed menus)\n[code:2488vqd7]JS&#46;HideOutputSection (name)\nSetTimeout (1) {\n  JS&#46;eval (&quot;$('#divOutput')&#46;css('min-height','0px');&quot;)\n}[/code:2488vqd7]\n\nAnd that seems to work as a duct-tape fix, but I'm not sure if it could cause more serious issues later, since I'm directly modifying CSS properties, instead of altering the behavior of the menu...\n(I haven't found where the HideOutputSection javascript is, so I don't know how it actually works...)",
+      "EditableFormat": "bbcode",
+      "HTML": "I have a ShowMenu function with a fairly long list(about 9 choices)<br/>After making a choice, the text command box doesn't fully retract to its original position before the menu was drawn.<br/><br/>Is there a better way to present a finite number of options without having to manually text parse each one for validity?<br/>Or a way to fix the command bar position? <br/><br/>I'm trying to avoid a lot of reckless screen clearing.<br/><br/>EDIT:<br/>I added this to function HideOutputSection (the function that gets called to removed completed menus)<br/><pre><code>JS&#46;HideOutputSection (name)<br/>SetTimeout (1) {<br/>  JS&#46;eval (&quot;$('#divOutput')&#46;css('min-height','0px');&quot;)<br/>}</code></pre><br/><br/>And that seems to work as a duct-tape fix, but I'm not sure if it could cause more serious issues later, since I'm directly modifying CSS properties, instead of altering the behavior of the menu...<br/>(I haven't found where the HideOutputSection javascript is, so I don't know how it actually works...)",
+      "PostDate": "2015-04-11T04:26:12+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35707",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "The JS version of HideOutputSection looks like this (taken from player.js in Quest 5.5.1):\n\n[code:3nbq1fwp]function HideOutputSection(name) {\n    EndOutputSection(name);\n    $(&quot;&#46;&quot; + name + &quot; a&quot;)&#46;attr(&quot;onclick&quot;, &quot;&quot;);\n    setTimeout(function() {\n        $(&quot;&#46;&quot; + name)&#46;hide(250, function () { $(this)&#46;remove(); });\n    }, 250);\n}\n[/code:3nbq1fwp]\n(You can get all of the player code and more by downloading the source from the Quest GIT repository. I would recommend it, especially if you're code savvy. It's handy to be able to search for things.)\n\nBasically all the code does is hide the div. It doesn't adjust the overall output div height to account for the lost area. (I used to be annoyed by that behavior, but I came to terms with it, somewhat, as a design decision. A large gap vs the text scrolling back down to close the gap...)\n\nIt looks like you have a solution, so I'm not sure if I can help further. But let me know if I can.",
+      "EditableFormat": "bbcode",
+      "HTML": "The JS version of HideOutputSection looks like this (taken from player.js in Quest 5.5.1):<br/><br/><pre><code>function HideOutputSection(name) {<br/>    EndOutputSection(name);<br/>    $(&quot;&#46;&quot; + name + &quot; a&quot;)&#46;attr(&quot;onclick&quot;, &quot;&quot;);<br/>    setTimeout(function() {<br/>        $(&quot;&#46;&quot; + name)&#46;hide(250, function () { $(this)&#46;remove(); });<br/>    }, 250);<br/>}<br/></code></pre><br/>(You can get all of the player code and more by downloading the source from the Quest GIT repository. I would recommend it, especially if you're code savvy. It's handy to be able to search for things.)<br/><br/>Basically all the code does is hide the div. It doesn't adjust the overall output div height to account for the lost area. (I used to be annoyed by that behavior, but I came to terms with it, somewhat, as a design decision. A large gap vs the text scrolling back down to close the gap...)<br/><br/>It looks like you have a solution, so I'm not sure if I can help further. But let me know if I can.",
+      "PostDate": "2015-04-11T09:56:30+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35712",
+      "UserId": 0,
+      "Username": "Satoh",
+      "UserAvatar": null,
+      "UserGravatar": "9394f3e18dda87f542bcdbea67632812",
+      "EditableText": "&quot;Looks like&quot; is the operative term here. It seems to work ok, but I haven't tested it thoroughly.\nThe problem, I have discovered, was that the output div from the previous line of text, gets its min-height attribute inflated for each menu item, but once those are hidden, nothing changes the attribute back to normal.\n\nIt appears as though settingit to 0px is ok, (its min-height, after all, not max-height).\nI hesitate to call this resolved until more testing is done...\n\nThanks for the reply. I'll look through those source files.",
+      "EditableFormat": "bbcode",
+      "HTML": "&quot;Looks like&quot; is the operative term here. It seems to work ok, but I haven't tested it thoroughly.<br/>The problem, I have discovered, was that the output div from the previous line of text, gets its min-height attribute inflated for each menu item, but once those are hidden, nothing changes the attribute back to normal.<br/><br/>It appears as though settingit to 0px is ok, (its min-height, after all, not max-height).<br/>I hesitate to call this resolved until more testing is done...<br/><br/>Thanks for the reply. I'll look through those source files.",
+      "PostDate": "2015-04-11T18:06:28+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

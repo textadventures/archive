@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "2253",
+    "ForumId": "10",
+    "Title": "Container problem in Quest 4.1.2.",
+    "LastUpdated": "2010-03-21T22:30:08+00:00",
+    "ReplyCount": 6
+  },
+  "Posts": [
+    {
+      "PostId": "17264",
+      "UserId": 0,
+      "Username": "Tomsa",
+      "UserAvatar": null,
+      "UserGravatar": "ef37a3599eb99171e2b32ae318749ff7",
+      "EditableText": "So...I wanted to make a chest that is unlockable/lockable with a key, but stumbeled into a problem. It goes like this... \n\nWhen setting up the container, run script when open - if chest property of locked - print &quot;it is locked&quot;, else print &quot;you open the chest using the key&quot; + open object (chest)\n\nWhen setting up use options for key - use on chest - give chest property of unlocked\n\nHowever, when I unlock the chest and open it, the contents are not there!\n\nI know I am missing some simple detail here, but what is it? \n\nPS I do not know ASL",
+      "EditableFormat": "bbcode",
+      "HTML": "So...I wanted to make a chest that is unlockable/lockable with a key, but stumbeled into a problem. It goes like this... <br/><br/>When setting up the container, run script when open - if chest property of locked - print &quot;it is locked&quot;, else print &quot;you open the chest using the key&quot; + open object (chest)<br/><br/>When setting up use options for key - use on chest - give chest property of unlocked<br/><br/>However, when I unlock the chest and open it, the contents are not there!<br/><br/>I know I am missing some simple detail here, but what is it? <br/><br/>PS I do not know ASL",
+      "PostDate": "2010-03-20T10:58:15+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "17268",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "I made a test file and it worked for me - please can you send me your ASL file and I'll see what's going on.",
+      "EditableFormat": "bbcode",
+      "HTML": "I made a test file and it worked for me - please can you send me your ASL file and I'll see what's going on.",
+      "PostDate": "2010-03-20T18:22:50+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "17269",
+      "UserId": 0,
+      "Username": "Tomsa",
+      "UserAvatar": null,
+      "UserGravatar": "ef37a3599eb99171e2b32ae318749ff7",
+      "EditableText": "Here is the ASL snippet:\n\n\tdefine object &lt;desk&gt;\n\t\talt &lt;drawer&gt;\n\t\tlook &lt;It is a fine mahogany desk of excellent craftmanship. The middle drawer is adorned with a brass ring.&gt;\n\t\tprefix &lt;a&gt;\n\t\tdisplaytype &lt;Object&gt;\n\t\tarticle &lt;it&gt;\n\t\tgender &lt;it&gt;\n\t\tcontainer\n\t\topen {\n\t\t\tif property &lt;desk; unlocked&gt; then {\n\t\t\t\tmsg &lt;|s00You open the desk using the key.&gt;\n\t\t\t\topen &lt;desk&gt; } else msg &lt;The desk is locked.&gt;\n\t\t}\n\t\tclose\n\t\tadd\n\t\tremove\n\tend define\n\n\tdefine object &lt;book&gt;\n\t\tlook &lt;A leather-bound booklet small enough to fit in a vest pocket.&gt;\n\t\ttake &lt;You pick up the small book and put it in your vest pocket.&gt;\n\t\tprefix &lt;a&gt;\n\t\tdisplaytype &lt;Object&gt;\n\t\tarticle &lt;it&gt;\n\t\tgender &lt;it&gt;\n\t\tparent &lt;desk&gt;\n\t\taction &lt;read&gt; do &lt;chapters&gt;\n\tend define\n\n\tdefine object &lt;matches&gt;\n\t\tlook &lt;A box of extra long matches.&gt;\n\t\ttake\n\t\tdisplaytype &lt;Object&gt;\n\t\tarticle &lt;it&gt;\n\t\tgender &lt;it&gt;\n\t\tparent &lt;desk&gt;\n\t\tuse on &lt;firewood&gt; {\n\t\t\tif property &lt;kiln; ready to light&gt; then {\n\t\t\t\tmsg &lt;You strike a match and set the stacked wood on fire, using some leftover paper as igniter. Soon the kiln emits a warm glow, which means it is ready for use.&gt;\n\t\t\t\tflag on &lt;kiln ready for use&gt;\n\t\t\t\thide &lt;firewood&gt; } else msg &lt;You need to put the firewood into the kiln before setting it on fire. After all, you do not want to torch the place.&gt;\n\t\t}\n\tend define\n\n\tdefine object &lt;painting&gt;\n\t\tlook &lt;The classic &quot;Old fisherman with a pipe&quot; gives your office a grandmotherly feel. As you watch the painting while listening to the waves breaking puts you at ease before the daunting task ahead of you. It hangs slightly askew.&gt;\n\t\tprefix &lt;a&gt;\n\t\tdisplaytype &lt;Object&gt;\n\t\tarticle &lt;it&gt;\n\t\tgender &lt;it&gt;\n\t\tinvisible\n\t\tproperties &lt;move&gt;\n\t\taction &lt;move&gt; {\n\t\t\tmsg &lt;As you unhook the painting and put it gently on the floor, you reveal a small key hanging on the crooked nail upon which the painting had hung.&gt;\n\t\t\tshow &lt;key&gt;\n\t\t}\n\tend define\n\n\tdefine object &lt;key&gt;\n\t\talias &lt;drawer key&gt;\n\t\tlook &lt;It is a small key of rusted iron.&gt;\n\t\ttake &lt;You take the key from the crooked nail on the wall and slip it into your pocket.&gt;\n\t\tprefix &lt;a&gt;\n\t\tdisplaytype &lt;Object&gt;\n\t\tarticle &lt;it&gt;\n\t\tgender &lt;it&gt;\n\t\thidden\n\t\tuse on &lt;desk&gt; {\n\t\t\tmsg &lt;As you put the key into the keyhole of the desk drawer and turn, you hear a loud clicking noise.&gt;\n\t\t\tproperty &lt;desk; unlocked&gt;\n\t\t}\n\tend define\n\nend define\n\nIn other words, I move the painting in order to get the hidden key, which I use on the locked desk to open it, revealing its contents - the book and the matches.",
+      "EditableFormat": "bbcode",
+      "HTML": "Here is the ASL snippet:<br/><br/>\tdefine object &lt;desk&gt;<br/>\t\talt &lt;drawer&gt;<br/>\t\tlook &lt;It is a fine mahogany desk of excellent craftmanship. The middle drawer is adorned with a brass ring.&gt;<br/>\t\tprefix &lt;a&gt;<br/>\t\tdisplaytype &lt;Object&gt;<br/>\t\tarticle &lt;it&gt;<br/>\t\tgender &lt;it&gt;<br/>\t\tcontainer<br/>\t\topen {<br/>\t\t\tif property &lt;desk; unlocked&gt; then {<br/>\t\t\t\tmsg &lt;|s00You open the desk using the key.&gt;<br/>\t\t\t\topen &lt;desk&gt; } else msg &lt;The desk is locked.&gt;<br/>\t\t}<br/>\t\tclose<br/>\t\tadd<br/>\t\tremove<br/>\tend define<br/><br/>\tdefine object &lt;book&gt;<br/>\t\tlook &lt;A leather-bound booklet small enough to fit in a vest pocket.&gt;<br/>\t\ttake &lt;You pick up the small book and put it in your vest pocket.&gt;<br/>\t\tprefix &lt;a&gt;<br/>\t\tdisplaytype &lt;Object&gt;<br/>\t\tarticle &lt;it&gt;<br/>\t\tgender &lt;it&gt;<br/>\t\tparent &lt;desk&gt;<br/>\t\taction &lt;read&gt; do &lt;chapters&gt;<br/>\tend define<br/><br/>\tdefine object &lt;matches&gt;<br/>\t\tlook &lt;A box of extra long matches.&gt;<br/>\t\ttake<br/>\t\tdisplaytype &lt;Object&gt;<br/>\t\tarticle &lt;it&gt;<br/>\t\tgender &lt;it&gt;<br/>\t\tparent &lt;desk&gt;<br/>\t\tuse on &lt;firewood&gt; {<br/>\t\t\tif property &lt;kiln; ready to light&gt; then {<br/>\t\t\t\tmsg &lt;You strike a match and set the stacked wood on fire, using some leftover paper as igniter. Soon the kiln emits a warm glow, which means it is ready for use.&gt;<br/>\t\t\t\tflag on &lt;kiln ready for use&gt;<br/>\t\t\t\thide &lt;firewood&gt; } else msg &lt;You need to put the firewood into the kiln before setting it on fire. After all, you do not want to torch the place.&gt;<br/>\t\t}<br/>\tend define<br/><br/>\tdefine object &lt;painting&gt;<br/>\t\tlook &lt;The classic &quot;Old fisherman with a pipe&quot; gives your office a grandmotherly feel. As you watch the painting while listening to the waves breaking puts you at ease before the daunting task ahead of you. It hangs slightly askew.&gt;<br/>\t\tprefix &lt;a&gt;<br/>\t\tdisplaytype &lt;Object&gt;<br/>\t\tarticle &lt;it&gt;<br/>\t\tgender &lt;it&gt;<br/>\t\tinvisible<br/>\t\tproperties &lt;move&gt;<br/>\t\taction &lt;move&gt; {<br/>\t\t\tmsg &lt;As you unhook the painting and put it gently on the floor, you reveal a small key hanging on the crooked nail upon which the painting had hung.&gt;<br/>\t\t\tshow &lt;key&gt;<br/>\t\t}<br/>\tend define<br/><br/>\tdefine object &lt;key&gt;<br/>\t\talias &lt;drawer key&gt;<br/>\t\tlook &lt;It is a small key of rusted iron.&gt;<br/>\t\ttake &lt;You take the key from the crooked nail on the wall and slip it into your pocket.&gt;<br/>\t\tprefix &lt;a&gt;<br/>\t\tdisplaytype &lt;Object&gt;<br/>\t\tarticle &lt;it&gt;<br/>\t\tgender &lt;it&gt;<br/>\t\thidden<br/>\t\tuse on &lt;desk&gt; {<br/>\t\t\tmsg &lt;As you put the key into the keyhole of the desk drawer and turn, you hear a loud clicking noise.&gt;<br/>\t\t\tproperty &lt;desk; unlocked&gt;<br/>\t\t}<br/>\tend define<br/><br/>end define<br/><br/>In other words, I move the painting in order to get the hidden key, which I use on the locked desk to open it, revealing its contents - the book and the matches.",
+      "PostDate": "2010-03-20T19:35:27+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "17270",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "I get this output, which looks fine to me:\n\n[quote:35cz1szl]\n&gt; move painting\nAs you unhook the painting and put it gently on the floor, you reveal a small key hanging on the crooked nail upon which the painting had hung.\n\n&gt; take key\nYou take the key from the crooked nail on the wall and slip it into your pocket.\n\n&gt; use key on desk\nAs you put the key into the keyhole of the desk drawer and turn, you hear a loud clicking noise.\n\n&gt; open desk\nYou open the desk using the key.\n\n&gt; x desk\nIt is a fine mahogany desk of excellent craftmanship. The middle drawer is adorned with a brass ring.\nIt contains a book and matches.\n[/quote:35cz1szl]\n\nIs this not the behaviour you expect?",
+      "EditableFormat": "bbcode",
+      "HTML": "I get this output, which looks fine to me:<br/><br/><blockquote><p><br/>&gt; move painting<br/>As you unhook the painting and put it gently on the floor, you reveal a small key hanging on the crooked nail upon which the painting had hung.<br/><br/>&gt; take key<br/>You take the key from the crooked nail on the wall and slip it into your pocket.<br/><br/>&gt; use key on desk<br/>As you put the key into the keyhole of the desk drawer and turn, you hear a loud clicking noise.<br/><br/>&gt; open desk<br/>You open the desk using the key.<br/><br/>&gt; x desk<br/>It is a fine mahogany desk of excellent craftmanship. The middle drawer is adorned with a brass ring.<br/>It contains a book and matches.<br/></p></blockquote><br/><br/>Is this not the behaviour you expect?",
+      "PostDate": "2010-03-20T19:57:27+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "17271",
+      "UserId": 0,
+      "Username": "Tomsa",
+      "UserAvatar": null,
+      "UserGravatar": "ef37a3599eb99171e2b32ae318749ff7",
+      "EditableText": "I WANT it to behave that way, however, when I type &quot;open the desk&quot; after using the key on it, it does not display its contents (book and matches) even though the desk is their parent object. \n\nI have used an if statement in container properties that goes like &quot;if desk has the property unlocked, then print 'You open the desk drawer' Open 'desk'. Else print ' The desk is locked'.\n\nThe use details of the key is to modify the property of the desk to unlocked.\nEverything seems to be in order, exept that I cannot see the contents of the desk when I finally open it. Is there something wrong in my ASL?",
+      "EditableFormat": "bbcode",
+      "HTML": "I WANT it to behave that way, however, when I type &quot;open the desk&quot; after using the key on it, it does not display its contents (book and matches) even though the desk is their parent object. <br/><br/>I have used an if statement in container properties that goes like &quot;if desk has the property unlocked, then print 'You open the desk drawer' Open 'desk'. Else print ' The desk is locked'.<br/><br/>The use details of the key is to modify the property of the desk to unlocked.<br/>Everything seems to be in order, exept that I cannot see the contents of the desk when I finally open it. Is there something wrong in my ASL?",
+      "PostDate": "2010-03-21T16:10:35+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "17272",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "I copied your ASL code and got the output above, so the ASL code you pasted is working at least. What exact output do you get? If you could attach the entire ASL file that would also help.",
+      "EditableFormat": "bbcode",
+      "HTML": "I copied your ASL code and got the output above, so the ASL code you pasted is working at least. What exact output do you get? If you could attach the entire ASL file that would also help.",
+      "PostDate": "2010-03-21T16:46:52+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "17273",
+      "UserId": 0,
+      "Username": "Tomsa",
+      "UserAvatar": null,
+      "UserGravatar": "ef37a3599eb99171e2b32ae318749ff7",
+      "EditableText": "I played around with the chest.asl you sent me and...problem solved! I did exactly the same as I did before, with the minor change that I edited the use options for the desk instead of the key (key being the object that you could use on the desk), and I also dropped the whole changing property thing. In my eyes, the same thing but different results...but still, I solved the problem. Now I can finally sleep. Expect a new game for textadventures.co.uk soon!",
+      "EditableFormat": "bbcode",
+      "HTML": "I played around with the chest.asl you sent me and...problem solved! I did exactly the same as I did before, with the minor change that I edited the use options for the desk instead of the key (key being the object that you could use on the desk), and I also dropped the whole changing property thing. In my eyes, the same thing but different results...but still, I solved the problem. Now I can finally sleep. Expect a new game for textadventures.co.uk soon!",
+      "PostDate": "2010-03-21T22:30:08+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "wxos8um_e0y2o6m3qemqng",
+    "ForumId": "10",
+    "Title": "Turnscript not enabling",
+    "LastUpdated": "2022-11-23T10:16:06.8880954Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "9faca4a7-3efb-4b21-81e1-43b505f83df4",
+      "UserId": 610239,
+      "Username": "Pigbeetle",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/c870c44b1275ae6261ff1552a3ba3ea4?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I can get a match to light succesfully, and illuminate the room, but it's only supposed to work for a certain number of turns, before snuffing itself out. I could just set a timer script, but I'm trying to use a turnscript, as per this tutorial: \r\n\r\nhttps://docs.textadventures.co.uk/quest/handling_light_and_dark.html\r\n\r\nBut no matter what happens, the turnscript just isn't doing anything at all. The match stays lit no matter how many turns are taken.\r\n\r\nWhen you \"light match\" I have this run: and it works for lighting up the room as it should\r\n\r\n```set (Matches, \"lit\", true)\r\nSetLight (Campsite)\r\nmsg (\"You strike the match across the book and it lights, illuminating your environment just enough to look around.\")\r\nEnableTurnScript (match)\r\n```\r\nAnd this under the match turnscript:\r\n\r\n```\r\nMatches.stick = Matches.stick - 1\r\nif (Matches.stick < 1) {\r\n  Matches.lit = false\r\n  Matches.lightsource = false\r\n  DisableTurnScript (match)\r\n  msg (\"The flame reaches the end of the matchstick and fizzles out and your lightsource disappears, but not before burning your thumb and index finger, causing you to reflexively twitch and launch it off somewhere into the darkness..\")\r\n  RemoveObject (Matches)\r\n}\r\n```\r\n\r\nI literally just copied the code from that tutorial and swapped my attribute names, \"stick\" being how much stick is left of the match, and lit obviously being if it's lit or not.\r\nSo even though  I clearly enable the match turnscript once its lit, the countdown does not start. I've tried even setting the stick integer just to 1 and making many moves in an attempt to get it to do something, but it just doesn't.\r\n\r\nAm I misunderstanding that the \"Matches.stick - 1\" bit is supposed to decrease the stick integer by 1 each turn made?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I can get a match to light succesfully, and illuminate the room, but it's only supposed to work for a certain number of turns, before snuffing itself out. I could just set a timer script, but I'm trying to use a turnscript, as per this tutorial:</p>\n<p>https://docs.textadventures.co.uk/quest/handling_light_and_dark.html</p>\n<p>But no matter what happens, the turnscript just isn't doing anything at all. The match stays lit no matter how many turns are taken.</p>\n<p>When you \"light match\" I have this run: and it works for lighting up the room as it should</p>\n<pre><code>SetLight (Campsite)\nmsg (\"You strike the match across the book and it lights, illuminating your environment just enough to look around.\")\nEnableTurnScript (match)\n</code></pre>\n<p>And this under the match turnscript:</p>\n<pre><code>Matches.stick = Matches.stick - 1\nif (Matches.stick &lt; 1) {\n  Matches.lit = false\n  Matches.lightsource = false\n  DisableTurnScript (match)\n  msg (\"The flame reaches the end of the matchstick and fizzles out and your lightsource disappears, but not before burning your thumb and index finger, causing you to reflexively twitch and launch it off somewhere into the darkness..\")\n  RemoveObject (Matches)\n}\n</code></pre>\n<p>I literally just copied the code from that tutorial and swapped my attribute names, \"stick\" being how much stick is left of the match, and lit obviously being if it's lit or not.<br>\nSo even though  I clearly enable the match turnscript once its lit, the countdown does not start. I've tried even setting the stick integer just to 1 and making many moves in an attempt to get it to do something, but it just doesn't.</p>\n<p>Am I misunderstanding that the \"Matches.stick - 1\" bit is supposed to decrease the stick integer by 1 each turn made?</p>\n\n",
+      "PostDate": "2022-11-23T10:16:06.8880954Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "aadaf872-61dd-46fb-bad3-24a95b30f1c0",
+      "UserId": 610239,
+      "Username": "Pigbeetle",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/c870c44b1275ae6261ff1552a3ba3ea4?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Nevermind I had the turnscript under the actual matches, not on its standalone thing in the general list of things in the game. Hence what I get for trying to keep things more compact :P",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Nevermind I had the turnscript under the actual matches, not on its standalone thing in the general list of things in the game. Hence what I get for trying to keep things more compact :P</p>\n\n",
+      "PostDate": "2022-11-23T11:02:50.6758229Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "c35c56f1-3c48-4ade-a584-8dcc7a268ec6",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Yeah; turnscripts and commands need to be either in the player's current room, or outside any location.\r\n\r\nOddly enough, if you want to put them somewhere else to make it more organised in the editor, you could use `RemoveObject (match)` to shift them to the global list when you enable them.\r\n\r\nFor stuff like this, where a turnscript relates to a specific object, I sometimes find it easier to make a turnscript that just looks at all the objects. Something like:\r\n```\r\nforeach (obj, AllObjects()) {\r\n  if (HasScript (obj, \"turnscript\")) {\r\n    do (obj, \"turnscript\")\r\n  }\r\n}\r\n```\r\nand then you can give the match a script attribute named `turnscript` doing something like:\r\n```\r\nif (GetBoolean (this, \"lit\")) {\r\n  this.stick = this.stick - 1\r\n  if (this.stick < 1) {\r\n    this.lit = false\r\n    msg (\"The flame reaches the end of the matchstick and fizzles out and your lightsource disappears, but not before burning your thumb and index finger, causing you to reflexively twitch and launch it off somewhere into the darkness..\")\r\n    RemoveObject (this)\r\n  }\r\n}\r\n```\r\nTo me, that seems to make things easier to organise, because the match's script is on the match rather than in a separate turnscript.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Yeah; turnscripts and commands need to be either in the player's current room, or outside any location.</p>\n<p>Oddly enough, if you want to put them somewhere else to make it more organised in the editor, you could use <code>RemoveObject (match)</code> to shift them to the global list when you enable them.</p>\n<p>For stuff like this, where a turnscript relates to a specific object, I sometimes find it easier to make a turnscript that just looks at all the objects. Something like:</p>\n<pre><code>foreach (obj, AllObjects()) {\n  if (HasScript (obj, \"turnscript\")) {\n    do (obj, \"turnscript\")\n  }\n}\n</code></pre>\n<p>and then you can give the match a script attribute named <code>turnscript</code> doing something like:</p>\n<pre><code>if (GetBoolean (this, \"lit\")) {\n  this.stick = this.stick - 1\n  if (this.stick &lt; 1) {\n    this.lit = false\n    msg (\"The flame reaches the end of the matchstick and fizzles out and your lightsource disappears, but not before burning your thumb and index finger, causing you to reflexively twitch and launch it off somewhere into the darkness..\")\n    RemoveObject (this)\n  }\n}\n</code></pre>\n<p>To me, that seems to make things easier to organise, because the match's script is on the match rather than in a separate turnscript.</p>\n\n",
+      "PostDate": "2022-11-23T13:38:27.9318493Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

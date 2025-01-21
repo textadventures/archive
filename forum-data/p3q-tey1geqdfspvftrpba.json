@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "p3q-tey1geqdfspvftrpba",
+    "ForumId": "10",
+    "Title": "Quick questions on naming exits in code",
+    "LastUpdated": "2017-11-08T21:45:24.0052061Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "17cd39fc-f199-4aac-a05c-9d1eadf9b5dd",
+      "UserId": 260569,
+      "Username": "DarkLizerd",
+      "AvatarUrl": "https://i.imgur.com/vjdH3t6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I have done this in my Wumpus game, naming the exit to the name of the destination room, but I was naming the exit OF the room I was in and each exit had it's own name...\r\nBut, here is my question...\r\nI am in room #1, exits are north, East, and South...\r\nAfter I go north, I am in room #2, the exits are West and South...\r\nHow to I change the north exit in room #1 to say \"room #2\" and the south exit in room #2 to say \"Room #1\"\r\nSo that, when I enter room #2, it will list the exits as: West and room #1...\r\n(I know this is an easy fix...)\r\n\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I have done this in my Wumpus game, naming the exit to the name of the destination room, but I was naming the exit OF the room I was in and each exit had it's own name...<br>\nBut, here is my question...<br>\nI am in room #1, exits are north, East, and South...<br>\nAfter I go north, I am in room #2, the exits are West and South...<br>\nHow to I change the north exit in room #1 to say \"room #2\" and the south exit in room #2 to say \"Room #1\"<br>\nSo that, when I enter room #2, it will list the exits as: West and room #1...<br>\n(I know this is an easy fix...)</p>\n\n",
+      "PostDate": "2017-11-08T21:45:24.0052061Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "ce53404e-168f-4a0e-b422-808b091967cf",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hmm ... looks like you want a script that runs whenever you go through a door. I'd probably give all the rooms an onexit script:\r\n```\r\nx = GetExitByLink (this, game.pov.parent)\r\nif (not x = null) {\r\n  x = GetObject (x)\r\n  x.alias = GetDisplayAlias (x.to)\r\n}\r\nx = GetExitByLink (game.pov.parent, this)\r\nif (not x = null) {\r\n  x = GetObject (x)\r\n  x.alias = GetDisplayAlias (x.to)\r\n}\r\n```\r\n(You could also do this by adding code to the player's `changedparent` script, using `this.parent` and `oldvalue`; you would have to be careful not to break the existing functionality of that script, though)\r\n\r\nOr am I misunderstanding you?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hmm ... looks like you want a script that runs whenever you go through a door. I'd probably give all the rooms an onexit script:</p>\n<pre><code>x = GetExitByLink (this, game.pov.parent)\nif (not x = null) {\n  x = GetObject (x)\n  x.alias = GetDisplayAlias (x.to)\n}\nx = GetExitByLink (game.pov.parent, this)\nif (not x = null) {\n  x = GetObject (x)\n  x.alias = GetDisplayAlias (x.to)\n}\n</code></pre>\n<p>(You could also do this by adding code to the player's <code>changedparent</code> script, using <code>this.parent</code> and <code>oldvalue</code>; you would have to be careful not to break the existing functionality of that script, though)</p>\n<p>Or am I misunderstanding you?</p>\n\n",
+      "PostDate": "2017-11-08T21:56:36.6863903Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "a74cb703-4373-4f0d-9d12-30e04f0a63dc",
+      "UserId": 260569,
+      "Username": "DarkLizerd",
+      "AvatarUrl": "https://i.imgur.com/vjdH3t6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You sound like you got it...\r\nBut your code has me lost...\r\nSomething simple like:\r\nroom #1. exit_north.alias=\"room #2\"\r\nfor the room I just left... and...\r\nroom #2.exit_south.alias=\"room #1\"\r\nfor the room I just entered...\r\nMaybe placed in the \"Before entering the room:\" script so that the door I just came through would have the room name and not the direction.\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You sound like you got it...<br>\nBut your code has me lost...<br>\nSomething simple like:<br>\nroom #1. exit_north.alias=\"room #2\"<br>\nfor the room I just left... and...<br>\nroom #2.exit_south.alias=\"room #1\"<br>\nfor the room I just entered...<br>\nMaybe placed in the \"Before entering the room:\" script so that the door I just came through would have the room name and not the direction.</p>\n\n",
+      "PostDate": "2017-11-09T03:10:20.6343362Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "ce4ae73b-0019-4cdb-a384-599202370eef",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "If you just want to change the north exit of room #1, you could do:\r\n```\r\nexit_north = GetObject( GetExitByName(Room #1, \"north\"))\r\nexit_north.alias = \"Room #2\"\r\n```\r\n\r\nSorry, I thought you wanted to rename whichever exit the player walked  through. For  that, I went for the onexit script, because the beforeenter script doesn't know where you came from.\r\n\r\nIn an onexit script, `this` is the room you're going from, and `game.pov.parent` is the room you're going to. So `GetExitByLink (this, game.pov.parent)` is the  exit you went through, and `GetExitByLink (game.pov.parent, this)` is the other side of the same door.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>If you just want to change the north exit of room #1, you could do:</p>\n<pre><code>exit_north = GetObject( GetExitByName(Room #1, \"north\"))\nexit_north.alias = \"Room #2\"\n</code></pre>\n<p>Sorry, I thought you wanted to rename whichever exit the player walked  through. For  that, I went for the onexit script, because the beforeenter script doesn't know where you came from.</p>\n<p>In an onexit script, <code>this</code> is the room you're going from, and <code>game.pov.parent</code> is the room you're going to. So <code>GetExitByLink (this, game.pov.parent)</code> is the  exit you went through, and <code>GetExitByLink (game.pov.parent, this)</code> is the other side of the same door.</p>\n\n",
+      "PostDate": "2017-11-09T03:36:58.2727071Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "4ef59736-b105-48e2-a5ee-48296e4151ef",
+      "UserId": 318253,
+      "Username": "K.V.",
+      "AvatarUrl": "http://i.imgur.com/FOIjtApb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "When put in the ```onexit``` script, ```this``` is the room you just exited.\r\n\r\nSo this next line finds the exit between the room you just left and the room you are currently in, and sets it up as ```x```.\r\n\r\n```x = GetExitByLink (this, game.pov.parent)```\r\n\r\nThis just checks to make sure ```x``` exists, making sure the script won't throw an error if it doesn't:\r\n\r\n```if (not x = null) {```\r\n\r\nThis just changes ```x``` from a string to an object.\r\n```x = GetObject (x)```\r\n\r\nAnd this sets the exit's alias to the alias of the room the exit leads to:\r\n```x.alias = GetDisplayAlias (x.to)```\r\n\r\n\r\n<details><summary>CLICK HERE to check it out in an example game with debugging messages, DL:</summary>\r\n\r\n---\r\n```\r\n<!--Saved by Quest 5.7.6404.15496-->\r\n<asl version=\"550\">\r\n  <include ref=\"English.aslx\" />\r\n  <include ref=\"Core.aslx\" />\r\n  <game name=\"Example (code by mrangel)\">\r\n    <gameid>b1109d19-2c86-407b-972b-7ee2da530b2c</gameid>\r\n    <version>1.0</version>\r\n    <firstpublished>2017</firstpublished>\r\n    <start type=\"script\">\r\n    </start>\r\n    <roomenter type=\"script\">\r\n    </roomenter>\r\n  </game>\r\n  <object name=\"room one\">\r\n    <inherit name=\"editor_room\" />\r\n    <usedefaultprefix type=\"boolean\">false</usedefaultprefix>\r\n    <onexit type=\"script\">\r\n      x = GetExitByLink (this, game.pov.parent)\r\n      if (not x = null) {\r\n        msg (\"FIRST ONEXIT SCRIPT:\")\r\n        msg (\"This is the exit the script found: \"+x)\r\n        x = GetObject (x)\r\n        msg (\"This is the room that exit leads to: \"+GetDisplayAlias (x.to))\r\n        msg (\"This is the exit object: \"+x)\r\n        x.alias = GetDisplayAlias (x.to)\r\n      }\r\n      x = GetExitByLink (game.pov.parent, this)\r\n      if (not x = null) {\r\n        msg (\"SECOND ONEXIT SCRIPT:\")\r\n        msg (\"This is the exit the script found: \"+x)\r\n        x = GetObject (x)\r\n        msg (\"This is the room that exit leads to: \"+GetDisplayAlias (x.to))\r\n        msg (\"This is the exit object: \"+x)\r\n        x.alias = GetDisplayAlias (x.to)\r\n      }\r\n    </onexit>\r\n    <object name=\"player\">\r\n      <inherit name=\"editor_object\" />\r\n      <inherit name=\"editor_player\" />\r\n    </object>\r\n    <exit alias=\"north\" to=\"room two\">\r\n      <inherit name=\"northdirection\" />\r\n    </exit>\r\n  </object>\r\n  <object name=\"room two\">\r\n    <inherit name=\"editor_room\" />\r\n    <usedefaultprefix type=\"boolean\">false</usedefaultprefix>\r\n    <onexit type=\"script\">\r\n      x = GetExitByLink (this, game.pov.parent)\r\n      if (not x = null) {\r\n        msg (x)\r\n        x = GetObject (x)\r\n        x.alias = GetDisplayAlias (x.to)\r\n      }\r\n      x = GetExitByLink (game.pov.parent, this)\r\n      if (not x = null) {\r\n        msg (x)\r\n        x = GetObject (x)\r\n        x.alias = GetDisplayAlias (x.to)\r\n      }\r\n    </onexit>\r\n    <exit alias=\"south\" to=\"room one\">\r\n      <inherit name=\"southdirection\" />\r\n    </exit>\r\n  </object>\r\n</asl>\r\n```\r\n---\r\n\r\n</details>\r\n\r\n---\r\nEDIT:\r\n\r\nHehehe...\r\n\r\nI missed mrangel's post during the 21 minute learning-by-example-game session I had going on there.\r\n\r\n(I learn something from mrangel almost every day.  Have I told you guys that before?  Thanks, mrangel!)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>When put in the <code>onexit</code> script, <code>this</code> is the room you just exited.</p>\n<p>So this next line finds the exit between the room you just left and the room you are currently in, and sets it up as <code>x</code>.</p>\n<p><code>x = GetExitByLink (this, game.pov.parent)</code></p>\n<p>This just checks to make sure <code>x</code> exists, making sure the script won't throw an error if it doesn't:</p>\n<p><code>if (not x = null) {</code></p>\n<p>This just changes <code>x</code> from a string to an object.<br>\n<code>x = GetObject (x)</code></p>\n<p>And this sets the exit's alias to the alias of the room the exit leads to:<br>\n<code>x.alias = GetDisplayAlias (x.to)</code></p>\n<details><summary>CLICK HERE to check it out in an example game with debugging messages, DL:</summary>\n<hr>\n<pre><code>&lt;!--Saved by Quest 5.7.6404.15496--&gt;\n&lt;asl version=\"550\"&gt;\n  &lt;include ref=\"English.aslx\" /&gt;\n  &lt;include ref=\"Core.aslx\" /&gt;\n  &lt;game name=\"Example (code by mrangel)\"&gt;\n    &lt;gameid&gt;b1109d19-2c86-407b-972b-7ee2da530b2c&lt;/gameid&gt;\n    &lt;version&gt;1.0&lt;/version&gt;\n    &lt;firstpublished&gt;2017&lt;/firstpublished&gt;\n    &lt;start type=\"script\"&gt;\n    &lt;/start&gt;\n    &lt;roomenter type=\"script\"&gt;\n    &lt;/roomenter&gt;\n  &lt;/game&gt;\n  &lt;object name=\"room one\"&gt;\n    &lt;inherit name=\"editor_room\" /&gt;\n    &lt;usedefaultprefix type=\"boolean\"&gt;false&lt;/usedefaultprefix&gt;\n    &lt;onexit type=\"script\"&gt;\n      x = GetExitByLink (this, game.pov.parent)\n      if (not x = null) {\n        msg (\"FIRST ONEXIT SCRIPT:\")\n        msg (\"This is the exit the script found: \"+x)\n        x = GetObject (x)\n        msg (\"This is the room that exit leads to: \"+GetDisplayAlias (x.to))\n        msg (\"This is the exit object: \"+x)\n        x.alias = GetDisplayAlias (x.to)\n      }\n      x = GetExitByLink (game.pov.parent, this)\n      if (not x = null) {\n        msg (\"SECOND ONEXIT SCRIPT:\")\n        msg (\"This is the exit the script found: \"+x)\n        x = GetObject (x)\n        msg (\"This is the room that exit leads to: \"+GetDisplayAlias (x.to))\n        msg (\"This is the exit object: \"+x)\n        x.alias = GetDisplayAlias (x.to)\n      }\n    &lt;/onexit&gt;\n    &lt;object name=\"player\"&gt;\n      &lt;inherit name=\"editor_object\" /&gt;\n      &lt;inherit name=\"editor_player\" /&gt;\n    &lt;/object&gt;\n    &lt;exit alias=\"north\" to=\"room two\"&gt;\n      &lt;inherit name=\"northdirection\" /&gt;\n    &lt;/exit&gt;\n  &lt;/object&gt;\n  &lt;object name=\"room two\"&gt;\n    &lt;inherit name=\"editor_room\" /&gt;\n    &lt;usedefaultprefix type=\"boolean\"&gt;false&lt;/usedefaultprefix&gt;\n    &lt;onexit type=\"script\"&gt;\n      x = GetExitByLink (this, game.pov.parent)\n      if (not x = null) {\n        msg (x)\n        x = GetObject (x)\n        x.alias = GetDisplayAlias (x.to)\n      }\n      x = GetExitByLink (game.pov.parent, this)\n      if (not x = null) {\n        msg (x)\n        x = GetObject (x)\n        x.alias = GetDisplayAlias (x.to)\n      }\n    &lt;/onexit&gt;\n    &lt;exit alias=\"south\" to=\"room one\"&gt;\n      &lt;inherit name=\"southdirection\" /&gt;\n    &lt;/exit&gt;\n  &lt;/object&gt;\n&lt;/asl&gt;\n</code></pre>\n<hr>\n</details>\n<hr>\n<p>EDIT:</p>\n<p>Hehehe...</p>\n<p>I missed mrangel's post during the 21 minute learning-by-example-game session I had going on there.</p>\n<p>(I learn something from mrangel almost every day.  Have I told you guys that before?  Thanks, mrangel!)</p>\n\n",
+      "PostDate": "2017-11-09T03:57:37.3145074Z",
+      "LastEditDate": "2017-11-09T04:09:44.335409Z",
+      "link": null
+    },
+    {
+      "PostId": "4bb665eb-6700-490f-b95f-a9991498f2a6",
+      "UserId": 260569,
+      "Username": "DarkLizerd",
+      "AvatarUrl": "https://i.imgur.com/vjdH3t6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Bingo!!!   (I think)... and it works!!!\r\nNow to plug it in and see what it does...\r\nYes, your two room \"game\" helps...\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Bingo!!!   (I think)... and it works!!!<br>\nNow to plug it in and see what it does...<br>\nYes, your two room \"game\" helps...</p>\n\n",
+      "PostDate": "2017-11-09T08:07:59.8541469Z",
+      "LastEditDate": "2017-11-09T08:40:35.5749922Z",
+      "link": null
+    }
+  ]
+}

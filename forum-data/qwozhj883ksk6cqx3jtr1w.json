@@ -1,0 +1,123 @@
+{
+  "Topic": {
+    "TopicId": "qwozhj883ksk6cqx3jtr1w",
+    "ForumId": "10",
+    "Title": "How to have different responses given the number of times player repeats action",
+    "LastUpdated": "2021-07-07T15:42:38.0908931Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "1c43d222-1a37-4431-a16f-000fa317eb96",
+      "UserId": 552330,
+      "Username": "McTigglesworth",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/385368c3549e121c4bea8caa268d7c8e?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello all!  I’m new to making text adventure games.  I’ve made a few basic games in RPG maker but that’s about it.  Anyway; I’m trying to figure out how to have different printed text that is dependent on the number of times the player repeats the action. \r\n\r\nFor example:\r\nplayer kicks rock 1st time: “you hurt your foot.  The rock is unfazed”\r\nPlayer kicks rock 2nd time: “you hurt your foot again.  The rock is unfazed”\r\nPlayer kicks rock 3rd time: “you have broken your toe.  You aren’t very smart are you”\r\n\r\nIf anyone could help me out, I would greatly appreciate it.\r\n\r\nThank you\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello all!  I’m new to making text adventure games.  I’ve made a few basic games in RPG maker but that’s about it.  Anyway; I’m trying to figure out how to have different printed text that is dependent on the number of times the player repeats the action.</p>\n<p>For example:<br>\nplayer kicks rock 1st time: “you hurt your foot.  The rock is unfazed”<br>\nPlayer kicks rock 2nd time: “you hurt your foot again.  The rock is unfazed”<br>\nPlayer kicks rock 3rd time: “you have broken your toe.  You aren’t very smart are you”</p>\n<p>If anyone could help me out, I would greatly appreciate it.</p>\n<p>Thank you</p>\n\n",
+      "PostDate": "2021-07-07T15:42:38.0908931Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "ae6ddc8d-a872-40af-9930-676bfddea471",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello.\r\n\r\nFirst off, I would create a new command: ```kick_cmd```.\r\n\r\nMy ```kick_cmd``` command would look something like this:\r\n\r\nCOMMAND PATTERN: ```kick #object#```\r\nNAME: ```kick_cmd```\r\nSCRIPT:\r\n```\r\nif (not HasAttribute(object, \"kick\")) {\r\n  msg (\"Kicking \" + GetDefiniteName(object) + \" would serve no purpose.\")\r\n}\r\nelse {\r\n  do (object, \"kick\")\r\n}\r\n```\r\n\r\n---\r\n\r\n---\r\nThat way, when you try to kick anything which has no ```kick``` script attribute set on it, it will behave like this:\r\n\r\n```\r\n> kick the frob\r\nKicking the frob would serve no purpose.\r\n```\r\n\r\n---\r\nThen, I would add a ```kick``` script attribute to my ```rock``` object with a script like this:\r\n\r\n```\r\nif (not HasAttribute(this, \"times_kicked\")) {\r\n  this.times_kicked = 0\r\n}\r\nif (this.times_kicked < 4) {\r\n  this.times_kicked = this.times_kicked + 1\r\n}\r\nswitch (this.times_kicked) {\r\n  case (1) {\r\n    msg (\"You hurt your foot. The rock is unfazed.\")\r\n  }\r\n  case (2) {\r\n    msg (\"You hurt your foot again. The rock is unfazed.\")\r\n  }\r\n  case (3) {\r\n    msg (\"You have broken your toe. You aren't very smart, are you?\")\r\n  }\r\n  default {\r\n    msg (\"You are not allowed to kick the rock anymore!\")\r\n  }\r\n}\r\n```\r\n\r\n---\r\n![image](https://user-images.githubusercontent.com/30656341/124794448-a70e3c00-df14-11eb-85bc-60a99fa2fbce.png)\r\n\r\n---\r\nHere is the example game's code:\r\n\r\nhttps://gist.githubusercontent.com/KVonGit/599da0101df5eea7a338c4942290bda4/raw/bf4376ac2d28a6cdd36addf9f8eb004250467e3f/Kick%2520the%2520Rock.aslx\r\n\r\nYou can click that and view the code, or you can right-click to save the file and open it with Quest (when using the desktop version of Quest) to see it in the GUI.\r\n\r\nIf you're using Quest online, you'll have to manually enter everything (and probably copy and paste the scripts).\r\n\r\n---\r\nI avoided using a verb because that would be misleading. The player shouldn't be kicking the rock. Therefore adding a visible ```kick``` verb to the rock would be dirty pool.\r\n\r\nIf you'd rather abuse the player by adding \"kick\" verbs to objects they shouldn't kick (which might be amusing), it wouldn't be hard to change the kick command into a verb.\r\n\r\n---\r\nThere are many ways one could do this. If you don't like this method, just say the word.\r\n\r\nHappy gaming!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello.</p>\n<p>First off, I would create a new command: <code>kick_cmd</code>.</p>\n<p>My <code>kick_cmd</code> command would look something like this:</p>\n<p>COMMAND PATTERN: <code>kick #object#</code><br>\nNAME: <code>kick_cmd</code><br>\nSCRIPT:</p>\n<pre><code>if (not HasAttribute(object, \"kick\")) {\n  msg (\"Kicking \" + GetDefiniteName(object) + \" would serve no purpose.\")\n}\nelse {\n  do (object, \"kick\")\n}\n</code></pre>\n<hr>\n<hr>\n<p>That way, when you try to kick anything which has no <code>kick</code> script attribute set on it, it will behave like this:</p>\n<pre><code>&gt; kick the frob\nKicking the frob would serve no purpose.\n</code></pre>\n<hr>\n<p>Then, I would add a <code>kick</code> script attribute to my <code>rock</code> object with a script like this:</p>\n<pre><code>if (not HasAttribute(this, \"times_kicked\")) {\n  this.times_kicked = 0\n}\nif (this.times_kicked &lt; 4) {\n  this.times_kicked = this.times_kicked + 1\n}\nswitch (this.times_kicked) {\n  case (1) {\n    msg (\"You hurt your foot. The rock is unfazed.\")\n  }\n  case (2) {\n    msg (\"You hurt your foot again. The rock is unfazed.\")\n  }\n  case (3) {\n    msg (\"You have broken your toe. You aren't very smart, are you?\")\n  }\n  default {\n    msg (\"You are not allowed to kick the rock anymore!\")\n  }\n}\n</code></pre>\n<hr>\n<p><img src=\"https://user-images.githubusercontent.com/30656341/124794448-a70e3c00-df14-11eb-85bc-60a99fa2fbce.png\" alt=\"image\"></p>\n<hr>\n<p>Here is the example game's code:</p>\n<p>https://gist.githubusercontent.com/KVonGit/599da0101df5eea7a338c4942290bda4/raw/bf4376ac2d28a6cdd36addf9f8eb004250467e3f/Kick%2520the%2520Rock.aslx</p>\n<p>You can click that and view the code, or you can right-click to save the file and open it with Quest (when using the desktop version of Quest) to see it in the GUI.</p>\n<p>If you're using Quest online, you'll have to manually enter everything (and probably copy and paste the scripts).</p>\n<hr>\n<p>I avoided using a verb because that would be misleading. The player shouldn't be kicking the rock. Therefore adding a visible <code>kick</code> verb to the rock would be dirty pool.</p>\n<p>If you'd rather abuse the player by adding \"kick\" verbs to objects they shouldn't kick (which might be amusing), it wouldn't be hard to change the kick command into a verb.</p>\n<hr>\n<p>There are many ways one could do this. If you don't like this method, just say the word.</p>\n<p>Happy gaming!</p>\n\n",
+      "PostDate": "2021-07-07T16:23:58.0127805Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "4fb067d6-8414-4bc1-9c98-9fe052f05b66",
+      "UserId": 552330,
+      "Username": "McTigglesworth",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/385368c3549e121c4bea8caa268d7c8e?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thank you so much KV!\r\nI plan to use and expand upon this basic function to create a variety of humor occurrences.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thank you so much KV!<br>\nI plan to use and expand upon this basic function to create a variety of humor occurrences.</p>\n\n",
+      "PostDate": "2021-07-07T16:44:13.6271507Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "ed4d33e7-8d52-4cf8-aa79-d344c5f3d1ca",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You are very welcome.\r\n\r\nIf you are adding a turn count to your game, you'll probably want to suppress the turn scripts in that command script when the object has no ```kick``` attribute.\r\n\r\nYou'll most likely need to tweak all sorts of other things as you add more stuff to your game, too, but learning how to make it all work the way you want is the fun part.\r\n\r\nHave fun!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You are very welcome.</p>\n<p>If you are adding a turn count to your game, you'll probably want to suppress the turn scripts in that command script when the object has no <code>kick</code> attribute.</p>\n<p>You'll most likely need to tweak all sorts of other things as you add more stuff to your game, too, but learning how to make it all work the way you want is the fun part.</p>\n<p>Have fun!</p>\n\n",
+      "PostDate": "2021-07-07T16:54:31.2890764Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "4e8cfdf5-de16-487e-aa46-2208744d1f07",
+      "UserId": 56551,
+      "Username": "XanMag",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4b45a3afd18077f76f6569225c422bdb?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Here is a lengthy explanation that I copy-pasted from my Quest tutorial “game” that never gets any attention so occasionally I have to offer a shameless plug here and there... and I am quite sure that KVs answer is likely simpler and easier to understand but here it is nonetheless.  Hope it helps.\r\n\r\n•explain room\r\nThis is a frequent problem I see on the forums and one that I struggled with for the longest time. Once I figured this out, it is most likely the most helpful bit of coding I have learned. It really opens up gaming options! So, I will try to make this simple.\r\n\r\nYou will use something like this whenever you want multiple things to get accomplished before it triggers a new event or singular accomplishment. Want to have multiple keys used to open a door? Or, multiple pieces of a password collected before punching in a code? You want to wear multiple different pieces of clothing before you can sneak in to a top secret lab?? This is your answer.\r\n\r\n1. You will need to add an attribute to an object. Make it an integer attribute and set the integer equal to the number of sub-events. In this room, I added the attribute to the jigsaw puzzle. You need to use four puzzle pieces to complete the puzzle, so I set the integer to 4.\r\n2. To do so, click on the object, click on the attribute tab. At the bottom box, click on 'Add'. I always name mine [something]Count. In this case, I named it 'MissingPieceCount'.\r\n3a. Next, click on the 'Add change script'. Under this, I added an 'If' script. Select the 'If object attribute equals' from the drop down. \r\n3b. Select the object the attribute is set on. In this case, it was the jigsaw puzzle.\r\n3c. Type in the title of your attribute. Here it was 'MissingPieceCount' and set it to value zero (0).\r\n3d. For the then, I printed a 'Congratulations, the puzzle is complete' message and set a flag titled 'Complete' on the puzzle. I did this so I could look at the puzzle and get a different response for a complete puzzle and one that wasn't complete.\r\n4a. Wherever the subevent is completed... in this case it was use puzzle piece with puzzle.... you need to adjust the integer variable on the object in question.\r\n4b. To do this, I chose the 'set a variable or attribute' script under the heading 'Variables'.\r\n4c. You need to type into that first box the following: object.attribute - In the second box you need to leave it as 'expression'. In the third box you need to adjust the variable by typing the following: object.attribute - 1\r\n4d. So, in my example, it looks like this: Set variable: jigsaw puzzle.MissingPieceCount = expression jigsaw puzzle.MissingPieceCount -1\r\n5. Now, back over to the changedMissingPieceCount script if you choose. I didn't, but you could have added a bunch of Else Ifs to the changedMissingPieceCount attribute. Else If, object has attribute equal to 4 (or 3, or 2, or 1) print a proper message. If you choose to do this, each time a sub-event is comleted, you can send a message to the player that there are three (or two, or one) more events needed to complete it.\r\n6. Optional: In the look at description, you can add a switch or a bunch of If/Else Ifs to describe the object (puzzle) that is changing.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Here is a lengthy explanation that I copy-pasted from my Quest tutorial “game” that never gets any attention so occasionally I have to offer a shameless plug here and there... and I am quite sure that KVs answer is likely simpler and easier to understand but here it is nonetheless.  Hope it helps.</p>\n<p>•explain room<br>\nThis is a frequent problem I see on the forums and one that I struggled with for the longest time. Once I figured this out, it is most likely the most helpful bit of coding I have learned. It really opens up gaming options! So, I will try to make this simple.</p>\n<p>You will use something like this whenever you want multiple things to get accomplished before it triggers a new event or singular accomplishment. Want to have multiple keys used to open a door? Or, multiple pieces of a password collected before punching in a code? You want to wear multiple different pieces of clothing before you can sneak in to a top secret lab?? This is your answer.</p>\n<ol>\n<li>You will need to add an attribute to an object. Make it an integer attribute and set the integer equal to the number of sub-events. In this room, I added the attribute to the jigsaw puzzle. You need to use four puzzle pieces to complete the puzzle, so I set the integer to 4.</li>\n<li>To do so, click on the object, click on the attribute tab. At the bottom box, click on 'Add'. I always name mine [something]Count. In this case, I named it 'MissingPieceCount'.<br>\n3a. Next, click on the 'Add change script'. Under this, I added an 'If' script. Select the 'If object attribute equals' from the drop down.<br>\n3b. Select the object the attribute is set on. In this case, it was the jigsaw puzzle.<br>\n3c. Type in the title of your attribute. Here it was 'MissingPieceCount' and set it to value zero (0).<br>\n3d. For the then, I printed a 'Congratulations, the puzzle is complete' message and set a flag titled 'Complete' on the puzzle. I did this so I could look at the puzzle and get a different response for a complete puzzle and one that wasn't complete.<br>\n4a. Wherever the subevent is completed... in this case it was use puzzle piece with puzzle.... you need to adjust the integer variable on the object in question.<br>\n4b. To do this, I chose the 'set a variable or attribute' script under the heading 'Variables'.<br>\n4c. You need to type into that first box the following: object.attribute - In the second box you need to leave it as 'expression'. In the third box you need to adjust the variable by typing the following: object.attribute - 1<br>\n4d. So, in my example, it looks like this: Set variable: jigsaw puzzle.MissingPieceCount = expression jigsaw puzzle.MissingPieceCount -1</li>\n<li>Now, back over to the changedMissingPieceCount script if you choose. I didn't, but you could have added a bunch of Else Ifs to the changedMissingPieceCount attribute. Else If, object has attribute equal to 4 (or 3, or 2, or 1) print a proper message. If you choose to do this, each time a sub-event is comleted, you can send a message to the player that there are three (or two, or one) more events needed to complete it.</li>\n<li>Optional: In the look at description, you can add a switch or a bunch of If/Else Ifs to describe the object (puzzle) that is changing.</li>\n</ol>\n\n",
+      "PostDate": "2021-07-07T18:46:25.9253997Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "99cf3da5-f365-413d-8aee-d1f1e1715779",
+      "UserId": 553518,
+      "Username": "DavidSaine",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/401d364df63dd156947110e31af85f06?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello, XanMag! I have seen several excerpts from your book and they really carry a lot of useful information. But unfortunately, you correctly expressed that your book rarely attracts attention. Most likely it happens because you do not know how to write the text correctly in order to attract the attention of people. To write in such a way as to interest a large category of people, you need to have certain skills. Several services that I have been working with for a long time help me to acquire these skills, pay for essays, and they provide services for writing dissertations.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello, XanMag! I have seen several excerpts from your book and they really carry a lot of useful information. But unfortunately, you correctly expressed that your book rarely attracts attention. Most likely it happens because you do not know how to write the text correctly in order to attract the attention of people. To write in such a way as to interest a large category of people, you need to have certain skills. Several services that I have been working with for a long time help me to acquire these skills, pay for essays, and they provide services for writing dissertations.</p>\n\n",
+      "PostDate": "2021-07-17T19:10:42.2021956Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "89be631e-f77e-4bc7-a218-0cd65b52a70c",
+      "UserId": 32920,
+      "Username": "Father",
+      "AvatarUrl": "http://i.imgur.com/ogRXH9lb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Without using code ( I can’t do code)\r\nI usually. Set a kick verb on rock\r\nThen under scripts choose  first time.\r\nFirst time print first response\r\nOtherwise first time\r\nFirst time second response \r\nOtherwise first time\r\nFirst time third response\r\nYou can continue that ad infinitum until you put a final response in otherwise.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Without using code ( I can’t do code)<br>\nI usually. Set a kick verb on rock<br>\nThen under scripts choose  first time.<br>\nFirst time print first response<br>\nOtherwise first time<br>\nFirst time second response<br>\nOtherwise first time<br>\nFirst time third response<br>\nYou can continue that ad infinitum until you put a final response in otherwise.</p>\n\n",
+      "PostDate": "2021-07-18T15:04:14.4012015Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "3c7a752c-7b09-453a-8857-d0008a52c366",
+      "UserId": 56551,
+      "Username": "XanMag",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4b45a3afd18077f76f6569225c422bdb?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "@DavidSaine\r\n\r\nhttps://youtu.be/jZOywn1qArI\r\n\r\n😂 \r\n\r\nI think it’s more about how I code and solve problems while using quest - not necessarily my literary skill set.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>@DavidSaine</p>\n<p>https://youtu.be/jZOywn1qArI</p>\n<p>😂</p>\n<p>I think it’s more about how I code and solve problems while using quest - not necessarily my literary skill set.</p>\n\n",
+      "PostDate": "2021-07-18T18:50:30.7075266Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

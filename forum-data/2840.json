@@ -1,0 +1,143 @@
+{
+  "Topic": {
+    "TopicId": "2840",
+    "ForumId": "10",
+    "Title": "Question about descriptions",
+    "LastUpdated": "2013-01-19T18:19:52+00:00",
+    "ReplyCount": 10
+  },
+  "Posts": [
+    {
+      "PostId": "19652",
+      "UserId": 0,
+      "Username": "comradepants",
+      "UserAvatar": null,
+      "UserGravatar": "a740d0af749f5baf83c75adac1382b92",
+      "EditableText": "Is it possible to display exits, objects, etc. AFTER a room description appears?",
+      "EditableFormat": "bbcode",
+      "HTML": "Is it possible to display exits, objects, etc. AFTER a room description appears?",
+      "PostDate": "2012-02-22T12:53:17+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "19653",
+      "UserId": 0,
+      "Username": "guzmere",
+      "UserAvatar": "6360_1340718101.jpg",
+      "UserGravatar": "f5b5b6c64b9bea2411598f3a2db8121f",
+      "EditableText": "Hi have a look in the forum at --------Room descriptions/Object descriptions---------\nBest of luck nuff said   <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Hi have a look in the forum at --------Room descriptions/Object descriptions---------<br/>Best of luck nuff said   <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "PostDate": "2012-02-22T13:24:15+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "19658",
+      "UserId": 0,
+      "Username": "sgreig",
+      "UserAvatar": null,
+      "UserGravatar": "9117185af66d72729b195384e3a446f0",
+      "EditableText": "It is possible. It's been done in Tim Hamilton's Things That Go Bump In The Night, and I also do it in my game Sleuth. Since this is pretty complicated (I needed Alex's help with this), I'll post the code here but there are a few steps you need to do first: [b:1xviqyfo](make sure to backup your game file first unless you're confident you know what you're doing. Better safe than sorry.)[/b:1xviqyfo]\n\n[b:1xviqyfo]1:[/b:1xviqyfo] You need to click the filters button at the bottom of the node tree on the left, and click on show library elements. Then, you have to find the ShowRoomDescription function in the list. If you click on that, you'll see a yellow bar appear across the top of the editor window with a copy button. Click that and it will import the function into your game so you can modify it.\n\n[b:1xviqyfo]2:[/b:1xviqyfo] At this point, you'll want to switch over to the code view (button is second from the right at the top of the window) and scroll down until you see the part that says:\n\n&lt;function name=&quot;ShowRoomDescription&quot;&gt;\n\nYou can then replace that code with my code here:\n\n[code:1xviqyfo]\n&lt;function name=&quot;ShowRoomDescription&quot;&gt;&lt;!&#91;CDATA&#91;\n    if (HasScript(player&#46;parent, &quot;description&quot;)) {\n      do (player&#46;parent, &quot;description&quot;)\n    }\n    else {\n      if (game&#46;autodescription) {\n        youarein = player&#46;parent&#46;descprefix\n        msg (youarein + &quot; &quot; + GetDisplayName(player&#46;parent) + &quot;&#46;&quot;)\n        fulldesc = &quot;&quot;\n        if (HasString(player&#46;parent, &quot;description&quot;)) {\n          if (LengthOf(player&#46;parent&#46;description) &gt; 0) {\n            fulldesc = player&#46;parent&#46;description\n          }\n        }\n        if (game&#46;appendobjectdescription) {\n          foreach (val, ScopeVisibleNotHeld()) {\n            if (HasString(val, &quot;description&quot;)) {\n              if (LengthOf(val&#46;description) &gt; 0 and val &lt;&gt; player) {\n                fulldesc = fulldesc + &quot; &quot; + val&#46;description\n              }\n            }\n          }\n        }\n        if (LengthOf(fulldesc) &gt; 0) {\n          msg (fulldesc)\n        }\n        desc = FormatObjectList(player&#46;parent&#46;objectslistprefix, GetNonTransparentParent(player&#46;parent), Template(&quot;And&quot;), &quot;&#46;&quot;, false)\n        exits = FormatExitList(player&#46;parent&#46;exitslistprefix, ScopeExits(), Template(&quot;Or&quot;), &quot;&#46;&quot;)\n        fulldesc = &quot;&quot;\n        if (LengthOf(desc) &gt; 0) {\n          fulldesc = desc\n          if (LengthOf(exits) &gt; 0) {\n            fulldesc = fulldesc + &quot;&lt;br /&gt;&quot;\n          }\n        }\n        if (LengthOf(exits) &gt; 0) {\n          fulldesc = fulldesc + exits\n        }\n        if (LengthOf(fulldesc) &gt; 0) {\n          msg (fulldesc)\n        }\n      }\n    }\n  &#93;&#93;&gt;&lt;/function&gt;\n[/code:1xviqyfo]\n\nIf you did everything correctly, when you run your game the exits and objects should now display after the room description.",
+      "EditableFormat": "bbcode",
+      "HTML": "It is possible. It's been done in Tim Hamilton's Things That Go Bump In The Night, and I also do it in my game Sleuth. Since this is pretty complicated (I needed Alex's help with this), I'll post the code here but there are a few steps you need to do first: <span style=\"font-weight:bold;\">(make sure to backup your game file first unless you're confident you know what you're doing. Better safe than sorry.)</span><br/><br/><span style=\"font-weight:bold;\">1:</span> You need to click the filters button at the bottom of the node tree on the left, and click on show library elements. Then, you have to find the ShowRoomDescription function in the list. If you click on that, you'll see a yellow bar appear across the top of the editor window with a copy button. Click that and it will import the function into your game so you can modify it.<br/><br/><span style=\"font-weight:bold;\">2:</span> At this point, you'll want to switch over to the code view (button is second from the right at the top of the window) and scroll down until you see the part that says:<br/><br/>&lt;function name=&quot;ShowRoomDescription&quot;&gt;<br/><br/>You can then replace that code with my code here:<br/><br/><pre><code><br/>&lt;function name=&quot;ShowRoomDescription&quot;&gt;&lt;!&#91;CDATA&#91;<br/>    if (HasScript(player&#46;parent, &quot;description&quot;)) {<br/>      do (player&#46;parent, &quot;description&quot;)<br/>    }<br/>    else {<br/>      if (game&#46;autodescription) {<br/>        youarein = player&#46;parent&#46;descprefix<br/>        msg (youarein + &quot; &quot; + GetDisplayName(player&#46;parent) + &quot;&#46;&quot;)<br/>        fulldesc = &quot;&quot;<br/>        if (HasString(player&#46;parent, &quot;description&quot;)) {<br/>          if (LengthOf(player&#46;parent&#46;description) &gt; 0) {<br/>            fulldesc = player&#46;parent&#46;description<br/>          }<br/>        }<br/>        if (game&#46;appendobjectdescription) {<br/>          foreach (val, ScopeVisibleNotHeld()) {<br/>            if (HasString(val, &quot;description&quot;)) {<br/>              if (LengthOf(val&#46;description) &gt; 0 and val &lt;&gt; player) {<br/>                fulldesc = fulldesc + &quot; &quot; + val&#46;description<br/>              }<br/>            }<br/>          }<br/>        }<br/>        if (LengthOf(fulldesc) &gt; 0) {<br/>          msg (fulldesc)<br/>        }<br/>        desc = FormatObjectList(player&#46;parent&#46;objectslistprefix, GetNonTransparentParent(player&#46;parent), Template(&quot;And&quot;), &quot;&#46;&quot;, false)<br/>        exits = FormatExitList(player&#46;parent&#46;exitslistprefix, ScopeExits(), Template(&quot;Or&quot;), &quot;&#46;&quot;)<br/>        fulldesc = &quot;&quot;<br/>        if (LengthOf(desc) &gt; 0) {<br/>          fulldesc = desc<br/>          if (LengthOf(exits) &gt; 0) {<br/>            fulldesc = fulldesc + &quot;&lt;br /&gt;&quot;<br/>          }<br/>        }<br/>        if (LengthOf(exits) &gt; 0) {<br/>          fulldesc = fulldesc + exits<br/>        }<br/>        if (LengthOf(fulldesc) &gt; 0) {<br/>          msg (fulldesc)<br/>        }<br/>      }<br/>    }<br/>  &#93;&#93;&gt;&lt;/function&gt;<br/></code></pre><br/><br/>If you did everything correctly, when you run your game the exits and objects should now display after the room description.",
+      "PostDate": "2012-02-22T22:30:39+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "19713",
+      "UserId": 0,
+      "Username": "comradepants",
+      "UserAvatar": null,
+      "UserGravatar": "a740d0af749f5baf83c75adac1382b92",
+      "EditableText": "Wow, thanks a lot! I shall give it a shot  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->\n\nEDIT: Works just fine. Thanks for your help!",
+      "EditableFormat": "bbcode",
+      "HTML": "Wow, thanks a lot! I shall give it a shot  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D --><br/><br/>EDIT: Works just fine. Thanks for your help!",
+      "PostDate": "2012-03-04T10:10:18+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "19714",
+      "UserId": 0,
+      "Username": "sgreig",
+      "UserAvatar": null,
+      "UserGravatar": "9117185af66d72729b195384e3a446f0",
+      "EditableText": "No problem. Glad I could help! I would remiss if I didn't thank Alex for giving me the code that worked. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "No problem. Glad I could help! I would remiss if I didn't thank Alex for giving me the code that worked. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2012-03-04T10:29:02+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "22381",
+      "UserId": 0,
+      "Username": "demonboy",
+      "UserAvatar": null,
+      "UserGravatar": "30d5e72d183f691852c8b0534ccc2b90",
+      "EditableText": "Could someone tell me if this is still relevant or if this has been addressed in 5.3?",
+      "EditableFormat": "bbcode",
+      "HTML": "Could someone tell me if this is still relevant or if this has been addressed in 5.3?",
+      "PostDate": "2013-01-17T18:49:39+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "22385",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "yes, see here in the GUI for yourself:\n\nObjects -&gt; Game -&gt; (1) Setup, (2) Script, (3) Room Descriptions, (4) Player, (5) Display, (6) Attributes\n\nso click on the Room Descriptions:\n\nGame -&gt; Room Descriptions\n\ncheck box for &quot;Automatically generate room descriptions&quot;\n\ncheck box for &quot;Show room description when entering a room&quot;\n\ncheck box for &quot;Append in-room descriptions to room descriptions&quot;\n\nas can be seen very noobie-friendly with the GUI, wink",
+      "EditableFormat": "bbcode",
+      "HTML": "yes, see here in the GUI for yourself:<br/><br/>Objects -&gt; Game -&gt; (1) Setup, (2) Script, (3) Room Descriptions, (4) Player, (5) Display, (6) Attributes<br/><br/>so click on the Room Descriptions:<br/><br/>Game -&gt; Room Descriptions<br/><br/>check box for &quot;Automatically generate room descriptions&quot;<br/><br/>check box for &quot;Show room description when entering a room&quot;<br/><br/>check box for &quot;Append in-room descriptions to room descriptions&quot;<br/><br/>as can be seen very noobie-friendly with the GUI, wink",
+      "PostDate": "2013-01-17T19:43:34+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "22387",
+      "UserId": 0,
+      "Username": "demonboy",
+      "UserAvatar": null,
+      "UserGravatar": "30d5e72d183f691852c8b0534ccc2b90",
+      "EditableText": "But when using scripts those options do not put the description before the objects and exits, which is what the OP wanted (and what I'm after too).",
+      "EditableFormat": "bbcode",
+      "HTML": "But when using scripts those options do not put the description before the objects and exits, which is what the OP wanted (and what I'm after too).",
+      "PostDate": "2013-01-17T20:28:40+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "22388",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "Can't you change the room description layout in the room descriptions tab in game?\n[attachment=0:3k6bfnel]<!-- ia0 -->sshot-2.png<!-- ia0 -->[/attachment:3k6bfnel]",
+      "EditableFormat": "bbcode",
+      "HTML": "Can't you change the room description layout in the room descriptions tab in game?<br/><div><img src=\"/attachment/462\" alt=\"sshot-2.png\" /></div>",
+      "PostDate": "2013-01-17T22:12:08+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "22402",
+      "UserId": 0,
+      "Username": "sonic102",
+      "UserAvatar": null,
+      "UserGravatar": "fd0d4fb0d4f66001ed8c262e48930d07",
+      "EditableText": "Yes, someone gave the actual answer to this question!",
+      "EditableFormat": "bbcode",
+      "HTML": "Yes, someone gave the actual answer to this question!",
+      "PostDate": "2013-01-18T20:49:25+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "22406",
+      "UserId": 0,
+      "Username": "demonboy",
+      "UserAvatar": null,
+      "UserGravatar": "30d5e72d183f691852c8b0534ccc2b90",
+      "EditableText": "No, this does still not solve my problem. I have Pertex's screenshot set up so the description is second, but in my first room under the scripts tab, under 'After entering the room for the first time', I am printing a message which is the initial room description and this is still displaying last. Perhaps there should be a fifth option in that Room Description Layout order to place your scripts?",
+      "EditableFormat": "bbcode",
+      "HTML": "No, this does still not solve my problem. I have Pertex's screenshot set up so the description is second, but in my first room under the scripts tab, under 'After entering the room for the first time', I am printing a message which is the initial room description and this is still displaying last. Perhaps there should be a fifth option in that Room Description Layout order to place your scripts?",
+      "PostDate": "2013-01-19T18:19:52+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

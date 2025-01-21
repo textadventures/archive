@@ -1,0 +1,128 @@
+{
+  "Topic": {
+    "TopicId": "cvk7qikruugrh7ptcuoslg",
+    "ForumId": "10",
+    "Title": "More information on containers?",
+    "LastUpdated": "2017-01-29T12:25:12.2730899Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "edbe6be4-43cd-4555-b05f-14b761993067",
+      "UserId": 263865,
+      "Username": "NecroDeath",
+      "AvatarUrl": "http://i.imgur.com/1w7HHAhb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I've read the tutorial section on containers, but am looking for more information about the logical consequences of the different types you can chose from - i.e. what types are logically appropriate for what type of object. e.g. a chest,a  letter, a hole etc. Is there a document I can read anywhere? I tend to end up getting the right solution by trial and error.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I've read the tutorial section on containers, but am looking for more information about the logical consequences of the different types you can chose from - i.e. what types are logically appropriate for what type of object. e.g. a chest,a  letter, a hole etc. Is there a document I can read anywhere? I tend to end up getting the right solution by trial and error.</p>\n\n",
+      "PostDate": "2017-01-29T12:25:12.2730899Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "86cfca36-ba62-4055-88d7-ad99a23bc947",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "see here:\r\n\r\nhttp://docs.textadventures.co.uk/quest/elements/object.html (scroll down to the very bottom: 'object types defined by core aslx')\r\n\r\n(I'm still having a bit of trouble myself with the exactly what some of them do and their inheritance heirarchy, as for me, the descriptions of them are still a bit unclear or confusing)\r\n\r\n----------------\r\n\r\nObject Types / Types: these are quest's user-level 'groups/classes', see an example below:\r\n\r\n```\r\n<object name=\"player_1\">\r\n  <inherit name=\"player_type\" />\r\n</object>\r\n\r\n<object name=\"player_2\">\r\n  <inherit name=\"player_type\" />\r\n</object>\r\n\r\n<object name=\"monster_1\">\r\n  <inherit name=\"character_type\" />\r\n</object>\r\n\r\n<object name=\"monster_2\">\r\n  <inherit name=\"character_type\" />\r\n</object>\r\n\r\n<object name=\"npc_1\">\r\n  <inherit name=\"character_type\" />\r\n</object>\r\n\r\n<object name=\"npc_2\">\r\n  <inherit name=\"character_type\" />\r\n</object>\r\n\r\n<type name=\"character_type\">\r\n  <attr name=\"condition_string_attribute\" type=\"string\">unknown</attr>\r\n  <attr name=\"life_string_attribute\" type=\"string\">unknown</attr>\r\n  <attr name=\"level_integer_attribute\" type=\"int\">0</attr>\r\n  <attr name=\"cash_integer_attribute\" type=\"int\">0</attr>\r\n  <attr name=\"experience_integer_attribute\" type=\"int\">0</attr>\r\n  <attr name=\"current_life_integer_attribute\" type=\"int\">1</attr>\r\n  <attr name=\"maximum_life_integer_attribute\" type=\"int\">1</attr>\r\n  <attr name=\"current_mana_integer_attribute\" type=\"int\">0</attr>\r\n  <attr name=\"maximum_mana_integer_attribute\" type=\"int\">0</attr>\r\n  <attr name=\"strength_integer_attribute\" type=\"int\">0</attr>\r\n  <attr name=\"endurance_integer_attribute\" type=\"int\">0</attr>\r\n  <attr name=\"dexterity_integer_attribute\" type=\"int\">0</attr>\r\n  <attr name=\"agility_integer_attribute\" type=\"int\">0</attr>\r\n  <attr name=\"speed_integer_attribute\" type=\"int\">0</attr>\r\n  <attr name=\"luck_integer_attribute\" type=\"int\">0</attr>\r\n  <attr name=\"changedcurrent_life_integer_attribute\" type=\"script\"><![CDATA[\r\n    if (this.current_life_integer_attribute > this.maximum_life_integer_attribute) {\r\n      this.current_life_integer_attribute = this.maximum_life_integer_attribute\r\n    } else if (this.current_life_integer_attribute < 1) {\r\n      this.current_life_integer_attribute = 0\r\n      this.condition_string_attribute = \"dead\"\r\n    }\r\n    this.life_string_attribute = this.current_life_integer_attribute + \"/\" + this.maximum_life_integer_attribute\r\n  ]]></attr>\r\n  <attr name=\"changedmaximum_life_integer_attribute\" type=\"script\">\r\n    this.life_string_attribute = this.current_life_integer_attribute + \"/\" + this.maximum_life_integer_attribute\r\n  </attr>\r\n</type>\r\n\r\n<type name=\"player_type\">\r\n  <inherit name=\"character_type\" />\r\n  <attr name=\"statusattributes\" type=\"simplestringdictionary\">level_integer_attribute = Level: !; cash_integer_attribute = Cash: !; experience_integer_attribute = Experience: !; strength_integer_attribute = Strength: !; ETC ETC ETC; condition_string_attribute = Condition: !; life_string_attribute = Life: !</attr>\r\n  <attr name=\"changedcondition_string_attribute\" type=\"script\">\r\n    if (this.condition_string_attribute = \"dead\") {\r\n      msg (\"You died or were killed.\")\r\n      msg (\"GAME OVER\")\r\n      finish\r\n    }\r\n  </attr>\r\n</type>\r\n```\r\n\r\n-----------------------\r\n\r\nthe NOT 'container' Object Types:\r\n\r\n1. the 'openable' Object Type ( http://docs.textadventures.co.uk/quest/attributes/openable.html ):\r\n\r\nit provides the Object with all the code stuff needed for or used with 'opening/closing' feature/capability:\r\n\r\nA. the 'isopen' Boolean Attribute is what actually determines the state of whether the Object is open or closed\r\nB. the 'Open' Verb is added to the Object (which is done through the 'displayverbs' and/or 'inventoryverbs' Stringlist Attributes)\r\nC. the 'Close' Verb is added to the Object (which is done through the 'displayverbs' and/or 'inventoryverbs' Stringlist Attributes)\r\nD. the 'open' Boolean Attribute is actually how quest checks if an Object has the feature/capability of being openable\r\nD. the 'close' Boolean Attribute is actually how quest checks if an Object has the feature/capability of being close'able\r\n\r\nhttp://docs.textadventures.co.uk/quest/attributes/isopen.html\r\nhttp://docs.textadventures.co.uk/quest/attributes/open.html\r\nhttp://docs.textadventures.co.uk/quest/attributes/close.html\r\n\r\n2. container_lockable: this does NOT implement any 'container' features/capabilities (you've got to use one of the other 'container' Object Types if you want 'container' capabilities/features), but what it does do is to provide the 'lockable' capability/feature\r\n\r\n3. switchable ( http://docs.textadventures.co.uk/quest/attributes/switchable.html ): 'on/off' feature/capabilities\r\n\r\n4. edible\r\n\r\netc etc etc\r\n\r\n---------------------\r\n\r\nthe 'container' Object Types:\r\n\r\n1. surface: a 'put/hold-on-top-of' container: a 'table' Object (you can put stuff/Objects on top of the table, but there's no door you have to open/close to see and/or get/take the stuff/Objects being contained by the 'table' Object)\r\n\r\n2. container_limited: a 'container' capability/feature, but with the added code stuff needed for handling/implementing 'maxobject/limiting items that can be contained within the container Object' capability/feature\r\n\r\n3. container_closed: 'container' features/capabilies, and it starts out in the 'closed' state\r\n\r\n4. container_open: 'container' features/capabilies, and it starts out in the 'open' state\r\n\r\n5. container_base: this what provides the 'container' features/capabilities (the other 'container' Object Types that are containers already use this Object Type, so you shouldn't normally ever choice/use this container Object Type)\r\n\r\n6. container: I'm still baffled as to exactly what makes the 'container' Object Type different from the 'container_open' Object Type, meh\r\n\r\n-----\r\n\r\nso the 'container' inheritance heirarchy looks like this... as my best guess, lol:\r\n\r\nopenable -> container_base\r\nopenable -> container_base -> surface (transparent: you can see the Objects \"inside/on-top-of\" it, open container, and can NOT be closed)\r\nopenable -> container_base -> container_closed\r\nopenable -> container_base -> container_open\r\nopenable -> container_base -> container_open -> container\r\nopenable -> container_base -> container_open -> container -> container_limited\r\n\r\nand completely separately from the above, for your use too:\r\n\r\nopenable: if you want Objet to be openable/close'able, but NOT have 'container' features/capabilities\r\n\r\ncontainer_lockable: lockable features/capabilites, and... (if you also want 'container' features/capabilities, you've got to use/include/'inherit' one of the 'container' Object Types for your Object, on top of the 'container_lockable' Object Type)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>see here:</p>\n<p>http://docs.textadventures.co.uk/quest/elements/object.html (scroll down to the very bottom: 'object types defined by core aslx')</p>\n<p>(I'm still having a bit of trouble myself with the exactly what some of them do and their inheritance heirarchy, as for me, the descriptions of them are still a bit unclear or confusing)</p>\n<hr>\n<p>Object Types / Types: these are quest's user-level 'groups/classes', see an example below:</p>\n<pre><code>&lt;object name=\"player_1\"&gt;\n  &lt;inherit name=\"player_type\" /&gt;\n&lt;/object&gt;\n\n&lt;object name=\"player_2\"&gt;\n  &lt;inherit name=\"player_type\" /&gt;\n&lt;/object&gt;\n\n&lt;object name=\"monster_1\"&gt;\n  &lt;inherit name=\"character_type\" /&gt;\n&lt;/object&gt;\n\n&lt;object name=\"monster_2\"&gt;\n  &lt;inherit name=\"character_type\" /&gt;\n&lt;/object&gt;\n\n&lt;object name=\"npc_1\"&gt;\n  &lt;inherit name=\"character_type\" /&gt;\n&lt;/object&gt;\n\n&lt;object name=\"npc_2\"&gt;\n  &lt;inherit name=\"character_type\" /&gt;\n&lt;/object&gt;\n\n&lt;type name=\"character_type\"&gt;\n  &lt;attr name=\"condition_string_attribute\" type=\"string\"&gt;unknown&lt;/attr&gt;\n  &lt;attr name=\"life_string_attribute\" type=\"string\"&gt;unknown&lt;/attr&gt;\n  &lt;attr name=\"level_integer_attribute\" type=\"int\"&gt;0&lt;/attr&gt;\n  &lt;attr name=\"cash_integer_attribute\" type=\"int\"&gt;0&lt;/attr&gt;\n  &lt;attr name=\"experience_integer_attribute\" type=\"int\"&gt;0&lt;/attr&gt;\n  &lt;attr name=\"current_life_integer_attribute\" type=\"int\"&gt;1&lt;/attr&gt;\n  &lt;attr name=\"maximum_life_integer_attribute\" type=\"int\"&gt;1&lt;/attr&gt;\n  &lt;attr name=\"current_mana_integer_attribute\" type=\"int\"&gt;0&lt;/attr&gt;\n  &lt;attr name=\"maximum_mana_integer_attribute\" type=\"int\"&gt;0&lt;/attr&gt;\n  &lt;attr name=\"strength_integer_attribute\" type=\"int\"&gt;0&lt;/attr&gt;\n  &lt;attr name=\"endurance_integer_attribute\" type=\"int\"&gt;0&lt;/attr&gt;\n  &lt;attr name=\"dexterity_integer_attribute\" type=\"int\"&gt;0&lt;/attr&gt;\n  &lt;attr name=\"agility_integer_attribute\" type=\"int\"&gt;0&lt;/attr&gt;\n  &lt;attr name=\"speed_integer_attribute\" type=\"int\"&gt;0&lt;/attr&gt;\n  &lt;attr name=\"luck_integer_attribute\" type=\"int\"&gt;0&lt;/attr&gt;\n  &lt;attr name=\"changedcurrent_life_integer_attribute\" type=\"script\"&gt;&lt;![CDATA[\n    if (this.current_life_integer_attribute &gt; this.maximum_life_integer_attribute) {\n      this.current_life_integer_attribute = this.maximum_life_integer_attribute\n    } else if (this.current_life_integer_attribute &lt; 1) {\n      this.current_life_integer_attribute = 0\n      this.condition_string_attribute = \"dead\"\n    }\n    this.life_string_attribute = this.current_life_integer_attribute + \"/\" + this.maximum_life_integer_attribute\n  ]]&gt;&lt;/attr&gt;\n  &lt;attr name=\"changedmaximum_life_integer_attribute\" type=\"script\"&gt;\n    this.life_string_attribute = this.current_life_integer_attribute + \"/\" + this.maximum_life_integer_attribute\n  &lt;/attr&gt;\n&lt;/type&gt;\n\n&lt;type name=\"player_type\"&gt;\n  &lt;inherit name=\"character_type\" /&gt;\n  &lt;attr name=\"statusattributes\" type=\"simplestringdictionary\"&gt;level_integer_attribute = Level: !; cash_integer_attribute = Cash: !; experience_integer_attribute = Experience: !; strength_integer_attribute = Strength: !; ETC ETC ETC; condition_string_attribute = Condition: !; life_string_attribute = Life: !&lt;/attr&gt;\n  &lt;attr name=\"changedcondition_string_attribute\" type=\"script\"&gt;\n    if (this.condition_string_attribute = \"dead\") {\n      msg (\"You died or were killed.\")\n      msg (\"GAME OVER\")\n      finish\n    }\n  &lt;/attr&gt;\n&lt;/type&gt;\n</code></pre>\n<hr>\n<p>the NOT 'container' Object Types:</p>\n<ol>\n<li>the 'openable' Object Type ( http://docs.textadventures.co.uk/quest/attributes/openable.html ):</li>\n</ol>\n<p>it provides the Object with all the code stuff needed for or used with 'opening/closing' feature/capability:</p>\n<p>A. the 'isopen' Boolean Attribute is what actually determines the state of whether the Object is open or closed<br>\nB. the 'Open' Verb is added to the Object (which is done through the 'displayverbs' and/or 'inventoryverbs' Stringlist Attributes)<br>\nC. the 'Close' Verb is added to the Object (which is done through the 'displayverbs' and/or 'inventoryverbs' Stringlist Attributes)<br>\nD. the 'open' Boolean Attribute is actually how quest checks if an Object has the feature/capability of being openable<br>\nD. the 'close' Boolean Attribute is actually how quest checks if an Object has the feature/capability of being close'able</p>\n<p>http://docs.textadventures.co.uk/quest/attributes/isopen.html<br>\nhttp://docs.textadventures.co.uk/quest/attributes/open.html<br>\nhttp://docs.textadventures.co.uk/quest/attributes/close.html</p>\n<ol start=\"2\">\n<li>\n<p>container_lockable: this does NOT implement any 'container' features/capabilities (you've got to use one of the other 'container' Object Types if you want 'container' capabilities/features), but what it does do is to provide the 'lockable' capability/feature</p>\n</li>\n<li>\n<p>switchable ( http://docs.textadventures.co.uk/quest/attributes/switchable.html ): 'on/off' feature/capabilities</p>\n</li>\n<li>\n<p>edible</p>\n</li>\n</ol>\n<p>etc etc etc</p>\n<hr>\n<p>the 'container' Object Types:</p>\n<ol>\n<li>\n<p>surface: a 'put/hold-on-top-of' container: a 'table' Object (you can put stuff/Objects on top of the table, but there's no door you have to open/close to see and/or get/take the stuff/Objects being contained by the 'table' Object)</p>\n</li>\n<li>\n<p>container_limited: a 'container' capability/feature, but with the added code stuff needed for handling/implementing 'maxobject/limiting items that can be contained within the container Object' capability/feature</p>\n</li>\n<li>\n<p>container_closed: 'container' features/capabilies, and it starts out in the 'closed' state</p>\n</li>\n<li>\n<p>container_open: 'container' features/capabilies, and it starts out in the 'open' state</p>\n</li>\n<li>\n<p>container_base: this what provides the 'container' features/capabilities (the other 'container' Object Types that are containers already use this Object Type, so you shouldn't normally ever choice/use this container Object Type)</p>\n</li>\n<li>\n<p>container: I'm still baffled as to exactly what makes the 'container' Object Type different from the 'container_open' Object Type, meh</p>\n</li>\n</ol>\n<hr>\n<p>so the 'container' inheritance heirarchy looks like this... as my best guess, lol:</p>\n<p>openable -&gt; container_base<br>\nopenable -&gt; container_base -&gt; surface (transparent: you can see the Objects \"inside/on-top-of\" it, open container, and can NOT be closed)<br>\nopenable -&gt; container_base -&gt; container_closed<br>\nopenable -&gt; container_base -&gt; container_open<br>\nopenable -&gt; container_base -&gt; container_open -&gt; container<br>\nopenable -&gt; container_base -&gt; container_open -&gt; container -&gt; container_limited</p>\n<p>and completely separately from the above, for your use too:</p>\n<p>openable: if you want Objet to be openable/close'able, but NOT have 'container' features/capabilities</p>\n<p>container_lockable: lockable features/capabilites, and... (if you also want 'container' features/capabilities, you've got to use/include/'inherit' one of the 'container' Object Types for your Object, on top of the 'container_lockable' Object Type)</p>\n\n",
+      "PostDate": "2017-01-29T14:16:58.0519374Z",
+      "LastEditDate": "2017-01-29T15:10:46.43395Z"
+    },
+    {
+      "PostId": "a1922fd8-e822-4072-95de-367bcc97c461",
+      "UserId": 263865,
+      "Username": "NecroDeath",
+      "AvatarUrl": "http://i.imgur.com/1w7HHAhb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks! This helps, reassuring that it's not just me that gets baffled, I have more problems with containers than anything else.\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks! This helps, reassuring that it's not just me that gets baffled, I have more problems with containers than anything else.</p>\n\n",
+      "PostDate": "2017-01-29T14:31:49.72306Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "415b1870-ba32-4728-b709-28a43384a378",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "just edited my post up a bit, so you may want to refresh and take a look at it again (sorry about that).",
+      "EditableFormat": "markdown",
+      "HTML": "<p>just edited my post up a bit, so you may want to refresh and take a look at it again (sorry about that).</p>\n\n",
+      "PostDate": "2017-01-29T14:35:13.4472653Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "56149100-04af-4fdd-97d6-1fb229bde758",
+      "UserId": 263865,
+      "Username": "NecroDeath",
+      "AvatarUrl": "http://i.imgur.com/1w7HHAhb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks, really appreciate the detail and effort you go to in your replies.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks, really appreciate the detail and effort you go to in your replies.</p>\n\n",
+      "PostDate": "2017-01-29T14:37:09.3689296Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "2ae17839-2bb6-4322-9c1d-0cf29cdac61d",
+      "UserId": 56551,
+      "Username": "XanMag",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4b45a3afd18077f76f6569225c422bdb?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I always use limited containers.  Largely because some dolt will try to stick an elephant in an envelope or put all their inventory in one small container.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I always use limited containers.  Largely because some dolt will try to stick an elephant in an envelope or put all their inventory in one small container.</p>\n\n",
+      "PostDate": "2017-01-29T14:37:34.4277439Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "c1ed0927-abd4-4f3a-a867-dc504f8b4954",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "also, the rest of this link (NOT the very bottom part on the Object Types) is very useful too:\r\n\r\nhttp://docs.textadventures.co.uk/quest/elements/object.html\r\n\r\nas these are all/most of the Object's Attributes... (especially notice that in-discreet/discreet-meh-whatever/insignificant 'visited' Boolean Attribute, laughs. It's actually extremely important for quest and/or you)\r\n\r\nalso, the special 'game' Game Settings/Etc Object's Attributes can be useful too for those who mess with some of this type of stuff (refering to the grid/map and UI type of stuff, as this is stuff I don't understand yet, lol), and of course there's some really useful stuff here too (the 'start' Script Attribute for an example), that you probably do want to mess with, lol:\r\n\r\nhttp://docs.textadventures.co.uk/quest/elements/game.html\r\n\r\nalso, all of these links/sections under/within ' http://docs.textadventures.co.uk/quest/elements/ ' are very useful to study and read up on and/or jsut be aware of.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>also, the rest of this link (NOT the very bottom part on the Object Types) is very useful too:</p>\n<p>http://docs.textadventures.co.uk/quest/elements/object.html</p>\n<p>as these are all/most of the Object's Attributes... (especially notice that in-discreet/discreet-meh-whatever/insignificant 'visited' Boolean Attribute, laughs. It's actually extremely important for quest and/or you)</p>\n<p>also, the special 'game' Game Settings/Etc Object's Attributes can be useful too for those who mess with some of this type of stuff (refering to the grid/map and UI type of stuff, as this is stuff I don't understand yet, lol), and of course there's some really useful stuff here too (the 'start' Script Attribute for an example), that you probably do want to mess with, lol:</p>\n<p>http://docs.textadventures.co.uk/quest/elements/game.html</p>\n<p>also, all of these links/sections under/within ' http://docs.textadventures.co.uk/quest/elements/ ' are very useful to study and read up on and/or jsut be aware of.</p>\n\n",
+      "PostDate": "2017-01-29T14:51:56.3911882Z",
+      "LastEditDate": "2017-01-29T14:59:21.1045796Z"
+    },
+    {
+      "PostId": "d560315f-9ec1-44b9-b8b8-8fb8e210f1cb",
+      "UserId": 291256,
+      "Username": "chattydash94",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/53d164db5b274d26c0b88ec6d1afb155?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "What if you want one object to contain a container? E.G. a car with a boot (trunk).",
+      "EditableFormat": "markdown",
+      "HTML": "<p>What if you want one object to contain a container? E.G. a car with a boot (trunk).</p>\n\n",
+      "PostDate": "2017-02-15T11:33:32.5506925Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "01b71053-aaee-4b6b-97cb-5e6ed8c0c0fd",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Just have two separate containers. The player will not know that the trunk is not in the car.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Just have two separate containers. The player will not know that the trunk is not in the car.</p>\n\n",
+      "PostDate": "2017-02-15T13:48:53.6668298Z",
+      "LastEditDate": null
+    }
+  ]
+}

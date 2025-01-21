@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "2bkisovhteid5avqecloyw",
+    "ForumId": "10",
+    "Title": "Make objects unusable while a state is in play",
+    "LastUpdated": "2019-09-08T08:12:44.4437282Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "27ad6f74-422a-4c25-8f95-0cf9be2d8834",
+      "UserId": 431614,
+      "Username": "sceritz",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/238af0a775d6cb424f8236109c63043b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello everyone. I'm relatively new to this, and though I've read through the documentation I'm stuck on something. At different parts of the game (during fights for example) I'd like to make objects that you would usually be able to interact generate a different message (and keep you from using it) during this state. What's the best way of going out this? I've figured out how to close doors. (i just lock them during a particular state, and the make a trigger to unlock them after an action is done, though i wish I could make the doors have different outputs for every specific session). I am not sure how to do this with objects though, other than just making them invisible, which isn't really realistic (they are there you just shouldn't use them at the time). Any ideas?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello everyone. I'm relatively new to this, and though I've read through the documentation I'm stuck on something. At different parts of the game (during fights for example) I'd like to make objects that you would usually be able to interact generate a different message (and keep you from using it) during this state. What's the best way of going out this? I've figured out how to close doors. (i just lock them during a particular state, and the make a trigger to unlock them after an action is done, though i wish I could make the doors have different outputs for every specific session). I am not sure how to do this with objects though, other than just making them invisible, which isn't really realistic (they are there you just shouldn't use them at the time). Any ideas?</p>\n\n",
+      "PostDate": "2019-09-08T08:12:44.4437282Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e14d9f27-0f5e-4757-ba2a-25a33a01916d",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Do you mean the \"use\" command, or an object's other verbs?\r\n\r\nIn either case, the script for doing that action is stored in a script attribute; so you can temporarily remove it.\r\n\r\nAn example script. To disable verbs:\r\n```\r\n// Which commands we want to disable\r\nverbs_to_disable = Split (\"use;useon;taste;paint\")\r\n\r\n// Only visible objects. Depending how far the player can move while this state is in effect, it might be better to use AllObjects()\r\nobjects_to_disable = ScopeVisible()\r\nforeach (obj, objects_to_disable) {\r\n  foreach (verb, verbs_to_disable) {\r\n    if (HasAttribute (obj, verb)) {\r\n      set (obj, \"disabledverb_\"+verb, GetAttribute (o9bj, verb))\r\n      if (verb = \"use\") {\r\n        // We handle 'use' differently from other verbs, because I think it can't be a string\r\n        obj.use => {\r\n          msg (\"You can't do that right now!\")\r\n        }\r\n      }\r\n      else {\r\n        set (obj, verb, \"You can't do that right now!\")\r\n      }\r\n    }\r\n  }\r\n}\r\n```\r\nAnd then to enable those verbs again, you'd do:\r\n```\r\nforeach (obj, AllObjects()) {\r\n  foreach (verb, GetAttributeNames (obj, false)) {\r\n    if (StartsWith (verb, \"disabledverb_\")) {\r\n      set (obj, Mid (verb, 14), GetAttribute (obj, verb))\r\n    }\r\n  }\r\n}\r\n```\r\n\r\nThat just disables specific verbs for specific objects.\r\nI can think of better ways to do that (for example, by making a 'disabledverbs' dictionary), but the code would be harder for you to see what I'm doing.\r\n\r\n<hr />\r\n\r\n**Or, a simpler method:**\r\n\r\nIf you want to disable certain commands entirely, you could create a new command, with a pattern like `use #text#;examine #text#;eat #text#;craft #text#` - so that it matches all of the commands you want to block.\r\n\r\nWhen you want to stop the player using those commands, you move your new command into the room with them; and when you want them to be able to act normally, you move the command into a box somewhere.\r\n\r\nCommands which are in the current room always take priority over commands that don't have a specific location. And you can move commands around in a script just like you can with any other object.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Do you mean the \"use\" command, or an object's other verbs?</p>\n<p>In either case, the script for doing that action is stored in a script attribute; so you can temporarily remove it.</p>\n<p>An example script. To disable verbs:</p>\n<pre><code>// Which commands we want to disable\nverbs_to_disable = Split (\"use;useon;taste;paint\")\n\n// Only visible objects. Depending how far the player can move while this state is in effect, it might be better to use AllObjects()\nobjects_to_disable = ScopeVisible()\nforeach (obj, objects_to_disable) {\n  foreach (verb, verbs_to_disable) {\n    if (HasAttribute (obj, verb)) {\n      set (obj, \"disabledverb_\"+verb, GetAttribute (o9bj, verb))\n      if (verb = \"use\") {\n        // We handle 'use' differently from other verbs, because I think it can't be a string\n        obj.use =&gt; {\n          msg (\"You can't do that right now!\")\n        }\n      }\n      else {\n        set (obj, verb, \"You can't do that right now!\")\n      }\n    }\n  }\n}\n</code></pre>\n<p>And then to enable those verbs again, you'd do:</p>\n<pre><code>foreach (obj, AllObjects()) {\n  foreach (verb, GetAttributeNames (obj, false)) {\n    if (StartsWith (verb, \"disabledverb_\")) {\n      set (obj, Mid (verb, 14), GetAttribute (obj, verb))\n    }\n  }\n}\n</code></pre>\n<p>That just disables specific verbs for specific objects.<br>\nI can think of better ways to do that (for example, by making a 'disabledverbs' dictionary), but the code would be harder for you to see what I'm doing.</p>\n<hr>\n<p><strong>Or, a simpler method:</strong></p>\n<p>If you want to disable certain commands entirely, you could create a new command, with a pattern like <code>use #text#;examine #text#;eat #text#;craft #text#</code> - so that it matches all of the commands you want to block.</p>\n<p>When you want to stop the player using those commands, you move your new command into the room with them; and when you want them to be able to act normally, you move the command into a box somewhere.</p>\n<p>Commands which are in the current room always take priority over commands that don't have a specific location. And you can move commands around in a script just like you can with any other object.</p>\n\n",
+      "PostDate": "2019-09-08T08:54:01.7376903Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "4e31e417-2f8d-4ece-842d-86e69139fd62",
+      "UserId": 431614,
+      "Username": "sceritz",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/238af0a775d6cb424f8236109c63043b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks so much! So the n00b in me is going to go for the simpler methods (especially since I don't even know how you get to the code mentions in the harder method.\r\n\r\nI know how to create commands but I don't know how to tell the commands to enter or leave a room based on what's going on.\r\n\r\nfor example at the beginning of this game the player is in a fight. They can't use the exits, and they can't use the objects. They have to \"fight\" the person there, and THEN they can use the exits and interact with the environment. I can put the command in the room to stop them from doing these things at the beginning but say the action is \"K.O. opponent\" and I create a script to unlock the doors and remove the opponent from the room? How do I also remove the \"block\" command from the room?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks so much! So the n00b in me is going to go for the simpler methods (especially since I don't even know how you get to the code mentions in the harder method.</p>\n<p>I know how to create commands but I don't know how to tell the commands to enter or leave a room based on what's going on.</p>\n<p>for example at the beginning of this game the player is in a fight. They can't use the exits, and they can't use the objects. They have to \"fight\" the person there, and THEN they can use the exits and interact with the environment. I can put the command in the room to stop them from doing these things at the beginning but say the action is \"K.O. opponent\" and I create a script to unlock the doors and remove the opponent from the room? How do I also remove the \"block\" command from the room?</p>\n\n",
+      "PostDate": "2019-09-08T16:36:46.5002228Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "f007c8ae-8fb9-4e43-b3a4-fd54792e0ba3",
+      "UserId": 431614,
+      "Username": "sceritz",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/238af0a775d6cb424f8236109c63043b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Yeah I've been poking around for over an hour and there is no way to remove a command like you can an object (aside from code I'm guessing). It only lists non command objects when I try to \"remove\" script. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Yeah I've been poking around for over an hour and there is no way to remove a command like you can an object (aside from code I'm guessing). It only lists non command objects when I try to \"remove\" script.</p>\n\n",
+      "PostDate": "2019-09-08T17:50:14.2886213Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "141703b2-0e24-41fe-8d0f-a6f4dd1ebad8",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You should be able to use the 'move object' script on a command.\r\n\r\nIt only lists objects in the GUI editor, but if you select \"expression\" then you can type the name of the command in the box and it will work fine.\r\n\r\nYou don't want to 'remove' the command, however. The `RemoveObject` function moves an object into space (outside any room, where the player can't interact with it); but commands that aren't in a room are effective everywhere.\r\nWhen you want to remove the command, you need to use the 'move object' function to put it inside an object somewhere; then it won't have any effect unless the player is also inside that object.\r\n\r\nAlternatively, you can disable a command by changing its `pattern` attribute to the string `^(?!x)x` (a special pattern which doesn't match any command)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You should be able to use the 'move object' script on a command.</p>\n<p>It only lists objects in the GUI editor, but if you select \"expression\" then you can type the name of the command in the box and it will work fine.</p>\n<p>You don't want to 'remove' the command, however. The <code>RemoveObject</code> function moves an object into space (outside any room, where the player can't interact with it); but commands that aren't in a room are effective everywhere.<br>\nWhen you want to remove the command, you need to use the 'move object' function to put it inside an object somewhere; then it won't have any effect unless the player is also inside that object.</p>\n<p>Alternatively, you can disable a command by changing its <code>pattern</code> attribute to the string <code>^(?!x)x</code> (a special pattern which doesn't match any command)</p>\n\n",
+      "PostDate": "2019-09-08T22:15:33.4148116Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "2a496801-2e24-4b4f-824f-b7eb11fd027c",
+      "UserId": 431614,
+      "Username": "sceritz",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/238af0a775d6cb424f8236109c63043b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "AH I created an object called \"Command Toybox\" and moved the \"Block During Fight\" command  there after the fight is over and SHIPOOPI it worked! That is glorious. I have a lot to learn but this will help quite a bit for future things. Thank you! ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>AH I created an object called \"Command Toybox\" and moved the \"Block During Fight\" command  there after the fight is over and SHIPOOPI it worked! That is glorious. I have a lot to learn but this will help quite a bit for future things. Thank you!</p>\n\n",
+      "PostDate": "2019-09-08T23:28:24.6841506Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

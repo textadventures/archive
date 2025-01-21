@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "seytmiamy026y6vqfmvsya",
+    "ForumId": "10",
+    "Title": "Using ForEach to add display verbs to multiple objects at once",
+    "LastUpdated": "2023-09-26T13:04:37.4558784Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "bee6176c-5705-4bf2-916c-e143a388ff20",
+      "UserId": 227864,
+      "Username": "Talon",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3b6191c9adc337e83fec8e293e3fc584?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm trying to do a little automation with lists, the idea I have is when one event triggers it will put new display verbs on all characters of a certain faction. have the list working fine in filtering the faction npcs(Using the display list function to check) but when I do a for each to actually add the verbs i get a \r\nError running script: Unrecognized list type\r\nerror\r\nI think I am missing something quite simple... but have yet to figure it out.\r\n\r\n```\r\nallobjects = AllObjects()\r\nFactionAggressive = FilterByAttribute(allobjects,\"agressive\",true)\r\nDisplayList (FactionAggressive, false)\r\nforeach (i, FactionAggressive) {\r\n  list add (i.displayverb, \"Intimidate\")\r\n} \r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm trying to do a little automation with lists, the idea I have is when one event triggers it will put new display verbs on all characters of a certain faction. have the list working fine in filtering the faction npcs(Using the display list function to check) but when I do a for each to actually add the verbs i get a<br>\nError running script: Unrecognized list type<br>\nerror<br>\nI think I am missing something quite simple... but have yet to figure it out.</p>\n<pre><code>allobjects = AllObjects()\nFactionAggressive = FilterByAttribute(allobjects,\"agressive\",true)\nDisplayList (FactionAggressive, false)\nforeach (i, FactionAggressive) {\n&nbsp;&nbsp;list add (i.displayverb, \"Intimidate\")\n} \n</code></pre>\n\n",
+      "PostDate": "2023-09-26T13:04:37.4558784Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "51ca9f1e-7c4a-400a-aa0b-904db812eec5",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The attribute is <code>displayverb<b>s</b></code>.\r\n\r\nDoes your game logic ensure that none of the characters already have that displayverb, and that their displayverbs aren't inherited? Maybe you do, but if you're not sure it would be wise to guard against future bugs by doing something like:\r\n```\r\nforeach (i, FactionAggressive) {\r\n  if (not ListContains (i.displayverbs, \"intimidate\")) {\r\n    i.displayverbs = i.displayverbs\r\n    list add (i.displayverbs, \"Intimidate\")\r\n  }\r\n} \r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The attribute is <code>displayverb<b>s</b></code>.</p>\n<p>Does your game logic ensure that none of the characters already have that displayverb, and that their displayverbs aren't inherited? Maybe you do, but if you're not sure it would be wise to guard against future bugs by doing something like:</p>\n<pre><code>foreach (i, FactionAggressive) {\n  if (not ListContains (i.displayverbs, \"intimidate\")) {\n    i.displayverbs = i.displayverbs\n    list add (i.displayverbs, \"Intimidate\")\n  }\n} \n</code></pre>\n\n",
+      "PostDate": "2023-09-26T16:41:43.0353463Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "c4fc55d3-3f1d-4a61-8834-e8bf2cf0dd9e",
+      "UserId": 227864,
+      "Username": "Talon",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3b6191c9adc337e83fec8e293e3fc584?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Yeah, was something simple, the displayverbS was the thing i was missing.  mind was thinking \"Oh its only one item, so its a verb\" mind was not thinking with machine logic\r\n\r\nA similar follow-up though, more of it \"can it work?\" question. trying to search for any item with a certain string in its alias, if found one reaction, found an old post of yours that had this  that SEEMS almost what I need, but would want it to search any string that has \"Venture\" in its name, so Venture baggage, Venture insignia, ect, I'm thinking I'd have to use some sort of function or regrex but don't think it would fit in the same If statement.\r\n```\r\nif (ListCount (FilterByAttribute (ScopeInventory(), \"alias\", \"club\")) > 0) {\r\n\r\n```\r\n\r\nDon't know if it matters but using the Clone prototype and Move to generate the items I'm looking for, which have semi random names. Since I use multiple prototypes like this how would  \"Prototype\" know which one it was looking for? Essentially each item has a MFG(Venture in this case) and an actual item for the alias.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Yeah, was something simple, the displayverbS was the thing i was missing.  mind was thinking \"Oh its only one item, so its a verb\" mind was not thinking with machine logic</p>\n<p>A similar follow-up though, more of it \"can it work?\" question. trying to search for any item with a certain string in its alias, if found one reaction, found an old post of yours that had this  that SEEMS almost what I need, but would want it to search any string that has \"Venture\" in its name, so Venture baggage, Venture insignia, ect, I'm thinking I'd have to use some sort of function or regrex but don't think it would fit in the same If statement.</p>\n<pre><code>if (ListCount (FilterByAttribute (ScopeInventory(), \"alias\", \"club\")) &gt; 0) {\n\n</code></pre>\n<p>Don't know if it matters but using the Clone prototype and Move to generate the items I'm looking for, which have semi random names. Since I use multiple prototypes like this how would  \"Prototype\" know which one it was looking for? Essentially each item has a MFG(Venture in this case) and an actual item for the alias.</p>\n\n",
+      "PostDate": "2023-09-27T15:34:27.5524928Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "7d41e97f-c028-4a86-b3db-7d7608391f35",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "A few options; roughly in order of efficiency:\r\n\r\nIf all clubs are clones of the same original/prototype, it would be much more efficient to do:\r\n<pre><code>if (ListCount (FilterByAttribute (ScopeInventory(), \"prototype\", <b style=\"color: blue\">original_club_object</b>)) > 0) {</code></pre>\r\n\r\nIf there are multiple objects that it could be cloned from, you could give them all a type and do something like:\r\n<pre><code>if (ListCount (FilterByType (ScopeInventory(), \"<b style=\"color: blue\">club</b>\")) > 0) {</code></pre>\r\nor give those objects an attribute you can easily check for:\r\n<pre><code>if (ListCount (FilterByAttribute (ScopeInventory(), \"<b style=\"color: purple\">weapontype</b>\", \"<b style=\"color: blue\">club</b>\")) > 0) {</code></pre>\r\nor:\r\n<pre><code>if (ListCount (FilterByAttribute (ScopeInventory(), \"<b style=\"color: blue\">isclub</b>\", true)) > 0) {</code></pre>\r\n\r\nIf you really need to do it using the alias, you would have to make your own filter function to take a regular expression. Something like:\r\n```\r\n<function name=\"FilterByAttributeRegex\" parameters=\"list, attribute, expression\" type=\"objectlist\">\r\n  output = NewObjectList()\r\n  foreach (obj, list) {\r\n    if (HasString (obj, attribute)) {\r\n      if (IsRegexMatch (expression, GetString (obj, attribute))) {\r\n        list add (output, obj)\r\n      }\r\n    }\r\n  }\r\n  return (output)\r\n</function>\r\n```\r\nThen you could do:\r\n<pre><code>if (ListCount (FilterByAttributeRegex (ScopeInventory(), \"alias\", \"<b style=\"color: blue\">club</b>\")) > 0) {</code></pre>\r\n\r\nAlternatively, if you don't need to know which object it is, you could make a simpler function:\r\n```\r\n<function name=\"ListHasMatchingObject\" parameters=\"list, attribute, expression\" type=\"boolean\">\r\n  foreach (obj, list) {\r\n    if (HasString (obj, attribute)) {\r\n      if (IsRegexMatch (expression, GetString (obj, attribute))) {\r\n        return (true)\r\n      }\r\n    }\r\n  }\r\n  return (false)\r\n</function>\r\n```\r\nso you could just do:\r\n<pre><code>if (ListHasMatchingObject (ScopeInventory(), \"alias\", \"<b style=\"color: blue\">club</b>\")) {</code></pre>\r\n(this is faster because it can stop as soon as it finds one, instead of creating a whole list)\r\n\r\nHope that helps!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>A few options; roughly in order of efficiency:</p>\n<p>If all clubs are clones of the same original/prototype, it would be much more efficient to do:</p>\n<pre><code>if (ListCount (FilterByAttribute (ScopeInventory(), \"prototype\", <b style=\"color: blue\">original_club_object</b>)) &gt; 0) {</code></pre>\n<p>If there are multiple objects that it could be cloned from, you could give them all a type and do something like:</p>\n<pre><code>if (ListCount (FilterByType (ScopeInventory(), \"<b style=\"color: blue\">club</b>\")) &gt; 0) {</code></pre>\n<p>or give those objects an attribute you can easily check for:</p>\n<pre><code>if (ListCount (FilterByAttribute (ScopeInventory(), \"<b style=\"color: purple\">weapontype</b>\", \"<b style=\"color: blue\">club</b>\")) &gt; 0) {</code></pre>\n<p>or:</p>\n<pre><code>if (ListCount (FilterByAttribute (ScopeInventory(), \"<b style=\"color: blue\">isclub</b>\", true)) &gt; 0) {</code></pre>\n<p>If you really need to do it using the alias, you would have to make your own filter function to take a regular expression. Something like:</p>\n<pre><code>&lt;function name=\"FilterByAttributeRegex\" parameters=\"list, attribute, expression\" type=\"objectlist\"&gt;\n  output = NewObjectList()\n  foreach (obj, list) {\n    if (HasString (obj, attribute)) {\n      if (IsRegexMatch (expression, GetString (obj, attribute))) {\n        list add (output, obj)\n      }\n    }\n  }\n  return (output)\n&lt;/function&gt;\n</code></pre>\n<p>Then you could do:</p>\n<pre><code>if (ListCount (FilterByAttributeRegex (ScopeInventory(), \"alias\", \"<b style=\"color: blue\">club</b>\")) &gt; 0) {</code></pre>\n<p>Alternatively, if you don't need to know which object it is, you could make a simpler function:</p>\n<pre><code>&lt;function name=\"ListHasMatchingObject\" parameters=\"list, attribute, expression\" type=\"boolean\"&gt;\n  foreach (obj, list) {\n    if (HasString (obj, attribute)) {\n      if (IsRegexMatch (expression, GetString (obj, attribute))) {\n        return (true)\n      }\n    }\n  }\n  return (false)\n&lt;/function&gt;\n</code></pre>\n<p>so you could just do:</p>\n<pre><code>if (ListHasMatchingObject (ScopeInventory(), \"alias\", \"<b style=\"color: blue\">club</b>\")) {</code></pre>\n<p>(this is faster because it can stop as soon as it finds one, instead of creating a whole list)</p>\n<p>Hope that helps!</p>\n\n",
+      "PostDate": "2023-09-27T20:50:42.2337691Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

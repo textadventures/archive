@@ -1,0 +1,143 @@
+{
+  "Topic": {
+    "TopicId": "2031",
+    "ForumId": "10",
+    "Title": "Shoot Gun",
+    "LastUpdated": "2009-05-12T21:42:11+01:00",
+    "ReplyCount": 10
+  },
+  "Posts": [
+    {
+      "PostId": "16550",
+      "UserId": 0,
+      "Username": "Overcat",
+      "UserAvatar": null,
+      "UserGravatar": "3958f867d73b44faed6e01f35e74c093",
+      "EditableText": "I'm having a bit of a scripting issue, as regards the millionth iteration of the world model I'm attempting to build.  Here's the problem:\n\n'shoot gun'\n\nThe reason this command is a problem for me is because, unlike most one-verb/one-noun commands, 'shoot gun' is ambiguous.  Does the player want to 'shoot at the gun', or 'shoot the gun itself'?  I want to avoid prompting the player for information about this, if possible.\n\nMy world library is set up so that verbs that operate on a noun will only work if the noun-object has an action for that verb, as is no doubt reasonable.  \n\n[code:jvcz1g4u]'an object with this type may be shot\ndefine type &lt;shootable&gt;\n\n\taction &lt;BeforeShoot&gt; doaction &lt;$thisobject$; OnShoot&gt;\n\taction &lt;OnShoot&gt; {\n    \t\n\t\t'default functionality\n\t\tdoaction &lt;$thisobject$; AfterShoot&gt;\n\t}\n\tdefine action &lt;AfterShoot&gt; {\n\t}\n    \nend define\n\ndefine object &lt;target&gt;\n\n\ttype &lt;shootable&gt;\n\t\nend define\n\n'an object with this type may shoot\ndefine type &lt;shooting&gt;\n\n\taction &lt;BeforeShooting&gt; doaction &lt;$thisobject$; OnShooting&gt;\n\taction &lt;OnShooting&gt; {\n    \t\n\t\t'default functionality\n\t\tdoaction &lt;$thisobject$; AfterShooting&gt;\n\t}\n\tdefine action &lt;AfterShooting&gt; {\n\t}\nend define\t\n\ndefine object &lt;gun&gt;\n\n\ttype &lt;shooting&gt;\n\ttype &lt;shootable&gt;\n\t\nend define[/code:jvcz1g4u]\n\nOkay, so far so good.  My question is, how should I write the following command?\n\n[code:jvcz1g4u]command &lt;shoot #@noun#&gt; {\n\n\t'Hmmmm?\t\n}[/code:jvcz1g4u]",
+      "EditableFormat": "bbcode",
+      "HTML": "I'm having a bit of a scripting issue, as regards the millionth iteration of the world model I'm attempting to build.  Here's the problem:<br/><br/>'shoot gun'<br/><br/>The reason this command is a problem for me is because, unlike most one-verb/one-noun commands, 'shoot gun' is ambiguous.  Does the player want to 'shoot at the gun', or 'shoot the gun itself'?  I want to avoid prompting the player for information about this, if possible.<br/><br/>My world library is set up so that verbs that operate on a noun will only work if the noun-object has an action for that verb, as is no doubt reasonable.  <br/><br/><pre><code>'an object with this type may be shot<br/>define type &lt;shootable&gt;<br/><br/>\taction &lt;BeforeShoot&gt; doaction &lt;$thisobject$; OnShoot&gt;<br/>\taction &lt;OnShoot&gt; {<br/>    \t<br/>\t\t'default functionality<br/>\t\tdoaction &lt;$thisobject$; AfterShoot&gt;<br/>\t}<br/>\tdefine action &lt;AfterShoot&gt; {<br/>\t}<br/>    <br/>end define<br/><br/>define object &lt;target&gt;<br/><br/>\ttype &lt;shootable&gt;<br/>\t<br/>end define<br/><br/>'an object with this type may shoot<br/>define type &lt;shooting&gt;<br/><br/>\taction &lt;BeforeShooting&gt; doaction &lt;$thisobject$; OnShooting&gt;<br/>\taction &lt;OnShooting&gt; {<br/>    \t<br/>\t\t'default functionality<br/>\t\tdoaction &lt;$thisobject$; AfterShooting&gt;<br/>\t}<br/>\tdefine action &lt;AfterShooting&gt; {<br/>\t}<br/>end define\t<br/><br/>define object &lt;gun&gt;<br/><br/>\ttype &lt;shooting&gt;<br/>\ttype &lt;shootable&gt;<br/>\t<br/>end define</code></pre><br/><br/>Okay, so far so good.  My question is, how should I write the following command?<br/><br/><pre><code>command &lt;shoot #@noun#&gt; {<br/><br/>\t'Hmmmm?\t<br/>}</code></pre>",
+      "PostDate": "2009-05-05T21:58:56+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16552",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "In this situation there needs to be a clear &quot;what are you shooting at?&quot; message.\nEither that or go with the default message for the object type - the default would then decide if the gun CAN be shot by itself or needs to be pointed at an object.\n\nRemember that if there is no question - there is no answer (that's what we learn from the H2G2).",
+      "EditableFormat": "bbcode",
+      "HTML": "In this situation there needs to be a clear &quot;what are you shooting at?&quot; message.<br/>Either that or go with the default message for the object type - the default would then decide if the gun CAN be shot by itself or needs to be pointed at an object.<br/><br/>Remember that if there is no question - there is no answer (that's what we learn from the H2G2).",
+      "PostDate": "2009-05-06T00:20:51+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16553",
+      "UserId": 0,
+      "Username": "Overcat",
+      "UserAvatar": null,
+      "UserGravatar": "3958f867d73b44faed6e01f35e74c093",
+      "EditableText": "Right, but if the player has a gun in their hand they can type (for instance) 'shoot robber'.  (They shouldn't have to type 'shoot robber with gun'.)  In that case I just check to make sure they've got a 'shooting' type item in their hands.  (If they don't, I check the inventory and the room for an accessible 'shooting' type object:  if one is found, the appropriate actions are added to the player's &quot;action queue&quot; to make it possible to commit the original action.  The player enacts each action in their action queue sequentially - one action per firing of the afterturn script - which allows them to be &quot;interrupted&quot; by other actors or events.  If no accessible 'shooting' type object is found, a message similar to &quot;You have nothing to shoot the robber with...&quot; is printed.)  \n\nSo it follows that they should be able to type 'shoot gun' when they want to shoot another gun with the gun in their hand.  I need to disambiguate whether the player means 'shoot with the gun I've got' (at nothing, in which case the message would print that they need to choose a target) or 'shoot the other gun with the gun I've got'.  I can't default to interpreting that the player should shoot the other gun with their own gun - Quest will force the player to disambiguate with its popup.\n\nAlso, I have the feeling that if the player has a single gun, and they type 'shoot gun', that I'm going to receive a &quot;You can't shoot the gun with itself...&quot; (since I need to code for attempts like that) rather than &quot;You need to pick a target...&quot;",
+      "EditableFormat": "bbcode",
+      "HTML": "Right, but if the player has a gun in their hand they can type (for instance) 'shoot robber'.  (They shouldn't have to type 'shoot robber with gun'.)  In that case I just check to make sure they've got a 'shooting' type item in their hands.  (If they don't, I check the inventory and the room for an accessible 'shooting' type object:  if one is found, the appropriate actions are added to the player's &quot;action queue&quot; to make it possible to commit the original action.  The player enacts each action in their action queue sequentially - one action per firing of the afterturn script - which allows them to be &quot;interrupted&quot; by other actors or events.  If no accessible 'shooting' type object is found, a message similar to &quot;You have nothing to shoot the robber with...&quot; is printed.)  <br/><br/>So it follows that they should be able to type 'shoot gun' when they want to shoot another gun with the gun in their hand.  I need to disambiguate whether the player means 'shoot with the gun I've got' (at nothing, in which case the message would print that they need to choose a target) or 'shoot the other gun with the gun I've got'.  I can't default to interpreting that the player should shoot the other gun with their own gun - Quest will force the player to disambiguate with its popup.<br/><br/>Also, I have the feeling that if the player has a single gun, and they type 'shoot gun', that I'm going to receive a &quot;You can't shoot the gun with itself...&quot; (since I need to code for attempts like that) rather than &quot;You need to pick a target...&quot;",
+      "PostDate": "2009-05-06T01:54:08+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16554",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "Well &quot;shoot robber&quot; and &quot;shoot gun&quot; seem like the same command to me.\n\n... Meaning.. 'shoot gun' should search for objects in the room which are a &quot;gun&quot;.\nAs far as I know you can't do that properly since the #object:alt# tag is &quot;;&quot; separated - so you'd probably use a &quot;gun&quot; type/property and check for that.\n\nIf there is no object, say that you need to aim at a specific thing in the room.\n\nSo there are only two forms:\nshoot #object# with gun\nshoot #object# (..with gun is implied here)\n\nSO, I see something like:\n\n[code:2xfw9nul]command &lt;shoot #object# with gun&gt; {\n # Step 1&#58; search for a gun in your inventory etc&#46;&#46;&#46; so sort out what your GUN is\n # Step 2&#58; search for your #object# that is going to be shot&#46;&#46; Make sure it isn't the gun from Step 1\n}\ncommand &lt;shoot #object#&gt; exec command &lt;shoot #object# with gun&gt;[/code:2xfw9nul]\nSo the second command would only get kicked off if they did not type &quot;with gun&quot;, and would kick off the first one.",
+      "EditableFormat": "bbcode",
+      "HTML": "Well &quot;shoot robber&quot; and &quot;shoot gun&quot; seem like the same command to me.<br/><br/>... Meaning.. 'shoot gun' should search for objects in the room which are a &quot;gun&quot;.<br/>As far as I know you can't do that properly since the #object:alt# tag is &quot;;&quot; separated - so you'd probably use a &quot;gun&quot; type/property and check for that.<br/><br/>If there is no object, say that you need to aim at a specific thing in the room.<br/><br/>So there are only two forms:<br/>shoot #object# with gun<br/>shoot #object# (..with gun is implied here)<br/><br/>SO, I see something like:<br/><br/><pre><code>command &lt;shoot #object# with gun&gt; {<br/> # Step 1&#58; search for a gun in your inventory etc&#46;&#46;&#46; so sort out what your GUN is<br/> # Step 2&#58; search for your #object# that is going to be shot&#46;&#46; Make sure it isn't the gun from Step 1<br/>}<br/>command &lt;shoot #object#&gt; exec command &lt;shoot #object# with gun&gt;</code></pre><br/>So the second command would only get kicked off if they did not type &quot;with gun&quot;, and would kick off the first one.",
+      "PostDate": "2009-05-06T21:13:03+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16557",
+      "UserId": 0,
+      "Username": "Overcat",
+      "UserAvatar": null,
+      "UserGravatar": "3958f867d73b44faed6e01f35e74c093",
+      "EditableText": "[quote:16xofg2l][code:16xofg2l]command &lt;shoot #object# with gun&gt; {[/code:16xofg2l][/quote:16xofg2l]\n\nAre you purposefully leaving out the @ symbol?\n\nBy doing it that way the player could still type 'shoot gun' thinking that they are going to aimlessly shoot the gun, rather than shoot at the gun with another shooting type item.  They would receive a message like 'You cannot shoot the gun with the gun!' or some such, rather than &quot;What do you want to shoot at?&quot;",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><p><pre><code>command &lt;shoot #object# with gun&gt; {</code></pre></p></blockquote><br/><br/>Are you purposefully leaving out the @ symbol?<br/><br/>By doing it that way the player could still type 'shoot gun' thinking that they are going to aimlessly shoot the gun, rather than shoot at the gun with another shooting type item.  They would receive a message like 'You cannot shoot the gun with the gun!' or some such, rather than &quot;What do you want to shoot at?&quot;",
+      "PostDate": "2009-05-09T19:34:17+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16561",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "They would receive the &quot;there doesn't seem to be any 'gun' in the room&quot;.\n\nYes, #@object# is purposefully left out since you are doing your own parsing... As you said - you don't want the user to get prompted for &quot;which gun do you mean&quot; type stuff.",
+      "EditableFormat": "bbcode",
+      "HTML": "They would receive the &quot;there doesn't seem to be any 'gun' in the room&quot;.<br/><br/>Yes, #@object# is purposefully left out since you are doing your own parsing... As you said - you don't want the user to get prompted for &quot;which gun do you mean&quot; type stuff.",
+      "PostDate": "2009-05-10T15:22:44+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16565",
+      "UserId": 0,
+      "Username": "Overcat",
+      "UserAvatar": null,
+      "UserGravatar": "3958f867d73b44faed6e01f35e74c093",
+      "EditableText": "[quote:2se0alrk]Yes, #@object# is purposefully left out since you are doing your own parsing... As you said - you don't want the user to get prompted for &quot;which gun do you mean&quot; type stuff.[/quote:2se0alrk]\n\nI went that route before, but I found there was just too much work involved.  I would prefer to keep the @ symbol and the built-in object discovery.  I think it's faster, too.  I'd like to avoid as much &quot;loop lag&quot; as possible.  In this case, can you think of a solution?",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><p>Yes, #@object# is purposefully left out since you are doing your own parsing... As you said - you don't want the user to get prompted for &quot;which gun do you mean&quot; type stuff.</p></blockquote><br/><br/>I went that route before, but I found there was just too much work involved.  I would prefer to keep the @ symbol and the built-in object discovery.  I think it's faster, too.  I'd like to avoid as much &quot;loop lag&quot; as possible.  In this case, can you think of a solution?",
+      "PostDate": "2009-05-10T16:00:02+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16566",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "Well, I think in that case it's sorted out for you.\n\n... As long as you use the &quot;shoot #@object# with #@object#&quot; model...\n.. Which has &quot;shoot #@object#&quot; kicking off &quot;shoot #object# with gun&quot;\n\nSo, for instance, they only have 1 gun:\n&gt; shoot cat with gun\nQuest will recognize the gun etc.\n\n&gt; shoot cat\nKicks off &quot;with gun&quot; as above.\n\n&gt; shoot gun\nKicks off &quot;with gun&quot;..\nThe object you're trying to shoot is ITSELF - so you should be able to check this and return what you'd like &quot;you can't shoot the gun you're firing!&quot;.\nYou can even compare the #quest.originalcommand# to see what the player typed and see if he WAS typing the first or second type (or use flags if you wish).\nMeaning you CAN make him see &quot;you shoot the gun into the air! YEE-HAH!&quot; or &quot;you can't make the gun shoot itself fool!&quot;.\n\nThe player has TWO guns:\n&gt; shoot cat with gun\nshould prompt for which gun to use\n\n&gt; shoot gun with gun\nshould prompt for which gun TWICE\n\n&gt; shoot gun\nprompted twice again as above\n\n... as long as you make it CLEAR to the player that &quot;shoot #@object#&quot; is basically the short version of &quot;shoot#@object# with [b:1zl39u7f]gun[/b:1zl39u7f]&quot;, then I see no problem.\n.. Is there anything I missed?",
+      "EditableFormat": "bbcode",
+      "HTML": "Well, I think in that case it's sorted out for you.<br/><br/>... As long as you use the &quot;shoot #@object# with #@object#&quot; model...<br/>.. Which has &quot;shoot #@object#&quot; kicking off &quot;shoot #object# with gun&quot;<br/><br/>So, for instance, they only have 1 gun:<br/>&gt; shoot cat with gun<br/>Quest will recognize the gun etc.<br/><br/>&gt; shoot cat<br/>Kicks off &quot;with gun&quot; as above.<br/><br/>&gt; shoot gun<br/>Kicks off &quot;with gun&quot;..<br/>The object you're trying to shoot is ITSELF - so you should be able to check this and return what you'd like &quot;you can't shoot the gun you're firing!&quot;.<br/>You can even compare the #quest.originalcommand# to see what the player typed and see if he WAS typing the first or second type (or use flags if you wish).<br/>Meaning you CAN make him see &quot;you shoot the gun into the air! YEE-HAH!&quot; or &quot;you can't make the gun shoot itself fool!&quot;.<br/><br/>The player has TWO guns:<br/>&gt; shoot cat with gun<br/>should prompt for which gun to use<br/><br/>&gt; shoot gun with gun<br/>should prompt for which gun TWICE<br/><br/>&gt; shoot gun<br/>prompted twice again as above<br/><br/>... as long as you make it CLEAR to the player that &quot;shoot #@object#&quot; is basically the short version of &quot;shoot#@object# with <span style=\"font-weight:bold;\">gun</span>&quot;, then I see no problem.<br/>.. Is there anything I missed?",
+      "PostDate": "2009-05-10T23:54:44+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16567",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "So to answer your question:\n\n[code:e90qtrgc]command &lt;shoot #@object1# with #@object2#&gt; {\n    ' checks to make sure objects are shootable / firable\n    ' check to see if object1 = object2 - if so bail out\n    ' kick off the shooting actions\n}\ncommand &lt;shoot #@object#&gt; exec &lt;shoot #object# with gun&gt;[/code:e90qtrgc]",
+      "EditableFormat": "bbcode",
+      "HTML": "So to answer your question:<br/><br/><pre><code>command &lt;shoot #@object1# with #@object2#&gt; {<br/>    ' checks to make sure objects are shootable / firable<br/>    ' check to see if object1 = object2 - if so bail out<br/>    ' kick off the shooting actions<br/>}<br/>command &lt;shoot #@object#&gt; exec &lt;shoot #object# with gun&gt;</code></pre>",
+      "PostDate": "2009-05-11T00:03:44+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16579",
+      "UserId": 0,
+      "Username": "Overcat",
+      "UserAvatar": null,
+      "UserGravatar": "3958f867d73b44faed6e01f35e74c093",
+      "EditableText": "So...\n\n[quote:12lufgpu]I want to avoid prompting the player for information about this, if possible.[/quote:12lufgpu]\n\n...has dissolved into:\n\n[quote:12lufgpu]... as long as you make it CLEAR to the player that &quot;shoot #@object#&quot; is basically the short version of &quot;shoot#@object# with gun&quot;, then I see no problem.[/quote:12lufgpu]\n\nI must tell the player in advance.  Thought so.  (Had already coded 'shoot #@object#' to execute 'shoot #@object# with shooting item', but that didn't resolve my issue.)\n\nThanks, Paul.  <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "So...<br/><br/><blockquote><p>I want to avoid prompting the player for information about this, if possible.</p></blockquote><br/><br/>...has dissolved into:<br/><br/><blockquote><p>... as long as you make it CLEAR to the player that &quot;shoot #@object#&quot; is basically the short version of &quot;shoot#@object# with gun&quot;, then I see no problem.</p></blockquote><br/><br/>I must tell the player in advance.  Thought so.  (Had already coded 'shoot #@object#' to execute 'shoot #@object# with shooting item', but that didn't resolve my issue.)<br/><br/>Thanks, Paul.  <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2009-05-12T16:31:29+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16582",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "Well, the only way to not prompt the user is to do your own disambiguation - and even then there's no garuntee that you won't prompt him.\n\n&quot;as little as possible&quot; is &quot;as little as possible depending on what objects are around at the time&quot;.",
+      "EditableFormat": "bbcode",
+      "HTML": "Well, the only way to not prompt the user is to do your own disambiguation - and even then there's no garuntee that you won't prompt him.<br/><br/>&quot;as little as possible&quot; is &quot;as little as possible depending on what objects are around at the time&quot;.",
+      "PostDate": "2009-05-12T21:42:11+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "8l314zik_0y2exp2nvfkug",
+    "ForumId": "24",
+    "Title": "Trouble while playing with squiffy.story.go loops",
+    "LastUpdated": "2021-09-19T15:15:18.1857955Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "f44462dc-4791-4368-9ad9-9734b987d347",
+      "UserId": 208122,
+      "Username": "IFforClassroom",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/9683526b9b2547bc86419ed8a2454df1?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I think this is supposed to work. I can get it to loop and print a lexicon of all the words in the string, but then it won't go to the next section.\r\n\r\n```\r\n@start foods\r\n\r\n[[foods]]:\r\n@inc loops\r\n    var loops = squiffy.get(\"loops\");\r\n    let food = \"For breakfast, I had leftover chicken. For lunch, I had more leftover chicken.\";\r\n    var indivWords = food.split(' ').length;\r\n    var word = food.split(' ')[loops];\r\n    var word = word.replace(/[.,]/g, \"\");\r\n    var wordInstances = new RegExp(word, \"g\");\r\n    var count = food.match(wordInstances).length;\r\n    squiffy.set(word, count);\r\n    if (indivWords != loops){squiffy.story.go(\"foods\")} //I can phrase this conditional in a bunch of ways and it always works.\r\n    else {squiffy.story.go(\"nutrition facts\")}; //So why won't this ELSE work?\r\n\r\n\r\n[[nutrition facts]]:\r\n Will I ever get into this section?\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I think this is supposed to work. I can get it to loop and print a lexicon of all the words in the string, but then it won't go to the next section.</p>\n<pre><code>@start foods\n\n[[foods]]:\n@inc loops\n    var loops = squiffy.get(\"loops\");\n    let food = \"For breakfast, I had leftover chicken. For lunch, I had more leftover chicken.\";\n    var indivWords = food.split(' ').length;\n    var word = food.split(' ')[loops];\n    var word = word.replace(/[.,]/g, \"\");\n    var wordInstances = new RegExp(word, \"g\");\n    var count = food.match(wordInstances).length;\n    squiffy.set(word, count);\n    if (indivWords != loops){squiffy.story.go(\"foods\")} //I can phrase this conditional in a bunch of ways and it always works.\n    else {squiffy.story.go(\"nutrition facts\")}; //So why won't this ELSE work?\n\n\n[[nutrition facts]]:\n Will I ever get into this section?\n</code></pre>\n\n",
+      "PostDate": "2021-09-19T15:15:18.1857955Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "ce1c7bee-615c-4a20-afb3-ec1862b7ea69",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You're off by one.\r\n\r\nIf `indivWords` is 13, there are 13 words in the string, numbered from 0 to 12. So when `loops` is 13, it gets as far as the line: `var word = food.split(' ')[loops];`. This causes an error, because there isn't a word number 13. And because it's had an error, it doesn't get to the `if` statement at the end of the script.\r\n\r\nI suspect that you want to change it to <code style=\"color: green\">var word = food.split(' ')[loops<b>-1</b>];</code> - that way, the first time through the script (when `loops` is 1, it will look at word 0, the first word. And the last time through the loop, when `loops` is 13 (or whatever the number of words is) it will look at word number 12 (the last one).",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You're off by one.</p>\n<p>If <code>indivWords</code> is 13, there are 13 words in the string, numbered from 0 to 12. So when <code>loops</code> is 13, it gets as far as the line: <code>var word = food.split(' ')[loops];</code>. This causes an error, because there isn't a word number 13. And because it's had an error, it doesn't get to the <code>if</code> statement at the end of the script.</p>\n<p>I suspect that you want to change it to <code style=\"color: green\">var word = food.split(' ')[loops<b>-1</b>];</code> - that way, the first time through the script (when <code>loops</code> is 1, it will look at word 0, the first word. And the last time through the loop, when <code>loops</code> is 13 (or whatever the number of words is) it will look at word number 12 (the last one).</p>\n\n",
+      "PostDate": "2021-09-19T19:51:18.3584922Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "2b71c2c9-9cfe-48dc-8a9f-e9984adb404b",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Also, I guess you're going about this in an unusual way for some reason, but not sure  what it could be. Is there some reason you need to keep going back to the same section?\r\n(Edit… made a silly mistake)\r\n\r\nIt seems like you could achieve the same effect with considerably less code:\r\n```\r\n[[foods]]:\r\n    let food = \"For breakfast, I had leftover chicken. For lunch, I had more leftover chicken.\";\r\n    let wordsfound = {};\r\n    food.split(\" \").forEach(word => squiffy.set(word, ++wordsfound[word.replace(/[,.]/g, \"\")]));\r\n    squiffy.story.go(\"nutrition facts\");\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Also, I guess you're going about this in an unusual way for some reason, but not sure  what it could be. Is there some reason you need to keep going back to the same section?<br>\n(Edit… made a silly mistake)</p>\n<p>It seems like you could achieve the same effect with considerably less code:</p>\n<pre><code>[[foods]]:\n    let food = \"For breakfast, I had leftover chicken. For lunch, I had more leftover chicken.\";\n    let wordsfound = {};\n    food.split(\" \").forEach(word =&gt; squiffy.set(word, ++wordsfound[word.replace(/[,.]/g, \"\")]));\n    squiffy.story.go(\"nutrition facts\");\n</code></pre>\n\n",
+      "PostDate": "2021-09-19T20:14:21.9692124Z",
+      "LastEditDate": "2021-09-19T20:16:38.2739846Z",
+      "link": null
+    },
+    {
+      "PostId": "18042dc2-dcb6-4f79-a2e8-dbe5e6a0f8ae",
+      "UserId": 208122,
+      "Username": "IFforClassroom",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/9683526b9b2547bc86419ed8a2454df1?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks, mrangel. The first time I ever asked for help on this forum, Alex Warren gave me a solution in jQuery, evidently. I had little understanding of how it worked, but I pasted it into several projects. I'm now just beginning to learn how to write verbose js commands and actually know what they're telling the browser to do. I'm also still heavily relying on Squiffy's abilities, and making basic mistakes. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks, mrangel. The first time I ever asked for help on this forum, Alex Warren gave me a solution in jQuery, evidently. I had little understanding of how it worked, but I pasted it into several projects. I'm now just beginning to learn how to write verbose js commands and actually know what they're telling the browser to do. I'm also still heavily relying on Squiffy's abilities, and making basic mistakes.</p>\n\n",
+      "PostDate": "2021-09-20T08:09:20.2376984Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "a7cc7c20-3693-4cf8-ac83-59f3f27fcbe6",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Actually, I realised later that my solution and your solution aren't quite the same. Mine counts the number of times each word appears in the sentence; yours loops over the words and counts the number of times each of them appears. Not sure if that's intentional behaviour or not.\r\n\r\nThe difference is that if the sentence included a short word like \"a\", mine would count the number of times \"a\" appears as a word; while yours would count the number of times the letter \"a\" appears, including within other words.\r\n\r\nSo if I was trying to replicate what your code actually does, I should have done:\r\n```\r\n[[foods]]:\r\n    let food = \"For breakfast, I had leftover chicken. For lunch, I had more leftover chicken.\";\r\n    food.split(\" \").forEach(word => squiffy.set(word, food.match(new RegExp(word.replace(/[,.]/g, \"\"), \"g\"))));\r\n    squiffy.story.go(\"nutrition facts\");\r\n```\r\n\r\nOr to keep track of which words you already counted, so it doesn't run more than once.\r\n```\r\n[[foods]]:\r\n    let food = \"For breakfast, I had leftover chicken. For lunch, I had more leftover chicken.\";\r\n    let wordsfound = {};\r\n    food.split(\" \").forEach(word => wordsFound[word] ||= squiffy.set(word, food.match(new RegExp(word.replace(/[,.]/g, \"\"), \"g\")) || 1));\r\n    squiffy.story.go(\"nutrition facts\");\r\n```\r\n\r\nIf the brief was just \"split a string into words and count how many times each appears\", I would go for something more like:\r\n```\r\n    let food = \"For breakfast, I had leftover chicken. For lunch, I had more leftover chicken.\";\r\n    var matched = food.match(/\\w+/g).reduce((matched, word) => ++matched[word] && matched, {});\r\n    $.each(matched, (word, number) => squiffy.set (word, number));\r\n```\r\nHopefully those are all simple enough to understand. Not sure how many of the core javascript and/or jQuery functions you're familiar with. If you'd like an explanation of any of it, let me know :)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Actually, I realised later that my solution and your solution aren't quite the same. Mine counts the number of times each word appears in the sentence; yours loops over the words and counts the number of times each of them appears. Not sure if that's intentional behaviour or not.</p>\n<p>The difference is that if the sentence included a short word like \"a\", mine would count the number of times \"a\" appears as a word; while yours would count the number of times the letter \"a\" appears, including within other words.</p>\n<p>So if I was trying to replicate what your code actually does, I should have done:</p>\n<pre><code>[[foods]]:\n    let food = \"For breakfast, I had leftover chicken. For lunch, I had more leftover chicken.\";\n    food.split(\" \").forEach(word =&gt; squiffy.set(word, food.match(new RegExp(word.replace(/[,.]/g, \"\"), \"g\"))));\n    squiffy.story.go(\"nutrition facts\");\n</code></pre>\n<p>Or to keep track of which words you already counted, so it doesn't run more than once.</p>\n<pre><code>[[foods]]:\n    let food = \"For breakfast, I had leftover chicken. For lunch, I had more leftover chicken.\";\n    let wordsfound = {};\n    food.split(\" \").forEach(word =&gt; wordsFound[word] ||= squiffy.set(word, food.match(new RegExp(word.replace(/[,.]/g, \"\"), \"g\")) || 1));\n    squiffy.story.go(\"nutrition facts\");\n</code></pre>\n<p>If the brief was just \"split a string into words and count how many times each appears\", I would go for something more like:</p>\n<pre><code>    let food = \"For breakfast, I had leftover chicken. For lunch, I had more leftover chicken.\";\n    var matched = food.match(/\\w+/g).reduce((matched, word) =&gt; ++matched[word] &amp;&amp; matched, {});\n    $.each(matched, (word, number) =&gt; squiffy.set (word, number));\n</code></pre>\n<p>Hopefully those are all simple enough to understand. Not sure how many of the core javascript and/or jQuery functions you're familiar with. If you'd like an explanation of any of it, let me know :)</p>\n\n",
+      "PostDate": "2021-09-20T09:59:06.1195872Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "87bf1b9e-f3bd-451d-b2fc-75a66cd62b48",
+      "UserId": 208122,
+      "Username": "IFforClassroom",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/9683526b9b2547bc86419ed8a2454df1?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm awed and impressed as always, mrangel. The mess in my op is about the extent of my familiarity with js. I'm just monkeying with it like I did when I learned Excel or Squiffy. I like to see what works and how before trying to learn the next piece . I did try a sentence with 'a', and sure enough, it counted all the letter a's. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm awed and impressed as always, mrangel. The mess in my op is about the extent of my familiarity with js. I'm just monkeying with it like I did when I learned Excel or Squiffy. I like to see what works and how before trying to learn the next piece . I did try a sentence with 'a', and sure enough, it counted all the letter a's.</p>\n\n",
+      "PostDate": "2021-09-20T13:05:05.0381949Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

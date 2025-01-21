@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "ga27_va9k02pkmbwm3szeg",
+    "ForumId": "10",
+    "Title": "[SOLVED] How can we make TAKE ALL include scenery but not objects flagged \"not_all\"?",
+    "LastUpdated": "2021-05-06T06:27:14.4662409Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "f770aa57-a743-48cb-954c-13dad7582ae4",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello.\r\n\r\nYeah...\r\n\r\nI want TAKE ALL to have scenery in scope.\r\n\r\n<details>\r\n\r\nI found the bit of code in ResolveNextName, but when I get rid of the part that filters by the attribute \"scenery\", it only returns scenery and nothing else.\r\n\r\n```scope = FilterByAttribute(GetScope(\"object\", \"\", \"object\"), \"scenery\", false)```\r\n\r\nWhen I change that to: ```scope = GetScope(\"object\", \"\", \"object\")```, I only end up trying to take scenery with GET ALL.\r\n\r\nWhat am I missing? How am I ignorant?\r\n\r\n```scope = GetScope(\"object\", \"\", \"object\")``` is everything in the room. I don't understand how this is working...\r\n\r\n---\r\n```\r\n          if (GetBoolean(game.pov.currentcommandpattern, \"allow_all\")) {\r\n            scope = FilterByAttribute(GetScope(\"object\", \"\", \"object\"), \"scenery\", false)\r\n            game.pov.currentcommandpendingobjectscope = ListExclude(scope, FilterByAttribute(scope, \"not_all\", true))\r\n            game.pov.currentcommandpendingvariable = var\r\n            ResolveNameList (value, \"object\")\r\n            resolvinglist = true\r\n          }\r\n```\r\n\r\n</details>",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello.</p>\n<p>Yeah...</p>\n<p>I want TAKE ALL to have scenery in scope.</p>\n<details>\n<p>I found the bit of code in ResolveNextName, but when I get rid of the part that filters by the attribute \"scenery\", it only returns scenery and nothing else.</p>\n<p><code>scope = FilterByAttribute(GetScope(\"object\", \"\", \"object\"), \"scenery\", false)</code></p>\n<p>When I change that to: <code>scope = GetScope(\"object\", \"\", \"object\")</code>, I only end up trying to take scenery with GET ALL.</p>\n<p>What am I missing? How am I ignorant?</p>\n<p><code>scope = GetScope(\"object\", \"\", \"object\")</code> is everything in the room. I don't understand how this is working...</p>\n<hr>\n<pre><code>          if (GetBoolean(game.pov.currentcommandpattern, \"allow_all\")) {\n            scope = FilterByAttribute(GetScope(\"object\", \"\", \"object\"), \"scenery\", false)\n            game.pov.currentcommandpendingobjectscope = ListExclude(scope, FilterByAttribute(scope, \"not_all\", true))\n            game.pov.currentcommandpendingvariable = var\n            ResolveNameList (value, \"object\")\n            resolvinglist = true\n          }\n</code></pre>\n</details>\n\n",
+      "PostDate": "2021-05-06T06:27:14.4662409Z",
+      "LastEditDate": "2021-05-07T23:40:15.2906987Z",
+      "link": null
+    },
+    {
+      "PostId": "09f1a350-c5ac-4547-a030-6259836f9167",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Never mind.\r\n\r\nI knew I was missing something.\r\n\r\nI had another function doing things which I was blaming on this code.\r\n\r\n<details>\r\n\r\nThis includes scenery but not \"not_all\":\r\n\r\n```\r\n          if (GetBoolean(game.pov.currentcommandpattern, \"allow_all\")) {\r\n            scope = (GetScope(\"object\", \"\", \"object\")\r\n            game.pov.currentcommandpendingobjectscope = ListExclude(scope, FilterByAttribute(scope, \"not_all\", true))\r\n            game.pov.currentcommandpendingvariable = var\r\n            ResolveNameList (value, \"object\")\r\n            resolvinglist = true\r\n          }\r\n```\r\n\r\n</details>",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Never mind.</p>\n<p>I knew I was missing something.</p>\n<p>I had another function doing things which I was blaming on this code.</p>\n<details>\n<p>This includes scenery but not \"not_all\":</p>\n<pre><code>          if (GetBoolean(game.pov.currentcommandpattern, \"allow_all\")) {\n            scope = (GetScope(\"object\", \"\", \"object\")\n            game.pov.currentcommandpendingobjectscope = ListExclude(scope, FilterByAttribute(scope, \"not_all\", true))\n            game.pov.currentcommandpendingvariable = var\n            ResolveNameList (value, \"object\")\n            resolvinglist = true\n          }\n</code></pre>\n</details>\n\n",
+      "PostDate": "2021-05-07T17:59:25.9139068Z",
+      "LastEditDate": "2021-05-07T23:40:45.8784828Z",
+      "link": null
+    },
+    {
+      "PostId": "d26736f2-ac8e-4c3b-a495-cdffdfed43e6",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "...that's bad practice, though.  Don't do that.  ^^^\r\n\r\nIf I want something which can be taken to be scenery (so I can describe it in the room description, if applicable -- or give it an in-room description) but still be included as part of ALL, I give that object an ```all_ok``` boolean attribute set to true.\r\n\r\nHere's my modified bit of code from ```ResolveNextName```:\r\n\r\n```\r\n          if (GetBoolean(game.pov.currentcommandpattern, \"allow_all\")) {\r\n            scope = FilterByAttribute(GetScope(\"object\", \"\", \"object\"), \"scenery\", false)\r\n            allok = FilterByAttribute(FilterByAttribute(GetScope(\"object\", \"\", \"object\"), \"scenery\", true), \"all_ok\", true)\r\n            newlist = ListCombine (scope, allok)\r\n            game.pov.currentcommandpendingobjectscope = ListExclude(newlist, FilterByAttribute(scope, \"not_all\", true))\r\n            game.pov.currentcommandpendingvariable = var\r\n            ResolveNameList (value, \"object\")\r\n            resolvinglist = true\r\n          }\r\n```\r\n\r\n---\r\n**EDIT**\r\n\r\nNow, what have I overlooked (if anything)?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>...that's bad practice, though.  Don't do that.  ^^^</p>\n<p>If I want something which can be taken to be scenery (so I can describe it in the room description, if applicable -- or give it an in-room description) but still be included as part of ALL, I give that object an <code>all_ok</code> boolean attribute set to true.</p>\n<p>Here's my modified bit of code from <code>ResolveNextName</code>:</p>\n<pre><code>          if (GetBoolean(game.pov.currentcommandpattern, \"allow_all\")) {\n            scope = FilterByAttribute(GetScope(\"object\", \"\", \"object\"), \"scenery\", false)\n            allok = FilterByAttribute(FilterByAttribute(GetScope(\"object\", \"\", \"object\"), \"scenery\", true), \"all_ok\", true)\n            newlist = ListCombine (scope, allok)\n            game.pov.currentcommandpendingobjectscope = ListExclude(newlist, FilterByAttribute(scope, \"not_all\", true))\n            game.pov.currentcommandpendingvariable = var\n            ResolveNameList (value, \"object\")\n            resolvinglist = true\n          }\n</code></pre>\n<hr>\n<p><strong>EDIT</strong></p>\n<p>Now, what have I overlooked (if anything)?</p>\n\n",
+      "PostDate": "2021-05-07T19:31:38.0005725Z",
+      "LastEditDate": "2021-05-07T19:33:25.7223611Z",
+      "link": null
+    }
+  ]
+}

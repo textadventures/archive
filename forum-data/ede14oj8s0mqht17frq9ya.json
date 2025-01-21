@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "ede14oj8s0mqht17frq9ya",
+    "ForumId": "10",
+    "Title": "Run print room description again.",
+    "LastUpdated": "2019-10-27T09:39:13.9852537Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "54487352-3bbb-48ca-9d90-fd2440c2091e",
+      "UserId": 438211,
+      "Username": "Ray Angelo V.",
+      "AvatarUrl": "https://i.imgur.com/Gpxzw7Ab.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi guys,\r\n\r\nI know you can type 'look' to show the room description again, but I'd like it so when you pick up an object it shows the room description automatically again. I can't figure this one out. I found an old post from 2004 but I'm not sure if it's outdated. It basically says to do this;\r\n\r\n```msg <#(quest.currentroom):look#>``` \r\n\r\nor (In QDK, put #(quest.currentroom):look# in the parameter for the print command).\r\n\r\nis this code still valid? I tried it and I get an error:\r\n\r\nError running script: Error compiling expression 'quest.currentroom': Unknown object or variable 'quest'\r\n\r\nI'm using Quest 5.8.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi guys,</p>\n<p>I know you can type 'look' to show the room description again, but I'd like it so when you pick up an object it shows the room description automatically again. I can't figure this one out. I found an old post from 2004 but I'm not sure if it's outdated. It basically says to do this;</p>\n<p><code>msg &lt;#(quest.currentroom):look#&gt;</code></p>\n<p>or (In QDK, put #(quest.currentroom):look# in the parameter for the print command).</p>\n<p>is this code still valid? I tried it and I get an error:</p>\n<p>Error running script: Error compiling expression 'quest.currentroom': Unknown object or variable 'quest'</p>\n<p>I'm using Quest 5.8.</p>\n\n",
+      "PostDate": "2019-10-27T09:39:13.9852537Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "a2351003-deca-4e2f-9316-47673337255e",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Depending on your situation, there's a few different options.\r\n\r\n1. **(most likely option)** If you want to show the description and also the \"You can see:\" and \"You can go:\" lines\r\n```\r\nShowRoomDescription()\r\n```\r\n\r\n<hr style=\"border-top: 1px solid black\">\r\n\r\n\r\n2. If you just want to show the description:\r\n```\r\nmsg (GetRoomDescription())\r\n```\r\n<hr style=\"border-top: 1px solid black\">\r\n\r\n3. If you just want to show the description, but the room might have a script for its description:\r\n```\r\nif (HasScript (game.pov.parent, \"description\")) {\r\n  do (game.pov.parent, \"description\")\r\n}\r\nelse {\r\n  msg (GetRoomDescription())\r\n}\r\n```\r\n\r\n<hr style=\"border-top: 1px solid black\">\r\n\r\n4. If the description might be a script, and the room might be dark:\r\n```\r\nif (CheckDarkness()) {\r\n  field = \"darkdescription\"\r\n}\r\nelse {\r\n  field = \"description\"\r\n}\r\nif (HasScript (game.pov.parent, field)) {\r\n  do (game.pov.parent, field)\r\n}\r\nelse {\r\n  msg (GetRoomDescription())\r\n}\r\n```\r\n\r\n<hr style=\"border-top: 1px solid black\">\r\n\r\n5. If you want to show the description and run the room's \"on enter\" scripts again (because some people seem to put part of the description in those scripts):\r\n```\r\nOnRoomEnter (null)\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Depending on your situation, there's a few different options.</p>\n<ol>\n<li><strong>(most likely option)</strong> If you want to show the description and also the \"You can see:\" and \"You can go:\" lines</li>\n</ol>\n<pre><code>ShowRoomDescription()\n</code></pre>\n<hr style=\"border-top: 1px solid black\">\n<ol start=\"2\">\n<li>If you just want to show the description:</li>\n</ol>\n<pre><code>msg (GetRoomDescription())\n</code></pre>\n<hr style=\"border-top: 1px solid black\">\n<ol start=\"3\">\n<li>If you just want to show the description, but the room might have a script for its description:</li>\n</ol>\n<pre><code>if (HasScript (game.pov.parent, \"description\")) {\n  do (game.pov.parent, \"description\")\n}\nelse {\n  msg (GetRoomDescription())\n}\n</code></pre>\n<hr style=\"border-top: 1px solid black\">\n<ol start=\"4\">\n<li>If the description might be a script, and the room might be dark:</li>\n</ol>\n<pre><code>if (CheckDarkness()) {\n  field = \"darkdescription\"\n}\nelse {\n  field = \"description\"\n}\nif (HasScript (game.pov.parent, field)) {\n  do (game.pov.parent, field)\n}\nelse {\n  msg (GetRoomDescription())\n}\n</code></pre>\n<hr style=\"border-top: 1px solid black\">\n<ol start=\"5\">\n<li>If you want to show the description and run the room's \"on enter\" scripts again (because some people seem to put part of the description in those scripts):</li>\n</ol>\n<pre><code>OnRoomEnter (null)\n</code></pre>\n\n",
+      "PostDate": "2019-10-27T10:18:30.6338046Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "3c7c68b2-95a9-4bc5-a9c0-d7a95becc131",
+      "UserId": 438211,
+      "Username": "Ray Angelo V.",
+      "AvatarUrl": "https://i.imgur.com/Gpxzw7Ab.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks for the reply.\r\n\r\nI'm basically trying to implement special glasses in my game. When the player doesn't have the glasses, he/she just reads the normal room description with whatever objects are in the room. Then when the player puts on the special glasses, he/she can see hidden objects/spirits in the room. To distinguish it better that the player indeed wears the special glasses I changed the background color when she is wearing them. \r\n\r\nWhen I put the glasses on it changes automatically to 'orange' but no room description shows unless I type in 'look', then it displays the 'alternate' room description I have set for when the player puts on the glasses.\r\n\r\nThe script I did  in 'After Wearing':\r\n\r\n```\r\nSetBackgroundColour (\"Orange\")\r\nSetObjectFlagOn (Glasses, \"puton\")\r\nmsg (GetRoomDescription())\r\n```\r\nbut the line remains empty when I run it.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks for the reply.</p>\n<p>I'm basically trying to implement special glasses in my game. When the player doesn't have the glasses, he/she just reads the normal room description with whatever objects are in the room. Then when the player puts on the special glasses, he/she can see hidden objects/spirits in the room. To distinguish it better that the player indeed wears the special glasses I changed the background color when she is wearing them.</p>\n<p>When I put the glasses on it changes automatically to 'orange' but no room description shows unless I type in 'look', then it displays the 'alternate' room description I have set for when the player puts on the glasses.</p>\n<p>The script I did  in 'After Wearing':</p>\n<pre><code>SetBackgroundColour (\"Orange\")\nSetObjectFlagOn (Glasses, \"puton\")\nmsg (GetRoomDescription())\n</code></pre>\n<p>but the line remains empty when I run it.</p>\n\n",
+      "PostDate": "2019-10-27T10:56:32.8436082Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "d13eead8-c2d8-46d3-8654-011933c132e4",
+      "UserId": 438211,
+      "Username": "Ray Angelo V.",
+      "AvatarUrl": "https://i.imgur.com/Gpxzw7Ab.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Never mind, I figured it out. My room has a script description, that's why it didn't work in the first place. Works like a charm now! The correct code should have been:\r\n\r\n```\r\nSetBackgroundColour (\"Orange\")\r\nSetObjectFlagOn (Glasses, \"puton\")\r\nif (HasScript (game.pov.parent, \"description\")) {\r\n  do (game.pov.parent, \"description\")\r\n}\r\nelse {\r\n  msg (GetRoomDescription())\r\n}\r\n```\r\n\r\nThanks for the help!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Never mind, I figured it out. My room has a script description, that's why it didn't work in the first place. Works like a charm now! The correct code should have been:</p>\n<pre><code>SetBackgroundColour (\"Orange\")\nSetObjectFlagOn (Glasses, \"puton\")\nif (HasScript (game.pov.parent, \"description\")) {\n  do (game.pov.parent, \"description\")\n}\nelse {\n  msg (GetRoomDescription())\n}\n</code></pre>\n<p>Thanks for the help!</p>\n\n",
+      "PostDate": "2019-10-27T11:20:51.4549971Z",
+      "LastEditDate": "2019-10-27T11:22:11.5899918Z",
+      "link": null
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "5120",
+    "ForumId": "10",
+    "Title": "Getting Integer Input",
+    "LastUpdated": "2015-03-22T04:25:44+00:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "35423",
+      "UserId": 0,
+      "Username": "Rydhme",
+      "UserAvatar": null,
+      "UserGravatar": "3faaef13570ac7e7886ea433cc6b1658",
+      "EditableText": "I have try to getting an 'integer' input from player. I'm still new to quest.\nI want player inputs became integer, not string.\nI have try a function 'ToInt', but i get an error message, [i:2umhi23c]Error running script&#058; Function not found: 'ToInt'[/i:2umhi23c]\n[code:2umhi23c]\nmsg (&quot;How Many ?&quot;)\nget input {\n  ToInt (result)\n  if (player&#46;money &lt;= ( 10 * result )) {\n    msg (&quot;You cant afford it&quot;)\n  }\n  else {\n    bricks&#46;count = bricks&#46;count + result\n    AddToInventory (bricks)\n  }\n}\n[/code:2umhi23c]\nThat's in-game buy command's code (at the Shop). I think there's no problem with variables and attributes.\n[attachment=0:2umhi23c]<!-- ia0 -->Alpha Mine.aslx<!-- ia0 -->[/attachment:2umhi23c]",
+      "EditableFormat": "bbcode",
+      "HTML": "I have try to getting an 'integer' input from player. I'm still new to quest.<br/>I want player inputs became integer, not string.<br/>I have try a function 'ToInt', but i get an error message, <span style=\"font-style:italic;\">Error running script&#058; Function not found: 'ToInt'</span><br/><pre><code><br/>msg (&quot;How Many ?&quot;)<br/>get input {<br/>  ToInt (result)<br/>  if (player&#46;money &lt;= ( 10 * result )) {<br/>    msg (&quot;You cant afford it&quot;)<br/>  }<br/>  else {<br/>    bricks&#46;count = bricks&#46;count + result<br/>    AddToInventory (bricks)<br/>  }<br/>}<br/></code></pre><br/>That's in-game buy command's code (at the Shop). I think there's no problem with variables and attributes.<br/><div><a href=\"/attachment/1187\">Alpha Mine.aslx</a></div>",
+      "PostDate": "2015-03-22T03:15:51+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35424",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "you almost got it... (and very good job!, as understanding that you need to set~make your input into a Type:Integer, is the more difficult concept~logic part for people new to coding, hehe. You only are missing the proper syntaxing of how to do it).\n\nthe 'ToInt (result)', must be set to something... as it is an Expression:\n......................................................................../\n.......................................................................V\nObject_name.Attribute_name = Value_or_Expression\n~OR~\nvariable_string_name = Value_or_Expression\n\nso... in the below example:\n\nvariable_string_name = Expression\nresult2 = ToInt (result)\n\n[code:xqpwasw6]msg (&quot;How Many ?&quot;)\nget input {\n  // the 'get input' automatically (hidden from you) sets its built-in Variable&#58; result = your_typed_in_input\n  // this method however will have an error if the person playing the game doesn't type in a non-decimal number&#46;&#46;&#46;\n  // but now we need to convert it to being an Integer (and have to set it again to another VARIABLE, for this example, a local Variable, which I'm labeling~naming~calling it as 'result2', but you can call it whatever you want)&#58;\n  result2 = ToInt (result)\n  // now, we can use our 'result2' local Variable below&#58;\n  if (player&#46;money &lt;= 10 * result2) {\n    msg (&quot;You cant afford it&quot;)\n  }\n  else {\n    bricks&#46;count = bricks&#46;count + result2\n    AddToInventory (bricks)\n  }\n}[/code:xqpwasw6]\n\nI think this way would work too instead of the above way using a 2nd Variable (result2), but you still got the same issue~error if the person doesn't type in a non-decimal number:\n\n[code:xqpwasw6]msg (&quot;How Many ?&quot;)\nget input {\n  if (player&#46;money &lt;= 10 * ToInt (result)) {\n    msg (&quot;You cant afford it&quot;)\n  }\n  else {\n    bricks&#46;count = bricks&#46;count + ToInt (result)\n    AddToInventory (bricks)\n  }\n}[/code:xqpwasw6]\n\nalternatively (and better coding design: 'Error and Exception Handling' pre-emptive coding), you can check the input if it's an Integer:\n\n<!-- m --><a class=\"postlink\" href=\"http://docs.textadventures.co.uk/quest/functions/isint.html\">http://docs.textadventures.co.uk/quest/ ... isint.html</a><!-- m -->\n\n[code:xqpwasw6]msg (&quot;How Many ?&quot;)\nget input {\n  if (IsInt (result)) {\n    if (player&#46;money &lt;= 10 * ToInt (result)) {\n      msg (&quot;You cant afford it&quot;)\n    } else {\n      bricks&#46;count = bricks&#46;count + ToInt (result)\n      AddToInventory (bricks)\n    }\n  } else {\n    msg (&quot;Wrong input, try again, using a non-decimal number this time, please&#46;&quot;)\n  }\n}[/code:xqpwasw6]",
+      "EditableFormat": "bbcode",
+      "HTML": "you almost got it... (and very good job!, as understanding that you need to set~make your input into a Type:Integer, is the more difficult concept~logic part for people new to coding, hehe. You only are missing the proper syntaxing of how to do it).<br/><br/>the 'ToInt (result)', must be set to something... as it is an Expression:<br/>......................................................................../<br/>.......................................................................V<br/>Object_name.Attribute_name = Value_or_Expression<br/>~OR~<br/>variable_string_name = Value_or_Expression<br/><br/>so... in the below example:<br/><br/>variable_string_name = Expression<br/>result2 = ToInt (result)<br/><br/><pre><code>msg (&quot;How Many ?&quot;)<br/>get input {<br/>  // the 'get input' automatically (hidden from you) sets its built-in Variable&#58; result = your_typed_in_input<br/>  // this method however will have an error if the person playing the game doesn't type in a non-decimal number&#46;&#46;&#46;<br/>  // but now we need to convert it to being an Integer (and have to set it again to another VARIABLE, for this example, a local Variable, which I'm labeling~naming~calling it as 'result2', but you can call it whatever you want)&#58;<br/>  result2 = ToInt (result)<br/>  // now, we can use our 'result2' local Variable below&#58;<br/>  if (player&#46;money &lt;= 10 * result2) {<br/>    msg (&quot;You cant afford it&quot;)<br/>  }<br/>  else {<br/>    bricks&#46;count = bricks&#46;count + result2<br/>    AddToInventory (bricks)<br/>  }<br/>}</code></pre><br/><br/>I think this way would work too instead of the above way using a 2nd Variable (result2), but you still got the same issue~error if the person doesn't type in a non-decimal number:<br/><br/><pre><code>msg (&quot;How Many ?&quot;)<br/>get input {<br/>  if (player&#46;money &lt;= 10 * ToInt (result)) {<br/>    msg (&quot;You cant afford it&quot;)<br/>  }<br/>  else {<br/>    bricks&#46;count = bricks&#46;count + ToInt (result)<br/>    AddToInventory (bricks)<br/>  }<br/>}</code></pre><br/><br/>alternatively (and better coding design: 'Error and Exception Handling' pre-emptive coding), you can check the input if it's an Integer:<br/><br/><!-- m --><a class=\"postlink\" href=\"http://docs.textadventures.co.uk/quest/functions/isint.html\">http://docs.textadventures.co.uk/quest/ ... isint.html</a><!-- m --><br/><br/><pre><code>msg (&quot;How Many ?&quot;)<br/>get input {<br/>  if (IsInt (result)) {<br/>    if (player&#46;money &lt;= 10 * ToInt (result)) {<br/>      msg (&quot;You cant afford it&quot;)<br/>    } else {<br/>      bricks&#46;count = bricks&#46;count + ToInt (result)<br/>      AddToInventory (bricks)<br/>    }<br/>  } else {<br/>    msg (&quot;Wrong input, try again, using a non-decimal number this time, please&#46;&quot;)<br/>  }<br/>}</code></pre>",
+      "PostDate": "2015-03-22T03:32:42+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35425",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "sorry, my apologies as I had some mistakes, which I just edited in some corrections with my code, and I also added in some additions too, with my previous post. Now my previous post's codings should work...",
+      "EditableFormat": "bbcode",
+      "HTML": "sorry, my apologies as I had some mistakes, which I just edited in some corrections with my code, and I also added in some additions too, with my previous post. Now my previous post's codings should work...",
+      "PostDate": "2015-03-22T04:02:03+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35426",
+      "UserId": 0,
+      "Username": "Rydhme",
+      "UserAvatar": null,
+      "UserGravatar": "3faaef13570ac7e7886ea433cc6b1658",
+      "EditableText": "I understand, and it works ! Thanks !",
+      "EditableFormat": "bbcode",
+      "HTML": "I understand, and it works ! Thanks !",
+      "PostDate": "2015-03-22T04:23:39+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35427",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "p.s.\n\nlet me know if you want to place a limit upon just how many (quantity of) items you can buy~have~hold (as right now, if you got tons of money you can buy tons of bricks, lol), if you can't figure out how to do it yourself.\n\n(quite creative~intelligent with your code-logic Expression~math equation, with the pricing~your_money limit you did!, by the way, too, hehe)\n\n---------\n\nHK edit:\n\np.s.s.\n\nhere's Sora's Stackable Library for item usage:\n\n<!-- l --><a class=\"postlink-local\" href=\"http://forum.textadventures.co.uk/viewtopic.php?f=18&amp;t=3515\">viewtopic.php?f=18&amp;t=3515</a><!-- l -->\n\nnot sure if I can help though with it if you got problems with trying to use it, as it is beyond my coding level, lol",
+      "EditableFormat": "bbcode",
+      "HTML": "p.s.<br/><br/>let me know if you want to place a limit upon just how many (quantity of) items you can buy~have~hold (as right now, if you got tons of money you can buy tons of bricks, lol), if you can't figure out how to do it yourself.<br/><br/>(quite creative~intelligent with your code-logic Expression~math equation, with the pricing~your_money limit you did!, by the way, too, hehe)<br/><br/>---------<br/><br/>HK edit:<br/><br/>p.s.s.<br/><br/>here's Sora's Stackable Library for item usage:<br/><br/><!-- l --><a class=\"postlink-local\" href=\"http://forum.textadventures.co.uk/viewtopic.php?f=18&amp;t=3515\">viewtopic.php?f=18&amp;t=3515</a><!-- l --><br/><br/>not sure if I can help though with it if you got problems with trying to use it, as it is beyond my coding level, lol",
+      "PostDate": "2015-03-22T04:25:44+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

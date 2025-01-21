@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "5258",
+    "ForumId": "10",
+    "Title": "Attributes Question - Visibility System",
+    "LastUpdated": "2015-05-31T23:42:26+01:00",
+    "ReplyCount": 6
+  },
+  "Posts": [
+    {
+      "PostId": "36285",
+      "UserId": 0,
+      "Username": "Bissrok",
+      "UserAvatar": null,
+      "UserGravatar": "622eca3c054afbd3f8bb8e20c73bce73",
+      "EditableText": "I just downloaded the program for Windows yesterday, and I have been playing around, but can't get a particular system to work. \n\nI'm trying to put a &quot;Visibility&quot; attribute in the game. Your current Visibility score would always be displayed on the screen, and it is affected by the equipment you're carrying and certain events. \n\nTo the player object, I added a &quot;visibility&quot; attribute (integer) of value 0. I added a &quot;visibility&quot; status attribute with a blank value.\n\nTo a weapon object (called &quot;weapon&quot;), I gave a &quot;visibility&quot; attribute. For the value, I wrote a script&#058;\n\n[quote:ytghfnfi]if (Got(weapon)) {\n  player.visibility = player.visibility +2\n}\nelse {\n  player.visibility = player.visibility +0\n}[/quote:ytghfnfi]\n\nThe intention was to make it so that, if the player is carrying the object, their visibility would go up by 2. If they're not carrying it, it does not affect their visibility.\n\nBut, when I run the game, whether or not they're carrying the object &quot;weapon,&quot; I only see &quot;Visibility: &quot; on the main screen. I assume I at least did something wrong on the player settings, but I am not sure what. Could anyone tell me what I did wrong?",
+      "EditableFormat": "bbcode",
+      "HTML": "I just downloaded the program for Windows yesterday, and I have been playing around, but can't get a particular system to work. <br/><br/>I'm trying to put a &quot;Visibility&quot; attribute in the game. Your current Visibility score would always be displayed on the screen, and it is affected by the equipment you're carrying and certain events. <br/><br/>To the player object, I added a &quot;visibility&quot; attribute (integer) of value 0. I added a &quot;visibility&quot; status attribute with a blank value.<br/><br/>To a weapon object (called &quot;weapon&quot;), I gave a &quot;visibility&quot; attribute. For the value, I wrote a script&#058;<br/><br/><blockquote><p>if (Got(weapon)) {<br/>  player.visibility = player.visibility +2<br/>}<br/>else {<br/>  player.visibility = player.visibility +0<br/>}</p></blockquote><br/><br/>The intention was to make it so that, if the player is carrying the object, their visibility would go up by 2. If they're not carrying it, it does not affect their visibility.<br/><br/>But, when I run the game, whether or not they're carrying the object &quot;weapon,&quot; I only see &quot;Visibility: &quot; on the main screen. I assume I at least did something wrong on the player settings, but I am not sure what. Could anyone tell me what I did wrong?",
+      "PostDate": "2015-05-30T18:07:42+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36288",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Sounds like two different issues. The first is that you should see &quot;Visibility: 0&quot;. I am not sure, but that could be because of capitalisation. Quest is looking for &quot;Visibility&quot;, but you have put in &quot;visibility&quot;. Try deleting it from the statis attributes, and putting in &quot;visibility&quot; and &quot;Visibility: !&quot; (the exclamation mark tells Quest to put the value there).\n\nThe second issue is that your if/else may never get triggered. Where is the script? I would put it in the take and drop scripts. When you take a weapon, visiubility goes up two, when you drop it, it goes down two.\n\nThis probably has not answered your question, but hopefully has set you in the right direction. If it is still not working, it might be a good idea to paste in your game code.",
+      "EditableFormat": "bbcode",
+      "HTML": "Sounds like two different issues. The first is that you should see &quot;Visibility: 0&quot;. I am not sure, but that could be because of capitalisation. Quest is looking for &quot;Visibility&quot;, but you have put in &quot;visibility&quot;. Try deleting it from the statis attributes, and putting in &quot;visibility&quot; and &quot;Visibility: !&quot; (the exclamation mark tells Quest to put the value there).<br/><br/>The second issue is that your if/else may never get triggered. Where is the script? I would put it in the take and drop scripts. When you take a weapon, visiubility goes up two, when you drop it, it goes down two.<br/><br/>This probably has not answered your question, but hopefully has set you in the right direction. If it is still not working, it might be a good idea to paste in your game code.",
+      "PostDate": "2015-05-30T22:35:58+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36289",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "your 'if' Script should be put into a global Turnscript, instead of as an added~created~set'ted Script Attribute for your 'weapon' Object.\n\nThe problem is that your 'if' Script is not firing~activating~executing~running constantly. An Object's Script Attribute requires that you have to manually~force it to activate, such as if you created it in the GUI~Editor, as an added Verb, then during game play, the person would click on the Object's Verb's button or its hypertext link to activate it, or you'd have to have actual code lines that~to~will activate~call it.\n\nA global Turnscript (if its 'enabled' Boolean Attribute checkbox in the GUI~Editor is checked) is constantly activating, which is what you want.\n\nto create~add a global Turnscript&#058;\n\nclick on the upper-left most 'object' in the left side's 'tree of stuff', so that it is highlighted, as this ensures that the Turnscript will be a global Turnscript.\n\nnow at the top of the screen, under the 'add' in the menu bar (I don't know why 'Turnscript' is not in the 'tree of stuff', as Timer is there, which is the same as a Turnscript, except it uses real time seconds, instead of the quest engine's underlying 'turn' internal coding), choose 'Turnscript'.\n\ngive the Turnscript a name, check in its 'enabled' Boolean Attribute checkbox (this causes it to be always activating from the moment the game begins), then add in your Scripts.\n\n-------\n\nabout your script block...\n\n[code:2l3tcc4a]if (Got(weapon)) {\n  player&#46;visibility = player&#46;visibility +2\n}\nelse {\n  player&#46;visibility = player&#46;visibility +0\n}[/code:2l3tcc4a]\n\n1. 'player.visibility = player.visibility + 2' will cause it to be constantly raising~increasing your 'visibility' by +2... which I don't think you want..., right?\n\ndo you want a 'event flag state' system ???, which is this conceptually:\n\nplayer.visibility = 0 ---&gt; 'whatever' is not visible\nplayer.visibility = 1 ---&gt; 'whatever' is opaque (half-visible)\nplayer.visibility = 2 ---&gt; 'whatever' is (fully) visible\n\nwhich you would jsut use this instead:\n\n[code:2l3tcc4a]if (Got(weapon)) {\n  player&#46;visibility = 2\n}\nelse {\n  player&#46;visibility = 0\n}[/code:2l3tcc4a]\n\n~ OR ~\n\ndo you want to do a '0-100' system, of gradual more visibility layers of the 'whatever' :\n( this would use the 'player.visibility=player.visibility+2' )\n( and I think this is self-explanatory, hopefully )\n\n2. if you want to do the '0-100' system, then you don't want this code~script line~block:\n\n[code:2l3tcc4a]else {\n  player&#46;visibility = player&#46;visibility +0\n}[/code:2l3tcc4a]\n\nas there's no reason for it. You'd just want this for your full script block:\n\n[code:2l3tcc4a]if (Got(weapon)) {\n  player&#46;visibility = 2\n}[/code:2l3tcc4a]\n\nunless you need to change between '0' and '2', then you'd need this:\n\n[code:2l3tcc4a]if (Got(weapon)) {\n  player&#46;visibility = 2\n} else {\n  player&#46;visibility = 0\n}[/code:2l3tcc4a]\n\n--------------\n\nand (well, Pixie, already beat me to it), are you seeing the 'visibility' displaying '0' or '2' during the game?",
+      "EditableFormat": "bbcode",
+      "HTML": "your 'if' Script should be put into a global Turnscript, instead of as an added~created~set'ted Script Attribute for your 'weapon' Object.<br/><br/>The problem is that your 'if' Script is not firing~activating~executing~running constantly. An Object's Script Attribute requires that you have to manually~force it to activate, such as if you created it in the GUI~Editor, as an added Verb, then during game play, the person would click on the Object's Verb's button or its hypertext link to activate it, or you'd have to have actual code lines that~to~will activate~call it.<br/><br/>A global Turnscript (if its 'enabled' Boolean Attribute checkbox in the GUI~Editor is checked) is constantly activating, which is what you want.<br/><br/>to create~add a global Turnscript&#058;<br/><br/>click on the upper-left most 'object' in the left side's 'tree of stuff', so that it is highlighted, as this ensures that the Turnscript will be a global Turnscript.<br/><br/>now at the top of the screen, under the 'add' in the menu bar (I don't know why 'Turnscript' is not in the 'tree of stuff', as Timer is there, which is the same as a Turnscript, except it uses real time seconds, instead of the quest engine's underlying 'turn' internal coding), choose 'Turnscript'.<br/><br/>give the Turnscript a name, check in its 'enabled' Boolean Attribute checkbox (this causes it to be always activating from the moment the game begins), then add in your Scripts.<br/><br/>-------<br/><br/>about your script block...<br/><br/><pre><code>if (Got(weapon)) {<br/>  player&#46;visibility = player&#46;visibility +2<br/>}<br/>else {<br/>  player&#46;visibility = player&#46;visibility +0<br/>}</code></pre><br/><br/>1. 'player.visibility = player.visibility + 2' will cause it to be constantly raising~increasing your 'visibility' by +2... which I don't think you want..., right?<br/><br/>do you want a 'event flag state' system ???, which is this conceptually:<br/><br/>player.visibility = 0 ---&gt; 'whatever' is not visible<br/>player.visibility = 1 ---&gt; 'whatever' is opaque (half-visible)<br/>player.visibility = 2 ---&gt; 'whatever' is (fully) visible<br/><br/>which you would jsut use this instead:<br/><br/><pre><code>if (Got(weapon)) {<br/>  player&#46;visibility = 2<br/>}<br/>else {<br/>  player&#46;visibility = 0<br/>}</code></pre><br/><br/>~ OR ~<br/><br/>do you want to do a '0-100' system, of gradual more visibility layers of the 'whatever' :<br/>( this would use the 'player.visibility=player.visibility+2' )<br/>( and I think this is self-explanatory, hopefully )<br/><br/>2. if you want to do the '0-100' system, then you don't want this code~script line~block:<br/><br/><pre><code>else {<br/>  player&#46;visibility = player&#46;visibility +0<br/>}</code></pre><br/><br/>as there's no reason for it. You'd just want this for your full script block:<br/><br/><pre><code>if (Got(weapon)) {<br/>  player&#46;visibility = 2<br/>}</code></pre><br/><br/>unless you need to change between '0' and '2', then you'd need this:<br/><br/><pre><code>if (Got(weapon)) {<br/>  player&#46;visibility = 2<br/>} else {<br/>  player&#46;visibility = 0<br/>}</code></pre><br/><br/>--------------<br/><br/>and (well, Pixie, already beat me to it), are you seeing the 'visibility' displaying '0' or '2' during the game?",
+      "PostDate": "2015-05-30T22:45:14+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36290",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "[quote=&quot;HegemonKhan&quot;:hisssrxq]your 'if' Script should be put into a global Turnscript, instead of as an added~created~set'ted Script Attribute for your 'weapon' Object.[/quote:hisssrxq]\nI was thinking that myself at first, but if you do that the visibility will increase by 2 every turn, which is not what you want (I think).",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>HegemonKhan wrote:</cite>your 'if' Script should be put into a global Turnscript, instead of as an added~created~set'ted Script Attribute for your 'weapon' Object.</blockquote><br/>I was thinking that myself at first, but if you do that the visibility will increase by 2 every turn, which is not what you want (I think).",
+      "PostDate": "2015-05-30T23:20:02+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36293",
+      "UserId": 0,
+      "Username": "Bissrok",
+      "UserAvatar": null,
+      "UserGravatar": "622eca3c054afbd3f8bb8e20c73bce73",
+      "EditableText": "Thank you both. It is working and displaying perfectly now.\n\nMy experience with programming is half a book of Python for Kids, so I am glad to know help is out there!",
+      "EditableFormat": "bbcode",
+      "HTML": "Thank you both. It is working and displaying perfectly now.<br/><br/>My experience with programming is half a book of Python for Kids, so I am glad to know help is out there!",
+      "PostDate": "2015-05-31T04:28:31+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36301",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "laughs, I'm still going through the python lesson on codecademy, about 75% through it, forgot what section I'm on is called though, maybe the 'classes' section.\n\nQuest's XML+FLEE is very noobie-friendly, it's how I learned to code, and now am moving onto learning python on codecademy thanks to quest, laughs.",
+      "EditableFormat": "bbcode",
+      "HTML": "laughs, I'm still going through the python lesson on codecademy, about 75% through it, forgot what section I'm on is called though, maybe the 'classes' section.<br/><br/>Quest's XML+FLEE is very noobie-friendly, it's how I learned to code, and now am moving onto learning python on codecademy thanks to quest, laughs.",
+      "PostDate": "2015-05-31T18:48:24+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36304",
+      "UserId": 0,
+      "Username": "Bissrok",
+      "UserAvatar": null,
+      "UserGravatar": "622eca3c054afbd3f8bb8e20c73bce73",
+      "EditableText": "I have a related question, if you guys don't mind.\n\nI want it so that, if you fire a gun, your Visibility attribute is increased by 7 one time, and it will be removed once you leave the room.\n\n-I gave the player a Boolean attribute called &quot;gunfired,&quot; which starts as False.\n-I made a turn script that is enabled at the start of the game which says:\n\n[code:1pl18pnf]if (player&#46;gunfired = True) {\n  player&#46;visibility = player&#46;visibility + 7\n  SetTurnTimeout (1) {\n    player&#46;gunfired = False\n  }\n}[/code:1pl18pnf]\nWhen I run it in the game, it runs twice, then stops. I only want it to run once. In the GUI, it reads &quot;After 1 turns...&quot; I tried setting this to zero, but I saw the same thing. Runs twice, stops.\n\nI get the feeling that I am using SetTurnTimeout incorrectly. Does anyone know how I might use it properly?\n\n\nEDIT: Nevermind! I found a workaround. I now it have it so that, when you use the verb Shoot on the object, &quot;gunfired&quot; goes to true and you get +7 visibility. Then, when you enter the next map, if &quot;gunfired&quot; is True, it drops visibility by 7 and changes &quot;gunfired&quot; to False.",
+      "EditableFormat": "bbcode",
+      "HTML": "I have a related question, if you guys don't mind.<br/><br/>I want it so that, if you fire a gun, your Visibility attribute is increased by 7 one time, and it will be removed once you leave the room.<br/><br/>-I gave the player a Boolean attribute called &quot;gunfired,&quot; which starts as False.<br/>-I made a turn script that is enabled at the start of the game which says:<br/><br/><pre><code>if (player&#46;gunfired = True) {<br/>  player&#46;visibility = player&#46;visibility + 7<br/>  SetTurnTimeout (1) {<br/>    player&#46;gunfired = False<br/>  }<br/>}</code></pre><br/>When I run it in the game, it runs twice, then stops. I only want it to run once. In the GUI, it reads &quot;After 1 turns...&quot; I tried setting this to zero, but I saw the same thing. Runs twice, stops.<br/><br/>I get the feeling that I am using SetTurnTimeout incorrectly. Does anyone know how I might use it properly?<br/><br/><br/>EDIT: Nevermind! I found a workaround. I now it have it so that, when you use the verb Shoot on the object, &quot;gunfired&quot; goes to true and you get +7 visibility. Then, when you enter the next map, if &quot;gunfired&quot; is True, it drops visibility by 7 and changes &quot;gunfired&quot; to False.",
+      "PostDate": "2015-05-31T23:42:26+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

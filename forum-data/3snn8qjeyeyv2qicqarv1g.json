@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "3snn8qjeyeyv2qicqarv1g",
+    "ForumId": "20",
+    "Title": "New to Quest but ambitious to write rpgs that help me teach principles of music online",
+    "LastUpdated": "2021-06-29T17:51:35.838968Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "3af1147d-d03d-439d-8652-76ecabb98e78",
+      "UserId": 458252,
+      "Username": "AlecDouglasJacksonMusicTeacher",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I want NPCs to collect items off screen and present them at a hub periodically. \r\nHow do I get them to have random items. If it is a string list how do they select from the list a random amount of random items?  I assume it is Pickering with a random command but I can't get it to work.\r\nPlease help. I am not a coder and have been using the Web version",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I want NPCs to collect items off screen and present them at a hub periodically.<br>\nHow do I get them to have random items. If it is a string list how do they select from the list a random amount of random items?  I assume it is Pickering with a random command but I can't get it to work.<br>\nPlease help. I am not a coder and have been using the Web version</p>\n\n",
+      "PostDate": "2021-06-29T17:51:35.838968Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "3b175a93-27e5-494f-be92-4564ad401e73",
+      "UserId": 267336,
+      "Username": "jmnevil54",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5d73d7ec1dbe20a5cb46f02a6d53f187?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Honestly, I would use a series of if statements and getrandomInt functions and variables. But that's just me.\r\n\r\nI suppose you would need something like this...\r\n```\r\nobj.selectobject => {\r\n  this.holding = GetObject(PickOneString(\"paper;pen;scissors\"))\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Honestly, I would use a series of if statements and getrandomInt functions and variables. But that's just me.</p>\n<p>I suppose you would need something like this...</p>\n<pre><code>obj.selectobject =&gt; {\n  this.holding = GetObject(PickOneString(\"paper;pen;scissors\"))\n}\n</code></pre>\n\n",
+      "PostDate": "2021-06-30T21:48:12.2895059Z",
+      "LastEditDate": "2021-06-30T22:03:27.8419162Z",
+      "link": null
+    },
+    {
+      "PostId": "92f0c232-242f-447c-9c35-d7921f1852f8",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "It's relatively simple to pick one object from a list. Picking a random number of random items is also simple, but there's more than one way to do it. Basically, how do you want it to decide how many items to choose?\r\n\r\nI'll assume you have a list of objects to choose from `objects_to_choose`, and want to store the result in a list `result`.\r\n\r\nHere's one example, that will choose between 3 and 7 objects:\r\n```\r\nresult = NewObjectList()\r\nfor (i, 1, GetRandomInt (3, 7)) {\r\n  not_chosen_yet = ListExclude (objects_to_choose, result)\r\n  list add (result, PickOneObject (not_chosen_yet))\r\n}\r\n```\r\n\r\nOr you could do this, which chooses a more open-ended number:\r\n```\r\nresult = NewObjectList()\r\nwhile (ListCount (result) < ListCount (objects_to_choose) and RandomChance (50)) {\r\n  not_chosen_yet = ListExclude (objects_to_choose, result)\r\n  list add (result, PickOneObject (not_chosen_yet))\r\n}\r\n```\r\nIn this example, as long as there are more objects to choose, the script will have a 50/50 chance of picking another one, or stopping.\r\n\r\nThis is assuming that the NPCs are just randomly choosing objects from a list. If you want to make this take time, you could have a turnscript do something like this:\r\n```\r\nnot_chosen_yet = FilterByNotAttribute (objects_to_choose, \"parent\", npc)\r\nif (ListCount (GetDirectChildren (npc)) = 0 or RandomChance (60) and ListCount (not_chosen_yet) > 0)  {\r\n  obj = PickOneObject (not_chosen_yet)\r\n  MoveObject (obj, npc)\r\n}\r\nelse {\r\n  // Have the NPC return to the hub with the objects they picked up\r\n}\r\n```\r\nThis way the NPC has a 60% chance each turn of picking up another object, and a 40% chance of returning to the hub with the objects they have collected. In this case I'm using the NPC's inventory rather than a `result` list.\r\n\r\nA lot of this depends on how you want the NPC to act, and how you want the information to be stored. There are a lot of different ways to do this, and I don't know which ones are best for the situation you're looking at. In one of my first games, I had an NPC who would walk around the house when the player wasn't present, with a random chance of picking up objects and putting them back where they belong. So if the player moves an object, the NPC can put it back, and if the player leaves objects in the house that don't belong there, they will eventually end up in the trashcan.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>It's relatively simple to pick one object from a list. Picking a random number of random items is also simple, but there's more than one way to do it. Basically, how do you want it to decide how many items to choose?</p>\n<p>I'll assume you have a list of objects to choose from <code>objects_to_choose</code>, and want to store the result in a list <code>result</code>.</p>\n<p>Here's one example, that will choose between 3 and 7 objects:</p>\n<pre><code>result = NewObjectList()\nfor (i, 1, GetRandomInt (3, 7)) {\n  not_chosen_yet = ListExclude (objects_to_choose, result)\n  list add (result, PickOneObject (not_chosen_yet))\n}\n</code></pre>\n<p>Or you could do this, which chooses a more open-ended number:</p>\n<pre><code>result = NewObjectList()\nwhile (ListCount (result) &lt; ListCount (objects_to_choose) and RandomChance (50)) {\n  not_chosen_yet = ListExclude (objects_to_choose, result)\n  list add (result, PickOneObject (not_chosen_yet))\n}\n</code></pre>\n<p>In this example, as long as there are more objects to choose, the script will have a 50/50 chance of picking another one, or stopping.</p>\n<p>This is assuming that the NPCs are just randomly choosing objects from a list. If you want to make this take time, you could have a turnscript do something like this:</p>\n<pre><code>not_chosen_yet = FilterByNotAttribute (objects_to_choose, \"parent\", npc)\nif (ListCount (GetDirectChildren (npc)) = 0 or RandomChance (60) and ListCount (not_chosen_yet) &gt; 0)  {\n  obj = PickOneObject (not_chosen_yet)\n  MoveObject (obj, npc)\n}\nelse {\n  // Have the NPC return to the hub with the objects they picked up\n}\n</code></pre>\n<p>This way the NPC has a 60% chance each turn of picking up another object, and a 40% chance of returning to the hub with the objects they have collected. In this case I'm using the NPC's inventory rather than a <code>result</code> list.</p>\n<p>A lot of this depends on how you want the NPC to act, and how you want the information to be stored. There are a lot of different ways to do this, and I don't know which ones are best for the situation you're looking at. In one of my first games, I had an NPC who would walk around the house when the player wasn't present, with a random chance of picking up objects and putting them back where they belong. So if the player moves an object, the NPC can put it back, and if the player leaves objects in the house that don't belong there, they will eventually end up in the trashcan.</p>\n\n",
+      "PostDate": "2021-07-01T09:11:07.2204318Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

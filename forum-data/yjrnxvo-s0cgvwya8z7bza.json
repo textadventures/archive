@@ -1,0 +1,109 @@
+{
+  "Topic": {
+    "TopicId": "yjrnxvo-s0cgvwya8z7bza",
+    "ForumId": "10",
+    "Title": "Randomness",
+    "LastUpdated": "2021-09-07T13:49:54.3881151Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "f21a96f4-d10c-4e19-9f88-7cb315b93f99",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I was recently playing a game, and someone advised that if you're after a particular status effect you can keep surrendering to one of the bosses. (you get one at random if you surrender in battle; each monster has 1-4 options). But their method for getting there quickly was an interesting one: walk around until you get a battle. If it's not a monster that offers the ending you want, undo and repeat. Once you have the monster you want, surrender. If the result isn't the one you want, undo and do it again.\r\n\r\nSince then, I've been wondering if there could be a way to prevent the abuse of 'undo' to redo random stuff.\r\n\r\nNot sure if there's really a point; I want the game to be fun. But it would be nice if it wasn't so easy to 'cheat'. So, here's my solution (pseudocode):\r\n\r\n**Random Number function**\r\nAs well as the range of numbers to select, this will have a parameter for 'reason'.  This would be a string like `attackroll_goblin` or `Wizard_Nigel_drops`. In the case of PickOneString, it probably makes sense to use the list of options as the reason.\r\n\r\nRandomNumber does:\r\n* If there is a number in `game.rng_pending` with the same reason, choose it (and remove it)\r\n* Otherwise, call `GetRandomInt`\r\n* Store the number in `game.rng_generated`\r\n    * This is a list of dictionaries. Each dict contains a random number, its range, and its reason.\r\n    * To prevent file bloating, you could remove items from the beginning of the list if it's over a certain length\r\n* Then return the number\r\n\r\nThe 'undo' command will:\r\n* Copy rng_pending and rng_generated into local variables (which aren't affected by transactions)\r\n* call `undo`\r\n* Compare the local variables to the list attributes.\r\n    * Entries in `rng_generated` before the undo that are no longer there should be added to `rng_generated` unless they're already there\r\n    * Then any entries that were in `rng_pending` before the undo but aren't now should be added.\r\n\r\nThis basically means that when the game generates a random number for some specific purpose (treasure, combat, etc), it records it in a log. When you undo, those stored numbers will be put into a queue, so that they'll be used the next time you roll for that thing. You presumably don't need to save numbers for purely cosmetic things like using `{random:` in the text processor to taunt the player, but it does mean that you can't keep undoing and attacking the same monster again until you get a critical hit. And (unlike a random queue without the reasons), you can't respond to a fumble by undoing and skipping a turn so an enemy gets your bad luck.\r\n\r\nWhat do you think? I'm pretty sure I'm thinking about this too much; but it would be nice to have an anti-cheating feature that doesn't disable 'undo' entirely.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I was recently playing a game, and someone advised that if you're after a particular status effect you can keep surrendering to one of the bosses. (you get one at random if you surrender in battle; each monster has 1-4 options). But their method for getting there quickly was an interesting one: walk around until you get a battle. If it's not a monster that offers the ending you want, undo and repeat. Once you have the monster you want, surrender. If the result isn't the one you want, undo and do it again.</p>\n<p>Since then, I've been wondering if there could be a way to prevent the abuse of 'undo' to redo random stuff.</p>\n<p>Not sure if there's really a point; I want the game to be fun. But it would be nice if it wasn't so easy to 'cheat'. So, here's my solution (pseudocode):</p>\n<p><strong>Random Number function</strong><br>\nAs well as the range of numbers to select, this will have a parameter for 'reason'.  This would be a string like <code>attackroll_goblin</code> or <code>Wizard_Nigel_drops</code>. In the case of PickOneString, it probably makes sense to use the list of options as the reason.</p>\n<p>RandomNumber does:</p>\n<ul>\n<li>If there is a number in <code>game.rng_pending</code> with the same reason, choose it (and remove it)</li>\n<li>Otherwise, call <code>GetRandomInt</code></li>\n<li>Store the number in <code>game.rng_generated</code>\n<ul>\n<li>This is a list of dictionaries. Each dict contains a random number, its range, and its reason.</li>\n<li>To prevent file bloating, you could remove items from the beginning of the list if it's over a certain length</li>\n</ul>\n</li>\n<li>Then return the number</li>\n</ul>\n<p>The 'undo' command will:</p>\n<ul>\n<li>Copy rng_pending and rng_generated into local variables (which aren't affected by transactions)</li>\n<li>call <code>undo</code></li>\n<li>Compare the local variables to the list attributes.\n<ul>\n<li>Entries in <code>rng_generated</code> before the undo that are no longer there should be added to <code>rng_generated</code> unless they're already there</li>\n<li>Then any entries that were in <code>rng_pending</code> before the undo but aren't now should be added.</li>\n</ul>\n</li>\n</ul>\n<p>This basically means that when the game generates a random number for some specific purpose (treasure, combat, etc), it records it in a log. When you undo, those stored numbers will be put into a queue, so that they'll be used the next time you roll for that thing. You presumably don't need to save numbers for purely cosmetic things like using <code>{random:</code> in the text processor to taunt the player, but it does mean that you can't keep undoing and attacking the same monster again until you get a critical hit. And (unlike a random queue without the reasons), you can't respond to a fumble by undoing and skipping a turn so an enemy gets your bad luck.</p>\n<p>What do you think? I'm pretty sure I'm thinking about this too much; but it would be nice to have an anti-cheating feature that doesn't disable 'undo' entirely.</p>\n\n",
+      "PostDate": "2021-09-07T13:49:54.3881151Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "a22fcf64-2cce-4682-a9d5-7357a03fe9a4",
+      "UserId": 199273,
+      "Username": "DavyB",
+      "AvatarUrl": "http://i.imgur.com/8BcaZCyb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Perhaps UNDO is itself a 'cheat'? I don't think I've encountered a case where a designer has incorporated it in game play? Indeed, as you know, UNDO in standard Quest is broken so perhaps most designers don't even think about it? \r\n\r\nOut of curiousity, I tried UNDO in The Mansion (2004, Quest 3), with the following surprising result:\r\n```\r\n> n\r\nThe glass paned door is locked. If you had a weapon, you could smash it open, or maybe there's a key somewhere around.\r\n\r\n> undo\r\nYou pick it up.\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Perhaps UNDO is itself a 'cheat'? I don't think I've encountered a case where a designer has incorporated it in game play? Indeed, as you know, UNDO in standard Quest is broken so perhaps most designers don't even think about it?</p>\n<p>Out of curiousity, I tried UNDO in The Mansion (2004, Quest 3), with the following surprising result:</p>\n<pre><code>&gt; n\nThe glass paned door is locked. If you had a weapon, you could smash it open, or maybe there's a key somewhere around.\n\n&gt; undo\nYou pick it up.\n</code></pre>\n\n",
+      "PostDate": "2021-09-07T18:02:18.9250624Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "ae77805c-e6f6-4b77-9ae0-0809c04bb2d6",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I think there is a place for undo in games. I know I use the up/down arrows a lot when repeating commands; but sometimes memory is imperfect and you enter the wrong thing.  I think 'undo' and 'oops' are reasonable if you mistyped a command; or hit enter before completing a list of objects. (Especially as I'm in the habit of only typing the first few letters of an object's name, for speed. Sometimes it's possible for a typo to select completely the wrong object.\r\n\r\nVery much a personal thing. Using it to cheese the random number generator feels like cheating to me. Correcting a typo seems like intended behaviour. Trying an option and then going back, I'm not sure about… maybe depends on the game. Somewhere in between the other two.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I think there is a place for undo in games. I know I use the up/down arrows a lot when repeating commands; but sometimes memory is imperfect and you enter the wrong thing.  I think 'undo' and 'oops' are reasonable if you mistyped a command; or hit enter before completing a list of objects. (Especially as I'm in the habit of only typing the first few letters of an object's name, for speed. Sometimes it's possible for a typo to select completely the wrong object.</p>\n<p>Very much a personal thing. Using it to cheese the random number generator feels like cheating to me. Correcting a typo seems like intended behaviour. Trying an option and then going back, I'm not sure about… maybe depends on the game. Somewhere in between the other two.</p>\n\n",
+      "PostDate": "2021-09-07T19:01:20.2207484Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "a1909429-cb4b-423c-b433-1968b72456e3",
+      "UserId": 924,
+      "Username": "Pertex",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4cc1e52f99452e841ecf4cbee9eadde9?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Wouldn't it be easier to randomly populate an enemy dictionary at game start and then access it with an index variable? With Undo then only the index variable must be reset.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Wouldn't it be easier to randomly populate an enemy dictionary at game start and then access it with an index variable? With Undo then only the index variable must be reset.</p>\n\n",
+      "PostDate": "2021-09-07T19:48:07.354776Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "3a241834-f27b-4f7c-9a7c-1bdc5c04f9ad",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "What do you put in the dictionary? All the random numbers for the game?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>What do you put in the dictionary? All the random numbers for the game?</p>\n\n",
+      "PostDate": "2021-09-08T00:22:46.2851774Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "1d263675-21a5-4b4a-b694-c0314cd3ffaa",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "And that's got me thinking about another useful thing you could do.\r\n\r\nIf you have a custom function that's used whenever you generate a random number, you could have it call something like `JS.recordRandom()`. Have a function which does nothing on the desktop player (as it's not needed), but records the random numbers used into a big array. The array also stores the commands that the player has entered.\r\n\r\nThen, if the web player is disconnected (wifi signal issues, server fell over, timeout, or whatever), these arrays are saved to LocalStorage. The JS on the client side pops up a message \"you have been disconnected from the server. Reconnect?\" And when you reconnect, it reloads the game from the last save.\r\n\r\n*However*, the UI Initialisation script now checks LocalStorage for an array of saved commands and random numbers. If found, they can be splatted back to the server. your `rng_pending` is populated with all the random numbers, and the commands from the previous attempt are splatted back into `commandqueue`.\r\n\r\nQuest can replay the game from your last save point, using a saved copy of all the random numbers you entered so that it's guaranteed to play out the same way. Would enable you to work around any stability issues with the server, and allow players to continue from where they were up to after a timeout or other disconnection.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>And that's got me thinking about another useful thing you could do.</p>\n<p>If you have a custom function that's used whenever you generate a random number, you could have it call something like <code>JS.recordRandom()</code>. Have a function which does nothing on the desktop player (as it's not needed), but records the random numbers used into a big array. The array also stores the commands that the player has entered.</p>\n<p>Then, if the web player is disconnected (wifi signal issues, server fell over, timeout, or whatever), these arrays are saved to LocalStorage. The JS on the client side pops up a message \"you have been disconnected from the server. Reconnect?\" And when you reconnect, it reloads the game from the last save.</p>\n<p><em>However</em>, the UI Initialisation script now checks LocalStorage for an array of saved commands and random numbers. If found, they can be splatted back to the server. your <code>rng_pending</code> is populated with all the random numbers, and the commands from the previous attempt are splatted back into <code>commandqueue</code>.</p>\n<p>Quest can replay the game from your last save point, using a saved copy of all the random numbers you entered so that it's guaranteed to play out the same way. Would enable you to work around any stability issues with the server, and allow players to continue from where they were up to after a timeout or other disconnection.</p>\n\n",
+      "PostDate": "2021-09-08T15:54:25.2127349Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "cac43a35-f2ec-4095-9553-907cf5e76e5c",
+      "UserId": 924,
+      "Username": "Pertex",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4cc1e52f99452e841ecf4cbee9eadde9?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "```\r\nWhat do you put in the dictionary? All the random numbers for the game?\r\n```\r\n\r\nIt depends on what you need the random numbers for. If you want to randomly spawn monsters, at the start of the game the monsters will be randomly added to a monster  dictionary.",
+      "EditableFormat": "markdown",
+      "HTML": "<pre><code>What do you put in the dictionary? All the random numbers for the game?\n</code></pre>\n<p>It depends on what you need the random numbers for. If you want to randomly spawn monsters, at the start of the game the monsters will be randomly added to a monster  dictionary.</p>\n\n",
+      "PostDate": "2021-09-09T09:32:29.6404472Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

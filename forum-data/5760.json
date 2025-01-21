@@ -1,0 +1,83 @@
+{
+  "Topic": {
+    "TopicId": "5760",
+    "ForumId": "20",
+    "Title": "Vague command responses okay?",
+    "LastUpdated": "2015-12-24T20:23:56+00:00",
+    "ReplyCount": 5
+  },
+  "Posts": [
+    {
+      "PostId": "39936",
+      "UserId": 0,
+      "Username": "XanMag",
+      "UserAvatar": "7161_1436827710.jpg",
+      "UserGravatar": "4b45a3afd18077f76f6569225c422bdb",
+      "EditableText": "What are you thoughts as players for the following scenario?\n\nIn my game it is required to 'use blade on the red car tires'.  I have this in the 'use this object on another object' box.\n\nI also want to have a command available that allows the player to type in random variations of stab tires with blade (as you can see in the code below).  However, when the player tries to stab anything else with anything else in the room I used this code to respond.\n[code:1w4kvey5]    &lt;command name=&quot;stab wrong tires cmd&quot;&gt;\n      &lt;pattern&gt;stab #text# with #text#&lt;/pattern&gt;\n      &lt;script&gt;\n        msg (&quot;Stabbing something like that with that doesn't achieve the desired effect&#46;&quot;)[/code:1w4kvey5]\n\nCorrect code:  [code:1w4kvey5]    &lt;command name=&quot;stab tires cmd&quot;&gt;\n      &lt;pattern&gt;stab tires with stout knife; stab red car tires with stout blade; stab red tires with stout; stab red cars tire with stout blade; stab red cars tires with stout blade; stab tires with stout; stab red car tires with stout; stab red tires with stout; stab red cars tire with stout; stab red cars tires with stout; stab tires with blade; stab red car tires with blade; stab red tires with blade; stab red cars tire with blade; stab red cars tires with blade&lt;/pattern&gt;\n      &lt;script&gt;\n        if (Got(stout blade)) {\n          msg (&quot;You plunge the blade into the back driver's side tire and an angry hiss escapes&#46;  Pleased with your work, you jab the other three as well&#46;  On the fourth tire, the blade snaps&#46;  Oh well&#46;&#46;&#46; tires and knife destroyed&#46;&quot;)\n          SetObjectFlagOn (red car, &quot;disabled&quot;)\n          panel&#46;VehiclesDisabledCount = panel&#46;VehiclesDisabledCount - 1\n          RemoveObject (stout blade)\n        }\n        else {\n          msg (&quot;You are not carrying the right blade to do that&#46;  Right idea though&#46;&quot;)\n        }\n      &lt;/script&gt;\n    &lt;/command&gt;[/code:1w4kvey5]\n\nThe question I have is &quot;Is this okay for a response?&quot;  Would you just try stabbing everything in the room with every object in your inventory?  Should I have a more detailed hint?  Maybe add &quot;Stabbing something like that with that doesn't achieve the desired effect.  The only thing worth stabbing in this room are you and those red car's tires, but you better have a formidable weapon for even those fancy tires.&quot;\n\nAlso... is there an easier way to do this?",
+      "EditableFormat": "bbcode",
+      "HTML": "What are you thoughts as players for the following scenario?<br/><br/>In my game it is required to 'use blade on the red car tires'.  I have this in the 'use this object on another object' box.<br/><br/>I also want to have a command available that allows the player to type in random variations of stab tires with blade (as you can see in the code below).  However, when the player tries to stab anything else with anything else in the room I used this code to respond.<br/><pre><code>    &lt;command name=&quot;stab wrong tires cmd&quot;&gt;<br/>      &lt;pattern&gt;stab #text# with #text#&lt;/pattern&gt;<br/>      &lt;script&gt;<br/>        msg (&quot;Stabbing something like that with that doesn't achieve the desired effect&#46;&quot;)</code></pre><br/><br/>Correct code:  <pre><code>    &lt;command name=&quot;stab tires cmd&quot;&gt;<br/>      &lt;pattern&gt;stab tires with stout knife; stab red car tires with stout blade; stab red tires with stout; stab red cars tire with stout blade; stab red cars tires with stout blade; stab tires with stout; stab red car tires with stout; stab red tires with stout; stab red cars tire with stout; stab red cars tires with stout; stab tires with blade; stab red car tires with blade; stab red tires with blade; stab red cars tire with blade; stab red cars tires with blade&lt;/pattern&gt;<br/>      &lt;script&gt;<br/>        if (Got(stout blade)) {<br/>          msg (&quot;You plunge the blade into the back driver's side tire and an angry hiss escapes&#46;  Pleased with your work, you jab the other three as well&#46;  On the fourth tire, the blade snaps&#46;  Oh well&#46;&#46;&#46; tires and knife destroyed&#46;&quot;)<br/>          SetObjectFlagOn (red car, &quot;disabled&quot;)<br/>          panel&#46;VehiclesDisabledCount = panel&#46;VehiclesDisabledCount - 1<br/>          RemoveObject (stout blade)<br/>        }<br/>        else {<br/>          msg (&quot;You are not carrying the right blade to do that&#46;  Right idea though&#46;&quot;)<br/>        }<br/>      &lt;/script&gt;<br/>    &lt;/command&gt;</code></pre><br/><br/>The question I have is &quot;Is this okay for a response?&quot;  Would you just try stabbing everything in the room with every object in your inventory?  Should I have a more detailed hint?  Maybe add &quot;Stabbing something like that with that doesn't achieve the desired effect.  The only thing worth stabbing in this room are you and those red car's tires, but you better have a formidable weapon for even those fancy tires.&quot;<br/><br/>Also... is there an easier way to do this?",
+      "PostDate": "2015-12-23T06:21:09+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39938",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "I think that is good response, as it hints at what the player needs to do.\n\nDo not use #text# for your command. The only two times to use it are when the player has to refer to an object that is not held and not in the room, or when it does not refer to an object at all.\n\nInstead, use #object#, which Quest will match up to an object. This means you do not have to put in all the alternative ways of referring to the object. As you have two objects (your types are an object, right? they should be, so the player can examine them), use #object1# and #object2#, and the pattern is simply:\n[code:28cae37q]stab #object1# with #object2#[/code:28cae37q]\nThis command will cover both the commands you have above, and handle two alternative verbs as well:\n[code:28cae37q]&lt;command name=&quot;stab tires cmd&quot;&gt;\n  &lt;pattern&gt;stab #object1# with #object2#;slash #object1# with #object2#;puncture #object1# with #object2#&lt;/pattern&gt;\n  &lt;script&gt;\n    if (object1 = red car tire) {\n      if (object2 = stout blade) {\n        msg (&quot;You plunge the blade into the back driver's side tire and an angry hiss escapes&#46;  Pleased with your work, you jab the other three as well&#46;  On the fourth tire, the blade snaps&#46;  Oh well&#46;&#46;&#46; tires and knife destroyed&#46;&quot;)\n        SetObjectFlagOn (red car, &quot;disabled&quot;)\n        panel&#46;VehiclesDisabledCount = panel&#46;VehiclesDisabledCount - 1\n        RemoveObject (stout blade)\n      }\n      else {\n        msg (&quot;You are not carrying the right blade to do that&#46;  Right idea though&#46;&quot;)\n      }\n    }\n    else {\n      msg(&quot;Stabbing something like that with that doesn't achieve the desired effect&#46;&quot;)\n    }\n  &lt;/script&gt;\n&lt;/command&gt;[/code:28cae37q]",
+      "EditableFormat": "bbcode",
+      "HTML": "I think that is good response, as it hints at what the player needs to do.<br/><br/>Do not use #text# for your command. The only two times to use it are when the player has to refer to an object that is not held and not in the room, or when it does not refer to an object at all.<br/><br/>Instead, use #object#, which Quest will match up to an object. This means you do not have to put in all the alternative ways of referring to the object. As you have two objects (your types are an object, right? they should be, so the player can examine them), use #object1# and #object2#, and the pattern is simply:<br/><pre><code>stab #object1# with #object2#</code></pre><br/>This command will cover both the commands you have above, and handle two alternative verbs as well:<br/><pre><code>&lt;command name=&quot;stab tires cmd&quot;&gt;<br/>  &lt;pattern&gt;stab #object1# with #object2#;slash #object1# with #object2#;puncture #object1# with #object2#&lt;/pattern&gt;<br/>  &lt;script&gt;<br/>    if (object1 = red car tire) {<br/>      if (object2 = stout blade) {<br/>        msg (&quot;You plunge the blade into the back driver's side tire and an angry hiss escapes&#46;  Pleased with your work, you jab the other three as well&#46;  On the fourth tire, the blade snaps&#46;  Oh well&#46;&#46;&#46; tires and knife destroyed&#46;&quot;)<br/>        SetObjectFlagOn (red car, &quot;disabled&quot;)<br/>        panel&#46;VehiclesDisabledCount = panel&#46;VehiclesDisabledCount - 1<br/>        RemoveObject (stout blade)<br/>      }<br/>      else {<br/>        msg (&quot;You are not carrying the right blade to do that&#46;  Right idea though&#46;&quot;)<br/>      }<br/>    }<br/>    else {<br/>      msg(&quot;Stabbing something like that with that doesn't achieve the desired effect&#46;&quot;)<br/>    }<br/>  &lt;/script&gt;<br/>&lt;/command&gt;</code></pre>",
+      "PostDate": "2015-12-23T08:24:49+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39939",
+      "UserId": 0,
+      "Username": "XanMag",
+      "UserAvatar": "7161_1436827710.jpg",
+      "UserGravatar": "4b45a3afd18077f76f6569225c422bdb",
+      "EditableText": "Oooh.  Very nice to know.  Thanks again!",
+      "EditableFormat": "bbcode",
+      "HTML": "Oooh.  Very nice to know.  Thanks again!",
+      "PostDate": "2015-12-23T08:39:41+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39947",
+      "UserId": 0,
+      "Username": "Marzipan",
+      "UserAvatar": null,
+      "UserGravatar": "96db8d4d178365a7065b1872e874bc83",
+      "EditableText": "Pixie, just so you know you're posts are invaluable for more than just the people whose questions you're answering. I really appreciate the time you take to clearly explain things to those of us who are programming-impaired, and I've been building up a nice little collection of coding tips just quoting your posts and PMing them to myself for future reference. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Pixie, just so you know you're posts are invaluable for more than just the people whose questions you're answering. I really appreciate the time you take to clearly explain things to those of us who are programming-impaired, and I've been building up a nice little collection of coding tips just quoting your posts and PMing them to myself for future reference. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2015-12-23T15:19:09+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39949",
+      "UserId": 0,
+      "Username": "ChrisRT",
+      "UserAvatar": null,
+      "UserGravatar": "8478a1aaaa3a253f922b36257eeb50b0",
+      "EditableText": "As someone who is new to Quest and programming in general, I agree - I feel like I learn something new/interesting every time I check the forums, and also have a few threads bookmarked for reference. The community on here is very helpful in general, and it's much appreciated. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "As someone who is new to Quest and programming in general, I agree - I feel like I learn something new/interesting every time I check the forums, and also have a few threads bookmarked for reference. The community on here is very helpful in general, and it's much appreciated. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2015-12-23T16:16:37+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39999",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "You can also do this with a verb instead of a command. That allows you to easily vary the behavior per object without having to have all this nasty &quot;if this and that&quot; sort of code. Quest does that for you.\n\nFirst, create a verb called &quot;stab&quot;. The defaults are reasonable for this, though you can customize them as desired. Note that &quot;stab&quot; will have object separators of &quot;with&quot; and &quot;using&quot;. This means you can type &quot;stab X with Y&quot; or &quot;stab X using Y&quot;. (And all the variations you have in your command can be handled by adding aliases to the objects...)\n\nThen go to your tire and add the &quot;stab&quot; verb. It defaults to &quot;Print a message&quot;. Change that to &quot;Require another object&quot;. You then will have a list where you can add objects that you can stab the tire with (&quot;stab tire with Y&quot;). In this case, you want it to be the knife, so...\n\nClick &quot;Add&quot; and pick the knife from the object dropdown. It will then pop up allowing you to enter the script for when someone types &quot;stab tire with knife&quot;. In my case, I just printed, &quot;The tire hisses.&quot; \n\nSample session:\n\n[quote:fto21d2s]&gt; stab tire with knife\nThe tire hisses.\n\n&gt; stab flowers with knife\nYou can't stab them.[/quote:fto21d2s]\n\nIn case that makes life any easier... <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "You can also do this with a verb instead of a command. That allows you to easily vary the behavior per object without having to have all this nasty &quot;if this and that&quot; sort of code. Quest does that for you.<br/><br/>First, create a verb called &quot;stab&quot;. The defaults are reasonable for this, though you can customize them as desired. Note that &quot;stab&quot; will have object separators of &quot;with&quot; and &quot;using&quot;. This means you can type &quot;stab X with Y&quot; or &quot;stab X using Y&quot;. (And all the variations you have in your command can be handled by adding aliases to the objects...)<br/><br/>Then go to your tire and add the &quot;stab&quot; verb. It defaults to &quot;Print a message&quot;. Change that to &quot;Require another object&quot;. You then will have a list where you can add objects that you can stab the tire with (&quot;stab tire with Y&quot;). In this case, you want it to be the knife, so...<br/><br/>Click &quot;Add&quot; and pick the knife from the object dropdown. It will then pop up allowing you to enter the script for when someone types &quot;stab tire with knife&quot;. In my case, I just printed, &quot;The tire hisses.&quot; <br/><br/>Sample session:<br/><br/><blockquote><p>&gt; stab tire with knife<br/>The tire hisses.<br/><br/>&gt; stab flowers with knife<br/>You can't stab them.</p></blockquote><br/><br/>In case that makes life any easier... <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2015-12-24T20:23:56+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "--vyn3k16usnt5wbwkj4_q",
+    "ForumId": "10",
+    "Title": "Can't add verbs during gameplay",
+    "LastUpdated": "2021-12-05T19:53:00.0231115Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "d044c5b0-7bd0-437b-b79a-76b08c61b327",
+      "UserId": 569662,
+      "Username": "Dongers",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm having trouble. I want my character to jump towards and object by using its display verb \"Jump\" in one of the scenes. However, the same object can be encountered elsewhere where jumping towards it wouldn't make sense since it's directly within reach. So I want to add the Jump display verb when the Jump scene is about to happen, but want to remove it if the player decides to take it later and instead replace it with \"touch\".\r\nI've tried following this tutorial https://docs.textadventures.co.uk/quest/display_verbs.html but it doesn't work. Is there a way to do it without expressions or direct coding?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm having trouble. I want my character to jump towards and object by using its display verb \"Jump\" in one of the scenes. However, the same object can be encountered elsewhere where jumping towards it wouldn't make sense since it's directly within reach. So I want to add the Jump display verb when the Jump scene is about to happen, but want to remove it if the player decides to take it later and instead replace it with \"touch\".<br>\nI've tried following this tutorial https://docs.textadventures.co.uk/quest/display_verbs.html but it doesn't work. Is there a way to do it without expressions or direct coding?</p>\n\n",
+      "PostDate": "2021-12-05T19:53:00.0231115Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "9c68d87f-1192-4aec-a1f4-2fb1bb4279e6",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> but it doesn't work\r\n\r\nWhat doesn't work?\r\nIf you can show your code, and tell us what the error message is, then someone will probably be able to see what's wrong.\r\n\r\nThe most common problem with this kind of thing is Quest's weird issue with inherited lists. If you haven't altered the object's display verbs in the editor, then before you can change them you will need to make them concrete by doing:\r\n```\r\nname_of_object.displayverbs = name_of_object.displayverbs\r\n```\r\nAfter that,  you can add a verb before the 'jump' scene by doing:\r\n```\r\nif (not ListContains (name_of_object.displayverbs, \"Jump\")) {\r\n  list add (name_of_object.displayverbs, \"Jump\")\r\n}\r\n```\r\nand afterwards (when the object is moved, or when the player leaves that area), you could do:\r\n```\r\nif (ListContains (name_of_object.displayverbs, \"Jump\")) {\r\n  list remove (name_of_object.displayverbs, \"Jump\")\r\n}\r\nif (not ListContains (name_of_object.displayverbs, \"Touch\")) {\r\n  list add (name_of_object.displayverbs, \"Touch\")\r\n}\r\n```\r\n\r\nNow, if this is an actual *verb*, it's  a little more complex. Because any verbs an object had are automatically added to a list called `generatedverbslist`, which is created the first time the player sees the object. By default, Quest displays both the `displayverbs` *and* `generatedverbslist`.\r\n\r\nSo… you can either use the different tickboxes above the display verbs list to control which list(s) are used; or you can make sure the unwanted verbs are removed from `generatedverbslist` as well, using the same method. Before altering generatedverbslist, you would need to make sure it has been generated, by doing:\r\n```\r\nGetDisplayVerbs (name_of_object)\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>but it doesn't work</p>\n</blockquote>\n<p>What doesn't work?<br>\nIf you can show your code, and tell us what the error message is, then someone will probably be able to see what's wrong.</p>\n<p>The most common problem with this kind of thing is Quest's weird issue with inherited lists. If you haven't altered the object's display verbs in the editor, then before you can change them you will need to make them concrete by doing:</p>\n<pre><code>name_of_object.displayverbs = name_of_object.displayverbs\n</code></pre>\n<p>After that,  you can add a verb before the 'jump' scene by doing:</p>\n<pre><code>if (not ListContains (name_of_object.displayverbs, \"Jump\")) {\n  list add (name_of_object.displayverbs, \"Jump\")\n}\n</code></pre>\n<p>and afterwards (when the object is moved, or when the player leaves that area), you could do:</p>\n<pre><code>if (ListContains (name_of_object.displayverbs, \"Jump\")) {\n  list remove (name_of_object.displayverbs, \"Jump\")\n}\nif (not ListContains (name_of_object.displayverbs, \"Touch\")) {\n  list add (name_of_object.displayverbs, \"Touch\")\n}\n</code></pre>\n<p>Now, if this is an actual <em>verb</em>, it's  a little more complex. Because any verbs an object had are automatically added to a list called <code>generatedverbslist</code>, which is created the first time the player sees the object. By default, Quest displays both the <code>displayverbs</code> <em>and</em> <code>generatedverbslist</code>.</p>\n<p>So… you can either use the different tickboxes above the display verbs list to control which list(s) are used; or you can make sure the unwanted verbs are removed from <code>generatedverbslist</code> as well, using the same method. Before altering generatedverbslist, you would need to make sure it has been generated, by doing:</p>\n<pre><code>GetDisplayVerbs (name_of_object)\n</code></pre>\n\n",
+      "PostDate": "2021-12-05T21:20:42.9481314Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "c47aad79-5c37-4163-bbe7-e8bb21ecef99",
+      "UserId": 569662,
+      "Username": "Dongers",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thank you! I just used expressions the completely wrong way it seems. Now I managed to make the Verbs show up and disappear, but how do I edit what they do?\r\nQuest  just replies \"I don't understand your command\" whenever I select them. Where can I edit what they'll do?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thank you! I just used expressions the completely wrong way it seems. Now I managed to make the Verbs show up and disappear, but how do I edit what they do?<br>\nQuest  just replies \"I don't understand your command\" whenever I select them. Where can I edit what they'll do?</p>\n\n",
+      "PostDate": "2021-12-05T21:40:36.4677186Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "9536ff2f-3af9-4057-9a77-44398f35fcc4",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You can add verbs on the 'Verbs' tab for an object.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You can add verbs on the 'Verbs' tab for an object.</p>\n\n",
+      "PostDate": "2021-12-06T00:21:09.3353479Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "3b9f8e7d-da53-4ab3-a2ca-4b9767e8f8d7",
+      "UserId": 569662,
+      "Username": "Dongers",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I did that, now they aren't being removed anymore.\r\nNevermind, I figured that one out. Had to disable the automatic inclusion of Verb tab verbs in the displayverbs.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I did that, now they aren't being removed anymore.<br>\nNevermind, I figured that one out. Had to disable the automatic inclusion of Verb tab verbs in the displayverbs.</p>\n\n",
+      "PostDate": "2021-12-06T16:13:56.4949545Z",
+      "LastEditDate": "2021-12-06T16:16:53.0612495Z",
+      "link": null
+    },
+    {
+      "PostId": "9348edf3-04e5-4c12-9368-5795d691b028",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> I did that, now they aren't being removed anymore.\r\n\r\nI explained that in the previous post.\r\nAn object's verbs are automatically added to a second list, `generatedverbslist`, which is displayed in addition to the displayverbs if it's enabled.\r\n\r\nYou can turn off the automatically generated verb list, and make sure that all your other verbs are manually included in the displayverbs; or you can use the same technique to remove it from `generatedverbslist`.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>I did that, now they aren't being removed anymore.</p>\n</blockquote>\n<p>I explained that in the previous post.<br>\nAn object's verbs are automatically added to a second list, <code>generatedverbslist</code>, which is displayed in addition to the displayverbs if it's enabled.</p>\n<p>You can turn off the automatically generated verb list, and make sure that all your other verbs are manually included in the displayverbs; or you can use the same technique to remove it from <code>generatedverbslist</code>.</p>\n\n",
+      "PostDate": "2021-12-06T17:29:36.6940462Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

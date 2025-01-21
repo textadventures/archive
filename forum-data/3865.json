@@ -1,0 +1,83 @@
+{
+  "Topic": {
+    "TopicId": "3865",
+    "ForumId": "10",
+    "Title": "Help with Combat/Map/Spell system",
+    "LastUpdated": "2013-08-17T07:31:57+01:00",
+    "ReplyCount": 5
+  },
+  "Posts": [
+    {
+      "PostId": "25865",
+      "UserId": 0,
+      "Username": "DokaNoker",
+      "UserAvatar": null,
+      "UserGravatar": "df6e32f0b7bdbdee2a0ffe48c7e30092",
+      "EditableText": "Hi \nI have had a problem with my combat system because\n1. I cannot respawn\n2. I only know how much i was hurt when i die, i cannot see my health drop\n3. If the monsters die, they still attack\nAnd for the map\n1.If you go to the castle, the map goes crazy, with the player icon being in a different place then the map cubes.\nEDIT:\nBy the way, the spells wont hurt .",
+      "EditableFormat": "bbcode",
+      "HTML": "Hi <br/>I have had a problem with my combat system because<br/>1. I cannot respawn<br/>2. I only know how much i was hurt when i die, i cannot see my health drop<br/>3. If the monsters die, they still attack<br/>And for the map<br/>1.If you go to the castle, the map goes crazy, with the player icon being in a different place then the map cubes.<br/>EDIT:<br/>By the way, the spells wont hurt .<div><a href=\"/attachment/694\">library.aslx</a></div><div><a href=\"/attachment/693\">Logolandia.aslx</a></div>",
+      "PostDate": "2013-08-15T18:51:27+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25866",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "For the map, it goes crazy because your rooms and exits are not consistent. The exit leading to the castle has length 3, but the one leading away from the castle has length 1. So the map draws a length 3 line when you head northeast, but coming back, it only returns 1, and doesn't make it visually to the target room. \n\n(Also, from your first room, both north and south go to the same room!)",
+      "EditableFormat": "bbcode",
+      "HTML": "For the map, it goes crazy because your rooms and exits are not consistent. The exit leading to the castle has length 3, but the one leading away from the castle has length 1. So the map draws a length 3 line when you head northeast, but coming back, it only returns 1, and doesn't make it visually to the target room. <br/><br/>(Also, from your first room, both north and south go to the same room!)",
+      "PostDate": "2013-08-15T23:35:25+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25867",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "For 2), you don't see your health decrease during combat because your status is showing the &quot;health&quot; attribute, whereas the combat library is using an attribute called &quot;hitpoints&quot;.",
+      "EditableFormat": "bbcode",
+      "HTML": "For 2), you don't see your health decrease during combat because your status is showing the &quot;health&quot; attribute, whereas the combat library is using an attribute called &quot;hitpoints&quot;.",
+      "PostDate": "2013-08-15T23:45:32+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25868",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "1. If you mean that when the game is over, the game is over, and thus you can't keep playing (ie &quot;respawning&quot;), then you have to remove the &quot;finish&quot; coding lines (and its script blocks) from Pixie's Library.\n\nimplementing a &quot;dead&quot; functional-game-status (preventing you from doing only some stuff ~ unlike the &quot;finish&quot; coding which prevents you from doing any~all stuff, and also along with a &quot;revival&quot; potion or whatever feature to revive you), is very much more complicated, and will take some work and explanation.\n\n2. I edited this in later to my previous post (but you must not have seen it in time), so you didn't know about it, my apologies!\n\nbecause of my too late edit addition to my previous post, you thus messed up on one of the &quot;player&quot; Player Object's attributes:\n\nyou have it looking like this:\n\n&lt;statusattributes type=&quot;stringdictionary&quot; /&gt;\n\nneeds to be changed to (look like) this:\n\n&lt;statusattributes type=&quot;simplestringdictionary&quot;&gt;hitpoints =;armour =;attack =;defence =&lt;/statusattributes&gt;\n\n~AND~OR~\n\nyou can add in script lines to Pixie's Library, to display your current~new hitpoint_amount (after getting hit by the monsters).\nthis will take some explanation too, if you don't know what you're doing. Add this line where it's needed or where you want it:\n\nmsg (game.pov.alias + &quot; has &quot; + game.pov.hitpoints + &quot; HP remaining.&quot;)\n\n3. I forgot to notice this and tell it to you in my previous post, my apologies!\n\nyou need to also add this Attribute to all of your &quot;monster&quot; Objects:\n\n&quot;whatever_your_monster_object_name&quot; Object -&gt; Attributes (Tab) -&gt; Attributes -&gt; Add -&gt;\n\nName: dead\nType: boolean\nValue: false\n\n~OR~\n\nin Pixie's Library File:\n\nfind the &quot;monster&quot; Object Type coding block:\n\n[code:5wbhmts9]&lt;type name=&quot;monster&quot;&gt;\n  // blah coding\n&lt;/type&gt;[/code:5wbhmts9]\n\nand add in this line to it:\n\n&lt;dead type=&quot;boolean&quot;&gt;false&lt;/dead&gt;\n\nit should look like this:\n\n[code:5wbhmts9]&lt;type name=&quot;monster&quot;&gt;\n  &lt;inherit name=&quot;weapon&quot; /&gt;\n  &lt;dead type=&quot;boolean&quot;&gt;false&lt;/dead&gt;\n  &lt;defence type=&quot;int&quot;&gt;0&lt;/defence&gt;\n  // blah coding ~ ie the rest of the coding\n&lt;/type&gt;[/code:5wbhmts9]",
+      "EditableFormat": "bbcode",
+      "HTML": "1. If you mean that when the game is over, the game is over, and thus you can't keep playing (ie &quot;respawning&quot;), then you have to remove the &quot;finish&quot; coding lines (and its script blocks) from Pixie's Library.<br/><br/>implementing a &quot;dead&quot; functional-game-status (preventing you from doing only some stuff ~ unlike the &quot;finish&quot; coding which prevents you from doing any~all stuff, and also along with a &quot;revival&quot; potion or whatever feature to revive you), is very much more complicated, and will take some work and explanation.<br/><br/>2. I edited this in later to my previous post (but you must not have seen it in time), so you didn't know about it, my apologies!<br/><br/>because of my too late edit addition to my previous post, you thus messed up on one of the &quot;player&quot; Player Object's attributes:<br/><br/>you have it looking like this:<br/><br/>&lt;statusattributes type=&quot;stringdictionary&quot; /&gt;<br/><br/>needs to be changed to (look like) this:<br/><br/>&lt;statusattributes type=&quot;simplestringdictionary&quot;&gt;hitpoints =;armour =;attack =;defence =&lt;/statusattributes&gt;<br/><br/>~AND~OR~<br/><br/>you can add in script lines to Pixie's Library, to display your current~new hitpoint_amount (after getting hit by the monsters).<br/>this will take some explanation too, if you don't know what you're doing. Add this line where it's needed or where you want it:<br/><br/>msg (game.pov.alias + &quot; has &quot; + game.pov.hitpoints + &quot; HP remaining.&quot;)<br/><br/>3. I forgot to notice this and tell it to you in my previous post, my apologies!<br/><br/>you need to also add this Attribute to all of your &quot;monster&quot; Objects:<br/><br/>&quot;whatever_your_monster_object_name&quot; Object -&gt; Attributes (Tab) -&gt; Attributes -&gt; Add -&gt;<br/><br/>Name: dead<br/>Type: boolean<br/>Value: false<br/><br/>~OR~<br/><br/>in Pixie's Library File:<br/><br/>find the &quot;monster&quot; Object Type coding block:<br/><br/><pre><code>&lt;type name=&quot;monster&quot;&gt;<br/>  // blah coding<br/>&lt;/type&gt;</code></pre><br/><br/>and add in this line to it:<br/><br/>&lt;dead type=&quot;boolean&quot;&gt;false&lt;/dead&gt;<br/><br/>it should look like this:<br/><br/><pre><code>&lt;type name=&quot;monster&quot;&gt;<br/>  &lt;inherit name=&quot;weapon&quot; /&gt;<br/>  &lt;dead type=&quot;boolean&quot;&gt;false&lt;/dead&gt;<br/>  &lt;defence type=&quot;int&quot;&gt;0&lt;/defence&gt;<br/>  // blah coding ~ ie the rest of the coding<br/>&lt;/type&gt;</code></pre>",
+      "PostDate": "2013-08-16T02:16:45+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25881",
+      "UserId": 0,
+      "Username": "DokaNoker",
+      "UserAvatar": null,
+      "UserGravatar": "df6e32f0b7bdbdee2a0ffe48c7e30092",
+      "EditableText": "ZOh by the way\nzEven if the monsters die, they [i:3gdb77la][u:3gdb77la]Still[/u:3gdb77la][/i:3gdb77la] attack\nand i get  this error\nError running script&#058; Error compiling expression 'monster': Unknown object or variable 'monster'",
+      "EditableFormat": "bbcode",
+      "HTML": "ZOh by the way<br/>zEven if the monsters die, they <span style=\"font-style:italic;\"><span style=\"text-decoration:underline;\">Still</span></span> attack<br/>and i get  this error<br/>Error running script&#058; Error compiling expression 'monster': Unknown object or variable 'monster'",
+      "PostDate": "2013-08-16T18:56:48+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25888",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "can you post your game file (and Pixie's Library File if you made changes to it) again, and I'll have a look at it (and provide you directly with edited files that will work) ???\n\n------------\n\nI'm not quite sure how Pixie's Combat Library works, but try his~her Game Demo, and see if the enemy Objects will attack you after they're dead. If they do, then Pixie forgot some code lines or stuff, if not, then we just need to see what you're missing that is needed to get it to work.\n\n-----------\n\nignoring Pixie's Combat Library, the basic way of implementing it is this:\n\ngive your &quot;enemy&quot; Objects a boolean attribute (for example: orc.dead=false)\n\nin the script block where you kill the &quot;enemy&quot; Object, you need this code~script line: orc.dead=true\n\nand, back to the &quot;enemy&quot; Object's &quot;attack&quot; verb script block, at the very beginning (top) of it, you need a &quot;check&quot; (conditional):\n\n[b:1mbyq2f5]if (orc.dead = false) {[/b:1mbyq2f5]\n-&gt; // the orc attacks and damages you, and you attack and damage it too\n[b:1mbyq2f5]} else if (orc.dead = true) {[/b:1mbyq2f5]\n-&gt; // nothing happens to you, either don't message anything or message something to this effect: msg (&quot;The orc is already dead, you can't fight it, you can't attack what is already dead, and it's corpse can't attack you, either&quot;)\n\n// so....\n\nsince the &quot;orc&quot; isn't dead yet when you begin, it attacks you and you attack it, and hopefully the &quot;orc&quot; dies, lol.\n\nnow that the orc is dead (via setting it's &quot;dead&quot; boolean to &quot;true&quot;, after it's HP is zero or less), if you try to attack it again, it skips the fight scripting, and either ends doing nothing or it'll display your message to the effect that it says nothing happens, as the orc is already dead.\n\n-------------\n\nyour error message is just due to an error in the coding, often a simple mistake by you; a typo or whatever (very annoying to try to find, ie &quot;trouble shoot&quot;, them... lol). Errors are very common, welcome to Trouble Shooting your game~code, muhaha! <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "EditableFormat": "bbcode",
+      "HTML": "can you post your game file (and Pixie's Library File if you made changes to it) again, and I'll have a look at it (and provide you directly with edited files that will work) ???<br/><br/>------------<br/><br/>I'm not quite sure how Pixie's Combat Library works, but try his~her Game Demo, and see if the enemy Objects will attack you after they're dead. If they do, then Pixie forgot some code lines or stuff, if not, then we just need to see what you're missing that is needed to get it to work.<br/><br/>-----------<br/><br/>ignoring Pixie's Combat Library, the basic way of implementing it is this:<br/><br/>give your &quot;enemy&quot; Objects a boolean attribute (for example: orc.dead=false)<br/><br/>in the script block where you kill the &quot;enemy&quot; Object, you need this code~script line: orc.dead=true<br/><br/>and, back to the &quot;enemy&quot; Object's &quot;attack&quot; verb script block, at the very beginning (top) of it, you need a &quot;check&quot; (conditional):<br/><br/><span style=\"font-weight:bold;\">if (orc.dead = false) {</span><br/>-&gt; // the orc attacks and damages you, and you attack and damage it too<br/><span style=\"font-weight:bold;\">} else if (orc.dead = true) {</span><br/>-&gt; // nothing happens to you, either don't message anything or message something to this effect: msg (&quot;The orc is already dead, you can't fight it, you can't attack what is already dead, and it's corpse can't attack you, either&quot;)<br/><br/>// so....<br/><br/>since the &quot;orc&quot; isn't dead yet when you begin, it attacks you and you attack it, and hopefully the &quot;orc&quot; dies, lol.<br/><br/>now that the orc is dead (via setting it's &quot;dead&quot; boolean to &quot;true&quot;, after it's HP is zero or less), if you try to attack it again, it skips the fight scripting, and either ends doing nothing or it'll display your message to the effect that it says nothing happens, as the orc is already dead.<br/><br/>-------------<br/><br/>your error message is just due to an error in the coding, often a simple mistake by you; a typo or whatever (very annoying to try to find, ie &quot;trouble shoot&quot;, them... lol). Errors are very common, welcome to Trouble Shooting your game~code, muhaha! <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "PostDate": "2013-08-17T07:31:57+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

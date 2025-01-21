@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "3850",
+    "ForumId": "18",
+    "Title": "Mod operator with negative numbers",
+    "LastUpdated": "2013-08-18T16:08:18+01:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "25777",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Just to record this somewhere, here is how the mod operator (%) handles negative numbers:\n\n[code:3pex9pqo]1 % 4 = 1\n6 % 4 = 2\n-1 % 4 = -1\n-2 % 4 = -2\n-3 % 4 = -3\n-4 % 4 = 0\n-7 % 4 = -3\n5 % -4 = 1\n-5 % -4 = -1[/code:3pex9pqo]\n\nThe key points:\n- The mod of a negative number is the negative of the mod of the same positive number.\n- Mod to a negative base returns the same value as mod to the positive base.\n\nThe first point means that you can't expect the result of &quot;mod n&quot; to be in the range &quot;0 - (n-1)&quot; for all numbers. If you do need a mod that behaves that way, you can use something like:\n\n[code:3pex9pqo]&lt;function name=&quot;SafeMod&quot; parameters=&quot;n,base&quot; type=&quot;int&quot;&gt;\n  return (((n % base) + base) % base)\n&lt;/function&gt;[/code:3pex9pqo]\n\nIf you know your &quot;n&quot; will always be positive, you can just use &quot;n%base&quot; straight.",
+      "EditableFormat": "bbcode",
+      "HTML": "Just to record this somewhere, here is how the mod operator (%) handles negative numbers:<br/><br/><pre><code>1 % 4 = 1<br/>6 % 4 = 2<br/>-1 % 4 = -1<br/>-2 % 4 = -2<br/>-3 % 4 = -3<br/>-4 % 4 = 0<br/>-7 % 4 = -3<br/>5 % -4 = 1<br/>-5 % -4 = -1</code></pre><br/><br/>The key points:<br/>- The mod of a negative number is the negative of the mod of the same positive number.<br/>- Mod to a negative base returns the same value as mod to the positive base.<br/><br/>The first point means that you can't expect the result of &quot;mod n&quot; to be in the range &quot;0 - (n-1)&quot; for all numbers. If you do need a mod that behaves that way, you can use something like:<br/><br/><pre><code>&lt;function name=&quot;SafeMod&quot; parameters=&quot;n,base&quot; type=&quot;int&quot;&gt;<br/>  return (((n % base) + base) % base)<br/>&lt;/function&gt;</code></pre><br/><br/>If you know your &quot;n&quot; will always be positive, you can just use &quot;n%base&quot; straight.",
+      "PostDate": "2013-08-09T01:42:41+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25871",
+      "UserId": 0,
+      "Username": "sharpnova",
+      "UserAvatar": null,
+      "UserGravatar": "7e8873c3039b5f3b8c8d4f8a4b1164ce",
+      "EditableText": "Just to clarify, since it wasn't stated in the OP.\n\nThis is incorrect behavior for MOD.\n\nIn general, (-1)%n = n-1\n\nThe mod function should never return a negative value. My guess is that the function was handwritten, for Quest, by someone who didn't understand what MOD is meant to do.\n\nAnd I *do* think that this misformulation of the function has potentially annoying consequences for game creators.",
+      "EditableFormat": "bbcode",
+      "HTML": "Just to clarify, since it wasn't stated in the OP.<br/><br/>This is incorrect behavior for MOD.<br/><br/>In general, (-1)%n = n-1<br/><br/>The mod function should never return a negative value. My guess is that the function was handwritten, for Quest, by someone who didn't understand what MOD is meant to do.<br/><br/>And I *do* think that this misformulation of the function has potentially annoying consequences for game creators.",
+      "PostDate": "2013-08-16T12:43:04+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25873",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "[quote=&quot;sharpnova&quot;:2we5m6wm]My guess is that the function was handwritten, for Quest, by someone who didn't understand what MOD is meant to do.[/quote:2we5m6wm]\n\nI think that's a bit harsh and doesn't reflect the history of mod in programming languages. For example, Ruby and Python use the mathematically correct rule, while C and Java do not. And the C++ spec states that the handling of mod is &quot;implementation dependent,&quot; which means it can vary from platform to platform, depending on the underlying hardware and the library implementation. And I'm quite sure that these people understand what the mod function is and does. There are just other considerations (like performance).\n\nThe point of my post wasn't to criticize or condemn but rather to inform. The mod operator *does* vary depending on implementation, which is why I went through this exercise to begin with, so that those who care could know what Quest does. Quest, by the way, is built on top of FLEE which is built using VB/.NET. So perhaps you can blame Microsoft for the &quot;handwritten implementation&quot; by &quot;someone who didn't understand&quot;.",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>sharpnova wrote:</cite>My guess is that the function was handwritten, for Quest, by someone who didn't understand what MOD is meant to do.</blockquote><br/><br/>I think that's a bit harsh and doesn't reflect the history of mod in programming languages. For example, Ruby and Python use the mathematically correct rule, while C and Java do not. And the C++ spec states that the handling of mod is &quot;implementation dependent,&quot; which means it can vary from platform to platform, depending on the underlying hardware and the library implementation. And I'm quite sure that these people understand what the mod function is and does. There are just other considerations (like performance).<br/><br/>The point of my post wasn't to criticize or condemn but rather to inform. The mod operator *does* vary depending on implementation, which is why I went through this exercise to begin with, so that those who care could know what Quest does. Quest, by the way, is built on top of FLEE which is built using VB/.NET. So perhaps you can blame Microsoft for the &quot;handwritten implementation&quot; by &quot;someone who didn't understand&quot;.",
+      "PostDate": "2013-08-16T13:01:05+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25905",
+      "UserId": 0,
+      "Username": "Entropic Pen",
+      "UserAvatar": null,
+      "UserGravatar": "e5f002e803b6ffc8146a20f6f4777d33",
+      "EditableText": "So before everyone stops giving two bothers about Mod operators... tell us how this could be used in practice b/c I sure don't know!",
+      "EditableFormat": "bbcode",
+      "HTML": "So before everyone stops giving two bothers about Mod operators... tell us how this could be used in practice b/c I sure don't know!",
+      "PostDate": "2013-08-18T15:20:29+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25906",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Mod (&quot;modulo&quot;) is good for cylic things. I used them in the exit generation and navigation code I posted for imamy. To refresh a bit, the mod function to a base returns a number which is (naïvely) the remainder when divided by that base. That definition isn't 100% accurate, but it works for positive numbers, and it might be easier to understand if the concept is new. Here is the first set of numbers mod 4:\n\n[code:1rnhik5h]0 1 2 3 4 5 6 7 8 9 10 11 12 13 14&#46;&#46;&#46;\n0 1 2 3 0 1 2 3 0 1  2  3  0  1  2&#46;&#46;&#46;[/code:1rnhik5h]\n\nAs you can see, the mod function repeats. You can talk about two numbers being &quot;equivalent mod X&quot; if they have the same value mod X. For example, 3, 7 and 11 are all equivalent mod 4.\n\nLet's say you have a rotation attribute with these values:\n\nNorth = 0\nEast = 1\nSouth = 2\nWest = 3\n\nwhere each succeeding number goes 90 degrees further right. This allows you to have a single &quot;direction&quot; index. So how do you rotate right? Generally, you add 1 to the direction index. So North (0) goes to East (1) goes to South (2), etc. And to rotate left, you'd subtract 1.\n\nWhen you get to the ends, though, you need to wrap. Now, you can put &quot;if&quot;s in saying &quot;Add 1. If the new value is 4 set it to 0&quot; and similarly for left rots. It's easier just to use:\n\ndir = (dir + 1) % 4\n\nThe problem comes in with negative numbers. If you look at the above pattern for 0-14, you'll see a pattern of 0,1,2,3, repeating over and over. A technically correct mod preserves that going further negative, so that -1 would be 3, -2 would be 2, -3 would be 1, and -4 would be zero again:\n\n[code:1rnhik5h]-7 -6 -5 -4 -3 -2 -1 0 1 2 3 4\n 1  2  3  0  1  2  3 0 1 2 3 0[/code:1rnhik5h]\n\nThe mod n values are always [0..n-1]. However, some implementations seem to do it strictly as if it were a remainder, such that -1 mod 4 would be -1, -2 would be -2, etc\n\n[code:1rnhik5h]-7 -6 -5 -4 -3 -2 -1 0 1 2 3 4\n-3 -2 -1  0 -3 -2 -1 0 1 2 3 0[/code:1rnhik5h]\n\nAnd this causes problems! Because now in our case, if we go left from 0, we end up at -1, not 3. There are ways around this. For example, we can do this:\n\n[code:1rnhik5h]Right&#58; \ndir = (dir + 1) % 4\nLeft&#58; \ndir = (dir + 3) % 4[/code:1rnhik5h]\nand that will always work. (It might seem off, but think: if we add 4, we're back to the same number, mod 4. So adding 3 gets us to the number just left of it. The number 3 is the equivalent of -1.)\n\nI don't know if that answers it all (or too much), but it's one use for mod. You see things like mod all the time - time on a clock (which is mod 12 hours), degrees in a circle (which are mod 360), etc.\n\n[b:1rnhik5h]Edit: fixed the directions above.[/b:1rnhik5h]",
+      "EditableFormat": "bbcode",
+      "HTML": "Mod (&quot;modulo&quot;) is good for cylic things. I used them in the exit generation and navigation code I posted for imamy. To refresh a bit, the mod function to a base returns a number which is (naïvely) the remainder when divided by that base. That definition isn't 100% accurate, but it works for positive numbers, and it might be easier to understand if the concept is new. Here is the first set of numbers mod 4:<br/><br/><pre><code>0 1 2 3 4 5 6 7 8 9 10 11 12 13 14&#46;&#46;&#46;<br/>0 1 2 3 0 1 2 3 0 1  2  3  0  1  2&#46;&#46;&#46;</code></pre><br/><br/>As you can see, the mod function repeats. You can talk about two numbers being &quot;equivalent mod X&quot; if they have the same value mod X. For example, 3, 7 and 11 are all equivalent mod 4.<br/><br/>Let's say you have a rotation attribute with these values:<br/><br/>North = 0<br/>East = 1<br/>South = 2<br/>West = 3<br/><br/>where each succeeding number goes 90 degrees further right. This allows you to have a single &quot;direction&quot; index. So how do you rotate right? Generally, you add 1 to the direction index. So North (0) goes to East (1) goes to South (2), etc. And to rotate left, you'd subtract 1.<br/><br/>When you get to the ends, though, you need to wrap. Now, you can put &quot;if&quot;s in saying &quot;Add 1. If the new value is 4 set it to 0&quot; and similarly for left rots. It's easier just to use:<br/><br/>dir = (dir + 1) % 4<br/><br/>The problem comes in with negative numbers. If you look at the above pattern for 0-14, you'll see a pattern of 0,1,2,3, repeating over and over. A technically correct mod preserves that going further negative, so that -1 would be 3, -2 would be 2, -3 would be 1, and -4 would be zero again:<br/><br/><pre><code>-7 -6 -5 -4 -3 -2 -1 0 1 2 3 4<br/> 1  2  3  0  1  2  3 0 1 2 3 0</code></pre><br/><br/>The mod n values are always [0..n-1]. However, some implementations seem to do it strictly as if it were a remainder, such that -1 mod 4 would be -1, -2 would be -2, etc<br/><br/><pre><code>-7 -6 -5 -4 -3 -2 -1 0 1 2 3 4<br/>-3 -2 -1  0 -3 -2 -1 0 1 2 3 0</code></pre><br/><br/>And this causes problems! Because now in our case, if we go left from 0, we end up at -1, not 3. There are ways around this. For example, we can do this:<br/><br/><pre><code>Right&#58; <br/>dir = (dir + 1) % 4<br/>Left&#58; <br/>dir = (dir + 3) % 4</code></pre><br/>and that will always work. (It might seem off, but think: if we add 4, we're back to the same number, mod 4. So adding 3 gets us to the number just left of it. The number 3 is the equivalent of -1.)<br/><br/>I don't know if that answers it all (or too much), but it's one use for mod. You see things like mod all the time - time on a clock (which is mod 12 hours), degrees in a circle (which are mod 360), etc.<br/><br/><span style=\"font-weight:bold;\">Edit: fixed the directions above.</span>",
+      "PostDate": "2013-08-18T16:08:18+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

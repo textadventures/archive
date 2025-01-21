@@ -1,0 +1,191 @@
+{
+  "Topic": {
+    "TopicId": "70",
+    "ForumId": "10",
+    "Title": "\"You\" to [Character Name] Question",
+    "LastUpdated": "2003-08-11T12:56:44+01:00",
+    "ReplyCount": 14
+  },
+  "Posts": [
+    {
+      "PostId": "264",
+      "UserId": 0,
+      "Username": "Shoal",
+      "UserAvatar": null,
+      "UserGravatar": "0ab398dfac55bda2c5330cc1a5921560",
+      "EditableText": "Hi,\n\nI never liked the idea of \"You\" being the character in a game, so I'm working on a game in which \"You\" is replaced by the name of the character. Let's call him \"Bob\" for now (not his actual name).\n\nI've managed to replace \"You\" with \"Bob\" for everything I know of except the inventory list. When you type \"inventory\", it says \"You are carrying:\"\n\nHow do you make it say, \"Bob is carrying:\"?\n\nAny help would be greatly appreciated.\n\nThanks,\n\nShoal",
+      "EditableFormat": "bbcode",
+      "HTML": "Hi,<br/><br/>I never liked the idea of \"You\" being the character in a game, so I'm working on a game in which \"You\" is replaced by the name of the character. Let's call him \"Bob\" for now (not his actual name).<br/><br/>I've managed to replace \"You\" with \"Bob\" for everything I know of except the inventory list. When you type \"inventory\", it says \"You are carrying:\"<br/><br/>How do you make it say, \"Bob is carrying:\"?<br/><br/>Any help would be greatly appreciated.<br/><br/>Thanks,<br/><br/>Shoal",
+      "PostDate": "2003-08-09T07:02:34+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "266",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "You could do this by overriding the \"inventory\", \"inv\" and \"i\" commands. Here's some ASL code I've knocked up - this is untested though:\n\n[code:2lwuotla]\ncommand &lt;inventory; inv; i&gt; &#123;\n\tset numeric &lt;CurrentObject; 1&gt;\n\tfor each object in &lt;inventory&gt; &#123;\n\t\n\t\t' Go through the inventory and add object names in bold\n\t\t' to an ObjectName array\n\t\t\n\t\tset string &lt;ObjectName&#91;CurrentObject&#93;; |b#@quest&#46;thing#|xb&gt;\n\t\t\n\t\t' Add prefix and suffix if they exist\n\t\t\n\t\tif &#40; #&#40;quest&#46;thing&#41;&#58;prefix# &lt;&gt; &#41; then set &lt;ObjectName&#91;CurrentObject&#93;; #&#40;quest&#46;thing&#41;&#58;prefix# #ObjectName&#91;CurrentObject&#93;#&gt;\n\t\tif &#40; #&#40;quest&#46;thing&#41;&#58;suffix# &lt;&gt; &#41; then set &lt;ObjectName&#91;CurrentObject&#93;; #ObjectName&#91;CurrentObject&#93;# #&#40;quest&#46;thing&#41;&#58;suffix#&gt;\n\t\t\n\t\t' Increment the CurrentObject counter\n\t\t\n\t\tset numeric &lt;CurrentObject; %CurrentObject% + 1&gt;\n\t&#125;\n\t\n\tif &#40; %CurrentObject% = 1 &#41; then &#123;\n\t\t' The player isn't carrying anything\t\n\t\tmsg &lt;Bob is not carrying anything&#46;&gt;\n\t&#125;\n\telse &#123;\n\t\t' decrement CurrentObject as we will have added an extra 1\n\t\t' to it after adding the last object\n\t\tset &lt;CurrentObject; %CurrentObject% - 1&gt;\n\t\t\n\t\tmsg &lt;Bob is carrying&#58;|n&gt;\n\n\t\tfor &lt;i; 1; %CurrentObject%&gt; &#123;\n\t\t\tmsg &lt;#ObjectName&#91;i&#93;#&gt;\n\t\t\t\n\t\t\t' Add a comma after all but the last object printed\n\t\t\tif &#40; %i% &lt;&gt; %CurrentObject% &#41; then msg &lt;, &gt;\n\t\t&#125;\n\t&#125;\n&#125;\n[/code:2lwuotla]",
+      "EditableFormat": "bbcode",
+      "HTML": "You could do this by overriding the \"inventory\", \"inv\" and \"i\" commands. Here's some ASL code I've knocked up - this is untested though:<br/><br/><pre><code><br/>command &lt;inventory; inv; i&gt; &#123;<br/>\tset numeric &lt;CurrentObject; 1&gt;<br/>\tfor each object in &lt;inventory&gt; &#123;<br/>\t<br/>\t\t' Go through the inventory and add object names in bold<br/>\t\t' to an ObjectName array<br/>\t\t<br/>\t\tset string &lt;ObjectName&#91;CurrentObject&#93;; |b#@quest&#46;thing#|xb&gt;<br/>\t\t<br/>\t\t' Add prefix and suffix if they exist<br/>\t\t<br/>\t\tif &#40; #&#40;quest&#46;thing&#41;&#58;prefix# &lt;&gt; &#41; then set &lt;ObjectName&#91;CurrentObject&#93;; #&#40;quest&#46;thing&#41;&#58;prefix# #ObjectName&#91;CurrentObject&#93;#&gt;<br/>\t\tif &#40; #&#40;quest&#46;thing&#41;&#58;suffix# &lt;&gt; &#41; then set &lt;ObjectName&#91;CurrentObject&#93;; #ObjectName&#91;CurrentObject&#93;# #&#40;quest&#46;thing&#41;&#58;suffix#&gt;<br/>\t\t<br/>\t\t' Increment the CurrentObject counter<br/>\t\t<br/>\t\tset numeric &lt;CurrentObject; %CurrentObject% + 1&gt;<br/>\t&#125;<br/>\t<br/>\tif &#40; %CurrentObject% = 1 &#41; then &#123;<br/>\t\t' The player isn't carrying anything\t<br/>\t\tmsg &lt;Bob is not carrying anything&#46;&gt;<br/>\t&#125;<br/>\telse &#123;<br/>\t\t' decrement CurrentObject as we will have added an extra 1<br/>\t\t' to it after adding the last object<br/>\t\tset &lt;CurrentObject; %CurrentObject% - 1&gt;<br/>\t\t<br/>\t\tmsg &lt;Bob is carrying&#58;|n&gt;<br/><br/>\t\tfor &lt;i; 1; %CurrentObject%&gt; &#123;<br/>\t\t\tmsg &lt;#ObjectName&#91;i&#93;#&gt;<br/>\t\t\t<br/>\t\t\t' Add a comma after all but the last object printed<br/>\t\t\tif &#40; %i% &lt;&gt; %CurrentObject% &#41; then msg &lt;, &gt;<br/>\t\t&#125;<br/>\t&#125;<br/>&#125;<br/></code></pre>",
+      "PostDate": "2003-08-09T09:18:26+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "267",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "Correction: in the final \"for\" loop, the line\n\nmsg &lt;#ObjectName[i]#&gt; \n\nshould read\n\nmsg &lt;#ObjectName[i]#|xn&gt; \n\nto stop a new line being printed after the object name.\n\n\nSimilarly\n\nif ( %i% &lt;&gt; %CurrentObject% ) then msg &lt;, &gt;\n\nshould read\n\nif ( %i% &lt;&gt; %CurrentObject% ) then msg &lt;, |xn&gt; else msg &lt;|n&gt;\n\nto stop a new line being printed after the comma, and to finish the line when the printing of the object names has finished.\n\nI did say it was untested! <!-- s:) --><img src=\"{SMILIES_PATH}/icon_e_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Correction: in the final \"for\" loop, the line<br/><br/>msg &lt;#ObjectName[i]#&gt; <br/><br/>should read<br/><br/>msg &lt;#ObjectName[i]#|xn&gt; <br/><br/>to stop a new line being printed after the object name.<br/><br/><br/>Similarly<br/><br/>if ( %i% &lt;&gt; %CurrentObject% ) then msg &lt;, &gt;<br/><br/>should read<br/><br/>if ( %i% &lt;&gt; %CurrentObject% ) then msg &lt;, |xn&gt; else msg &lt;|n&gt;<br/><br/>to stop a new line being printed after the comma, and to finish the line when the printing of the object names has finished.<br/><br/>I did say it was untested! <!-- s:) --><img src=\"{SMILIES_PATH}/icon_e_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2003-08-09T09:21:19+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "274",
+      "UserId": 0,
+      "Username": "Shoal",
+      "UserAvatar": null,
+      "UserGravatar": "0ab398dfac55bda2c5330cc1a5921560",
+      "EditableText": "What you gave me works, it just needs a little modification.\n\nHere is what it displays:\n\n[quote:43vy2ov9]Bob is carrying:\nan object one !, an object two !, an object 3 ![/quote:43vy2ov9]\n\nThe \"an\"s were added by me as object prefixes. I also removed the new line after \"Bob is carrying\".\n\nFirst of all, how do I get rid of the exclamation points and the space that preceeds them?\n\nI also changed \"Bob is not carrying:\" to \"Bob is carrying:\", because, if I didn't, it would display \"Bob is not carrying:\" and then list all his inventory items.\n\nAlso, how do I make the first object prefix capitalized, ala \"An\", and add an \"and\" and period before and after the last object, respectively?\n\nI'm sorry I'm asking this complicated question, but I really, really suck at programming! Why else do you think I'm using an editor to make something as simple as a text adventure? :)\n\nYou're being a huge help! Thanks!\n\nShoal",
+      "EditableFormat": "bbcode",
+      "HTML": "What you gave me works, it just needs a little modification.<br/><br/>Here is what it displays:<br/><br/><blockquote><p>Bob is carrying:<br/>an object one !, an object two !, an object 3 !</p></blockquote><br/><br/>The \"an\"s were added by me as object prefixes. I also removed the new line after \"Bob is carrying\".<br/><br/>First of all, how do I get rid of the exclamation points and the space that preceeds them?<br/><br/>I also changed \"Bob is not carrying:\" to \"Bob is carrying:\", because, if I didn't, it would display \"Bob is not carrying:\" and then list all his inventory items.<br/><br/>Also, how do I make the first object prefix capitalized, ala \"An\", and add an \"and\" and period before and after the last object, respectively?<br/><br/>I'm sorry I'm asking this complicated question, but I really, really suck at programming! Why else do you think I'm using an editor to make something as simple as a text adventure? :)<br/><br/>You're being a huge help! Thanks!<br/><br/>Shoal",
+      "PostDate": "2003-08-09T19:31:44+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "276",
+      "UserId": 0,
+      "Username": "Shoal",
+      "UserAvatar": null,
+      "UserGravatar": "0ab398dfac55bda2c5330cc1a5921560",
+      "EditableText": "Be sure to see my reply above as well.\n\nI just discovered that since I didn't have any rooms to travel to, I didn't realize that it displays \"You can go [direction or place]\". :?\n\nDammit! It would be great if a feature could be added where you could edit those lines in a much easier fashion...\n\nI need it to say \"Bob can travel [direction or place]\".\n\nI know this all seems really stupid for something so small, but I want the players of my adventure to fall in love with the main character, not themselves. :(\n\nI promise the name of anyone who helps out will be in the credits, if that helps! :) Thanks!\n\nShoal",
+      "EditableFormat": "bbcode",
+      "HTML": "Be sure to see my reply above as well.<br/><br/>I just discovered that since I didn't have any rooms to travel to, I didn't realize that it displays \"You can go [direction or place]\". :?<br/><br/>Dammit! It would be great if a feature could be added where you could edit those lines in a much easier fashion...<br/><br/>I need it to say \"Bob can travel [direction or place]\".<br/><br/>I know this all seems really stupid for something so small, but I want the players of my adventure to fall in love with the main character, not themselves. :(<br/><br/>I promise the name of anyone who helps out will be in the credits, if that helps! :) Thanks!<br/><br/>Shoal",
+      "PostDate": "2003-08-09T21:26:22+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "280",
+      "UserId": 0,
+      "Username": "I think Im Dead",
+      "UserAvatar": null,
+      "UserGravatar": "662782b48efa4728f8d0773b83c01ddf",
+      "EditableText": "That's as simple as editing the room description format. The Quest help documentation goes into how to change this in the category \"How to... Customize Room Descriptions.\"\n\nBasically it involves modifying these pieces of code...\n\n[code:o82v52qf]\ndescription &#123;\n\tset string &lt;indescription; $gettag&#40;#quest&#46;currentroom#;indescription&#41;$&gt;\n\tif is &lt;#indescription#;&gt; then set string &lt;indescription; You are in&gt;\n\telse &#123;\n\t\tset numeric &lt;len; $lengthof&#40;#indescription#&#41;$&gt;\n\t\tset numeric &lt;len; %len%-1&gt;\n\t\tset string &lt;indescription; $left&#40;#indescription#;%len%&#41;$&gt;\n\t&#125;\n\tmsg &lt;#indescription# |b|cl#quest&#46;formatroom#|xb|cb&#46;&gt;\n\tif not is &lt;#quest&#46;doorways&#46;out#;&gt; then msg &lt;You can go out to #quest&#46;doorways&#46;out#&#46;&gt;\n\tif not is &lt;#quest&#46;doorways&#46;dirs#;&gt; then msg &lt;You can go #quest&#46;doorways&#46;dirs#&#46;&gt;\n\tif not is &lt;#quest&#46;doorways&#46;places#;&gt; then msg &lt;You can go to #quest&#46;doorways&#46;places#&#46;&gt;\n\tif not is &lt;#quest&#46;objects#;&gt; then msg &lt;You can see #quest&#46;formatobjects#&#46;&gt;\n\tmsg &lt;#quest&#46;lookdesc#&gt;\n&#125;\n[/code:o82v52qf]\n\nAnd putting it in your game definitions block.",
+      "EditableFormat": "bbcode",
+      "HTML": "That's as simple as editing the room description format. The Quest help documentation goes into how to change this in the category \"How to... Customize Room Descriptions.\"<br/><br/>Basically it involves modifying these pieces of code...<br/><br/><pre><code><br/>description &#123;<br/>\tset string &lt;indescription; $gettag&#40;#quest&#46;currentroom#;indescription&#41;$&gt;<br/>\tif is &lt;#indescription#;&gt; then set string &lt;indescription; You are in&gt;<br/>\telse &#123;<br/>\t\tset numeric &lt;len; $lengthof&#40;#indescription#&#41;$&gt;<br/>\t\tset numeric &lt;len; %len%-1&gt;<br/>\t\tset string &lt;indescription; $left&#40;#indescription#;%len%&#41;$&gt;<br/>\t&#125;<br/>\tmsg &lt;#indescription# |b|cl#quest&#46;formatroom#|xb|cb&#46;&gt;<br/>\tif not is &lt;#quest&#46;doorways&#46;out#;&gt; then msg &lt;You can go out to #quest&#46;doorways&#46;out#&#46;&gt;<br/>\tif not is &lt;#quest&#46;doorways&#46;dirs#;&gt; then msg &lt;You can go #quest&#46;doorways&#46;dirs#&#46;&gt;<br/>\tif not is &lt;#quest&#46;doorways&#46;places#;&gt; then msg &lt;You can go to #quest&#46;doorways&#46;places#&#46;&gt;<br/>\tif not is &lt;#quest&#46;objects#;&gt; then msg &lt;You can see #quest&#46;formatobjects#&#46;&gt;<br/>\tmsg &lt;#quest&#46;lookdesc#&gt;<br/>&#125;<br/></code></pre><br/><br/>And putting it in your game definitions block.",
+      "PostDate": "2003-08-09T23:00:23+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "281",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "Ah yes, forgot that if you don't have a prefix or suffix set then Quest will return an error and indicate it with an \"!\". You could replace:\n\n[code:28gkmz1o]\nif &#40; #&#40;quest&#46;thing&#41;&#58;prefix# &lt;&gt; &#41; then set &lt;ObjectName&#91;CurrentObject&#93;; #&#40;quest&#46;thing&#41;&#58;prefix# #ObjectName&#91;CurrentObject&#93;#&gt; \nif &#40; #&#40;quest&#46;thing&#41;&#58;suffix# &lt;&gt; &#41; then set &lt;ObjectName&#91;CurrentObject&#93;; #ObjectName&#91;CurrentObject&#93;# #&#40;quest&#46;thing&#41;&#58;suffix#&gt; \n[/code:28gkmz1o]\n\nwith\n\n[code:28gkmz1o]\nif &#40; #&#40;quest&#46;thing&#41;&#58;prefix# &lt;&gt; ! &#41; then set &lt;ObjectName&#91;CurrentObject&#93;; #&#40;quest&#46;thing&#41;&#58;prefix# #ObjectName&#91;CurrentObject&#93;#&gt; \nif &#40; #&#40;quest&#46;thing&#41;&#58;suffix# &lt;&gt; ! &#41; then set &lt;ObjectName&#91;CurrentObject&#93;; #ObjectName&#91;CurrentObject&#93;# #&#40;quest&#46;thing&#41;&#58;suffix#&gt; \n[/code:28gkmz1o]\n\nThis will leave a few ASL errors in your log though, but if you're not worried about that then it doesn't really matter.\n\nTo capitalise the \"An\", use the $capfirst$ function on the first item when printing the list. Replace the final loop with this:\n\n[code:28gkmz1o]\nfor &lt;i; 1; %CurrentObject%&gt; &#123; \n         if &#40; %i% = 1 &#41; then msg &lt;$capfirst&#40;#ObjectName&#91;i&#93;#&#41;$&gt; else msg &lt;#ObjectName&#91;i&#93;#&gt;\n          \n         ' Add a comma after all but the last object printed \n         if &#40; %i% &lt;&gt; %CurrentObject% &#41; then msg &lt;, &gt; \n&#125;\n[/code:28gkmz1o]\n\n\nAs for \"Bob can go (direction or place)\" you need to provide your own description-generating routine. You can do this using with \"description\" script in the \"define game\" block. For example:\n\n[code:28gkmz1o]\ndescription &#123;\n\tset string &lt;indescription; $gettag&#40;#quest&#46;currentroom#;indescription&#41;$&gt;\n\tif is &lt;#indescription#;&gt; then set string &lt;indescription; You are in&gt;\n\telse &#123;\n\t\tset numeric &lt;len; $lengthof&#40;#indescription#&#41;$&gt;\n\t\tset numeric &lt;len; %len%-1&gt;\n\t\tset string &lt;indescription; $left&#40;#indescription#;%len%&#41;$&gt;\n\t&#125;\n\tmsg &lt;#indescription# |b|cl#quest&#46;formatroom#|xb|cb&#46;&gt;\n\tif &#40; #quest&#46;doorways&#46;out# &lt;&gt; &#41; then msg &lt;Bob can go out to #quest&#46;doorways&#46;out#&#46;&gt;\n\tif &#40; #quest&#46;doorways&#46;dirs# &lt;&gt; &#41; then msg &lt;Bob can go #quest&#46;doorways&#46;dirs#&#46;&gt;\n\tif &#40; #quest&#46;doorways&#46;places# &lt;&gt; &#41; then msg &lt;Bob can go to #quest&#46;doorways&#46;places#&#46;&gt;\n\tif &#40; #quest&#46;objects# &lt;&gt; &#41; then msg &lt;Bob can see #quest&#46;formatobjects#&#46;&gt;\n\tmsg &lt;#quest&#46;lookdesc#&gt;\n&#125;\n[/code:28gkmz1o]",
+      "EditableFormat": "bbcode",
+      "HTML": "Ah yes, forgot that if you don't have a prefix or suffix set then Quest will return an error and indicate it with an \"!\". You could replace:<br/><br/><pre><code><br/>if &#40; #&#40;quest&#46;thing&#41;&#58;prefix# &lt;&gt; &#41; then set &lt;ObjectName&#91;CurrentObject&#93;; #&#40;quest&#46;thing&#41;&#58;prefix# #ObjectName&#91;CurrentObject&#93;#&gt; <br/>if &#40; #&#40;quest&#46;thing&#41;&#58;suffix# &lt;&gt; &#41; then set &lt;ObjectName&#91;CurrentObject&#93;; #ObjectName&#91;CurrentObject&#93;# #&#40;quest&#46;thing&#41;&#58;suffix#&gt; <br/></code></pre><br/><br/>with<br/><br/><pre><code><br/>if &#40; #&#40;quest&#46;thing&#41;&#58;prefix# &lt;&gt; ! &#41; then set &lt;ObjectName&#91;CurrentObject&#93;; #&#40;quest&#46;thing&#41;&#58;prefix# #ObjectName&#91;CurrentObject&#93;#&gt; <br/>if &#40; #&#40;quest&#46;thing&#41;&#58;suffix# &lt;&gt; ! &#41; then set &lt;ObjectName&#91;CurrentObject&#93;; #ObjectName&#91;CurrentObject&#93;# #&#40;quest&#46;thing&#41;&#58;suffix#&gt; <br/></code></pre><br/><br/>This will leave a few ASL errors in your log though, but if you're not worried about that then it doesn't really matter.<br/><br/>To capitalise the \"An\", use the $capfirst$ function on the first item when printing the list. Replace the final loop with this:<br/><br/><pre><code><br/>for &lt;i; 1; %CurrentObject%&gt; &#123; <br/>         if &#40; %i% = 1 &#41; then msg &lt;$capfirst&#40;#ObjectName&#91;i&#93;#&#41;$&gt; else msg &lt;#ObjectName&#91;i&#93;#&gt;<br/>          <br/>         ' Add a comma after all but the last object printed <br/>         if &#40; %i% &lt;&gt; %CurrentObject% &#41; then msg &lt;, &gt; <br/>&#125;<br/></code></pre><br/><br/><br/>As for \"Bob can go (direction or place)\" you need to provide your own description-generating routine. You can do this using with \"description\" script in the \"define game\" block. For example:<br/><br/><pre><code><br/>description &#123;<br/>\tset string &lt;indescription; $gettag&#40;#quest&#46;currentroom#;indescription&#41;$&gt;<br/>\tif is &lt;#indescription#;&gt; then set string &lt;indescription; You are in&gt;<br/>\telse &#123;<br/>\t\tset numeric &lt;len; $lengthof&#40;#indescription#&#41;$&gt;<br/>\t\tset numeric &lt;len; %len%-1&gt;<br/>\t\tset string &lt;indescription; $left&#40;#indescription#;%len%&#41;$&gt;<br/>\t&#125;<br/>\tmsg &lt;#indescription# |b|cl#quest&#46;formatroom#|xb|cb&#46;&gt;<br/>\tif &#40; #quest&#46;doorways&#46;out# &lt;&gt; &#41; then msg &lt;Bob can go out to #quest&#46;doorways&#46;out#&#46;&gt;<br/>\tif &#40; #quest&#46;doorways&#46;dirs# &lt;&gt; &#41; then msg &lt;Bob can go #quest&#46;doorways&#46;dirs#&#46;&gt;<br/>\tif &#40; #quest&#46;doorways&#46;places# &lt;&gt; &#41; then msg &lt;Bob can go to #quest&#46;doorways&#46;places#&#46;&gt;<br/>\tif &#40; #quest&#46;objects# &lt;&gt; &#41; then msg &lt;Bob can see #quest&#46;formatobjects#&#46;&gt;<br/>\tmsg &lt;#quest&#46;lookdesc#&gt;<br/>&#125;<br/></code></pre>",
+      "PostDate": "2003-08-09T23:01:32+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "282",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "Woops again, I missed out the previous \"|xn\" corrections from that new correction. I'm sure you can work it out though. Looks like this posting untested code thing is a bit of a false economy <!-- s:) --><img src=\"{SMILIES_PATH}/icon_e_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Woops again, I missed out the previous \"|xn\" corrections from that new correction. I'm sure you can work it out though. Looks like this posting untested code thing is a bit of a false economy <!-- s:) --><img src=\"{SMILIES_PATH}/icon_e_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2003-08-09T23:04:20+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "283",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "ITID beat me with the description thing by one minute, but we're saying the same thing.",
+      "EditableFormat": "bbcode",
+      "HTML": "ITID beat me with the description thing by one minute, but we're saying the same thing.",
+      "PostDate": "2003-08-09T23:05:43+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "285",
+      "UserId": 0,
+      "Username": "Shoal",
+      "UserAvatar": null,
+      "UserGravatar": "0ab398dfac55bda2c5330cc1a5921560",
+      "EditableText": "Okay, description stuff worked! Big thanks! :)\n\nHowever, the inventory code still has some problems. With what you provided me, the exclamation points are gone, but now a new line is created for every new object in Bob's inventory. Also, there is no \"and\" before the last inventory item.\n\nAlso, you mentioned errors in the ASL code. What did you mean?\n\nThanks,\n\nShoal",
+      "EditableFormat": "bbcode",
+      "HTML": "Okay, description stuff worked! Big thanks! :)<br/><br/>However, the inventory code still has some problems. With what you provided me, the exclamation points are gone, but now a new line is created for every new object in Bob's inventory. Also, there is no \"and\" before the last inventory item.<br/><br/>Also, you mentioned errors in the ASL code. What did you mean?<br/><br/>Thanks,<br/><br/>Shoal",
+      "PostDate": "2003-08-10T00:00:36+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "289",
+      "UserId": 0,
+      "Username": "I think Im Dead",
+      "UserAvatar": null,
+      "UserGravatar": "662782b48efa4728f8d0773b83c01ddf",
+      "EditableText": "It's probably not the easiest way of doing it but I'd suggest adding a section to the top of the inventory code, right after the for each object in &lt;inventory&gt;(or before to get a count first) that adds one to a numeric variable for each object in the inventory, then you can just test each variable's number and place an AND before the last one similar to the comma's after all the others.\n\nEh, the thoughts came out in my head right, but I'm fairly sure Gin effects something between the brain and mouth.",
+      "EditableFormat": "bbcode",
+      "HTML": "It's probably not the easiest way of doing it but I'd suggest adding a section to the top of the inventory code, right after the for each object in &lt;inventory&gt;(or before to get a count first) that adds one to a numeric variable for each object in the inventory, then you can just test each variable's number and place an AND before the last one similar to the comma's after all the others.<br/><br/>Eh, the thoughts came out in my head right, but I'm fairly sure Gin effects something between the brain and mouth.",
+      "PostDate": "2003-08-10T03:40:19+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "293",
+      "UserId": 0,
+      "Username": "Shoal",
+      "UserAvatar": null,
+      "UserGravatar": "0ab398dfac55bda2c5330cc1a5921560",
+      "EditableText": "I, uh, didn't understand any of that. I suck at programming, remember? Code scares me! I failed my basic programming class in my freshman year of college. :(\n\nI need concrete, fully written-out code example... :(\n\nThanks,\n\nShoal",
+      "EditableFormat": "bbcode",
+      "HTML": "I, uh, didn't understand any of that. I suck at programming, remember? Code scares me! I failed my basic programming class in my freshman year of college. :(<br/><br/>I need concrete, fully written-out code example... :(<br/><br/>Thanks,<br/><br/>Shoal",
+      "PostDate": "2003-08-10T05:57:55+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "294",
+      "UserId": 0,
+      "Username": "I think Im Dead",
+      "UserAvatar": null,
+      "UserGravatar": "662782b48efa4728f8d0773b83c01ddf",
+      "EditableText": "Ok it ain't pretty but here it is...\n\npaste this part alongside your other commands in the .asl file\n\n[code:1ilazirw]\n\ncommand &lt;inventory; inv; i&gt; &#123;\n\tset numeric &lt;inv-count; 0&gt;\n\tset numeric &lt;inv-total; 0&gt;\n\tfor each object in &lt;inventory&gt; set numeric &lt;inv-total; %inv-total% + 1&gt;\n\tif &#40; %inv-total% = 0 &#41; then set string &lt;inv-list; nothing&#46;|n&gt; else &#123;\n\t\tfor each object in &lt;inventory&gt; &#123;\n\t\t\tset numeric &lt;inv-count; %inv-count% + 1&gt;\n\t\t\tif property &lt;#quest&#46;thing#; prefix&gt; then set string &lt;inv-item; $objectproperty&#40;#quest&#46;thing#; prefix&#41;$ $displayname&#40;#quest&#46;thing#&#41;$&gt; else set string &lt;inv-item; $displayname&#40;#quest&#46;thing#&#41;$&gt;\n\t\t\tif property &lt;#quest&#46;thing#; suffix&gt; then set string &lt;inv-item; #inv-item# $objectproperty&#40;#quest&#46;thing#; suffix&#41;$&gt;\n\t\t\tproperty &lt;temp; %inv-count%=#inv-item#&gt;\n\t\t\tset string &lt;inv-item; &gt; \n\t\t&#125;\n\t\tfor &lt;inv-create; 1; %inv-total%&gt; if &#40; %inv-create% &lt;&gt; 1 &#41; and &#40; %inv-create% &lt;&gt; %inv-total% &#41; then set string &lt;inv-list; #inv-list#, $objectproperty&#40;temp; %inv-create%&#41;$&gt; else &#123;\n\t\t\tif &#40; %inv-create% = 1 &#41; and &#40; %inv-create% &lt;&gt; %inv-total% &#41; then set string &lt;inv-list; $objectproperty&#40;temp; %inv-create%&#41;$&gt;\n\t\t\tif &#40; %inv-create% = %inv-total% &#41; and &#40; %inv-create% &lt;&gt; 1 &#41; then set string &lt;inv-list; #inv-list# and $objectproperty&#40;temp; %inv-create%&#41;$&#46;|n&gt;\n\t\t\tif &#40; %inv-create% = 1 &#41; and &#40; %inv-create% = %inv-total% &#41; then set string &lt;inv-list; $objectproperty&#40;temp; %inv-create%&#41;$&#46;|n&gt;\n\t\t&#125;\n\t&#125;\nmsg &lt;Bob is carrying #inv-list#&gt;\n&#125;\n[/code:1ilazirw]\n\npaste this alongside where your rooms are defined, it's a temporary room, just there to make things easy to keep track of.\n\n[code:1ilazirw]\ndefine room &lt;temp&gt;\nend define\n[/code:1ilazirw]\n\nIt works fine for me, tested it a few times with no problems. Adds the comma's and the elusive 'and' in the right place. Have fun.",
+      "EditableFormat": "bbcode",
+      "HTML": "Ok it ain't pretty but here it is...<br/><br/>paste this part alongside your other commands in the .asl file<br/><br/><pre><code><br/><br/>command &lt;inventory; inv; i&gt; &#123;<br/>\tset numeric &lt;inv-count; 0&gt;<br/>\tset numeric &lt;inv-total; 0&gt;<br/>\tfor each object in &lt;inventory&gt; set numeric &lt;inv-total; %inv-total% + 1&gt;<br/>\tif &#40; %inv-total% = 0 &#41; then set string &lt;inv-list; nothing&#46;|n&gt; else &#123;<br/>\t\tfor each object in &lt;inventory&gt; &#123;<br/>\t\t\tset numeric &lt;inv-count; %inv-count% + 1&gt;<br/>\t\t\tif property &lt;#quest&#46;thing#; prefix&gt; then set string &lt;inv-item; $objectproperty&#40;#quest&#46;thing#; prefix&#41;$ $displayname&#40;#quest&#46;thing#&#41;$&gt; else set string &lt;inv-item; $displayname&#40;#quest&#46;thing#&#41;$&gt;<br/>\t\t\tif property &lt;#quest&#46;thing#; suffix&gt; then set string &lt;inv-item; #inv-item# $objectproperty&#40;#quest&#46;thing#; suffix&#41;$&gt;<br/>\t\t\tproperty &lt;temp; %inv-count%=#inv-item#&gt;<br/>\t\t\tset string &lt;inv-item; &gt; <br/>\t\t&#125;<br/>\t\tfor &lt;inv-create; 1; %inv-total%&gt; if &#40; %inv-create% &lt;&gt; 1 &#41; and &#40; %inv-create% &lt;&gt; %inv-total% &#41; then set string &lt;inv-list; #inv-list#, $objectproperty&#40;temp; %inv-create%&#41;$&gt; else &#123;<br/>\t\t\tif &#40; %inv-create% = 1 &#41; and &#40; %inv-create% &lt;&gt; %inv-total% &#41; then set string &lt;inv-list; $objectproperty&#40;temp; %inv-create%&#41;$&gt;<br/>\t\t\tif &#40; %inv-create% = %inv-total% &#41; and &#40; %inv-create% &lt;&gt; 1 &#41; then set string &lt;inv-list; #inv-list# and $objectproperty&#40;temp; %inv-create%&#41;$&#46;|n&gt;<br/>\t\t\tif &#40; %inv-create% = 1 &#41; and &#40; %inv-create% = %inv-total% &#41; then set string &lt;inv-list; $objectproperty&#40;temp; %inv-create%&#41;$&#46;|n&gt;<br/>\t\t&#125;<br/>\t&#125;<br/>msg &lt;Bob is carrying #inv-list#&gt;<br/>&#125;<br/></code></pre><br/><br/>paste this alongside where your rooms are defined, it's a temporary room, just there to make things easy to keep track of.<br/><br/><pre><code><br/>define room &lt;temp&gt;<br/>end define<br/></code></pre><br/><br/>It works fine for me, tested it a few times with no problems. Adds the comma's and the elusive 'and' in the right place. Have fun.",
+      "PostDate": "2003-08-10T08:19:31+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "320",
+      "UserId": 0,
+      "Username": "Shoal",
+      "UserAvatar": null,
+      "UserGravatar": "0ab398dfac55bda2c5330cc1a5921560",
+      "EditableText": "I'll test the code out as soon as I can get the ASL file to run... the new DAT that Alex gave me hates me. It crashes my ASL everytime.\n\nThanks,\n\nShoal",
+      "EditableFormat": "bbcode",
+      "HTML": "I'll test the code out as soon as I can get the ASL file to run... the new DAT that Alex gave me hates me. It crashes my ASL everytime.<br/><br/>Thanks,<br/><br/>Shoal",
+      "PostDate": "2003-08-11T12:49:47+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "321",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "Hmm, I sent you a QDK.DAT for QDK 3.5 Beta, but I see you're actually using QDK 3.12, so this will be the reason you're having problems I think. I'll send you a corrected QDK.DAT for QDK 3.12 later on today.",
+      "EditableFormat": "bbcode",
+      "HTML": "Hmm, I sent you a QDK.DAT for QDK 3.5 Beta, but I see you're actually using QDK 3.12, so this will be the reason you're having problems I think. I'll send you a corrected QDK.DAT for QDK 3.12 later on today.",
+      "PostDate": "2003-08-11T12:56:44+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

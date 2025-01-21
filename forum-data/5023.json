@@ -1,0 +1,83 @@
+{
+  "Topic": {
+    "TopicId": "5023",
+    "ForumId": "18",
+    "Title": "How to use display verbs and inventory verbs effectively",
+    "LastUpdated": "2016-06-24T08:16:28+01:00",
+    "ReplyCount": 5
+  },
+  "Posts": [
+    {
+      "PostId": "34510",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "When you play a text adventure using Quest, there will usually be a set of panels on the right. As well as the compass rose, there will be lists of objects in the current location and in your inventory. If you click on an object, buttons will appear giving short-cuts to commands with the object. These are display verbs and inventory verbs.\n\n\n[size=150:1c95zaae][b:1c95zaae][i:1c95zaae]Adding And Removing Verbs[/i:1c95zaae][/b:1c95zaae][/size:1c95zaae]\n\nThere is a simple way to change the list of verbs for an object. On the Object tab, at the bottom, is a section called &quot;Display verbs&quot;. You can add and remove as appropriate. For example, if an object cannot be picked up, remove the &quot;Take&quot; entry from the display verbs.\n\nBy the way you can add anything you like here, even if it makes no sense to Quest. It is, therefore, a good idea when playing through your game to click on each verb for every object to see how Quest responds (if it can be picked up, do it for both in the inventory and in the room).\n\nChanging the object type on the Setup tab will also change the verbs. Changing it to a male character, for example, will change the displayer verbs to &quot;Look at&quot; and &quot;Speak to&quot;, rather than &quot;Look at&quot; and &quot;Take&quot;.\n\nWhen you add a verb to an object via the Verb tab, Quest will automatically add that verb to both the display verbs and the inventory verb. You can stop it doing that by unticking the &quot;Automatically generate object display verb lists&quot; box on the Room Descriptions tab (I do not know why either) of the game object. I prefer to do this, as it gives you full control over the verbs that will be shown. You can also stop verbs being generated automatically for a specific item by ticking the box on the Object tab for that object.\n\n\n[size=150:1c95zaae][b:1c95zaae][i:1c95zaae]Adding And Removing Verbs On The Fly[/i:1c95zaae][/b:1c95zaae][/size:1c95zaae]\n\n[i:1c95zaae]Note: I have edited this (28/Jan/16) as it was pointed out the old method does not work consistently when playing on-line.[/i:1c95zaae]\n\nSo far so good, but what if you want verbs to change during the course of the game? Say there is a hat that can be worn, so you want a &quot;Wear&quot; verb, but when put on you want a &quot;Remove&quot; verb instead. The verbs are held in two string list attributes, displayverbs and inventoryverbs.\n\nThere are issues to be aware of. Firstly, automatically generated verbs are not in that list (another good reason to turn the feature off).\n\nSecondly, your object will only have those attributes if you have modified the lists on the Object tab. If you go to the Attributes tab, look for displayverbs in the list at the bottom. If it is in grey, your object is getting its list from its type, and if you try to add or remove something in the list during play, you will get this helpful message:\n\n[i:1c95zaae]Error running script&#058; Cannot modify the contents of this list as it is defined by an inherited type. Clone it before attempting to modify.[/i:1c95zaae]\n\nThirdly, the web player is not great at spotting when the list has changed, so might not update the display anyway.\n\n\n[size=150:1c95zaae][b:1c95zaae][i:1c95zaae]Coding...[/i:1c95zaae][/b:1c95zaae][/size:1c95zaae]\n\nSo how do you actually add and remove verbs? Let us suppose we have an object called &quot;hat&quot;, and we want to add a &quot;Wear&quot; verb to the inventory list. The safe approach is to create a new list each time. This is easily done with the Split function. This takes two strings, the first being a list of verbs, seperated by semi-colons, the second just a semi-colon, telling Quest what to break the first list on.\n[code:1c95zaae]hat&#46;inventoryverbs = Split(&quot;look at;Drop;Wear&quot;, &quot;;&quot;)[/code:1c95zaae]\nThen when the hat is worn:\n[code:1c95zaae]hat&#46;inventoryverbs = Split(&quot;look at;Remove&quot;, &quot;;&quot;)[/code:1c95zaae]\n\nAlternatively, here are a set of functions you can paste into your game in [i:1c95zaae]File - Code view[/i:1c95zaae]. These will let you add and remove single verbs.\n[code:1c95zaae]  &lt;function name=&quot;AddDisplayVerb&quot; parameters=&quot;c, s&quot;&gt;\n    if (not ListContains(c&#46;displayverbs, s)) {\n      s2 = Join(c&#46;displayverbs, &quot;|&quot;) + &quot;|&quot;  + s\n      c&#46;displayverbs = Split(s2, &quot;|&quot;)\n    }\n  &lt;/function&gt;\n  \n  &lt;function name=&quot;RemoveDisplayVerb&quot; parameters=&quot;c, s&quot;&gt;\n    a = NewStringList()\n    foreach (s2, c&#46;displayverbs) {\n      if (not s2 = s) {\n        list add (a, s2)\n      }\n    }\n    c&#46;displayverbs = a\n  &lt;/function&gt;\n  \n    &lt;function name=&quot;AddInventoryVerb&quot; parameters=&quot;c, s&quot;&gt;\n    if (not ListContains(c&#46;inventoryverbs, s)) {\n      s2 = Join(c&#46;inventoryverbs, &quot;|&quot;) + &quot;|&quot;  + s\n      c&#46;inventoryverbs= Split(s2, &quot;|&quot;)\n    }\n  &lt;/function&gt;\n  \n  &lt;function name=&quot;RemoveInventoryVerb&quot; parameters=&quot;c, s&quot;&gt;\n    a = NewStringList()\n    foreach (s2, c&#46;inventoryverbs) {\n      if (not s2 = s) {\n        list add (a, s2)\n      }\n    }\n    c&#46;inventoryverbs= a\n  &lt;/function&gt;[/code:1c95zaae]\nNow you can do:\n[code:1c95zaae]AddInventoryVerb(hat, &quot;Wear&quot;)[/code:1c95zaae]\nUsing this technique you can have a game where an object's verbs are dynamically assigned and always make sense, making life much easier, and therefore more enjoyable, for the player.",
+      "EditableFormat": "bbcode",
+      "HTML": "When you play a text adventure using Quest, there will usually be a set of panels on the right. As well as the compass rose, there will be lists of objects in the current location and in your inventory. If you click on an object, buttons will appear giving short-cuts to commands with the object. These are display verbs and inventory verbs.<br/><br/><br/><span style=\"font-size:150\"><span style=\"font-weight:bold;\"><span style=\"font-style:italic;\">Adding And Removing Verbs</span></span></span><br/><br/>There is a simple way to change the list of verbs for an object. On the Object tab, at the bottom, is a section called &quot;Display verbs&quot;. You can add and remove as appropriate. For example, if an object cannot be picked up, remove the &quot;Take&quot; entry from the display verbs.<br/><br/>By the way you can add anything you like here, even if it makes no sense to Quest. It is, therefore, a good idea when playing through your game to click on each verb for every object to see how Quest responds (if it can be picked up, do it for both in the inventory and in the room).<br/><br/>Changing the object type on the Setup tab will also change the verbs. Changing it to a male character, for example, will change the displayer verbs to &quot;Look at&quot; and &quot;Speak to&quot;, rather than &quot;Look at&quot; and &quot;Take&quot;.<br/><br/>When you add a verb to an object via the Verb tab, Quest will automatically add that verb to both the display verbs and the inventory verb. You can stop it doing that by unticking the &quot;Automatically generate object display verb lists&quot; box on the Room Descriptions tab (I do not know why either) of the game object. I prefer to do this, as it gives you full control over the verbs that will be shown. You can also stop verbs being generated automatically for a specific item by ticking the box on the Object tab for that object.<br/><br/><br/><span style=\"font-size:150\"><span style=\"font-weight:bold;\"><span style=\"font-style:italic;\">Adding And Removing Verbs On The Fly</span></span></span><br/><br/><span style=\"font-style:italic;\">Note: I have edited this (28/Jan/16) as it was pointed out the old method does not work consistently when playing on-line.</span><br/><br/>So far so good, but what if you want verbs to change during the course of the game? Say there is a hat that can be worn, so you want a &quot;Wear&quot; verb, but when put on you want a &quot;Remove&quot; verb instead. The verbs are held in two string list attributes, displayverbs and inventoryverbs.<br/><br/>There are issues to be aware of. Firstly, automatically generated verbs are not in that list (another good reason to turn the feature off).<br/><br/>Secondly, your object will only have those attributes if you have modified the lists on the Object tab. If you go to the Attributes tab, look for displayverbs in the list at the bottom. If it is in grey, your object is getting its list from its type, and if you try to add or remove something in the list during play, you will get this helpful message:<br/><br/><span style=\"font-style:italic;\">Error running script&#058; Cannot modify the contents of this list as it is defined by an inherited type. Clone it before attempting to modify.</span><br/><br/>Thirdly, the web player is not great at spotting when the list has changed, so might not update the display anyway.<br/><br/><br/><span style=\"font-size:150\"><span style=\"font-weight:bold;\"><span style=\"font-style:italic;\">Coding...</span></span></span><br/><br/>So how do you actually add and remove verbs? Let us suppose we have an object called &quot;hat&quot;, and we want to add a &quot;Wear&quot; verb to the inventory list. The safe approach is to create a new list each time. This is easily done with the Split function. This takes two strings, the first being a list of verbs, seperated by semi-colons, the second just a semi-colon, telling Quest what to break the first list on.<br/><pre><code>hat&#46;inventoryverbs = Split(&quot;look at;Drop;Wear&quot;, &quot;;&quot;)</code></pre><br/>Then when the hat is worn:<br/><pre><code>hat&#46;inventoryverbs = Split(&quot;look at;Remove&quot;, &quot;;&quot;)</code></pre><br/><br/>Alternatively, here are a set of functions you can paste into your game in <span style=\"font-style:italic;\">File - Code view</span>. These will let you add and remove single verbs.<br/><pre><code>  &lt;function name=&quot;AddDisplayVerb&quot; parameters=&quot;c, s&quot;&gt;<br/>    if (not ListContains(c&#46;displayverbs, s)) {<br/>      s2 = Join(c&#46;displayverbs, &quot;|&quot;) + &quot;|&quot;  + s<br/>      c&#46;displayverbs = Split(s2, &quot;|&quot;)<br/>    }<br/>  &lt;/function&gt;<br/>  <br/>  &lt;function name=&quot;RemoveDisplayVerb&quot; parameters=&quot;c, s&quot;&gt;<br/>    a = NewStringList()<br/>    foreach (s2, c&#46;displayverbs) {<br/>      if (not s2 = s) {<br/>        list add (a, s2)<br/>      }<br/>    }<br/>    c&#46;displayverbs = a<br/>  &lt;/function&gt;<br/>  <br/>    &lt;function name=&quot;AddInventoryVerb&quot; parameters=&quot;c, s&quot;&gt;<br/>    if (not ListContains(c&#46;inventoryverbs, s)) {<br/>      s2 = Join(c&#46;inventoryverbs, &quot;|&quot;) + &quot;|&quot;  + s<br/>      c&#46;inventoryverbs= Split(s2, &quot;|&quot;)<br/>    }<br/>  &lt;/function&gt;<br/>  <br/>  &lt;function name=&quot;RemoveInventoryVerb&quot; parameters=&quot;c, s&quot;&gt;<br/>    a = NewStringList()<br/>    foreach (s2, c&#46;inventoryverbs) {<br/>      if (not s2 = s) {<br/>        list add (a, s2)<br/>      }<br/>    }<br/>    c&#46;inventoryverbs= a<br/>  &lt;/function&gt;</code></pre><br/>Now you can do:<br/><pre><code>AddInventoryVerb(hat, &quot;Wear&quot;)</code></pre><br/>Using this technique you can have a game where an object's verbs are dynamically assigned and always make sense, making life much easier, and therefore more enjoyable, for the player.",
+      "PostDate": "2015-02-04T10:00:10+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "34511",
+      "UserId": 0,
+      "Username": "Silver",
+      "UserAvatar": null,
+      "UserGravatar": "13024be5ccbb463906b024d5bd3cb5e8",
+      "EditableText": "Thanks for that. It often puzzled me when playing games with clickable objects that you could click one of the verbs and it would return a negative. \n\nNot related to this but similarly to being able to remove a verb that isn't there I found it very helpful that you can stop timers that aren't running; which is useful if a script employs several timers sequentially but you want the one running to stop but have no way of checking which it is.\n\nThat sentence was probably longer than it needed to be.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks for that. It often puzzled me when playing games with clickable objects that you could click one of the verbs and it would return a negative. <br/><br/>Not related to this but similarly to being able to remove a verb that isn't there I found it very helpful that you can stop timers that aren't running; which is useful if a script employs several timers sequentially but you want the one running to stop but have no way of checking which it is.<br/><br/>That sentence was probably longer than it needed to be.",
+      "PostDate": "2015-02-04T10:20:20+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40933",
+      "UserId": 0,
+      "Username": "Quantus",
+      "UserAvatar": null,
+      "UserGravatar": "35a21115ef82667ce2865ae6db5011e6",
+      "EditableText": "The above code works for me, but I have to drop the item and pick it back up for the new verbs to show up.  How do I get it to change the verbs list while it's in my inventory without dropping it?",
+      "EditableFormat": "bbcode",
+      "HTML": "The above code works for me, but I have to drop the item and pick it back up for the new verbs to show up.  How do I get it to change the verbs list while it's in my inventory without dropping it?",
+      "PostDate": "2016-01-24T18:00:26+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "41051",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Quantus, ivestigating further, it is clear that there is an issue here. I have updated the OP with a solution, which essentially is to give the object a new list, rather than modifying the existing one.",
+      "EditableFormat": "bbcode",
+      "HTML": "Quantus, ivestigating further, it is clear that there is an issue here. I have updated the OP with a solution, which essentially is to give the object a new list, rather than modifying the existing one.",
+      "PostDate": "2016-01-28T09:33:52+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "43696",
+      "UserId": 0,
+      "Username": "Deckrect",
+      "UserAvatar": null,
+      "UserGravatar": "13c7167a5f539c7d2d1ce248f7dbbdfe",
+      "EditableText": "Ok. But does anything changes if I plan using it only on objects in room which cannot be taken and case by case?",
+      "EditableFormat": "bbcode",
+      "HTML": "Ok. But does anything changes if I plan using it only on objects in room which cannot be taken and case by case?",
+      "PostDate": "2016-06-23T19:59:14+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "43712",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "You are better off using it on each object individually, and you can use it on any object.",
+      "EditableFormat": "bbcode",
+      "HTML": "You are better off using it on each object individually, and you can use it on any object.",
+      "PostDate": "2016-06-24T08:16:28+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

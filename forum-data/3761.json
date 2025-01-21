@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "3761",
+    "ForumId": "10",
+    "Title": "If Then Statements not working properly?",
+    "LastUpdated": "2013-06-29T07:10:28+01:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "25181",
+      "UserId": 0,
+      "Username": "lyteside",
+      "UserAvatar": null,
+      "UserGravatar": "8a1935c84e0128360167bbb363a419cc",
+      "EditableText": "I've been away for a while, but interested in using the new technology to create a game. I immediately encountered a problem with the if/then statements. I attached a pic for reference. There are three objects I'm using.\n\nBroom, Bed, Player\n\nWhen I do a standard if/else statement (checks for broom property, then checks for everything else), it works great.\n\nBut once I add the complexity of if else [if/else], it doesn't work great. The finally instruction doesn't work (it checks for the player, but it doesn't print my final message if the player condition isn't met). Any suggestions?",
+      "EditableFormat": "bbcode",
+      "HTML": "I've been away for a while, but interested in using the new technology to create a game. I immediately encountered a problem with the if/then statements. I attached a pic for reference. There are three objects I'm using.<br/><br/>Broom, Bed, Player<br/><br/>When I do a standard if/else statement (checks for broom property, then checks for everything else), it works great.<br/><br/>But once I add the complexity of if else [if/else], it doesn't work great. The finally instruction doesn't work (it checks for the player, but it doesn't print my final message if the player condition isn't met). Any suggestions?<div><a href=\"/attachment/648\">game.zip</a></div><div><img src=\"/attachment/647\" alt=\"Screen Shot 2013-06-27 at 2.50.02 PM.png\" /></div>",
+      "PostDate": "2013-06-27T22:59:03+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25184",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "You are using this pattern: &lt;pattern&gt;search for #object#&lt;/pattern&gt;\nSo if you search for an object that is not reachable for the player it prints the unresolved message. You should change it to\n&lt;pattern&gt;search for #text#&lt;/pattern&gt;\nIn the script do something like\n[code:lwab6egk]\nobject= GetObject(text)\nif (object=null){\n \tmsg(&quot;There is no &quot; + text +&quot; here&quot;))\n} else  {\n     if (object&#46;alias = &quot;broom&quot;) {\n&#46;&#46;&#46;\n[/code:lwab6egk]",
+      "EditableFormat": "bbcode",
+      "HTML": "You are using this pattern: &lt;pattern&gt;search for #object#&lt;/pattern&gt;<br/>So if you search for an object that is not reachable for the player it prints the unresolved message. You should change it to<br/>&lt;pattern&gt;search for #text#&lt;/pattern&gt;<br/>In the script do something like<br/><pre><code><br/>object= GetObject(text)<br/>if (object=null){<br/> \tmsg(&quot;There is no &quot; + text +&quot; here&quot;))<br/>} else  {<br/>     if (object&#46;alias = &quot;broom&quot;) {<br/>&#46;&#46;&#46;<br/></code></pre>",
+      "PostDate": "2013-06-28T07:16:22+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25189",
+      "UserId": 0,
+      "Username": "lyteside",
+      "UserAvatar": null,
+      "UserGravatar": "8a1935c84e0128360167bbb363a419cc",
+      "EditableText": "awesome! How would you tweak the code so that the player can type any alias of the object. Currently, that code only works if the player puts in the exact name of an object. <!-- s:( --><img src=\"{SMILIES_PATH}/icon_sad.gif\" alt=\":(\" title=\"Sad\" /><!-- s:( -->",
+      "EditableFormat": "bbcode",
+      "HTML": "awesome! How would you tweak the code so that the player can type any alias of the object. Currently, that code only works if the player puts in the exact name of an object. <!-- s:( --><img src=\"{SMILIES_PATH}/icon_sad.gif\" alt=\":(\" title=\"Sad\" /><!-- s:( -->",
+      "PostDate": "2013-06-29T00:34:47+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25190",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "Pertex' Code (I was helped too with this same thing, though it was~is for my combat system coding, hehe):\n\n(just replace the stuff as needed to match what you're doing in your game~coding)\n\n[code:2mm3sesu]enemy = GetObject (text)\nif (enemy = null) {\n  foreach (obj,AllObjects()) {\n    if (obj&#46;alias=text) {\n      enemy = obj\n    } else {\n      msg (&quot;There seemingly is no &quot; + text + &quot;here&#46;&quot;)\n    }\n  }\n}\n// the rest~continuation of the code, being able to use ' enemy ' now for it[/code:2mm3sesu]\n\nas the ' GetObject (text) ' searches for the NAME while if you use an ALIAS, which is what is seen by the game player~user and not the NAME, then you'll end up with quest not finding the object, ' enemy=null ' , as the game player~user types in the ALIAS. To get around this, Pertex sets up a way to search all objects in the game, ' if (enemy=null) { foreach (obj,AllObjects()) { ' , looking to see if those objects' ALIASES match the ALIAS that the game player~user typed in, ' if (obj.alias=text) ' , and if there's a match, then that variable name~label for the GetObject (text) is set to~as that searched object who's aliases matches the ALIAS that was typed in by the game player~user, ' enemy=obj ' . If there's no match, then there's a message saying it, ' msg (&quot;There seemingly is no &quot; + text + &quot;here.&quot;) ' . Also, the~this code is ready to be continued for that match and now set up variable name~label with what ever coding you want, ' // the rest~continuation of the code, being able to use ' enemy ' now for it ' .\n\n-------\n\nhere's an example of the first part of my combat system, so you can see how you can then continue the code using that variable name~label (in my case, it is ' enemy '):\n\n[code:2mm3sesu]&lt;command name=&quot;fight_command&quot;&gt;\n  &lt;pattern&gt;fight #text#&lt;/pattern&gt;\n  &lt;script&gt;\n    fight_function (game&#46;pov,text)\n  &lt;/script&gt;\n&lt;/command&gt;\n\n&lt;function name=&quot;fight_function&quot; parameters=&quot;self,text&quot;&gt;\n  enemy=GetObject(text)\n  if (enemy=null) {\n    foreach (obj,AllObjects()) {\n\t  if (obj&#46;alias=text) {\n\t    enemy=obj\n\t  } else {\n\t    msg (&quot;There seemingly is no &quot; + text + &quot; here&#46;&quot;)\n\t  }\n\t}\n  } else if (not check_reachable_function (enemy) = true) {\n    msg (&quot;There seemingly is no &quot; + enemy&#46;alias + &quot; here&#46;&quot;)\n  } else if (not DoesInherit (enemy,&quot;character_object_type&quot;)) {\n    msg (enemy&#46;alias + &quot;is seemingly not something that you can battle&#46;&quot;)\n  } else if (GetBoolean (enemy,&quot;hostile&quot;) = false) {\n    msg (enemy&#46;alias + &quot; is seemingly not something that you can battle&#46;&quot;)\n  } else if (GetBoolean (enemy,&quot;dead&quot;) = true) {\n    msg (enemy&#46;alias + &quot; is already dead&#46;&quot;)\n  } else {\n    battle_sequence_function (self,enemy)\n  }\n&lt;/function&gt;[/code:2mm3sesu]\n\nYou could put your script into the COMMAND's script, I chose to put the script into a separate function, which is &quot; called upon &quot; (activated) by the COMMAND's script (in code, it's simple the name of the function (and its parameters), ' fight_function (game.pov,text) '. In the GUI~Editor, it is the: Add a~new script -&gt; Scripts -&gt; Call function",
+      "EditableFormat": "bbcode",
+      "HTML": "Pertex' Code (I was helped too with this same thing, though it was~is for my combat system coding, hehe):<br/><br/>(just replace the stuff as needed to match what you're doing in your game~coding)<br/><br/><pre><code>enemy = GetObject (text)<br/>if (enemy = null) {<br/>  foreach (obj,AllObjects()) {<br/>    if (obj&#46;alias=text) {<br/>      enemy = obj<br/>    } else {<br/>      msg (&quot;There seemingly is no &quot; + text + &quot;here&#46;&quot;)<br/>    }<br/>  }<br/>}<br/>// the rest~continuation of the code, being able to use ' enemy ' now for it</code></pre><br/><br/>as the ' GetObject (text) ' searches for the NAME while if you use an ALIAS, which is what is seen by the game player~user and not the NAME, then you'll end up with quest not finding the object, ' enemy=null ' , as the game player~user types in the ALIAS. To get around this, Pertex sets up a way to search all objects in the game, ' if (enemy=null) { foreach (obj,AllObjects()) { ' , looking to see if those objects' ALIASES match the ALIAS that the game player~user typed in, ' if (obj.alias=text) ' , and if there's a match, then that variable name~label for the GetObject (text) is set to~as that searched object who's aliases matches the ALIAS that was typed in by the game player~user, ' enemy=obj ' . If there's no match, then there's a message saying it, ' msg (&quot;There seemingly is no &quot; + text + &quot;here.&quot;) ' . Also, the~this code is ready to be continued for that match and now set up variable name~label with what ever coding you want, ' // the rest~continuation of the code, being able to use ' enemy ' now for it ' .<br/><br/>-------<br/><br/>here's an example of the first part of my combat system, so you can see how you can then continue the code using that variable name~label (in my case, it is ' enemy '):<br/><br/><pre><code>&lt;command name=&quot;fight_command&quot;&gt;<br/>  &lt;pattern&gt;fight #text#&lt;/pattern&gt;<br/>  &lt;script&gt;<br/>    fight_function (game&#46;pov,text)<br/>  &lt;/script&gt;<br/>&lt;/command&gt;<br/><br/>&lt;function name=&quot;fight_function&quot; parameters=&quot;self,text&quot;&gt;<br/>  enemy=GetObject(text)<br/>  if (enemy=null) {<br/>    foreach (obj,AllObjects()) {<br/>\t  if (obj&#46;alias=text) {<br/>\t    enemy=obj<br/>\t  } else {<br/>\t    msg (&quot;There seemingly is no &quot; + text + &quot; here&#46;&quot;)<br/>\t  }<br/>\t}<br/>  } else if (not check_reachable_function (enemy) = true) {<br/>    msg (&quot;There seemingly is no &quot; + enemy&#46;alias + &quot; here&#46;&quot;)<br/>  } else if (not DoesInherit (enemy,&quot;character_object_type&quot;)) {<br/>    msg (enemy&#46;alias + &quot;is seemingly not something that you can battle&#46;&quot;)<br/>  } else if (GetBoolean (enemy,&quot;hostile&quot;) = false) {<br/>    msg (enemy&#46;alias + &quot; is seemingly not something that you can battle&#46;&quot;)<br/>  } else if (GetBoolean (enemy,&quot;dead&quot;) = true) {<br/>    msg (enemy&#46;alias + &quot; is already dead&#46;&quot;)<br/>  } else {<br/>    battle_sequence_function (self,enemy)<br/>  }<br/>&lt;/function&gt;</code></pre><br/><br/>You could put your script into the COMMAND's script, I chose to put the script into a separate function, which is &quot; called upon &quot; (activated) by the COMMAND's script (in code, it's simple the name of the function (and its parameters), ' fight_function (game.pov,text) '. In the GUI~Editor, it is the: Add a~new script -&gt; Scripts -&gt; Call function",
+      "PostDate": "2013-06-29T07:10:28+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

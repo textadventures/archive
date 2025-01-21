@@ -1,0 +1,131 @@
+{
+  "Topic": {
+    "TopicId": "3186",
+    "ForumId": "10",
+    "Title": "Changing the player UI to include commands",
+    "LastUpdated": "2012-10-06T08:45:16+01:00",
+    "ReplyCount": 9
+  },
+  "Posts": [
+    {
+      "PostId": "21309",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Is there a way to modify the player UI for custom commands? It is easy enough to do this with verbs related to specific objects, but nothing obvious for command without objects (look, wait, dance, jump, smell, listen, etc.). \n\nIdeally, I would like to see a &quot;Look&quot; button in the middle of the compass, a &quot;Wait&quot; button under &quot;Down&quot; and &quot;Out&quot;, and an area right of the where room-specific commands can go, analogous to the options for items.\n\nI guess otherwise have a The Room object that you can put verbs on that trigger the commands, but that seems considerably less slick.\n\nPart of the motivation here is to build a game that can be played only using the mouse, so can be converted readily to an App.",
+      "EditableFormat": "bbcode",
+      "HTML": "Is there a way to modify the player UI for custom commands? It is easy enough to do this with verbs related to specific objects, but nothing obvious for command without objects (look, wait, dance, jump, smell, listen, etc.). <br/><br/>Ideally, I would like to see a &quot;Look&quot; button in the middle of the compass, a &quot;Wait&quot; button under &quot;Down&quot; and &quot;Out&quot;, and an area right of the where room-specific commands can go, analogous to the options for items.<br/><br/>I guess otherwise have a The Room object that you can put verbs on that trigger the commands, but that seems considerably less slick.<br/><br/>Part of the motivation here is to build a game that can be played only using the mouse, so can be converted readily to an App.",
+      "PostDate": "2012-09-05T13:43:33+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21310",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "There was a threadwhere we discussed this problem some time ago. Can't find it any more. I think it's not possible to change the player UI but there is an issue for Q5.3 to add additional panes which are fully custimizable",
+      "EditableFormat": "bbcode",
+      "HTML": "There was a threadwhere we discussed this problem some time ago. Can't find it any more. I think it's not possible to change the player UI but there is an issue for Q5.3 to add additional panes which are fully custimizable",
+      "PostDate": "2012-09-05T14:02:26+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21390",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "I have had a play around to see what I could do for this, and here is the result:\n\n[attachment=0:281z9tot]<!-- ia0 -->EnvironmentDemo.aslx<!-- ia0 -->[/attachment:281z9tot]\n\nIt is a modification of the demo for the environment library, in the Ubiquious Items thread, and it add a &quot;This Location&quot; item, which is always present. The player can select it from the location, then click on &quot;Wait at&quot;, &quot;look in&quot;, etc. Go the the most eastern room, and it gets a &quot;Dance in&quot; option too,\n\nIt works fine, but how is it from a player perspective? Is it obvious what this is, and how to use it?",
+      "EditableFormat": "bbcode",
+      "HTML": "I have had a play around to see what I could do for this, and here is the result:<br/><br/><div><a href=\"/attachment/363\">EnvironmentDemo.aslx</a></div><br/><br/>It is a modification of the demo for the environment library, in the Ubiquious Items thread, and it add a &quot;This Location&quot; item, which is always present. The player can select it from the location, then click on &quot;Wait at&quot;, &quot;look in&quot;, etc. Go the the most eastern room, and it gets a &quot;Dance in&quot; option too,<br/><br/>It works fine, but how is it from a player perspective? Is it obvious what this is, and how to use it?",
+      "PostDate": "2012-09-17T13:15:22+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21391",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "Nice idea. There is only one problem for the player: he always must  click on &quot;This location&quot; to see the actual buttons for this room.\n\nWhat about this solution? I changed DoShowRoomDescription in envirolib.aslx and I added a modified GetTaggedName function to it. Now in the first line of the roomdescription (you are in) the name/alias of the room is a link, which calls the verbs of this_location.",
+      "EditableFormat": "bbcode",
+      "HTML": "Nice idea. There is only one problem for the player: he always must  click on &quot;This location&quot; to see the actual buttons for this room.<br/><br/>What about this solution? I changed DoShowRoomDescription in envirolib.aslx and I added a modified GetTaggedName function to it. Now in the first line of the roomdescription (you are in) the name/alias of the room is a link, which calls the verbs of this_location.<div><a href=\"/attachment/365\">test.zip</a></div>",
+      "PostDate": "2012-09-17T13:48:53+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21415",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "That does not work properly. Your link will be something like this:\n\n[code:103iuuup]&lt;object id='this_location' verbs=&quot;Wait at/Look at&quot;&gt;Room in a Building&lt;/object&gt;[/code:103iuuup]\n\nThe problem is that the id attribute is not used, and Quest tries to do &quot;Wait at Room in a Building&quot;. Is there another attribute on the object tag that would work? I tried &quot;name&quot;, and that fails too.",
+      "EditableFormat": "bbcode",
+      "HTML": "That does not work properly. Your link will be something like this:<br/><br/><pre><code>&lt;object id='this_location' verbs=&quot;Wait at/Look at&quot;&gt;Room in a Building&lt;/object&gt;</code></pre><br/><br/>The problem is that the id attribute is not used, and Quest tries to do &quot;Wait at Room in a Building&quot;. Is there another attribute on the object tag that would work? I tried &quot;name&quot;, and that fails too.",
+      "PostDate": "2012-09-19T15:58:13+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21416",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "Hmmm, are you sure?  Quest says  &quot;Wait at Room in a Building&quot; but internal it is working with this_location. Here is a screenshot where it shows that &quot;wait at&quot; and &quot;help for&quot; are working.\n[attachment=0:3tmyt4db]<!-- ia0 -->sshot-1.png<!-- ia0 -->[/attachment:3tmyt4db]",
+      "EditableFormat": "bbcode",
+      "HTML": "Hmmm, are you sure?  Quest says  &quot;Wait at Room in a Building&quot; but internal it is working with this_location. Here is a screenshot where it shows that &quot;wait at&quot; and &quot;help for&quot; are working.<br/><div><img src=\"/attachment/369\" alt=\"sshot-1.png\" /></div>",
+      "PostDate": "2012-09-19T18:08:23+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21419",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "This is what I see:\n[attachment=0:2uakwsen]<!-- ia0 -->roominabuilding.png<!-- ia0 -->[/attachment:2uakwsen]\n\nThe list of verbs appears as it should, and using the &quot;This Location&quot; object from the pane on the right behaves as it should. I am using build 5.2.4515.24532 by the way.",
+      "EditableFormat": "bbcode",
+      "HTML": "This is what I see:<br/><div><img src=\"/attachment/370\" alt=\"roominabuilding.png\" /></div><br/><br/>The list of verbs appears as it should, and using the &quot;This Location&quot; object from the pane on the right behaves as it should. I am using build 5.2.4515.24532 by the way.",
+      "PostDate": "2012-09-20T08:43:58+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21420",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "Ah ok, I am working with 5.3",
+      "EditableFormat": "bbcode",
+      "HTML": "Ah ok, I am working with 5.3",
+      "PostDate": "2012-09-20T09:47:00+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21502",
+      "UserId": 0,
+      "Username": "leftycool",
+      "UserAvatar": null,
+      "UserGravatar": "1ab0c738257443fbc7e6664f34c64ffc",
+      "EditableText": "this looks like a good thread to ask in:\nI want to create a new verb that becomes accessible to the player once a flag is raised. \nI can find the add verb screen but I am not sure what information I fill in as there are several unlabelled entry fields. \nis there a page in the documentation which has a step-by-step for creating verbs?\nthanks in advance.",
+      "EditableFormat": "bbcode",
+      "HTML": "this looks like a good thread to ask in:<br/>I want to create a new verb that becomes accessible to the player once a flag is raised. <br/>I can find the add verb screen but I am not sure what information I fill in as there are several unlabelled entry fields. <br/>is there a page in the documentation which has a step-by-step for creating verbs?<br/>thanks in advance.",
+      "PostDate": "2012-10-03T10:13:56+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21516",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "This page gives some help:\n\n<!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/Using_Types\">http://quest5.net/wiki/Using_Types</a><!-- m -->",
+      "EditableFormat": "bbcode",
+      "HTML": "This page gives some help:<br/><br/><!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/Using_Types\">http://quest5.net/wiki/Using_Types</a><!-- m -->",
+      "PostDate": "2012-10-06T08:45:16+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

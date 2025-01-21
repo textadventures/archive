@@ -1,0 +1,83 @@
+{
+  "Topic": {
+    "TopicId": "4837",
+    "ForumId": "10",
+    "Title": "evaluating which attribute is highest out of a group",
+    "LastUpdated": "2014-11-29T17:05:29+00:00",
+    "ReplyCount": 5
+  },
+  "Posts": [
+    {
+      "PostId": "32157",
+      "UserId": 0,
+      "Username": "ilta",
+      "UserAvatar": null,
+      "UserGravatar": "6023b96e1f2128d6f9b0116742748686",
+      "EditableText": "Hi all!\n\nI've got a sticky programming question.\n\nIn my game, there's a scene where the player is in a car and can go in any of the four compass directions. Theoretically they could travel 15 times (either in one direction, or in some combination), though it's unlikely they will actually bother to go more than 3 before getting bored and doing something else.\n\nEach time they travel in one direction, an attribute in the player object ticks up from 0:\n\ndrove_n\ndrove_e\ndrove_s\ndrove_w\n\nLater on, I'd like to be able to report back to them which direction they traveled the most (ie which attribute is highest of the four). If they tie, that's fine, it could either report the tie (&quot;you drove mostly north and south&quot;) or it could report &quot;you didn't travel in any one particular direction&quot;.\n\nAnyone have any ideas how to go about doing this? Is there a &quot;compare values&quot; function that could work for more than one variable at a time? I'm a little lost.\n\nThanks everyone!\n\n- Isaiah",
+      "EditableFormat": "bbcode",
+      "HTML": "Hi all!<br/><br/>I've got a sticky programming question.<br/><br/>In my game, there's a scene where the player is in a car and can go in any of the four compass directions. Theoretically they could travel 15 times (either in one direction, or in some combination), though it's unlikely they will actually bother to go more than 3 before getting bored and doing something else.<br/><br/>Each time they travel in one direction, an attribute in the player object ticks up from 0:<br/><br/>drove_n<br/>drove_e<br/>drove_s<br/>drove_w<br/><br/>Later on, I'd like to be able to report back to them which direction they traveled the most (ie which attribute is highest of the four). If they tie, that's fine, it could either report the tie (&quot;you drove mostly north and south&quot;) or it could report &quot;you didn't travel in any one particular direction&quot;.<br/><br/>Anyone have any ideas how to go about doing this? Is there a &quot;compare values&quot; function that could work for more than one variable at a time? I'm a little lost.<br/><br/>Thanks everyone!<br/><br/>- Isaiah",
+      "PostDate": "2014-11-29T09:57:00+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32160",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "The way I would do it is to use four separate objects, each with a common attribute, rather than four attributes on a single object. For example, instead of:\n\n[code:2o160zsj]&lt;object name=&quot;player&quot;&gt;\n    &lt;northcounter type=&quot;int&quot;&gt;0&lt;/northcounter&gt;\n    &lt;southcounter type=&quot;int&quot;&gt;0&lt;/southcounter&gt;\n    &lt;westcounter type=&quot;int&quot;&gt;0&lt;/westcounter&gt;\n    &lt;eastcounter type=&quot;int&quot;&gt;0&lt;/eastcounter&gt;\n&lt;/object&gt;[/code:2o160zsj]\nI would use:\n[code:2o160zsj]&lt;object name=&quot;northcounter&quot;&gt;\n    &lt;value type=&quot;int&quot;&gt;0&lt;/value&gt;\n&lt;object&gt;\n&lt;object name=&quot;southcounter&quot;&gt;\n    &lt;value type=&quot;int&quot;&gt;0&lt;/value&gt;\n&lt;object&gt;\n&lt;object name=&quot;westcounter&quot;&gt;\n    &lt;value type=&quot;int&quot;&gt;0&lt;/value&gt;\n&lt;object&gt;\n&lt;object name=&quot;eastcounter&quot;&gt;\n    &lt;value type=&quot;int&quot;&gt;0&lt;/value&gt;\n&lt;object&gt;[/code:2o160zsj]\nThe reason for that is twofold:\n1) You need to associate the direction with the value during the sort, so that when it's all sorted, you know which value corresponds to which object. So you'd need to combine the value and direction into some sort of structure anyway.\n2) There is a function in Quest called ObjectListSort (or ObjectListSortDescending), which sorts a list of objects based on the value of an attribute.\n\n[Note that this is an internal use of objects. These objects won't appear in any room or be accessible by the player in any way. They should live outside your rooms.]\n\nAssuming you have the objects set up with their values tallied, you could have code like:\n\n[code:2o160zsj]    \t// Create a list of the counters objects&#46;\n\t\tcounters = NewObjectList()\n\t\tlist add(counters, northcounter)\n\t\tlist add(counters, southcounter)\n\t\tlist add(counters, westcounter)\n\t\tlist add(counters, eastcounter)\n\t\t// Sort the list\n\t\tsortedcounters = ObjectListSortDescending(counters, &quot;value&quot;)\n\t\t// Grab the highest counters\n\t\tswitch (sortedcounters&#91;0&#93;) {\n\t\t\tcase (northcounter) {\n\t\t\t\tmsg(&quot;The north direction was the most&#46;&quot;)\n\t\t\t}\n\t\t\tcase (southcounter) {\n\t\t\t\tmsg(&quot;The south direction was the most&#46;&quot;)\n\t\t\t}\n\t\t\tcase (westcounter) {\n\t\t\t\tmsg(&quot;The west directxion was the most&#46;&quot;)\n\t\t\t}\n\t\t\tcase (eastcounter) {\n\t\t\t\tmsg(&quot;The east direction was the most&#46;&quot;)\n\t\t\t}\n\t\t}[/code:2o160zsj]\nThe attached game shows this in action. The counter object value attributes have hard-coded values so you can see the sort results without having to move around in a set of rooms. (North = 0, South = 10, West = 5, East = 3) It not only dumps out the highest but shows the sorted counters list as well.\n\nI hope that helps!",
+      "EditableFormat": "bbcode",
+      "HTML": "The way I would do it is to use four separate objects, each with a common attribute, rather than four attributes on a single object. For example, instead of:<br/><br/><pre><code>&lt;object name=&quot;player&quot;&gt;<br/>    &lt;northcounter type=&quot;int&quot;&gt;0&lt;/northcounter&gt;<br/>    &lt;southcounter type=&quot;int&quot;&gt;0&lt;/southcounter&gt;<br/>    &lt;westcounter type=&quot;int&quot;&gt;0&lt;/westcounter&gt;<br/>    &lt;eastcounter type=&quot;int&quot;&gt;0&lt;/eastcounter&gt;<br/>&lt;/object&gt;</code></pre><br/>I would use:<br/><pre><code>&lt;object name=&quot;northcounter&quot;&gt;<br/>    &lt;value type=&quot;int&quot;&gt;0&lt;/value&gt;<br/>&lt;object&gt;<br/>&lt;object name=&quot;southcounter&quot;&gt;<br/>    &lt;value type=&quot;int&quot;&gt;0&lt;/value&gt;<br/>&lt;object&gt;<br/>&lt;object name=&quot;westcounter&quot;&gt;<br/>    &lt;value type=&quot;int&quot;&gt;0&lt;/value&gt;<br/>&lt;object&gt;<br/>&lt;object name=&quot;eastcounter&quot;&gt;<br/>    &lt;value type=&quot;int&quot;&gt;0&lt;/value&gt;<br/>&lt;object&gt;</code></pre><br/>The reason for that is twofold:<br/>1) You need to associate the direction with the value during the sort, so that when it's all sorted, you know which value corresponds to which object. So you'd need to combine the value and direction into some sort of structure anyway.<br/>2) There is a function in Quest called ObjectListSort (or ObjectListSortDescending), which sorts a list of objects based on the value of an attribute.<br/><br/>[Note that this is an internal use of objects. These objects won't appear in any room or be accessible by the player in any way. They should live outside your rooms.]<br/><br/>Assuming you have the objects set up with their values tallied, you could have code like:<br/><br/><pre><code>    \t// Create a list of the counters objects&#46;<br/>\t\tcounters = NewObjectList()<br/>\t\tlist add(counters, northcounter)<br/>\t\tlist add(counters, southcounter)<br/>\t\tlist add(counters, westcounter)<br/>\t\tlist add(counters, eastcounter)<br/>\t\t// Sort the list<br/>\t\tsortedcounters = ObjectListSortDescending(counters, &quot;value&quot;)<br/>\t\t// Grab the highest counters<br/>\t\tswitch (sortedcounters&#91;0&#93;) {<br/>\t\t\tcase (northcounter) {<br/>\t\t\t\tmsg(&quot;The north direction was the most&#46;&quot;)<br/>\t\t\t}<br/>\t\t\tcase (southcounter) {<br/>\t\t\t\tmsg(&quot;The south direction was the most&#46;&quot;)<br/>\t\t\t}<br/>\t\t\tcase (westcounter) {<br/>\t\t\t\tmsg(&quot;The west directxion was the most&#46;&quot;)<br/>\t\t\t}<br/>\t\t\tcase (eastcounter) {<br/>\t\t\t\tmsg(&quot;The east direction was the most&#46;&quot;)<br/>\t\t\t}<br/>\t\t}</code></pre><br/>The attached game shows this in action. The counter object value attributes have hard-coded values so you can see the sort results without having to move around in a set of rooms. (North = 0, South = 10, West = 5, East = 3) It not only dumps out the highest but shows the sorted counters list as well.<br/><br/>I hope that helps!<div><a href=\"/attachment/1086\">dirsort.aslx</a></div>",
+      "PostDate": "2014-11-29T10:47:13+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32162",
+      "UserId": 0,
+      "Username": "ilta",
+      "UserAvatar": null,
+      "UserGravatar": "6023b96e1f2128d6f9b0116742748686",
+      "EditableText": "that is amazing. Thank you so much! I'll give it a try.",
+      "EditableFormat": "bbcode",
+      "HTML": "that is amazing. Thank you so much! I'll give it a try.",
+      "PostDate": "2014-11-29T11:26:38+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32163",
+      "UserId": 0,
+      "Username": "ilta",
+      "UserAvatar": null,
+      "UserGravatar": "6023b96e1f2128d6f9b0116742748686",
+      "EditableText": "related question:\n\nif I want to output the number as well, what does that command look like? I assume it's similar to &quot;msg(&quot;something something is equal to&quot; object.value &quot;.&quot;)&quot; but I can't figure out the syntax quite right. Sorry I'm sure this is a noob question.",
+      "EditableFormat": "bbcode",
+      "HTML": "related question:<br/><br/>if I want to output the number as well, what does that command look like? I assume it's similar to &quot;msg(&quot;something something is equal to&quot; object.value &quot;.&quot;)&quot; but I can't figure out the syntax quite right. Sorry I'm sure this is a noob question.",
+      "PostDate": "2014-11-29T11:28:18+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32164",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Something like:\n\n[code:pshfqk4z]msg(&quot;You went north &quot; + northcounter&#46;value + &quot; times&#46;&quot;)[/code:pshfqk4z]",
+      "EditableFormat": "bbcode",
+      "HTML": "Something like:<br/><br/><pre><code>msg(&quot;You went north &quot; + northcounter&#46;value + &quot; times&#46;&quot;)</code></pre>",
+      "PostDate": "2014-11-29T12:03:50+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32183",
+      "UserId": 0,
+      "Username": "ilta",
+      "UserAvatar": null,
+      "UserGravatar": "6023b96e1f2128d6f9b0116742748686",
+      "EditableText": "thanks again!",
+      "EditableFormat": "bbcode",
+      "HTML": "thanks again!",
+      "PostDate": "2014-11-29T17:05:29+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

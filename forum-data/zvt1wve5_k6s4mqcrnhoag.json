@@ -1,0 +1,109 @@
+{
+  "Topic": {
+    "TopicId": "zvt1wve5_k6s4mqcrnhoag",
+    "ForumId": "10",
+    "Title": "How high can an integer go? (Solved)",
+    "LastUpdated": "2018-08-27T11:41:19.8603033Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "f5348658-1ddc-4cf8-9c34-a245177a48e7",
+      "UserId": 372999,
+      "Username": "Nakita Block",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3bae1b35d822d93e538260a988f64861?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I want to make a \"tycoon\" type of game but it's no use if a variable is badly limited on how high its number can get (cough BASIC) so that is pretty much my question. Does anyone know the range?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I want to make a \"tycoon\" type of game but it's no use if a variable is badly limited on how high its number can get (cough BASIC) so that is pretty much my question. Does anyone know the range?</p>\n\n",
+      "PostDate": "2018-08-27T11:41:19.8603033Z",
+      "LastEditDate": "2018-08-28T04:10:30.6950317Z",
+      "link": null
+    },
+    {
+      "PostId": "5c81a8f2-9a19-440d-b6d7-ea37132f4f57",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Looks like the range of integers is -2147483648 to 2147483647.\r\n\r\nIt shouldn't be that hard to implement a bignumber system, though. Have separate attributes for units, millions, billions, and so on. Use changescripts to automatically update the higher values, so that as soon as your units value goes over a million, it subtracts a million from itself and adds one to the millions attribute. Then you only need to worry about individual transactions that are over the limit (which is unlikely, because if you have something that costs over a billion, you could just make the price apply directly to the millions counter.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Looks like the range of integers is -2147483648 to 2147483647.</p>\n<p>It shouldn't be that hard to implement a bignumber system, though. Have separate attributes for units, millions, billions, and so on. Use changescripts to automatically update the higher values, so that as soon as your units value goes over a million, it subtracts a million from itself and adds one to the millions attribute. Then you only need to worry about individual transactions that are over the limit (which is unlikely, because if you have something that costs over a billion, you could just make the price apply directly to the millions counter.</p>\n\n",
+      "PostDate": "2018-08-27T12:28:16.5633047Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "d1fde593-bc9b-4574-bb77-a2b483658e65",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Or, as you're likely to be adding and subtracting numbers but not multiplying them or doing other arithmetic (outside of very special circumstances) you could go string-as-bignum. Make your attribute a string like \"1238959859885\" or whatever, and make a couple of functions like `AddBignum` and similar. If you can't figure out how to do this, there's plenty of people who'd be happy to help.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Or, as you're likely to be adding and subtracting numbers but not multiplying them or doing other arithmetic (outside of very special circumstances) you could go string-as-bignum. Make your attribute a string like \"1238959859885\" or whatever, and make a couple of functions like <code>AddBignum</code> and similar. If you can't figure out how to do this, there's plenty of people who'd be happy to help.</p>\n\n",
+      "PostDate": "2018-08-27T13:14:35.7007764Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "3863b25a-9cce-42cf-800e-838b797679bc",
+      "UserId": 372999,
+      "Username": "Nakita Block",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3bae1b35d822d93e538260a988f64861?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thank you for your replies. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thank you for your replies.</p>\n\n",
+      "PostDate": "2018-08-28T04:10:43.4432878Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "412c25f4-4c7d-4b0b-ad51-72572163188c",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Just out of curiosity, here's one method I might use for handing \"integers\" bigger than a couple of billion. This stores your numbers as strings of digits, so there's no theoretical maximum length. It then converts numbers to lists of numbers, 3 digits at a time, in order to do arithmetic.\r\n```\r\n<function name=\"AddBignum\" type=\"string\" parameters=\"numA, numB\"><![CDATA[\r\n  result = \"\"\r\n  partsA = NumberParts(numA)\r\n  partsB = NumberParts(numB)\r\n  negative = false\r\n  if (partsA[0] = partsB[0]) {\r\n    if (partsA[0] = -1) {\r\n      negative = true\r\n    }\r\n  }\r\n  else {\r\n    inverted = NewList()\r\n    list add (inverted, 1)\r\n    if (partsA[0] = -1) {\r\n      list remove (partsA, -1)\r\n      return (SubtractBignum (partsB, ListCombine(inverted, partsA)))\r\n    }\r\n    else {\r\n      list remove (partsB, -1)\r\n      return (SubtractBignum (partsA, ListCombine(inverted, partsB)))\r\n    }\r\n  }\r\n  remainder = 0\r\n  while (ListCount(partsA) * ListCount(partsB) > 1) {\r\n    result_part = remainder\r\n    if (ListCount (partsA) > 1) {\r\n      part = partsA[1]\r\n      list remove (partsA, part)\r\n      result_part = result_part + part\r\n    }\r\n    if (ListCount (partsB) > 1) {\r\n      part = partsB[1]\r\n      list remove (partsB, part)\r\n      result_part = result_part + part\r\n    }\r\n    remainder = result_part / 1000\r\n    result = Right( \"000\"+ToString (result_part), 3) + result\r\n  }\r\n  if (negative) {\r\n    result = \"-\" + result\r\n  }\r\n  return (result)\r\n]]></function>\r\n\r\n<function name=\"NumberParts\" type=\"list\" parameters=\"input\"><![CDATA[\r\n  switch (TypeOf (input)) {\r\n    case (\"list\") {\r\n      return (input)\r\n    }\r\n    case (\"string\") {\r\n      result = NewList()\r\n      if (Left (input, 1) = \"-\") {\r\n        list add (result, -1)\r\n        input = Mid (input, 2)\r\n      }\r\n      else {\r\n        list add (result, 1)\r\n      }\r\n      while (true) {\r\n        list add (result, ToInt (Right (input, 3)))\r\n        if (LengthOf (input) > 3) {\r\n          input = Left (input, LengthOf (input) - 3)\r\n        }\r\n        else {\r\n          if (ListCount (result) = 1) {\r\n            list add (result, 0)\r\n          }\r\n          return (result)\r\n        }\r\n      }\r\n    }\r\n    case (\"int\") {\r\n      result = NewList()\r\n      if (input < 0) {\r\n        input = 0 - input\r\n        list add (result, -1)\r\n      }\r\n      else {\r\n        list add (result, 1)\r\n      }\r\n      while (input > 0) {\r\n        list add (result, input % 1000)\r\n        input = input / 1000\r\n      }\r\n      if (ListCount (result) = 1) {\r\n        list add (result, 0)\r\n      }\r\n      return (result)\r\n    }\r\n    default {\r\n      error (\"ERROR: Can't convert \"+input+\" (\"+TypeOf(input)+\") to a bignum.\")\r\n    }\r\n  }\r\n]]></function>\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Just out of curiosity, here's one method I might use for handing \"integers\" bigger than a couple of billion. This stores your numbers as strings of digits, so there's no theoretical maximum length. It then converts numbers to lists of numbers, 3 digits at a time, in order to do arithmetic.</p>\n<pre><code>&lt;function name=\"AddBignum\" type=\"string\" parameters=\"numA, numB\"&gt;&lt;![CDATA[\n  result = \"\"\n  partsA = NumberParts(numA)\n  partsB = NumberParts(numB)\n  negative = false\n  if (partsA[0] = partsB[0]) {\n    if (partsA[0] = -1) {\n      negative = true\n    }\n  }\n  else {\n    inverted = NewList()\n    list add (inverted, 1)\n    if (partsA[0] = -1) {\n      list remove (partsA, -1)\n      return (SubtractBignum (partsB, ListCombine(inverted, partsA)))\n    }\n    else {\n      list remove (partsB, -1)\n      return (SubtractBignum (partsA, ListCombine(inverted, partsB)))\n    }\n  }\n  remainder = 0\n  while (ListCount(partsA) * ListCount(partsB) &gt; 1) {\n    result_part = remainder\n    if (ListCount (partsA) &gt; 1) {\n      part = partsA[1]\n      list remove (partsA, part)\n      result_part = result_part + part\n    }\n    if (ListCount (partsB) &gt; 1) {\n      part = partsB[1]\n      list remove (partsB, part)\n      result_part = result_part + part\n    }\n    remainder = result_part / 1000\n    result = Right( \"000\"+ToString (result_part), 3) + result\n  }\n  if (negative) {\n    result = \"-\" + result\n  }\n  return (result)\n]]&gt;&lt;/function&gt;\n\n&lt;function name=\"NumberParts\" type=\"list\" parameters=\"input\"&gt;&lt;![CDATA[\n  switch (TypeOf (input)) {\n    case (\"list\") {\n      return (input)\n    }\n    case (\"string\") {\n      result = NewList()\n      if (Left (input, 1) = \"-\") {\n        list add (result, -1)\n        input = Mid (input, 2)\n      }\n      else {\n        list add (result, 1)\n      }\n      while (true) {\n        list add (result, ToInt (Right (input, 3)))\n        if (LengthOf (input) &gt; 3) {\n          input = Left (input, LengthOf (input) - 3)\n        }\n        else {\n          if (ListCount (result) = 1) {\n            list add (result, 0)\n          }\n          return (result)\n        }\n      }\n    }\n    case (\"int\") {\n      result = NewList()\n      if (input &lt; 0) {\n        input = 0 - input\n        list add (result, -1)\n      }\n      else {\n        list add (result, 1)\n      }\n      while (input &gt; 0) {\n        list add (result, input % 1000)\n        input = input / 1000\n      }\n      if (ListCount (result) = 1) {\n        list add (result, 0)\n      }\n      return (result)\n    }\n    default {\n      error (\"ERROR: Can't convert \"+input+\" (\"+TypeOf(input)+\") to a bignum.\")\n    }\n  }\n]]&gt;&lt;/function&gt;\n</code></pre>\n\n",
+      "PostDate": "2018-08-28T17:37:28.4640824Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "35da7fca-fd41-45bb-8c6b-1e9571160343",
+      "UserId": 924,
+      "Username": "Pertex",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4cc1e52f99452e841ecf4cbee9eadde9?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Can't you use Double for larger numbers?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Can't you use Double for larger numbers?</p>\n\n",
+      "PostDate": "2018-08-29T06:42:40.4661991Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "6bd518b0-4f88-4c92-a863-483fcb806983",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Using floats sacrifices accuracy.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Using floats sacrifices accuracy.</p>\n\n",
+      "PostDate": "2018-08-29T07:53:11.7401997Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "1677",
+    "ForumId": "10",
+    "Title": "Differnet container/surface stuff",
+    "LastUpdated": "2007-05-01T19:02:37+01:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "13329",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "Right,\r\n\r\nso I do try and do bits to my game when I can.. I think the start looks quite nice myself.\r\nRounding off the edges to try and get a nice polished effect...\r\n\r\n.. Except, I have a surface (stump), and an object(bottle). When no object is on the surface it prints out the message &quot;durr&quot;, while putting the bottle onto the table produces: &quot;It contains: a bottle&quot;.\r\n\r\nI don't know about you, but I think a more general &quot;You see #objects# on the #quest.thing#&quot; or &quot;on the #quest.thing# you see #objects#&quot;.\r\n(ie 'You see a bottle on the table' or 'On the table you see a bottle')\r\n\r\nIs there any was I can do the second without parsing the #quest.command# variable and getting the object name.. and then getting the alias?\r\n\r\nHow about the first - without having to parse all the objects in the room and check if their parent property is the surface?\r\n\r\nI would prefer to use the built-in quest functionality rather then try to botch my own and end up rewriting the whole container substructure myself.\r\n\r\nAlex - any opinions on the matter, or perhaps knowledge on Quest which I may be looking in the wrong place for?",
+      "EditableFormat": "bbcode",
+      "HTML": "Right,<br/><br/>so I do try and do bits to my game when I can.. I think the start looks quite nice myself.<br/>Rounding off the edges to try and get a nice polished effect...<br/><br/>.. Except, I have a surface (stump), and an object(bottle). When no object is on the surface it prints out the message &quot;durr&quot;, while putting the bottle onto the table produces: &quot;It contains: a bottle&quot;.<br/><br/>I don't know about you, but I think a more general &quot;You see #objects# on the #quest.thing#&quot; or &quot;on the #quest.thing# you see #objects#&quot;.<br/>(ie 'You see a bottle on the table' or 'On the table you see a bottle')<br/><br/>Is there any was I can do the second without parsing the #quest.command# variable and getting the object name.. and then getting the alias?<br/><br/>How about the first - without having to parse all the objects in the room and check if their parent property is the surface?<br/><br/>I would prefer to use the built-in quest functionality rather then try to botch my own and end up rewriting the whole container substructure myself.<br/><br/>Alex - any opinions on the matter, or perhaps knowledge on Quest which I may be looking in the wrong place for?",
+      "PostDate": "2007-04-30T16:30:38+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "13331",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "oops..\r\n\r\nI thought I had posted something which was a mistake - but it wasn't...\r\nStill I deleted it, so I'll have to re-type the gist of it:\r\n\r\ncommand &lt;look on #@object#&gt; exec &lt;look on #@object#;normal&gt;\r\n^^ works\r\n\r\nlist &lt;#object# contains :&gt;\r\nsimply outputs;\r\n&quot; contains ...&quot;\r\n\r\nI guess I'm doing a &quot;list &lt;script&gt;&quot; then...",
+      "EditableFormat": "bbcode",
+      "HTML": "oops..<br/><br/>I thought I had posted something which was a mistake - but it wasn't...<br/>Still I deleted it, so I'll have to re-type the gist of it:<br/><br/>command &lt;look on #@object#&gt; exec &lt;look on #@object#;normal&gt;<br/>^^ works<br/><br/>list &lt;#object# contains :&gt;<br/>simply outputs;<br/>&quot; contains ...&quot;<br/><br/>I guess I'm doing a &quot;list &lt;script&gt;&quot; then...",
+      "PostDate": "2007-04-30T17:06:46+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "13333",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "Do types work with surfaces?\r\n\r\n[code:3pfpwc4q]define type &lt;surface_01&gt;\n    surface\n    add\n\n    list &lt;hello?&gt;\nend define\n\ndefine room &lt;one&gt;\n   look &lt;room!&gt;\n\ndefine object &lt;obj1&gt;\n    look &lt;a table&gt;\n    type &lt;surface_01&gt;\n    list empty exec &lt;look at obj3&gt;\nend define\n\ndefine object &lt;obj2&gt;\n    look &lt;a bottle&gt;\nend define\n\ndefine object &lt;obj3&gt;\n    parent &lt;obj1&gt;\n    properties &lt;invisible&gt;\nend define\n\nend define[/code:3pfpwc4q]\r\n\r\nWhen you try to '[b:3pfpwc4q]put obj2 on obj1[/b:3pfpwc4q]' it returns saying it cannot be done.\r\nWhen you try to '[b:3pfpwc4q]look on obj1[/b:3pfpwc4q]' it returns saying &quot;a table&quot; - and nothing else.\r\n\r\nOh, and the list empty works fine the way it is because while 'obj3' is on 'obj1#'.. It is invisible and the list /would/ be empty.. I like this operation because you can have cool things - like mats etc which /are/ objects and are easy to define as objects - but you wouldn't want to show up in a list etc.\r\n\r\n[b:3pfpwc4q]======DISASTER OVERTED=======[/b:3pfpwc4q]\r\nSeems that you need to add &quot;container&quot; into the type definition while not for object blocks (it's applied automatically to the object - but not if it's in a type definition.. I'm guessing this is because it's applied as a plain property in the types and if it's in the object definition it's applied as a hirarchial group of some sort).\r\n\r\n[b:3pfpwc4q]======EDIT 2======[/b:3pfpwc4q]\r\nErm, closing a surface gives the message &quot;it is already closed&quot;..\r\nI think surfaces should be neither opened or closed.. But perhaps, if a default should be selected - I'd vote for opened.",
+      "EditableFormat": "bbcode",
+      "HTML": "Do types work with surfaces?<br/><br/><pre><code>define type &lt;surface_01&gt;<br/>    surface<br/>    add<br/><br/>    list &lt;hello?&gt;<br/>end define<br/><br/>define room &lt;one&gt;<br/>   look &lt;room!&gt;<br/><br/>define object &lt;obj1&gt;<br/>    look &lt;a table&gt;<br/>    type &lt;surface_01&gt;<br/>    list empty exec &lt;look at obj3&gt;<br/>end define<br/><br/>define object &lt;obj2&gt;<br/>    look &lt;a bottle&gt;<br/>end define<br/><br/>define object &lt;obj3&gt;<br/>    parent &lt;obj1&gt;<br/>    properties &lt;invisible&gt;<br/>end define<br/><br/>end define</code></pre><br/><br/>When you try to '<span style=\"font-weight:bold;\">put obj2 on obj1</span>' it returns saying it cannot be done.<br/>When you try to '<span style=\"font-weight:bold;\">look on obj1</span>' it returns saying &quot;a table&quot; - and nothing else.<br/><br/>Oh, and the list empty works fine the way it is because while 'obj3' is on 'obj1#'.. It is invisible and the list /would/ be empty.. I like this operation because you can have cool things - like mats etc which /are/ objects and are easy to define as objects - but you wouldn't want to show up in a list etc.<br/><br/><span style=\"font-weight:bold;\">======DISASTER OVERTED=======</span><br/>Seems that you need to add &quot;container&quot; into the type definition while not for object blocks (it's applied automatically to the object - but not if it's in a type definition.. I'm guessing this is because it's applied as a plain property in the types and if it's in the object definition it's applied as a hirarchial group of some sort).<br/><br/><span style=\"font-weight:bold;\">======EDIT 2======</span><br/>Erm, closing a surface gives the message &quot;it is already closed&quot;..<br/>I think surfaces should be neither opened or closed.. But perhaps, if a default should be selected - I'd vote for opened.",
+      "PostDate": "2007-05-01T12:30:27+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "13337",
+      "UserId": 0,
+      "Username": "Elexxorine",
+      "UserAvatar": null,
+      "UserGravatar": "a220ee44d8fe2f07029cf1f61b98bf40",
+      "EditableText": "Make them 'open' and unclosable. Glad you worked it out yourself btw..... *hug*",
+      "EditableFormat": "bbcode",
+      "HTML": "Make them 'open' and unclosable. Glad you worked it out yourself btw..... *hug*",
+      "PostDate": "2007-05-01T19:02:37+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

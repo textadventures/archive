@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "sn63jmvpz02osg0fzzle9q",
+    "ForumId": "10",
+    "Title": "Trying to find text in a game for Cloak of Darkness example",
+    "LastUpdated": "2020-01-03T11:22:35.8372809Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "dd6eff09-5f22-4ec6-8894-cd238ad63d53",
+      "UserId": 454326,
+      "Username": "Brian5757",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/411c3e8cd4782d4a996f292940a61069?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm studying the 'cloak of darkness.asxl' game.\r\nIf I type 'listen' while being in any room other than the cloakroom room I get a message \"You can hear the rain pouring against the windows\". if I  type 'listen' while I'm  in the cloakroom I get the message \"It is quiet as a grave\"\r\nI can't find anywhere in the quest program the text \"You can hear the rain pouring against the windows\" in the interface type programming, but I can see it in the 'code view'. Is this text something that has to be added in the code view and is unable to be added to the interface type programming (drop down menus, tick boxes, etc)?\r\n\r\nThe command that activates it is 'print expression player.parent.listen'",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm studying the 'cloak of darkness.asxl' game.<br>\nIf I type 'listen' while being in any room other than the cloakroom room I get a message \"You can hear the rain pouring against the windows\". if I  type 'listen' while I'm  in the cloakroom I get the message \"It is quiet as a grave\"<br>\nI can't find anywhere in the quest program the text \"You can hear the rain pouring against the windows\" in the interface type programming, but I can see it in the 'code view'. Is this text something that has to be added in the code view and is unable to be added to the interface type programming (drop down menus, tick boxes, etc)?</p>\n<p>The command that activates it is 'print expression player.parent.listen'</p>\n\n",
+      "PostDate": "2020-01-03T11:22:35.8372809Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "03699de1-c96f-44f8-808e-b88ecfd7a283",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "`listen` is a custom attribute that only exists in that game, so there isn't a space for it in the GUI.\r\n\r\nIf you have the desktop version of Quest, you can go to the \"Attributes\" tab of an object to see all the attributes that are currently defined. It just gives a list of attribute names and their initial values, and you can add new attributes as you wish.\r\n\r\nThe expression you've found, `player.parent.listen` is a good example of using object references.\r\n* `player` is the object whose name is \"player\". It's an object, so you can follow it with a dot to access any of its attributes.\r\n* `player.parent` is a special attribute referring to the room the player is inside. The room is also an object, so you can add another dot to access its attributes.\r\n* `player.parent.listen` is the `listen` attribute of the current room.\r\n\r\nThe string \"You can hear the rain pouring against the windows.\" is the initial value of `foyer.listen`, while \"It is quiet as the grave...\" is the default displayed in a room that doesn't have a `listen` attribute.",
+      "EditableFormat": "markdown",
+      "HTML": "<p><code>listen</code> is a custom attribute that only exists in that game, so there isn't a space for it in the GUI.</p>\n<p>If you have the desktop version of Quest, you can go to the \"Attributes\" tab of an object to see all the attributes that are currently defined. It just gives a list of attribute names and their initial values, and you can add new attributes as you wish.</p>\n<p>The expression you've found, <code>player.parent.listen</code> is a good example of using object references.</p>\n<ul>\n<li><code>player</code> is the object whose name is \"player\". It's an object, so you can follow it with a dot to access any of its attributes.</li>\n<li><code>player.parent</code> is a special attribute referring to the room the player is inside. The room is also an object, so you can add another dot to access its attributes.</li>\n<li><code>player.parent.listen</code> is the <code>listen</code> attribute of the current room.</li>\n</ul>\n<p>The string \"You can hear the rain pouring against the windows.\" is the initial value of <code>foyer.listen</code>, while \"It is quiet as the grave...\" is the default displayed in a room that doesn't have a <code>listen</code> attribute.</p>\n\n",
+      "PostDate": "2020-01-03T12:17:00.6595413Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "3984db1e-1392-4514-adbc-3ec80413ab1c",
+      "UserId": 454326,
+      "Username": "Brian5757",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/411c3e8cd4782d4a996f292940a61069?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks mrangel.\r\nLooks like there is lots to learn but it will be worth it.\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks mrangel.<br>\nLooks like there is lots to learn but it will be worth it.</p>\n\n",
+      "PostDate": "2020-01-03T12:28:18.1093352Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "257fbb5e-465d-4954-b41c-187b69aa81eb",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "One thing: I wouldn't advise using `player` in code. It's not a problem here, but is a bad habit. Because if someone else is using your code as a reference, their player object might not be named `player`, which leads to the same problems being posted on the forums every month or so.\r\n\r\nIt would be more robust to use `pov`, an attribute of the `game` element which is a reference to the current player object. (You can set this attribute at the top of the game's \"Player\" tab).\r\nSo instead of `player.parent.listen`, it might be better to put `game.pov.parent.listen`; so that the code will continue working even if it's reused in a game where the player can switch between controlling different characters.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>One thing: I wouldn't advise using <code>player</code> in code. It's not a problem here, but is a bad habit. Because if someone else is using your code as a reference, their player object might not be named <code>player</code>, which leads to the same problems being posted on the forums every month or so.</p>\n<p>It would be more robust to use <code>pov</code>, an attribute of the <code>game</code> element which is a reference to the current player object. (You can set this attribute at the top of the game's \"Player\" tab).<br>\nSo instead of <code>player.parent.listen</code>, it might be better to put <code>game.pov.parent.listen</code>; so that the code will continue working even if it's reused in a game where the player can switch between controlling different characters.</p>\n\n",
+      "PostDate": "2020-01-03T17:48:37.6175903Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

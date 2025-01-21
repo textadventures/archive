@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "2849",
+    "ForumId": "10",
+    "Title": "GetDisplayNameLink",
+    "LastUpdated": "2012-03-05T09:51:02+00:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "19717",
+      "UserId": 0,
+      "Username": "MerchantToo",
+      "UserAvatar": null,
+      "UserGravatar": "4473548b882c95d13eed24acd916e029",
+      "EditableText": "Is there a version of this function that I can pass in an exit? I got the exit from the a call to GetObject(GetExitByLink(CurrentRoom, DestinationRoom)). I can't figure out how to do this. It's probably really simple, but I've been scratching my head for ages. Any help greatly appreciated  <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Is there a version of this function that I can pass in an exit? I got the exit from the a call to GetObject(GetExitByLink(CurrentRoom, DestinationRoom)). I can't figure out how to do this. It's probably really simple, but I've been scratching my head for ages. Any help greatly appreciated  <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2012-03-04T17:17:21+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "19718",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "This one?\n\n [code:a8aglhxu]GetDisplayNameLink (object,&quot;exit&quot;, displayverblist)[/code:a8aglhxu]",
+      "EditableFormat": "bbcode",
+      "HTML": "This one?<br/><br/> <pre><code>GetDisplayNameLink (object,&quot;exit&quot;, displayverblist)</code></pre>",
+      "PostDate": "2012-03-04T19:59:03+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "19722",
+      "UserId": 0,
+      "Username": "MerchantToo",
+      "UserAvatar": null,
+      "UserGravatar": "4473548b882c95d13eed24acd916e029",
+      "EditableText": "Thanks. I was kind of trying to avoid to set up a new string list with the names of verbs in it. I was assuming that that would already exist as a list somewhere but couldn't find it. So I set up a new list as below, and this works well. My next question is: does Quest deal with junking of string lists well and will this give a performance hit down the road if I use this type of set-up multiple times? I can foresee many opportunities where I need an [i:1rfocvhf]ad hoc[/i:1rfocvhf] stringlist. Would I be better off creating this at the game level just once, rather than every time I jump into this function?\n\nFor those wondering why I'm doing this: I want the player  to be able to see along corridors and across large rooms in my game. But then only relatively large objects like monsters and NPCs, which will be moving around. In this way the player will be able to see what's coming!\n\n[code:1rfocvhf]  &lt;function name=&quot;DescribeCorridorObjects&quot; parameters=&quot;BaseRoom&quot; type=&quot;string&quot;&gt;\n    ExitVerbs = NewStringList()\n    list add (ExitVerbs, &quot;go&quot;)\n    Printed = BaseRoom&#46;InitialDescription\n    Index = 0\n    foreach (pointer, BaseRoom&#46;ViewRoom) {\n      obj = GetObject(pointer)\n      Prefix = StringListItem(BaseRoom&#46;ViewRoomPrefix,Index)\n      Direction = GetObject(GetExitByLink(BaseRoom, obj))\n      Printed = Printed + &quot; &quot; + Prefix + &quot; &quot; + GetDisplayNameLink(Direction, &quot;exit&quot;, ExitVerbs) \n         + &quot; you can see &quot; + DescribePeopleInRoom(obj, BaseRoom)\n      Index = Index + 1\n    }\n    return (Printed)\n  &lt;/function&gt;[/code:1rfocvhf]\n\nAnd by the way if I use Direction.displayverbs instead of ExitVerbs, I get a hyperlink on the exit, but it raises an error if I try to click it.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks. I was kind of trying to avoid to set up a new string list with the names of verbs in it. I was assuming that that would already exist as a list somewhere but couldn't find it. So I set up a new list as below, and this works well. My next question is: does Quest deal with junking of string lists well and will this give a performance hit down the road if I use this type of set-up multiple times? I can foresee many opportunities where I need an <span style=\"font-style:italic;\">ad hoc</span> stringlist. Would I be better off creating this at the game level just once, rather than every time I jump into this function?<br/><br/>For those wondering why I'm doing this: I want the player  to be able to see along corridors and across large rooms in my game. But then only relatively large objects like monsters and NPCs, which will be moving around. In this way the player will be able to see what's coming!<br/><br/><pre><code>  &lt;function name=&quot;DescribeCorridorObjects&quot; parameters=&quot;BaseRoom&quot; type=&quot;string&quot;&gt;<br/>    ExitVerbs = NewStringList()<br/>    list add (ExitVerbs, &quot;go&quot;)<br/>    Printed = BaseRoom&#46;InitialDescription<br/>    Index = 0<br/>    foreach (pointer, BaseRoom&#46;ViewRoom) {<br/>      obj = GetObject(pointer)<br/>      Prefix = StringListItem(BaseRoom&#46;ViewRoomPrefix,Index)<br/>      Direction = GetObject(GetExitByLink(BaseRoom, obj))<br/>      Printed = Printed + &quot; &quot; + Prefix + &quot; &quot; + GetDisplayNameLink(Direction, &quot;exit&quot;, ExitVerbs) <br/>         + &quot; you can see &quot; + DescribePeopleInRoom(obj, BaseRoom)<br/>      Index = Index + 1<br/>    }<br/>    return (Printed)<br/>  &lt;/function&gt;</code></pre><br/><br/>And by the way if I use Direction.displayverbs instead of ExitVerbs, I get a hyperlink on the exit, but it raises an error if I try to click it.",
+      "PostDate": "2012-03-05T05:56:50+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "19724",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "I think this will not cause a performance problem.\nI just tested Direction.displayverbs and its working in my testgame.",
+      "EditableFormat": "bbcode",
+      "HTML": "I think this will not cause a performance problem.<br/>I just tested Direction.displayverbs and its working in my testgame.",
+      "PostDate": "2012-03-05T08:01:30+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "19725",
+      "UserId": 0,
+      "Username": "MerchantToo",
+      "UserAvatar": null,
+      "UserGravatar": "4473548b882c95d13eed24acd916e029",
+      "EditableText": "Your absolutely right. It does work now. I must have been doing something else wrong at the time. Thanks all the same.",
+      "EditableFormat": "bbcode",
+      "HTML": "Your absolutely right. It does work now. I must have been doing something else wrong at the time. Thanks all the same.",
+      "PostDate": "2012-03-05T09:51:02+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

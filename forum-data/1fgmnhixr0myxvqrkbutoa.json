@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "1fgmnhixr0myxvqrkbutoa",
+    "ForumId": "10",
+    "Title": "Changing an Object in a List[SOLVED]",
+    "LastUpdated": "2018-03-21T21:37:48.8051764Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "5d12f259-b595-4f77-8064-ed61f4e7bc83",
+      "UserId": 282833,
+      "Username": "Io",
+      "AvatarUrl": "http://i.imgur.com/XVmdocTb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "So let's say I have an Object with a stringlist as an attribute, called GenericStringList. I set GenericStringList to have the items  ListObject1, ListObject2, and ListObject3.\r\n\r\nNow, I know how to add things to lists, and I know how to call them. But I was looking through quest's List documentation and I couldn't see anything about changing an object already in a list. So, say, if I wanted to, during the game, replace \"ListObject2\" with \"Fresh Apple\", what is the syntax I would use for that?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>So let's say I have an Object with a stringlist as an attribute, called GenericStringList. I set GenericStringList to have the items  ListObject1, ListObject2, and ListObject3.</p>\n<p>Now, I know how to add things to lists, and I know how to call them. But I was looking through quest's List documentation and I couldn't see anything about changing an object already in a list. So, say, if I wanted to, during the game, replace \"ListObject2\" with \"Fresh Apple\", what is the syntax I would use for that?</p>\n\n",
+      "PostDate": "2018-03-21T21:37:48.8051764Z",
+      "LastEditDate": "2018-03-22T02:07:34.5270421Z",
+      "link": null
+    },
+    {
+      "PostId": "c88defef-bb7e-4b58-8a31-d813d830627b",
+      "UserId": 304102,
+      "Username": "Doctor Agon",
+      "AvatarUrl": "http://i.imgur.com/Lzd3mOwb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Is the original Object2 still an apple? Either bad? bruised? or otherwise? \r\nIf so the simplest solution is to change the objects alias. ```Object2.alias = \"A fresh apple.\"```\r\nThe other alternative is ```List remove``` and ```List add```, I don't think Quest has a ```List replace``` function.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Is the original Object2 still an apple? Either bad? bruised? or otherwise?<br>\nIf so the simplest solution is to change the objects alias. <code>Object2.alias = \"A fresh apple.\"</code><br>\nThe other alternative is <code>List remove</code> and <code>List add</code>, I don't think Quest has a <code>List replace</code> function.</p>\n\n",
+      "PostDate": "2018-03-21T21:55:51.7535296Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "63048fcb-0554-4c50-a49c-a8eda0997c8e",
+      "UserId": 282833,
+      "Username": "Io",
+      "AvatarUrl": "http://i.imgur.com/XVmdocTb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "No, no actual objects. Poor wording on my part.\r\n\r\nSo Object.GenericStringList contains \"ListString1\",\" ListString2\", \"ListString3\". I want to change \"ListString2\" to \"Fresh Apple\" ingame.\r\n\r\nReally, no list replace? That's a bummer. I mean, I can in theory do it with creative use of add and remove, but it'd be a hell of a headache. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>No, no actual objects. Poor wording on my part.</p>\n<p>So Object.GenericStringList contains \"ListString1\",\" ListString2\", \"ListString3\". I want to change \"ListString2\" to \"Fresh Apple\" ingame.</p>\n<p>Really, no list replace? That's a bummer. I mean, I can in theory do it with creative use of add and remove, but it'd be a hell of a headache.</p>\n\n",
+      "PostDate": "2018-03-21T21:58:26.2896367Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "14ad01e3-4b74-49e3-8a1d-a967f28aab3b",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hmm...\r\n```\r\nGenericStringList[1] = \"Fresh Apple\"\r\n```\r\nNo idea if that works; I know that bracket notation for lists works in some situations, but haven't actually used it.\r\n(i'm pretty sure it won't be as flexible as Perl, where you can do stuff equivalent to `somelist[1,2,6] = anotherlist[3,2,1]` ... but you might be able to use a list item as an lvalue)\r\n\r\nIf not, then make a function…\r\n```\r\n<function name=\"ListReplace\" parameters=\"list, oldvalue, newvalue\" type=\"list\">\r\n  newlist = NewList()\r\n  foreach (item, list) {\r\n    if (item = oldvalue) {\r\n      list add (newlist, newvalue)\r\n    }\r\n    else {\r\n      list add (newlist, item)\r\n    }\r\n  }\r\n  return (newlist)\r\n</function>\r\n```\r\nSo then you could do: `Object.GenericStringList = ListReplace (Object.GenericStringList, \"ListString2\", \"A rotten apple\")`\r\n\r\nOr if you want to edit the list in place (I think there's places that's necessary), the function would be a bit larger:\r\n\r\n```\r\n<function name=\"ListReplace\" parameters=\"list, oldvalue, newvalue\">\r\n  newlist = NewList()\r\n  foreach (item, list) {\r\n    if (item = oldvalue) {\r\n      list add (newlist, newvalue)\r\n    }\r\n    else {\r\n      list add (newlist, item)\r\n    }\r\n  }\r\n  while (ListCount(list) > 0) {\r\n    list remove (list, list[0])\r\n  }\r\n  foreach (item, newlist) {\r\n    list add (list, item)\r\n  }\r\n</function>\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hmm...</p>\n<pre><code>GenericStringList[1] = \"Fresh Apple\"\n</code></pre>\n<p>No idea if that works; I know that bracket notation for lists works in some situations, but haven't actually used it.<br>\n(i'm pretty sure it won't be as flexible as Perl, where you can do stuff equivalent to <code>somelist[1,2,6] = anotherlist[3,2,1]</code> ... but you might be able to use a list item as an lvalue)</p>\n<p>If not, then make a function…</p>\n<pre><code>&lt;function name=\"ListReplace\" parameters=\"list, oldvalue, newvalue\" type=\"list\"&gt;\n  newlist = NewList()\n  foreach (item, list) {\n    if (item = oldvalue) {\n      list add (newlist, newvalue)\n    }\n    else {\n      list add (newlist, item)\n    }\n  }\n  return (newlist)\n&lt;/function&gt;\n</code></pre>\n<p>So then you could do: <code>Object.GenericStringList = ListReplace (Object.GenericStringList, \"ListString2\", \"A rotten apple\")</code></p>\n<p>Or if you want to edit the list in place (I think there's places that's necessary), the function would be a bit larger:</p>\n<pre><code>&lt;function name=\"ListReplace\" parameters=\"list, oldvalue, newvalue\"&gt;\n  newlist = NewList()\n  foreach (item, list) {\n    if (item = oldvalue) {\n      list add (newlist, newvalue)\n    }\n    else {\n      list add (newlist, item)\n    }\n  }\n  while (ListCount(list) &gt; 0) {\n    list remove (list, list[0])\n  }\n  foreach (item, newlist) {\n    list add (list, item)\n  }\n&lt;/function&gt;\n</code></pre>\n\n",
+      "PostDate": "2018-03-22T00:40:48.8049781Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "be924f2a-37a1-4608-94ce-314c9b434b8e",
+      "UserId": 282833,
+      "Username": "Io",
+      "AvatarUrl": "http://i.imgur.com/XVmdocTb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hmm, that seems a bit much, at least for what I'm doing; I'm entirely unfamiliar with setting parameters in functions, and I've just been using them as places to dump large amounts of code that I expect to call multiple times.\r\n\r\nIn any case, I /did/ find a solution for my specific problem with 3 more variables, but thanks anyway!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hmm, that seems a bit much, at least for what I'm doing; I'm entirely unfamiliar with setting parameters in functions, and I've just been using them as places to dump large amounts of code that I expect to call multiple times.</p>\n<p>In any case, I /did/ find a solution for my specific problem with 3 more variables, but thanks anyway!</p>\n\n",
+      "PostDate": "2018-03-22T02:07:10.921174Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "ntdvse1qtkamhvjb59l2kg",
+    "ForumId": "10",
+    "Title": "Unrecognized list type when setting up shop?",
+    "LastUpdated": "2023-11-12T17:32:24.5801667Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "b72d9f04-4709-4d93-b195-76be33fd8a30",
+      "UserId": 362690,
+      "Username": "windymelon",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi, I've had a text game going for several months but have the past few ones been totally stumped by this issue. What I have is a shop and a stock, and two of the four items in the stock can't be bought. I can't see any difference between the items except that the buyable ones are both food items (edible and gives health), while the other two are a lantern (lights up, switchable, and wearable) and a shirt (wearable and adds a charisma stat). I followed the guide on setting up shop exactly as is said [here](http://docs.textadventures.co.uk/quest/shop.html) and have gone over each step several times to try to solve this on my own, and the specific error I get simply reads `Error running script: Unrecognised list type`. Nothing I can come up with myself seems to help.\r\nIf anyone can guide me on what information exactly is needed to help, I'll happily provide it as long as there's some sort of fix for this, because it's been really bothering me.\r\n\r\nThanks in advance!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi, I've had a text game going for several months but have the past few ones been totally stumped by this issue. What I have is a shop and a stock, and two of the four items in the stock can't be bought. I can't see any difference between the items except that the buyable ones are both food items (edible and gives health), while the other two are a lantern (lights up, switchable, and wearable) and a shirt (wearable and adds a charisma stat). I followed the guide on setting up shop exactly as is said <a href=\"http://docs.textadventures.co.uk/quest/shop.html\">here</a> and have gone over each step several times to try to solve this on my own, and the specific error I get simply reads <code>Error running script: Unrecognised list type</code>. Nothing I can come up with myself seems to help.<br>\nIf anyone can guide me on what information exactly is needed to help, I'll happily provide it as long as there's some sort of fix for this, because it's been really bothering me.</p>\n<p>Thanks in advance!</p>\n\n",
+      "PostDate": "2023-11-12T17:32:24.5801667Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "32bf80c9-4a98-4cee-a4c0-8464ae667128",
+      "UserId": 643545,
+      "Username": "Ip Man",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3ca198fe75de39041c2e4cd0a8852e3c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hey there,\r\n\r\nI've run into some issues when I start a new game (or go back to an old one) with ShopLib too.  I think it's usually not because of the \"setup\" but sometimes required attributes what aren't filled-in/added to the objects.\r\n\r\nYour issue is probably in this part of the code:\r\n```\r\n  <function name=\"DoBuy\" parameters=\"obj\">\r\n      if (not HasInt (obj, \"price\")) {\r\n        msg (DynamicTemplate(\"NotForSale\", obj))\r\n      }\r\n      else {\r\n        buyingprice = BuyingPrice(obj)\r\n        if (buyingprice > game.pov.money) {\r\n          msg (DynamicTemplate(\"CannotAfford\", obj))\r\n        }\r\n        else {\r\n          if (GetBoolean(obj, \"cloneonpurchase\")) {\r\n            CloneObjectAndMove(obj, game.pov)\r\n          }\r\n          else {\r\n            obj.parent = game.pov\r\n          }\r\n          game.pov.money = game.pov.money - buyingprice\r\n          P (DynamicTemplate(\"BuySuccessful\", obj))\r\n        }\r\n      }\r\n  </function>\r\n```\r\n\r\nFor example, your food items are most likely set to be in the \"clone on purchase\" section of the script and are handled that way.  The other two objects are probably handled by a different part of the script.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hey there,</p>\n<p>I've run into some issues when I start a new game (or go back to an old one) with ShopLib too.  I think it's usually not because of the \"setup\" but sometimes required attributes what aren't filled-in/added to the objects.</p>\n<p>Your issue is probably in this part of the code:</p>\n<pre><code>  &lt;function name=\"DoBuy\" parameters=\"obj\"&gt;\n      if (not HasInt (obj, \"price\")) {\n        msg (DynamicTemplate(\"NotForSale\", obj))\n      }\n      else {\n        buyingprice = BuyingPrice(obj)\n        if (buyingprice &gt; game.pov.money) {\n          msg (DynamicTemplate(\"CannotAfford\", obj))\n        }\n        else {\n          if (GetBoolean(obj, \"cloneonpurchase\")) {\n            CloneObjectAndMove(obj, game.pov)\n          }\n          else {\n            obj.parent = game.pov\n          }\n          game.pov.money = game.pov.money - buyingprice\n          P (DynamicTemplate(\"BuySuccessful\", obj))\n        }\n      }\n  &lt;/function&gt;\n</code></pre>\n<p>For example, your food items are most likely set to be in the \"clone on purchase\" section of the script and are handled that way.  The other two objects are probably handled by a different part of the script.</p>\n\n",
+      "PostDate": "2023-11-12T22:20:25.1921227Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "ce32c7a1-6b81-49fc-880b-41678882b387",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Does it give any indication which part of the script the error occurs in? Often an error message will include the expression which generates the error.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Does it give any indication which part of the script the error occurs in? Often an error message will include the expression which generates the error.</p>\n\n",
+      "PostDate": "2023-11-13T11:17:41.3213507Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

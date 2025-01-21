@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "mmepwyysqek08kwoscvr1a",
+    "ForumId": "10",
+    "Title": "Test Facility?",
+    "LastUpdated": "2020-04-11T16:22:53.0381697Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "f4f311b1-d1b4-4927-a966-6649335f88c9",
+      "UserId": 199273,
+      "Username": "DavyB",
+      "AvatarUrl": "http://i.imgur.com/8BcaZCyb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "During testing it would be useful to have a command that adds a non-scenery  item to the player's inventory no matter where it resides and even if it has been 'removed'. Does anyone have a neat way to do this? It would be even better if there was a prompt when several items with the same name exist!\r\n```\r\n>find brass key\r\n```\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>During testing it would be useful to have a command that adds a non-scenery  item to the player's inventory no matter where it resides and even if it has been 'removed'. Does anyone have a neat way to do this? It would be even better if there was a prompt when several items with the same name exist!</p>\n<pre><code>&gt;find brass key\n</code></pre>\n\n",
+      "PostDate": "2020-04-11T16:22:53.0381697Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "94ef3b6e-4a4e-4d68-a522-5e983181e423",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Off the top of my head:\r\n```\r\n<command name=\"obtain\">\r\n  <pattern>obtain #object#</pattern>\r\n  <scope>world</scope>\r\n  <script>\r\n    object.parent = game.pov\r\n  </script>\r\n</command>\r\n```\r\n\r\n> It would be even better if there was a prompt when several items with the same name exist!\r\n\r\nWell, you get the disambiguation prompt. All I'm doing is using the scope `world`, which means that it adds `AllObjects()` to scope.\r\nIf you mean distinguishing between different objects with the same alias, a little javascript may help:\r\n```\r\nJS.eval (\"$(function () {var i = addText;addText = t => i(t.replace(/'ShowMenuResponse','(.+?)'\\\\)\\\"/, (a,b) => a + ' title=\\\"'+b+'\\\"'));});\")\r\n```\r\n(added to the ui init script while you're testing, this lets you hover the mouse over an object alias in the disambiguation menu and see the object's  name in the tooltip)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Off the top of my head:</p>\n<pre><code>&lt;command name=\"obtain\"&gt;\n  &lt;pattern&gt;obtain #object#&lt;/pattern&gt;\n  &lt;scope&gt;world&lt;/scope&gt;\n  &lt;script&gt;\n    object.parent = game.pov\n  &lt;/script&gt;\n&lt;/command&gt;\n</code></pre>\n<blockquote>\n<p>It would be even better if there was a prompt when several items with the same name exist!</p>\n</blockquote>\n<p>Well, you get the disambiguation prompt. All I'm doing is using the scope <code>world</code>, which means that it adds <code>AllObjects()</code> to scope.<br>\nIf you mean distinguishing between different objects with the same alias, a little javascript may help:</p>\n<pre><code>JS.eval (\"$(function () {var i = addText;addText = t =&gt; i(t.replace(/'ShowMenuResponse','(.+?)'\\\\)\\\"/, (a,b) =&gt; a + ' title=\\\"'+b+'\\\"'));});\")\n</code></pre>\n<p>(added to the ui init script while you're testing, this lets you hover the mouse over an object alias in the disambiguation menu and see the object's  name in the tooltip)</p>\n\n",
+      "PostDate": "2020-04-11T20:21:23.3382374Z",
+      "LastEditDate": "2020-04-12T09:18:39.7420865Z",
+      "link": null
+    },
+    {
+      "PostId": "0a6b9a9f-8b67-4e0a-9e52-debbca8b0db4",
+      "UserId": 199273,
+      "Username": "DavyB",
+      "AvatarUrl": "http://i.imgur.com/8BcaZCyb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Wow mrangel! ...many thanks for the fast and extremely helpful response. I expected you to have an answer but nothing this neat!! The command script is just what I was looking for. I also tried out the JavaScript but Quest is reporting a parsing error. I don't think I need it anyway, as the disambiguation prompt with the command feels sufficient. I did add a line just to make clear what I'd picked up:\r\n```\r\nmsg (\"You now have \" + GetDisplayName (object) + \".\")\r\n```\r\nAgain, many thanks!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Wow mrangel! ...many thanks for the fast and extremely helpful response. I expected you to have an answer but nothing this neat!! The command script is just what I was looking for. I also tried out the JavaScript but Quest is reporting a parsing error. I don't think I need it anyway, as the disambiguation prompt with the command feels sufficient. I did add a line just to make clear what I'd picked up:</p>\n<pre><code>msg (\"You now have \" + GetDisplayName (object) + \".\")\n</code></pre>\n<p>Again, many thanks!</p>\n\n",
+      "PostDate": "2020-04-12T06:51:57.3662859Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "b63b22dd-60d8-4184-a7e2-86c0eb5fac2b",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> I also tried out the JavaScript but Quest is reporting a parsing error.\r\n\r\nMy mistake. I tested it by running the javascript in the the console on someone else's game. Missed out a `\\` when I wrapped it in Quest code. Is fixed now :)\r\n\r\nAnd while I was looking at that I thought of an alternative use case:\r\n\r\nIf you find yourself wanting this functionality at short notice while testing a game, you can go to the JS console (Ctrl+Shift+J I think) and enter:\r\n```\r\n$('#divOutput a.cmdlink[onclick*=ShowMenuResponse]').each(function (){$(this).append($(this).attr('onclick').replace(/^.+'(.+?)'\\)$/,' [object name:$1]'));});\r\n```\r\nThat will append the object name to any currently-displayed menus :)",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>I also tried out the JavaScript but Quest is reporting a parsing error.</p>\n</blockquote>\n<p>My mistake. I tested it by running the javascript in the the console on someone else's game. Missed out a <code>\\</code> when I wrapped it in Quest code. Is fixed now :)</p>\n<p>And while I was looking at that I thought of an alternative use case:</p>\n<p>If you find yourself wanting this functionality at short notice while testing a game, you can go to the JS console (Ctrl+Shift+J I think) and enter:</p>\n<pre><code>$('#divOutput a.cmdlink[onclick*=ShowMenuResponse]').each(function (){$(this).append($(this).attr('onclick').replace(/^.+'(.+?)'\\)$/,' [object name:$1]'));});\n</code></pre>\n<p>That will append the object name to any currently-displayed menus :)</p>\n\n",
+      "PostDate": "2020-04-12T09:35:21.9813474Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

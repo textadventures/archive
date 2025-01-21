@@ -1,0 +1,109 @@
+{
+  "Topic": {
+    "TopicId": "vz4qrwvki0uv6abeplh8ia",
+    "ForumId": "10",
+    "Title": "Map Wipes After Teleportation",
+    "LastUpdated": "2020-07-07T06:02:33.5984103Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "2e148d25-4f7f-4893-9018-5273a4aae4dc",
+      "UserId": 187141,
+      "Username": "Shadecerule",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/c73b5bde1f86d7098461d3f9889a386f?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I have the following Teleport function in my game with two parameters (\"to\" and \"mapOnOff\"):\r\n\r\n```\r\nif (game.mapOn and mapOnOff = 0) {\r\n  from = player.parent\r\n  set (player, \"saved_map_for_\" + from.name, player.grid_coordinates)\r\n}\r\nif (HasAttribute(player, \"saved_map_for_\" + to.name)) {\r\n  player.grid_coordinates = GetAttribute(player, \"saved_map_for_\" + to.name)\r\n}\r\nelse {\r\n  player.grid_coordinates = null\r\n}\r\nif (game.mapOn and mapOnOff = 0) {\r\n  JS.ShowGrid (0)\r\n}\r\nelse if (game.mapOn and mapOnOff = 1) {\r\n  JS.ShowGrid (180)\r\n}\r\nplayer.parent = to\r\nJS.Grid_ClearAllLayers ()\r\nGrid_Redraw\r\nGrid_DrawPlayerInRoom (game.pov.parent)\r\n```\r\n\r\nThe parameter \"to\" tells the function where I want to teleport the player to. \"mapOnOff\" tells the function whether I want to turn the map on or off while teleporting, which I use when teleporting to rooms off the map. \"0\" turns the map off, \"1\" turns the map on, and \"2\" does neither for when I want to keep the same state.\r\n\r\nThe issue I'm having is that when I pass \"2\" into mapOnOff, the map will sometimes wipe itself while the map is off. When I turn the map back on, the map is a clean slate and the only visible room is the one the player is standing in. So far, this has NEVER happened when I pass in \"2\" while the map is on.\r\n\r\nWhat case would allow the map to be wiped like this? I always send the player back to the room the map was turned off in before I turn it back on, so it shouldn't be an issue of misplacement. I feel like this might have something to do with \"player.grid_coordinates = null\" but I'm not sure how to fix this.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I have the following Teleport function in my game with two parameters (\"to\" and \"mapOnOff\"):</p>\n<pre><code>if (game.mapOn and mapOnOff = 0) {\n  from = player.parent\n  set (player, \"saved_map_for_\" + from.name, player.grid_coordinates)\n}\nif (HasAttribute(player, \"saved_map_for_\" + to.name)) {\n  player.grid_coordinates = GetAttribute(player, \"saved_map_for_\" + to.name)\n}\nelse {\n  player.grid_coordinates = null\n}\nif (game.mapOn and mapOnOff = 0) {\n  JS.ShowGrid (0)\n}\nelse if (game.mapOn and mapOnOff = 1) {\n  JS.ShowGrid (180)\n}\nplayer.parent = to\nJS.Grid_ClearAllLayers ()\nGrid_Redraw\nGrid_DrawPlayerInRoom (game.pov.parent)\n</code></pre>\n<p>The parameter \"to\" tells the function where I want to teleport the player to. \"mapOnOff\" tells the function whether I want to turn the map on or off while teleporting, which I use when teleporting to rooms off the map. \"0\" turns the map off, \"1\" turns the map on, and \"2\" does neither for when I want to keep the same state.</p>\n<p>The issue I'm having is that when I pass \"2\" into mapOnOff, the map will sometimes wipe itself while the map is off. When I turn the map back on, the map is a clean slate and the only visible room is the one the player is standing in. So far, this has NEVER happened when I pass in \"2\" while the map is on.</p>\n<p>What case would allow the map to be wiped like this? I always send the player back to the room the map was turned off in before I turn it back on, so it shouldn't be an issue of misplacement. I feel like this might have something to do with \"player.grid_coordinates = null\" but I'm not sure how to fix this.</p>\n\n",
+      "PostDate": "2020-07-07T06:02:33.5984103Z",
+      "LastEditDate": "2020-07-07T06:22:45.842156Z",
+      "link": null
+    },
+    {
+      "PostId": "8588a44d-4cc3-4311-9d69-f2d39f3e4b2c",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm not sure what you're doing here. It looks like you're *hiding* the map, but not disabling it; although I don't know what the rest of the code with your `game.mapOn` attribute is doing. In this case, you probably don't want to stop the map updating, or to delete areas from the map.\r\n\r\nWhen you call this function, it saves the current location's map only if `(game.mapOn and mapOnOff = 0)` - in any other case, all currently-displayed map data will be lost.\r\n\r\nI would suggest changing the if statement in the first line to `if (HasAttribute (player, \"grid_coordinates\")) {` so that if there is any map data saved (whether it's displayed onscreen or not), it will be saved.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm not sure what you're doing here. It looks like you're <em>hiding</em> the map, but not disabling it; although I don't know what the rest of the code with your <code>game.mapOn</code> attribute is doing. In this case, you probably don't want to stop the map updating, or to delete areas from the map.</p>\n<p>When you call this function, it saves the current location's map only if <code>(game.mapOn and mapOnOff = 0)</code> - in any other case, all currently-displayed map data will be lost.</p>\n<p>I would suggest changing the if statement in the first line to <code>if (HasAttribute (player, \"grid_coordinates\")) {</code> so that if there is any map data saved (whether it's displayed onscreen or not), it will be saved.</p>\n\n",
+      "PostDate": "2020-07-07T10:53:47.7419973Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "1eb20a54-02e0-4cd3-96e6-1deb6823961b",
+      "UserId": 187141,
+      "Username": "Shadecerule",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/c73b5bde1f86d7098461d3f9889a386f?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Sorry, I'm using a modified version of the \"Save the map, single departure\" script here:\r\n\r\nhttps://docs.textadventures.co.uk/quest/showing_a_map.html\r\n\r\nThe original is this:\r\n\r\n```\r\nfrom = player.parent\r\nset (player, \"saved_map_for_\" + from.name, player.grid_coordinates)\r\nif (HasAttribute(player, \"saved_map_for_\" + to.name)) {\r\n  player.grid_coordinates = GetAttribute(player, \"saved_map_for_\" + to.name)\r\n}\r\nelse {\r\n  player.grid_coordinates = null\r\n}\r\nplayer.parent = to\r\nJS.Grid_ClearAllLayers ()\r\nGrid_Redraw\r\nGrid_DrawPlayerInRoom (game.pov.parent)\r\n```\r\n\r\nIt's similar but I've tried to changed it to hide or display the map when teleporting. Sorry, but that's what I meant when I said that I was turning the map on and off. It works except for sometimes in the case I mentioned. \r\n\r\nAs for ```game.mapOn```, this just says whether the map is actually enabled or disabled. I've let the player turn the map off if they don't want to use it. I've changed this script to also try and account for that.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Sorry, I'm using a modified version of the \"Save the map, single departure\" script here:</p>\n<p>https://docs.textadventures.co.uk/quest/showing_a_map.html</p>\n<p>The original is this:</p>\n<pre><code>from = player.parent\nset (player, \"saved_map_for_\" + from.name, player.grid_coordinates)\nif (HasAttribute(player, \"saved_map_for_\" + to.name)) {\n  player.grid_coordinates = GetAttribute(player, \"saved_map_for_\" + to.name)\n}\nelse {\n  player.grid_coordinates = null\n}\nplayer.parent = to\nJS.Grid_ClearAllLayers ()\nGrid_Redraw\nGrid_DrawPlayerInRoom (game.pov.parent)\n</code></pre>\n<p>It's similar but I've tried to changed it to hide or display the map when teleporting. Sorry, but that's what I meant when I said that I was turning the map on and off. It works except for sometimes in the case I mentioned.</p>\n<p>As for <code>game.mapOn</code>, this just says whether the map is actually enabled or disabled. I've let the player turn the map off if they don't want to use it. I've changed this script to also try and account for that.</p>\n\n",
+      "PostDate": "2020-07-07T12:03:35.2804524Z",
+      "LastEditDate": "2020-07-07T12:06:25.5741554Z",
+      "link": null
+    },
+    {
+      "PostId": "fdb8b938-5796-4e9f-abaa-f00859998c4f",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "In that case, I would suggest something like:\r\n<pre><code>from = player.parent\r\nset (player, \"saved_map_for_\" + from.name, player.grid_coordinates)\r\nif (HasAttribute(player, \"saved_map_for_\" + to.name)) {\r\n  player.grid_coordinates = GetAttribute(player, \"saved_map_for_\" + to.name)\r\n}\r\nelse {\r\n  player.grid_coordinates = null\r\n}\r\nplayer.parent = to\r\n\r\nif (game.mapOn) {\r\n  if (mapOnOff = 0) {\r\n    JS.ShowGrid (0)\r\n  }\r\n  else if (mapOnOff = 1) {\r\n    JS.ShowGrid (180)\r\n  }\r\n  JS.Grid_ClearAllLayers ()\r\n  Grid_Redraw\r\n  Grid_DrawPlayerInRoom (game.pov.parent)\r\n}</code></pre>\r\nSo that passing `mapOnOff` a non-zero value *hides* the map, but doesn't delete the currently-displayed map data.\r\n\r\nHowever, could still be problematic. I think that if the player uses the command to disable the map, teleports to a room off the map, and enables the map again, they will see a map for an area that wouldn't usually have one. (I don't know if this would be a problem for your game or not).",
+      "EditableFormat": "markdown",
+      "HTML": "<p>In that case, I would suggest something like:</p>\n<pre><code>from = player.parent\nset (player, \"saved_map_for_\" + from.name, player.grid_coordinates)\nif (HasAttribute(player, \"saved_map_for_\" + to.name)) {\n  player.grid_coordinates = GetAttribute(player, \"saved_map_for_\" + to.name)\n}\nelse {\n  player.grid_coordinates = null\n}\nplayer.parent = to\n\nif (game.mapOn) {\n  if (mapOnOff = 0) {\n    JS.ShowGrid (0)\n  }\n  else if (mapOnOff = 1) {\n    JS.ShowGrid (180)\n  }\n  JS.Grid_ClearAllLayers ()\n  Grid_Redraw\n  Grid_DrawPlayerInRoom (game.pov.parent)\n}</code></pre>\n<p>So that passing <code>mapOnOff</code> a non-zero value <em>hides</em> the map, but doesn't delete the currently-displayed map data.</p>\n<p>However, could still be problematic. I think that if the player uses the command to disable the map, teleports to a room off the map, and enables the map again, they will see a map for an area that wouldn't usually have one. (I don't know if this would be a problem for your game or not).</p>\n\n",
+      "PostDate": "2020-07-07T13:13:25.9271803Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "3726d289-e3bb-445d-90ae-86b13ee8dc3a",
+      "UserId": 187141,
+      "Username": "Shadecerule",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/c73b5bde1f86d7098461d3f9889a386f?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I had to make some modifications, but the same issue occurs with this script. Passing in \"2\" can still reset the map.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I had to make some modifications, but the same issue occurs with this script. Passing in \"2\" can still reset the map.</p>\n\n",
+      "PostDate": "2020-07-08T16:24:19.3436485Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "b3c0d5bf-85e4-457e-9a57-69065678f98d",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Are you teleporting back to the same room you left from?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Are you teleporting back to the same room you left from?</p>\n\n",
+      "PostDate": "2020-07-08T17:25:26.324208Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "f34b9b13-4971-4558-a483-95c80829936e",
+      "UserId": 187141,
+      "Username": "Shadecerule",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/c73b5bde1f86d7098461d3f9889a386f?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I am. I've been playing around and found something odd, though. I can fix this issue by duplicating the following code and placing it after ```player.parent = to```:\r\n\r\n```\r\nif (HasAttribute(player, \"saved_map_for_\" + to.name)) {\r\n  player.grid_coordinates = GetAttribute(player, \"saved_map_for_\" + to.name)\r\n}\r\nelse {\r\n  player.grid_coordinates = null\r\n}\r\n```\r\n\r\nI'm not sure if it's the best way to solve this issue but the map is no longer resetting. I found that the map continues to draw even while hidden, and I _think_ that the map was doing something weird when setting ```player.parent = to```. It seems that if I set ```player.grid_coordinates``` to the saved map (```\"saved_map_for_\" + to.name```) after changing the player's parent, it displays the map as it should be.\r\n\r\nI've done some testing and it seems to work how I want it to, but could you foresee anything weird happening because of this?\r\n\r\n(By the way, I'm keeping the above chunk of code in both places because deleting the first copy will make the game complain about missing dictionary keys.)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I am. I've been playing around and found something odd, though. I can fix this issue by duplicating the following code and placing it after <code>player.parent = to</code>:</p>\n<pre><code>if (HasAttribute(player, \"saved_map_for_\" + to.name)) {\n  player.grid_coordinates = GetAttribute(player, \"saved_map_for_\" + to.name)\n}\nelse {\n  player.grid_coordinates = null\n}\n</code></pre>\n<p>I'm not sure if it's the best way to solve this issue but the map is no longer resetting. I found that the map continues to draw even while hidden, and I <em>think</em> that the map was doing something weird when setting <code>player.parent = to</code>. It seems that if I set <code>player.grid_coordinates</code> to the saved map (<code>\"saved_map_for_\" + to.name</code>) after changing the player's parent, it displays the map as it should be.</p>\n<p>I've done some testing and it seems to work how I want it to, but could you foresee anything weird happening because of this?</p>\n<p>(By the way, I'm keeping the above chunk of code in both places because deleting the first copy will make the game complain about missing dictionary keys.)</p>\n\n",
+      "PostDate": "2020-07-08T20:57:37.7069385Z",
+      "LastEditDate": "2020-07-08T21:01:21.1601907Z",
+      "link": null
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "2640",
+    "ForumId": "10",
+    "Title": "Alternative conversations",
+    "LastUpdated": "2011-09-06T14:26:39+01:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "18807",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "I was wondering whether an Elder Scrolls approach to conversation could be done in Quest 5. What I would envisage from a player point of view is that you &quot;talk to npc&quot; to start the conversation. A list of available topics would then appear in their own pane on the right, whiuch the player can click on, or she can type &quot;ask about &lt;subject&gt;&quot;.\n\nAlternatively, this could be done with &quot;ask &lt;npc&gt; about &lt;subject&gt;&quot;.\n\nFor the writer, I am thinking this would be handled as a list of objects (one list for all NPCs). The system runs though the list looking for a match, and presents the first object that matches the situation. If the object has a name, then that must match the name of the NPC. If the object has a pattern, then that must match the subject. You could also match attributes on the player as desired.\n\nConversation objects would be arranged with more specific ones at the top (this topic, this NPC, these attributes set), less specific towards the bottom (this topic, but NPC not speficied; this NPC, but any topic), to a generic &quot;I don't know&quot; at the bottom of the list to catch anything unspecified.\n\nI am wondering if this is doable in the current version. Have a dummy room that contains a bunch of objects that are conversation objects. Use a scope function to collect them into a list (does that preserve order?). Create my own ask-about command to iterate through them.\n\nIs there a way to collect the names of attributes on an object? If not, you may need to put a script on the object; check the npc name if it has a name attribute, check the subject pattern, run the script and check the result (can a script return a result?).\n\nIf the game had to run through the list every time the player asks a question, and there are hundreds of conversation objects, would this be slow?\n\nAn advantage to this is that several NPCs can have the same response to questions that do not concern them. Or the first one asked can give a full response, but all subsequent questions get the generic response. You can have responses generic to a gender or some other grouping, say a member of the secret cult, but checking for the cult_member attribute on the NPC.\n\nThe actual conversation would also be a script that can access both object1 (the npc) and object2 (the subject).",
+      "EditableFormat": "bbcode",
+      "HTML": "I was wondering whether an Elder Scrolls approach to conversation could be done in Quest 5. What I would envisage from a player point of view is that you &quot;talk to npc&quot; to start the conversation. A list of available topics would then appear in their own pane on the right, whiuch the player can click on, or she can type &quot;ask about &lt;subject&gt;&quot;.<br/><br/>Alternatively, this could be done with &quot;ask &lt;npc&gt; about &lt;subject&gt;&quot;.<br/><br/>For the writer, I am thinking this would be handled as a list of objects (one list for all NPCs). The system runs though the list looking for a match, and presents the first object that matches the situation. If the object has a name, then that must match the name of the NPC. If the object has a pattern, then that must match the subject. You could also match attributes on the player as desired.<br/><br/>Conversation objects would be arranged with more specific ones at the top (this topic, this NPC, these attributes set), less specific towards the bottom (this topic, but NPC not speficied; this NPC, but any topic), to a generic &quot;I don't know&quot; at the bottom of the list to catch anything unspecified.<br/><br/>I am wondering if this is doable in the current version. Have a dummy room that contains a bunch of objects that are conversation objects. Use a scope function to collect them into a list (does that preserve order?). Create my own ask-about command to iterate through them.<br/><br/>Is there a way to collect the names of attributes on an object? If not, you may need to put a script on the object; check the npc name if it has a name attribute, check the subject pattern, run the script and check the result (can a script return a result?).<br/><br/>If the game had to run through the list every time the player asks a question, and there are hundreds of conversation objects, would this be slow?<br/><br/>An advantage to this is that several NPCs can have the same response to questions that do not concern them. Or the first one asked can give a full response, but all subsequent questions get the generic response. You can have responses generic to a gender or some other grouping, say a member of the secret cult, but checking for the cult_member attribute on the NPC.<br/><br/>The actual conversation would also be a script that can access both object1 (the npc) and object2 (the subject).",
+      "PostDate": "2011-09-05T14:45:46+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "18808",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "Could you post a simple example? I don't understand why you want to use objects and attributes in the script.",
+      "EditableFormat": "bbcode",
+      "HTML": "Could you post a simple example? I don't understand why you want to use objects and attributes in the script.",
+      "PostDate": "2011-09-05T15:54:09+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "18810",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "[b:266s3e38]NPCs[/b:266s3e38]\n\n[i:266s3e38]Adam\nBoris (cult_member = true)\nClaire (cult_member = true)\netc.[/i:266s3e38]\n\n[b:266s3e38]Conversation Objects[/b:266s3e38]\n\n[i:266s3e38]&quot;Yeah I heard something about a cult. You might want to talk to Boris.&quot;\nname = &quot;Adam&quot;, pattern = &quot;cult&quot;\n\n&quot;Sure, there is a secret cult. If you want to join, you have to do the initiation&quot;\npattern = &quot;cult&quot;, script = (is cult_member = true ?)\n\n&quot;I know nothing about a cult&quot;\npattern = &quot;cult&quot;\n\n&quot;It's awful weather, isn't it?&quot;\npattern = &quot;weather&quot;\n\n&quot;I don't know about that\n-[/i:266s3e38]\n\nThe player types &quot;ask Boris about cult&quot;, and the game goes through the list. The fitrst fails, that is for Adam, but the second is accepted, because &quot;cult&quot; matches and  the script returns true.\n\nThe player types &quot;ask Claire about the weather&quot;, and the game goes through the list. The first three fail, because the pattern does not match. The fourth is accepted, because &quot;weather&quot; matches and there is nothing else to check.\n\nDoes that make sense?",
+      "EditableFormat": "bbcode",
+      "HTML": "<span style=\"font-weight:bold;\">NPCs</span><br/><br/><span style=\"font-style:italic;\">Adam<br/>Boris (cult_member = true)<br/>Claire (cult_member = true)<br/>etc.</span><br/><br/><span style=\"font-weight:bold;\">Conversation Objects</span><br/><br/><span style=\"font-style:italic;\">&quot;Yeah I heard something about a cult. You might want to talk to Boris.&quot;<br/>name = &quot;Adam&quot;, pattern = &quot;cult&quot;<br/><br/>&quot;Sure, there is a secret cult. If you want to join, you have to do the initiation&quot;<br/>pattern = &quot;cult&quot;, script = (is cult_member = true ?)<br/><br/>&quot;I know nothing about a cult&quot;<br/>pattern = &quot;cult&quot;<br/><br/>&quot;It's awful weather, isn't it?&quot;<br/>pattern = &quot;weather&quot;<br/><br/>&quot;I don't know about that<br/>-</span><br/><br/>The player types &quot;ask Boris about cult&quot;, and the game goes through the list. The fitrst fails, that is for Adam, but the second is accepted, because &quot;cult&quot; matches and  the script returns true.<br/><br/>The player types &quot;ask Claire about the weather&quot;, and the game goes through the list. The first three fail, because the pattern does not match. The fourth is accepted, because &quot;weather&quot; matches and there is nothing else to check.<br/><br/>Does that make sense?",
+      "PostDate": "2011-09-05T20:24:37+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "18823",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "Hmmm, I  think I would do this with a function something like this:\n[code:1nbwf0xg]\n&lt;function name=&quot;testinput&quot; parameters=&quot;actor, pattern &quot;&gt;\n\tif (pattern =&quot;CULT&quot;) {\n\t\tif (actor&#46;name=&quot;Adam&quot;) {\n\t\t\tmsg(&quot;&quot;Yeah I heard something about a cult&#46; You might want to talk to Boris&#46;&quot;&quot;)\n\t\t} else if (actor&#46;cult_member) {\n\t\t\tmsg(&quot;&quot;Sure, there is a secret cult&#46; If you want to join, you have to do the initiation&quot;&quot;)\n\t\t} else {\n\t\t\tmsg(&quot;&quot;I know nothing about a cult&quot;&quot;)\n\t\t}\n\t} else if (pattern=&quot;WEATHER&quot;) {\n\t\tmsg(&quot;&quot;It's awful weather, isn't it?&quot;&quot;)\n\t} else {\n\t\tmsg(&quot;I don't know about that&quot;)\n\t}\n&lt;function&gt;[/code:1nbwf0xg]\n\nIt should be the same you want to do",
+      "EditableFormat": "bbcode",
+      "HTML": "Hmmm, I  think I would do this with a function something like this:<br/><pre><code><br/>&lt;function name=&quot;testinput&quot; parameters=&quot;actor, pattern &quot;&gt;<br/>\tif (pattern =&quot;CULT&quot;) {<br/>\t\tif (actor&#46;name=&quot;Adam&quot;) {<br/>\t\t\tmsg(&quot;&quot;Yeah I heard something about a cult&#46; You might want to talk to Boris&#46;&quot;&quot;)<br/>\t\t} else if (actor&#46;cult_member) {<br/>\t\t\tmsg(&quot;&quot;Sure, there is a secret cult&#46; If you want to join, you have to do the initiation&quot;&quot;)<br/>\t\t} else {<br/>\t\t\tmsg(&quot;&quot;I know nothing about a cult&quot;&quot;)<br/>\t\t}<br/>\t} else if (pattern=&quot;WEATHER&quot;) {<br/>\t\tmsg(&quot;&quot;It's awful weather, isn't it?&quot;&quot;)<br/>\t} else {<br/>\t\tmsg(&quot;I don't know about that&quot;)<br/>\t}<br/>&lt;function&gt;</code></pre><br/><br/>It should be the same you want to do",
+      "PostDate": "2011-09-06T14:26:39+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

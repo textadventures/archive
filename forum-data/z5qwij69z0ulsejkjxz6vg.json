@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "z5qwij69z0ulsejkjxz6vg",
+    "ForumId": "10",
+    "Title": "Coloring the text in a stringlist",
+    "LastUpdated": "2020-04-29T21:22:39.1775098Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "ac599c9d-8905-4a4e-86f1-d6af8e32974d",
+      "UserId": 142763,
+      "Username": "Forgewright",
+      "AvatarUrl": "http://i.imgur.com/Ea6HecZb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I need to color all text spoken by an NPC without having to manually add the color to each line in the \"thingstosay\" stringlist.\r\n**New speak to command:**\r\n```\r\nif (HasScript(object, \"speak\")) {\r\n  do (object, \"speak\")\r\n}\r\nelse if (ListCount(object.thingstosay) = 0) {\r\n  msg (CapFirst(object.gender) + \" says,\")\r\n  msg (\"\\\"<i>That's all I have for now.\\\"\")\r\n}\r\nelse {\r\n  line = StringListItem (object.thingstosay, 0)\r\n  msg (CapFirst(object.gender) + \" says,\")\r\n  msg (\"<em>\" {color:silver: + line})\r\n  list remove (object.thingstosay, line)\r\n}\r\n```\r\nI get the following error:\r\n\r\nError running script: Function not found: ')'\r\n\r\nI know the line:\r\n```\r\nmsg (\"<em>\" {color:silver: + line})\r\n```\r\nis wrong, but I have tried every arrangement I can think of. It allows the  ```<em> ```but not the color code.\r\n```  msg (\"<em>{color:silver:}\"  + line)``` This runs but no color.\r\nAny ideas?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I need to color all text spoken by an NPC without having to manually add the color to each line in the \"thingstosay\" stringlist.<br>\n<strong>New speak to command:</strong></p>\n<pre><code>if (HasScript(object, \"speak\")) {\n  do (object, \"speak\")\n}\nelse if (ListCount(object.thingstosay) = 0) {\n  msg (CapFirst(object.gender) + \" says,\")\n  msg (\"\\\"&lt;i&gt;That's all I have for now.\\\"\")\n}\nelse {\n  line = StringListItem (object.thingstosay, 0)\n  msg (CapFirst(object.gender) + \" says,\")\n  msg (\"&lt;em&gt;\" {color:silver: + line})\n  list remove (object.thingstosay, line)\n}\n</code></pre>\n<p>I get the following error:</p>\n<p>Error running script: Function not found: ')'</p>\n<p>I know the line:</p>\n<pre><code>msg (\"&lt;em&gt;\" {color:silver: + line})\n</code></pre>\n<p>is wrong, but I have tried every arrangement I can think of. It allows the  <code>&lt;em&gt;</code>but not the color code.<br>\n<code>msg (\"&lt;em&gt;{color:silver:}\" + line)</code> This runs but no color.<br>\nAny ideas?</p>\n\n",
+      "PostDate": "2020-04-29T21:22:39.1775098Z",
+      "LastEditDate": "2020-04-29T21:39:27.5389933Z",
+      "link": null
+    },
+    {
+      "PostId": "e79d9bcb-34a2-48de-a4a7-64f035fee955",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "When you've put the string together, you want it to look like `<em>{color:silver:Your text here}</em>`. The text processor directive is parsed by the text processor when the message is printed; it is a string, not a quest function, so needs to be in quotes.\r\n\r\nSo the line you want is:\r\n```\r\nmsg (\"<em>{color:silver:\" + line + \"}</em>\")\r\n```\r\nBut the text processor automatically changes `{color:silver:some text}` to `<span style=\"color: silver\">some text</span>`, and uses quite a lot of function calls in the process; so it might be more efficient to generate the HTML yourself. Something like:\r\n```\r\nmsg (\"<em><span style=\\\"color:silver\\\">\" + line + \"</span></em>\")\r\n```\r\nAlthough while you're applying both emphasis and color to the same text, it would be more efficient to combine the two styles:\r\n```\r\nmsg (\"<em style=\\\"color:silver\\\">\" + line + \"</em>\")\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>When you've put the string together, you want it to look like <code>&lt;em&gt;{color:silver:Your text here}&lt;/em&gt;</code>. The text processor directive is parsed by the text processor when the message is printed; it is a string, not a quest function, so needs to be in quotes.</p>\n<p>So the line you want is:</p>\n<pre><code>msg (\"&lt;em&gt;{color:silver:\" + line + \"}&lt;/em&gt;\")\n</code></pre>\n<p>But the text processor automatically changes <code>{color:silver:some text}</code> to <code>&lt;span style=\"color: silver\"&gt;some text&lt;/span&gt;</code>, and uses quite a lot of function calls in the process; so it might be more efficient to generate the HTML yourself. Something like:</p>\n<pre><code>msg (\"&lt;em&gt;&lt;span style=\\\"color:silver\\\"&gt;\" + line + \"&lt;/span&gt;&lt;/em&gt;\")\n</code></pre>\n<p>Although while you're applying both emphasis and color to the same text, it would be more efficient to combine the two styles:</p>\n<pre><code>msg (\"&lt;em style=\\\"color:silver\\\"&gt;\" + line + \"&lt;/em&gt;\")\n</code></pre>\n\n",
+      "PostDate": "2020-04-29T22:00:17.6678991Z",
+      "LastEditDate": "2020-04-29T22:55:24.4527131Z",
+      "link": null
+    },
+    {
+      "PostId": "c20e777f-0914-4eb1-832b-a27c7372d3bb",
+      "UserId": 142763,
+      "Username": "Forgewright",
+      "AvatarUrl": "http://i.imgur.com/Ea6HecZb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "That is purdy. Thanks again Merlin...I mean Mrangel",
+      "EditableFormat": "markdown",
+      "HTML": "<p>That is purdy. Thanks again Merlin...I mean Mrangel</p>\n\n",
+      "PostDate": "2020-04-29T22:20:53.3965441Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

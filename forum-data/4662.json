@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "4662",
+    "ForumId": "10",
+    "Title": "Making a \"steal\" command.",
+    "LastUpdated": "2014-10-15T10:58:32+01:00",
+    "ReplyCount": 6
+  },
+  "Posts": [
+    {
+      "PostId": "30649",
+      "UserId": 0,
+      "Username": "jaktube",
+      "UserAvatar": null,
+      "UserGravatar": "441dd60b161c076ddcc345a600181d6b",
+      "EditableText": "I am currently working on a game in which you are a theif. I would like to make a command that let's you take something from another character. Like this:\n\n&gt;Steal sword from guard\n\nYou would get either:\nYou grab the item.\n\nOr:\n\nYou are spotted attempting to steal.\n\nI would like it to be able to increase the chance of successfully stealing by putting on different items of clothing (ie put on thieves hood, gain 10% better chance of stealing successfully). Please help as this seems like a lot of work. Also, if possible please tell me how to do it in the GUI editor. Thanks.\n\nEdit 1: If it cant be done in the GUI editor, go ahead and give me the coding anyway.",
+      "EditableFormat": "bbcode",
+      "HTML": "I am currently working on a game in which you are a theif. I would like to make a command that let's you take something from another character. Like this:<br/><br/>&gt;Steal sword from guard<br/><br/>You would get either:<br/>You grab the item.<br/><br/>Or:<br/><br/>You are spotted attempting to steal.<br/><br/>I would like it to be able to increase the chance of successfully stealing by putting on different items of clothing (ie put on thieves hood, gain 10% better chance of stealing successfully). Please help as this seems like a lot of work. Also, if possible please tell me how to do it in the GUI editor. Thanks.<br/><br/>Edit 1: If it cant be done in the GUI editor, go ahead and give me the coding anyway.",
+      "PostDate": "2014-10-14T21:54:59+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "30651",
+      "UserId": 0,
+      "Username": "Silver",
+      "UserAvatar": null,
+      "UserGravatar": "13024be5ccbb463906b024d5bd3cb5e8",
+      "EditableText": "I really have no idea how to give actions a percentage of success, I don't think it can be done in the interface though. Expect the coders to be along shortly for that. In terms of implementing items that can be worn there's a wearable library that can be added to a game and it works.\n\nDownload file from opening post\n\n<!-- l --><a class=\"postlink-local\" href=\"http://forum.textadventures.co.uk/viewtopic.php?f=10&amp;t=2901\">viewtopic.php?f=10&amp;t=2901</a><!-- l -->\n\n[quote:3b0ip44x]Copy the file wearable.aslx into your gamedirectory and add it to 'Advanced/Included Libraries'.   [/quote:3b0ip44x]\n\n<!-- m --><a class=\"postlink\" href=\"http://docs.textadventures.co.uk/quest/libraries/clothing_library2.html\">http://docs.textadventures.co.uk/quest/ ... rary2.html</a><!-- m -->",
+      "EditableFormat": "bbcode",
+      "HTML": "I really have no idea how to give actions a percentage of success, I don't think it can be done in the interface though. Expect the coders to be along shortly for that. In terms of implementing items that can be worn there's a wearable library that can be added to a game and it works.<br/><br/>Download file from opening post<br/><br/><!-- l --><a class=\"postlink-local\" href=\"http://forum.textadventures.co.uk/viewtopic.php?f=10&amp;t=2901\">viewtopic.php?f=10&amp;t=2901</a><!-- l --><br/><br/><blockquote><p>Copy the file wearable.aslx into your gamedirectory and add it to 'Advanced/Included Libraries'.   </p></blockquote><br/><br/><!-- m --><a class=\"postlink\" href=\"http://docs.textadventures.co.uk/quest/libraries/clothing_library2.html\">http://docs.textadventures.co.uk/quest/ ... rary2.html</a><!-- m -->",
+      "PostDate": "2014-10-14T22:42:28+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "30656",
+      "UserId": 0,
+      "Username": "Avantar",
+      "UserAvatar": "7009_1418309433.jpg",
+      "UserGravatar": "86de2b95c147252a1c38b8d3996da855",
+      "EditableText": "I am no coder, but you can create a command with a pattern.\nBelow is a snippet from the top of my head that I would try. You will have to define your conditions to your liking - below is just an example.\nFor the 50% chance there is a Boolean statement for percentage, but I can't remember it. You might use GetRandomInt(1,2) for a 50% chance being either a 1 or a 2.\nIf the random number is 1 - do this or if it is 2 do that....\nHopefully this is putting you on the right path.\n\n[code:1znmul78]&lt;command name=&quot;steal_stuff&quot;&gt;\n&lt;pattern&gt;steal #text# from #text2#&lt;/pattern&gt;\n\nobject_x = GetObject (text)\nif (object_x = null) {\n  foreach (obj, GetAllChildObjects(game&#46;pov&#46;parent)) {\n    if (LCase(GetDisplayAlias(obj)) = text) {\n\ttexts = obj&#46;name\n      object_x = GetObject (texts)\n    }\n  }\n}\n  foreach (obj, GetDirectChildren(game&#46;pov&#46;parent)) {\n    if (LCase(GetDisplayAlias(obj)) = text2 or LCase(GetDisplayName(obj)) = text2) {\n\ttext2 = obj&#46;name\n      object_stealing = GetObject (text2)\n    }\n  }\n  if (not IsDefined(&quot;object_stealing&quot;)) {\n  msg (&quot;There is no-one here by that name to steal from&#46;&quot;)\n  }\nelse if (object_x = null) {\n\tmsg (&quot;The guard is not carrying that item&#46;&quot;)\n\t}\n\telse {\n\tmsg (&quot;You steal a &quot; + object_x&#46;alias + &quot; from the guard&#46;&quot;)\n\tMoveObject (object_x, game&#46;pov)\n\t}\n\t}[/code:1znmul78]",
+      "EditableFormat": "bbcode",
+      "HTML": "I am no coder, but you can create a command with a pattern.<br/>Below is a snippet from the top of my head that I would try. You will have to define your conditions to your liking - below is just an example.<br/>For the 50% chance there is a Boolean statement for percentage, but I can't remember it. You might use GetRandomInt(1,2) for a 50% chance being either a 1 or a 2.<br/>If the random number is 1 - do this or if it is 2 do that....<br/>Hopefully this is putting you on the right path.<br/><br/><pre><code>&lt;command name=&quot;steal_stuff&quot;&gt;<br/>&lt;pattern&gt;steal #text# from #text2#&lt;/pattern&gt;<br/><br/>object_x = GetObject (text)<br/>if (object_x = null) {<br/>  foreach (obj, GetAllChildObjects(game&#46;pov&#46;parent)) {<br/>    if (LCase(GetDisplayAlias(obj)) = text) {<br/>\ttexts = obj&#46;name<br/>      object_x = GetObject (texts)<br/>    }<br/>  }<br/>}<br/>  foreach (obj, GetDirectChildren(game&#46;pov&#46;parent)) {<br/>    if (LCase(GetDisplayAlias(obj)) = text2 or LCase(GetDisplayName(obj)) = text2) {<br/>\ttext2 = obj&#46;name<br/>      object_stealing = GetObject (text2)<br/>    }<br/>  }<br/>  if (not IsDefined(&quot;object_stealing&quot;)) {<br/>  msg (&quot;There is no-one here by that name to steal from&#46;&quot;)<br/>  }<br/>else if (object_x = null) {<br/>\tmsg (&quot;The guard is not carrying that item&#46;&quot;)<br/>\t}<br/>\telse {<br/>\tmsg (&quot;You steal a &quot; + object_x&#46;alias + &quot; from the guard&#46;&quot;)<br/>\tMoveObject (object_x, game&#46;pov)<br/>\t}<br/>\t}</code></pre>",
+      "PostDate": "2014-10-14T23:29:22+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "30658",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "the hardest part is the equipment and implementing it with your stealing\n\nas the stealing check itself is pretty simple:\n\nGUI~Editor: run as script -&gt; add a script -&gt; scripts -&gt; if -&gt; [EXPRESSION] -&gt; (type in the below)\n\nRandomChance (percent value): so the range of values is 0 to 100\n\nif (RandomChance (player.steal_integer) = true) {\n// take items scripting: so the 'player' now has them\n}\n\n---------\n\nconceptually of what you need to do via code or GUI~Editor:\n\n(this example is based upon using an object list to define what equipment is equipped upon you: if it's in, added to, the object list, then it is 'equipped', and all other items aren't 'equipped', and also I'm just using equipment as an example, but obviously you should steal from the target's full 'item' object list, and usually too you wouldn't steal from what is equipped... I just realized this now, after I've already gave this example, laughs. if you need help, I'll craft a full code for you, but when I can find the time to do so... sighs)\n\nyou need to put all your (to be equipped) equipment into your 'equipped' object list (Object List, because, then you can do a 'foreach' script to add their 'XXX' (stealing) Integer Attributes together, which you would then use for the 'RandomChance' code line:\n\n<!-- m --><a class=\"postlink\" href=\"http://docs.textadventures.co.uk/quest/functions/corelibrary/randomchance.html\">http://docs.textadventures.co.uk/quest/ ... hance.html</a><!-- m -->\n~and~\n<!-- m --><a class=\"postlink\" href=\"http://docs.textadventures.co.uk/quest/scripts/foreach.html\">http://docs.textadventures.co.uk/quest/ ... reach.html</a><!-- m -->\n<!-- m --><a class=\"postlink\" href=\"http://docs.textadventures.co.uk/quest/guides/using_lists.html\">http://docs.textadventures.co.uk/quest/ ... lists.html</a><!-- m -->\n<!-- m --><a class=\"postlink\" href=\"http://docs.textadventures.co.uk/quest/using_dictionaries.html\">http://docs.textadventures.co.uk/quest/ ... aries.html</a><!-- m -->\n\nto get your steal integer:\n\n[code:360c06dq]steal_x = ToInt (0)\nforeach (item_x, player&#46;equipped_objectlist) {\n  if (HasInt (item_x, &quot;steal_integer&quot;) = true) {\n    steal_x = ToInt (steal_x) + ToInt (item_x&#46;steal_integer)\n  }\n}\nplayer&#46;steal_integer = ToInt (steal_x)\nif (player&#46;steal_integer &gt; 100) {\n  player&#46;steal_integer = 100\n} else if (player&#46;steal_integer &lt; 0) {\n  player&#46;steal_integer = 0\n}[/code:360c06dq]\n\n'steal' Verb:\n\n(this = your target character object that you're trying to steal from, use the 'this' word, don't change it to something else)\n\n(the 'this' is a special thing that will get the object, whatever or no matter what it is, be it an 'orc' or a 'rogue' npc~enemy Object)\n\n[code:360c06dq]foreach (item_x, this&#46;equipment_objectlist) {\n  if (RandomChance (player&#46;steal_integer) = true) {\n    item_x&#46;parent = player\n  }\n}[/code:360c06dq]",
+      "EditableFormat": "bbcode",
+      "HTML": "the hardest part is the equipment and implementing it with your stealing<br/><br/>as the stealing check itself is pretty simple:<br/><br/>GUI~Editor: run as script -&gt; add a script -&gt; scripts -&gt; if -&gt; [EXPRESSION] -&gt; (type in the below)<br/><br/>RandomChance (percent value): so the range of values is 0 to 100<br/><br/>if (RandomChance (player.steal_integer) = true) {<br/>// take items scripting: so the 'player' now has them<br/>}<br/><br/>---------<br/><br/>conceptually of what you need to do via code or GUI~Editor:<br/><br/>(this example is based upon using an object list to define what equipment is equipped upon you: if it's in, added to, the object list, then it is 'equipped', and all other items aren't 'equipped', and also I'm just using equipment as an example, but obviously you should steal from the target's full 'item' object list, and usually too you wouldn't steal from what is equipped... I just realized this now, after I've already gave this example, laughs. if you need help, I'll craft a full code for you, but when I can find the time to do so... sighs)<br/><br/>you need to put all your (to be equipped) equipment into your 'equipped' object list (Object List, because, then you can do a 'foreach' script to add their 'XXX' (stealing) Integer Attributes together, which you would then use for the 'RandomChance' code line:<br/><br/><!-- m --><a class=\"postlink\" href=\"http://docs.textadventures.co.uk/quest/functions/corelibrary/randomchance.html\">http://docs.textadventures.co.uk/quest/ ... hance.html</a><!-- m --><br/>~and~<br/><!-- m --><a class=\"postlink\" href=\"http://docs.textadventures.co.uk/quest/scripts/foreach.html\">http://docs.textadventures.co.uk/quest/ ... reach.html</a><!-- m --><br/><!-- m --><a class=\"postlink\" href=\"http://docs.textadventures.co.uk/quest/guides/using_lists.html\">http://docs.textadventures.co.uk/quest/ ... lists.html</a><!-- m --><br/><!-- m --><a class=\"postlink\" href=\"http://docs.textadventures.co.uk/quest/using_dictionaries.html\">http://docs.textadventures.co.uk/quest/ ... aries.html</a><!-- m --><br/><br/>to get your steal integer:<br/><br/><pre><code>steal_x = ToInt (0)<br/>foreach (item_x, player&#46;equipped_objectlist) {<br/>  if (HasInt (item_x, &quot;steal_integer&quot;) = true) {<br/>    steal_x = ToInt (steal_x) + ToInt (item_x&#46;steal_integer)<br/>  }<br/>}<br/>player&#46;steal_integer = ToInt (steal_x)<br/>if (player&#46;steal_integer &gt; 100) {<br/>  player&#46;steal_integer = 100<br/>} else if (player&#46;steal_integer &lt; 0) {<br/>  player&#46;steal_integer = 0<br/>}</code></pre><br/><br/>'steal' Verb:<br/><br/>(this = your target character object that you're trying to steal from, use the 'this' word, don't change it to something else)<br/><br/>(the 'this' is a special thing that will get the object, whatever or no matter what it is, be it an 'orc' or a 'rogue' npc~enemy Object)<br/><br/><pre><code>foreach (item_x, this&#46;equipment_objectlist) {<br/>  if (RandomChance (player&#46;steal_integer) = true) {<br/>    item_x&#46;parent = player<br/>  }<br/>}</code></pre>",
+      "PostDate": "2014-10-15T01:10:35+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "30664",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "I think you would need to do this as a command, as you are wanting to reference two objects.\n\nThe pattern as a regular expression would look like this (using the &quot;useon&quot; command as a guide):\n\n^(steal|lift|pinch) (?&lt;object1&gt;.*) from (?&lt;object2&gt;.*)$\n\nThen object1 is a variable that holds the item to steal, object2 the target.",
+      "EditableFormat": "bbcode",
+      "HTML": "I think you would need to do this as a command, as you are wanting to reference two objects.<br/><br/>The pattern as a regular expression would look like this (using the &quot;useon&quot; command as a guide):<br/><br/>^(steal|lift|pinch) (?&lt;object1&gt;.*) from (?&lt;object2&gt;.*)$<br/><br/>Then object1 is a variable that holds the item to steal, object2 the target.",
+      "PostDate": "2014-10-15T08:04:42+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "30669",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "The main problem (and difficulty) with using &quot;object&quot; in your pattern is that (presumably) the object in question will belong to the one you're stealing it from... which means it won't be found when doing the pattern match in either the current room scope or your inventory scope. In other words, it's not visible as such in the world model.\n\nYou'd have to use &quot;text&quot; in the pattern and then do an object lookup based on that text - and handle the case where the target doesn't have the object!",
+      "EditableFormat": "bbcode",
+      "HTML": "The main problem (and difficulty) with using &quot;object&quot; in your pattern is that (presumably) the object in question will belong to the one you're stealing it from... which means it won't be found when doing the pattern match in either the current room scope or your inventory scope. In other words, it's not visible as such in the world model.<br/><br/>You'd have to use &quot;text&quot; in the pattern and then do an object lookup based on that text - and handle the case where the target doesn't have the object!",
+      "PostDate": "2014-10-15T09:40:04+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "30670",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Good point. So the pattern would be \n\n^(steal|lift|pinch) (?&lt;text&gt;.*) from (?&lt;object&gt;.*)$\n\nAnd you would have to search through the children of object for a match with text (remembering to check the alternative names too).",
+      "EditableFormat": "bbcode",
+      "HTML": "Good point. So the pattern would be <br/><br/>^(steal|lift|pinch) (?&lt;text&gt;.*) from (?&lt;object&gt;.*)$<br/><br/>And you would have to search through the children of object for a match with text (remembering to check the alternative names too).",
+      "PostDate": "2014-10-15T10:58:32+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

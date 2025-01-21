@@ -1,0 +1,47 @@
+{
+  "Topic": {
+    "TopicId": "1402",
+    "ForumId": "10",
+    "Title": "what am I doing wrong?",
+    "LastUpdated": "2006-10-31T15:16:27+00:00",
+    "ReplyCount": 2
+  },
+  "Posts": [
+    {
+      "PostId": "11405",
+      "UserId": 0,
+      "Username": "darkgoddessnight",
+      "UserAvatar": null,
+      "UserGravatar": "f57470a3bc351d13c31f470219bbcaf8",
+      "EditableText": "alright, so I am still working on character creation...long process, but I don't have much else to fill my time...and I am stuck.  I am doing the hair now and I am trying to make it that if you are bald, that you don't go on to hair length...I mean, if you are bald your hair length is pretty obvious right?  but it isn't working and I know I am doing something wrong.\n\nHere is my code:\n\ndefine procedure &lt;aquarianhair1&gt;\n\tset string &lt;choice[userid]; null&gt;\n\tset string &lt;valid[userid]; null&gt;\n\tmsg &lt;What color is your hair? 1-$objectproperty(aquarian_hair1; total)$|n&gt;\n\tfor &lt;i; 1; $objectproperty(aquarian_hair1; total)$&gt; msg &lt;%i%. $objectproperty(aquarian_hair1; %i%)$|n&gt;\n\tenter &lt;choice[userid]&gt;\n\tfor &lt;i; 1; $objectproperty(aquarian_hair1; total)$&gt; {\n\t\tif ( #choice[userid]# = %i% ) then set string &lt;valid[userid]; true&gt;\n\t}\n\tif ( #valid[userid]# &lt;&gt; true ) then {\n\t\tmsg &lt;That is not a valid choice.|n&gt;\n\t\tdo &lt;aquarianhair1&gt;\n\t}\n\telse {\n\t\tproperty &lt;player%userid%; haircolor=$objectproperty(aquarian_hair1; #choice[userid]#)$&gt;\n\t\tif property &lt;player%userid%; haircolor=none&gt; then do &lt;aquarianeye1&gt; else do &lt;hairlength&gt;\n\t}\nend define\n\ndefine object &lt;aquarian_hair1&gt;\n\t\tinvisible\n\t\tproperties &lt;1=white; 2=aqua blue; 3=azure blue; 4=blue gray; 5=blue green; 6=dark blue; 7=dark green; 8=deep \n\nblue; 9=deep green; 10=gray green; 11=pale blue; 12=pale green; 13=sea green; 14=silvery blue; 15=silvery gray; 16=silver \n\ngreen; 17=none; total=17&gt;\n\tend define\n\nthe problem is, it just keeps going on to hair length no matter what I do, I tried brackets, I tried %, I've tried everything!  *starts pulling out her hair*  pretty soon I am going to be bald myself lol\n\nplease help, thankyou\nShadow*",
+      "EditableFormat": "bbcode",
+      "HTML": "alright, so I am still working on character creation...long process, but I don't have much else to fill my time...and I am stuck.  I am doing the hair now and I am trying to make it that if you are bald, that you don't go on to hair length...I mean, if you are bald your hair length is pretty obvious right?  but it isn't working and I know I am doing something wrong.<br/><br/>Here is my code:<br/><br/>define procedure &lt;aquarianhair1&gt;<br/>\tset string &lt;choice[userid]; null&gt;<br/>\tset string &lt;valid[userid]; null&gt;<br/>\tmsg &lt;What color is your hair? 1-$objectproperty(aquarian_hair1; total)$|n&gt;<br/>\tfor &lt;i; 1; $objectproperty(aquarian_hair1; total)$&gt; msg &lt;%i%. $objectproperty(aquarian_hair1; %i%)$|n&gt;<br/>\tenter &lt;choice[userid]&gt;<br/>\tfor &lt;i; 1; $objectproperty(aquarian_hair1; total)$&gt; {<br/>\t\tif ( #choice[userid]# = %i% ) then set string &lt;valid[userid]; true&gt;<br/>\t}<br/>\tif ( #valid[userid]# &lt;&gt; true ) then {<br/>\t\tmsg &lt;That is not a valid choice.|n&gt;<br/>\t\tdo &lt;aquarianhair1&gt;<br/>\t}<br/>\telse {<br/>\t\tproperty &lt;player%userid%; haircolor=$objectproperty(aquarian_hair1; #choice[userid]#)$&gt;<br/>\t\tif property &lt;player%userid%; haircolor=none&gt; then do &lt;aquarianeye1&gt; else do &lt;hairlength&gt;<br/>\t}<br/>end define<br/><br/>define object &lt;aquarian_hair1&gt;<br/>\t\tinvisible<br/>\t\tproperties &lt;1=white; 2=aqua blue; 3=azure blue; 4=blue gray; 5=blue green; 6=dark blue; 7=dark green; 8=deep <br/><br/>blue; 9=deep green; 10=gray green; 11=pale blue; 12=pale green; 13=sea green; 14=silvery blue; 15=silvery gray; 16=silver <br/><br/>green; 17=none; total=17&gt;<br/>\tend define<br/><br/>the problem is, it just keeps going on to hair length no matter what I do, I tried brackets, I tried %, I've tried everything!  *starts pulling out her hair*  pretty soon I am going to be bald myself lol<br/><br/>please help, thankyou<br/>Shadow*",
+      "PostDate": "2006-10-31T02:02:56+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11407",
+      "UserId": 0,
+      "Username": "I think Im Dead",
+      "UserAvatar": null,
+      "UserGravatar": "662782b48efa4728f8d0773b83c01ddf",
+      "EditableText": "Your problem comes in the else section. You are setting the haircolor to a value, then checking if it isn't set and trying to do two different things accordingly. Change the code in your ELSE section to...\n\nThen from the hairlength, move onto eyecolor and whatnot.\n\n[code:2zpwhzd2]\n property &lt;player%userid%; haircolor=$objectproperty&#40;aquarian_hair1; #choice&#91;userid&#93;#&#41;$&gt; \ndo &lt;hairlength&gt;\n\n[/code:2zpwhzd2]",
+      "EditableFormat": "bbcode",
+      "HTML": "Your problem comes in the else section. You are setting the haircolor to a value, then checking if it isn't set and trying to do two different things accordingly. Change the code in your ELSE section to...<br/><br/>Then from the hairlength, move onto eyecolor and whatnot.<br/><br/><pre><code><br/> property &lt;player%userid%; haircolor=$objectproperty&#40;aquarian_hair1; #choice&#91;userid&#93;#&#41;$&gt; <br/>do &lt;hairlength&gt;<br/><br/></code></pre>",
+      "PostDate": "2006-10-31T14:36:02+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11408",
+      "UserId": 0,
+      "Username": "darkgoddessnight",
+      "UserAvatar": null,
+      "UserGravatar": "f57470a3bc351d13c31f470219bbcaf8",
+      "EditableText": "Thanks <!-- s:D --><img src=\"{SMILIES_PATH}/icon_e_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks <!-- s:D --><img src=\"{SMILIES_PATH}/icon_e_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "PostDate": "2006-10-31T15:16:27+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

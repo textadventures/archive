@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "6bxhkwxnxemenzs1nyerpa",
+    "ForumId": "10",
+    "Title": "DictionaryContains error",
+    "LastUpdated": "2019-05-15T10:23:37.3723915Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "4a4fefd4-b515-44e6-9347-e27f7280f75f",
+      "UserId": 418279,
+      "Username": "Zesc",
+      "AvatarUrl": "https://i.imgur.com/bGcfC7sb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Greetings fellow Quest coders.\r\n\r\nI'm currently working on a small gamebook project which is non-linear and allows the player to acces previous pages. To do this, i'm using a rather simple script executed at the start of each page:\r\n```\r\nplayer.LastPage = player.Now\r\nplayer.Now = player.parent\r\nAddPageLink (player.parent, player.LastPage, \"Previous Page\")\r\nAddPageLink (player.parent, MainHub, \"Main Menu\")\r\n```\r\n\r\n(I've seen people here using NewStringDictionary instead, but that's too messy for my taste for what is supposed to be a simple feature.)\r\n\r\nThe good news is that this works smoothly, and in case in which the last page is the Main Menu, you only get one link instead of two doing exactly the same.\r\n\r\nThe bad thing: whenever the game is started, it throws up two ugly errors:\r\n```\r\nError running script: Error compiling expression 'DictionaryContains(source.options, destination.name)': Variable does not refer to an object: 'destination'\r\nError running script: Error compiling expression 'destination.name': Variable does not refer to an object: 'destination'\r\n```\r\n\r\nAt first i thought this is because the game tries to reference a last page when there is none, but further scrutinity reveales this must be somehow connected to the HandleCommand function in GamebookCore.aslx . I'm defenitly not experienced enough to fiddle with the GamebookCore.aslx, and i have no idea what causes these errors.\r\n\r\nSo could anyone help me and explain what's going wrong, and how to do better? Help is highly appreciated, and thanks in advance.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Greetings fellow Quest coders.</p>\n<p>I'm currently working on a small gamebook project which is non-linear and allows the player to acces previous pages. To do this, i'm using a rather simple script executed at the start of each page:</p>\n<pre><code>player.LastPage = player.Now\nplayer.Now = player.parent\nAddPageLink (player.parent, player.LastPage, \"Previous Page\")\nAddPageLink (player.parent, MainHub, \"Main Menu\")\n</code></pre>\n<p>(I've seen people here using NewStringDictionary instead, but that's too messy for my taste for what is supposed to be a simple feature.)</p>\n<p>The good news is that this works smoothly, and in case in which the last page is the Main Menu, you only get one link instead of two doing exactly the same.</p>\n<p>The bad thing: whenever the game is started, it throws up two ugly errors:</p>\n<pre><code>Error running script: Error compiling expression 'DictionaryContains(source.options, destination.name)': Variable does not refer to an object: 'destination'\nError running script: Error compiling expression 'destination.name': Variable does not refer to an object: 'destination'\n</code></pre>\n<p>At first i thought this is because the game tries to reference a last page when there is none, but further scrutinity reveales this must be somehow connected to the HandleCommand function in GamebookCore.aslx . I'm defenitly not experienced enough to fiddle with the GamebookCore.aslx, and i have no idea what causes these errors.</p>\n<p>So could anyone help me and explain what's going wrong, and how to do better? Help is highly appreciated, and thanks in advance.</p>\n\n",
+      "PostDate": "2019-05-15T10:23:37.3723915Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e7896b70-5c9a-4e3d-a496-5b433509aa33",
+      "UserId": 418279,
+      "Username": "Zesc",
+      "AvatarUrl": "https://i.imgur.com/bGcfC7sb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Okay, i found a workaround on my own, but it's not exactly elegant.\r\n\r\n```\r\nif (player.parent = Intro) {\r\n  player.Now = MainHub\r\n}\r\n```\r\n(This is included _before_ the script i described above)\r\n\r\n This works around the error by making the game refer to an non-null value. It's not what i hoped for, but it gets the job done. And, let's be honest, this won't impact performance to a measurable degree.\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Okay, i found a workaround on my own, but it's not exactly elegant.</p>\n<pre><code>if (player.parent = Intro) {\n  player.Now = MainHub\n}\n</code></pre>\n<p>(This is included <em>before</em> the script i described above)</p>\n<p>This works around the error by making the game refer to an non-null value. It's not what i hoped for, but it gets the job done. And, let's be honest, this won't impact performance to a measurable degree.</p>\n\n",
+      "PostDate": "2019-05-16T18:29:57.9121949Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "55d32bfc-eb38-4899-b4c3-db5064666685",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "That does not make sense as you describe it. Your new code is:\r\n```\r\nif (player.parent = Intro) {\r\n  player.Now = MainHub\r\n}\r\nplayer.LastPage = player.Now\r\nplayer.Now = player.parent\r\nAddPageLink (player.parent, player.LastPage, \"Previous Page\")\r\nAddPageLink (player.parent, MainHub, \"Main Menu\")\r\n```\r\nIf the player is in the intro, player.Now gets set to Mainhub, but then gets set to Intro before you do anything with it, so the end result is exactly the same as you had originally. Or is there some intervening code?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>That does not make sense as you describe it. Your new code is:</p>\n<pre><code>if (player.parent = Intro) {\n  player.Now = MainHub\n}\nplayer.LastPage = player.Now\nplayer.Now = player.parent\nAddPageLink (player.parent, player.LastPage, \"Previous Page\")\nAddPageLink (player.parent, MainHub, \"Main Menu\")\n</code></pre>\n<p>If the player is in the intro, player.Now gets set to Mainhub, but then gets set to Intro before you do anything with it, so the end result is exactly the same as you had originally. Or is there some intervening code?</p>\n\n",
+      "PostDate": "2019-05-17T07:02:29.80019Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "79d5a0e0-f776-4325-8533-43e2cbc10e06",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> If the player is in the intro, player.Now gets set to Mainhub, but then gets set to Intro before you do anything with it, \r\n\r\nNo, it's for the `player.LastPage = player.Now`. Otherwise, the first time it's run LastPage would be set to null, which generates the error quoted in the first post.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>If the player is in the intro, player.Now gets set to Mainhub, but then gets set to Intro before you do anything with it,</p>\n</blockquote>\n<p>No, it's for the <code>player.LastPage = player.Now</code>. Otherwise, the first time it's run LastPage would be set to null, which generates the error quoted in the first post.</p>\n\n",
+      "PostDate": "2019-05-17T12:53:29.2685782Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "4fe398eb-1408-4c6b-8bef-d3f8942a1e90",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks, had not spotted that!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks, had not spotted that!</p>\n\n",
+      "PostDate": "2019-05-17T13:18:43.9221053Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "17d7e4c8-d0f3-46bc-b2b2-1966a4771299",
+      "UserId": 418279,
+      "Username": "Zesc",
+      "AvatarUrl": "https://i.imgur.com/bGcfC7sb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Exactly what mrangel said.  Seems like the errors came from the game trying to set a value to a value that wasn't defined then. (Still don't get what the second error means though.)\r\n\r\nBy setting the previous page to be the Main Menu, i'm abusing the fact that using AddPageLink will not generate a link to the same object/page twice, and instead modifies the existing entry. In this case, changes it to read \"Main Menu\" instead of \"Previous Page\". I honestly don't know if that is a feature or a bug, but since i discovered this a while ago i'm making use of it to put flavour into my games.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Exactly what mrangel said.  Seems like the errors came from the game trying to set a value to a value that wasn't defined then. (Still don't get what the second error means though.)</p>\n<p>By setting the previous page to be the Main Menu, i'm abusing the fact that using AddPageLink will not generate a link to the same object/page twice, and instead modifies the existing entry. In this case, changes it to read \"Main Menu\" instead of \"Previous Page\". I honestly don't know if that is a feature or a bug, but since i discovered this a while ago i'm making use of it to put flavour into my games.</p>\n\n",
+      "PostDate": "2019-05-17T20:33:43.8758666Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

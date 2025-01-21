@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "qxnqnqsuxeca_xnxh9cgzq",
+    "ForumId": "10",
+    "Title": "Combat UI based on speed.",
+    "LastUpdated": "2020-06-03T18:13:15.8145352Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "a6e0bedf-6723-4082-863d-bc1474545eb1",
+      "UserId": 420742,
+      "Username": "GC2",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "How do I create a combat UI when fighting and how do I base turns on speed?\r\nFor example: If I have 2 speed, enemy A has 2 speed, and enemy B has 1 speed. Enemy A and I would both get a turn while enemy B needs to wait two turns before having its turn.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>How do I create a combat UI when fighting and how do I base turns on speed?<br>\nFor example: If I have 2 speed, enemy A has 2 speed, and enemy B has 1 speed. Enemy A and I would both get a turn while enemy B needs to wait two turns before having its turn.</p>\n\n",
+      "PostDate": "2020-06-03T18:13:15.8145352Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "6bbb98fb-49bd-450c-9085-f0f33d983c3c",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "There's different ways to handle it, but this would be mine:\r\nMake a list of current combatants (probably at the beginning of combat), and give each an attribute saying how long it is until that character gets a turn. Maybe that's some number divided by their speed, or minus their speed, or some more complex formula.\r\n\r\nSo, you've got a list of characters, and each character has an attribute saying how long until their next turn.\r\nThen you'd have a turnscript that looks something like the following (pseudocode):\r\n```\r\nplayer_turn = false\r\nwhile (not player_turn) {\r\n  Take a 'current character' from the front of the list\r\n  Add the current character to the end of the list\r\n  subtract one from current character's wait time\r\n  if current character's wait time is zero {\r\n    if (current character is the player) {\r\n      // this exits the loop so the player can take their turn\r\n      player_turn = true\r\n    }\r\n    else {\r\n      decide what the current enemy is going to do, and resolve that action\r\n    }\r\n    recalculate the character's wait time according to their speed\r\n  }\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>There's different ways to handle it, but this would be mine:<br>\nMake a list of current combatants (probably at the beginning of combat), and give each an attribute saying how long it is until that character gets a turn. Maybe that's some number divided by their speed, or minus their speed, or some more complex formula.</p>\n<p>So, you've got a list of characters, and each character has an attribute saying how long until their next turn.<br>\nThen you'd have a turnscript that looks something like the following (pseudocode):</p>\n<pre><code>player_turn = false\nwhile (not player_turn) {\n  Take a 'current character' from the front of the list\n  Add the current character to the end of the list\n  subtract one from current character's wait time\n  if current character's wait time is zero {\n    if (current character is the player) {\n      // this exits the loop so the player can take their turn\n      player_turn = true\n    }\n    else {\n      decide what the current enemy is going to do, and resolve that action\n    }\n    recalculate the character's wait time according to their speed\n  }\n}\n</code></pre>\n\n",
+      "PostDate": "2020-06-03T18:58:51.441269Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "919a2060-bd96-4be0-8ddf-f6c8d644af71",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Or an alternate method, avoiding the need for a list (which may make a difference in some circumstances), would be having a turnscript like:\r\n```\r\n// Get a list of enemies/allies/player in the current room\r\n// In this case, I'm getting a list of anything in the current room with a 'speed' attribute; but you can do something different depending on your game\r\ncombatants = FilterByNotAttribute (GetDirectChildren (game.pov.parent), \"speed\", null))\r\n\r\n// We probably don't need to take turns if the player is the only person in the room\r\nif (ListCount (combatants) > 1) {\r\n\r\n  // keep on looping until it's the player's turn\r\n  while (game.pov.turncounter > 0) {\r\n    foreach (npc, combatants) {\r\n\r\n      // If they only just joined combat, they have 360 'ticks' until their first action. Each time through the loop, this number goes down by their speed, so a character with double the speed gets twice as many turns\r\n      // I picked 360 because it's not a massive number, but has lots of factors, which makes the maths smoother\r\n      if (not HasInt (npc, \"turncount\")) {\r\n        npc.turncount = 360\r\n      }\r\n      npc.turncount = npc.turncount - npc.speed\r\n\r\n      // if it's their turn and they're not the player and not dead, they take their turn\r\n      // If you have things like paralysis effects, it might be worth using a function for this test\r\n      if (npc.turncount < 0 and not npc = game.pov and not GetBoolean (npc, \"dead\")) {\r\n        npc.turncount = npc.turncount + 360\r\n        // This function should decide what action the NPC takes, and do all the damage etc.\r\n        TakeTurn (npc)\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\ngame.pov.turncount = game.pov.turncount + 360\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Or an alternate method, avoiding the need for a list (which may make a difference in some circumstances), would be having a turnscript like:</p>\n<pre><code>// Get a list of enemies/allies/player in the current room\n// In this case, I'm getting a list of anything in the current room with a 'speed' attribute; but you can do something different depending on your game\ncombatants = FilterByNotAttribute (GetDirectChildren (game.pov.parent), \"speed\", null))\n\n// We probably don't need to take turns if the player is the only person in the room\nif (ListCount (combatants) &gt; 1) {\n\n  // keep on looping until it's the player's turn\n  while (game.pov.turncounter &gt; 0) {\n    foreach (npc, combatants) {\n\n      // If they only just joined combat, they have 360 'ticks' until their first action. Each time through the loop, this number goes down by their speed, so a character with double the speed gets twice as many turns\n      // I picked 360 because it's not a massive number, but has lots of factors, which makes the maths smoother\n      if (not HasInt (npc, \"turncount\")) {\n        npc.turncount = 360\n      }\n      npc.turncount = npc.turncount - npc.speed\n\n      // if it's their turn and they're not the player and not dead, they take their turn\n      // If you have things like paralysis effects, it might be worth using a function for this test\n      if (npc.turncount &lt; 0 and not npc = game.pov and not GetBoolean (npc, \"dead\")) {\n        npc.turncount = npc.turncount + 360\n        // This function should decide what action the NPC takes, and do all the damage etc.\n        TakeTurn (npc)\n      }\n    }\n  }\n}\n\ngame.pov.turncount = game.pov.turncount + 360\n</code></pre>\n\n",
+      "PostDate": "2020-06-03T20:00:09.6615448Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

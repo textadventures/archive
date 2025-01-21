@@ -1,0 +1,143 @@
+{
+  "Topic": {
+    "TopicId": "3200",
+    "ForumId": "10",
+    "Title": "Need Script to Recognize an Object's Alias",
+    "LastUpdated": "2012-09-19T10:02:01+01:00",
+    "ReplyCount": 10
+  },
+  "Posts": [
+    {
+      "PostId": "21369",
+      "UserId": 0,
+      "Username": "MikeOmega",
+      "UserAvatar": null,
+      "UserGravatar": "0d668151e09cdc3f5614de6a4396cdc3",
+      "EditableText": "I keep running into this problem... In my game, I have a series of objects which I am using as spells. I have a command which allows the player to cast a spell given that spell object is contained within a hidden object, the player's spellbook. My problem is, when a player learns a new spell, the original spell object is cloned and moved to their spellbook. Say we're using a spell named &quot;blind&quot;. This changes the object's name to &quot;blind1&quot; as it is a duplicate of an already existing object. There are other parts of the game where that object has already been cloned, so now the object's name is &quot;blind2&quot; or &quot;blind3&quot;. So I can't have the game check for a specific name. I need a way for the game to check the spell book for the object's alias instead, which is &quot;Blind&quot;. Is there a way to do this? \n\nAnother similar note, I am working with another script which would end the game when the player's health reaches 0, but not if the player is carrying a specific item in their inventory. I am calling this item &quot;phoenix&quot; right now, if the player's health reaches 0 and the object &quot;phoenix&quot; is in their inventory, then it restores their health and the game does not end. I tried this with a &quot;for each&quot; script, which checks the player's inventory. I hit the same problem with the first, It can only search for the specific &quot;phoenix&quot; object rather than a clone, say &quot;phoenix1&quot; or &quot;phoenix2&quot;. And if the player is carrying more objects in their inventory than just the &quot;phoenix&quot; then it runs the script on them as well, because they are not &quot;phoenix&quot; and ends the game. How can I fix it so that it searches for the alias &quot;Phoenix&quot; and only ends the game if the player lacks it?\n\n[code:12zq8pku]if (player&#46;health &lt;= 0) {\n          if (Got(phoenix)) {\n            msg (&quot;You nearly succumb to your wounds&#46;&#46;&#46; But before your vision fades for the last time, you feel a burning heat radiating from your pouch&#46; A powerful energy washes over you as the Phoenix Phylactory you were carrying uses its magic to restore your life! As the vitality fills you, the amulet, having been drained of its energy, shatters!&quot;)\n            MoveObject (object, junk)\n            player&#46;health = player&#46;maxHP\n          }\n          else {\n            msg (&quot;You have been slain!&quot;)\n            finish\n          }[/code:12zq8pku]\nHow do I fix this?",
+      "EditableFormat": "bbcode",
+      "HTML": "I keep running into this problem... In my game, I have a series of objects which I am using as spells. I have a command which allows the player to cast a spell given that spell object is contained within a hidden object, the player's spellbook. My problem is, when a player learns a new spell, the original spell object is cloned and moved to their spellbook. Say we're using a spell named &quot;blind&quot;. This changes the object's name to &quot;blind1&quot; as it is a duplicate of an already existing object. There are other parts of the game where that object has already been cloned, so now the object's name is &quot;blind2&quot; or &quot;blind3&quot;. So I can't have the game check for a specific name. I need a way for the game to check the spell book for the object's alias instead, which is &quot;Blind&quot;. Is there a way to do this? <br/><br/>Another similar note, I am working with another script which would end the game when the player's health reaches 0, but not if the player is carrying a specific item in their inventory. I am calling this item &quot;phoenix&quot; right now, if the player's health reaches 0 and the object &quot;phoenix&quot; is in their inventory, then it restores their health and the game does not end. I tried this with a &quot;for each&quot; script, which checks the player's inventory. I hit the same problem with the first, It can only search for the specific &quot;phoenix&quot; object rather than a clone, say &quot;phoenix1&quot; or &quot;phoenix2&quot;. And if the player is carrying more objects in their inventory than just the &quot;phoenix&quot; then it runs the script on them as well, because they are not &quot;phoenix&quot; and ends the game. How can I fix it so that it searches for the alias &quot;Phoenix&quot; and only ends the game if the player lacks it?<br/><br/><pre><code>if (player&#46;health &lt;= 0) {<br/>          if (Got(phoenix)) {<br/>            msg (&quot;You nearly succumb to your wounds&#46;&#46;&#46; But before your vision fades for the last time, you feel a burning heat radiating from your pouch&#46; A powerful energy washes over you as the Phoenix Phylactory you were carrying uses its magic to restore your life! As the vitality fills you, the amulet, having been drained of its energy, shatters!&quot;)<br/>            MoveObject (object, junk)<br/>            player&#46;health = player&#46;maxHP<br/>          }<br/>          else {<br/>            msg (&quot;You have been slain!&quot;)<br/>            finish<br/>          }</code></pre><br/>How do I fix this?",
+      "PostDate": "2012-09-14T18:02:23+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21370",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "Perhaps this function can help. It searches an object or his cloned brothers under the specific parent .\n[code:32xc3r93]      obj1=findObject(spellbook,blind)\n\t  if (obj1 &lt;&gt; null) {\n\t\t\t// do something\n\t  }[/code:32xc3r93]\n\n\n\n[code:32xc3r93]  &lt;function name=&quot;findObject&quot; parameters=&quot;parent, searchObj&quot; type=&quot;object&quot;&gt;&lt;!&#91;CDATA&#91;\n    result = null\n    lenSearchObj = LengthOf(searchObj&#46;name)\n    foreach (obj, AllObjects()) {\n      if (obj&#46;parent=parent) {\n        len = LengthOf(obj&#46;name)\n        if (len&gt;=lenSearchObj and UCase(Left(obj&#46;name,lenSearchObj))=UCase(searchObj&#46;name)) {\n          result = obj\n        }\n      }\n    }\n    return (result)\n  &#93;&#93;&gt;&lt;/function&gt;[/code:32xc3r93]",
+      "EditableFormat": "bbcode",
+      "HTML": "Perhaps this function can help. It searches an object or his cloned brothers under the specific parent .<br/><pre><code>      obj1=findObject(spellbook,blind)<br/>\t  if (obj1 &lt;&gt; null) {<br/>\t\t\t// do something<br/>\t  }</code></pre><br/><br/><br/><br/><pre><code>  &lt;function name=&quot;findObject&quot; parameters=&quot;parent, searchObj&quot; type=&quot;object&quot;&gt;&lt;!&#91;CDATA&#91;<br/>    result = null<br/>    lenSearchObj = LengthOf(searchObj&#46;name)<br/>    foreach (obj, AllObjects()) {<br/>      if (obj&#46;parent=parent) {<br/>        len = LengthOf(obj&#46;name)<br/>        if (len&gt;=lenSearchObj and UCase(Left(obj&#46;name,lenSearchObj))=UCase(searchObj&#46;name)) {<br/>          result = obj<br/>        }<br/>      }<br/>    }<br/>    return (result)<br/>  &#93;&#93;&gt;&lt;/function&gt;</code></pre>",
+      "PostDate": "2012-09-14T19:35:00+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21371",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "If I was doing it, rather than cloning, I would move the object to the spellbook, or whatever, then check where that specific object is.",
+      "EditableFormat": "bbcode",
+      "HTML": "If I was doing it, rather than cloning, I would move the object to the spellbook, or whatever, then check where that specific object is.",
+      "PostDate": "2012-09-14T19:51:13+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21372",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "A variation on the theme that Pertex posted would be to search for the original prototype object differently - by storing it in the clone itself for easy access.\n\nWhen you clone an object (creating &quot;newObj&quot; from &quot;prototypeObj&quot;), you can then do something like:\n\n[code:g9nyu1th]newObj&#46;prototype= prototypeObj[/code:g9nyu1th]\n\nThen instead of some questionable name (or alias) munging, you can just do a comparison:\n\n[code:g9nyu1th]  &lt;function name=&quot;findObject&quot; parameters=&quot;parent, prototypeObj&quot; type=&quot;object&quot;&gt;&lt;!&#91;CDATA&#91;\n    result = null\n    foreach (obj, AllObjects()) {\n      if (obj&#46;parent=parent and GetAttribute(obj, &quot;prototype&quot;) = prototypeObj) {\n          result = obj\n      }\n    }\n    return (result)\n[/code:g9nyu1th]",
+      "EditableFormat": "bbcode",
+      "HTML": "A variation on the theme that Pertex posted would be to search for the original prototype object differently - by storing it in the clone itself for easy access.<br/><br/>When you clone an object (creating &quot;newObj&quot; from &quot;prototypeObj&quot;), you can then do something like:<br/><br/><pre><code>newObj&#46;prototype= prototypeObj</code></pre><br/><br/>Then instead of some questionable name (or alias) munging, you can just do a comparison:<br/><br/><pre><code>  &lt;function name=&quot;findObject&quot; parameters=&quot;parent, prototypeObj&quot; type=&quot;object&quot;&gt;&lt;!&#91;CDATA&#91;<br/>    result = null<br/>    foreach (obj, AllObjects()) {<br/>      if (obj&#46;parent=parent and GetAttribute(obj, &quot;prototype&quot;) = prototypeObj) {<br/>          result = obj<br/>      }<br/>    }<br/>    return (result)<br/></code></pre>",
+      "PostDate": "2012-09-14T21:37:42+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21374",
+      "UserId": 0,
+      "Username": "sgreig",
+      "UserAvatar": null,
+      "UserGravatar": "9117185af66d72729b195384e3a446f0",
+      "EditableText": "Those are good suggestions... but unless there's a specific need to be cloning the objects, I would just do as The Pixie suggested and move the original objects instead. This will make things much less complicated. Rememeber the KISS principle.",
+      "EditableFormat": "bbcode",
+      "HTML": "Those are good suggestions... but unless there's a specific need to be cloning the objects, I would just do as The Pixie suggested and move the original objects instead. This will make things much less complicated. Rememeber the KISS principle.",
+      "PostDate": "2012-09-15T08:04:17+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21375",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "I had made an assumption that, given the use of cloning, there could be multilple instances of the same spell in play at once. If not, then certainly reusing the same object makes more sense. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "I had made an assumption that, given the use of cloning, there could be multilple instances of the same spell in play at once. If not, then certainly reusing the same object makes more sense. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2012-09-15T10:07:58+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21377",
+      "UserId": 0,
+      "Username": "sgreig",
+      "UserAvatar": null,
+      "UserGravatar": "9117185af66d72729b195384e3a446f0",
+      "EditableText": "Yeah, that's what I was thinking as well. Unfortunately, the OP doesn't really specify why he's choosing to clone the items, so it's hard to say for sure until he clues us in. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Yeah, that's what I was thinking as well. Unfortunately, the OP doesn't really specify why he's choosing to clone the items, so it's hard to say for sure until he clues us in. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2012-09-15T19:30:20+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21408",
+      "UserId": 0,
+      "Username": "MikeOmega",
+      "UserAvatar": null,
+      "UserGravatar": "0d668151e09cdc3f5614de6a4396cdc3",
+      "EditableText": "My apologies, I have been away for a few days. Let me provide some clarification.\n\nI'm trying to make my game highly dynamic and highly variable, where each little action of the players, from character creation onwards, creates a distinctly unique playing experience. \n\nThe reason I am cloning the objects is because the object in question needs to be available at multiple points in the game, and will be in the inventory of multiple characters simultaneously. In the case of spells, they are either given to the player when they start the game or later on if they choose to purchase one from a merchant. To me, it makes more sense to clone the object and move it than to make a million or so objects which would have to be sorted. And if I would like other character objects in the game to be holding that identical spell object, it would necessitate cloning from a prototype spell object, yes? \n\nI believe the issue is that I have vendors who sell items and spells in my game. When the player chooses an option from a list of what to buy, the game clones a prototype object and moves it to the player's inventory, that way not every single vendor has to have their own complete inventory of objects, and that objects can be purchased multiple times. \n\nI'm having a bit of trouble incorporating the code given into my game... I'm not sure what I'm doing wrong here. I've tried implementing it as a function, but I keep getting errors. How do I go about setting this up in Quest's interface?",
+      "EditableFormat": "bbcode",
+      "HTML": "My apologies, I have been away for a few days. Let me provide some clarification.<br/><br/>I'm trying to make my game highly dynamic and highly variable, where each little action of the players, from character creation onwards, creates a distinctly unique playing experience. <br/><br/>The reason I am cloning the objects is because the object in question needs to be available at multiple points in the game, and will be in the inventory of multiple characters simultaneously. In the case of spells, they are either given to the player when they start the game or later on if they choose to purchase one from a merchant. To me, it makes more sense to clone the object and move it than to make a million or so objects which would have to be sorted. And if I would like other character objects in the game to be holding that identical spell object, it would necessitate cloning from a prototype spell object, yes? <br/><br/>I believe the issue is that I have vendors who sell items and spells in my game. When the player chooses an option from a list of what to buy, the game clones a prototype object and moves it to the player's inventory, that way not every single vendor has to have their own complete inventory of objects, and that objects can be purchased multiple times. <br/><br/>I'm having a bit of trouble incorporating the code given into my game... I'm not sure what I'm doing wrong here. I've tried implementing it as a function, but I keep getting errors. How do I go about setting this up in Quest's interface?",
+      "PostDate": "2012-09-18T17:49:42+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21410",
+      "UserId": 0,
+      "Username": "sgreig",
+      "UserAvatar": null,
+      "UserGravatar": "9117185af66d72729b195384e3a446f0",
+      "EditableText": "Ok, I see what you're getting at. Maybe there's a simpler solution? How about instead of having multiple instances of the spell objects, use flags instead? For example, and assuming I've understood the premise of how spells work in your game, you have the spell book object, and when you add these gems or crystals or whatever the objects are to the spell book, you gain the ability to cast a specific spell?\n\nWhat you could do instead of cloning the objects, is when a spell object is acquired either through loot drops or purchase from a vendor, is that a flag is set on the spellbook object, and the physical object is moved to a sort of &quot;limbo&quot; room outside of the playable area of the game. You wouldn't see the objects in the list of inventory items in the panel, but you could have a dynamic description of the spell book that tells the player what spell objects they have. This probably isn't exactly how you envisioned it, but this is the simplest way I can think of to implement what you're talking about.",
+      "EditableFormat": "bbcode",
+      "HTML": "Ok, I see what you're getting at. Maybe there's a simpler solution? How about instead of having multiple instances of the spell objects, use flags instead? For example, and assuming I've understood the premise of how spells work in your game, you have the spell book object, and when you add these gems or crystals or whatever the objects are to the spell book, you gain the ability to cast a specific spell?<br/><br/>What you could do instead of cloning the objects, is when a spell object is acquired either through loot drops or purchase from a vendor, is that a flag is set on the spellbook object, and the physical object is moved to a sort of &quot;limbo&quot; room outside of the playable area of the game. You wouldn't see the objects in the list of inventory items in the panel, but you could have a dynamic description of the spell book that tells the player what spell objects they have. This probably isn't exactly how you envisioned it, but this is the simplest way I can think of to implement what you're talking about.",
+      "PostDate": "2012-09-19T00:09:56+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21411",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Mike, if you could post what you're trying that's giving you errors, it might help. I understand what you're doing generally, and it more or less makes sense, but I can't offer any guidance on the specifics without seeing something... specific. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Mike, if you could post what you're trying that's giving you errors, it might help. I understand what you're doing generally, and it more or less makes sense, but I can't offer any guidance on the specifics without seeing something... specific. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2012-09-19T00:44:50+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21412",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "Mike, open the codeview in the editor, then copy the function to your game, best between the last  &lt;/object&gt; and &lt;/asl&gt;, something like this:\n[attachment=1:i4q47twz]<!-- ia1 -->code1.png<!-- ia1 -->[/attachment:i4q47twz]\n\nThen you can switch back to the gui and call this function like this:\n[attachment=0:i4q47twz]<!-- ia0 -->code2.png<!-- ia0 -->[/attachment:i4q47twz]",
+      "EditableFormat": "bbcode",
+      "HTML": "Mike, open the codeview in the editor, then copy the function to your game, best between the last  &lt;/object&gt; and &lt;/asl&gt;, something like this:<br/><div><img src=\"/attachment/366\" alt=\"code1.png\" /></div><br/><br/>Then you can switch back to the gui and call this function like this:<br/><div><img src=\"/attachment/368\" alt=\"code2.png\" /></div>",
+      "PostDate": "2012-09-19T10:02:01+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

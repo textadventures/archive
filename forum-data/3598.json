@@ -1,0 +1,35 @@
+{
+  "Topic": {
+    "TopicId": "3598",
+    "ForumId": "10",
+    "Title": "Maintaining stringlist order and nesting menus",
+    "LastUpdated": "2013-04-02T22:05:41+01:00",
+    "ReplyCount": 1
+  },
+  "Posts": [
+    {
+      "PostId": "23885",
+      "UserId": 0,
+      "Username": "TriangleGames",
+      "UserAvatar": null,
+      "UserGravatar": "134d9e995777da65c5cf8efda551d579",
+      "EditableText": "1.) I have a stringlist which will be added to throughout the game, but I need to keep one specific string at the end of it. It's a list of options for a menu, and I want the last option to always be &quot;Back.&quot; I imagine it has something to do with &quot;list order,&quot; or &quot;list position,&quot; but I've never used that stuff before, and I don't know the proper syntax for it. Or, should I create a &quot;new&quot; stringlist each time I call the menu, based on another stringlist and then add &quot;Back&quot; to the end of it?\n\n2.) Also, I'm trying to figure out how to make &quot;branching menus&quot; which can return to the previous menu, and so far my best idea is to make a function for each menu so they can refer back to each other, but that seems pretty sloppy. Is there any simple way to do this without a full library? I tried using [b:3jd3vq4t]undo[/b:3jd3vq4t], but it goes back too far and undoes whatever called the first menu to begin with. I tried looking at the conversation library, but I got confused very quickly, and it implements stuff I don't really need, so I can't tell if it's a good model for what I want.\n\nVisual example:\n[b:3jd3vq4t]Main Menu[/b:3jd3vq4t]: Make a choice...\n--&quot;Opt 1&quot;\n----[i:3jd3vq4t]Stuff happens[/i:3jd3vq4t]\n--&quot;Opt 2&quot;\n----[b:3jd3vq4t]Sub Menu[/b:3jd3vq4t]\n------&quot;Opt 1&quot;\n--------[i:3jd3vq4t]Things occur[/i:3jd3vq4t]\n------&quot;Back&quot;\n--------[i:3jd3vq4t]Return to Main Menu[/i:3jd3vq4t]",
+      "EditableFormat": "bbcode",
+      "HTML": "1.) I have a stringlist which will be added to throughout the game, but I need to keep one specific string at the end of it. It's a list of options for a menu, and I want the last option to always be &quot;Back.&quot; I imagine it has something to do with &quot;list order,&quot; or &quot;list position,&quot; but I've never used that stuff before, and I don't know the proper syntax for it. Or, should I create a &quot;new&quot; stringlist each time I call the menu, based on another stringlist and then add &quot;Back&quot; to the end of it?<br/><br/>2.) Also, I'm trying to figure out how to make &quot;branching menus&quot; which can return to the previous menu, and so far my best idea is to make a function for each menu so they can refer back to each other, but that seems pretty sloppy. Is there any simple way to do this without a full library? I tried using <span style=\"font-weight:bold;\">undo</span>, but it goes back too far and undoes whatever called the first menu to begin with. I tried looking at the conversation library, but I got confused very quickly, and it implements stuff I don't really need, so I can't tell if it's a good model for what I want.<br/><br/>Visual example:<br/><span style=\"font-weight:bold;\">Main Menu</span>: Make a choice...<br/>--&quot;Opt 1&quot;<br/>----<span style=\"font-style:italic;\">Stuff happens</span><br/>--&quot;Opt 2&quot;<br/>----<span style=\"font-weight:bold;\">Sub Menu</span><br/>------&quot;Opt 1&quot;<br/>--------<span style=\"font-style:italic;\">Things occur</span><br/>------&quot;Back&quot;<br/>--------<span style=\"font-style:italic;\">Return to Main Menu</span>",
+      "PostDate": "2013-04-02T16:04:34+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "23891",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "1) I was leaning toward what you said at the end - keep your list without the &quot;Back&quot; and then add &quot;Back&quot; on at the last minute. If you keep &quot;Back&quot; in its own string list (a list of length 1), then you can just do ListCombine(menu, back) at the last minute. This will generate a new list with the combined contents of the two.\n\n2) Your visual example suggests a possibility: use objects for your menu data, and then use the parent/child relationship to navigate up and down. \n\n[code:1b3kejiw]&lt;object name=&quot;MainMenu&quot;&gt;\n  &lt;object name=&quot;MainMenu_Opt1&quot;&gt;\n  &lt;/object&gt;\n  &lt;object name=&quot;MainMenu_Opt2&quot;&gt;\n    &lt;object name=&quot;MainMenu_Opt2&#46;1&quot;&gt;\n    &lt;/object&gt;\n  &lt;/object&gt;\n&lt;/object&gt;[/code:1b3kejiw]\n\nYou can then hang text and even functionality (scripts) off the objects.\n\nThe other way to do it is to have a list, which you use as a stack. When you navigate to a new level, push the current level on the end of the list. When you go to navigate up, grab the last entry and remove it from the list, to &quot;pop&quot; the entry.",
+      "EditableFormat": "bbcode",
+      "HTML": "1) I was leaning toward what you said at the end - keep your list without the &quot;Back&quot; and then add &quot;Back&quot; on at the last minute. If you keep &quot;Back&quot; in its own string list (a list of length 1), then you can just do ListCombine(menu, back) at the last minute. This will generate a new list with the combined contents of the two.<br/><br/>2) Your visual example suggests a possibility: use objects for your menu data, and then use the parent/child relationship to navigate up and down. <br/><br/><pre><code>&lt;object name=&quot;MainMenu&quot;&gt;<br/>  &lt;object name=&quot;MainMenu_Opt1&quot;&gt;<br/>  &lt;/object&gt;<br/>  &lt;object name=&quot;MainMenu_Opt2&quot;&gt;<br/>    &lt;object name=&quot;MainMenu_Opt2&#46;1&quot;&gt;<br/>    &lt;/object&gt;<br/>  &lt;/object&gt;<br/>&lt;/object&gt;</code></pre><br/><br/>You can then hang text and even functionality (scripts) off the objects.<br/><br/>The other way to do it is to have a list, which you use as a stack. When you navigate to a new level, push the current level on the end of the list. When you go to navigate up, grab the last entry and remove it from the list, to &quot;pop&quot; the entry.",
+      "PostDate": "2013-04-02T22:05:41+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "Topic": {
+    "TopicId": "0h-8unblqewyssz9r06yvg",
+    "ForumId": "10",
+    "Title": "How to Hide Scenery Object in Container in Inventory Pane",
+    "LastUpdated": "2017-02-04T15:35:26.4558205Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "df7356fe-0455-4f77-9abe-909b708aa622",
+      "UserId": 277074,
+      "Username": "Dcoder",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/6bf915571362451733db8730696fe55d?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I have a chest (container) that always contains a false bottom (scenery object, can't be taken, can't be dropped, and has no alias).  The false bottom is there so that the player can interact with it when the chest is open, but can't \"see\" it.\r\n\r\nWhen the chest is open, the false bottom does NOT show up in the room description, or when you \"look at chest\", or when the player carries the chest and types \"inventory\" (as it should be).  It also does NOT display in the Places and Objects Pane on the right side (this is also good).  However, it DOES show up in the Inventory Pane when the player carries the chest and the chest is open (this is bad!).  Any way to completely hide this?\r\n\r\nThanks.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I have a chest (container) that always contains a false bottom (scenery object, can't be taken, can't be dropped, and has no alias).  The false bottom is there so that the player can interact with it when the chest is open, but can't \"see\" it.</p>\n<p>When the chest is open, the false bottom does NOT show up in the room description, or when you \"look at chest\", or when the player carries the chest and types \"inventory\" (as it should be).  It also does NOT display in the Places and Objects Pane on the right side (this is also good).  However, it DOES show up in the Inventory Pane when the player carries the chest and the chest is open (this is bad!).  Any way to completely hide this?</p>\n<p>Thanks.</p>\n\n",
+      "PostDate": "2017-02-04T15:35:26.4558205Z",
+      "LastEditDate": "2017-02-04T16:17:21.1054841Z"
+    },
+    {
+      "PostId": "55b0ce21-a8c3-400f-a085-f9a95e8b0cd2",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "A bit of a play suggests no, there is not. I thought you could override `ScopeInventory`, so it will only return non-scenery items (using `RemoveSceneryObjects`), but if you do that, you cannot interact with it at all.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>A bit of a play suggests no, there is not. I thought you could override <code>ScopeInventory</code>, so it will only return non-scenery items (using <code>RemoveSceneryObjects</code>), but if you do that, you cannot interact with it at all.</p>\n\n",
+      "PostDate": "2017-02-04T16:42:25.7461356Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3473d7e5-a82c-4625-8ee0-24a410df8bf8",
+      "UserId": 288307,
+      "Username": "crystalwizard",
+      "AvatarUrl": "http://i.imgur.com/3AxpbN7b.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "What, exactly, are you trying to accomplish here with this false bottom? Stuff that seems logical from a real world perspective frequently has to be accomplished some other way in code. So, explain, please, so we can help you find a good solution.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>What, exactly, are you trying to accomplish here with this false bottom? Stuff that seems logical from a real world perspective frequently has to be accomplished some other way in code. So, explain, please, so we can help you find a good solution.</p>\n\n",
+      "PostDate": "2017-02-04T16:56:58.434284Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "716b8a2b-4c03-4559-ab87-9877aa0c9c64",
+      "UserId": 277074,
+      "Username": "Dcoder",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/6bf915571362451733db8730696fe55d?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I wanted the player to be able to try and remove it, or break it, or something to expose what's underneath.  Maybe I'll just get rid of the false bottom object and let the player interact with the chest object instead.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I wanted the player to be able to try and remove it, or break it, or something to expose what's underneath.  Maybe I'll just get rid of the false bottom object and let the player interact with the chest object instead.</p>\n\n",
+      "PostDate": "2017-02-04T17:14:49.8360195Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "931896f1-43ec-41b0-9ed1-28fe4965c7a6",
+      "UserId": 288307,
+      "Username": "crystalwizard",
+      "AvatarUrl": "http://i.imgur.com/3AxpbN7b.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "no, don't do that. But don't use a scenery object, either. Add a script to the chest that will check for player actions.\r\n\r\nFake code example:\r\n\r\nif player (action=hit) chest msg(\"something seems to rattle under the bottom\")\r\nif player (action=pry) chest msg(\"you pry up the bottom\")\r\n.....then if player (action=look in chest)  msg(\"you see diamonds in what was the false bottom\")\r\nelse msg(\"I don't understand what you want to do to the chest. You can hit, shake, pry, the chest\")\r\n\r\nand yeah, you do have to tell them what actions they can take, or you have to accept the fact that your players might just not ever come up with the words you used for success actions.\r\n\r\nyou can modify that to include a check to see if they have a pry bar in inventory, and if not, then they lack something to pry the bottom up with. And if your player has a strength stat, you can require their strength be over a certain number. You can get very detailed with that.\r\n\r\nRemember, just because in the real world you'd need a false bottom, in the game you don't. Your chest doesn't need to have anything in it at all until it's looked in, in fact. \r\n\r\nWhat you really have, in terms of the actual game, is a chest object and a list of objects that chest contains. You also have a state on the chest - opened or closed. If closed, and the player looks in chest, the game just refuses to show them the list of objects, and instead tells them that the chest is closed. If the state is changed to opened, and the player looks in chest, then the game tells them the list of objects.\r\n\r\nSo that also applies to a \"false bottom\". There isn't really one there. There's just a state check. If player does some success action -> shake, hit, pry, whatever -> the game displays the appropriate message and checks to see if success is yes or no. If it's yes, it adds whatever was under the false bottom to the list of objects it'll display once the player looks into the open chest.\r\n\r\nStop thinking in terms of what you'd find in the real world, and start thinking in terms of what you want to have happen in reaction to events in the game.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>no, don't do that. But don't use a scenery object, either. Add a script to the chest that will check for player actions.</p>\n<p>Fake code example:</p>\n<p>if player (action=hit) chest msg(\"something seems to rattle under the bottom\")<br>\nif player (action=pry) chest msg(\"you pry up the bottom\")<br>\n.....then if player (action=look in chest)  msg(\"you see diamonds in what was the false bottom\")<br>\nelse msg(\"I don't understand what you want to do to the chest. You can hit, shake, pry, the chest\")</p>\n<p>and yeah, you do have to tell them what actions they can take, or you have to accept the fact that your players might just not ever come up with the words you used for success actions.</p>\n<p>you can modify that to include a check to see if they have a pry bar in inventory, and if not, then they lack something to pry the bottom up with. And if your player has a strength stat, you can require their strength be over a certain number. You can get very detailed with that.</p>\n<p>Remember, just because in the real world you'd need a false bottom, in the game you don't. Your chest doesn't need to have anything in it at all until it's looked in, in fact.</p>\n<p>What you really have, in terms of the actual game, is a chest object and a list of objects that chest contains. You also have a state on the chest - opened or closed. If closed, and the player looks in chest, the game just refuses to show them the list of objects, and instead tells them that the chest is closed. If the state is changed to opened, and the player looks in chest, then the game tells them the list of objects.</p>\n<p>So that also applies to a \"false bottom\". There isn't really one there. There's just a state check. If player does some success action -&gt; shake, hit, pry, whatever -&gt; the game displays the appropriate message and checks to see if success is yes or no. If it's yes, it adds whatever was under the false bottom to the list of objects it'll display once the player looks into the open chest.</p>\n<p>Stop thinking in terms of what you'd find in the real world, and start thinking in terms of what you want to have happen in reaction to events in the game.</p>\n\n",
+      "PostDate": "2017-02-04T17:19:04.1618404Z",
+      "LastEditDate": "2017-02-04T17:28:49.405456Z"
+    },
+    {
+      "PostId": "801556a2-e753-4e25-adb6-0b6966da21cd",
+      "UserId": 277074,
+      "Username": "Dcoder",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/6bf915571362451733db8730696fe55d?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks, I'll see what I can come up with.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks, I'll see what I can come up with.</p>\n\n",
+      "PostDate": "2017-02-05T02:44:38.5078087Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "f23cb71a-99ee-46a7-8b96-c466ed16ec0f",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "It is a little hacky, but you can do it. You need to [override](https://github.com/ThePix/quest/wiki/Overriding-Functions) a couple of functions so this willonly work for the off-line editor.\r\n\r\n\r\n_ScopeInventory_\r\n\r\nThe last line is this:\r\n```\r\nreturn (result)\r\n```\r\nReplace that with:\r\n```\r\nif (game.incommand) {\r\n  game.incommand = false\r\n  return (result)\r\n}\r\nelse {\r\n  return (RemoveSceneryObjects(result))\r\n}\r\n```\r\n\r\n\r\n_HandleSingleCommand_\r\n\r\nThe last three lines are this:\r\n```\r\nelse {\r\n  varlist = Populate(thiscommand.pattern, command, thiscommand.name)\r\n  HandleSingleCommandPattern (command, thiscommand, varlist)\r\n}\r\n```\r\nReplace with this:\r\n```\r\nelse {\r\n  varlist = Populate(thiscommand.pattern, command, thiscommand.name)\r\n  game.incommand = true\r\n  HandleSingleCommandPattern (command, thiscommand, varlist)\r\n}",
+      "EditableFormat": "markdown",
+      "HTML": "<p>It is a little hacky, but you can do it. You need to <a href=\"https://github.com/ThePix/quest/wiki/Overriding-Functions\">override</a> a couple of functions so this willonly work for the off-line editor.</p>\n<p><em>ScopeInventory</em></p>\n<p>The last line is this:</p>\n<pre><code>return (result)\n</code></pre>\n<p>Replace that with:</p>\n<pre><code>if (game.incommand) {\n  game.incommand = false\n  return (result)\n}\nelse {\n  return (RemoveSceneryObjects(result))\n}\n</code></pre>\n<p><em>HandleSingleCommand</em></p>\n<p>The last three lines are this:</p>\n<pre><code>else {\n  varlist = Populate(thiscommand.pattern, command, thiscommand.name)\n  HandleSingleCommandPattern (command, thiscommand, varlist)\n}\n</code></pre>\n<p>Replace with this:</p>\n<pre><code>else {\n  varlist = Populate(thiscommand.pattern, command, thiscommand.name)\n  game.incommand = true\n  HandleSingleCommandPattern (command, thiscommand, varlist)\n}\n</code></pre>\n\n",
+      "PostDate": "2017-02-05T09:36:43.946346Z",
+      "LastEditDate": "2017-02-05T09:37:11.7392731Z"
+    },
+    {
+      "PostId": "85f8cb79-d6bf-4f0f-b941-cd2fbd4e93cb",
+      "UserId": 277074,
+      "Username": "Dcoder",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/6bf915571362451733db8730696fe55d?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Pixie,\r\n\r\nIn the offline editor, I created a brand new TA game and overrode the 2 default functions by replacing the specified lines with the new code.  When I play the game, I get a whole slew of errors!  I'm not sure if I did this the way you intended me to.\r\n\r\nDon't sweat this though, because I simplified things by deleting the false bottom object and am just applying commands to the chest object.  Am curious to understand what you were going for though?  Thanks.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Pixie,</p>\n<p>In the offline editor, I created a brand new TA game and overrode the 2 default functions by replacing the specified lines with the new code.  When I play the game, I get a whole slew of errors!  I'm not sure if I did this the way you intended me to.</p>\n<p>Don't sweat this though, because I simplified things by deleting the false bottom object and am just applying commands to the chest object.  Am curious to understand what you were going for though?  Thanks.</p>\n\n",
+      "PostDate": "2017-02-05T15:51:43.7251656Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "80e1af5c-4783-41b3-bab7-8e8cc1d40535",
+      "UserId": 288307,
+      "Username": "crystalwizard",
+      "AvatarUrl": "http://i.imgur.com/3AxpbN7b.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I wouldn't apply them globally, just to the specific container. I can think of lots of problems that can happen if it's global. Not good.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I wouldn't apply them globally, just to the specific container. I can think of lots of problems that can happen if it's global. Not good.</p>\n\n",
+      "PostDate": "2017-02-05T15:56:48.9590586Z",
+      "LastEditDate": null
+    }
+  ]
+}

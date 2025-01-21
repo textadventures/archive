@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "rzvoeb9zeuuebugcgx3uqa",
+    "ForumId": "10",
+    "Title": "Best way of triggering events?",
+    "LastUpdated": "2020-03-31T03:25:44.877841Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "0339e6e0-5a1a-4f26-96f7-73d20f3117b3",
+      "UserId": 454326,
+      "Username": "Brian5757",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/411c3e8cd4782d4a996f292940a61069?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm looking at some ways I can trigger an event.\r\nI have the player going into a 4 room house and at some stage near the start of the adventure I want him to hear a sound in room 1 then discover a character in that room. \r\nThe two common ways to do this would be to have a turns counter so that after a certain amount of turns the player gets a message about hearing a sound in room 1\r\nThe other way is to have the character walk into one of the other rooms (2-4) which would trigger the message that someone is in room 1.\r\nIf the character walks into the room 1 at the start of the adventure then the character is not there.\r\nAdventure players are unpredictable. If the player decided to spend all his time in room 1 then the character would not appear as the player needs to be out of room 1. If I used a \"when entering a certain room\" to trigger this new character event then the player might not go into the certain room or might go into the room at the start of the game which triggers the character's arrival too soon.\r\nI need a bit of time for the player to explore the house, especially exploring room 1 before the character arrives. The character comes into the house and is discovered in room 1.\r\n\r\nJust after suggestions thanks as someone may of thought of an idea that I have not through of.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm looking at some ways I can trigger an event.<br>\nI have the player going into a 4 room house and at some stage near the start of the adventure I want him to hear a sound in room 1 then discover a character in that room.<br>\nThe two common ways to do this would be to have a turns counter so that after a certain amount of turns the player gets a message about hearing a sound in room 1<br>\nThe other way is to have the character walk into one of the other rooms (2-4) which would trigger the message that someone is in room 1.<br>\nIf the character walks into the room 1 at the start of the adventure then the character is not there.<br>\nAdventure players are unpredictable. If the player decided to spend all his time in room 1 then the character would not appear as the player needs to be out of room 1. If I used a \"when entering a certain room\" to trigger this new character event then the player might not go into the certain room or might go into the room at the start of the game which triggers the character's arrival too soon.<br>\nI need a bit of time for the player to explore the house, especially exploring room 1 before the character arrives. The character comes into the house and is discovered in room 1.</p>\n<p>Just after suggestions thanks as someone may of thought of an idea that I have not through of.</p>\n\n",
+      "PostDate": "2020-03-31T03:25:44.877841Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e1c658fe-8c1b-45a7-84e6-13c715ba5cb0",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Is there a 'room' for the house, which contains the other rooms? That can sometimes make it easier  for scripting purposes. (This could be done without it, but takes a little longer)\r\n\r\nI'd probably have a turnscript something like:\r\n<pre><code>if (Contains (house, game.pov) and not Contains (room1, game.pov)) {\r\n  roomsvisited = FilterByAttribute (GetDirectChildren (house), \"visited\", true)\r\n  if (ListContains (roomsvisited, room1) and RandomChance (<em style=\"color: green; font-family: initial\">8</em> * ListCount (roomsvisited)) {\r\n    <em style=\"color: blue; font-family: initial\">// code to run the event here</em>\r\n    this.enabled = false\r\n  }\r\n}</code></pre>\r\n\r\nThis seems most natural to me. The event only triggers if the player has visited room1 but isn't there now, and the chance of it happening each turn increases the more rooms they've visited. You can tweak the probabilities by adjusting one number; I think for a typical player this would take around 5-6 turns.\r\n\r\n(I used `game.pov` in the code instead of `player` because that's a good habit to get into. Not sure if you've come across that one yes, but `game.pov` refers to the current player object)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Is there a 'room' for the house, which contains the other rooms? That can sometimes make it easier  for scripting purposes. (This could be done without it, but takes a little longer)</p>\n<p>I'd probably have a turnscript something like:</p>\n<pre><code>if (Contains (house, game.pov) and not Contains (room1, game.pov)) {\n  roomsvisited = FilterByAttribute (GetDirectChildren (house), \"visited\", true)\n  if (ListContains (roomsvisited, room1) and RandomChance (<em style=\"color: green; font-family: initial\">8</em> * ListCount (roomsvisited)) {\n    <em style=\"color: blue; font-family: initial\">// code to run the event here</em>\n    this.enabled = false\n  }\n}</code></pre>\n<p>This seems most natural to me. The event only triggers if the player has visited room1 but isn't there now, and the chance of it happening each turn increases the more rooms they've visited. You can tweak the probabilities by adjusting one number; I think for a typical player this would take around 5-6 turns.</p>\n<p>(I used <code>game.pov</code> in the code instead of <code>player</code> because that's a good habit to get into. Not sure if you've come across that one yes, but <code>game.pov</code> refers to the current player object)</p>\n\n",
+      "PostDate": "2020-03-31T09:39:21.607328Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "86c4e463-2454-489f-b979-35658411d9c9",
+      "UserId": 454326,
+      "Username": "Brian5757",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/411c3e8cd4782d4a996f292940a61069?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks mrangel.\r\n\r\nPlease correct me if I'm wrong.\r\nFrom the code you've suggested I'm thinking that it reads if player is in the house and player is not in room 1 then \r\nget the number of rooms the player has visited and use this number to increase the chance of an event from happening.\r\nIf the list of room visited contains room1 and the random number passes then trigger the event.\r\n\r\nI'm not certain what this.enabled = false is for, maybe it disables something in the code.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks mrangel.</p>\n<p>Please correct me if I'm wrong.<br>\nFrom the code you've suggested I'm thinking that it reads if player is in the house and player is not in room 1 then<br>\nget the number of rooms the player has visited and use this number to increase the chance of an event from happening.<br>\nIf the list of room visited contains room1 and the random number passes then trigger the event.</p>\n<p>I'm not certain what this.enabled = false is for, maybe it disables something in the code.</p>\n\n",
+      "PostDate": "2020-03-31T21:50:21.2035355Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "dec4ad4e-beda-40a7-bc7b-85e954ff9bb8",
+      "UserId": 454326,
+      "Username": "Brian5757",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/411c3e8cd4782d4a996f292940a61069?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "In answer to your question mrangel\r\nThe house is a location and not a container and each room is a location. \r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>In answer to your question mrangel<br>\nThe house is a location and not a container and each room is a location.</p>\n\n",
+      "PostDate": "2020-03-31T21:56:12.7582618Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "5a713d26-721f-4dc6-9907-0dd5512cdf61",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> I'm not certain what `this.enabled = false` is for, maybe it disables something in the code.\r\n\r\nWithin a turnscript, `this` refers to the turnscript. So in this case, the turnscript disables itself to stop the event triggering again (I guessed this was the desired behaviour).\r\n\r\n> The house is a location and not a container and each room is a location.\r\n\r\nI only asked because I used `GetDirectChildren (house)` to get the list of rooms; that assumes that the rooms are all inside the house. It doesn't matter if the house is a room or an object; just that the rooms are inside the house. If they weren't, it would take a bit more code to see if the player had visited them.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>I'm not certain what <code>this.enabled = false</code> is for, maybe it disables something in the code.</p>\n</blockquote>\n<p>Within a turnscript, <code>this</code> refers to the turnscript. So in this case, the turnscript disables itself to stop the event triggering again (I guessed this was the desired behaviour).</p>\n<blockquote>\n<p>The house is a location and not a container and each room is a location.</p>\n</blockquote>\n<p>I only asked because I used <code>GetDirectChildren (house)</code> to get the list of rooms; that assumes that the rooms are all inside the house. It doesn't matter if the house is a room or an object; just that the rooms are inside the house. If they weren't, it would take a bit more code to see if the player had visited them.</p>\n\n",
+      "PostDate": "2020-04-01T00:21:42.1232624Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "41252417-8c4e-41d4-8998-2c304eed7659",
+      "UserId": 454326,
+      "Username": "Brian5757",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/411c3e8cd4782d4a996f292940a61069?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Ok thanks mrangel.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Ok thanks mrangel.</p>\n\n",
+      "PostDate": "2020-04-01T10:00:31.4765871Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

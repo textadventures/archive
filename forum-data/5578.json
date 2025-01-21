@@ -1,0 +1,35 @@
+{
+  "Topic": {
+    "TopicId": "5578",
+    "ForumId": "10",
+    "Title": "lost item",
+    "LastUpdated": "2015-10-23T12:46:11+01:00",
+    "ReplyCount": 1
+  },
+  "Posts": [
+    {
+      "PostId": "38418",
+      "UserId": 0,
+      "Username": "MatCauthon137",
+      "UserAvatar": null,
+      "UserGravatar": "2dbc07e4b190f3e9ef32628a9a3cedb4",
+      "EditableText": "Ok, maybe I'm overthinking things here. I very recently upgraded from quest 4.0 (to 5.6.1)so that is what I'm used to working with. Now, let's say you have an arbitrary status variable, we'll call &quot;beauty&quot; and an item &quot;makeup&quot;. \n\nThe gain command is simple, upon &quot;take&quot; increase the variable beauty. I got that to work. On drop, decrease beauty. Works also. Here is where I stumble.\n\nSince the decrease is with the command &quot;drop&quot; then putting the item in a box or on a shelf doesn't decrease beauty. And for the life of me, I can't find the old &quot;on lose item&quot; only &quot;on drop item&quot;. \n\nI'm assuming I need to do this with an attribute, maybe an inherited attribute, but I can't wrap my head around that. I would only be able to change the attribute &quot;on lose item&quot;. I thought about using a turn script with a flag system, but that seems overly cumbersome? \n\nAny suggestions would be greatly appreciated.",
+      "EditableFormat": "bbcode",
+      "HTML": "Ok, maybe I'm overthinking things here. I very recently upgraded from quest 4.0 (to 5.6.1)so that is what I'm used to working with. Now, let's say you have an arbitrary status variable, we'll call &quot;beauty&quot; and an item &quot;makeup&quot;. <br/><br/>The gain command is simple, upon &quot;take&quot; increase the variable beauty. I got that to work. On drop, decrease beauty. Works also. Here is where I stumble.<br/><br/>Since the decrease is with the command &quot;drop&quot; then putting the item in a box or on a shelf doesn't decrease beauty. And for the life of me, I can't find the old &quot;on lose item&quot; only &quot;on drop item&quot;. <br/><br/>I'm assuming I need to do this with an attribute, maybe an inherited attribute, but I can't wrap my head around that. I would only be able to change the attribute &quot;on lose item&quot;. I thought about using a turn script with a flag system, but that seems overly cumbersome? <br/><br/>Any suggestions would be greatly appreciated.",
+      "PostDate": "2015-10-23T02:15:48+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "38419",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "There is nothing built-in as such, but you can add a change script to the object. In fact it will already have one, you need to modify it. Assuming you are working offline, go to the Attributes tab, and select changeparent in the list at the bottom. Now click the Make editable copy button, then click on the Code view icon. You will see this:\n[code:2hgb2vvq]if (game&#46;pov = this) {\n  if (IsDefined(&quot;oldvalue&quot;)) {\n    OnEnterRoom (oldvalue)\n  }\n  else {\n    OnEnterRoom (null)\n  }\n  if (game&#46;gridmap) {\n    MergePOVCoordinates\n  }\n}[/code:2hgb2vvq]\nYou can get rid of that as the makeup will never by a player object. Replace it with this:\n[code:2hgb2vvq]if (IsDefined(&quot;oldvalue&quot;)) {\n  if (oldvalue = player) {\n    msg (&quot;You are no longer holding it&quot;)\n  }\n}[/code:2hgb2vvq]",
+      "EditableFormat": "bbcode",
+      "HTML": "There is nothing built-in as such, but you can add a change script to the object. In fact it will already have one, you need to modify it. Assuming you are working offline, go to the Attributes tab, and select changeparent in the list at the bottom. Now click the Make editable copy button, then click on the Code view icon. You will see this:<br/><pre><code>if (game&#46;pov = this) {<br/>  if (IsDefined(&quot;oldvalue&quot;)) {<br/>    OnEnterRoom (oldvalue)<br/>  }<br/>  else {<br/>    OnEnterRoom (null)<br/>  }<br/>  if (game&#46;gridmap) {<br/>    MergePOVCoordinates<br/>  }<br/>}</code></pre><br/>You can get rid of that as the makeup will never by a player object. Replace it with this:<br/><pre><code>if (IsDefined(&quot;oldvalue&quot;)) {<br/>  if (oldvalue = player) {<br/>    msg (&quot;You are no longer holding it&quot;)<br/>  }<br/>}</code></pre>",
+      "PostDate": "2015-10-23T12:46:11+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

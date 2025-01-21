@@ -1,0 +1,89 @@
+{
+  "Topic": {
+    "TopicId": "4t25t_4xpescdqztpc6k8a",
+    "ForumId": "10",
+    "Title": "Gamebook help (Adding to variables)",
+    "LastUpdated": "2017-03-18T20:51:08.4815237Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "644985ad-c473-4bac-b02b-9345e40c0988",
+      "UserId": 25522,
+      "Username": "tinlin",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/12b9b54e32339a9dee20f14da6b635af?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "New to Gamebook, very limited knowledge. I've been trying to figure out how to add to a variable all day. Once it's set how do I add to it? ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>New to Gamebook, very limited knowledge. I've been trying to figure out how to add to a variable all day. Once it's set how do I add to it?</p>\n\n",
+      "PostDate": "2017-03-18T20:51:08.4815237Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "20a040f9-4e8e-4d40-8175-7c51024a5e64",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "you do have Attribute usage, but you can only do so through scripting:\r\n\r\n'NAME_OF_PAGE_OBJECT' Page Object -> 'Page' Tab -> Page Type: [script] or [script+text] -> (see below)\r\n\r\nadd new script -> 'variables' section/category -> 'set a variable or  attribute' Script -> (see below, an example)\r\n\r\nset variable player.strength = [EXPRESSION] 0\r\n\r\nthe general structure/pattern/format/syntax is this (in code, which is slightly different from the GUI/Editor's '[EXPRESSION]' scripting syntax):\r\n\r\nNAME_OF_OBJECT.NAME_OF_ATTRIBUTE\r\nor\r\nNAME_OF_OBJECT.NAME_OF_ATTRIBUTE OPERATOR VALUE_OR_EXPRESSION\r\n\r\nin the Game Book, you've only got two Objects to use:\r\n\r\n1. the 'player' Player Object: player\r\n2. the 'game' Game Settings Object: game\r\n\r\nsome examples (in code, which is a bit different than the GUI/Editor's '[EXPRESSION]' scripting syntax)\r\n\r\nplayer.strength = 0\r\ngame.state = 0\r\nplayer.alias = \"HK\"\r\ngame.dragon_killed = false\r\ngame.dragon_killed = true\r\ngame.greeting = \"welcome to my game, I hope you enjoy it!\"\r\n\r\nbut, there's a way to 'cheat' to effectively have more Objects:\r\n\r\ngame.orc_life = 50\r\ngame.orc_damage = 10\r\ngame.dragon_life = 1000\r\ngame.dragon_damage = 500\r\n\r\nyou can use the 'player' as well (but it usually doesn't make logical sense -- unnerving for us humans, but NO actual errors in terms of/for the computer using it):\r\n\r\nplayer.orc_life = 50\r\nplayer.orc_damage = 10\r\nplayer.dragon_life = 1000\r\nplayer.dragon_damage = 500\r\n\r\n-----------\r\n\r\nto do simple arithmetic simple expressions, some examples (using the GUI/Editor's '[EXPRESSION]' scripting syntax):\r\n\r\nAddition:\r\n\r\nset variable player.strength = [EXPRESSION] player.strength + 7\r\n\r\nSubtraction:\r\n\r\nset variable player.strength = [EXPRESSION] player.strength - 20\r\n\r\nMultiplication:\r\n\r\nset variable player.strength = [EXPRESSION] player.strength * 3\r\n\r\nDivision:\r\n\r\nset variable player.strength = [EXPRESSION] player.strength / 2\r\n\r\n------\r\n\r\nModulus (division, but it finds/gets the REMAINDER): %\r\n\r\nCyclic example:\r\n\r\ngame.military_hour = game.hour % 24\r\ngame.civilian_hour = game.hour % 12\r\n\r\n//game.hour = 13\r\ngame.military_hour = game.hour % 24\r\n// game.military_hour = game.hour / 24 = 13 / 24 = no division, thus no change (13 - 0): 13 \r\ngame.civilian_hour = game.hour % 12\r\n// game.military_hour = game.hour / 24 = 13 / 12 = (1, R:1) = R:1 = 1\r\n\r\n//game.hour = 60\r\ngame.military_hour = game.hour % 24\r\n// game.military_hour = game.hour / 24 = 60 / 24 = (2, R:12) = R:12 = 12\r\ngame.civilian_hour = game.hour % 12\r\n// game.military_hour = game.hour / 24 = 60 / 12 = (5, R:0) = R:0 = 0\r\n\r\nEven/Odd/Factor-Divisible-X example:\r\n\r\n```\r\nif (game.my_value % 2 = 0) {\r\n  msg (\"The value is even\")\r\n} else {\r\n  msg (\"The value is odd\")\r\n}\r\n\r\nif (game.my_value % 7 = 0) {\r\n  msg (\"The value is divisible by 7, or said another way: 7 is a factor of the value\")\r\n} else {\r\n  msg (\"The value is not divisible by 7\")\r\n}\r\n```\r\n\r\n--------\r\n\r\nyou can do more complex expressions too, an example:\r\n\r\n// set variable player.strength = [EXPRESSION] 75\r\n// set variable player.weapon_damage = [EXPRESSION] 50\r\nset variable player.damage = [EXPRESSION] player.weapon_damage + player.weapon_damage * player.strength / 100\r\n// player.damage = 50 + 50 * 75/100\r\n// player.damage = 50 + 37 = 87\r\n\r\n--------\r\n\r\nhere's a more detailed guide:\r\n\r\nhttp://textadventures.co.uk/forum/samples/topic/5559/attributes-and-if-script-guide-by-hk\r\n\r\n(it's for a text adventure, but the scripting stuff is the same between text adventure and game book, for the most part. Only the means of accessing the scripting differs, and also that the Game Book is much more limited in its functionality than a Text Adventure and its full functionality, as the Game Book was meant merely for non-code-heavy CYOA game making)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>you do have Attribute usage, but you can only do so through scripting:</p>\n<p>'NAME_OF_PAGE_OBJECT' Page Object -&gt; 'Page' Tab -&gt; Page Type: [script] or [script+text] -&gt; (see below)</p>\n<p>add new script -&gt; 'variables' section/category -&gt; 'set a variable or  attribute' Script -&gt; (see below, an example)</p>\n<p>set variable player.strength = [EXPRESSION] 0</p>\n<p>the general structure/pattern/format/syntax is this (in code, which is slightly different from the GUI/Editor's '[EXPRESSION]' scripting syntax):</p>\n<p>NAME_OF_OBJECT.NAME_OF_ATTRIBUTE<br>\nor<br>\nNAME_OF_OBJECT.NAME_OF_ATTRIBUTE OPERATOR VALUE_OR_EXPRESSION</p>\n<p>in the Game Book, you've only got two Objects to use:</p>\n<ol>\n<li>the 'player' Player Object: player</li>\n<li>the 'game' Game Settings Object: game</li>\n</ol>\n<p>some examples (in code, which is a bit different than the GUI/Editor's '[EXPRESSION]' scripting syntax)</p>\n<p>player.strength = 0<br>\ngame.state = 0<br>\nplayer.alias = \"HK\"<br>\ngame.dragon_killed = false<br>\ngame.dragon_killed = true<br>\ngame.greeting = \"welcome to my game, I hope you enjoy it!\"</p>\n<p>but, there's a way to 'cheat' to effectively have more Objects:</p>\n<p>game.orc_life = 50<br>\ngame.orc_damage = 10<br>\ngame.dragon_life = 1000<br>\ngame.dragon_damage = 500</p>\n<p>you can use the 'player' as well (but it usually doesn't make logical sense -- unnerving for us humans, but NO actual errors in terms of/for the computer using it):</p>\n<p>player.orc_life = 50<br>\nplayer.orc_damage = 10<br>\nplayer.dragon_life = 1000<br>\nplayer.dragon_damage = 500</p>\n<hr>\n<p>to do simple arithmetic simple expressions, some examples (using the GUI/Editor's '[EXPRESSION]' scripting syntax):</p>\n<p>Addition:</p>\n<p>set variable player.strength = [EXPRESSION] player.strength + 7</p>\n<p>Subtraction:</p>\n<p>set variable player.strength = [EXPRESSION] player.strength - 20</p>\n<p>Multiplication:</p>\n<p>set variable player.strength = [EXPRESSION] player.strength * 3</p>\n<p>Division:</p>\n<p>set variable player.strength = [EXPRESSION] player.strength / 2</p>\n<hr>\n<p>Modulus (division, but it finds/gets the REMAINDER): %</p>\n<p>Cyclic example:</p>\n<p>game.military_hour = game.hour % 24<br>\ngame.civilian_hour = game.hour % 12</p>\n<p>//game.hour = 13<br>\ngame.military_hour = game.hour % 24<br>\n// game.military_hour = game.hour / 24 = 13 / 24 = no division, thus no change (13 - 0): 13<br>\ngame.civilian_hour = game.hour % 12<br>\n// game.military_hour = game.hour / 24 = 13 / 12 = (1, R:1) = R:1 = 1</p>\n<p>//game.hour = 60<br>\ngame.military_hour = game.hour % 24<br>\n// game.military_hour = game.hour / 24 = 60 / 24 = (2, R:12) = R:12 = 12<br>\ngame.civilian_hour = game.hour % 12<br>\n// game.military_hour = game.hour / 24 = 60 / 12 = (5, R:0) = R:0 = 0</p>\n<p>Even/Odd/Factor-Divisible-X example:</p>\n<pre><code>if (game.my_value % 2 = 0) {\n  msg (\"The value is even\")\n} else {\n  msg (\"The value is odd\")\n}\n\nif (game.my_value % 7 = 0) {\n  msg (\"The value is divisible by 7, or said another way: 7 is a factor of the value\")\n} else {\n  msg (\"The value is not divisible by 7\")\n}\n</code></pre>\n<hr>\n<p>you can do more complex expressions too, an example:</p>\n<p>// set variable player.strength = [EXPRESSION] 75<br>\n// set variable player.weapon_damage = [EXPRESSION] 50<br>\nset variable player.damage = [EXPRESSION] player.weapon_damage + player.weapon_damage * player.strength / 100<br>\n// player.damage = 50 + 50 * 75/100<br>\n// player.damage = 50 + 37 = 87</p>\n<hr>\n<p>here's a more detailed guide:</p>\n<p>http://textadventures.co.uk/forum/samples/topic/5559/attributes-and-if-script-guide-by-hk</p>\n<p>(it's for a text adventure, but the scripting stuff is the same between text adventure and game book, for the most part. Only the means of accessing the scripting differs, and also that the Game Book is much more limited in its functionality than a Text Adventure and its full functionality, as the Game Book was meant merely for non-code-heavy CYOA game making)</p>\n\n",
+      "PostDate": "2017-03-18T22:58:21.021626Z",
+      "LastEditDate": "2017-03-18T23:27:18.1337859Z"
+    },
+    {
+      "PostId": "a7d22391-9637-403b-a2a5-c0af781c235a",
+      "UserId": 25522,
+      "Username": "tinlin",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/12b9b54e32339a9dee20f14da6b635af?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I tried that but it's not worked yet. I set Money to 0 in game and in a different page tried to add to it in the way you said but it stayed the same. Thanks anyway.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I tried that but it's not worked yet. I set Money to 0 in game and in a different page tried to add to it in the way you said but it stayed the same. Thanks anyway.</p>\n\n",
+      "PostDate": "2017-03-21T17:42:32.3965899Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3e14303d-647e-4ca8-a23d-284714c2d89f",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "you tried:\r\n\r\nPage A:\r\n\r\nset variable player.money = [EXPRESSION] 0\r\nprint [expression] \"Money: \" + player.money\r\n// output: Money: 0\r\n\r\nPage B:\r\n\r\nset variable player.money = [EXPRESSION] player.money + 5\r\nprint [expression] \"Money: \" + player.money\r\n// output: Money: 5\r\n\r\nor\r\n\r\nPage A:\r\n\r\nset variable game.money = [EXPRESSION] 0\r\nprint [expression] \"Money: \" + game.money\r\n// output: Money: 0\r\n\r\nPage B:\r\n\r\nset variable game.money = [EXPRESSION] game.money + 5\r\nprint [expression] \"Money: \" + game.money\r\n// output: Money: 5\r\n\r\nand it's not working?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>you tried:</p>\n<p>Page A:</p>\n<p>set variable player.money = [EXPRESSION] 0<br>\nprint [expression] \"Money: \" + player.money<br>\n// output: Money: 0</p>\n<p>Page B:</p>\n<p>set variable player.money = [EXPRESSION] player.money + 5<br>\nprint [expression] \"Money: \" + player.money<br>\n// output: Money: 5</p>\n<p>or</p>\n<p>Page A:</p>\n<p>set variable game.money = [EXPRESSION] 0<br>\nprint [expression] \"Money: \" + game.money<br>\n// output: Money: 0</p>\n<p>Page B:</p>\n<p>set variable game.money = [EXPRESSION] game.money + 5<br>\nprint [expression] \"Money: \" + game.money<br>\n// output: Money: 5</p>\n<p>and it's not working?</p>\n\n",
+      "PostDate": "2017-03-21T19:44:25.4530425Z",
+      "LastEditDate": "2017-03-21T19:46:20.228004Z"
+    },
+    {
+      "PostId": "768b9b31-7e96-456d-b7c4-8c111457864e",
+      "UserId": 25522,
+      "Username": "tinlin",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/12b9b54e32339a9dee20f14da6b635af?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Oops yeah it's working now. Must have missed something out. Thanks!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Oops yeah it's working now. Must have missed something out. Thanks!</p>\n\n",
+      "PostDate": "2017-03-21T20:47:57.9341537Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "f50a26e2-c98c-4a56-96d1-44f261370323",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "unfortunately with programming/coding/game-making... you've got to be 100% error/grammmer/syntax/spelling/typo... FREE! Programming/coding/game-making really helps you become a flawless typer... as you can have everything right, the code works perfectly.. but you got one tiny little spelling/typo mistake... and so the code doesn't work...\r\n\r\nmore often than not, you've done the coding right.... you just got some stupid small error... to find and fix... rarely does the code itself as a whole/design, not work. People are better coders than they realize... again, if something doesn't work, it's probably just because of some small mistake somewhere.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>unfortunately with programming/coding/game-making... you've got to be 100% error/grammmer/syntax/spelling/typo... FREE! Programming/coding/game-making really helps you become a flawless typer... as you can have everything right, the code works perfectly.. but you got one tiny little spelling/typo mistake... and so the code doesn't work...</p>\n<p>more often than not, you've done the coding right.... you just got some stupid small error... to find and fix... rarely does the code itself as a whole/design, not work. People are better coders than they realize... again, if something doesn't work, it's probably just because of some small mistake somewhere.</p>\n\n",
+      "PostDate": "2017-03-22T03:44:20.7238386Z",
+      "LastEditDate": null
+    }
+  ]
+}

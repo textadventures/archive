@@ -1,0 +1,155 @@
+{
+  "Topic": {
+    "TopicId": "1441",
+    "ForumId": "10",
+    "Title": "Bugs, Errors & Whatnots",
+    "LastUpdated": "2006-11-25T11:11:14+00:00",
+    "ReplyCount": 11
+  },
+  "Posts": [
+    {
+      "PostId": "11609",
+      "UserId": 0,
+      "Username": "I think Im Dead",
+      "UserAvatar": null,
+      "UserGravatar": "662782b48efa4728f8d0773b83c01ddf",
+      "EditableText": "Figured I'd start a general bugs and errors thread so things are a bit more organized than being tossed willy-nilly into the beta release thread. I encountered this error today when working on a Questnet Multiplayer game with 4.0, though I'm pretty sure it still happens with older versions of Quest as well.\n\nWhen using a library to contain procedures used in the [b:3c4auikz]Description[/b:3c4auikz] section of the game definition, I recieve a &quot;Run-Time Error 9: Subscript out of range&quot; error.\n\nI've thoroughly checked my code, and while adding the libraries procedures to the main ASL file seems to remedy the problem, it still seems like a bug/error.  \n\nHere's some simplified code to prove and reproduce the problem.\n\nASL Code\n[code:3c4auikz]\n!include &lt;display&#46;lib&gt;\n!include &lt;net&#46;lib&gt;\n\ndefine game &lt;Arena&gt;\n\tasl-version &lt;390&gt;\n\tgametype multiplayer\n\tstart &lt;arena&gt;\n\tgame version &lt;1&#46;00&gt;\n\tgame author &lt;Alex Warren&gt;\n\t\n\tdescription &#123;\n\t\tdo &lt;display&#46;msg&gt;\n\t&#125;\nend define\n[/code:3c4auikz]\nLibrary Code\n[code:3c4auikz]\n!addto game\n\t\ndefine procedure &lt;display&#46;msg&gt;\n\tmsg &lt;testing&#46;|n&gt;\nend define\n[/code:3c4auikz]",
+      "EditableFormat": "bbcode",
+      "HTML": "Figured I'd start a general bugs and errors thread so things are a bit more organized than being tossed willy-nilly into the beta release thread. I encountered this error today when working on a Questnet Multiplayer game with 4.0, though I'm pretty sure it still happens with older versions of Quest as well.<br/><br/>When using a library to contain procedures used in the <span style=\"font-weight:bold;\">Description</span> section of the game definition, I recieve a &quot;Run-Time Error 9: Subscript out of range&quot; error.<br/><br/>I've thoroughly checked my code, and while adding the libraries procedures to the main ASL file seems to remedy the problem, it still seems like a bug/error.  <br/><br/>Here's some simplified code to prove and reproduce the problem.<br/><br/>ASL Code<br/><pre><code><br/>!include &lt;display&#46;lib&gt;<br/>!include &lt;net&#46;lib&gt;<br/><br/>define game &lt;Arena&gt;<br/>\tasl-version &lt;390&gt;<br/>\tgametype multiplayer<br/>\tstart &lt;arena&gt;<br/>\tgame version &lt;1&#46;00&gt;<br/>\tgame author &lt;Alex Warren&gt;<br/>\t<br/>\tdescription &#123;<br/>\t\tdo &lt;display&#46;msg&gt;<br/>\t&#125;<br/>end define<br/></code></pre><br/>Library Code<br/><pre><code><br/>!addto game<br/>\t<br/>define procedure &lt;display&#46;msg&gt;<br/>\tmsg &lt;testing&#46;|n&gt;<br/>end define<br/></code></pre>",
+      "PostDate": "2006-11-18T16:21:20+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11616",
+      "UserId": 0,
+      "Username": "I think Im Dead",
+      "UserAvatar": null,
+      "UserGravatar": "662782b48efa4728f8d0773b83c01ddf",
+      "EditableText": "Another bug I noticed was the [b:3t6jn32p]dontprocess[/b:3t6jn32p] command doesn't appear to work. When attempting to use it in the beforeturn script for a multiplayer game, commands were still processed.\n\nSome code to reproduce the problem.\n[code:3t6jn32p]\n\tbeforeturn &#123;\n\t\tset numeric &lt;number; $rand&#40;1;2&#41;$&gt;\n\t\tif property &lt;player%userid%; netplayer&gt; and &#40; %number% = 2 &#41; then &#123;\n\t\t\tdontprocess \n\t\t\tmsg &lt;DENIED!!! %number%&gt;\n\t\t&#125; else msg &lt;APPROVED!! %number%&gt;\n\t&#125;\n[/code:3t6jn32p]\n\nDoesn't say in the documentation that the dontprocess doesn't work online, and if you use this code you can clearly see commands like look and move still get processed.",
+      "EditableFormat": "bbcode",
+      "HTML": "Another bug I noticed was the <span style=\"font-weight:bold;\">dontprocess</span> command doesn't appear to work. When attempting to use it in the beforeturn script for a multiplayer game, commands were still processed.<br/><br/>Some code to reproduce the problem.<br/><pre><code><br/>\tbeforeturn &#123;<br/>\t\tset numeric &lt;number; $rand&#40;1;2&#41;$&gt;<br/>\t\tif property &lt;player%userid%; netplayer&gt; and &#40; %number% = 2 &#41; then &#123;<br/>\t\t\tdontprocess <br/>\t\t\tmsg &lt;DENIED!!! %number%&gt;<br/>\t\t&#125; else msg &lt;APPROVED!! %number%&gt;<br/>\t&#125;<br/></code></pre><br/><br/>Doesn't say in the documentation that the dontprocess doesn't work online, and if you use this code you can clearly see commands like look and move still get processed.",
+      "PostDate": "2006-11-19T04:48:05+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11641",
+      "UserId": 0,
+      "Username": "steve the gaming guy",
+      "UserAvatar": null,
+      "UserGravatar": "6577a0affcb6ea711c75baf052ffd08a",
+      "EditableText": "This is minor but it's something.  In QDK, I'm trying to say that an object can be taken.  When it is taken, I want a statement to be printed.  Great.\nNow on the lower half of this option screen, you get a Drop section where you can say this object can be dropped Everywhere or Nowhere.  When I click one of these, the radio button is correctly highlighted for the option I chose.  For example, I clicked 'Nowhere'.  Great.\nHOWEVER, when this is clicked, the highlighted button for &quot;YES&quot; (this object can be taken) disappears rendering this object as not takeable.\n\nIn other words, if you want your object to be taken, you don't get an option of how you want it to be dropped even though the QDK Inventory screen seems to give you the option.\n\nEDIT:\nStrike that.  It seems to still work but you don't really know it's going to work until you play it.",
+      "EditableFormat": "bbcode",
+      "HTML": "This is minor but it's something.  In QDK, I'm trying to say that an object can be taken.  When it is taken, I want a statement to be printed.  Great.<br/>Now on the lower half of this option screen, you get a Drop section where you can say this object can be dropped Everywhere or Nowhere.  When I click one of these, the radio button is correctly highlighted for the option I chose.  For example, I clicked 'Nowhere'.  Great.<br/>HOWEVER, when this is clicked, the highlighted button for &quot;YES&quot; (this object can be taken) disappears rendering this object as not takeable.<br/><br/>In other words, if you want your object to be taken, you don't get an option of how you want it to be dropped even though the QDK Inventory screen seems to give you the option.<br/><br/>EDIT:<br/>Strike that.  It seems to still work but you don't really know it's going to work until you play it.",
+      "PostDate": "2006-11-21T16:21:43+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11642",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "That take/drop bug in QDK is fixed in Beta 2.\n\nITID, I'll look into your bugs and report back here...",
+      "EditableFormat": "bbcode",
+      "HTML": "That take/drop bug in QDK is fixed in Beta 2.<br/><br/>ITID, I'll look into your bugs and report back here...",
+      "PostDate": "2006-11-21T16:27:00+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11643",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "ITID:\n\nYou're getting a run-time error because your library isn't set up correctly. You have an &quot;!addto game&quot; which means everything below it gets added to the &quot;define game&quot; block, but you don't have a corresponding &quot;!end&quot;, which is why Quest crashes.\n\nYou shouldn't have your procedure within &quot;!addto game&quot; anyway, as it's a block in its own right.\n\nIf you remove the &quot;!addto game&quot; line, you will find it works correctly.\n\nI've reproduced and fixed the &quot;dontprocess&quot; not working in QuestNet for Beta 2.",
+      "EditableFormat": "bbcode",
+      "HTML": "ITID:<br/><br/>You're getting a run-time error because your library isn't set up correctly. You have an &quot;!addto game&quot; which means everything below it gets added to the &quot;define game&quot; block, but you don't have a corresponding &quot;!end&quot;, which is why Quest crashes.<br/><br/>You shouldn't have your procedure within &quot;!addto game&quot; anyway, as it's a block in its own right.<br/><br/>If you remove the &quot;!addto game&quot; line, you will find it works correctly.<br/><br/>I've reproduced and fixed the &quot;dontprocess&quot; not working in QuestNet for Beta 2.",
+      "PostDate": "2006-11-21T17:39:13+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11662",
+      "UserId": 0,
+      "Username": "steve the gaming guy",
+      "UserAvatar": null,
+      "UserGravatar": "6577a0affcb6ea711c75baf052ffd08a",
+      "EditableText": "Ok, here's something that's driving me up a wall.  It's happened in a few spots but the basic bug is that if you add several actions or scripts on an object or in a room within QDK and then exit out of that object or room, there is a chance that when you come back to it, some of the actions or scripts have disappeared.\n\nSometimes it is gone forever and sometimes, boom, out of nowhere, they have returned.  Specifically I am referring to the Script Editor screen where you can see your commands in the top box.",
+      "EditableFormat": "bbcode",
+      "HTML": "Ok, here's something that's driving me up a wall.  It's happened in a few spots but the basic bug is that if you add several actions or scripts on an object or in a room within QDK and then exit out of that object or room, there is a chance that when you come back to it, some of the actions or scripts have disappeared.<br/><br/>Sometimes it is gone forever and sometimes, boom, out of nowhere, they have returned.  Specifically I am referring to the Script Editor screen where you can see your commands in the top box.",
+      "PostDate": "2006-11-22T21:47:03+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11669",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "Are you able to find a way to consistently reproduce the problem? It's not one I've spotted yet.",
+      "EditableFormat": "bbcode",
+      "HTML": "Are you able to find a way to consistently reproduce the problem? It's not one I've spotted yet.",
+      "PostDate": "2006-11-23T12:12:57+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11671",
+      "UserId": 0,
+      "Username": "I think Im Dead",
+      "UserAvatar": null,
+      "UserGravatar": "662782b48efa4728f8d0773b83c01ddf",
+      "EditableText": "[quote=&quot;Alex&quot;:215mttcf]\nIf you remove the &quot;!addto game&quot; line, you will find it works correctly.\n[/quote:215mttcf]\n\nOops, sorry, assumed every library had to have that line is all. Have to re-read that part of the docs. I'll try and abuse that new container system a fair bit this weekend.",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>Alex wrote:</cite><br/>If you remove the &quot;!addto game&quot; line, you will find it works correctly.<br/></blockquote><br/><br/>Oops, sorry, assumed every library had to have that line is all. Have to re-read that part of the docs. I'll try and abuse that new container system a fair bit this weekend.",
+      "PostDate": "2006-11-23T18:33:52+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11675",
+      "UserId": 0,
+      "Username": "I think Im Dead",
+      "UserAvatar": null,
+      "UserGravatar": "662782b48efa4728f8d0773b83c01ddf",
+      "EditableText": "I made a quick room with a container in it, and the container opend and closed while in the room, but once I picked the object up and it was in my inventory, no &quot;open backpack&quot; or &quot;open my backpack&quot; worked to interact with it while in inventory.\n\nCode as done by QDK\n[code:25fsd8jo]\n\ndefine room &lt;001&gt;\n\talias &lt;The Test Room&gt;\n\tlook &lt;You are  in the center of an empty white test room&#46;&gt;\n\n\tdefine object &lt;container001&gt;\n\t\talias &lt;backpack&gt;\n\t\tlook &lt;You notice nothing special about it&#46;&gt;\n\t\ttake\n\t\tprefix &lt;a&gt;\n\t\tdisplaytype &lt;Object&gt;\n\t\tarticle &lt;it&gt;\n\t\tgender &lt;it&gt;\n\t\tcontainer\n\t\topened\n\t\topen\n\t\tclose\n\t\tadd\n\t\tremove\n\t\tlist empty &lt;It's empty&#46;&gt;\n\t\tlist closed &lt;It's closed&#46;&gt;\n\tend define\n\nend define\n\n\n[/code:25fsd8jo]",
+      "EditableFormat": "bbcode",
+      "HTML": "I made a quick room with a container in it, and the container opend and closed while in the room, but once I picked the object up and it was in my inventory, no &quot;open backpack&quot; or &quot;open my backpack&quot; worked to interact with it while in inventory.<br/><br/>Code as done by QDK<br/><pre><code><br/><br/>define room &lt;001&gt;<br/>\talias &lt;The Test Room&gt;<br/>\tlook &lt;You are  in the center of an empty white test room&#46;&gt;<br/><br/>\tdefine object &lt;container001&gt;<br/>\t\talias &lt;backpack&gt;<br/>\t\tlook &lt;You notice nothing special about it&#46;&gt;<br/>\t\ttake<br/>\t\tprefix &lt;a&gt;<br/>\t\tdisplaytype &lt;Object&gt;<br/>\t\tarticle &lt;it&gt;<br/>\t\tgender &lt;it&gt;<br/>\t\tcontainer<br/>\t\topened<br/>\t\topen<br/>\t\tclose<br/>\t\tadd<br/>\t\tremove<br/>\t\tlist empty &lt;It's empty&#46;&gt;<br/>\t\tlist closed &lt;It's closed&#46;&gt;<br/>\tend define<br/><br/>end define<br/><br/><br/></code></pre>",
+      "PostDate": "2006-11-24T03:47:12+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11676",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "Thanks, I'll take a look into this.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks, I'll take a look into this.",
+      "PostDate": "2006-11-24T10:28:52+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11689",
+      "UserId": 0,
+      "Username": "I think Im Dead",
+      "UserAvatar": null,
+      "UserGravatar": "662782b48efa4728f8d0773b83c01ddf",
+      "EditableText": "I recently encountered a bug which crashed QDK. I went ahead and created a room, TestRoom, then decided, I wanted to call it TestRoom001, when I went to edit this in the name entryfield, as soon as I navigated away from that room, a message box with the usual, &quot;You have changed a room, if other scripts are pointing to it you'll have to change them as well&quot; deal, and then a runtime error 35601 'element not found' box would pop up and crash qdk. I haven't been able to faithfully reproduce this one though with other qdk games, but it happens with this tiny asl test file I use all the time.\n\n[url=http&#58;//s88880570&#46;onlinehome&#46;us/asl/qdk-file&#46;asl:1v7pub9o]qdk-file.asl[/url:1v7pub9o]",
+      "EditableFormat": "bbcode",
+      "HTML": "I recently encountered a bug which crashed QDK. I went ahead and created a room, TestRoom, then decided, I wanted to call it TestRoom001, when I went to edit this in the name entryfield, as soon as I navigated away from that room, a message box with the usual, &quot;You have changed a room, if other scripts are pointing to it you'll have to change them as well&quot; deal, and then a runtime error 35601 'element not found' box would pop up and crash qdk. I haven't been able to faithfully reproduce this one though with other qdk games, but it happens with this tiny asl test file I use all the time.<br/><br/><a href=\"http&#58;//s88880570&#46;onlinehome&#46;us/asl/qdk-file&#46;asl\" rel=\"nofollow\">qdk-file.asl</a>",
+      "PostDate": "2006-11-25T07:02:34+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11692",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "I've now updated the Beta 2 package to fix this, so if you download again and reinstall this should work properly.",
+      "EditableFormat": "bbcode",
+      "HTML": "I've now updated the Beta 2 package to fix this, so if you download again and reinstall this should work properly.",
+      "PostDate": "2006-11-25T11:11:14+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

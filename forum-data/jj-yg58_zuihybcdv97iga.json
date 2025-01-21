@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "jj-yg58_zuihybcdv97iga",
+    "ForumId": "10",
+    "Title": "Operation 'And' is not defined for types 'Element' and 'Element'?",
+    "LastUpdated": "2018-06-26T14:35:32.0864321Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "d27708ed-8817-4fdb-ad5f-ffa2b7d336a0",
+      "UserId": 365704,
+      "Username": "Yellow_Anonymous",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/e8610973a034b32181778e10a1021057?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm trying to set up a script for an exit that checks to see if the player is carrying two specific objects, then displaying a wall of exposition before letting them leave. The problem is that apparently the \"and\" operation isn't defined to find out if the player has two specific objects. I've tried using the \"and\" operation to detect if the player is carrying the objects in their inventory and using the operation to detect if both items have the \"carried\" object flag, a flag only set if the player picks up the objects. But both methods return an error message stating that the \"and\" operation isn't defined for types \"Element\" and \"Element\".\r\n\r\nHere's the coding setup I have.\r\n```\r\nif (GetBoolean(photograph and map, \"carried\")) {\r\n  firsttime {\r\n    ClearScreen\r\n    PrintCentered (Yadda yadda yadda yadda)\r\n  }\r\n}\r\n```\r\nAm I using the wrong operation entirely? Am I just using the \"and\" operation wrong?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm trying to set up a script for an exit that checks to see if the player is carrying two specific objects, then displaying a wall of exposition before letting them leave. The problem is that apparently the \"and\" operation isn't defined to find out if the player has two specific objects. I've tried using the \"and\" operation to detect if the player is carrying the objects in their inventory and using the operation to detect if both items have the \"carried\" object flag, a flag only set if the player picks up the objects. But both methods return an error message stating that the \"and\" operation isn't defined for types \"Element\" and \"Element\".</p>\n<p>Here's the coding setup I have.</p>\n<pre><code>if (GetBoolean(photograph and map, \"carried\")) {\n  firsttime {\n    ClearScreen\n    PrintCentered (Yadda yadda yadda yadda)\n  }\n}\n</code></pre>\n<p>Am I using the wrong operation entirely? Am I just using the \"and\" operation wrong?</p>\n\n",
+      "PostDate": "2018-06-26T14:35:32.0864321Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "7c418781-6d85-459d-a5d3-ec7f590ee3ce",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "no, just the wrong syntax, each condition must be a statement, and it's 'GetBoolean (NAME_OF_OBJECT, \"NAME_OF_BOOLEAN_ATTRIBUTE\"):\r\n\r\n```\r\nif (CONDITION_STATEMENT_1 and CONDITION_STATEMENT_2) {\r\n  // whatever scripting\r\n}\r\n\r\n// ------\r\n\r\nCONDITION_STATEMENT_1: GetBoolean (photograph, \"carried\") ---> (true/false)\r\nCONDITION_STATEMENT_2: GetBoolean (map, \"carried\") ---> (true/false)\r\n\r\n// -------------------------------\r\n\r\n'AND' logic:\r\n\r\ntrue and true ---> TRUE\r\ntrue and false ---> FALSE\r\nfalse and true ---> FALSE\r\nfalse and false ---> FALSE\r\n\r\n// ----------------\r\n\r\n// these have to be existing Objects, examples via using scripting:\r\ncreate (\"photograph\")\r\ncreate (\"map\")\r\n\r\n// then, continuing the example using scripting, let's set the built-in 'take' Boolean Attribute to 'true' for them, so they can be picked up (put into your inventory):\r\nphotograph.take = true\r\nmap.take = true\r\n\r\n// since I'm not sure if the built-in 'drop' Boolean Attribute is set to 'true', using scripting to create an Object, let's set it to 'true', to be safe, lol:\r\n\r\nphotograph.drop = true\r\nmap.drop = true\r\n\r\n// continuing this example, we now need your 'carried' Boolean Attributes to exist as well:\r\nphotograph.carried = false\r\nmap.carried = false\r\n\r\n// continuing this example, we need to have the built-in 'take' Script Attribute, to set their 'carried' Boolean Attribute to 'true' and the built-in 'drop' Script Attribute, to set their 'carried' Boolean Attribute to 'false':\r\n\r\nphotograph.take => {\r\n  photograph.parent = player\r\n  photograph.carried = true\r\n}\r\n\r\nmap.take => {\r\n  map.parent = player\r\n  map.carried = true\r\n}\r\n\r\nphotograph.drop => {\r\n  photograph.parent = player.parent\r\n  photograph.carried = false\r\n}\r\n\r\nmap.drop => {\r\n  map.parent = player.parent\r\n  map.carried = false\r\n}\r\n\r\n// and lastly, your scripting in correct syntax:\r\n\r\nif (GetBoolean (photograph, \"carried\") and GetBoolean (map, \"carried\")) {\r\n  firsttime {\r\n    ClearScreen\r\n    PrintCentered (Yadda yadda yadda yadda)\r\n  }\r\n  // optional (do you get an error if you just have 'firsttime', with no 'otherwise {}', ??? (I'm too lazy to check myself, lol):\r\n  otherwise {\r\n    // whatever scripting or leave blank (or if no error with not even having the 'otherwise {}', than don't even have it, if you don't want any scripting, instead of having it be blank, lol)\r\n  }\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>no, just the wrong syntax, each condition must be a statement, and it's 'GetBoolean (NAME_OF_OBJECT, \"NAME_OF_BOOLEAN_ATTRIBUTE\"):</p>\n<pre><code>if (CONDITION_STATEMENT_1 and CONDITION_STATEMENT_2) {\n  // whatever scripting\n}\n\n// ------\n\nCONDITION_STATEMENT_1: GetBoolean (photograph, \"carried\") ---&gt; (true/false)\nCONDITION_STATEMENT_2: GetBoolean (map, \"carried\") ---&gt; (true/false)\n\n// -------------------------------\n\n'AND' logic:\n\ntrue and true ---&gt; TRUE\ntrue and false ---&gt; FALSE\nfalse and true ---&gt; FALSE\nfalse and false ---&gt; FALSE\n\n// ----------------\n\n// these have to be existing Objects, examples via using scripting:\ncreate (\"photograph\")\ncreate (\"map\")\n\n// then, continuing the example using scripting, let's set the built-in 'take' Boolean Attribute to 'true' for them, so they can be picked up (put into your inventory):\nphotograph.take = true\nmap.take = true\n\n// since I'm not sure if the built-in 'drop' Boolean Attribute is set to 'true', using scripting to create an Object, let's set it to 'true', to be safe, lol:\n\nphotograph.drop = true\nmap.drop = true\n\n// continuing this example, we now need your 'carried' Boolean Attributes to exist as well:\nphotograph.carried = false\nmap.carried = false\n\n// continuing this example, we need to have the built-in 'take' Script Attribute, to set their 'carried' Boolean Attribute to 'true' and the built-in 'drop' Script Attribute, to set their 'carried' Boolean Attribute to 'false':\n\nphotograph.take =&gt; {\n  photograph.parent = player\n  photograph.carried = true\n}\n\nmap.take =&gt; {\n  map.parent = player\n  map.carried = true\n}\n\nphotograph.drop =&gt; {\n  photograph.parent = player.parent\n  photograph.carried = false\n}\n\nmap.drop =&gt; {\n  map.parent = player.parent\n  map.carried = false\n}\n\n// and lastly, your scripting in correct syntax:\n\nif (GetBoolean (photograph, \"carried\") and GetBoolean (map, \"carried\")) {\n  firsttime {\n    ClearScreen\n    PrintCentered (Yadda yadda yadda yadda)\n  }\n  // optional (do you get an error if you just have 'firsttime', with no 'otherwise {}', ??? (I'm too lazy to check myself, lol):\n  otherwise {\n    // whatever scripting or leave blank (or if no error with not even having the 'otherwise {}', than don't even have it, if you don't want any scripting, instead of having it be blank, lol)\n  }\n}\n</code></pre>\n\n",
+      "PostDate": "2018-06-26T14:49:24.6329672Z",
+      "LastEditDate": "2018-06-26T15:21:09.5182741Z",
+      "link": null
+    },
+    {
+      "PostId": "d726accf-cbd5-4b59-8a52-ff318ede2007",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "though, if you just want to check if you got Objects in the inventory (aka: contained within the 'game.pov' --- this stores a pointer-reference of/to the Player Object that you're currently controlling, the default is the 'player' Player Object), use this:\r\n\r\nhttps://docs.textadventures.co.uk/quest/functions/corelibrary/got.html\r\n\r\n```\r\nif (Got (photograph) and Got (map)) {\r\n}\r\n```\r\n\r\n-------------\r\n\r\nthere's also:\r\n\r\nhttps://docs.textadventures.co.uk/quest/functions/contains.html\r\n\r\n```\r\nif (Contains (player, photograph) and Contains (player, map)) {\r\n}\r\n```\r\n\r\n-------\r\n\r\nthere's also:\r\n\r\nhttps://docs.textadventures.co.uk/quest/functions/listcontains.html\r\n\r\nhttps://docs.textadventures.co.uk/quest/functions/#scope\r\n\r\n```\r\nif (ListContains (ScopeInventory (), photograph) and ListContains (ScopeInventory (), map)) {\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>though, if you just want to check if you got Objects in the inventory (aka: contained within the 'game.pov' --- this stores a pointer-reference of/to the Player Object that you're currently controlling, the default is the 'player' Player Object), use this:</p>\n<p>https://docs.textadventures.co.uk/quest/functions/corelibrary/got.html</p>\n<pre><code>if (Got (photograph) and Got (map)) {\n}\n</code></pre>\n<hr>\n<p>there's also:</p>\n<p>https://docs.textadventures.co.uk/quest/functions/contains.html</p>\n<pre><code>if (Contains (player, photograph) and Contains (player, map)) {\n}\n</code></pre>\n<hr>\n<p>there's also:</p>\n<p>https://docs.textadventures.co.uk/quest/functions/listcontains.html</p>\n<p>https://docs.textadventures.co.uk/quest/functions/#scope</p>\n<pre><code>if (ListContains (ScopeInventory (), photograph) and ListContains (ScopeInventory (), map)) {\n}\n</code></pre>\n\n",
+      "PostDate": "2018-06-26T15:01:44.3045188Z",
+      "LastEditDate": "2018-06-26T15:03:55.4730137Z",
+      "link": null
+    },
+    {
+      "PostId": "c4aadc4e-5ce5-4293-8cc7-4d6368d8a91e",
+      "UserId": 365704,
+      "Username": "Yellow_Anonymous",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/e8610973a034b32181778e10a1021057?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Ah, thank you! Using \"Got\" worked perfectly!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Ah, thank you! Using \"Got\" worked perfectly!</p>\n\n",
+      "PostDate": "2018-06-26T15:16:54.9729613Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "Topic": {
+    "TopicId": "2ogjsmba0ui4cy-8ivpd7g",
+    "ForumId": "10",
+    "Title": "Conditional expression evaluation",
+    "LastUpdated": "2018-06-03T18:07:52.2129305Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "0247986d-e0cf-4b00-986e-2654d8be3a88",
+      "UserId": 362499,
+      "Username": "quaestor",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/f932fa5e212b8dd84c8d445b7d84b218?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Conditional expression chains in Quest are currently always evaluated in their entirety. This means that the expression \"if (true = false and false = true)\" would evaluate _both_ \"true = false\" and \"false = true\". Not only is it inefficient from a performance standpoint, but it causes more problems when evaluating chaining interdependent conditions. For example, \"if (player.object_attribute <> null and player.object_attribute.other_attribute)\" generates an error if player.object_attribute is null. Any null check with additional conditions therefore requires an additional layer of nesting, which quickly gets complicated to parse and edit, and is difficult to locate, considering the lack of traceability in the error messages that only appear conditionally.\r\n\r\nI tried to fix it myself for a few hours, but couldn't get past compilation issues to test anything. Can we expect a future version to stop evaluating conditional expression chains as soon as one link evaluates to false?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Conditional expression chains in Quest are currently always evaluated in their entirety. This means that the expression \"if (true = false and false = true)\" would evaluate <em>both</em> \"true = false\" and \"false = true\". Not only is it inefficient from a performance standpoint, but it causes more problems when evaluating chaining interdependent conditions. For example, \"if (player.object_attribute &lt;&gt; null and player.object_attribute.other_attribute)\" generates an error if player.object_attribute is null. Any null check with additional conditions therefore requires an additional layer of nesting, which quickly gets complicated to parse and edit, and is difficult to locate, considering the lack of traceability in the error messages that only appear conditionally.</p>\n<p>I tried to fix it myself for a few hours, but couldn't get past compilation issues to test anything. Can we expect a future version to stop evaluating conditional expression chains as soon as one link evaluates to false?</p>\n\n",
+      "PostDate": "2018-06-03T18:07:52.2129305Z",
+      "LastEditDate": "2018-06-03T18:09:54.7836826Z",
+      "link": null
+    },
+    {
+      "PostId": "1d4a8320-8ce6-4e62-a17b-693387cd33cc",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> Conditional expression chains in Quest are currently always evaluated in their entirety.\r\n\r\nI didn't think this was the case, so I just did a quick test.\r\n\r\n`if (somefunction(a) and somefunction(b))` only evaluates somefunction(b) if the first one is true. You can easily test this by making a function that prints a message when it's evaluated.\r\n\r\nSimilarly, `if (somefunction(a) or somefunction(b))` only evaluates the second function if the first is false.\r\n\r\n*However*, if I did `if (a = b and x < y)` where x is an int and y is an object, it will generate an error. `a` and `b` are never compared, because Quest checks for type errors before even attempting to evaluate any part of the expression. You can test this by doing `if (somefunction(a) and GetDisplayName(b))` - any messages printed by somefunction are not displayed; you just get an error complaining that there is no operator `and` which works on a boolean and a string.\r\n\r\nIn your example `if (player.object_attribute <> null and player.object_attribute.other_attribute)`, there is an error during type checking. The \"and\" operator only works on two booleans, so Quest attempts to check that the two subexpressions (the operator `<>` and the attribute `player.object_attribute.other_attribute`) are both booleans before it evaluates either of them.\r\n\r\nIf you really want to do this, you might be able to do:\r\n`if (player.object_attribute <> null and GetBoolean (player.object_attribute, \"other_attribute\"))` which I *think* will work. Because GetBoolean requires an object and a string, and its arguments are of the right types; and it returns a boolean, which is the type \"and\" is expecting. Using GetAttribute is a good way to defer errors until a statement is actually evaluated in some cases.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>Conditional expression chains in Quest are currently always evaluated in their entirety.</p>\n</blockquote>\n<p>I didn't think this was the case, so I just did a quick test.</p>\n<p><code>if (somefunction(a) and somefunction(b))</code> only evaluates somefunction(b) if the first one is true. You can easily test this by making a function that prints a message when it's evaluated.</p>\n<p>Similarly, <code>if (somefunction(a) or somefunction(b))</code> only evaluates the second function if the first is false.</p>\n<p><em>However</em>, if I did <code>if (a = b and x &lt; y)</code> where x is an int and y is an object, it will generate an error. <code>a</code> and <code>b</code> are never compared, because Quest checks for type errors before even attempting to evaluate any part of the expression. You can test this by doing <code>if (somefunction(a) and GetDisplayName(b))</code> - any messages printed by somefunction are not displayed; you just get an error complaining that there is no operator <code>and</code> which works on a boolean and a string.</p>\n<p>In your example <code>if (player.object_attribute &lt;&gt; null and player.object_attribute.other_attribute)</code>, there is an error during type checking. The \"and\" operator only works on two booleans, so Quest attempts to check that the two subexpressions (the operator <code>&lt;&gt;</code> and the attribute <code>player.object_attribute.other_attribute</code>) are both booleans before it evaluates either of them.</p>\n<p>If you really want to do this, you might be able to do:<br>\n<code>if (player.object_attribute &lt;&gt; null and GetBoolean (player.object_attribute, \"other_attribute\"))</code> which I <em>think</em> will work. Because GetBoolean requires an object and a string, and its arguments are of the right types; and it returns a boolean, which is the type \"and\" is expecting. Using GetAttribute is a good way to defer errors until a statement is actually evaluated in some cases.</p>\n\n",
+      "PostDate": "2018-06-03T21:19:48.9740684Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

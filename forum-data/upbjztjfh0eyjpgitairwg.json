@@ -1,0 +1,50 @@
+{
+  "Topic": {
+    "TopicId": "upbjztjfh0eyjpgitairwg",
+    "ForumId": "10",
+    "Title": "Referencing an attribute of 'result'",
+    "LastUpdated": "2017-02-05T12:41:22.1548951Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "d1d7e492-ba3b-403a-bebe-f673c7f00439",
+      "UserId": 283832,
+      "Username": "scrimshaw04",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/8d126990ac9c6b79315d4db221bf6ef7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "For various reasons, instead of using the 'display a menu of objects' checkbox in the use tab of an enemy in my game, I have to use a script to grab a list of objects from the player's inventory that can be used. I've got that *almost* working fine, here's the code I have\r\n\r\n```\r\ngame.menuitem = this\r\nstring_list = NewStringList()\r\nforeach (obj, ScopeInventory()) {\r\n  list add (string_list, \"BACK\")\r\n  if (DoesInherit(obj, \"object_usable\")) {\r\n    list add (string_list, GetDisplayName(obj))\r\n  }\r\n}\r\nShowMenu (\"Pick an item\", string_list, true) {\r\n  foreach (obj, ScopeInventory()) {\r\n    if (result = GetDisplayName(obj)) {\r\n      this.integer = this.integer + result.integer\r\n      msg (\"You use the \" + GetDisplayName(obj) + \".\")\r\n      destroy (GetDisplayName(obj))\r\n    }\r\n    if (result = \"BACK\") {\r\n    }\r\n  }\r\n  on ready {\r\n    do (game.menuitem, \"script_fight\")\r\n  }\r\n}\r\n```\r\n\r\nThe thing I'm not certain about is the 'this.integer = this.integer + result.integer' line. Because I'm cloning objects, and the player could have any number of them, I can't refer to a specific object in this case. What I want to do is to reference an integer attribute of the item that's used, and then add that to an integer attribute of the object that the item is being used upon.\r\n\r\nSo how do I reference a specific attribute of 'result' without referring to it by name?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>For various reasons, instead of using the 'display a menu of objects' checkbox in the use tab of an enemy in my game, I have to use a script to grab a list of objects from the player's inventory that can be used. I've got that <em>almost</em> working fine, here's the code I have</p>\n<pre><code>game.menuitem = this\nstring_list = NewStringList()\nforeach (obj, ScopeInventory()) {\n  list add (string_list, \"BACK\")\n  if (DoesInherit(obj, \"object_usable\")) {\n    list add (string_list, GetDisplayName(obj))\n  }\n}\nShowMenu (\"Pick an item\", string_list, true) {\n  foreach (obj, ScopeInventory()) {\n    if (result = GetDisplayName(obj)) {\n      this.integer = this.integer + result.integer\n      msg (\"You use the \" + GetDisplayName(obj) + \".\")\n      destroy (GetDisplayName(obj))\n    }\n    if (result = \"BACK\") {\n    }\n  }\n  on ready {\n    do (game.menuitem, \"script_fight\")\n  }\n}\n</code></pre>\n<p>The thing I'm not certain about is the 'this.integer = this.integer + result.integer' line. Because I'm cloning objects, and the player could have any number of them, I can't refer to a specific object in this case. What I want to do is to reference an integer attribute of the item that's used, and then add that to an integer attribute of the object that the item is being used upon.</p>\n<p>So how do I reference a specific attribute of 'result' without referring to it by name?</p>\n\n",
+      "PostDate": "2017-02-05T12:41:22.1548951Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "7d8ddb97-d0c2-424e-8fd6-5afd1d0532fb",
+      "UserId": 9112,
+      "Username": "Jay Nabonne",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/379859a7f1952a65399fc63997e68f0b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Short and simple answer: wouldn't it just be \"obj.integer\", since you found the object you wanted? If not, then I'm not sure what you're asking.\r\n\r\nLonger, different answer (assuming I know what your asking):\r\nShowMenu can take a dictionary instead of a list. Here is a quick example:\r\n\r\n```\r\n      options = NewStringDictionary()\r\n      dictionary add(options, \"Result1\", \"Choice 1\")\r\n      dictionary add(options, \"Result2\", \"Choice 2\")\r\n      dictionary add(options, \"Result3\", \"Choice 3\")\r\n      dictionary add(options, \"Result4\", \"Choice 4\")\r\n      ShowMenu(\"Pick an item\", options, true) {\r\n      \tmsg(\"Result = \" + result)\r\n      }\r\n```\r\nThe menu will show the \"value\" part of what's added (the \"Choice X\" strings), but when a choice is made, the \"key\" part (the \"ResultX\" string) will be set into result.\r\n\r\nFor your choice, change the string_list to a string dictionary - maybe give it a semantic name like \"options\". In your foreach, change your add to :\r\n\r\n```\r\ndictionary add(options, obj.name, GetDisplayName(obj))\r\n```\r\nThis will set the key to the object's name and the value (the displayed part) to the display name.\r\n\r\nThen to get the obj from the result, just use:\r\n\r\n```\r\nobj = GetObject(result)\r\n```\r\n\r\nNo need to use a loop to look up (and if the player has multiple objects with the same display name, it will use the one they picked, not the first with the matching display name).",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Short and simple answer: wouldn't it just be \"obj.integer\", since you found the object you wanted? If not, then I'm not sure what you're asking.</p>\n<p>Longer, different answer (assuming I know what your asking):<br>\nShowMenu can take a dictionary instead of a list. Here is a quick example:</p>\n<pre><code>      options = NewStringDictionary()\n      dictionary add(options, \"Result1\", \"Choice 1\")\n      dictionary add(options, \"Result2\", \"Choice 2\")\n      dictionary add(options, \"Result3\", \"Choice 3\")\n      dictionary add(options, \"Result4\", \"Choice 4\")\n      ShowMenu(\"Pick an item\", options, true) {\n      \tmsg(\"Result = \" + result)\n      }\n</code></pre>\n<p>The menu will show the \"value\" part of what's added (the \"Choice X\" strings), but when a choice is made, the \"key\" part (the \"ResultX\" string) will be set into result.</p>\n<p>For your choice, change the string_list to a string dictionary - maybe give it a semantic name like \"options\". In your foreach, change your add to :</p>\n<pre><code>dictionary add(options, obj.name, GetDisplayName(obj))\n</code></pre>\n<p>This will set the key to the object's name and the value (the displayed part) to the display name.</p>\n<p>Then to get the obj from the result, just use:</p>\n<pre><code>obj = GetObject(result)\n</code></pre>\n<p>No need to use a loop to look up (and if the player has multiple objects with the same display name, it will use the one they picked, not the first with the matching display name).</p>\n\n",
+      "PostDate": "2017-02-05T13:19:43.527158Z",
+      "LastEditDate": "2017-02-05T13:21:40.1684503Z"
+    },
+    {
+      "PostId": "2f7cf581-3c29-4fce-896a-2a17bb93c209",
+      "UserId": 9112,
+      "Username": "Jay Nabonne",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/379859a7f1952a65399fc63997e68f0b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Also, keep in mind that with the foreach loop, if you destroy the object inside the loop, you will likely get a runtime error message,as the list will get modified when you delete the object, and Quest doesn't like lists being modified when it's iterating over them. (Not confirmed this will happen, but a suspicion.)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Also, keep in mind that with the foreach loop, if you destroy the object inside the loop, you will likely get a runtime error message,as the list will get modified when you delete the object, and Quest doesn't like lists being modified when it's iterating over them. (Not confirmed this will happen, but a suspicion.)</p>\n\n",
+      "PostDate": "2017-02-05T13:21:20.7524895Z",
+      "LastEditDate": null
+    }
+  ]
+}

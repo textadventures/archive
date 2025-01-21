@@ -1,0 +1,167 @@
+{
+  "Topic": {
+    "TopicId": "5101",
+    "ForumId": "10",
+    "Title": "[SOLVED] Error: Object reference not set to an instance of an object",
+    "LastUpdated": "2015-03-12T23:02:55+00:00",
+    "ReplyCount": 12
+  },
+  "Posts": [
+    {
+      "PostId": "35275",
+      "UserId": 0,
+      "Username": "RedTulip",
+      "UserAvatar": null,
+      "UserGravatar": "6d6ade23f085a9bcd2bfb10f5596d451",
+      "EditableText": "Hey! It's me again. x) So sorry, my sister and I seem to be running into problems a lot. So, I'm moving around in the game and then when I head into this room, this error pops up on top of the room description: &quot;[i:158whgqa]Error running script&#058; Error evaluating expression 'ToString(value) = rhs': Object reference not set to an instance of an object.[/i:158whgqa]&quot;.\n\n[img:158whgqa]http&#58;//i&#46;imgbox&#46;com/CZxXQeTY&#46;png[/img:158whgqa]\n\nSo, it seems some reference I've made to an object is, for some reason, running the ToString function? Not sure. Anyways, here's the code of the room description the error pops up in:\n[code:158whgqa]\nif (GetBoolean(key, &quot;shinyfalse&quot;)) {\n  msg (&quot;You are in the midst of ruin and {object&#58;wreckage}&#46;{if key&#46;parent = antique2&#58;Underneath the rubble is a {object&#58;key}&#46;} To the {command&#58;north}, {command&#58;west} and {command&#58;east}, there are gaps between the {object&#58;wreckage} wide enough for you to pass&#46;&quot;)\n}\nelse {\n  msg (&quot;You are in the midst of ruin and {object&#58;wreckage}&#46;{if key&#46;parent = antique2&#58;You notice something {object&#58;key&#58;shiny} underneath the rubble, but you can't be entirely certain what it is until you {command&#58;examine shiny&#58;examine it}&#46;} To the {command&#58;north}, {command&#58;west} and {command&#58;east}, there are gaps between the {object&#58;wreckage} wide enough for you to pass&#46;&quot;)\n}\n[/code:158whgqa]\n\nThe [i:158whgqa]shinyfalse[/i:158whgqa] is a flag. I think the error has something to do with the [i:158whgqa]{if key.parent=antique2...[/i:158whgqa], as the text in the if condition doesn't show up in the room description. I made sure not to surround [i:158whgqa]antique2[/i:158whgqa] with quotes, as I had read that Quest would evaluate it as a string if I did.\n\nThank you so much for any help you guys can provide, and I'm sorry if this question seems dumb or anything. &lt;3",
+      "EditableFormat": "bbcode",
+      "HTML": "Hey! It's me again. x) So sorry, my sister and I seem to be running into problems a lot. So, I'm moving around in the game and then when I head into this room, this error pops up on top of the room description: &quot;<span style=\"font-style:italic;\">Error running script&#058; Error evaluating expression 'ToString(value) = rhs': Object reference not set to an instance of an object.</span>&quot;.<br/><br/><img src=\"http&#58;//i&#46;imgbox&#46;com/CZxXQeTY&#46;png\" alt=\"\" /><br/><br/>So, it seems some reference I've made to an object is, for some reason, running the ToString function? Not sure. Anyways, here's the code of the room description the error pops up in:<br/><pre><code><br/>if (GetBoolean(key, &quot;shinyfalse&quot;)) {<br/>  msg (&quot;You are in the midst of ruin and {object&#58;wreckage}&#46;{if key&#46;parent = antique2&#58;Underneath the rubble is a {object&#58;key}&#46;} To the {command&#58;north}, {command&#58;west} and {command&#58;east}, there are gaps between the {object&#58;wreckage} wide enough for you to pass&#46;&quot;)<br/>}<br/>else {<br/>  msg (&quot;You are in the midst of ruin and {object&#58;wreckage}&#46;{if key&#46;parent = antique2&#58;You notice something {object&#58;key&#58;shiny} underneath the rubble, but you can't be entirely certain what it is until you {command&#58;examine shiny&#58;examine it}&#46;} To the {command&#58;north}, {command&#58;west} and {command&#58;east}, there are gaps between the {object&#58;wreckage} wide enough for you to pass&#46;&quot;)<br/>}<br/></code></pre><br/><br/>The <span style=\"font-style:italic;\">shinyfalse</span> is a flag. I think the error has something to do with the <span style=\"font-style:italic;\">{if key.parent=antique2...</span>, as the text in the if condition doesn't show up in the room description. I made sure not to surround <span style=\"font-style:italic;\">antique2</span> with quotes, as I had read that Quest would evaluate it as a string if I did.<br/><br/>Thank you so much for any help you guys can provide, and I'm sorry if this question seems dumb or anything. &lt;3",
+      "PostDate": "2015-03-12T18:03:27+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35277",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "this:\n\nToString (value) = rhs\n\nis unusual, especially the 'rhs'\n\nis this your own code line somewhere in your game code? maybe it could be underlying quest engine code, but it seems unusual for that, as I've said.\n\nI can't really help until I can see code on this, as that is what the error is mentioning. We may need to see your entire game code as well (if you want to keep it private, you can PM it to me or someone else to help you with it), as I think you know, code is very interconnected, the issue~problem may be else where in your game code then where you might think it is limited to being at.\n\nalso, the syntax should be more like this:\n\nObject_name.Attribute_name = ToString (value)\n~OR~\nvariable_name_string = ToString (value)\n\nit possibly could~should be this:\n\nrhs = ToString (value)\n\nthe 'ToString (value)' is an Expression, which goes: ON THE RIGHT SIDE OF THE EQUAL (or other operator, if it's an 'if' script) SIGN\n\nthe 'rhs' could be an a variable_name_string or an Object (but then it'd need an attached Attribute to it too, which as seen is missing), and these go: ON THE LEFT SIDE OF THE EQUAL (or other operator) SIGN\n\nObject_name.Attribute_name = Value_or_Expression\n~OR~\nif (Object_name.Attribute_name OPERATOR Value_or_Expression) { scripts }\n\nbut not:\n\nToString (value) = rhs\n\nthis is wrong syntax, flip it around horizontally",
+      "EditableFormat": "bbcode",
+      "HTML": "this:<br/><br/>ToString (value) = rhs<br/><br/>is unusual, especially the 'rhs'<br/><br/>is this your own code line somewhere in your game code? maybe it could be underlying quest engine code, but it seems unusual for that, as I've said.<br/><br/>I can't really help until I can see code on this, as that is what the error is mentioning. We may need to see your entire game code as well (if you want to keep it private, you can PM it to me or someone else to help you with it), as I think you know, code is very interconnected, the issue~problem may be else where in your game code then where you might think it is limited to being at.<br/><br/>also, the syntax should be more like this:<br/><br/>Object_name.Attribute_name = ToString (value)<br/>~OR~<br/>variable_name_string = ToString (value)<br/><br/>it possibly could~should be this:<br/><br/>rhs = ToString (value)<br/><br/>the 'ToString (value)' is an Expression, which goes: ON THE RIGHT SIDE OF THE EQUAL (or other operator, if it's an 'if' script) SIGN<br/><br/>the 'rhs' could be an a variable_name_string or an Object (but then it'd need an attached Attribute to it too, which as seen is missing), and these go: ON THE LEFT SIDE OF THE EQUAL (or other operator) SIGN<br/><br/>Object_name.Attribute_name = Value_or_Expression<br/>~OR~<br/>if (Object_name.Attribute_name OPERATOR Value_or_Expression) { scripts }<br/><br/>but not:<br/><br/>ToString (value) = rhs<br/><br/>this is wrong syntax, flip it around horizontally",
+      "PostDate": "2015-03-12T18:45:06+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35278",
+      "UserId": 0,
+      "Username": "RedTulip",
+      "UserAvatar": null,
+      "UserGravatar": "6d6ade23f085a9bcd2bfb10f5596d451",
+      "EditableText": "Thanks for the quick reply! <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> I attached the .aslx here. I have never used a ToString function (intentionally, anyway...) in the game, and also I did a search in the code and there doesn't seem to be any [i:2hx7ai8n]ToString(value) = rhs[/i:2hx7ai8n]. :/\n\nEdit: The room with the problem description is to the north (open door, first), and then the east.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks for the quick reply! <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> I attached the .aslx here. I have never used a ToString function (intentionally, anyway...) in the game, and also I did a search in the code and there doesn't seem to be any <span style=\"font-style:italic;\">ToString(value) = rhs</span>. :/<br/><br/>Edit: The room with the problem description is to the north (open door, first), and then the east.<div><a href=\"/attachment/1177\">The Search for Mim.aslx</a></div>",
+      "PostDate": "2015-03-12T18:57:07+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35279",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "hmm.. I can't figure it out... (and ya, it seems like it may be something with the internal quest engine coding), so wait for some of the better coders (such as the site staff and some users too) to help, as they know all of quest's code better than I do, and know coding better too.\n\nIt might have something to do with the room being 'dark', and thus the Object's can't be acted upon... as that's the feature of 'darkness', but you use the 'darkness' feature elsewhere with 'descriptions', so I'm not sure if those other areas are working fine for you, or if not.\n\nalso, are you sure that it is with the 'antique2' Object ??, as you've got similiar 'descriptions' for all of your 'antiqueX' Object's, try to debug ~ diagnose where the error exactly is (put in 'msg (1..2...3...etc)' Scripts to try to narrow down to the single code line of where the issue is at, find where exactly the code is failing at, vs what code is running~working fine)",
+      "EditableFormat": "bbcode",
+      "HTML": "hmm.. I can't figure it out... (and ya, it seems like it may be something with the internal quest engine coding), so wait for some of the better coders (such as the site staff and some users too) to help, as they know all of quest's code better than I do, and know coding better too.<br/><br/>It might have something to do with the room being 'dark', and thus the Object's can't be acted upon... as that's the feature of 'darkness', but you use the 'darkness' feature elsewhere with 'descriptions', so I'm not sure if those other areas are working fine for you, or if not.<br/><br/>also, are you sure that it is with the 'antique2' Object ??, as you've got similiar 'descriptions' for all of your 'antiqueX' Object's, try to debug ~ diagnose where the error exactly is (put in 'msg (1..2...3...etc)' Scripts to try to narrow down to the single code line of where the issue is at, find where exactly the code is failing at, vs what code is running~working fine)",
+      "PostDate": "2015-03-12T19:21:52+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35280",
+      "UserId": 0,
+      "Username": "RedTulip",
+      "UserAvatar": null,
+      "UserGravatar": "6d6ade23f085a9bcd2bfb10f5596d451",
+      "EditableText": "Thanks for the help, anyways! Also, the player initially has a lantern, for debugging purposes, and I tested the script by removing the entire if condition ([i:1r4618bf]{if key.parent = antique2...}[/i:1r4618bf]) and the error disappeared.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks for the help, anyways! Also, the player initially has a lantern, for debugging purposes, and I tested the script by removing the entire if condition (<span style=\"font-style:italic;\">{if key.parent = antique2...}</span>) and the error disappeared.",
+      "PostDate": "2015-03-12T19:31:34+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35281",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "I don't think you ever created an Object (NAME) 'wreckage'...\n\nhmm... so removing that 'if' script removed the error... hmm..\n\nsimple thing to check: spelling~typo, as 'antique', can be easily mispelled~typo'ed",
+      "EditableFormat": "bbcode",
+      "HTML": "I don't think you ever created an Object (NAME) 'wreckage'...<br/><br/>hmm... so removing that 'if' script removed the error... hmm..<br/><br/>simple thing to check: spelling~typo, as 'antique', can be easily mispelled~typo'ed",
+      "PostDate": "2015-03-12T19:45:16+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35282",
+      "UserId": 0,
+      "Username": "RedTulip",
+      "UserAvatar": null,
+      "UserGravatar": "6d6ade23f085a9bcd2bfb10f5596d451",
+      "EditableText": "Haha, yes, that'll be created later on. I'll check if making one fixes it.\n\nEdit: Error's still there, so the wreckage object's not causing the problem.",
+      "EditableFormat": "bbcode",
+      "HTML": "Haha, yes, that'll be created later on. I'll check if making one fixes it.<br/><br/>Edit: Error's still there, so the wreckage object's not causing the problem.",
+      "PostDate": "2015-03-12T19:46:39+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35284",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "maybe it has soemthing to do with the period~dot with the syntaxing...\n\nas the period~dot can be both a sentence's ending and a code command for separating scripts ~ code lines ~ your text processor commands\n\nI thought there might be a toggle option possibly under the 'game' Object, for how it deals with using the dot~period in regards to this dual nature of it.",
+      "EditableFormat": "bbcode",
+      "HTML": "maybe it has soemthing to do with the period~dot with the syntaxing...<br/><br/>as the period~dot can be both a sentence's ending and a code command for separating scripts ~ code lines ~ your text processor commands<br/><br/>I thought there might be a toggle option possibly under the 'game' Object, for how it deals with using the dot~period in regards to this dual nature of it.",
+      "PostDate": "2015-03-12T19:54:26+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35285",
+      "UserId": 0,
+      "Username": "RedTulip",
+      "UserAvatar": null,
+      "UserGravatar": "6d6ade23f085a9bcd2bfb10f5596d451",
+      "EditableText": "Ah. Okay, tried turning off and then tested it. Error's still there. :/ Will study the code some more, something's missing. <!-- s:( --><img src=\"{SMILIES_PATH}/icon_sad.gif\" alt=\":(\" title=\"Sad\" /><!-- s:( -->(",
+      "EditableFormat": "bbcode",
+      "HTML": "Ah. Okay, tried turning off and then tested it. Error's still there. :/ Will study the code some more, something's missing. <!-- s:( --><img src=\"{SMILIES_PATH}/icon_sad.gif\" alt=\":(\" title=\"Sad\" /><!-- s:( -->(",
+      "PostDate": "2015-03-12T19:56:52+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35286",
+      "UserId": 0,
+      "Username": "RedTulip",
+      "UserAvatar": null,
+      "UserGravatar": "6d6ade23f085a9bcd2bfb10f5596d451",
+      "EditableText": "Got it working! Yes x) In [i:2t6h2b8g]{if key1.parent = antique2...}[/i:2t6h2b8g], there aren't supposed to be spaces around the equality symbol, so [i:2t6h2b8g]{if key1.parent=antique2...}[/i:2t6h2b8g] got it working.",
+      "EditableFormat": "bbcode",
+      "HTML": "Got it working! Yes x) In <span style=\"font-style:italic;\">{if key1.parent = antique2...}</span>, there aren't supposed to be spaces around the equality symbol, so <span style=\"font-style:italic;\">{if key1.parent=antique2...}</span> got it working.",
+      "PostDate": "2015-03-12T20:00:08+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35287",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "I'm really stumped... hmm...\n\nI'm sure the good coders here can quickly figure it out, but I'm just not able to do so, my apologies (sometimes I can debug people's issues, but not always)\n\n-----\n\nwow... a stupid spacing issue (quest is usually able to handle spacing, whereas I think many languages don't, so when the spacing causes a problem, we didn't realize it, until you just did now, hehe. GREAT JOB!).\n\nso with the text processor commands, NO spacing (around the OPERATOR symbol~character, anyways)\n\n(in normal quest scripting, you CAN have spaces around the OPERATOR symbol~character)",
+      "EditableFormat": "bbcode",
+      "HTML": "I'm really stumped... hmm...<br/><br/>I'm sure the good coders here can quickly figure it out, but I'm just not able to do so, my apologies (sometimes I can debug people's issues, but not always)<br/><br/>-----<br/><br/>wow... a stupid spacing issue (quest is usually able to handle spacing, whereas I think many languages don't, so when the spacing causes a problem, we didn't realize it, until you just did now, hehe. GREAT JOB!).<br/><br/>so with the text processor commands, NO spacing (around the OPERATOR symbol~character, anyways)<br/><br/>(in normal quest scripting, you CAN have spaces around the OPERATOR symbol~character)",
+      "PostDate": "2015-03-12T20:05:15+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35288",
+      "UserId": 0,
+      "Username": "RedTulip",
+      "UserAvatar": null,
+      "UserGravatar": "6d6ade23f085a9bcd2bfb10f5596d451",
+      "EditableText": "Yup. I can't believe it was just some spaces. xD Thanks so much for your help, by the way!",
+      "EditableFormat": "bbcode",
+      "HTML": "Yup. I can't believe it was just some spaces. xD Thanks so much for your help, by the way!",
+      "PostDate": "2015-03-12T20:07:03+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35290",
+      "UserId": 0,
+      "Username": "Silver",
+      "UserAvatar": null,
+      "UserGravatar": "13024be5ccbb463906b024d5bd3cb5e8",
+      "EditableText": "Yeah, I think spaces matter in the text processor where as they don't in scripting really.",
+      "EditableFormat": "bbcode",
+      "HTML": "Yeah, I think spaces matter in the text processor where as they don't in scripting really.",
+      "PostDate": "2015-03-12T23:02:55+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

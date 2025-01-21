@@ -1,0 +1,131 @@
+{
+  "Topic": {
+    "TopicId": "6060",
+    "ForumId": "10",
+    "Title": "Error Message",
+    "LastUpdated": "2016-03-25T20:13:36+00:00",
+    "ReplyCount": 9
+  },
+  "Posts": [
+    {
+      "PostId": "41867",
+      "UserId": 0,
+      "Username": "t1techno",
+      "UserAvatar": null,
+      "UserGravatar": "7ea57c9ece4f90687fd96cbb61d12f9b",
+      "EditableText": "One of my students is receiving this error and we can not seem to find what is causing it.\n\nError running script&#058; Error compiling expression 'ListCombine(baselist, verbs)': FunctionCallElement: Could find not function 'ListCombine(Object, QuestList`1)'\n\nIdeas?\n\n\nThanks",
+      "EditableFormat": "bbcode",
+      "HTML": "One of my students is receiving this error and we can not seem to find what is causing it.<br/><br/>Error running script&#058; Error compiling expression 'ListCombine(baselist, verbs)': FunctionCallElement: Could find not function 'ListCombine(Object, QuestList`1)'<br/><br/>Ideas?<br/><br/><br/>Thanks",
+      "PostDate": "2016-03-23T16:53:14+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "41869",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "I'd check out all of your Verbs (making sure that they fully exist/no-missing/no-misnamed verbs/etc that you're referencing) and/or Objects (their names, making sure they all matchup).\n\nThe problem is that these error codes (that you're getting) look like they're the underlying quest error codes (instead of direct error codes of the errors in your user-level/game code), which are getting displayed as they're used to do something, but are unable to do that something because that something has errors with it. The something that has errors is possibly an issue with Verbs or Objects. Has your students been using the GUI~Editor to add in Verbs or have they been directly coding in Verbs (there's actually a bit of stuff involved with creating Verbs, which the GUI~Editor handles for you, so if you're coding in Verbs, you need to be aware of all the things you need to do for creating/adding in Verbs).\n\nalso, if you and/or your student and/or school policy don't mind, you can post the student's game code (if it's not that big of a game), we can take a look at it for you, to try to troubleshoot it, or if you want to keep it private, then pm it to one of the site's mods, and they can take a look at it for you.",
+      "EditableFormat": "bbcode",
+      "HTML": "I'd check out all of your Verbs (making sure that they fully exist/no-missing/no-misnamed verbs/etc that you're referencing) and/or Objects (their names, making sure they all matchup).<br/><br/>The problem is that these error codes (that you're getting) look like they're the underlying quest error codes (instead of direct error codes of the errors in your user-level/game code), which are getting displayed as they're used to do something, but are unable to do that something because that something has errors with it. The something that has errors is possibly an issue with Verbs or Objects. Has your students been using the GUI~Editor to add in Verbs or have they been directly coding in Verbs (there's actually a bit of stuff involved with creating Verbs, which the GUI~Editor handles for you, so if you're coding in Verbs, you need to be aware of all the things you need to do for creating/adding in Verbs).<br/><br/>also, if you and/or your student and/or school policy don't mind, you can post the student's game code (if it's not that big of a game), we can take a look at it for you, to try to troubleshoot it, or if you want to keep it private, then pm it to one of the site's mods, and they can take a look at it for you.",
+      "PostDate": "2016-03-23T20:17:30+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "41874",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Be sure that they are assigning the result of ListCombine to something (e.g. a variable). There are a number of things in Quest that look like functions but are actually implemented as part of the expression code. They don't exist as standalone functions but only exist when you have an expression. So this will work:\n\n[code:dlpx4nc0]newlist = ListCombine(baselist, verbs)[/code:dlpx4nc0]\n\nbut this will give an error:\n\n[code:dlpx4nc0]ListCombine(baselist, verbs)[/code:dlpx4nc0]\nNot to mention not doing anything useful... <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Be sure that they are assigning the result of ListCombine to something (e.g. a variable). There are a number of things in Quest that look like functions but are actually implemented as part of the expression code. They don't exist as standalone functions but only exist when you have an expression. So this will work:<br/><br/><pre><code>newlist = ListCombine(baselist, verbs)</code></pre><br/><br/>but this will give an error:<br/><br/><pre><code>ListCombine(baselist, verbs)</code></pre><br/>Not to mention not doing anything useful... <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2016-03-23T20:54:12+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "41875",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "This is something in the Quest code, as HK says. Quest compiles a list of verbs for objects in the room or inventory, based on a baselist for the object, either inventoryverbs or displayverbs, and (optionally) a set of verbs it guesses it should have. For some reason, baselist is null (which is reported as Object in the error messages).\n\nIt is hard to see how you can have it as null. If you set it to null for an object, Quest will get the value from defaultobject instead. You cannot overwrite defaultobject.\n\nI think what I would do is create a new room, then one by one move objects to the new room, and see if it only occurs when a certain object is present. If it does, then delete that object, and create it new.",
+      "EditableFormat": "bbcode",
+      "HTML": "This is something in the Quest code, as HK says. Quest compiles a list of verbs for objects in the room or inventory, based on a baselist for the object, either inventoryverbs or displayverbs, and (optionally) a set of verbs it guesses it should have. For some reason, baselist is null (which is reported as Object in the error messages).<br/><br/>It is hard to see how you can have it as null. If you set it to null for an object, Quest will get the value from defaultobject instead. You cannot overwrite defaultobject.<br/><br/>I think what I would do is create a new room, then one by one move objects to the new room, and see if it only occurs when a certain object is present. If it does, then delete that object, and create it new.",
+      "PostDate": "2016-03-23T21:13:20+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "41877",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "If you were going to be using a baselist attribute, would you not have to use &quot;this.baselist&quot; or something?",
+      "EditableFormat": "bbcode",
+      "HTML": "If you were going to be using a baselist attribute, would you not have to use &quot;this.baselist&quot; or something?",
+      "PostDate": "2016-03-23T21:31:43+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "41879",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "I think the error is generated by this function, in core.aslx (almost at the bottom):\n[code:32otnlg7]  &lt;function name=&quot;GetDisplayVerbs&quot; parameters=&quot;object&quot; type=&quot;stringlist&quot;&gt;\n    if (Contains(game&#46;pov, object)) {\n      baselist = object&#46;inventoryverbs\n    }\n    else {\n      baselist = object&#46;displayverbs\n    }\n    \n    if (not game&#46;autodisplayverbs or GetBoolean(object, &quot;usestandardverblist&quot;)) {\n      return (baselist)\n    }\n    else {\n      if (HasAttribute(object, &quot;generatedverbslist&quot;)) {\n        verbs = object&#46;generatedverbslist\n      }\n      else {\n        verbs = NewStringList()\n        foreach (attr, GetAttributeNames(object, false)) {\n          if (ListContains(game&#46;verbattributes, attr)) {\n            cmd = ObjectDictionaryItem(game&#46;verbattributeslookup, attr)\n            if (HasString(cmd, &quot;displayverb&quot;)) {\n              displayverb = CapFirst(cmd&#46;displayverb)\n            }\n            else {\n              displayverb = CapFirst(attr)\n            }\n            if (not ListContains(baselist, displayverb)) {\n              list add (verbs, displayverb)\n            }\n          }\n        }\n        object&#46;generatedverbslist = verbs\n      }\n      if (GetBoolean(object, &quot;useindividualverblist&quot;)) {\n        return (verbs)\n      }\n      else {\n        return (ListCombine(baselist, verbs))\n      }  \n    }\n  &lt;/function&gt;[/code:32otnlg7]",
+      "EditableFormat": "bbcode",
+      "HTML": "I think the error is generated by this function, in core.aslx (almost at the bottom):<br/><pre><code>  &lt;function name=&quot;GetDisplayVerbs&quot; parameters=&quot;object&quot; type=&quot;stringlist&quot;&gt;<br/>    if (Contains(game&#46;pov, object)) {<br/>      baselist = object&#46;inventoryverbs<br/>    }<br/>    else {<br/>      baselist = object&#46;displayverbs<br/>    }<br/>    <br/>    if (not game&#46;autodisplayverbs or GetBoolean(object, &quot;usestandardverblist&quot;)) {<br/>      return (baselist)<br/>    }<br/>    else {<br/>      if (HasAttribute(object, &quot;generatedverbslist&quot;)) {<br/>        verbs = object&#46;generatedverbslist<br/>      }<br/>      else {<br/>        verbs = NewStringList()<br/>        foreach (attr, GetAttributeNames(object, false)) {<br/>          if (ListContains(game&#46;verbattributes, attr)) {<br/>            cmd = ObjectDictionaryItem(game&#46;verbattributeslookup, attr)<br/>            if (HasString(cmd, &quot;displayverb&quot;)) {<br/>              displayverb = CapFirst(cmd&#46;displayverb)<br/>            }<br/>            else {<br/>              displayverb = CapFirst(attr)<br/>            }<br/>            if (not ListContains(baselist, displayverb)) {<br/>              list add (verbs, displayverb)<br/>            }<br/>          }<br/>        }<br/>        object&#46;generatedverbslist = verbs<br/>      }<br/>      if (GetBoolean(object, &quot;useindividualverblist&quot;)) {<br/>        return (verbs)<br/>      }<br/>      else {<br/>        return (ListCombine(baselist, verbs))<br/>      }  <br/>    }<br/>  &lt;/function&gt;</code></pre>",
+      "PostDate": "2016-03-23T21:34:53+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "41883",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Ah, ok. I understand now!",
+      "EditableFormat": "bbcode",
+      "HTML": "Ah, ok. I understand now!",
+      "PostDate": "2016-03-23T22:05:11+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "41906",
+      "UserId": 0,
+      "Username": "t1techno",
+      "UserAvatar": null,
+      "UserGravatar": "7ea57c9ece4f90687fd96cbb61d12f9b",
+      "EditableText": "Thanks to all - a check of his verbs and objects revealed the problem and his game is working nicely.\n\nIt has been interesting introducing the high school students to the world of Zork and text based games.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks to all - a check of his verbs and objects revealed the problem and his game is working nicely.<br/><br/>It has been interesting introducing the high school students to the world of Zork and text based games.",
+      "PostDate": "2016-03-24T19:37:20+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "41907",
+      "UserId": 0,
+      "Username": "XanMag",
+      "UserAvatar": "7161_1436827710.jpg",
+      "UserGravatar": "4b45a3afd18077f76f6569225c422bdb",
+      "EditableText": "I have sent you a PM.  Please check it out.  Good luck!",
+      "EditableFormat": "bbcode",
+      "HTML": "I have sent you a PM.  Please check it out.  Good luck!",
+      "PostDate": "2016-03-24T20:01:05+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "41929",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "[quote=&quot;t1techno&quot;:ekbodmoh]Thanks to all - a check of his verbs and objects revealed the problem and his game is working nicely.\n\nIt has been interesting introducing the high school students to the world of Zork and text based games.[/quote:ekbodmoh]\nCan you tell us what caused it?",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>t1techno wrote:</cite>Thanks to all - a check of his verbs and objects revealed the problem and his game is working nicely.<br/><br/>It has been interesting introducing the high school students to the world of Zork and text based games.</blockquote><br/>Can you tell us what caused it?",
+      "PostDate": "2016-03-25T20:13:36+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

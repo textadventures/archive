@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "rntejucqbuw5qsqecdjxmq",
+    "ForumId": "10",
+    "Title": "BookLib, problems with inventory order when adding pages later?",
+    "LastUpdated": "2018-10-10T10:41:50.061037Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "72d26f67-52ff-47a2-afbd-390375057298",
+      "UserId": 348994,
+      "Username": "CheeseMyBaby",
+      "AvatarUrl": "https://i.imgur.com/c5nBbAgb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Long story short:\r\nMy main character has a diary. When major changes happens within the game he automatically writes in it and a page  is added to it. It's working and all... only problem is that it won't show up in the inventory in the right order. (see screenshot)\r\nIt sort of bugs me.\r\n\r\nHere, page 7 was just added... and it looks like this...\r\n\r\n<img src=\"http://rockstrom.com/bro/pages.jpg\">\r\n\r\nAny idea what I need to do to make it show up in the correct order?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Long story short:<br>\nMy main character has a diary. When major changes happens within the game he automatically writes in it and a page  is added to it. It's working and all... only problem is that it won't show up in the inventory in the right order. (see screenshot)<br>\nIt sort of bugs me.</p>\n<p>Here, page 7 was just added... and it looks like this...</p>\n<img src=\"http://rockstrom.com/bro/pages.jpg\">\n<p>Any idea what I need to do to make it show up in the correct order?</p>\n\n",
+      "PostDate": "2018-10-10T10:41:50.061037Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "4c79dea3-29ec-4c69-96d4-4f163d7046f1",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Can you show the code?\r\nI can't find BookLib anywhere.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Can you show the code?<br>\nI can't find BookLib anywhere.</p>\n\n",
+      "PostDate": "2018-10-10T11:20:33.2992381Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "c57fc8eb-283f-4128-9d40-f4e931c70805",
+      "UserId": 348994,
+      "Username": "CheeseMyBaby",
+      "AvatarUrl": "https://i.imgur.com/c5nBbAgb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "@mra\r\n\r\n<details>\r\n<summary>Click here for BookLib code</summary>\r\n\r\n```\r\n<?xml version=\"1.0\"?>\r\n<library>\r\n\r\n  <type name=\"booktype\">\r\n    <inherit name=\"editor_object\" />\r\n    <inherit name=\"openable\" />\r\n    <take />\r\n    <feature_container />\r\n    <read type=\"script\"><![CDATA[\r\n      if (not this.parent = game.pov) {\r\n        msg (\"You are not holding it.\")\r\n      }\r\n      else {\r\n        if (not this.isopen) {\r\n          msg (\"It isn't open.\")\r\n        }\r\n        else {\r\n          if (ListCount(GetDirectChildren(this))>0) {\r\n            ShowMenu (\"Which page?\", GetDirectChildren(this), true) {\r\n              obj = GetObject(result)\r\n              do(obj,\"look\")\r\n            }\r\n          }\r\n          else {\r\n            msg (\"There are no pages.\")\r\n          }\r\n        }\r\n      }\r\n    ]]></read>\r\n      <inventoryverbs type=\"stringlist\">\r\n        <value>Look at</value>\r\n        <value>Read</value>\r\n        <value>Drop</value>\r\n      </inventoryverbs>\r\n  </type>\r\n  <type name=\"pagetype\">\r\n    <inherit name=\"editor_object\" />\r\n    <displayverbs type=\"stringlist\">\r\n      <value>Read</value>\r\n    </displayverbs>\r\n    <inventoryverbs type=\"stringlist\">\r\n      <value>Read</value>\r\n\t  <value>Turn</value>\r\n    </inventoryverbs>\r\n    <read type=\"script\">\r\n\t  if ((this.parent = game.pov) or this.parent.parent = game.pov){\r\n        msg (this.pagetext)\r\n\t    if (HasAttribute(this,\"nextpage\")) {\r\n\t\t  msg (\"{command:read \"+GetDisplayAlias(this.nextpage)+\":Next Page}\")\r\n\t    }\r\n\t  }\r\n\t  else {\r\n\t    msg (\"You have to be holding something to read it.\")\r\n\t  }\r\n    </read>\r\n\t<look type=\"script\"><![CDATA[\r\n\t  do (this, \"read\")\r\n\t]]></look>\r\n\t<pagetext type=\"string\"><![CDATA[This page intentionally left blank.<br/>]]></pagetext>\r\n    <turn type=\"script\">\r\n\t  exists = false\r\n\t  if (HasAttribute(this,\"nextpage\")){\r\n        if (this.nextpage.parent = this.parent){\r\n\t\t  if (this.nextpage.visible){\r\n\t\t    do(this.nextpage,\"read\")\r\n\t\t\texists = true\r\n\t\t  }\r\n\t\t}\r\n\t  }\r\n\t  if (not exists){\r\n\t    msg (\"There is no page following this one.\")\r\n\t  }\r\n    </turn>\r\n  </type>\r\n  \r\n<!-- Interface -->\r\n  <tab>\r\n    <parent>_ObjectEditor</parent>\r\n    <caption>Book Options</caption>\r\n    <mustnotinherit>editor_room; defaultplayer</mustnotinherit>\r\n\r\n    <control>\r\n      <controltype>dropdowntypes</controltype>\r\n      <caption>Type</caption>\r\n      <types>*=None; booktype=Book; pagetype=Page</types>\r\n      <width>150</width>\r\n    </control>\r\n\t\r\n\t<control>\r\n\t  <onlydisplayif>DoesInherit(this,\"pagetype\")</onlydisplayif>\r\n\t  <controltype>checkbox</controltype>\r\n\t  <caption>Has next page</caption>\r\n\t  <attribute>hasnextpage</attribute>\r\n\t</control>\r\n\t\r\n\t<control>\r\n\t  <onlydisplayif>DoesInherit(this,\"pagetype\") and GetBoolean(this,\"hasnextpage\")</onlydisplayif>\r\n\t  <controltype>objects</controltype>\r\n\t  <caption>Next page</caption>\r\n\t  <attribute>nextpage</attribute>\r\n\t</control>\r\n\t\r\n\t<!--\r\n\t\r\n\t<control>\r\n\t  <onlydisplayif>DoesInherit(this,\"pagetype\")</onlydisplayif>\r\n\t  <controltype>checkbox</controltype>\r\n\t  <caption>Has previous page</caption>\r\n\t  <attribute>haspreviouspage</attribute>\r\n\t</control>\r\n\t\r\n\t<control>\r\n\t  <onlydisplayif>DoesInherit(this,\"pagetype\") and GetBoolean(this,\"haspreviouspage\")</onlydisplayif>\r\n\t  <controltype>objects</controltype>\r\n\t  <caption>Previous page</caption>\r\n\t  <attribute>previouspage</attribute>\r\n\t</control>\r\n\t-->\r\n\t\r\n\t<control>\r\n\t  <onlydisplayif>DoesInherit(this,\"pagetype\")</onlydisplayif>\r\n\t  <controltype>richtext</controltype>\r\n\t  <caption>Page text (Same as 'look' attribute.  This displays when reading or examining the page.)</caption>\r\n\t  <attribute>pagetext</attribute>\r\n\t</control>\r\n\t  \r\n\r\n\r\n  </tab>\r\n  \r\n\t\r\n</library>\r\n```\r\n</details>\r\n\r\n\r\n<br><br>\r\nWhen adding a page to it afterwards I do  ```MoveObject(pagename, diary)```, ```pagename.hasnextpage=true``` and ```pagename.nextpage = pagenumber```.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>@mra</p>\n<details>\n<summary>Click here for BookLib code</summary>\n<pre><code>&lt;?xml version=\"1.0\"?&gt;\n&lt;library&gt;\n\n  &lt;type name=\"booktype\"&gt;\n    &lt;inherit name=\"editor_object\" /&gt;\n    &lt;inherit name=\"openable\" /&gt;\n    &lt;take /&gt;\n    &lt;feature_container /&gt;\n    &lt;read type=\"script\"&gt;&lt;![CDATA[\n      if (not this.parent = game.pov) {\n        msg (\"You are not holding it.\")\n      }\n      else {\n        if (not this.isopen) {\n          msg (\"It isn't open.\")\n        }\n        else {\n          if (ListCount(GetDirectChildren(this))&gt;0) {\n            ShowMenu (\"Which page?\", GetDirectChildren(this), true) {\n              obj = GetObject(result)\n              do(obj,\"look\")\n            }\n          }\n          else {\n            msg (\"There are no pages.\")\n          }\n        }\n      }\n    ]]&gt;&lt;/read&gt;\n      &lt;inventoryverbs type=\"stringlist\"&gt;\n        &lt;value&gt;Look at&lt;/value&gt;\n        &lt;value&gt;Read&lt;/value&gt;\n        &lt;value&gt;Drop&lt;/value&gt;\n      &lt;/inventoryverbs&gt;\n  &lt;/type&gt;\n  &lt;type name=\"pagetype\"&gt;\n    &lt;inherit name=\"editor_object\" /&gt;\n    &lt;displayverbs type=\"stringlist\"&gt;\n      &lt;value&gt;Read&lt;/value&gt;\n    &lt;/displayverbs&gt;\n    &lt;inventoryverbs type=\"stringlist\"&gt;\n      &lt;value&gt;Read&lt;/value&gt;\n\t  &lt;value&gt;Turn&lt;/value&gt;\n    &lt;/inventoryverbs&gt;\n    &lt;read type=\"script\"&gt;\n\t  if ((this.parent = game.pov) or this.parent.parent = game.pov){\n        msg (this.pagetext)\n\t    if (HasAttribute(this,\"nextpage\")) {\n\t\t  msg (\"{command:read \"+GetDisplayAlias(this.nextpage)+\":Next Page}\")\n\t    }\n\t  }\n\t  else {\n\t    msg (\"You have to be holding something to read it.\")\n\t  }\n    &lt;/read&gt;\n\t&lt;look type=\"script\"&gt;&lt;![CDATA[\n\t  do (this, \"read\")\n\t]]&gt;&lt;/look&gt;\n\t&lt;pagetext type=\"string\"&gt;&lt;![CDATA[This page intentionally left blank.&lt;br/&gt;]]&gt;&lt;/pagetext&gt;\n    &lt;turn type=\"script\"&gt;\n\t  exists = false\n\t  if (HasAttribute(this,\"nextpage\")){\n        if (this.nextpage.parent = this.parent){\n\t\t  if (this.nextpage.visible){\n\t\t    do(this.nextpage,\"read\")\n\t\t\texists = true\n\t\t  }\n\t\t}\n\t  }\n\t  if (not exists){\n\t    msg (\"There is no page following this one.\")\n\t  }\n    &lt;/turn&gt;\n  &lt;/type&gt;\n  \n&lt;!-- Interface --&gt;\n  &lt;tab&gt;\n    &lt;parent&gt;_ObjectEditor&lt;/parent&gt;\n    &lt;caption&gt;Book Options&lt;/caption&gt;\n    &lt;mustnotinherit&gt;editor_room; defaultplayer&lt;/mustnotinherit&gt;\n\n    &lt;control&gt;\n      &lt;controltype&gt;dropdowntypes&lt;/controltype&gt;\n      &lt;caption&gt;Type&lt;/caption&gt;\n      &lt;types&gt;*=None; booktype=Book; pagetype=Page&lt;/types&gt;\n      &lt;width&gt;150&lt;/width&gt;\n    &lt;/control&gt;\n\t\n\t&lt;control&gt;\n\t  &lt;onlydisplayif&gt;DoesInherit(this,\"pagetype\")&lt;/onlydisplayif&gt;\n\t  &lt;controltype&gt;checkbox&lt;/controltype&gt;\n\t  &lt;caption&gt;Has next page&lt;/caption&gt;\n\t  &lt;attribute&gt;hasnextpage&lt;/attribute&gt;\n\t&lt;/control&gt;\n\t\n\t&lt;control&gt;\n\t  &lt;onlydisplayif&gt;DoesInherit(this,\"pagetype\") and GetBoolean(this,\"hasnextpage\")&lt;/onlydisplayif&gt;\n\t  &lt;controltype&gt;objects&lt;/controltype&gt;\n\t  &lt;caption&gt;Next page&lt;/caption&gt;\n\t  &lt;attribute&gt;nextpage&lt;/attribute&gt;\n\t&lt;/control&gt;\n\t\n\t&lt;!--\n\t\n\t&lt;control&gt;\n\t  &lt;onlydisplayif&gt;DoesInherit(this,\"pagetype\")&lt;/onlydisplayif&gt;\n\t  &lt;controltype&gt;checkbox&lt;/controltype&gt;\n\t  &lt;caption&gt;Has previous page&lt;/caption&gt;\n\t  &lt;attribute&gt;haspreviouspage&lt;/attribute&gt;\n\t&lt;/control&gt;\n\t\n\t&lt;control&gt;\n\t  &lt;onlydisplayif&gt;DoesInherit(this,\"pagetype\") and GetBoolean(this,\"haspreviouspage\")&lt;/onlydisplayif&gt;\n\t  &lt;controltype&gt;objects&lt;/controltype&gt;\n\t  &lt;caption&gt;Previous page&lt;/caption&gt;\n\t  &lt;attribute&gt;previouspage&lt;/attribute&gt;\n\t&lt;/control&gt;\n\t--&gt;\n\t\n\t&lt;control&gt;\n\t  &lt;onlydisplayif&gt;DoesInherit(this,\"pagetype\")&lt;/onlydisplayif&gt;\n\t  &lt;controltype&gt;richtext&lt;/controltype&gt;\n\t  &lt;caption&gt;Page text (Same as 'look' attribute.  This displays when reading or examining the page.)&lt;/caption&gt;\n\t  &lt;attribute&gt;pagetext&lt;/attribute&gt;\n\t&lt;/control&gt;\n\t  \n\n\n  &lt;/tab&gt;\n  \n\t\n&lt;/library&gt;\n</code></pre>\n</details>\n<p><br><br><br>\nWhen adding a page to it afterwards I do  <code>MoveObject(pagename, diary)</code>, <code>pagename.hasnextpage=true</code> and <code>pagename.nextpage = pagenumber</code>.</p>\n\n",
+      "PostDate": "2018-10-10T11:43:35.0350635Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "845149f0-0a89-4f90-8dd5-c07b6303f9c1",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Ah; the page objects are all created in the editor, rather than created during play?\r\nIn that case, they should appear in the inventory in the same order they are in the editor.\r\n\r\nIf you can acquire the pages in different orders, and want them to appear in the order you gained them, then I think you can do that by cloning pages into the diary instead of moving them.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Ah; the page objects are all created in the editor, rather than created during play?<br>\nIn that case, they should appear in the inventory in the same order they are in the editor.</p>\n<p>If you can acquire the pages in different orders, and want them to appear in the order you gained them, then I think you can do that by cloning pages into the diary instead of moving them.</p>\n\n",
+      "PostDate": "2018-10-10T12:36:43.3865354Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "6cb96434-e456-4f5b-90b3-859cfdbadb0b",
+      "UserId": 348994,
+      "Username": "CheeseMyBaby",
+      "AvatarUrl": "https://i.imgur.com/c5nBbAgb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Ah, so simple!\r\nThanks man!!!\r\n (I just changed the order of the objects in the editor and yes... it's working now)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Ah, so simple!<br>\nThanks man!!!<br>\n(I just changed the order of the objects in the editor and yes... it's working now)</p>\n\n",
+      "PostDate": "2018-10-10T12:58:57.943332Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

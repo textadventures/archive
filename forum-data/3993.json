@@ -1,0 +1,107 @@
+{
+  "Topic": {
+    "TopicId": "3993",
+    "ForumId": "10",
+    "Title": "Unreachable objects",
+    "LastUpdated": "2013-11-08T16:12:08+00:00",
+    "ReplyCount": 7
+  },
+  "Posts": [
+    {
+      "PostId": "26798",
+      "UserId": 0,
+      "Username": "Avantar",
+      "UserAvatar": "7009_1418309433.jpg",
+      "UserGravatar": "86de2b95c147252a1c38b8d3996da855",
+      "EditableText": "I was wondering:\nWhen would ScopeReachable() declare an object seen but unreachable?\nFor restoring my health from a health potion (script I got from HK), I used ScopeReachable() rather than ScopeInventory() so that I do not need to have it in my inventory to drink it if it is reachable.\n\nBut say you have the following:\n\nYou can see a health potion on a ledge, but it is not reachable - is it something you can impliment with ScopeReachable()?\n\nThank you for any help in this regard.",
+      "EditableFormat": "bbcode",
+      "HTML": "I was wondering:<br/>When would ScopeReachable() declare an object seen but unreachable?<br/>For restoring my health from a health potion (script I got from HK), I used ScopeReachable() rather than ScopeInventory() so that I do not need to have it in my inventory to drink it if it is reachable.<br/><br/>But say you have the following:<br/><br/>You can see a health potion on a ledge, but it is not reachable - is it something you can impliment with ScopeReachable()?<br/><br/>Thank you for any help in this regard.",
+      "PostDate": "2013-11-03T15:17:32+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26799",
+      "UserId": 0,
+      "Username": "george",
+      "UserAvatar": null,
+      "UserGravatar": "dc6fe8e6172303d85249a13c9a49c1ff",
+      "EditableText": "If an object is in a transparent container, then it's seen but not reachable. You can see how it works in the internal functions ContainsReachable, CanReachThrough, etcetera (which ScopeReachable defers to). So you don't exactly implement it with ScopeReachable -- ScopeReachable tells you if it [i:295oe4yg]is[/i:295oe4yg] reachable, but you would set it up with other code. \n\nWhat you basically want to do is make a different kind of surface whose objects aren't reachable. Maybe a new type? Like UnreachableSurface. Or I guess you could modify just that one surface (the ledge) if it's the only one in the game. I can imagine a few ways to go about it but I'll wait a minute to see if a more experienced Quester has some ideas.",
+      "EditableFormat": "bbcode",
+      "HTML": "If an object is in a transparent container, then it's seen but not reachable. You can see how it works in the internal functions ContainsReachable, CanReachThrough, etcetera (which ScopeReachable defers to). So you don't exactly implement it with ScopeReachable -- ScopeReachable tells you if it <span style=\"font-style:italic;\">is</span> reachable, but you would set it up with other code. <br/><br/>What you basically want to do is make a different kind of surface whose objects aren't reachable. Maybe a new type? Like UnreachableSurface. Or I guess you could modify just that one surface (the ledge) if it's the only one in the game. I can imagine a few ways to go about it but I'll wait a minute to see if a more experienced Quester has some ideas.",
+      "PostDate": "2013-11-03T17:41:42+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26801",
+      "UserId": 0,
+      "Username": "george",
+      "UserAvatar": null,
+      "UserGravatar": "dc6fe8e6172303d85249a13c9a49c1ff",
+      "EditableText": "So I've thought about this a bit, and I'm wondering if there's any reason you can't handle this with the default take logic? If you create a ledge and a potion, both are not takeable by default. If you make the potion takeable, of course you can then get it from the ledge. But you also could run a script when you take the potion, and just deny the take if the potion is on the ledge. Sure it's not a general solution, but perhaps it's good enough? As long as players can't put more stuff on the ledge you won't have to worry about coding that take behavior for every object.",
+      "EditableFormat": "bbcode",
+      "HTML": "So I've thought about this a bit, and I'm wondering if there's any reason you can't handle this with the default take logic? If you create a ledge and a potion, both are not takeable by default. If you make the potion takeable, of course you can then get it from the ledge. But you also could run a script when you take the potion, and just deny the take if the potion is on the ledge. Sure it's not a general solution, but perhaps it's good enough? As long as players can't put more stuff on the ledge you won't have to worry about coding that take behavior for every object.",
+      "PostDate": "2013-11-04T00:13:33+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26803",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "Just add an &quot;if&quot; script + &quot;boolean_or_string_or_integer&quot; script (or &quot;call upon&quot; a &quot;checking&quot; function) to your action script (Verb, Command, Function, etc), here's an example of mine though with my combat function (using a &quot;checking&quot; function):\n\nfor an example, maybe you can see the enemy on the other side of the river, but neither of you can swim, nor do either of you have projectile weapons, and thus you can't fight each other, yet.\n\n[code:21xvhvgs]// this is just a single part of my &quot;checking&quot; script block function for whether you can fight it or not&#58;\n\nelse if (not npc_reachable (enemy)) {\n  msg (&quot;There is no &quot; + enemy&#46;alias + &quot; in your vicinity&#46;&quot;)\n}\n\n// parameters' transfering&#58; enemy -&gt; object_x\n\n&lt;function name=&quot;npc_reachable&quot; parameters=&quot;object_x&quot; type=&quot;boolean&quot;&gt;\n  value = false\n  foreach (item_x,ScopeReachableNotHeld ()) {\n    if (item_x=object_x) {\n      value = true\n    }\n  }\n  return (value)\n&lt;/function&gt;[/code:21xvhvgs]\n\nyou can add in more script lines into the &quot;npc_reachable&quot; function if you have more conditions~factors involved to &quot;check for&quot;, such as seen in the below with the &quot;if + boolean&quot; scripting.\n\n----------------------------\n\nif + boolean scripting:\n\nlet's say there's a key high up in the air (or on a ledge high off the ground ~ whatever)\n\n[code:21xvhvgs]&lt;object name=&quot;key&quot;&gt;\n  &lt;inherit name=&quot;editor_object&quot; /&gt;\n  &lt;take_x type=&quot;script&quot;&gt;\n    if (player&#46;flying=true) {\n      key&#46;parent=player\n      msg (&quot;you fly up to the key and take it&quot;)\n    } else {\n      msg (&quot;what!, did you think you could just fly up into the air, to get the key?!&quot;)\n    }\n  &lt;/take_x&gt;\n&lt;/object&gt;\n\n&lt;object name=&quot;player&quot;&gt;\n  &lt;inherit name=&quot;editor_object&quot; /&gt;\n  &lt;inherit name=&quot;editor_player&quot; /&gt;\n  &lt;flying type=&quot;boolean&quot;&gt;false&lt;/flying&gt;\n&lt;/object&gt;\n\n&lt;object name=&quot;flying_potion&quot;&gt;\n  &lt;inherit name=&quot;editor_object&quot; /&gt;\n  &lt;alias&gt;mysterious potion&lt;/alias&gt;\n  &lt;drink_x type=&quot;script&quot;&gt;\n    player&#46;flying=true\n    msg (&quot;you drink the mysterious potion, and now you can fly!&quot;)\n  &lt;/drink_x&gt;\n&lt;/object&gt;[/code:21xvhvgs]\n\n---------------------------------\n\nScopeVisible is what you can see, ScopeReachable is what you can interact with (act upon),\n\n***IGNORE THIS***\nso you'll have to add in your own scripting to create the effect of something (an Object or Exit) being (initially) &quot;unreachable&quot; (or an actual &quot;ScopeUnreachable&quot; function).\n***IGNORE THIS***\n\n--------------------------------\n\nHK Edit:\n\nerr... I should have kept reading... lol:\n\nScopeVisibleNotReachable ()\n\n<!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/ScopeVisibleNotReachable\">http://quest5.net/wiki/ScopeVisibleNotReachable</a><!-- m -->\n\nReturns an objectlist containing all the objects which the player can see but cannot reach.\n\nAll objects in this scope can be seen, but can't be interacted with as they are either &quot;far away&quot; or inside a transparent container.\n\nScopeVisibleNotReachableForRoom (room)\n\n<!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/ScopeVisibleNotReachableForRoom\">http://quest5.net/wiki/ScopeVisibleNotReachableForRoom</a><!-- m -->\n\n    Returns an objectlist containing all the objects in the specified room which the player can see but cannot reach.\n\n    All objects in this scope can be seen, but can't be interacted with as they are either &quot;far away&quot; or inside a transparent container.",
+      "EditableFormat": "bbcode",
+      "HTML": "Just add an &quot;if&quot; script + &quot;boolean_or_string_or_integer&quot; script (or &quot;call upon&quot; a &quot;checking&quot; function) to your action script (Verb, Command, Function, etc), here's an example of mine though with my combat function (using a &quot;checking&quot; function):<br/><br/>for an example, maybe you can see the enemy on the other side of the river, but neither of you can swim, nor do either of you have projectile weapons, and thus you can't fight each other, yet.<br/><br/><pre><code>// this is just a single part of my &quot;checking&quot; script block function for whether you can fight it or not&#58;<br/><br/>else if (not npc_reachable (enemy)) {<br/>  msg (&quot;There is no &quot; + enemy&#46;alias + &quot; in your vicinity&#46;&quot;)<br/>}<br/><br/>// parameters' transfering&#58; enemy -&gt; object_x<br/><br/>&lt;function name=&quot;npc_reachable&quot; parameters=&quot;object_x&quot; type=&quot;boolean&quot;&gt;<br/>  value = false<br/>  foreach (item_x,ScopeReachableNotHeld ()) {<br/>    if (item_x=object_x) {<br/>      value = true<br/>    }<br/>  }<br/>  return (value)<br/>&lt;/function&gt;</code></pre><br/><br/>you can add in more script lines into the &quot;npc_reachable&quot; function if you have more conditions~factors involved to &quot;check for&quot;, such as seen in the below with the &quot;if + boolean&quot; scripting.<br/><br/>----------------------------<br/><br/>if + boolean scripting:<br/><br/>let's say there's a key high up in the air (or on a ledge high off the ground ~ whatever)<br/><br/><pre><code>&lt;object name=&quot;key&quot;&gt;<br/>  &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>  &lt;take_x type=&quot;script&quot;&gt;<br/>    if (player&#46;flying=true) {<br/>      key&#46;parent=player<br/>      msg (&quot;you fly up to the key and take it&quot;)<br/>    } else {<br/>      msg (&quot;what!, did you think you could just fly up into the air, to get the key?!&quot;)<br/>    }<br/>  &lt;/take_x&gt;<br/>&lt;/object&gt;<br/><br/>&lt;object name=&quot;player&quot;&gt;<br/>  &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>  &lt;inherit name=&quot;editor_player&quot; /&gt;<br/>  &lt;flying type=&quot;boolean&quot;&gt;false&lt;/flying&gt;<br/>&lt;/object&gt;<br/><br/>&lt;object name=&quot;flying_potion&quot;&gt;<br/>  &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>  &lt;alias&gt;mysterious potion&lt;/alias&gt;<br/>  &lt;drink_x type=&quot;script&quot;&gt;<br/>    player&#46;flying=true<br/>    msg (&quot;you drink the mysterious potion, and now you can fly!&quot;)<br/>  &lt;/drink_x&gt;<br/>&lt;/object&gt;</code></pre><br/><br/>---------------------------------<br/><br/>ScopeVisible is what you can see, ScopeReachable is what you can interact with (act upon),<br/><br/>***IGNORE THIS***<br/>so you'll have to add in your own scripting to create the effect of something (an Object or Exit) being (initially) &quot;unreachable&quot; (or an actual &quot;ScopeUnreachable&quot; function).<br/>***IGNORE THIS***<br/><br/>--------------------------------<br/><br/>HK Edit:<br/><br/>err... I should have kept reading... lol:<br/><br/>ScopeVisibleNotReachable ()<br/><br/><!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/ScopeVisibleNotReachable\">http://quest5.net/wiki/ScopeVisibleNotReachable</a><!-- m --><br/><br/>Returns an objectlist containing all the objects which the player can see but cannot reach.<br/><br/>All objects in this scope can be seen, but can't be interacted with as they are either &quot;far away&quot; or inside a transparent container.<br/><br/>ScopeVisibleNotReachableForRoom (room)<br/><br/><!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/ScopeVisibleNotReachableForRoom\">http://quest5.net/wiki/ScopeVisibleNotReachableForRoom</a><!-- m --><br/><br/>    Returns an objectlist containing all the objects in the specified room which the player can see but cannot reach.<br/><br/>    All objects in this scope can be seen, but can't be interacted with as they are either &quot;far away&quot; or inside a transparent container.",
+      "PostDate": "2013-11-04T02:09:19+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26808",
+      "UserId": 0,
+      "Username": "Avantar",
+      "UserAvatar": "7009_1418309433.jpg",
+      "UserGravatar": "86de2b95c147252a1c38b8d3996da855",
+      "EditableText": "Thank you guys for the replies!\n\nMaybe I am over complicating things:\n\nGeorge:\nYour first post was quite helpful - thx. \nThe reason why making a potion not takeable won't work is for the fact that I didn't want to have a potion in my inventory to be able to drink it - it should just be reachable.\n\nHK:\nHelpful script as always.  <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> I think I should maybe just stick to ScopeInventory() after all - it will alleviate the headache  <!-- s:lol: --><img src=\"{SMILIES_PATH}/icon_lol.gif\" alt=\":lol:\" title=\"Laughing\" /><!-- s:lol: --> \n\nSay - do you guys have any playable games out? With all the scripts you provide, HK - it seems you have some mean game going or done?",
+      "EditableFormat": "bbcode",
+      "HTML": "Thank you guys for the replies!<br/><br/>Maybe I am over complicating things:<br/><br/>George:<br/>Your first post was quite helpful - thx. <br/>The reason why making a potion not takeable won't work is for the fact that I didn't want to have a potion in my inventory to be able to drink it - it should just be reachable.<br/><br/>HK:<br/>Helpful script as always.  <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> I think I should maybe just stick to ScopeInventory() after all - it will alleviate the headache  <!-- s:lol: --><img src=\"{SMILIES_PATH}/icon_lol.gif\" alt=\":lol:\" title=\"Laughing\" /><!-- s:lol: --> <br/><br/>Say - do you guys have any playable games out? With all the scripts you provide, HK - it seems you have some mean game going or done?",
+      "PostDate": "2013-11-04T18:06:53+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26809",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "no game, still chunking away at learning more coding~scripting stuff ~ though I haven't been able to do anything, due to school. I'm currently working on getting time+date coding understood and crafted... if~when I ever get the time to do so again, lol.\n\nCoding I got to learn:\n\n(basically, the aspects of the TES:The Elder Scrolls ~Arena, Daggerfall, Morrowind, Oblivion, Skyrim~ RPG computer games)\n( <!-- m --><a class=\"postlink\" href=\"http://www.uesp.net/wiki/Main_Page\">http://www.uesp.net/wiki/Main_Page</a><!-- m --> )\n\nTime+Date System\nMagic System\nEquipment (beyond just equipping~unequipping) System\nThievery-Stealth System\nDiplomacy~Hostility~Dialogue System\nShopping System (connected to equipment obviously)\nParty~Team Members System\n&quot;String&quot; (?Parsing?) Coding\nJournal~Missions+Records~Notes System\n&quot;Pedia&quot;~Info System\nand etc (whatever I'm forgetting, lol)\n\n--------------------------\n\njust add an &quot;If + Boolean&quot;, nice and simple:\n\nCreate a custom Boolean on your Objects: &lt;reachable_flag type=&quot;boolean&quot;&gt;false&lt;/reachable_flag&gt;\n\nObject: whatever you want\n&quot;take_x&quot; Verb:\nif (reachable_flag=true) {\n-&gt; Object.parent = player\n} else {\n-&gt; (&quot;you can't take that&quot;)\n}",
+      "EditableFormat": "bbcode",
+      "HTML": "no game, still chunking away at learning more coding~scripting stuff ~ though I haven't been able to do anything, due to school. I'm currently working on getting time+date coding understood and crafted... if~when I ever get the time to do so again, lol.<br/><br/>Coding I got to learn:<br/><br/>(basically, the aspects of the TES:The Elder Scrolls ~Arena, Daggerfall, Morrowind, Oblivion, Skyrim~ RPG computer games)<br/>( <!-- m --><a class=\"postlink\" href=\"http://www.uesp.net/wiki/Main_Page\">http://www.uesp.net/wiki/Main_Page</a><!-- m --> )<br/><br/>Time+Date System<br/>Magic System<br/>Equipment (beyond just equipping~unequipping) System<br/>Thievery-Stealth System<br/>Diplomacy~Hostility~Dialogue System<br/>Shopping System (connected to equipment obviously)<br/>Party~Team Members System<br/>&quot;String&quot; (?Parsing?) Coding<br/>Journal~Missions+Records~Notes System<br/>&quot;Pedia&quot;~Info System<br/>and etc (whatever I'm forgetting, lol)<br/><br/>--------------------------<br/><br/>just add an &quot;If + Boolean&quot;, nice and simple:<br/><br/>Create a custom Boolean on your Objects: &lt;reachable_flag type=&quot;boolean&quot;&gt;false&lt;/reachable_flag&gt;<br/><br/>Object: whatever you want<br/>&quot;take_x&quot; Verb:<br/>if (reachable_flag=true) {<br/>-&gt; Object.parent = player<br/>} else {<br/>-&gt; (&quot;you can't take that&quot;)<br/>",
+      "PostDate": "2013-11-05T03:29:00+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26815",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "After reading this thread I realised transparent containers is a good way to implement something too high to reach. I created a quick game to see how it worked, and put it in the libraries and sample codes forum:\n\n<!-- l --><a class=\"postlink-local\" href=\"http://forum.textadventures.co.uk/viewtopic.php?f=18&amp;t=3997\">viewtopic.php?f=18&amp;t=3997</a><!-- l -->",
+      "EditableFormat": "bbcode",
+      "HTML": "After reading this thread I realised transparent containers is a good way to implement something too high to reach. I created a quick game to see how it worked, and put it in the libraries and sample codes forum:<br/><br/><!-- l --><a class=\"postlink-local\" href=\"http://forum.textadventures.co.uk/viewtopic.php?f=18&amp;t=3997\">viewtopic.php?f=18&amp;t=3997</a><!-- l -->",
+      "PostDate": "2013-11-07T09:01:00+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26820",
+      "UserId": 0,
+      "Username": "Avantar",
+      "UserAvatar": "7009_1418309433.jpg",
+      "UserGravatar": "86de2b95c147252a1c38b8d3996da855",
+      "EditableText": "Thank you Pixie! Much appreciated.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thank you Pixie! Much appreciated.",
+      "PostDate": "2013-11-08T16:12:08+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

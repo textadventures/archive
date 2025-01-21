@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "4314",
+    "ForumId": "10",
+    "Title": "Uploaded game bugs",
+    "LastUpdated": "2014-05-03T16:24:33+01:00",
+    "ReplyCount": 6
+  },
+  "Posts": [
+    {
+      "PostId": "28649",
+      "UserId": 0,
+      "Username": "rosieclaverton",
+      "UserAvatar": null,
+      "UserGravatar": "af7f469aa5aa9baac4986feabbf42883",
+      "EditableText": "Hi all - sorry to trouble you again.\n\nI tested my game on the desktop version and it seemed to be working very well.\n\nHowever, now I've uploaded it, it's skipping some room descriptions, not executing some scripts at all, putting all my text in the wrong order. I'm not sure how to even start fixing it, as I didn't see these problems on the desktop. I suspect issues with my liberal use of SetTimeout, but I'm not sure.\n\n<!-- m --><a class=\"postlink\" href=\"http://textadventures.co.uk/games/view/-ziovi3nxuwn5k2ugqv7eq/aeon-the-amy-lane-mysteries-online-game\">http://textadventures.co.uk/games/view/ ... nline-game</a><!-- m -->\n\nI've attached the aslx (no walkthrough, as I couldn't figure out how to make it wait)\n\nI'm trying to get this project finished on a very tight deadline and I've just come off a night shift, so that's adding to my confusion. Any and all help would be greatly appreciated.",
+      "EditableFormat": "bbcode",
+      "HTML": "Hi all - sorry to trouble you again.<br/><br/>I tested my game on the desktop version and it seemed to be working very well.<br/><br/>However, now I've uploaded it, it's skipping some room descriptions, not executing some scripts at all, putting all my text in the wrong order. I'm not sure how to even start fixing it, as I didn't see these problems on the desktop. I suspect issues with my liberal use of SetTimeout, but I'm not sure.<br/><br/><!-- m --><a class=\"postlink\" href=\"http://textadventures.co.uk/games/view/-ziovi3nxuwn5k2ugqv7eq/aeon-the-amy-lane-mysteries-online-game\">http://textadventures.co.uk/games/view/ ... nline-game</a><!-- m --><br/><br/>I've attached the aslx (no walkthrough, as I couldn't figure out how to make it wait)<br/><br/>I'm trying to get this project finished on a very tight deadline and I've just come off a night shift, so that's adding to my confusion. Any and all help would be greatly appreciated.<div><a href=\"/attachment/899\">AEON.aslx</a></div>",
+      "PostDate": "2014-05-02T20:10:14+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "28651",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "SetTimeout, timers, etc. are notorious for not working properly in the web player. There have been issues on the books about these for as long as I can remember.",
+      "EditableFormat": "bbcode",
+      "HTML": "SetTimeout, timers, etc. are notorious for not working properly in the web player. There have been issues on the books about these for as long as I can remember.",
+      "PostDate": "2014-05-02T20:32:54+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "28654",
+      "UserId": 0,
+      "Username": "rosieclaverton",
+      "UserAvatar": null,
+      "UserGravatar": "af7f469aa5aa9baac4986feabbf42883",
+      "EditableText": "Ah. <!-- s:( --><img src=\"{SMILIES_PATH}/icon_sad.gif\" alt=\":(\" title=\"Sad\" /><!-- s:( -->\n\nIs there anything I can use as alternatives? I'm mostly only using them to space out messages for realistic delays in response.",
+      "EditableFormat": "bbcode",
+      "HTML": "Ah. <!-- s:( --><img src=\"{SMILIES_PATH}/icon_sad.gif\" alt=\":(\" title=\"Sad\" /><!-- s:( --><br/><br/>Is there anything I can use as alternatives? I'm mostly only using them to space out messages for realistic delays in response.",
+      "PostDate": "2014-05-02T21:32:08+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "28655",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "I figured you might ask that... I have two thoughts.\n\nFirst, I noticed that there are some places you have nested timeouts:\n\n[code:37k1dmxy]          SetTimeout (3) {\n            msg (&quot;NEW MESSAGE FROM JASON&quot;)\n            msg (&quot;Where is the ransom dropoff?&quot;)\n            SetTimeout (2) {\n              MoveObject (player, Map)\n            }[/code:37k1dmxy]\n and some where you have concurrent, overlapping ones:\n\n[code:37k1dmxy]          SetTimeout (3) {\n            msg (&quot;CONNECTED&quot;)\n          }\n          SetTimeout (4) {\n            msg (&quot;DOWNLOADING&#46;&#46;&#46;&quot;)\n          }\n          SetTimeout (6) {\n            msg (&quot;DOWNLOAD COMPLETE&quot;)\n            MakeObjectVisible (Interview Transcript)\n          }[/code:37k1dmxy]\nI could see the latter ones being more problematic. You could try making them all nested and see if that fixes the problem. (e.g. settimeout 3, then a nested settimeout 1, then a nested timeout 2). If they're serialized, they might work better.\n\nThe second try is a drop-in alternative to SetTimeout, something I just attempted to put together. It's a little bit hacky, but it seems to work. The only requirement is that you can only have one SetTimeout going at a time. This means you *must* nest your timeouts. You can't have (say) one for 3 seconds and one for 4 seconds going at the same time, as you do above. It only knows about the most recent one called.\n\nAdd this code to your game:\n\n[code:37k1dmxy]  &lt;function name=&quot;TimeoutCallback&quot; parameters=&quot;param&quot;&gt;\n    invoke (game&#46;timeoutscript)\n  &lt;/function&gt;\n  &lt;function name=&quot;SetTimeout&quot; parameters=&quot;time, script&quot;&gt;\n    game&#46;timeoutscript = script\n    JS&#46;eval (&quot;setTimeout(function() { ASLEvent('TimeoutCallback', ''); }, &quot; + time*1000 + &quot;);&quot;)\n  &lt;/function&gt;[/code:37k1dmxy]\nBasically, this uses JavaScript to do the timeout. It has a TimeoutCallback ASLX function that is invoked by the JS once the timeout completes. This callback then invokes the script that was passed. As long as you nest your timeouts, it should work properly.\n\nLet me know if this doesn't work, and we can possibly look at why. But I think it should. (I'd definitely try nesting my timeouts first, as it may solve the problem, and you have to in order to use my code anyway.)\n\nEdit: Note also that ASLEvent causes turn scripts to run. So if you use the code I gave above, it will fire your turn scripts each time a timeout occurs. I don't see you using any, but I'm mentioning it in general anyway.",
+      "EditableFormat": "bbcode",
+      "HTML": "I figured you might ask that... I have two thoughts.<br/><br/>First, I noticed that there are some places you have nested timeouts:<br/><br/><pre><code>          SetTimeout (3) {<br/>            msg (&quot;NEW MESSAGE FROM JASON&quot;)<br/>            msg (&quot;Where is the ransom dropoff?&quot;)<br/>            SetTimeout (2) {<br/>              MoveObject (player, Map)<br/>            }</code></pre><br/> and some where you have concurrent, overlapping ones:<br/><br/><pre><code>          SetTimeout (3) {<br/>            msg (&quot;CONNECTED&quot;)<br/>          }<br/>          SetTimeout (4) {<br/>            msg (&quot;DOWNLOADING&#46;&#46;&#46;&quot;)<br/>          }<br/>          SetTimeout (6) {<br/>            msg (&quot;DOWNLOAD COMPLETE&quot;)<br/>            MakeObjectVisible (Interview Transcript)<br/>          }</code></pre><br/>I could see the latter ones being more problematic. You could try making them all nested and see if that fixes the problem. (e.g. settimeout 3, then a nested settimeout 1, then a nested timeout 2). If they're serialized, they might work better.<br/><br/>The second try is a drop-in alternative to SetTimeout, something I just attempted to put together. It's a little bit hacky, but it seems to work. The only requirement is that you can only have one SetTimeout going at a time. This means you *must* nest your timeouts. You can't have (say) one for 3 seconds and one for 4 seconds going at the same time, as you do above. It only knows about the most recent one called.<br/><br/>Add this code to your game:<br/><br/><pre><code>  &lt;function name=&quot;TimeoutCallback&quot; parameters=&quot;param&quot;&gt;<br/>    invoke (game&#46;timeoutscript)<br/>  &lt;/function&gt;<br/>  &lt;function name=&quot;SetTimeout&quot; parameters=&quot;time, script&quot;&gt;<br/>    game&#46;timeoutscript = script<br/>    JS&#46;eval (&quot;setTimeout(function() { ASLEvent('TimeoutCallback', ''); }, &quot; + time*1000 + &quot;);&quot;)<br/>  &lt;/function&gt;</code></pre><br/>Basically, this uses JavaScript to do the timeout. It has a TimeoutCallback ASLX function that is invoked by the JS once the timeout completes. This callback then invokes the script that was passed. As long as you nest your timeouts, it should work properly.<br/><br/>Let me know if this doesn't work, and we can possibly look at why. But I think it should. (I'd definitely try nesting my timeouts first, as it may solve the problem, and you have to in order to use my code anyway.)<br/><br/>Edit: Note also that ASLEvent causes turn scripts to run. So if you use the code I gave above, it will fire your turn scripts each time a timeout occurs. I don't see you using any, but I'm mentioning it in general anyway.",
+      "PostDate": "2014-05-02T22:35:08+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "28656",
+      "UserId": 0,
+      "Username": "rosieclaverton",
+      "UserAvatar": null,
+      "UserGravatar": "af7f469aa5aa9baac4986feabbf42883",
+      "EditableText": "Thank you very much! I will definitely try nesting first and will let you know how I get on.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thank you very much! I will definitely try nesting first and will let you know how I get on.",
+      "PostDate": "2014-05-02T23:15:51+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "28660",
+      "UserId": 0,
+      "Username": "rosieclaverton",
+      "UserAvatar": null,
+      "UserGravatar": "af7f469aa5aa9baac4986feabbf42883",
+      "EditableText": "Nesting alone did not work, but your script is PERFECT! Thank you very much!",
+      "EditableFormat": "bbcode",
+      "HTML": "Nesting alone did not work, but your script is PERFECT! Thank you very much!",
+      "PostDate": "2014-05-03T15:43:33+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "28661",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Glad to hear. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> &lt;Adds to bag of tricks.&gt;",
+      "EditableFormat": "bbcode",
+      "HTML": "Glad to hear. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> &lt;Adds to bag of tricks.&gt;",
+      "PostDate": "2014-05-03T16:24:33+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

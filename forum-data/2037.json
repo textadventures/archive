@@ -1,0 +1,167 @@
+{
+  "Topic": {
+    "TopicId": "2037",
+    "ForumId": "10",
+    "Title": "Exiting a room puts you in a random location - How?",
+    "LastUpdated": "2009-05-21T20:14:10+01:00",
+    "ReplyCount": 12
+  },
+  "Posts": [
+    {
+      "PostId": "16589",
+      "UserId": 0,
+      "Username": "Carrot",
+      "UserAvatar": null,
+      "UserGravatar": "12db43b39ade4bc3e479fc45c24e4f23",
+      "EditableText": "Firstly, sorry if this has been posted or asked before. I have done a quick search and couldn't find anything relevant.\n\nI currently only have QDK Lite, but am tempted to U/G.\n\nI would like to assign a random result (from a predefined list of &quot;rooms&quot;).  Ideally this is to be used with compass points rather than &quot;out&quot;.\n\nI am presuming I need to use the random command somehow, and attach a script to the exit, but how to write that script I am unsure.\n\nFor arguments sake, I have 3 rooms.  Room 1 is exitable by all 8 compass points, but the result of using any of the exits will be a random choice of one of the other two rooms.\n\nMany thanks.",
+      "EditableFormat": "bbcode",
+      "HTML": "Firstly, sorry if this has been posted or asked before. I have done a quick search and couldn't find anything relevant.<br/><br/>I currently only have QDK Lite, but am tempted to U/G.<br/><br/>I would like to assign a random result (from a predefined list of &quot;rooms&quot;).  Ideally this is to be used with compass points rather than &quot;out&quot;.<br/><br/>I am presuming I need to use the random command somehow, and attach a script to the exit, but how to write that script I am unsure.<br/><br/>For arguments sake, I have 3 rooms.  Room 1 is exitable by all 8 compass points, but the result of using any of the exits will be a random choice of one of the other two rooms.<br/><br/>Many thanks.",
+      "PostDate": "2009-05-18T22:42:02+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16590",
+      "UserId": 0,
+      "Username": "Overcat",
+      "UserAvatar": null,
+      "UserGravatar": "3958f867d73b44faed6e01f35e74c093",
+      "EditableText": "The following will work under version 4.10:\n\n[code:1athnc8c]define game &lt;Test Game&gt;\n\n\tasl-version &lt;410&gt;\t\n\tbackground &lt;black&gt;\n\tforeground &lt;white&gt;\n\t\n\tstart &lt;StartRoom&gt;\t\n\t\nend define\n\ndefine options\n\n\tdebug on\n\tpanes off\n\t\nend define\n\ndefine room &lt;StartRoom&gt;\n\t\n\talias &lt;Start Room&gt;\t\n\tlook &lt;A most boring location&#46;&gt;\n\t\n\tnorth { \n\t\tgoto &lt;$GetRandomLocation$&gt; }\n\tsouth { \n\t\tgoto &lt;$GetRandomLocation$&gt; }\n\twest { \n\t\tgoto &lt;$GetRandomLocation$&gt; }\n\teast { \n\t\tgoto &lt;$GetRandomLocation$&gt; }\n\tnorthwest { \n\t\tgoto &lt;$GetRandomLocation$&gt; }\n\tsouthwest { \n\t\tgoto &lt;$GetRandomLocation$&gt; }\n\tsoutheast { \n\t\tgoto &lt;$GetRandomLocation$&gt; }\n\tnortheast { \n\t\tgoto &lt;$GetRandomLocation$&gt; }\n\t\nend define\n\ndefine room &lt;AnotherRoom&gt;\n\t\n\talias &lt;Another Room&gt;\t\t\n\tlook &lt;Another boring location&#46;&gt;\t\t\n\t\n\tsouth &lt;StartRoom&gt;\n\t\nend define\n\ndefine room &lt;YetAnotherRoom&gt;\n\t\n\talias &lt;Yet Another Room&gt;\t\t\n\tlook &lt;Yet another boring location&#46;&gt;\t\t\n\t\n\tsouth &lt;StartRoom&gt;\n\t\nend define\n\ndefine function &lt;GetRandomLocation&gt;\n\t\n\tset numeric &lt;num; $rand(1; 2)$&gt;\t\n\t\n\tselect case &lt;%num%&gt; {\n\t\tcase &lt;1&gt; set string &lt;Location; AnotherRoom&gt;\n\t\tcase &lt;2&gt; set string &lt;Location; YetAnotherRoom&gt;\n\t}\n\n\treturn &lt;#Location#&gt; \n\nend define[/code:1athnc8c]\n\nIf you have any questions about the ASL above, ask away.\n\nFor others (including Alex) who may have attempted this, for some reason this statement would not work:\n\n[code:1athnc8c]north &lt;$GetRandomLocation$&gt;[/code:1athnc8c]\n\nI would get these errors:\n\n&quot;Error 9 - Subscript out of range\n\nin RoomExits.AddExitFromTag&quot;\n\nand\n\n&quot;Run-time error '91':\n\nObject variable or With block variable not set&quot;",
+      "EditableFormat": "bbcode",
+      "HTML": "The following will work under version 4.10:<br/><br/><pre><code>define game &lt;Test Game&gt;<br/><br/>\tasl-version &lt;410&gt;\t<br/>\tbackground &lt;black&gt;<br/>\tforeground &lt;white&gt;<br/>\t<br/>\tstart &lt;StartRoom&gt;\t<br/>\t<br/>end define<br/><br/>define options<br/><br/>\tdebug on<br/>\tpanes off<br/>\t<br/>end define<br/><br/>define room &lt;StartRoom&gt;<br/>\t<br/>\talias &lt;Start Room&gt;\t<br/>\tlook &lt;A most boring location&#46;&gt;<br/>\t<br/>\tnorth { <br/>\t\tgoto &lt;$GetRandomLocation$&gt; }<br/>\tsouth { <br/>\t\tgoto &lt;$GetRandomLocation$&gt; }<br/>\twest { <br/>\t\tgoto &lt;$GetRandomLocation$&gt; }<br/>\teast { <br/>\t\tgoto &lt;$GetRandomLocation$&gt; }<br/>\tnorthwest { <br/>\t\tgoto &lt;$GetRandomLocation$&gt; }<br/>\tsouthwest { <br/>\t\tgoto &lt;$GetRandomLocation$&gt; }<br/>\tsoutheast { <br/>\t\tgoto &lt;$GetRandomLocation$&gt; }<br/>\tnortheast { <br/>\t\tgoto &lt;$GetRandomLocation$&gt; }<br/>\t<br/>end define<br/><br/>define room &lt;AnotherRoom&gt;<br/>\t<br/>\talias &lt;Another Room&gt;\t\t<br/>\tlook &lt;Another boring location&#46;&gt;\t\t<br/>\t<br/>\tsouth &lt;StartRoom&gt;<br/>\t<br/>end define<br/><br/>define room &lt;YetAnotherRoom&gt;<br/>\t<br/>\talias &lt;Yet Another Room&gt;\t\t<br/>\tlook &lt;Yet another boring location&#46;&gt;\t\t<br/>\t<br/>\tsouth &lt;StartRoom&gt;<br/>\t<br/>end define<br/><br/>define function &lt;GetRandomLocation&gt;<br/>\t<br/>\tset numeric &lt;num; $rand(1; 2)$&gt;\t<br/>\t<br/>\tselect case &lt;%num%&gt; {<br/>\t\tcase &lt;1&gt; set string &lt;Location; AnotherRoom&gt;<br/>\t\tcase &lt;2&gt; set string &lt;Location; YetAnotherRoom&gt;<br/>\t}<br/><br/>\treturn &lt;#Location#&gt; <br/><br/>end define</code></pre><br/><br/>If you have any questions about the ASL above, ask away.<br/><br/>For others (including Alex) who may have attempted this, for some reason this statement would not work:<br/><br/><pre><code>north &lt;$GetRandomLocation$&gt;</code></pre><br/><br/>I would get these errors:<br/><br/>&quot;Error 9 - Subscript out of range<br/><br/>in RoomExits.AddExitFromTag&quot;<br/><br/>and<br/><br/>&quot;Run-time error '91':<br/><br/>Object variable or With block variable not set&quot;",
+      "PostDate": "2009-05-19T00:34:24+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16591",
+      "UserId": 0,
+      "Username": "Carrot",
+      "UserAvatar": null,
+      "UserGravatar": "12db43b39ade4bc3e479fc45c24e4f23",
+      "EditableText": "Thank you.\n\nI saved that and then loaded it.  But I am running 4.0.5 (went to update, it says mine is the latest version, it is lite not pro if that makes a diff?)\n\nAnyhow, it only seems to send me to &quot;[b:21ubxc9k]Yet Another boring Location[/b:21ubxc9k]&quot;, never &quot;[b:21ubxc9k]Another Boring Location[/b:21ubxc9k]&quot; (Could be the version difference?)\n\nAlso, bar editing the ASL directly in say notepad, how do I edit [b:21ubxc9k]$GetRandomLocation$[/b:21ubxc9k] ?",
+      "EditableFormat": "bbcode",
+      "HTML": "Thank you.<br/><br/>I saved that and then loaded it.  But I am running 4.0.5 (went to update, it says mine is the latest version, it is lite not pro if that makes a diff?)<br/><br/>Anyhow, it only seems to send me to &quot;<span style=\"font-weight:bold;\">Yet Another boring Location</span>&quot;, never &quot;<span style=\"font-weight:bold;\">Another Boring Location</span>&quot; (Could be the version difference?)<br/><br/>Also, bar editing the ASL directly in say notepad, how do I edit <span style=\"font-weight:bold;\">$GetRandomLocation$</span> ?",
+      "PostDate": "2009-05-19T00:58:13+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16592",
+      "UserId": 0,
+      "Username": "Overcat",
+      "UserAvatar": null,
+      "UserGravatar": "3958f867d73b44faed6e01f35e74c093",
+      "EditableText": "[quote:moseart6]I saved that and then loaded it. But I am running 4.0.5 (went to update, it says mine is the latest version, it is lite not pro if that makes a diff?)[/quote:moseart6]\n\nMy hunch is it won't.\n\n[quote:moseart6]Anyhow, it only seems to send me to &quot;Yet Another boring Location&quot;, never &quot;Another Boring Location&quot; (Could be the version difference?)[/quote:moseart6]\n\nHmm.  Are you sure?  I thought that too, when I first ran it - but it was just that the same room was randomly selected several times in a row.  Works for me.  How many times do you check it?  You can type 'south' or 's' repeatedly, since both &quot;Another Boring Location&quot; and &quot;Yet Another Boring Location&quot; exit southward to the start room.\n\n[quote:moseart6]Also, bar editing the ASL directly in say notepad, how do I edit $GetRandomLocation$ ?[/quote:moseart6]\n\nI'm using 4.1 Beta, so I don't know if the following will be the same for you:\n\nIn the tree at the left in the QDK window, navigate to Game -&gt; Functions.  'GetRandomLocation' should be listed on the right after you click 'Functions'. Click 'GetRandomLocation', and then click the 'Edit' button.  A window will pop up that allows you to edit the script statement by statement.\n\nIf that doesn't work for you, then perhaps 4.05 is just layed out differently.  (I don't use the QDK, so I can't recall what any of the differences are between the new and old versions.)  If it is the case that it's just layed out differently, try to find somewhere in the interface that allows you to edit 'functions'.  Maybe the tutorial will have something on that.",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><p>I saved that and then loaded it. But I am running 4.0.5 (went to update, it says mine is the latest version, it is lite not pro if that makes a diff?)</p></blockquote><br/><br/>My hunch is it won't.<br/><br/><blockquote><p>Anyhow, it only seems to send me to &quot;Yet Another boring Location&quot;, never &quot;Another Boring Location&quot; (Could be the version difference?)</p></blockquote><br/><br/>Hmm.  Are you sure?  I thought that too, when I first ran it - but it was just that the same room was randomly selected several times in a row.  Works for me.  How many times do you check it?  You can type 'south' or 's' repeatedly, since both &quot;Another Boring Location&quot; and &quot;Yet Another Boring Location&quot; exit southward to the start room.<br/><br/><blockquote><p>Also, bar editing the ASL directly in say notepad, how do I edit $GetRandomLocation$ ?</p></blockquote><br/><br/>I'm using 4.1 Beta, so I don't know if the following will be the same for you:<br/><br/>In the tree at the left in the QDK window, navigate to Game -&gt; Functions.  'GetRandomLocation' should be listed on the right after you click 'Functions'. Click 'GetRandomLocation', and then click the 'Edit' button.  A window will pop up that allows you to edit the script statement by statement.<br/><br/>If that doesn't work for you, then perhaps 4.05 is just layed out differently.  (I don't use the QDK, so I can't recall what any of the differences are between the new and old versions.)  If it is the case that it's just layed out differently, try to find somewhere in the interface that allows you to edit 'functions'.  Maybe the tutorial will have something on that.",
+      "PostDate": "2009-05-19T11:13:41+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16593",
+      "UserId": 0,
+      "Username": "Carrot",
+      "UserAvatar": null,
+      "UserGravatar": "12db43b39ade4bc3e479fc45c24e4f23",
+      "EditableText": "[quote=&quot;Overcat&quot;:di6bxtge][quote:di6bxtge]Anyhow, it only seems to send me to &quot;Yet Another boring Location&quot;, never &quot;Another Boring Location&quot; (Could be the version difference?)[/quote:di6bxtge]\n\nHmm.  Are you sure?  I thought that too, when I first ran it - but it was just that the same room was randomly selected several times in a row.  Works for me.  How many times do you check it?  You can type 'south' or 's' repeatedly, since both &quot;Another Boring Location&quot; and &quot;Yet Another Boring Location&quot; exit southward to the start room.\n[/quote:di6bxtge]\nYup.  I tried it about 10 times last night and either I wasn't reading it correctly, or it was throwing a strop.  Just tried it again (from the save file - not a new import) and it worked fine.\n\n[quote=&quot;Overcat&quot;:di6bxtge][quote:di6bxtge]Also, bar editing the ASL directly in say notepad, how do I edit $GetRandomLocation$ ?[/quote:di6bxtge]\n\nI'm using 4.1 Beta, so I don't know if the following will be the same for you:\n\nIn the tree at the left in the QDK window, navigate to Game -&gt; Functions.  'GetRandomLocation' should be listed on the right after you click 'Functions'. Click 'GetRandomLocation', and then click the 'Edit' button.  A window will pop up that allows you to edit the script statement by statement.\n\nIf that doesn't work for you, then perhaps 4.05 is just layed out differently.  (I don't use the QDK, so I can't recall what any of the differences are between the new and old versions.)  If it is the case that it's just layed out differently, try to find somewhere in the interface that allows you to edit 'functions'.  Maybe the tutorial will have something on that.[/quote:di6bxtge]\n\nI'll have a read through the manual.  In the left Pane, I have\n\n[list:di6bxtge]\n[*:di6bxtge]QDK[/*:m:di6bxtge]\n[*:di6bxtge]Game[list:di6bxtge]\n[*:di6bxtge]Verbs[/*:m:di6bxtge]\n[*:di6bxtge]Commands[/*:m:di6bxtge][/list:u:di6bxtge][/*:m:di6bxtge]\n[*:di6bxtge]Rooms[list:di6bxtge]\n[*:di6bxtge]StartRoom[/*:m:di6bxtge]\n[*:di6bxtge]AnotherRoom[/*:m:di6bxtge]\n[*:di6bxtge]YetAnotherRoom[/*:m:di6bxtge][/list:u:di6bxtge][/*:m:di6bxtge][/list:u:di6bxtge]\n\nThanks for your help.\n\n[edit]\n\nTo edit function in 4.0.5, its in the Tools menu. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->\n\n[/edit]",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>Overcat wrote:</cite><blockquote><p>Anyhow, it only seems to send me to &quot;Yet Another boring Location&quot;, never &quot;Another Boring Location&quot; (Could be the version difference?)</blockquote><br/><br/>Hmm.  Are you sure?  I thought that too, when I first ran it - but it was just that the same room was randomly selected several times in a row.  Works for me.  How many times do you check it?  You can type 'south' or 's' repeatedly, since both &quot;Another Boring Location&quot; and &quot;Yet Another Boring Location&quot; exit southward to the start room.<br/></p></blockquote><br/>Yup.  I tried it about 10 times last night and either I wasn't reading it correctly, or it was throwing a strop.  Just tried it again (from the save file - not a new import) and it worked fine.<br/><br/><blockquote><cite>Overcat wrote:</cite><blockquote><p>Also, bar editing the ASL directly in say notepad, how do I edit $GetRandomLocation$ ?</blockquote><br/><br/>I'm using 4.1 Beta, so I don't know if the following will be the same for you:<br/><br/>In the tree at the left in the QDK window, navigate to Game -&gt; Functions.  'GetRandomLocation' should be listed on the right after you click 'Functions'. Click 'GetRandomLocation', and then click the 'Edit' button.  A window will pop up that allows you to edit the script statement by statement.<br/><br/>If that doesn't work for you, then perhaps 4.05 is just layed out differently.  (I don't use the QDK, so I can't recall what any of the differences are between the new and old versions.)  If it is the case that it's just layed out differently, try to find somewhere in the interface that allows you to edit 'functions'.  Maybe the tutorial will have something on that.</p></blockquote><br/><br/>I'll have a read through the manual.  In the left Pane, I have<br/><br/>[list]<br/>[*]QDK[/*:m]<br/>[*]Game[list]<br/>[*]Verbs[/*:m]<br/>[*]Commands[/*:m][/list:u][/*:m]<br/>[*]Rooms[list]<br/>[*]StartRoom[/*:m]<br/>[*]AnotherRoom[/*:m]<br/>[*]YetAnotherRoom[/*:m][/list:u][/*:m][/list:u]<br/><br/>Thanks for your help.<br/><br/>[edit]<br/><br/>To edit function in 4.0.5, its in the Tools menu. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --><br/><br/>[/edit]",
+      "PostDate": "2009-05-19T20:20:46+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16602",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "[quote:ybbrpnw6]\nFor others (including Alex) who may have attempted this, for some reason this statement would not work:\n\nnorth &lt;$GetRandomLocation$&gt;\n[/quote:ybbrpnw6]\n\nThis seems to work fine for me in the latest build, possibly it was fixed as a side-effect of me fixing something else. I'll update the beta build soon.",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><p><br/>For others (including Alex) who may have attempted this, for some reason this statement would not work:<br/><br/>north &lt;$GetRandomLocation$&gt;<br/></p></blockquote><br/><br/>This seems to work fine for me in the latest build, possibly it was fixed as a side-effect of me fixing something else. I'll update the beta build soon.",
+      "PostDate": "2009-05-20T20:13:23+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16603",
+      "UserId": 0,
+      "Username": "Carrot",
+      "UserAvatar": null,
+      "UserGravatar": "12db43b39ade4bc3e479fc45c24e4f23",
+      "EditableText": "[quote=&quot;Alex&quot;:1vymyj2y][quote:1vymyj2y]\nFor others (including Alex) who may have attempted this, for some reason this statement would not work:\n\nnorth &lt;$GetRandomLocation$&gt;\n[/quote:1vymyj2y]\n\nThis seems to work fine for me in the latest build, possibly it was fixed as a side-effect of me fixing something else. I'll update the beta build soon.[/quote:1vymyj2y]\n\nDo you mean in place of\n\n[code:1vymyj2y]&#46;&#46;&#46;\n north { \n      goto &lt;$GetRandomLocation$&gt; }\n&#46;&#46;&#46;[/code:1vymyj2y]",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>Alex wrote:</cite><blockquote><p><br/>For others (including Alex) who may have attempted this, for some reason this statement would not work:<br/><br/>north &lt;$GetRandomLocation$&gt;<br/></blockquote><br/><br/>This seems to work fine for me in the latest build, possibly it was fixed as a side-effect of me fixing something else. I'll update the beta build soon.</p></blockquote><br/><br/>Do you mean in place of<br/><br/><pre><code>&#46;&#46;&#46;<br/> north { <br/>      goto &lt;$GetRandomLocation$&gt; }<br/>&#46;&#46;&#46;</code></pre>",
+      "PostDate": "2009-05-20T20:59:34+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16604",
+      "UserId": 0,
+      "Username": "Overcat",
+      "UserAvatar": null,
+      "UserGravatar": "3958f867d73b44faed6e01f35e74c093",
+      "EditableText": "[quote:1nyc5efk]\nDo you mean in place of\n\n[code:1nyc5efk]&#46;&#46;&#46;\nnorth { \ngoto &lt;$GetRandomLocation$&gt; }\n&#46;&#46;&#46;[/code:1nyc5efk][/quote:1nyc5efk]\n\nYes.  That would have been simpler, and was what I'd originally tried.",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><p><br/>Do you mean in place of<br/><br/><pre><code>&#46;&#46;&#46;<br/>north { <br/>goto &lt;$GetRandomLocation$&gt; }<br/>&#46;&#46;&#46;</code></pre></p></blockquote><br/><br/>Yes.  That would have been simpler, and was what I'd originally tried.",
+      "PostDate": "2009-05-20T21:30:41+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16605",
+      "UserId": 0,
+      "Username": "Carrot",
+      "UserAvatar": null,
+      "UserGravatar": "12db43b39ade4bc3e479fc45c24e4f23",
+      "EditableText": "I changed\n\n[code:1rk3yszz]north { \ngoto &lt;$GetRandomLocation$&gt; }\nsouth &#46;&#46;&#46;[/code:1rk3yszz]\nto \n[code:1rk3yszz]north &lt;$GetRandomLocation$&gt; \nsouth &#46;&#46;&#46;[/code:1rk3yszz]\n\nin the ASL.\n\nWhen i loaded it back into 4.0.5 (I have 4.1 beta pro now as well <!-- s;) --><img src=\"{SMILIES_PATH}/icon_wink.gif\" alt=\";)\" title=\"Wink\" /><!-- s;) -->) and tried to run it, I got a [b:1rk3yszz]&quot;You cant go in that direction&quot;[/b:1rk3yszz] message.  I opened the QDK, and looked at the room.  In the exits, in place of [b:1rk3yszz][script][/b:1rk3yszz] was [b:1rk3yszz]$GetRandomLocation$[/b:1rk3yszz]",
+      "EditableFormat": "bbcode",
+      "HTML": "I changed<br/><br/><pre><code>north { <br/>goto &lt;$GetRandomLocation$&gt; }<br/>south &#46;&#46;&#46;</code></pre><br/>to <br/><pre><code>north &lt;$GetRandomLocation$&gt; <br/>south &#46;&#46;&#46;</code></pre><br/><br/>in the ASL.<br/><br/>When i loaded it back into 4.0.5 (I have 4.1 beta pro now as well <!-- s;) --><img src=\"{SMILIES_PATH}/icon_wink.gif\" alt=\";)\" title=\"Wink\" /><!-- s;) -->) and tried to run it, I got a <span style=\"font-weight:bold;\">&quot;You cant go in that direction&quot;</span> message.  I opened the QDK, and looked at the room.  In the exits, in place of <span style=\"font-weight:bold;\">[script]</span> was <span style=\"font-weight:bold;\">$GetRandomLocation$</span>",
+      "PostDate": "2009-05-20T22:13:29+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16606",
+      "UserId": 0,
+      "Username": "Carrot",
+      "UserAvatar": null,
+      "UserGravatar": "12db43b39ade4bc3e479fc45c24e4f23",
+      "EditableText": "Changing it to\n\n[code:2r2lotye]north { \n    &lt;$GetRandomLocation$&gt; }\nsouth &#46;&#46;&#46;[/code:2r2lotye]\n\nMakes the room have its exits, but when you enter a direction, nothing happens",
+      "EditableFormat": "bbcode",
+      "HTML": "Changing it to<br/><br/><pre><code>north { <br/>    &lt;$GetRandomLocation$&gt; }<br/>south &#46;&#46;&#46;</code></pre><br/><br/>Makes the room have its exits, but when you enter a direction, nothing happens",
+      "PostDate": "2009-05-20T22:53:45+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16608",
+      "UserId": 0,
+      "Username": "Carrot",
+      "UserAvatar": null,
+      "UserGravatar": "12db43b39ade4bc3e479fc45c24e4f23",
+      "EditableText": "OK, new to this code, so possibly a bug? dunno.\n\nI get different results just by using a newline (which I thought, from the layout of the code, wouldn't be important).\n\nIn 4.0.5\n\n[code:285wnri0]north { \n    goto &lt;$GetRandomLocation$&gt; }[/code:285wnri0]\nworks\n\n\n[code:285wnri0]north \n     &lt;$GetRandomLocation$&gt;[/code:285wnri0]\ndoesn't give north in the list of exits, and entering [b:285wnri0]N[/b:285wnri0] gets [b:285wnri0]&quot;you can't go there&quot;[/b:285wnri0]\n\n\nand\n\n[code:285wnri0]north { goto &lt;$GetRandomLocation$&gt; }[/code:285wnri0]\nLeaves the location in the available list - but does nothing when you enter the direction command.\n\n\nin 4.1 beta the only difference is that using the [b:285wnri0]N[/b:285wnri0] on option 2 gives a selection of [b:285wnri0]NW[/b:285wnri0] or [b:285wnri0]NE[/b:285wnri0] instead of [b:285wnri0]&quot;you can't go there&quot;[/b:285wnri0]",
+      "EditableFormat": "bbcode",
+      "HTML": "OK, new to this code, so possibly a bug? dunno.<br/><br/>I get different results just by using a newline (which I thought, from the layout of the code, wouldn't be important).<br/><br/>In 4.0.5<br/><br/><pre><code>north { <br/>    goto &lt;$GetRandomLocation$&gt; }</code></pre><br/>works<br/><br/><br/><pre><code>north <br/>     &lt;$GetRandomLocation$&gt;</code></pre><br/>doesn't give north in the list of exits, and entering <span style=\"font-weight:bold;\">N</span> gets <span style=\"font-weight:bold;\">&quot;you can't go there&quot;</span><br/><br/><br/>and<br/><br/><pre><code>north { goto &lt;$GetRandomLocation$&gt; }</code></pre><br/>Leaves the location in the available list - but does nothing when you enter the direction command.<br/><br/><br/>in 4.1 beta the only difference is that using the <span style=\"font-weight:bold;\">N</span> on option 2 gives a selection of <span style=\"font-weight:bold;\">NW</span> or <span style=\"font-weight:bold;\">NE</span> instead of <span style=\"font-weight:bold;\">&quot;you can't go there&quot;</span>",
+      "PostDate": "2009-05-20T23:05:44+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16609",
+      "UserId": 0,
+      "Username": "Overcat",
+      "UserAvatar": null,
+      "UserGravatar": "3958f867d73b44faed6e01f35e74c093",
+      "EditableText": "[quote:3t06zq4e]Changing it to\n\n[code:3t06zq4e]\nnorth { \n    &lt;$GetRandomLocation$&gt; }\nsouth &#46;&#46;&#46;[/code:3t06zq4e]\n\nMakes the room have its exits, but when you enter a direction, nothing happens[/quote:3t06zq4e]\n\nThat's because as soon as you apply curly brances after the exit tag (in this case the 'north' exit tag), Quest runs a [i:3t06zq4e]script[/i:3t06zq4e].  That as opposed to running its built-in functionality for the exit tag when you merely specify a tag value.  When you only specify a tag value, as in...\n\n[code:3t06zq4e]north &lt;someroom&gt;[/code:3t06zq4e]\n\n...Quest automatically sends the player to the room indicated by the tag value (in this case, a room named 'someroom').  In your above example you run a script that doesn't do anything.  Well, something [i:3t06zq4e]does[/i:3t06zq4e] happen - a script runs.  But the script doesn't output anything for the player, so you don't see anything.  Try this:\n\n[code:3t06zq4e]north { \n    &lt;$GetRandomLocation$&gt; \n    msg &lt;North it is!&gt; }[/code:3t06zq4e]\n\n...and you should see what I mean.  If you watch the ASL Log Window, you should also see this:\n\n[b:3t06zq4e]ERROR: Unrecognized keyword. Line reads: '&lt;$GetRandomLocation$&gt;'[/b:3t06zq4e]\n\n[quote:3t06zq4e][code:3t06zq4e]north { goto &lt;$GetRandomLocation$&gt; }[/code:3t06zq4e]\n\nLeaves the location in the available list - but does nothing when you enter the direction command.[/quote:3t06zq4e]\n\nYes, I experienced that also, as I attempted to put the script all on one line.  That won't work, but I think it should (white space shouldn't matter).  Incidentally, this is the same for object actions:\n\n[code:3t06zq4e]define object &lt;SomeObject&gt;\n\n    &#46;&#46;&#46;\n    action &lt;SomeAction&gt; { msg &lt;Action fired&#46;&gt; }\n    &#46;&#46;&#46;\n\nend define[/code:3t06zq4e]\n\nThat won't work, but this will:\n\n[code:3t06zq4e]define object &lt;SomeObject&gt;\n\n    &#46;&#46;&#46;\n    action &lt;SomeAction&gt; { \n            msg &lt;Action fired&#46;&gt; }\n    &#46;&#46;&#46;\n\nend define[/code:3t06zq4e]\n\nThis touchiness on white space does constitute a bug, I think, since the help file (if I remember correctly) indicates that white space doesn't matter.",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><p>Changing it to<br/><br/><pre><code><br/>north { <br/>    &lt;$GetRandomLocation$&gt; }<br/>south &#46;&#46;&#46;</code></pre><br/><br/>Makes the room have its exits, but when you enter a direction, nothing happens</p></blockquote><br/><br/>That's because as soon as you apply curly brances after the exit tag (in this case the 'north' exit tag), Quest runs a <span style=\"font-style:italic;\">script</span>.  That as opposed to running its built-in functionality for the exit tag when you merely specify a tag value.  When you only specify a tag value, as in...<br/><br/><pre><code>north &lt;someroom&gt;</code></pre><br/><br/>...Quest automatically sends the player to the room indicated by the tag value (in this case, a room named 'someroom').  In your above example you run a script that doesn't do anything.  Well, something <span style=\"font-style:italic;\">does</span> happen - a script runs.  But the script doesn't output anything for the player, so you don't see anything.  Try this:<br/><br/><pre><code>north { <br/>    &lt;$GetRandomLocation$&gt; <br/>    msg &lt;North it is!&gt; }</code></pre><br/><br/>...and you should see what I mean.  If you watch the ASL Log Window, you should also see this:<br/><br/><span style=\"font-weight:bold;\">ERROR: Unrecognized keyword. Line reads: '&lt;$GetRandomLocation$&gt;'</span><br/><br/><blockquote><p><pre><code>north { goto &lt;$GetRandomLocation$&gt; }</code></pre><br/><br/>Leaves the location in the available list - but does nothing when you enter the direction command.</p></blockquote><br/><br/>Yes, I experienced that also, as I attempted to put the script all on one line.  That won't work, but I think it should (white space shouldn't matter).  Incidentally, this is the same for object actions:<br/><br/><pre><code>define object &lt;SomeObject&gt;<br/><br/>    &#46;&#46;&#46;<br/>    action &lt;SomeAction&gt; { msg &lt;Action fired&#46;&gt; }<br/>    &#46;&#46;&#46;<br/><br/>end define</code></pre><br/><br/>That won't work, but this will:<br/><br/><pre><code>define object &lt;SomeObject&gt;<br/><br/>    &#46;&#46;&#46;<br/>    action &lt;SomeAction&gt; { <br/>            msg &lt;Action fired&#46;&gt; }<br/>    &#46;&#46;&#46;<br/><br/>end define</code></pre><br/><br/>This touchiness on white space does constitute a bug, I think, since the help file (if I remember correctly) indicates that white space doesn't matter.",
+      "PostDate": "2009-05-21T02:33:45+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16611",
+      "UserId": 0,
+      "Username": "Carrot",
+      "UserAvatar": null,
+      "UserGravatar": "12db43b39ade4bc3e479fc45c24e4f23",
+      "EditableText": "[quote=&quot;Alex&quot;:2a6zx8o7][quote:2a6zx8o7]\nFor others (including Alex) who may have attempted this, for some reason this statement would not work:\n\nnorth &lt;$GetRandomLocation$&gt;\n[/quote:2a6zx8o7]\n\nThis seems to work fine for me in the latest build, possibly it was fixed as a side-effect of me fixing something else. I'll update the beta build soon.[/quote:2a6zx8o7]\n\nSo for the time being I should stick with\n\n[code:2a6zx8o7]north {\n\tgoto &lt;$GetRandomLocation$&gt; }[/code:2a6zx8o7]",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>Alex wrote:</cite><blockquote><p><br/>For others (including Alex) who may have attempted this, for some reason this statement would not work:<br/><br/>north &lt;$GetRandomLocation$&gt;<br/></blockquote><br/><br/>This seems to work fine for me in the latest build, possibly it was fixed as a side-effect of me fixing something else. I'll update the beta build soon.</p></blockquote><br/><br/>So for the time being I should stick with<br/><br/><pre><code>north {<br/>\tgoto &lt;$GetRandomLocation$&gt; }</code></pre>",
+      "PostDate": "2009-05-21T20:14:10+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

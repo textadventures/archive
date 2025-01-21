@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "5hyaki25g0efjewa1avq0q",
+    "ForumId": "10",
+    "Title": "What's the (room-)attribute for ''Objects here go to:''?",
+    "LastUpdated": "2021-12-21T11:27:06.8801766Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "257be883-2ba3-4fb6-af70-b68f45301c29",
+      "UserId": 326173,
+      "Username": "Curt A. P.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/bc1d5d57408cf4d13f9d9f23c1e3dc56?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "In an object's room tab  is the option to set an object where dropped objects go to. I want to know what the attribute for this option is, because I want it to be an expression.\r\n(Couldn't find it in the Documentation)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>In an object's room tab  is the option to set an object where dropped objects go to. I want to know what the attribute for this option is, because I want it to be an expression.<br>\n(Couldn't find it in the Documentation)</p>\n\n",
+      "PostDate": "2021-12-21T11:27:06.8801766Z",
+      "LastEditDate": "2021-12-21T12:21:57.4699564Z",
+      "link": null
+    },
+    {
+      "PostId": "654520c9-01fc-48c6-bb24-c00a8ba4dd82",
+      "UserId": 260569,
+      "Username": "DarkLizerd",
+      "AvatarUrl": "https://i.imgur.com/HiZKEtPb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Not sure how many people use that option, but...\r\nIf you are climbing a tree, and you drop something, it could be used to drop that object to the ground. (IE the room the tree in in.)\r\nOr, you are in a room where the floor is a grate, anything dropped would fall to the room below the grate.\r\nAt least, that's my thought.\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Not sure how many people use that option, but...<br>\nIf you are climbing a tree, and you drop something, it could be used to drop that object to the ground. (IE the room the tree in in.)<br>\nOr, you are in a room where the floor is a grate, anything dropped would fall to the room below the grate.<br>\nAt least, that's my thought.</p>\n\n",
+      "PostDate": "2021-12-21T22:21:55.4070973Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "8ae7a361-9eec-459c-abc3-6878698dde95",
+      "UserId": 326173,
+      "Username": "Curt A. P.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/bc1d5d57408cf4d13f9d9f23c1e3dc56?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> If you are climbing a tree, and you drop something, it could be used to drop that object to the ground. (IE the room the tree in in.)\r\n\r\nYes, and if the tree is a randomly cloned object, an expression for that option would be useful (in the tree's room tab):\r\n<b> Objects dropped here go to: this.parent</b> or <b>exit.to </b>\r\n\r\n> Or, you are in a room where the floor is a grate, anything dropped would fall to the room below the grate.\r\n\r\nMaybe some items are to large to slip through the grate. Anyway, it seems like the Quest UI couldn't show an expression as that option's value. \r\nMakes more sense to handle it via the drop script for each object individually...",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>If you are climbing a tree, and you drop something, it could be used to drop that object to the ground. (IE the room the tree in in.)</p>\n</blockquote>\n<p>Yes, and if the tree is a randomly cloned object, an expression for that option would be useful (in the tree's room tab):<br>\n<b> Objects dropped here go to: this.parent</b> or <b>exit.to </b></p>\n<blockquote>\n<p>Or, you are in a room where the floor is a grate, anything dropped would fall to the room below the grate.</p>\n</blockquote>\n<p>Maybe some items are to large to slip through the grate. Anyway, it seems like the Quest UI couldn't show an expression as that option's value.<br>\nMakes more sense to handle it via the drop script for each object individually...</p>\n\n",
+      "PostDate": "2021-12-22T08:23:12.4422332Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "f085f012-f955-457b-835f-940d990485fe",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I think the only time I've used it was remaking an 80s game \"Circus\", where objects dropped on the tightrope land in the ring below.\r\n\r\nThe attribute is `dropdestination`. Sadly, it can't be an expression; it needs to be an object attribute. However, if you're using the desktop version of Quest there's nothing to stop you altering the `DoDrop` function to allow it to be an expression.\r\n\r\n<details><summary>Somethinglike this (click for code)</summery>\r\nChange this part:\r\n```\r\n      if (HasObject(game.pov.parent, \"dropdestination\")) {\r\n        destination = game.pov.parent.dropdestination\r\n      }\r\n      else {\r\n        destination = game.pov.parent\r\n      }\r\n```1\r\nto\r\n```\r\n    destination = game.pov.parent.destination\r\n    if (TypeOf (destination) = \"string\") {\r\n      destination = eval (destination, QuickParams (\"this\", game.pov.parent, \"object\", object))\r\n    }\r\n    if (Equal (destination, null) or not TypeOf (destination) = \"object\") {\r\n      destination = game.pov.parent\r\n    }\r\n```\r\n</details>\r\n\r\n<hr/>\r\nIt's worth noting that if you are writing a specific \"drop\" script for the object, this will be accessible as the `destination` variable. It's important to make sure that your custom drop scripts use `destination`, because those scripts are also called for \"put object in box\" commands – it seems that people on the forum often recomment code using `player.parent` or `game.pov.parent` in a drop script, which would have the side effect of meaning that ytou can't put those objects in a container.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I think the only time I've used it was remaking an 80s game \"Circus\", where objects dropped on the tightrope land in the ring below.</p>\n<p>The attribute is <code>dropdestination</code>. Sadly, it can't be an expression; it needs to be an object attribute. However, if you're using the desktop version of Quest there's nothing to stop you altering the <code>DoDrop</code> function to allow it to be an expression.</p>\n<details><summary>Somethinglike this (click for code)\nChange this part:\n```\n      if (HasObject(game.pov.parent, \"dropdestination\")) {\n        destination = game.pov.parent.dropdestination\n      }\n      else {\n        destination = game.pov.parent\n      }\n```1\nto\n```\n    destination = game.pov.parent.destination\n    if (TypeOf (destination) = \"string\") {\n      destination = eval (destination, QuickParams (\"this\", game.pov.parent, \"object\", object))\n    }\n    if (Equal (destination, null) or not TypeOf (destination) = \"object\") {\n      destination = game.pov.parent\n    }\n```\n</summary></details>\n<hr>\nIt's worth noting that if you are writing a specific \"drop\" script for the object, this will be accessible as the `destination` variable. It's important to make sure that your custom drop scripts use `destination`, because those scripts are also called for \"put object in box\" commands – it seems that people on the forum often recomment code using `player.parent` or `game.pov.parent` in a drop script, which would have the side effect of meaning that ytou can't put those objects in a container.\n\n",
+      "PostDate": "2021-12-22T08:40:17.3710718Z",
+      "LastEditDate": "2021-12-22T08:50:32.4876987Z",
+      "link": null
+    },
+    {
+      "PostId": "c3a8c327-a2c1-4ce1-8227-554ea01ba387",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Sorry, I missed this part of the question:\r\n\r\n> Yes, and if the tree is a randomly cloned object, an expression for that option would be useful (in the tree's room tab):\r\nObjects dropped here go to: **this.parent** or **exit.to**\r\n\r\nIn this case, you don't need it to be an expression. You could do something like:\r\n```\r\nnewclone = CloneObjectAndMove (tree, SomeExpressionToDetermineWhereToPutIt())\r\nnewclone.dropdestination = newclone.parent\r\n```\r\nwhen you're creating the clone.\r\nOr if it might move around, you could give it a `changedparent` script that simply says:\r\n```\r\nthis.dropdestination = this.parent\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Sorry, I missed this part of the question:</p>\n<blockquote>\n<p>Yes, and if the tree is a randomly cloned object, an expression for that option would be useful (in the tree's room tab):<br>\nObjects dropped here go to: <strong>this.parent</strong> or <strong>exit.to</strong></p>\n</blockquote>\n<p>In this case, you don't need it to be an expression. You could do something like:</p>\n<pre><code>newclone = CloneObjectAndMove (tree, SomeExpressionToDetermineWhereToPutIt())\nnewclone.dropdestination = newclone.parent\n</code></pre>\n<p>when you're creating the clone.<br>\nOr if it might move around, you could give it a <code>changedparent</code> script that simply says:</p>\n<pre><code>this.dropdestination = this.parent\n</code></pre>\n\n",
+      "PostDate": "2021-12-22T08:53:34.6883637Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

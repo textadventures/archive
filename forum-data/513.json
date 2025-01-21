@@ -1,0 +1,107 @@
+{
+  "Topic": {
+    "TopicId": "513",
+    "ForumId": "3",
+    "Title": "VB6 Error trapping with File opening",
+    "LastUpdated": "2004-10-07T08:01:53+01:00",
+    "ReplyCount": 7
+  },
+  "Posts": [
+    {
+      "PostId": "3635",
+      "UserId": 0,
+      "Username": "007bond",
+      "UserAvatar": null,
+      "UserGravatar": "4c2673a2d8666a97b5c1082c5cf2e0e5",
+      "EditableText": "if I put a Close #1 in an error-trapping statement, what will happen if the script runs before or after the file was closed, will it produce another error?  If I don't do this, then should a put a statement that will have VB return to where it was before the error, or just let my script run?",
+      "EditableFormat": "bbcode",
+      "HTML": "if I put a Close #1 in an error-trapping statement, what will happen if the script runs before or after the file was closed, will it produce another error?  If I don't do this, then should a put a statement that will have VB return to where it was before the error, or just let my script run?",
+      "PostDate": "2004-10-06T08:58:46+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3637",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "If your error handler needs to close a file, why not either use a different error handler for after you open the file, or otherwise set a boolean flag to specify whether to close the file?\n\nAlso I wouldn't recommend always using #1 as that can lead to clashes. You should use the FreeFile function to get a file handle number and store that in a variable. What I tend to do is this:\n\n[code:dbmurfes]\nDim FH as Integer\nFH = FreeFile\nOpen &quot;whatever&#46;txt&quot; For Input As #FH\n&#46;\n&#46;\n&#46;\nClose #FH\n[/code:dbmurfes]",
+      "EditableFormat": "bbcode",
+      "HTML": "If your error handler needs to close a file, why not either use a different error handler for after you open the file, or otherwise set a boolean flag to specify whether to close the file?<br/><br/>Also I wouldn't recommend always using #1 as that can lead to clashes. You should use the FreeFile function to get a file handle number and store that in a variable. What I tend to do is this:<br/><br/><pre><code><br/>Dim FH as Integer<br/>FH = FreeFile<br/>Open &quot;whatever&#46;txt&quot; For Input As #FH<br/>&#46;<br/>&#46;<br/>&#46;<br/>Close #FH<br/></code></pre>",
+      "PostDate": "2004-10-06T10:01:33+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3638",
+      "UserId": 0,
+      "Username": "007bond",
+      "UserAvatar": null,
+      "UserGravatar": "4c2673a2d8666a97b5c1082c5cf2e0e5",
+      "EditableText": "How do I use two different error handlers?  The only way I can think of is setting a boolean variable to true, and then checking for this in the error handling.  Is there another way?",
+      "EditableFormat": "bbcode",
+      "HTML": "How do I use two different error handlers?  The only way I can think of is setting a boolean variable to true, and then checking for this in the error handling.  Is there another way?",
+      "PostDate": "2004-10-06T10:11:13+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3640",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "Yes that would work but you can also use \"On Error Goto 0\" to turn off error handling set earlier in a procedure. So you could have:\n\n[code:2g5n773m]\nOn Error Goto ErrorHandler1\n' do stuff\nOn Error Goto 0\n\nOpen &quot;blah&#46;txt&quot; For Input As &#46;&#46;&#46;&#46;\n\nOn Error Goto ErrorHandler2\n' blah blah\nOn Error Goto 0\n\nClose #FH\nExit Sub\n\nErrorHandler1&#58;\nMsgBox &quot;Something nasty happened&#46;&quot;\nResume Next\n\nErrorHandler2&#58;\nMsgBox &quot;An error occurred while writing to the file&#46;&#46;&#46;&quot;\nClose #FH\n[/code:2g5n773m]",
+      "EditableFormat": "bbcode",
+      "HTML": "Yes that would work but you can also use \"On Error Goto 0\" to turn off error handling set earlier in a procedure. So you could have:<br/><br/><pre><code><br/>On Error Goto ErrorHandler1<br/>' do stuff<br/>On Error Goto 0<br/><br/>Open &quot;blah&#46;txt&quot; For Input As &#46;&#46;&#46;&#46;<br/><br/>On Error Goto ErrorHandler2<br/>' blah blah<br/>On Error Goto 0<br/><br/>Close #FH<br/>Exit Sub<br/><br/>ErrorHandler1&#58;<br/>MsgBox &quot;Something nasty happened&#46;&quot;<br/>Resume Next<br/><br/>ErrorHandler2&#58;<br/>MsgBox &quot;An error occurred while writing to the file&#46;&#46;&#46;&quot;<br/>Close #FH<br/></code></pre>",
+      "PostDate": "2004-10-06T14:18:11+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3646",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "You could also have one error handler, but you grab the error code and use that to decide what to do next (using a select case, or if). Or you can use a variable which sets where you are in the procedure and lets the error handler react that way.\n\nThere's loads of different ways to do things.",
+      "EditableFormat": "bbcode",
+      "HTML": "You could also have one error handler, but you grab the error code and use that to decide what to do next (using a select case, or if). Or you can use a variable which sets where you are in the procedure and lets the error handler react that way.<br/><br/>There's loads of different ways to do things.",
+      "PostDate": "2004-10-06T20:00:25+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3655",
+      "UserId": 0,
+      "Username": "007bond",
+      "UserAvatar": null,
+      "UserGravatar": "4c2673a2d8666a97b5c1082c5cf2e0e5",
+      "EditableText": "Thanks, I didn't realise that you could have multiple On Error statements in one procedure.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks, I didn't realise that you could have multiple On Error statements in one procedure.",
+      "PostDate": "2004-10-06T22:41:07+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3657",
+      "UserId": 0,
+      "Username": "GameBoy",
+      "UserAvatar": null,
+      "UserGravatar": "554e89a053350b96f686f324a6049e9d",
+      "EditableText": "you really should try posting on VB forums.  it helps more if you're arround 1000s of expert coders.",
+      "EditableFormat": "bbcode",
+      "HTML": "you really should try posting on VB forums.  it helps more if you're arround 1000s of expert coders.",
+      "PostDate": "2004-10-06T23:53:06+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3660",
+      "UserId": 0,
+      "Username": "007bond",
+      "UserAvatar": null,
+      "UserGravatar": "4c2673a2d8666a97b5c1082c5cf2e0e5",
+      "EditableText": "I've tried twice and had problems activating my account, so I gave up.  vBulletin really makes it hard for you, especially if you want to change your email address.  I've also had problems @ thegaminguniverse.com, which also uses vBulletin, but I haven't had any problems with the Legends Alliance Forums (forums.legendsalliance.com).  Something is really screwy with vBulletin.",
+      "EditableFormat": "bbcode",
+      "HTML": "I've tried twice and had problems activating my account, so I gave up.  vBulletin really makes it hard for you, especially if you want to change your email address.  I've also had problems @ thegaminguniverse.com, which also uses vBulletin, but I haven't had any problems with the Legends Alliance Forums (forums.legendsalliance.com).  Something is really screwy with vBulletin.",
+      "PostDate": "2004-10-07T08:01:53+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

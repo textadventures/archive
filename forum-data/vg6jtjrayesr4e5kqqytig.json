@@ -1,0 +1,123 @@
+{
+  "Topic": {
+    "TopicId": "vg6jtjrayesr4e5kqqytig",
+    "ForumId": "18",
+    "Title": "Simple Turn Based RPG Combat Code Update + Working on a New System",
+    "LastUpdated": "2017-08-08T19:46:22.4011943Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "700b753e-07e5-40dc-9fff-6c7cfa19ab28",
+      "UserId": 267336,
+      "Username": "jmnevil54",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5d73d7ec1dbe20a5cb46f02a6d53f187?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I made this in reply to this old thread.\r\nhttp://textadventures.co.uk/forum/samples/topic/qzqe52enhuuacpdrljnffq/simple-turn-rpg-combat-for-the-web-quest\r\nBasic simple combat 2\r\nTurn based 2\r\nThe old thing was getting too big, and I'm working on a new system which will lock and unlock multiple rooms. I will post the code here when I'm done.\r\nIt's a fantasy-something or other game where the goal is to fight monsters with a fish (exactly how it sounds), then defeat the monster at the end. There are 100+ (have not counted exactly) rooms, and I'm just a few hours from completing it.\r\n\r\nMade on web quest. If you use a different program, do not attempt unless you know what you are doing.\r\n\r\nI would just like to put that I've updated the game's code.\r\nLink to the game here: http://textadventures.co.uk/games/view/xb0ge9kzbewhodrtmxnnqw/the-legend-of-the-secret-of-the-smelly-stinky-fish\r\n\r\nLink. http://jjj444555.deviantart.com/journal/Random-Code-1-691535053\r\n\r\nI've edited the attack script. (Because grammar) It looks like this now:\r\n```\r\nif (not game.notarealturn) {\r\n  list = NewObjectList()\r\n  foreach (obj, GetDirectChildren(player.parent)) {\r\n    if (HasBoolean(obj, \"dead\")) {\r\n      if (not obj.dead) {\r\n        do_attack (obj, obj, player, false)\r\n        list add (list, obj)\r\n      }\r\n    }\r\n  }\r\n  foreach (obj, ListExclude(player.attackers, list)) {\r\n    if (not obj.dead and RandomChance(80)) {\r\n      obj.parent = player.parent\r\n      msg (CapFirst(obj.alias) + \" shambles into the area.\")\r\n      list add (list, obj)\r\n    }\r\n  }\r\n  player.attackers = list\r\n}\r\ngame.notarealturn = false\r\n```\r\nAdding this here for filler.\r\nI also have a new function. It looks like this:\r\n___\r\n```\r\nif (firearm) {\r\n  damageatt = \"firearmdamage\"\r\n  attackatt = \"firearmattack\"\r\n  weapon.ammo = weapon.ammo - 1\r\n}\r\nelse {\r\n  damageatt = \"damage\"\r\n  attackatt = \"attack\"\r\n}\r\nroll = GetRandomInt(1, 20) + GetInt(weapon, attackatt) - target.defence\r\nif (HasInt(weapon, damageatt)) {\r\n  damage = GetInt(weapon, damageatt)\r\n}\r\nelse {\r\n  damage = DiceRoll(GetString(weapon, damageatt))\r\n}\r\ndamage = damage * (100 - target.armour) / 100\r\nif (damage < 1) {\r\n  damage = 1\r\n}\r\nif (roll > 15) {\r\n  damage = damage * 3\r\n  msg (CapFirst(attacker.alias) + \" attacks \" + target.alias + \" and gets a critical (\" + damage + \" hits)!\")\r\n  target.hitpoints = target.hitpoints - damage\r\n}\r\nelse if (roll > 5) {\r\n  msg (CapFirst(attacker.alias) + \" attacks \" + target.alias + \" and hits (\" + damage + \" hits).\")\r\n  target.hitpoints = target.hitpoints - damage\r\n}\r\nelse {\r\n  msg (CapFirst(attacker.alias) + \" attacks \" + target.alias + \" and misses...\")\r\n}\r\n```\r\n(Same parameters as DoAttack)\r\n\r\n\r\nI've also been working and testing out some new systems. First, I tried a lock system which would lock a player in a room. But that's taking too long. Then I tried making a teleport system, but I made a never ending loop where I spawn monsters and keep spawning back to the same place.\r\n\r\nWill come back if anything changes.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I made this in reply to this old thread.<br>\nhttp://textadventures.co.uk/forum/samples/topic/qzqe52enhuuacpdrljnffq/simple-turn-rpg-combat-for-the-web-quest<br>\nBasic simple combat 2<br>\nTurn based 2<br>\nThe old thing was getting too big, and I'm working on a new system which will lock and unlock multiple rooms. I will post the code here when I'm done.<br>\nIt's a fantasy-something or other game where the goal is to fight monsters with a fish (exactly how it sounds), then defeat the monster at the end. There are 100+ (have not counted exactly) rooms, and I'm just a few hours from completing it.</p>\n<p>Made on web quest. If you use a different program, do not attempt unless you know what you are doing.</p>\n<p>I would just like to put that I've updated the game's code.<br>\nLink to the game here: http://textadventures.co.uk/games/view/xb0ge9kzbewhodrtmxnnqw/the-legend-of-the-secret-of-the-smelly-stinky-fish</p>\n<p>Link. http://jjj444555.deviantart.com/journal/Random-Code-1-691535053</p>\n<p>I've edited the attack script. (Because grammar) It looks like this now:</p>\n<pre><code>if (not game.notarealturn) {\n  list = NewObjectList()\n  foreach (obj, GetDirectChildren(player.parent)) {\n    if (HasBoolean(obj, \"dead\")) {\n      if (not obj.dead) {\n        do_attack (obj, obj, player, false)\n        list add (list, obj)\n      }\n    }\n  }\n  foreach (obj, ListExclude(player.attackers, list)) {\n    if (not obj.dead and RandomChance(80)) {\n      obj.parent = player.parent\n      msg (CapFirst(obj.alias) + \" shambles into the area.\")\n      list add (list, obj)\n    }\n  }\n  player.attackers = list\n}\ngame.notarealturn = false\n</code></pre>\n<p>Adding this here for filler.<br>\nI also have a new function. It looks like this:</p>\n<hr>\n<pre><code>if (firearm) {\n  damageatt = \"firearmdamage\"\n  attackatt = \"firearmattack\"\n  weapon.ammo = weapon.ammo - 1\n}\nelse {\n  damageatt = \"damage\"\n  attackatt = \"attack\"\n}\nroll = GetRandomInt(1, 20) + GetInt(weapon, attackatt) - target.defence\nif (HasInt(weapon, damageatt)) {\n  damage = GetInt(weapon, damageatt)\n}\nelse {\n  damage = DiceRoll(GetString(weapon, damageatt))\n}\ndamage = damage * (100 - target.armour) / 100\nif (damage &lt; 1) {\n  damage = 1\n}\nif (roll &gt; 15) {\n  damage = damage * 3\n  msg (CapFirst(attacker.alias) + \" attacks \" + target.alias + \" and gets a critical (\" + damage + \" hits)!\")\n  target.hitpoints = target.hitpoints - damage\n}\nelse if (roll &gt; 5) {\n  msg (CapFirst(attacker.alias) + \" attacks \" + target.alias + \" and hits (\" + damage + \" hits).\")\n  target.hitpoints = target.hitpoints - damage\n}\nelse {\n  msg (CapFirst(attacker.alias) + \" attacks \" + target.alias + \" and misses...\")\n}\n</code></pre>\n<p>(Same parameters as DoAttack)</p>\n<p>I've also been working and testing out some new systems. First, I tried a lock system which would lock a player in a room. But that's taking too long. Then I tried making a teleport system, but I made a never ending loop where I spawn monsters and keep spawning back to the same place.</p>\n<p>Will come back if anything changes.</p>\n\n",
+      "PostDate": "2017-08-08T19:46:22.4011943Z",
+      "LastEditDate": "2019-09-21T07:24:20.555647Z",
+      "link": null
+    },
+    {
+      "PostId": "ea483236-0dee-4533-806b-4c833e570af6",
+      "UserId": 924,
+      "Username": "Pertex",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4cc1e52f99452e841ecf4cbee9eadde9?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Give us somee more informations please. Which code did you update (files? Quest core code or Libraries?)? Why did you do it?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Give us somee more informations please. Which code did you update (files? Quest core code or Libraries?)? Why did you do it?</p>\n\n",
+      "PostDate": "2017-08-09T07:45:47.2275843Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e625f125-e89d-4ab6-89fb-2dd2ba820d79",
+      "UserId": 267336,
+      "Username": "jmnevil54",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5d73d7ec1dbe20a5cb46f02a6d53f187?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Oops. Sorry.\r\n\r\nHere. http://textadventures.co.uk/forum/samples/topic/qzqe52enhuuacpdrljnffq/simple-turn-rpg-combat-for-the-web-quest\r\nIn reply to this old thread.\r\n\r\n(Look up for rest)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Oops. Sorry.</p>\n<p>Here. http://textadventures.co.uk/forum/samples/topic/qzqe52enhuuacpdrljnffq/simple-turn-rpg-combat-for-the-web-quest<br>\nIn reply to this old thread.</p>\n<p>(Look up for rest)</p>\n\n",
+      "PostDate": "2017-08-09T18:29:29.735586Z",
+      "LastEditDate": "2017-08-09T18:32:42.4551861Z",
+      "link": null
+    },
+    {
+      "PostId": "5e9790f1-152f-4f76-a422-73acba1f583b",
+      "UserId": 267336,
+      "Username": "jmnevil54",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5d73d7ec1dbe20a5cb46f02a6d53f187?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I finally got the lock system done.\r\nhttp://jjj444555.deviantart.com/journal/Random-code-3-697814207\r\n\r\nHow to Lock and Unlock multiple rooms at once.\r\nWarning:\r\nI did this to make the game more difficult (and also thanks to a suggestion). If you want to do this yourself, I suggest using a Show Menu system or a teleport (move both the player and the enemy to a different room) instead. I would have done the menu system, but that would mess up too much of my too fragile code, and I tried making a teleport system, but I made an infinite loop where I spawn back and forth into the same two rooms.\r\n\r\nEdit: The teleport code works now. You can use it now.\r\n\r\nI use the online editor/web Quest. If you don't use those programs, don't proceed unless you know what you are doing.\r\n\r\nThis also uses the Code View.\r\n\r\nYou can see the code in action yourself:\r\nhttp://textadventures.co.uk/games/view/xb0ge9kzbewhodrtmxnnqw/the-legend-of-the-secret-of-the-smelly-stinky-fish",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I finally got the lock system done.<br>\nhttp://jjj444555.deviantart.com/journal/Random-code-3-697814207</p>\n<p>How to Lock and Unlock multiple rooms at once.<br>\nWarning:<br>\nI did this to make the game more difficult (and also thanks to a suggestion). If you want to do this yourself, I suggest using a Show Menu system or a teleport (move both the player and the enemy to a different room) instead. I would have done the menu system, but that would mess up too much of my too fragile code, and I tried making a teleport system, but I made an infinite loop where I spawn back and forth into the same two rooms.</p>\n<p>Edit: The teleport code works now. You can use it now.</p>\n<p>I use the online editor/web Quest. If you don't use those programs, don't proceed unless you know what you are doing.</p>\n<p>This also uses the Code View.</p>\n<p>You can see the code in action yourself:<br>\nhttp://textadventures.co.uk/games/view/xb0ge9kzbewhodrtmxnnqw/the-legend-of-the-secret-of-the-smelly-stinky-fish</p>\n\n",
+      "PostDate": "2017-08-09T19:22:46.0807017Z",
+      "LastEditDate": "2019-06-27T07:39:18.7194715Z",
+      "link": null
+    },
+    {
+      "PostId": "216eeb3a-1fc6-4f2a-b2c2-c8b7eed476e4",
+      "UserId": 267336,
+      "Username": "jmnevil54",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5d73d7ec1dbe20a5cb46f02a6d53f187?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Teleport system\r\nAgain, I use the online/web Quest. Do not proceed unless you know what you are doing.\r\n\r\nI also tried making a Teleport code too. Use it for reference.\r\n\r\nYou will need a way to control the monsters spawning to do this. Maybe the First function, or something.\r\nLink. http://jjj444555.deviantart.com/journal/Random-code-4-697817801\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Teleport system<br>\nAgain, I use the online/web Quest. Do not proceed unless you know what you are doing.</p>\n<p>I also tried making a Teleport code too. Use it for reference.</p>\n<p>You will need a way to control the monsters spawning to do this. Maybe the First function, or something.<br>\nLink. http://jjj444555.deviantart.com/journal/Random-code-4-697817801</p>\n\n",
+      "PostDate": "2017-08-09T19:38:21.6578761Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "f1d79b61-d984-4288-8833-646651b52939",
+      "UserId": 267336,
+      "Username": "jmnevil54",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5d73d7ec1dbe20a5cb46f02a6d53f187?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "(Also, does anyone know why that when I try to edit my post up there, and I add some enters between the code to make it easier to read, the thing says \"Sorry, You can't post that here,\" or something?)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>(Also, does anyone know why that when I try to edit my post up there, and I add some enters between the code to make it easier to read, the thing says \"Sorry, You can't post that here,\" or something?)</p>\n\n",
+      "PostDate": "2017-08-09T19:42:41.6844592Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "ea9d5721-3c9b-45dd-abd5-ece5935dfb60",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "some kind of posting/editing restrictions/rules, the method I use that I found to work is this:\r\n\r\npretend that this is my post:\r\n\r\n```\r\nblah blah blah blah post writing and/or code\r\n```\r\n\r\nthen I go to edit it:\r\n\r\n```\r\nblah blah blah blah post writing and/or code mmmmmmmmmm\r\n```\r\n\r\nERROR, you can't update/post your edited post.\r\n\r\nso I do this:\r\n\r\n```\r\n(filler for getting my edited post updated/posted)\r\n\r\n-----------------------\r\n\r\nblah blah blah blah post writing and/or code mmmmmmmmmm\r\n```\r\n\r\n---------------\r\n\r\nit seems you got to add a certain amount new content/characters/symbols and it helps to add it at the top, if you want to quickly edit your post, otherwise, you got to wait like 5-10 minutes before you can edit your post.\r\n\r\nI haven't quite figured out the exact rules/restricts of the posting/editing.... though.\r\n\r\nHowever, using the '(filler..............)' at the top has always worked so far.... lol.\r\n\r\n--------\r\n\r\nP.S.\r\n\r\nif you do a 2nd editing and get blocked again, then just add another '(filler..........)' line, lol:\r\n\r\n```\r\n(filler for getting my edited post updated/posted)\r\n(again, filler for getting my edited post updated/posted)\r\n\r\n-----------------------\r\n\r\nblah blah blah blah post writing and/or code mmmmmmmmmm pppppppppppppppppppppp\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>some kind of posting/editing restrictions/rules, the method I use that I found to work is this:</p>\n<p>pretend that this is my post:</p>\n<pre><code>blah blah blah blah post writing and/or code\n</code></pre>\n<p>then I go to edit it:</p>\n<pre><code>blah blah blah blah post writing and/or code mmmmmmmmmm\n</code></pre>\n<p>ERROR, you can't update/post your edited post.</p>\n<p>so I do this:</p>\n<pre><code>(filler for getting my edited post updated/posted)\n\n-----------------------\n\nblah blah blah blah post writing and/or code mmmmmmmmmm\n</code></pre>\n<hr>\n<p>it seems you got to add a certain amount new content/characters/symbols and it helps to add it at the top, if you want to quickly edit your post, otherwise, you got to wait like 5-10 minutes before you can edit your post.</p>\n<p>I haven't quite figured out the exact rules/restricts of the posting/editing.... though.</p>\n<p>However, using the '(filler..............)' at the top has always worked so far.... lol.</p>\n<hr>\n<p>P.S.</p>\n<p>if you do a 2nd editing and get blocked again, then just add another '(filler..........)' line, lol:</p>\n<pre><code>(filler for getting my edited post updated/posted)\n(again, filler for getting my edited post updated/posted)\n\n-----------------------\n\nblah blah blah blah post writing and/or code mmmmmmmmmm pppppppppppppppppppppp\n</code></pre>\n\n",
+      "PostDate": "2017-08-09T23:59:21.7986555Z",
+      "LastEditDate": "2017-08-10T00:00:09.3372512Z",
+      "link": null
+    },
+    {
+      "PostId": "20f22886-4974-405f-ac5d-dafaf469862a",
+      "UserId": 267336,
+      "Username": "jmnevil54",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5d73d7ec1dbe20a5cb46f02a6d53f187?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks HK. Seems to work perfectly.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks HK. Seems to work perfectly.</p>\n\n",
+      "PostDate": "2017-08-10T19:11:20.9347798Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

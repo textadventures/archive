@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "xi1hdk-hdesjhsbs1ihx3g",
+    "ForumId": "10",
+    "Title": "How to check if player is wearing an object possibly by attribute or flag?",
+    "LastUpdated": "2023-11-10T11:04:07.1097176Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "ea2199be-d046-4c50-b91f-91216c1716b0",
+      "UserId": 278912,
+      "Username": "TheVulture",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/20692523c78c1a4814f2dcdf8c0ab3aa?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm trying to make a function to see if the player is wearing some kind of restraints. Like, if they're in handcuffs, it would be IsWristsRestrained = true. \r\nI'd like to have the function checking what the player is wearing to see if any worn object has the attribute, in this example, wristrestraint = true or similar (easy to make one of the default attributes for wearables a boolean like that). Or, if I must, set up a script to assign the same flag to objects on game start, though that's a little more annoying.\r\nBut I can't seem to figure out how to have the game check worn objects for that attribute/flag. The closest I can get is checking every carried object, but that makes things difficult if they're just carrying a pair of handcuffs and aren't actually restrained. Any ideas how I can set this up?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm trying to make a function to see if the player is wearing some kind of restraints. Like, if they're in handcuffs, it would be IsWristsRestrained = true.<br>\nI'd like to have the function checking what the player is wearing to see if any worn object has the attribute, in this example, wristrestraint = true or similar (easy to make one of the default attributes for wearables a boolean like that). Or, if I must, set up a script to assign the same flag to objects on game start, though that's a little more annoying.<br>\nBut I can't seem to figure out how to have the game check worn objects for that attribute/flag. The closest I can get is checking every carried object, but that makes things difficult if they're just carrying a pair of handcuffs and aren't actually restrained. Any ideas how I can set this up?</p>\n\n",
+      "PostDate": "2023-11-10T11:04:07.1097176Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "1aa91c9a-98aa-4fa3-bc62-07fd233440ab",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I think there might be built-in functions I've forgotten about that could help you; but if not, I'd create a function something like this.\r\n\r\nFunction name: `CheckWornAttribute`\r\nParameters: `attr`\r\nType: Boolean\r\nScript:\r\n```\r\nforeach (obj, GetAllChildObjects (game.pov)) {\r\n  if (GetBoolean (obj, attr) and GetBoolean (obj, \"worn\") and GetBoolean (obj, \"visible\")) {\r\n    return (true)\r\n  }\r\n}\r\nreturn (false)\r\n```\r\nThen you could do something like:\r\n```\r\nif (CheckWornAttribute (\"wristrestraint\")) {\r\n  // Do whatever it is\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I think there might be built-in functions I've forgotten about that could help you; but if not, I'd create a function something like this.</p>\n<p>Function name: <code>CheckWornAttribute</code><br>\nParameters: <code>attr</code><br>\nType: Boolean<br>\nScript:</p>\n<pre><code>foreach (obj, GetAllChildObjects (game.pov)) {\n  if (GetBoolean (obj, attr) and GetBoolean (obj, \"worn\") and GetBoolean (obj, \"visible\")) {\n    return (true)\n  }\n}\nreturn (false)\n</code></pre>\n<p>Then you could do something like:</p>\n<pre><code>if (CheckWornAttribute (\"wristrestraint\")) {\n  // Do whatever it is\n}\n</code></pre>\n\n",
+      "PostDate": "2023-11-10T13:18:51.7166005Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "fd89308c-6650-4206-a496-d223175d72ce",
+      "UserId": 643545,
+      "Username": "Ip Man",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3ca198fe75de39041c2e4cd0a8852e3c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "This is beautiful Mr. Angel.  Can this be modified to check the integer values of that found attribute and return the total of them?\r\n\r\nSay if each object had a magicbonus, is there a modification that can not only find the magicbonus attribute, but tally up the sum of all the values?  +1, +2, -1 ?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>This is beautiful Mr. Angel.  Can this be modified to check the integer values of that found attribute and return the total of them?</p>\n<p>Say if each object had a magicbonus, is there a modification that can not only find the magicbonus attribute, but tally up the sum of all the values?  +1, +2, -1 ?</p>\n\n",
+      "PostDate": "2023-11-10T20:53:53.7970355Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "a90cdd97-c3ee-470d-904b-80a6fbca2e2d",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> This is beautiful Mr. Angel. Can this be modified to check the integer values of that found attribute and return the total of them?\r\n\r\nOff the top of my head…\r\n```\r\n<function name=\"SumAttributeOfWornObjects\" parameters=\"attr\" type=\"int32\">\r\n  total = 0;\r\n  foreach (obj, GetAllChildObjects (game.pov)) {\r\n    if (HasInt (obj, attr) and GetBoolean (obj, \"worn\") and GetBoolean (obj, \"visible\")) {\r\n      total = total + GetInt (obj, attr)\r\n    }\r\n  }\r\n  return (total)\r\n</function>\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>This is beautiful Mr. Angel. Can this be modified to check the integer values of that found attribute and return the total of them?</p>\n</blockquote>\n<p>Off the top of my head…</p>\n<pre><code>&lt;function name=\"SumAttributeOfWornObjects\" parameters=\"attr\" type=\"int32\"&gt;\n  total = 0;\n  foreach (obj, GetAllChildObjects (game.pov)) {\n    if (HasInt (obj, attr) and GetBoolean (obj, \"worn\") and GetBoolean (obj, \"visible\")) {\n      total = total + GetInt (obj, attr)\n    }\n  }\n  return (total)\n&lt;/function&gt;\n</code></pre>\n\n",
+      "PostDate": "2023-11-11T22:20:21.7248887Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "cbdb2a16-5a41-4766-822b-c67686634589",
+      "UserId": 278912,
+      "Username": "TheVulture",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/20692523c78c1a4814f2dcdf8c0ab3aa?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Mr Angel, your function worked perfectly. I can't thank you enough for your help, this will streamline so much of the process!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Mr Angel, your function worked perfectly. I can't thank you enough for your help, this will streamline so much of the process!</p>\n\n",
+      "PostDate": "2023-11-13T05:16:51.3001265Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "ncvd5rwuu0g_f2xiarnpaa",
+    "ForumId": "10",
+    "Title": "Pick random object to keep",
+    "LastUpdated": "2023-07-29T18:57:27.6513798Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "f344b74f-1029-4c5f-a0fd-b93d1f1bb6cb",
+      "UserId": 659037,
+      "Username": "SmasherSir",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm having the PC rumage through a gift bag and pick something they can't see.  But I can't figure out how to move or use the item they pick.\r\n\r\nHere's what I've got:\r\n\r\n```\r\nlist = GetDirectChildren(this)\r\ns = PickOneString (list)\r\nMoveObject (s, player)\r\nmsg (\"You pulled out \"s\", how nice.\")\r\n```\r\n\r\nWhen I try it I get this error\r\n```\r\nError running script: Error compiling expression 'object': RootExpressionElement: Cannot convert type 'Object' to expression result of 'Element'\r\nError running script: Error compiling expression '\"You pulled out \"s\", how nice.\"': SyntaxError: Unexpected token \"s\" <IDENTIFIER>; expected one of <EOF>Line: 1, Column: 18\r\n```\r\nBy putting 's' into an attribute and using the debugger I found that the value is including \"Object:\" in front of it.  So the value is something like Object: funny teeth\r\n\r\nI think MoveObject doesn't like to have \"Object:\" in front of funny teeth, so I think that's what causes the first error. \r\n\r\nI think the 'Object:' in front of it is making it not look like a string, and that gives the second error.   \r\n\r\nI can't find what I need to do to remove 'Object:' from the front of the value, or what I should be doing instead.  Can anyone help me out?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm having the PC rumage through a gift bag and pick something they can't see.  But I can't figure out how to move or use the item they pick.</p>\n<p>Here's what I've got:</p>\n<pre><code>list = GetDirectChildren(this)\ns = PickOneString (list)\nMoveObject (s, player)\nmsg (\"You pulled out \"s\", how nice.\")\n</code></pre>\n<p>When I try it I get this error</p>\n<pre><code>Error running script: Error compiling expression 'object': RootExpressionElement: Cannot convert type 'Object' to expression result of 'Element'\nError running script: Error compiling expression '\"You pulled out \"s\", how nice.\"': SyntaxError: Unexpected token \"s\" &lt;IDENTIFIER&gt;; expected one of &lt;EOF&gt;Line: 1, Column: 18\n</code></pre>\n<p>By putting 's' into an attribute and using the debugger I found that the value is including \"Object:\" in front of it.  So the value is something like Object: funny teeth</p>\n<p>I think MoveObject doesn't like to have \"Object:\" in front of funny teeth, so I think that's what causes the first error.</p>\n<p>I think the 'Object:' in front of it is making it not look like a string, and that gives the second error.</p>\n<p>I can't find what I need to do to remove 'Object:' from the front of the value, or what I should be doing instead.  Can anyone help me out?</p>\n\n",
+      "PostDate": "2023-07-29T18:57:27.6513798Z",
+      "LastEditDate": "2023-07-29T19:03:17.3060731Z",
+      "link": null
+    },
+    {
+      "PostId": "215895f5-c01a-4989-8e32-bd29d765c8e9",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> <code style=\"color: green\">list = GetDirectChildren(this)</code>\r\n\r\nThat looks right. The variable `list` is now an objectlist containing all the objects inside `this` (which I assume is the bag here)\r\n\r\n> `s = PickOneString (list)`\r\n\r\nThe function `PickOneString` takes a single argument, assumes it is a list, and returns one element from it. However, this function is of type **string**. Your list here is a list of objects, so you should be using `PickOneObject`.\r\n\r\n> <code style=\"color: green\">MoveObject (s, player)</code>\r\n\r\nThis should work fine, so long as `s` is actually an object.\r\n\r\n> `msg (\"You pulled out \"s\", how nice.\")`\r\n\r\nYou can't just put a string and a variable next to each other. You need to tell Quest how to combine them.\r\n\r\nIf `s` was a string, you could do:\r\n```\r\nmsg (\"You pulled out \" + s + \", how nice.\")\r\n```\r\nBut as `s` is an object, you need to convert it to a string first. The usual way of doing this is one of:\r\n* <code style=\"color: green\">msg (\"You pulled out \" + GetDisplayAlias(s) + \", how nice.\")</code> (shows the object's name or alias. For example \"You pulled out ball\")\r\n* <code style=\"color: green\">msg (\"You pulled out \" + GetDisplayName(s) + \", how nice.\")</code> (this version includes the prefix. For example \"You pulled out a ball\")\r\n* <code style=\"color: green\">msg (\"You pulled out \" + GetDisplayNameLink(s, \"object\") + \", how nice.\")</code> (this version makes the name a clickable link, if your game has links enabled)\r\n* <code style=\"color: green\">msg (\"You pulled out {object:\" + s.name + \"}, how nice.\")</code> (actually the same as the previous one)",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p><code style=\"color: green\">list = GetDirectChildren(this)</code></p>\n</blockquote>\n<p>That looks right. The variable <code>list</code> is now an objectlist containing all the objects inside <code>this</code> (which I assume is the bag here)</p>\n<blockquote>\n<p><code>s = PickOneString (list)</code></p>\n</blockquote>\n<p>The function <code>PickOneString</code> takes a single argument, assumes it is a list, and returns one element from it. However, this function is of type <strong>string</strong>. Your list here is a list of objects, so you should be using <code>PickOneObject</code>.</p>\n<blockquote>\n<p><code style=\"color: green\">MoveObject (s, player)</code></p>\n</blockquote>\n<p>This should work fine, so long as <code>s</code> is actually an object.</p>\n<blockquote>\n<p><code>msg (\"You pulled out \"s\", how nice.\")</code></p>\n</blockquote>\n<p>You can't just put a string and a variable next to each other. You need to tell Quest how to combine them.</p>\n<p>If <code>s</code> was a string, you could do:</p>\n<pre><code>msg (\"You pulled out \" + s + \", how nice.\")\n</code></pre>\n<p>But as <code>s</code> is an object, you need to convert it to a string first. The usual way of doing this is one of:</p>\n<ul>\n<li><code style=\"color: green\">msg (\"You pulled out \" + GetDisplayAlias(s) + \", how nice.\")</code> (shows the object's name or alias. For example \"You pulled out ball\")</li>\n<li><code style=\"color: green\">msg (\"You pulled out \" + GetDisplayName(s) + \", how nice.\")</code> (this version includes the prefix. For example \"You pulled out a ball\")</li>\n<li><code style=\"color: green\">msg (\"You pulled out \" + GetDisplayNameLink(s, \"object\") + \", how nice.\")</code> (this version makes the name a clickable link, if your game has links enabled)</li>\n<li><code style=\"color: green\">msg (\"You pulled out {object:\" + s.name + \"}, how nice.\")</code> (actually the same as the previous one)</li>\n</ul>\n\n",
+      "PostDate": "2023-07-30T10:57:00.4883061Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "dd6e03b5-1dcf-49aa-891c-6d7e8f38a6e0",
+      "UserId": 659037,
+      "Username": "SmasherSir",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "That is so helpful, thank you!!\r\n\r\nI am still pretty new to this, and I was scouring the guide but couldn't find it.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>That is so helpful, thank you!!</p>\n<p>I am still pretty new to this, and I was scouring the guide but couldn't find it.</p>\n\n",
+      "PostDate": "2023-08-02T05:32:56.6856557Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

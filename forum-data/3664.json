@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "3664",
+    "ForumId": "10",
+    "Title": "List Indexing",
+    "LastUpdated": "2013-05-06T00:30:30+01:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "24442",
+      "UserId": 0,
+      "Username": "homeeman",
+      "UserAvatar": null,
+      "UserGravatar": "4c7b0e689de0b974bfe447478a40fb60",
+      "EditableText": "I'm having a little trouble understanding what Quest is trying to tell me, I think.  I have a somewhat complicated function which uses a lot of object lists and the like, but for some reason the first time I try to access one of them I get the following error message:\n\nError running script&#058; Error evaluating expression 'ObjectListItem(empty, GetRandomInt(1, ListCount(empty)) - 1)': ObjectListItem: index 0 is out of range for this list (0 items, last index is -1)\n\nFrom that last bit, I gathered that the list was empty (despite its name, it shouldn't be).  So just to double check, just after the list is created I decided to print its ListCount() return.\nJust before I get this error, it prints the number 4.\n\nSo I'm not entirely certain what this error is trying to tell me at this point.  Any ideas?  Is there something I'm missing?\n\nAdditional Info: The list is created using the GetDirectChildren() function on a &quot;room&quot; which serves to contain other rooms like a folder.\nI always get this error message.  So either for some reason I'm always getting '0' from the GetRandomInt() function, or this error is trying to tell me something I don't at all grasp.\nIf I remove the &quot;- 1&quot; from the ObjectListItem() function, replaces the 0 in &quot;0 items&quot; with a 1 and the -1 in &quot;last index is -1&quot; with a 0.",
+      "EditableFormat": "bbcode",
+      "HTML": "I'm having a little trouble understanding what Quest is trying to tell me, I think.  I have a somewhat complicated function which uses a lot of object lists and the like, but for some reason the first time I try to access one of them I get the following error message:<br/><br/>Error running script&#058; Error evaluating expression 'ObjectListItem(empty, GetRandomInt(1, ListCount(empty)) - 1)': ObjectListItem: index 0 is out of range for this list (0 items, last index is -1)<br/><br/>From that last bit, I gathered that the list was empty (despite its name, it shouldn't be).  So just to double check, just after the list is created I decided to print its ListCount() return.<br/>Just before I get this error, it prints the number 4.<br/><br/>So I'm not entirely certain what this error is trying to tell me at this point.  Any ideas?  Is there something I'm missing?<br/><br/>Additional Info: The list is created using the GetDirectChildren() function on a &quot;room&quot; which serves to contain other rooms like a folder.<br/>I always get this error message.  So either for some reason I'm always getting '0' from the GetRandomInt() function, or this error is trying to tell me something I don't at all grasp.<br/>If I remove the &quot;- 1&quot; from the ObjectListItem() function, replaces the 0 in &quot;0 items&quot; with a 1 and the -1 in &quot;last index is -1&quot; with a 0.",
+      "PostDate": "2013-05-05T08:12:49+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24444",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "You need to give more code, if possible. If I do this, it works:\n\n[code:1baki5bz]      L = NewObjectList()\n      list add(L, game)\n      list add(L, player)\n      o = ObjectListItem(L, GetRandomInt(1, ListCount(L)) - 1)\n      msg(o)[/code:1baki5bz]\n\nThe only time I get an error is if the list is, indeed, empty.",
+      "EditableFormat": "bbcode",
+      "HTML": "You need to give more code, if possible. If I do this, it works:<br/><br/><pre><code>      L = NewObjectList()<br/>      list add(L, game)<br/>      list add(L, player)<br/>      o = ObjectListItem(L, GetRandomInt(1, ListCount(L)) - 1)<br/>      msg(o)</code></pre><br/><br/>The only time I get an error is if the list is, indeed, empty.",
+      "PostDate": "2013-05-05T10:17:04+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24446",
+      "UserId": 0,
+      "Username": "homeeman",
+      "UserAvatar": null,
+      "UserGravatar": "4c7b0e689de0b974bfe447478a40fb60",
+      "EditableText": "Unfortunately, there's not much to add for the code:\n\n[code:3r77gyyd]\n&lt;function name=&quot;populateDungeon&quot; parameters=&quot;enemyList, weaponsList, suppliesList, area, max&quot;&gt;&lt;!&#91;CDATA&#91;\n  empty = GetDirectChildren(area)\n  enemies = enemyList\n  weapons = weaponsList\n  while (ListCount(enemies) &gt; 0) {\n    room = ObjectListItem(empty, GetRandomInt(1, ListCount(empty)) - 1) //This line is where the function hangs\n    for (i, 1, GetRandomInt(2, max), 1) {\n      enemy = CloneObject (ObjectListItem(enemies, GetRandomInt(1, ListCount(enemies)) - 1))\n      MoveObject (enemy, room)\n      enemy&#46;wequip = ObjectListItem(weapons, GetRandomInt(1, ListCount(weapons)) - 1)\n      supply = GetRandomInt(0, (2 * ListCount(suppliesList)) - 1)\n      count = 0\n      while (supply &lt; ListCount(suppliesList) and count &lt;&gt; 3) {\n        CloneObjectAndMove (ObjectListItem(suppliesList, supply), enemy)\n        supply = GetRandomInt(0, (2 * ListCount(suppliesList)) - 1)\n        count = count + 1\n      }\n      list remove (enemies, enemy&#46;cloneof)\n      room&#46;bads = room&#46;bads + 1\n    }\n    if (ListCount(enemies) = 1) {\n      enemy = CloneObject (ObjectListItem(enemies, 0))\n      MoveObject (enemy, room)\n      enemy&#46;wequip = ObjectListItem(weapons, GetRandomInt(1, ListCount(weapons)) - 1)\n      supply = GetRandomInt(0, (2 * ListCount(suppliesList)) - 1)\n      count = 0\n      while (supply &lt; ListCount(suppliesList) and count &lt;&gt; 3) {\n        CloneObjectAndMove (ObjectListItem(suppliesList, supply), enemy)\n        supply = GetRandomInt(0, (2 * ListCount(suppliesList)) - 1)\n        count = count + 1\n      }\n      list remove (enemies, enemy&#46;cloneof)\n      room&#46;bads = room&#46;bads + 1\n    }\n    room&#46;battle = true\n    room&#46;prubble = GetRandomInt(0, 4)\n    room&#46;erubble = GetRandomInt(0, max)\n    list remove (empty, room)\n  }\n&#93;&#93;&gt;&lt;/function&gt;\n[/code:3r77gyyd]\n\nIt doesn't get very far into the function before it stops completely (the sixth line above).  The parameters are put together just before the function is called, in the game's start script (the game doesn't react well to this function at all when it's called outside the start script, unfortunately).\n\n[code:3r77gyyd]\n      list add (game&#46;enemyList, Raider)\n      list add (game&#46;enemyList, Raider)\n      list add (game&#46;enemyList, Raider)\n      list add (game&#46;enemyList, Brute)\n      list add (game&#46;enemyList, Brute)\n      list add (game&#46;enemyList, Brute)\n      list add (game&#46;enemyList, Sickly)\n      list add (game&#46;enemyList, Sickly)\n      list add (game&#46;enemyList, Sickly)\n      list add (game&#46;weaponslist, combat knife)\n      list add (game&#46;weaponslist, crowbar)\n      list add (game&#46;weaponslist, baton)\n      list add (game&#46;weaponslist, pistol)\n      list add (game&#46;weaponslist, shotgun)\n      list add (game&#46;weaponslist, machete)\n      list add (game&#46;weaponslist, baseball bat)\n      list add (game&#46;supplieslist, leather jacket)\n      list add (game&#46;supplieslist, bulletproof vest)\n      list add (game&#46;supplieslist, pistol ammo)\n      list add (game&#46;supplieslist, shotgun shells)\n      populateDungeon (game&#46;enemyList, game&#46;weaponslist, game&#46;supplieslist, Combat Rooms, 3)\n[/code:3r77gyyd]",
+      "EditableFormat": "bbcode",
+      "HTML": "Unfortunately, there's not much to add for the code:<br/><br/><pre><code><br/>&lt;function name=&quot;populateDungeon&quot; parameters=&quot;enemyList, weaponsList, suppliesList, area, max&quot;&gt;&lt;!&#91;CDATA&#91;<br/>  empty = GetDirectChildren(area)<br/>  enemies = enemyList<br/>  weapons = weaponsList<br/>  while (ListCount(enemies) &gt; 0) {<br/>    room = ObjectListItem(empty, GetRandomInt(1, ListCount(empty)) - 1) //This line is where the function hangs<br/>    for (i, 1, GetRandomInt(2, max), 1) {<br/>      enemy = CloneObject (ObjectListItem(enemies, GetRandomInt(1, ListCount(enemies)) - 1))<br/>      MoveObject (enemy, room)<br/>      enemy&#46;wequip = ObjectListItem(weapons, GetRandomInt(1, ListCount(weapons)) - 1)<br/>      supply = GetRandomInt(0, (2 * ListCount(suppliesList)) - 1)<br/>      count = 0<br/>      while (supply &lt; ListCount(suppliesList) and count &lt;&gt; 3) {<br/>        CloneObjectAndMove (ObjectListItem(suppliesList, supply), enemy)<br/>        supply = GetRandomInt(0, (2 * ListCount(suppliesList)) - 1)<br/>        count = count + 1<br/>      }<br/>      list remove (enemies, enemy&#46;cloneof)<br/>      room&#46;bads = room&#46;bads + 1<br/>    }<br/>    if (ListCount(enemies) = 1) {<br/>      enemy = CloneObject (ObjectListItem(enemies, 0))<br/>      MoveObject (enemy, room)<br/>      enemy&#46;wequip = ObjectListItem(weapons, GetRandomInt(1, ListCount(weapons)) - 1)<br/>      supply = GetRandomInt(0, (2 * ListCount(suppliesList)) - 1)<br/>      count = 0<br/>      while (supply &lt; ListCount(suppliesList) and count &lt;&gt; 3) {<br/>        CloneObjectAndMove (ObjectListItem(suppliesList, supply), enemy)<br/>        supply = GetRandomInt(0, (2 * ListCount(suppliesList)) - 1)<br/>        count = count + 1<br/>      }<br/>      list remove (enemies, enemy&#46;cloneof)<br/>      room&#46;bads = room&#46;bads + 1<br/>    }<br/>    room&#46;battle = true<br/>    room&#46;prubble = GetRandomInt(0, 4)<br/>    room&#46;erubble = GetRandomInt(0, max)<br/>    list remove (empty, room)<br/>  }<br/>&#93;&#93;&gt;&lt;/function&gt;<br/></code></pre><br/><br/>It doesn't get very far into the function before it stops completely (the sixth line above).  The parameters are put together just before the function is called, in the game's start script (the game doesn't react well to this function at all when it's called outside the start script, unfortunately).<br/><br/><pre><code><br/>      list add (game&#46;enemyList, Raider)<br/>      list add (game&#46;enemyList, Raider)<br/>      list add (game&#46;enemyList, Raider)<br/>      list add (game&#46;enemyList, Brute)<br/>      list add (game&#46;enemyList, Brute)<br/>      list add (game&#46;enemyList, Brute)<br/>      list add (game&#46;enemyList, Sickly)<br/>      list add (game&#46;enemyList, Sickly)<br/>      list add (game&#46;enemyList, Sickly)<br/>      list add (game&#46;weaponslist, combat knife)<br/>      list add (game&#46;weaponslist, crowbar)<br/>      list add (game&#46;weaponslist, baton)<br/>      list add (game&#46;weaponslist, pistol)<br/>      list add (game&#46;weaponslist, shotgun)<br/>      list add (game&#46;weaponslist, machete)<br/>      list add (game&#46;weaponslist, baseball bat)<br/>      list add (game&#46;supplieslist, leather jacket)<br/>      list add (game&#46;supplieslist, bulletproof vest)<br/>      list add (game&#46;supplieslist, pistol ammo)<br/>      list add (game&#46;supplieslist, shotgun shells)<br/>      populateDungeon (game&#46;enemyList, game&#46;weaponslist, game&#46;supplieslist, Combat Rooms, 3)<br/></code></pre>",
+      "PostDate": "2013-05-05T19:16:54+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24448",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "What I see: you have a loop that loops on enemies and for each enemy picks and removes a room from &quot;empty&quot;. What happens if you have more enemies than rooms? Eventually &quot;empty&quot; will be... empty.",
+      "EditableFormat": "bbcode",
+      "HTML": "What I see: you have a loop that loops on enemies and for each enemy picks and removes a room from &quot;empty&quot;. What happens if you have more enemies than rooms? Eventually &quot;empty&quot; will be... empty.",
+      "PostDate": "2013-05-05T22:30:04+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24449",
+      "UserId": 0,
+      "Username": "homeeman",
+      "UserAvatar": null,
+      "UserGravatar": "4c7b0e689de0b974bfe447478a40fb60",
+      "EditableText": "I searched through this function forever and somehow I didn't notice that the while loop hinges on the number of enemies, not the number of remaining rooms.  Thanks a ton.",
+      "EditableFormat": "bbcode",
+      "HTML": "I searched through this function forever and somehow I didn't notice that the while loop hinges on the number of enemies, not the number of remaining rooms.  Thanks a ton.",
+      "PostDate": "2013-05-06T00:30:30+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

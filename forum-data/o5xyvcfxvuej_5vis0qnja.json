@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "o5xyvcfxvuej_5vis0qnja",
+    "ForumId": "10",
+    "Title": "Inventory Display with stacked object",
+    "LastUpdated": "2019-05-22T10:56:10.8494455Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "cf4ddccf-0eb5-41e4-8d01-2affe9773831",
+      "UserId": 340011,
+      "Username": "wooterslw",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/7d20dd39301d8b9be2be0abaf005968d?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Ok. I have an item \"Healing Potions\". When the player gets one I just increase the quantity of the object. I want the object to display in inventory like \"Healing Potions (x2)\". I've tried several ways and coming up for broke. How would I accomplish this? I tried using the listalias but that does nothing. Here is what I have so far.\r\n\r\n```\r\n  <object name=\"potionstack\">\r\n    <inherit name=\"editor_object\" />\r\n    <look><![CDATA[{img:Healing_Potion_card.png}<br/><br/>The liquid burns your throat like bitter fire but quickly heals open wounds and broken bones. When you drink this potion, you recover half of your maximum stamina.]]></look>\r\n    <attr name=\"feature_usegive\" type=\"boolean\">false</attr>\r\n    <take />\r\n    <quantity type=\"int\">1</quantity>\r\n    <alias type=\"string\"></alias>\r\n    <listalias type=\"script\">\r\n      potionstack.listalias = \"Healing Potion (x\" + potionstack.quantity + \")\"\r\n    </listalias>\r\n    <ontake type=\"script\"><![CDATA[\r\n      if (potionstack.quantity < 3) {\r\n        potionstack.quantity = potionstack.quantity + 1\r\n      }\r\n      else {\r\n        msg (\"You cannot carry more than three healing potions\")\r\n      }\r\n      potionstack.listalias = \"Healing Potion (x\" + potionstack.quantity + \")\"\r\n    ]]></ontake>\r\n    <drink type=\"script\">\r\n      if (player.staminacurrent = player.staminamax) {\r\n        msg (\"Your stamina is at maximum. You decide not to waste the potion.\")\r\n      }\r\n      else {\r\n        msg (\"You recover half of your maximum stamina and toss the bottle away.\")\r\n        potionstack.quantity = potionstack.quantity - 1\r\n        if (potionstack.quantity = 0) {\r\n          RemoveObject (potionstack)\r\n        }\r\n        player.staminacurrent = player.staminacurrent + (player.staminamax / 2)\r\n        potionstack.listalias = \"Healing Potion (x\" + potionstack.quantity + \")\"\r\n      }\r\n    </drink>\r\n    <use type=\"script\">\r\n    </use>\r\n    <drop type=\"boolean\">false</drop>\r\n    <inventoryverbs type=\"stringlist\">\r\n      <value>Look at</value>\r\n      <value>Drink</value>\r\n    </inventoryverbs>\r\n  </object>\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Ok. I have an item \"Healing Potions\". When the player gets one I just increase the quantity of the object. I want the object to display in inventory like \"Healing Potions (x2)\". I've tried several ways and coming up for broke. How would I accomplish this? I tried using the listalias but that does nothing. Here is what I have so far.</p>\n<pre><code>  &lt;object name=\"potionstack\"&gt;\n    &lt;inherit name=\"editor_object\" /&gt;\n    &lt;look&gt;&lt;![CDATA[{img:Healing_Potion_card.png}&lt;br/&gt;&lt;br/&gt;The liquid burns your throat like bitter fire but quickly heals open wounds and broken bones. When you drink this potion, you recover half of your maximum stamina.]]&gt;&lt;/look&gt;\n    &lt;attr name=\"feature_usegive\" type=\"boolean\"&gt;false&lt;/attr&gt;\n    &lt;take /&gt;\n    &lt;quantity type=\"int\"&gt;1&lt;/quantity&gt;\n    &lt;alias type=\"string\"&gt;&lt;/alias&gt;\n    &lt;listalias type=\"script\"&gt;\n      potionstack.listalias = \"Healing Potion (x\" + potionstack.quantity + \")\"\n    &lt;/listalias&gt;\n    &lt;ontake type=\"script\"&gt;&lt;![CDATA[\n      if (potionstack.quantity &lt; 3) {\n        potionstack.quantity = potionstack.quantity + 1\n      }\n      else {\n        msg (\"You cannot carry more than three healing potions\")\n      }\n      potionstack.listalias = \"Healing Potion (x\" + potionstack.quantity + \")\"\n    ]]&gt;&lt;/ontake&gt;\n    &lt;drink type=\"script\"&gt;\n      if (player.staminacurrent = player.staminamax) {\n        msg (\"Your stamina is at maximum. You decide not to waste the potion.\")\n      }\n      else {\n        msg (\"You recover half of your maximum stamina and toss the bottle away.\")\n        potionstack.quantity = potionstack.quantity - 1\n        if (potionstack.quantity = 0) {\n          RemoveObject (potionstack)\n        }\n        player.staminacurrent = player.staminacurrent + (player.staminamax / 2)\n        potionstack.listalias = \"Healing Potion (x\" + potionstack.quantity + \")\"\n      }\n    &lt;/drink&gt;\n    &lt;use type=\"script\"&gt;\n    &lt;/use&gt;\n    &lt;drop type=\"boolean\"&gt;false&lt;/drop&gt;\n    &lt;inventoryverbs type=\"stringlist\"&gt;\n      &lt;value&gt;Look at&lt;/value&gt;\n      &lt;value&gt;Drink&lt;/value&gt;\n    &lt;/inventoryverbs&gt;\n  &lt;/object&gt;\n</code></pre>\n\n",
+      "PostDate": "2019-05-22T10:56:10.8494455Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "7f0e3a95-baf8-4aa8-b66f-d7f8a4ef113d",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "This looks a little weird.\r\n\r\nYou have an item called `potionstack` which has an initial quantity attribute set tyo 1. When you pick it up, it increases this to 2, and sets its listalias to \"Healing potion (x2)\".\r\n\r\nNormally if you have a stacking system, you would have some way to have multiple of the same object. There are two different ways to do this:\r\n\r\n1) You have a `potionstack`object that the player starts off with (but its quantity might start at 0). Other potion objects can be found, and they have a `take` script which removes them from the game and increases the quantity of the potionstack instead.\r\n\r\n2) All potions are the same (without a separate stack object). When you pick up the first one it is taken normally, but if you pick up a second potion it removes itself from the game and increases the quantity on the first one instead.\r\n\r\nI'm not sure which one of these you're working with. If you have a separate potion object that the player can pick up, it might be worth showing us the script for that object. That's more likely where your problem lies.\r\n\r\nIf you're cloning your potionstack, the script you have won't work because you're changing `potionstack.listalias` (the list alias of the *original*) rather than `this.listalias` (the listalias of the one that the player is currently interacting with). So you'd need to guarantee that the one in the player's inventory is the original one.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>This looks a little weird.</p>\n<p>You have an item called <code>potionstack</code> which has an initial quantity attribute set tyo 1. When you pick it up, it increases this to 2, and sets its listalias to \"Healing potion (x2)\".</p>\n<p>Normally if you have a stacking system, you would have some way to have multiple of the same object. There are two different ways to do this:</p>\n<ol>\n<li>\n<p>You have a <code>potionstack</code>object that the player starts off with (but its quantity might start at 0). Other potion objects can be found, and they have a <code>take</code> script which removes them from the game and increases the quantity of the potionstack instead.</p>\n</li>\n<li>\n<p>All potions are the same (without a separate stack object). When you pick up the first one it is taken normally, but if you pick up a second potion it removes itself from the game and increases the quantity on the first one instead.</p>\n</li>\n</ol>\n<p>I'm not sure which one of these you're working with. If you have a separate potion object that the player can pick up, it might be worth showing us the script for that object. That's more likely where your problem lies.</p>\n<p>If you're cloning your potionstack, the script you have won't work because you're changing <code>potionstack.listalias</code> (the list alias of the <em>original</em>) rather than <code>this.listalias</code> (the listalias of the one that the player is currently interacting with). So you'd need to guarantee that the one in the player's inventory is the original one.</p>\n\n",
+      "PostDate": "2019-05-22T22:38:24.7670454Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "be6a5ba0-de80-4d01-8e1c-1065ac3e4304",
+      "UserId": 340011,
+      "Username": "wooterslw",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/7d20dd39301d8b9be2be0abaf005968d?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "This is the only object. It has an initial starting stack of 1 because when I give it to the player it is a single item. Then later, as I give him more, it increases the quantity. The object and the code work in game, my issue is that in my inventory I can only show it as \"Healing Potion\". I'm trying to have it show the quantity of the stack in the inventory window.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>This is the only object. It has an initial starting stack of 1 because when I give it to the player it is a single item. Then later, as I give him more, it increases the quantity. The object and the code work in game, my issue is that in my inventory I can only show it as \"Healing Potion\". I'm trying to have it show the quantity of the stack in the inventory window.</p>\n\n",
+      "PostDate": "2019-05-22T23:25:25.4723765Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "acb9c6ce-435b-4e17-b806-c07891fc4986",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> when I give it to the player it is a single item.\r\n\r\nIf the player picks it up, they will have 2, because it adds 1 when it is picked up.\r\n\r\nIf you give it to the player without them using the 'take' command, your `ontake` script is never run, so the listalias is never set.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>when I give it to the player it is a single item.</p>\n</blockquote>\n<p>If the player picks it up, they will have 2, because it adds 1 when it is picked up.</p>\n<p>If you give it to the player without them using the 'take' command, your <code>ontake</code> script is never run, so the listalias is never set.</p>\n\n",
+      "PostDate": "2019-05-23T01:23:54.4132164Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "9a59bd73-4684-4a8d-88c4-95ab9c5228a0",
+      "UserId": 277074,
+      "Username": "Dcoder",
+      "AvatarUrl": "https://i.imgur.com/XIlYPQ9b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I use a Text Processor directive in my stackables' aliases and listaliases, e.g.: ```olive oil ({olive_oil_player.qty})```.  This object's name is ```olive_oil_player``` and it has a ```qty``` integer attribute.  So when it is displayed, it reads: ```olive oil (5)```, if the ```qty``` is 5.  Whenever the ```qty``` value changes, the alias and listalias seem to update automatically.\r\n\r\nI also have 2 objectstacks for EACH real stackable object in my game, e.g.: ```olive_oil_player``` is a single objectstack that is moved into the player's inventory when the ```qty``` is more than zero, and ```olive_oil_clone``` is a single objectstack that is cloned and placed in the room when \"discovered\" or dropped.  Actually, I also have a 3rd objectstack ```olive_oil_merch``` that is only interacted with whenever the player buys that object from a merchant.\r\n\r\nWhen my stackables are taken or dropped, I run my own take or drop functions to handle everything.  Admittedly, they are a bit complicated.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I use a Text Processor directive in my stackables' aliases and listaliases, e.g.: <code>olive oil ({olive_oil_player.qty})</code>.  This object's name is <code>olive_oil_player</code> and it has a <code>qty</code> integer attribute.  So when it is displayed, it reads: <code>olive oil (5)</code>, if the <code>qty</code> is 5.  Whenever the <code>qty</code> value changes, the alias and listalias seem to update automatically.</p>\n<p>I also have 2 objectstacks for EACH real stackable object in my game, e.g.: <code>olive_oil_player</code> is a single objectstack that is moved into the player's inventory when the <code>qty</code> is more than zero, and <code>olive_oil_clone</code> is a single objectstack that is cloned and placed in the room when \"discovered\" or dropped.  Actually, I also have a 3rd objectstack <code>olive_oil_merch</code> that is only interacted with whenever the player buys that object from a merchant.</p>\n<p>When my stackables are taken or dropped, I run my own take or drop functions to handle everything.  Admittedly, they are a bit complicated.</p>\n\n",
+      "PostDate": "2019-05-23T06:53:56.7605041Z",
+      "LastEditDate": "2019-05-23T07:11:28.5079356Z",
+      "link": null
+    }
+  ]
+}

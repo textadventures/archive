@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "dxwn2p-h-eaavdze6qvhyq",
+    "ForumId": "10",
+    "Title": "Regarding CloneObject() inner workings",
+    "LastUpdated": "2018-11-02T08:29:02.2654392Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "f757aa3a-7c4d-4a9d-8a00-b57c2a7e5652",
+      "UserId": 383686,
+      "Username": "myarichuk",
+      "AvatarUrl": "https://i.imgur.com/B2r7Dfxb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "What happens to an object after it was created by CloneObject() and subsequently not used anywhere? I mean - since it is C# object under-the-hood, does it get GC'ed, or does it hold some references somewhere?\r\n\r\nConcrete example: \r\nLets imagine I want to have an object called \"SceneManager\" that will hold the state of some scene, and I want to allow several scenes happening at once. \r\nIf I were to create a \"prototype\" of SceneManager, clone it each time I want to start a scene and then discard it, would those discarded objects linger on indefinitely until Quest player is closed?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>What happens to an object after it was created by CloneObject() and subsequently not used anywhere? I mean - since it is C# object under-the-hood, does it get GC'ed, or does it hold some references somewhere?</p>\n<p>Concrete example:<br>\nLets imagine I want to have an object called \"SceneManager\" that will hold the state of some scene, and I want to allow several scenes happening at once.<br>\nIf I were to create a \"prototype\" of SceneManager, clone it each time I want to start a scene and then discard it, would those discarded objects linger on indefinitely until Quest player is closed?</p>\n\n",
+      "PostDate": "2018-11-02T08:29:02.2654392Z",
+      "LastEditDate": "2018-11-02T08:30:11.5441975Z",
+      "link": null
+    },
+    {
+      "PostId": "1a226e9d-6010-44b8-9882-0855eb322819",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "How are you discarding them? If you are destroying them, they may well get garbage collected. Otherwise they will linger indefinitely, and if the player saves the game, they will also be saved, and will get loaded with everything else.\r\n\r\nThis is not specific to clones. Clones work the same as everything else once created.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>How are you discarding them? If you are destroying them, they may well get garbage collected. Otherwise they will linger indefinitely, and if the player saves the game, they will also be saved, and will get loaded with everything else.</p>\n<p>This is not specific to clones. Clones work the same as everything else once created.</p>\n\n",
+      "PostDate": "2018-11-02T08:54:57.8192487Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "119d5b4e-70ac-4718-bab5-3b4be9ac0304",
+      "UserId": 383686,
+      "Username": "myarichuk",
+      "AvatarUrl": "https://i.imgur.com/B2r7Dfxb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "By \"discarding\" I mean what I would like to do, until you mentioned \"destroying\" haven't seen explicit way to destroy them.\r\nDo you mean that the **destroy()** function that I see at :http://docs.textadventures.co.uk/quest/scripts/destroy.html will cause the object to be eventually GCed? ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>By \"discarding\" I mean what I would like to do, until you mentioned \"destroying\" haven't seen explicit way to destroy them.<br>\nDo you mean that the <strong>destroy()</strong> function that I see at :http://docs.textadventures.co.uk/quest/scripts/destroy.html will cause the object to be eventually GCed?</p>\n\n",
+      "PostDate": "2018-11-02T10:10:41.9296017Z",
+      "LastEditDate": "2018-11-02T10:12:03.1247957Z",
+      "link": null
+    },
+    {
+      "PostId": "d1181ffc-38a0-408c-934e-a889620d43e6",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "All objects are stored in a global dictionary whose key is the object name. So there is always at least one reference to every object.\r\nThe only way to remove an object from this dictionary is to call `destroy()`, which explicitly destroys the object.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>All objects are stored in a global dictionary whose key is the object name. So there is always at least one reference to every object.<br>\nThe only way to remove an object from this dictionary is to call <code>destroy()</code>, which explicitly destroys the object.</p>\n\n",
+      "PostDate": "2018-11-02T10:45:17.8218432Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "0d4bd2dc-5fc4-40f0-9984-2872252845d3",
+      "UserId": 267336,
+      "Username": "jmnevil54",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5d73d7ec1dbe20a5cb46f02a6d53f187?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The function that The Pixie uses is. ```RemoveObject (this)```\r\n\r\nEdit:     \r\nSorry. I wrote the wrong code...",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The function that The Pixie uses is. <code>RemoveObject (this)</code></p>\n<p>Edit:<br>\nSorry. I wrote the wrong code...</p>\n\n",
+      "PostDate": "2018-11-02T18:18:27.53513Z",
+      "LastEditDate": "2018-11-03T01:11:19.6737148Z",
+      "link": null
+    },
+    {
+      "PostId": "5c043ae6-ea2c-42e2-9e0f-ad4d385a7b8d",
+      "UserId": 383686,
+      "Username": "myarichuk",
+      "AvatarUrl": "https://i.imgur.com/B2r7Dfxb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": ">All objects are stored in a global dictionary whose key is the object name. So there is always at least one reference to every object.\r\nThe only way to remove an object from this dictionary is to call destroy(), which explicitly destroys the object.\r\n\r\nGood to know that, thanks! Maybe its a habit that is not applicable at Quest scopes, but I do worry about memory usage :)",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>All objects are stored in a global dictionary whose key is the object name. So there is always at least one reference to every object.<br>\nThe only way to remove an object from this dictionary is to call destroy(), which explicitly destroys the object.</p>\n</blockquote>\n<p>Good to know that, thanks! Maybe its a habit that is not applicable at Quest scopes, but I do worry about memory usage :)</p>\n\n",
+      "PostDate": "2018-11-03T12:39:36.7246287Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

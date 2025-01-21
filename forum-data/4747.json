@@ -1,0 +1,107 @@
+{
+  "Topic": {
+    "TopicId": "4747",
+    "ForumId": "18",
+    "Title": "Injecting permanent style sheets from strings",
+    "LastUpdated": "2014-12-18T13:34:37+00:00",
+    "ReplyCount": 7
+  },
+  "Posts": [
+    {
+      "PostId": "31212",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "This describes an experimental approach to injecting permanent style sheets in Quest. The reason I call it &quot;experimental&quot; is that it uses data URIs, which are widely, but not universally, supported in browsers. Be sure to test!\n\nThe basic code is this (it includes a crude implementation of &quot;url encode&quot;):\n\n[code:34lt7lxu]  &lt;function name=&quot;addStyleSheet&quot; parameters=&quot;css&quot;&gt;\n  \tAddExternalStylesheet(&quot;data&#58;text/css,&quot; + urlEncode(css))\n  &lt;/function&gt;\n  \n  &lt;function name=&quot;urlEncode&quot; parameters=&quot;s&quot; type=&quot;string&quot;&gt;\n  &lt;!&#91;CDATA&#91;\n  \ts = Replace(s, &quot;%&quot;, &quot;%25&quot;)\n\n  \ts = Replace(s, &quot; &quot;, &quot;%20&quot;)\n  \ts = Replace(s, &quot;\\&quot;&quot;, &quot;%22&quot;)\n  \ts = Replace(s, &quot;#&quot;, &quot;%23&quot;)\n  \ts = Replace(s, &quot;$&quot;, &quot;%24&quot;)\n  \ts = Replace(s, &quot;&amp;&quot;, &quot;%26&quot;)\n  \ts = Replace(s, &quot;'&quot;, &quot;%27&quot;)\n  \ts = Replace(s, &quot;,&quot;, &quot;%2C&quot;)\n  \ts = Replace(s, &quot;&#58;&quot;, &quot;%3A&quot;)\n  \ts = Replace(s, &quot;;&quot;, &quot;%3B&quot;)\n  \ts = Replace(s, &quot;&lt;&quot;, &quot;%3C&quot;)\n  \ts = Replace(s, &quot;=&quot;, &quot;%3D&quot;)\n  \ts = Replace(s, &quot;&gt;&quot;, &quot;%3E&quot;)\n  \ts = Replace(s, &quot;&gt;&quot;, &quot;%3F&quot;)\n  \ts = Replace(s, &quot;{&quot;, &quot;%7B&quot;)\n  \ts = Replace(s, &quot;}&quot;, &quot;%7D&quot;)\n  \treturn(s)\n  \t&#93;&#93;&gt;\n  &lt;/function&gt;[/code:34lt7lxu]\n\nYou can use it by passing a css string (minus the enclosing &lt;style&gt; tag). One way to do that is to define an attribute in the game object like this:\n\n[code:34lt7lxu]&lt;game&gt;\n    &#46;&#46;&#46;\n    &lt;css&gt;\n        body {\n          background-color&#58;black;\n        }\n     \tdiv#gameBorder {\n\t        background-color&#58;black;\n     \t\tborder-color&#58;black;\n     \t}\n    &lt;/css&gt;\n    &#46;&#46;&#46;\n&lt;/game&gt;[/code:34lt7lxu]\nThen you set it with:\n\n[code:34lt7lxu]addStyleSheet(game&#46;css)[/code:34lt7lxu]\n\nYou can also just set the css with:\n\n[code:34lt7lxu]msg(game&#46;css)[/code:34lt7lxu]\nbut in this case, clearing the screen will require you to send the css again. Using the addStyleSheet function will set the style sheet permanently, so you will not need to set it more than once, regardless of clearing the screen.\n\nEdit: updated with working version",
+      "EditableFormat": "bbcode",
+      "HTML": "This describes an experimental approach to injecting permanent style sheets in Quest. The reason I call it &quot;experimental&quot; is that it uses data URIs, which are widely, but not universally, supported in browsers. Be sure to test!<br/><br/>The basic code is this (it includes a crude implementation of &quot;url encode&quot;):<br/><br/><pre><code>  &lt;function name=&quot;addStyleSheet&quot; parameters=&quot;css&quot;&gt;<br/>  \tAddExternalStylesheet(&quot;data&#58;text/css,&quot; + urlEncode(css))<br/>  &lt;/function&gt;<br/>  <br/>  &lt;function name=&quot;urlEncode&quot; parameters=&quot;s&quot; type=&quot;string&quot;&gt;<br/>  &lt;!&#91;CDATA&#91;<br/>  \ts = Replace(s, &quot;%&quot;, &quot;%25&quot;)<br/><br/>  \ts = Replace(s, &quot; &quot;, &quot;%20&quot;)<br/>  \ts = Replace(s, &quot;\\&quot;&quot;, &quot;%22&quot;)<br/>  \ts = Replace(s, &quot;#&quot;, &quot;%23&quot;)<br/>  \ts = Replace(s, &quot;$&quot;, &quot;%24&quot;)<br/>  \ts = Replace(s, &quot;&amp;&quot;, &quot;%26&quot;)<br/>  \ts = Replace(s, &quot;'&quot;, &quot;%27&quot;)<br/>  \ts = Replace(s, &quot;,&quot;, &quot;%2C&quot;)<br/>  \ts = Replace(s, &quot;&#58;&quot;, &quot;%3A&quot;)<br/>  \ts = Replace(s, &quot;;&quot;, &quot;%3B&quot;)<br/>  \ts = Replace(s, &quot;&lt;&quot;, &quot;%3C&quot;)<br/>  \ts = Replace(s, &quot;=&quot;, &quot;%3D&quot;)<br/>  \ts = Replace(s, &quot;&gt;&quot;, &quot;%3E&quot;)<br/>  \ts = Replace(s, &quot;&gt;&quot;, &quot;%3F&quot;)<br/>  \ts = Replace(s, &quot;{&quot;, &quot;%7B&quot;)<br/>  \ts = Replace(s, &quot;}&quot;, &quot;%7D&quot;)<br/>  \treturn(s)<br/>  \t&#93;&#93;&gt;<br/>  &lt;/function&gt;</code></pre><br/><br/>You can use it by passing a css string (minus the enclosing &lt;style&gt; tag). One way to do that is to define an attribute in the game object like this:<br/><br/><pre><code>&lt;game&gt;<br/>    &#46;&#46;&#46;<br/>    &lt;css&gt;<br/>        body {<br/>          background-color&#58;black;<br/>        }<br/>     \tdiv#gameBorder {<br/>\t        background-color&#58;black;<br/>     \t\tborder-color&#58;black;<br/>     \t}<br/>    &lt;/css&gt;<br/>    &#46;&#46;&#46;<br/>&lt;/game&gt;</code></pre><br/>Then you set it with:<br/><br/><pre><code>addStyleSheet(game&#46;css)</code></pre><br/><br/>You can also just set the css with:<br/><br/><pre><code>msg(game&#46;css)</code></pre><br/>but in this case, clearing the screen will require you to send the css again. Using the addStyleSheet function will set the style sheet permanently, so you will not need to set it more than once, regardless of clearing the screen.<br/><br/>Edit: updated with working version<div><a href=\"/attachment/1119\">AddStyleSheet.aslx</a></div><div><a href=\"/attachment/1055\">cssdatauri.aslx</a></div>",
+      "PostDate": "2014-11-15T22:53:39+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "31270",
+      "UserId": 0,
+      "Username": "george",
+      "UserAvatar": null,
+      "UserGravatar": "dc6fe8e6172303d85249a13c9a49c1ff",
+      "EditableText": "Cool Jay, is this a workaround for the problems I vaguely remember about Quest loading external style sheets?",
+      "EditableFormat": "bbcode",
+      "HTML": "Cool Jay, is this a workaround for the problems I vaguely remember about Quest loading external style sheets?",
+      "PostDate": "2014-11-16T20:47:07+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "31271",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Yes. That's what I was trying to solve. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> I hate posting responses to forum queries using css when I have to keep saying &quot;remember to re-send the CSS when you clear the screen.&quot; This seems like a simple solution if it holds up!",
+      "EditableFormat": "bbcode",
+      "HTML": "Yes. That's what I was trying to solve. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> I hate posting responses to forum queries using css when I have to keep saying &quot;remember to re-send the CSS when you clear the screen.&quot; This seems like a simple solution if it holds up!",
+      "PostDate": "2014-11-16T20:56:22+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32921",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "This seems not to work with uploaded games on Firefox and Chrome, though it does for IE. The CSS I am trying is:\n[code:243wt1c0]    &lt;css&gt;\n        img {\n          float&#58;left;\n          padding&#58;5px;\n        }\n        body {\n          background-color&#58;yellow;\n        }\n        &lt;/css&gt;[/code:243wt1c0]",
+      "EditableFormat": "bbcode",
+      "HTML": "This seems not to work with uploaded games on Firefox and Chrome, though it does for IE. The CSS I am trying is:<br/><pre><code>    &lt;css&gt;<br/>        img {<br/>          float&#58;left;<br/>          padding&#58;5px;<br/>        }<br/>        body {<br/>          background-color&#58;yellow;<br/>        }<br/>        &lt;/css&gt;</code></pre>",
+      "PostDate": "2014-12-16T11:23:54+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32935",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "I'll have to check that out. I thought it had worked for me with Chrome.\n\nAre there any errors in the Javascript console?",
+      "EditableFormat": "bbcode",
+      "HTML": "I'll have to check that out. I thought it had worked for me with Chrome.<br/><br/>Are there any errors in the Javascript console?",
+      "PostDate": "2014-12-17T07:48:05+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32937",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "It could be me. Here is the game code I was trying:\n[code:36gjrd5e]&lt;!--Saved by Quest 5&#46;5&#46;5328&#46;26617--&gt;\n&lt;asl version=&quot;550&quot;&gt;\n  &lt;include ref=&quot;English&#46;aslx&quot; /&gt;\n  &lt;include ref=&quot;Core&#46;aslx&quot; /&gt;\n  &lt;game name=&quot;reel&quot;&gt;\n    &lt;gameid&gt;5b8e54c5-c011-417a-9ee5-b3c34be859e7&lt;/gameid&gt;\n    &lt;version&gt;1&#46;0&lt;/version&gt;\n    &lt;firstpublished&gt;2014&lt;/firstpublished&gt;\n    &lt;showborder type=&quot;boolean&quot;&gt;false&lt;/showborder&gt;\n    &lt;attr name=&quot;autodescription_youarein_useprefix&quot; type=&quot;boolean&quot;&gt;false&lt;/attr&gt;\n    &lt;autodescription_youarein_newline /&gt;\n    &lt;appendobjectdescription /&gt;\n    &lt;attr name=&quot;autodescription_youcango&quot; type=&quot;int&quot;&gt;0&lt;/attr&gt;\n    &lt;css&gt;\n        img {\n          float&#58;left;\n          padding&#58;5px;\n        }\n        body {\n          background-color&#58;yellow;\n        }\n                &lt;/css&gt;\n    &lt;attr name=&quot;external_state&quot; type=&quot;int&quot;&gt;0&lt;/attr&gt;\n    &lt;author&gt;The Pixie&lt;/author&gt;\n    &lt;turn type=&quot;int&quot;&gt;0&lt;/turn&gt;\n    &lt;subtitle&gt;testing images&lt;/subtitle&gt;\n    &lt;start type=&quot;script&quot;&gt;\n      addStyleSheet (game&#46;css)\n    &lt;/start&gt;\n  &lt;/game&gt;\n  &lt;object name=&quot;room&quot;&gt;\n    &lt;inherit name=&quot;editor_room&quot; /&gt;\n    &lt;flag type=&quot;boolean&quot;&gt;false&lt;/flag&gt;\n    &lt;description type=&quot;script&quot;&gt;\n      if (this&#46;flag) {\n        msg (&quot;A big room, with wood-panelled walls&#46; There is a large hole in the west wall, where the wood is blackeden&#46;&quot;)\n      }\n      else {\n        msg (&quot;A big room, with wood-panelled walls&#46;&quot;)\n      }\n    &lt;/description&gt;\n    &lt;object name=&quot;player&quot;&gt;\n      &lt;inherit name=&quot;editor_object&quot; /&gt;\n      &lt;inherit name=&quot;editor_player&quot; /&gt;\n    &lt;/object&gt;\n  &lt;/object&gt;\n  &lt;command name=&quot;clr&quot;&gt;\n    &lt;pattern&gt;clr&lt;/pattern&gt;\n    &lt;script&gt;\n      ClearScreen\n    &lt;/script&gt;\n  &lt;/command&gt;\n  &lt;function name=&quot;addStyleSheet&quot; parameters=&quot;css&quot;&gt;\n    AddExternalStylesheet (&quot;data&#58;text/s,&quot; + urlEncode(css))\n  &lt;/function&gt;\n  &lt;function name=&quot;urlEncode&quot; parameters=&quot;s&quot; type=&quot;string&quot;&gt;&lt;!&#91;CDATA&#91;\n    s = Replace(s, &quot;%&quot;, &quot;%25&quot;)\n    s = Replace(s, &quot; &quot;, &quot;%20&quot;)\n    s = Replace(s, &quot;\\&quot;&quot;, &quot;%22&quot;)\n    s = Replace(s, &quot;#&quot;, &quot;%23&quot;)\n    s = Replace(s, &quot;$&quot;, &quot;%24&quot;)\n    s = Replace(s, &quot;&amp;&quot;, &quot;%26&quot;)\n    s = Replace(s, &quot;'&quot;, &quot;%27&quot;)\n    s = Replace(s, &quot;,&quot;, &quot;%2C&quot;)\n    s = Replace(s, &quot;&#58;&quot;, &quot;%3A&quot;)\n    s = Replace(s, &quot;;&quot;, &quot;%3B&quot;)\n    s = Replace(s, &quot;&lt;&quot;, &quot;%3C&quot;)\n    s = Replace(s, &quot;=&quot;, &quot;%3D&quot;)\n    s = Replace(s, &quot;&gt;&quot;, &quot;%3E&quot;)\n    s = Replace(s, &quot;&gt;&quot;, &quot;%3F&quot;)\n    s = Replace(s, &quot;{&quot;, &quot;%7B&quot;)\n      s = Replace(s, &quot;}&quot;, &quot;%7D&quot;)\n    return (s)\n  &#93;&#93;&gt;&lt;/function&gt;\n&lt;/asl&gt;[/code:36gjrd5e]\nAnd a link to the uploaded game. I should have a yellow body element:\n\n<!-- m --><a class=\"postlink\" href=\"http://textadventures.co.uk/games/view/obtvjzlemkawtmx3igm-5q/reel\">http://textadventures.co.uk/games/view/ ... gm-5q/reel</a><!-- m -->",
+      "EditableFormat": "bbcode",
+      "HTML": "It could be me. Here is the game code I was trying:<br/><pre><code>&lt;!--Saved by Quest 5&#46;5&#46;5328&#46;26617--&gt;<br/>&lt;asl version=&quot;550&quot;&gt;<br/>  &lt;include ref=&quot;English&#46;aslx&quot; /&gt;<br/>  &lt;include ref=&quot;Core&#46;aslx&quot; /&gt;<br/>  &lt;game name=&quot;reel&quot;&gt;<br/>    &lt;gameid&gt;5b8e54c5-c011-417a-9ee5-b3c34be859e7&lt;/gameid&gt;<br/>    &lt;version&gt;1&#46;0&lt;/version&gt;<br/>    &lt;firstpublished&gt;2014&lt;/firstpublished&gt;<br/>    &lt;showborder type=&quot;boolean&quot;&gt;false&lt;/showborder&gt;<br/>    &lt;attr name=&quot;autodescription_youarein_useprefix&quot; type=&quot;boolean&quot;&gt;false&lt;/attr&gt;<br/>    &lt;autodescription_youarein_newline /&gt;<br/>    &lt;appendobjectdescription /&gt;<br/>    &lt;attr name=&quot;autodescription_youcango&quot; type=&quot;int&quot;&gt;0&lt;/attr&gt;<br/>    &lt;css&gt;<br/>        img {<br/>          float&#58;left;<br/>          padding&#58;5px;<br/>        }<br/>        body {<br/>          background-color&#58;yellow;<br/>        }<br/>                &lt;/css&gt;<br/>    &lt;attr name=&quot;external_state&quot; type=&quot;int&quot;&gt;0&lt;/attr&gt;<br/>    &lt;author&gt;The Pixie&lt;/author&gt;<br/>    &lt;turn type=&quot;int&quot;&gt;0&lt;/turn&gt;<br/>    &lt;subtitle&gt;testing images&lt;/subtitle&gt;<br/>    &lt;start type=&quot;script&quot;&gt;<br/>      addStyleSheet (game&#46;css)<br/>    &lt;/start&gt;<br/>  &lt;/game&gt;<br/>  &lt;object name=&quot;room&quot;&gt;<br/>    &lt;inherit name=&quot;editor_room&quot; /&gt;<br/>    &lt;flag type=&quot;boolean&quot;&gt;false&lt;/flag&gt;<br/>    &lt;description type=&quot;script&quot;&gt;<br/>      if (this&#46;flag) {<br/>        msg (&quot;A big room, with wood-panelled walls&#46; There is a large hole in the west wall, where the wood is blackeden&#46;&quot;)<br/>      }<br/>      else {<br/>        msg (&quot;A big room, with wood-panelled walls&#46;&quot;)<br/>      }<br/>    &lt;/description&gt;<br/>    &lt;object name=&quot;player&quot;&gt;<br/>      &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>      &lt;inherit name=&quot;editor_player&quot; /&gt;<br/>    &lt;/object&gt;<br/>  &lt;/object&gt;<br/>  &lt;command name=&quot;clr&quot;&gt;<br/>    &lt;pattern&gt;clr&lt;/pattern&gt;<br/>    &lt;script&gt;<br/>      ClearScreen<br/>    &lt;/script&gt;<br/>  &lt;/command&gt;<br/>  &lt;function name=&quot;addStyleSheet&quot; parameters=&quot;css&quot;&gt;<br/>    AddExternalStylesheet (&quot;data&#58;text/s,&quot; + urlEncode(css))<br/>  &lt;/function&gt;<br/>  &lt;function name=&quot;urlEncode&quot; parameters=&quot;s&quot; type=&quot;string&quot;&gt;&lt;!&#91;CDATA&#91;<br/>    s = Replace(s, &quot;%&quot;, &quot;%25&quot;)<br/>    s = Replace(s, &quot; &quot;, &quot;%20&quot;)<br/>    s = Replace(s, &quot;\\&quot;&quot;, &quot;%22&quot;)<br/>    s = Replace(s, &quot;#&quot;, &quot;%23&quot;)<br/>    s = Replace(s, &quot;$&quot;, &quot;%24&quot;)<br/>    s = Replace(s, &quot;&amp;&quot;, &quot;%26&quot;)<br/>    s = Replace(s, &quot;'&quot;, &quot;%27&quot;)<br/>    s = Replace(s, &quot;,&quot;, &quot;%2C&quot;)<br/>    s = Replace(s, &quot;&#58;&quot;, &quot;%3A&quot;)<br/>    s = Replace(s, &quot;;&quot;, &quot;%3B&quot;)<br/>    s = Replace(s, &quot;&lt;&quot;, &quot;%3C&quot;)<br/>    s = Replace(s, &quot;=&quot;, &quot;%3D&quot;)<br/>    s = Replace(s, &quot;&gt;&quot;, &quot;%3E&quot;)<br/>    s = Replace(s, &quot;&gt;&quot;, &quot;%3F&quot;)<br/>    s = Replace(s, &quot;{&quot;, &quot;%7B&quot;)<br/>      s = Replace(s, &quot;}&quot;, &quot;%7D&quot;)<br/>    return (s)<br/>  &#93;&#93;&gt;&lt;/function&gt;<br/>&lt;/asl&gt;</code></pre><br/>And a link to the uploaded game. I should have a yellow body element:<br/><br/><!-- m --><a class=\"postlink\" href=\"http://textadventures.co.uk/games/view/obtvjzlemkawtmx3igm-5q/reel\">http://textadventures.co.uk/games/view/ ... gm-5q/reel</a><!-- m -->",
+      "PostDate": "2014-12-17T09:48:39+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32949",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "I seem to have botched it up at some point. I think I did a replace of &quot;css&quot; with &quot;s&quot; in part of it and just messed it all up. If you change the line to this:\n\n[code:2uy9nkqt]AddExternalStylesheet (&quot;data&#58;text/css,&quot; + urlEncode(css))[/code:2uy9nkqt]\nit should work. Even looking at it just now, I thought it looked wrong. Not sure where my head was before.",
+      "EditableFormat": "bbcode",
+      "HTML": "I seem to have botched it up at some point. I think I did a replace of &quot;css&quot; with &quot;s&quot; in part of it and just messed it all up. If you change the line to this:<br/><br/><pre><code>AddExternalStylesheet (&quot;data&#58;text/css,&quot; + urlEncode(css))</code></pre><br/>it should work. Even looking at it just now, I thought it looked wrong. Not sure where my head was before.",
+      "PostDate": "2014-12-17T21:06:09+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32979",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Thanks, works okay on Frefox, Chrome and IE now.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks, works okay on Frefox, Chrome and IE now.",
+      "PostDate": "2014-12-18T13:34:37+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

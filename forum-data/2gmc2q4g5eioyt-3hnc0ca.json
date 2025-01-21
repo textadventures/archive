@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "2gmc2q4g5eioyt-3hnc0ca",
+    "ForumId": "10",
+    "Title": "New RPGCore again…",
+    "LastUpdated": "2022-02-16T11:10:53.8113399Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "3925e19d-13cb-4bad-89cd-9024dd9d12b1",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Yet again, I'm trying to mess around with the parser to make RPG-ish combat a little easier to implement.\r\n\r\nI noticed that turnscripts and commands both have a `script` attribute, and that got me thinking. How about a system where there are different \"phases\". Basically, the game executes each of these in turn, running all active commands (NPCs have commands too) and turnscripts at each phase. So a turnscript with a `resolve` script attribute will run before the player's action. You can also have \"before_(phase)\" and \"after_(phase)\" scripts; which run before or after the specified phase, only if something happened.\r\n\r\n* `turn` phase: the player enters command(s), which are run in sequence.\r\n    * `round` phase, is run once for each of the player's commands\r\n        * `resolve` - match the player's input to a command, resolve objects, and NPCs decide what to do\r\n        * `fast` - some commands might run before the rest of the turn\r\n        * `attack` - make attack rolls etc\r\n        * `script` - normal commands (such as \"go\", \"lookat\") which aren't an attack\r\n        * `defend` - apply damage to the target and display messages\r\n        * `slow` - actions which happen after everything else\r\n        * `_interrupted` - if a player/NPC's \"interrupt\" flag is set, this phase runs instead of attack/script/slow phases. This could be used so that someone can't pick a lock while being attacked, for example; or you could have a fast \"distract\" command that can prevent an enemy attacking\r\n        * `final` - cleaning up temporary variables, etc\r\n\r\nIn this setup, you would use `after_round` for something like a turn counter, and `after_turn` for updating the sidebar and similar things. Turnscripts could be repurposed as status effects; equipped to the player or NPCs, or to a room. Weapons/equipment could also have the same scripts, which would be run each turn. This makes it easy for the user to create a status effect that messes with a particular part of the turn sequence, without needing to adapt it for individual commands.\r\n\r\nWhat do you think? I hope it's a little more streamlined than my last attempt, while still providing enough options to hang things on it.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Yet again, I'm trying to mess around with the parser to make RPG-ish combat a little easier to implement.</p>\n<p>I noticed that turnscripts and commands both have a <code>script</code> attribute, and that got me thinking. How about a system where there are different \"phases\". Basically, the game executes each of these in turn, running all active commands (NPCs have commands too) and turnscripts at each phase. So a turnscript with a <code>resolve</code> script attribute will run before the player's action. You can also have \"before_(phase)\" and \"after_(phase)\" scripts; which run before or after the specified phase, only if something happened.</p>\n<ul>\n<li><code>turn</code> phase: the player enters command(s), which are run in sequence.\n<ul>\n<li><code>round</code> phase, is run once for each of the player's commands\n<ul>\n<li><code>resolve</code> - match the player's input to a command, resolve objects, and NPCs decide what to do</li>\n<li><code>fast</code> - some commands might run before the rest of the turn</li>\n<li><code>attack</code> - make attack rolls etc</li>\n<li><code>script</code> - normal commands (such as \"go\", \"lookat\") which aren't an attack</li>\n<li><code>defend</code> - apply damage to the target and display messages</li>\n<li><code>slow</code> - actions which happen after everything else</li>\n<li><code>_interrupted</code> - if a player/NPC's \"interrupt\" flag is set, this phase runs instead of attack/script/slow phases. This could be used so that someone can't pick a lock while being attacked, for example; or you could have a fast \"distract\" command that can prevent an enemy attacking</li>\n<li><code>final</code> - cleaning up temporary variables, etc</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n<p>In this setup, you would use <code>after_round</code> for something like a turn counter, and <code>after_turn</code> for updating the sidebar and similar things. Turnscripts could be repurposed as status effects; equipped to the player or NPCs, or to a room. Weapons/equipment could also have the same scripts, which would be run each turn. This makes it easy for the user to create a status effect that messes with a particular part of the turn sequence, without needing to adapt it for individual commands.</p>\n<p>What do you think? I hope it's a little more streamlined than my last attempt, while still providing enough options to hang things on it.</p>\n\n",
+      "PostDate": "2022-02-16T11:10:53.8113399Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "1fc1d979-2787-44e9-a0b4-bb5c710e0b3c",
+      "UserId": 326173,
+      "Username": "Curt A. P.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/bc1d5d57408cf4d13f9d9f23c1e3dc56?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> What do you think? I hope it's a little more streamlined than my last attempt, while still providing enough options to hang things on it.\r\n\r\nIt looks good. I would love to see an example of this. A turnscript is also  an object. Is it a single turnscript(<code>turnround</code>) with multiple script attributes attached? <code>turnround.resolve => {</code>\r\nBecause in some cases I have attributes attached to a command.\r\n\r\nI would call it <code>action</code> instead of <code>attack</code> and the action can be an attack, using items, or running away, etc.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>What do you think? I hope it's a little more streamlined than my last attempt, while still providing enough options to hang things on it.</p>\n</blockquote>\n<p>It looks good. I would love to see an example of this. A turnscript is also  an object. Is it a single turnscript(<code>turnround</code>) with multiple script attributes attached? <code>turnround.resolve =&gt; {</code><br>\nBecause in some cases I have attributes attached to a command.</p>\n<p>I would call it <code>action</code> instead of <code>attack</code> and the action can be an attack, using items, or running away, etc.</p>\n\n",
+      "PostDate": "2022-02-17T08:47:25.443743Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "269ff73a-1224-4f15-b54c-de8ea306a4b4",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> Is it a single turnscript(turnround) with multiple script attributes attached?\r\n\r\nThat's the idea. Any given effect can use some or all of them.\r\n\r\n> I would call it action instead of attack and the action can be an attack, using items, or running away, etc.\r\n\r\nI separated `attack` for attacks from `script` for non-attack actions because I figure that status effects that affect the player's actions will most likely work differently for attacks. For example, the classic Final Fantasy style \"confusion\" status might have:\r\n```\r\nconfuse.after_attack => {\r\n  targets = FilterByNotAttribute (ScopeReachable(), \"hp\", null))\r\n  targets = FilterByNotAttribute (targets, \"hp\", 0))\r\n  attack.target = PickOneObject (targets)\r\n}\r\n```\r\nThe `attack` phase could also be used for non-physical attacks; but it seems sensible to distinguish between actions that target another character and actions that don't.\r\n\r\nThe idea is that with 'combat' actions, it runs the `attack` phase for the attacker, and the `defend` phase for the target (so status effects equipped on either character are handled sensibly).\r\n\r\nIf you can think of a better name, I'd appreciate it. But something generic like `action` could lead to confusion with actions that don't target another character.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>Is it a single turnscript(turnround) with multiple script attributes attached?</p>\n</blockquote>\n<p>That's the idea. Any given effect can use some or all of them.</p>\n<blockquote>\n<p>I would call it action instead of attack and the action can be an attack, using items, or running away, etc.</p>\n</blockquote>\n<p>I separated <code>attack</code> for attacks from <code>script</code> for non-attack actions because I figure that status effects that affect the player's actions will most likely work differently for attacks. For example, the classic Final Fantasy style \"confusion\" status might have:</p>\n<pre><code>confuse.after_attack =&gt; {\n  targets = FilterByNotAttribute (ScopeReachable(), \"hp\", null))\n  targets = FilterByNotAttribute (targets, \"hp\", 0))\n  attack.target = PickOneObject (targets)\n}\n</code></pre>\n<p>The <code>attack</code> phase could also be used for non-physical attacks; but it seems sensible to distinguish between actions that target another character and actions that don't.</p>\n<p>The idea is that with 'combat' actions, it runs the <code>attack</code> phase for the attacker, and the <code>defend</code> phase for the target (so status effects equipped on either character are handled sensibly).</p>\n<p>If you can think of a better name, I'd appreciate it. But something generic like <code>action</code> could lead to confusion with actions that don't target another character.</p>\n\n",
+      "PostDate": "2022-02-17T10:57:53.7117555Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "806c9d80-e5b9-441b-a595-348a4bbf5e51",
+      "UserId": 326173,
+      "Username": "Curt A. P.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/bc1d5d57408cf4d13f9d9f23c1e3dc56?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> I separated attack for attacks from script for non-attack actions because I figure that status effects that affect the player's actions will most likely work differently for attacks. \r\n>\r\n> The attack phase could also be used for non-physical attacks; but it seems sensible to distinguish between actions that target another character and actions that don't.\r\n\r\nI like the idea that both, non-attack and  attack actions can or cannot affect one or more entities. Like, using a sçroll of fire or throwing a granade. In many cases I would assume you shouldn't have the attack <b> and </b> non-attack. That's why I think to put 'em together and distinguish afterwards. \r\n\r\n> If you can think of a better name, I'd appreciate it. But something generic like action could lead to confusion with actions that don't target another character.\r\n\r\nI can't think of anything more suiting for this combined case, just thinking it is not confusing at all.\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>I separated attack for attacks from script for non-attack actions because I figure that status effects that affect the player's actions will most likely work differently for attacks.</p>\n<p>The attack phase could also be used for non-physical attacks; but it seems sensible to distinguish between actions that target another character and actions that don't.</p>\n</blockquote>\n<p>I like the idea that both, non-attack and  attack actions can or cannot affect one or more entities. Like, using a sçroll of fire or throwing a granade. In many cases I would assume you shouldn't have the attack <b> and </b> non-attack. That's why I think to put 'em together and distinguish afterwards.</p>\n<blockquote>\n<p>If you can think of a better name, I'd appreciate it. But something generic like action could lead to confusion with actions that don't target another character.</p>\n</blockquote>\n<p>I can't think of anything more suiting for this combined case, just thinking it is not confusing at all.</p>\n\n",
+      "PostDate": "2022-02-17T15:11:01.1015254Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

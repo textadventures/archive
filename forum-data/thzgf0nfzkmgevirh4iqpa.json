@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "thzgf0nfzkmgevirh4iqpa",
+    "ForumId": "10",
+    "Title": "checking a range of rooms?",
+    "LastUpdated": "2020-02-14T23:19:09.7371727Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "4300b22f-485f-4461-a448-17d3550012d2",
+      "UserId": 454326,
+      "Username": "Brian5757",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/411c3e8cd4782d4a996f292940a61069?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Is there anyway I can check that the player is not in a range of rooms? In this case I need to check if the player is not in the Dense Woods which are rooms Dense Woods 1, Dense Woods 2...Dense Woods 6\r\nThe only way I know of to do this is with a lot if 'IF' statements so I was wondering if there was an alternative code for this check.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Is there anyway I can check that the player is not in a range of rooms? In this case I need to check if the player is not in the Dense Woods which are rooms Dense Woods 1, Dense Woods 2...Dense Woods 6<br>\nThe only way I know of to do this is with a lot if 'IF' statements so I was wondering if there was an alternative code for this check.</p>\n\n",
+      "PostDate": "2020-02-14T23:19:09.7371727Z",
+      "LastEditDate": "2020-02-14T23:19:49.625528Z",
+      "link": null
+    },
+    {
+      "PostId": "b45ee188-f572-4716-b1d8-4a4789db8eca",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "If you give those rooms an attribute to identify them, you can check that. Say you gave all those rooms an attribute named \"densewoods\" with the value `true`, then you could do:\r\n\r\n```\r\nif (GetBoolean (game.pov.parent, \"densewoods\")) {\r\n  // your code\r\n}\r\n```\r\n\r\nAlternatively, you can check if `game.pov.parent` (the current room) is in a list. The easiest way is probably by getting its name, so that you can check if it's in a stringlist. Like this:\r\n```\r\nif (ListContains (Split(\"Dense Woods 1;Dense Woods 2;Dense Woods 3;Dense Woods 4;Dense Woods 5;Dense Woods 6\"), game.pov.parent.name)) {\r\n  // your code\r\n}\r\n```\r\nThat method is nice because it lets you check against any list of room names.\r\n\r\nBut if they all start with the same text, you could do:\r\n```\r\nif (StartsWith (game.pov.parent.name, \"Dense Woods \")) {\r\n  // your code\r\n}\r\n```\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>If you give those rooms an attribute to identify them, you can check that. Say you gave all those rooms an attribute named \"densewoods\" with the value <code>true</code>, then you could do:</p>\n<pre><code>if (GetBoolean (game.pov.parent, \"densewoods\")) {\n  // your code\n}\n</code></pre>\n<p>Alternatively, you can check if <code>game.pov.parent</code> (the current room) is in a list. The easiest way is probably by getting its name, so that you can check if it's in a stringlist. Like this:</p>\n<pre><code>if (ListContains (Split(\"Dense Woods 1;Dense Woods 2;Dense Woods 3;Dense Woods 4;Dense Woods 5;Dense Woods 6\"), game.pov.parent.name)) {\n  // your code\n}\n</code></pre>\n<p>That method is nice because it lets you check against any list of room names.</p>\n<p>But if they all start with the same text, you could do:</p>\n<pre><code>if (StartsWith (game.pov.parent.name, \"Dense Woods \")) {\n  // your code\n}\n</code></pre>\n\n",
+      "PostDate": "2020-02-15T01:00:25.5558641Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "3760f6d1-5fc0-4b3a-9720-430b9b1f8747",
+      "UserId": 454326,
+      "Username": "Brian5757",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/411c3e8cd4782d4a996f292940a61069?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks mrangel.\r\n\r\nGood to know there are several options I can chose from.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks mrangel.</p>\n<p>Good to know there are several options I can chose from.</p>\n\n",
+      "PostDate": "2020-02-15T09:49:13.5070183Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "31507189-b20a-47af-aa65-fccd28f57e79",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Oh, there's also `switch`, which might be more efficient in many cases.\r\n\r\nFor example, if I want to do one thing when the player is upstairs in a house and another when they're downstairs, I could write:\r\n```\r\nswitch (game.pov.parent) {\r\n  case (Master Bedroom, Alice Bedroom, Spare Room, Bathroom) {\r\n    // do one thing\r\n  }\r\n  case (Lounge, Kitchen, Hallway) {\r\n    // do  the other thing\r\n  }\r\n  case (Basement) {\r\n    // another thing\r\n  }\r\n  default {\r\n    // the player isn't in the house\r\n  }\r\n}\r\n```\r\n\r\nAlternatively, you could put all of the rooms inside another room which the player never sees. Then you can just do:\r\n```\r\nif (Contains (House, game.pov)) {\r\n  // your code\r\n}\r\n```\r\nThis is probably the easiest to write, as you can move the rooms around using the GUI. However, it doesn't work if you have non-geographic lists of rooms (for example \"haunted rooms\" or \"dark rooms\"), because it doesn't work when a room can be in 2 different lists for different situations.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Oh, there's also <code>switch</code>, which might be more efficient in many cases.</p>\n<p>For example, if I want to do one thing when the player is upstairs in a house and another when they're downstairs, I could write:</p>\n<pre><code>switch (game.pov.parent) {\n  case (Master Bedroom, Alice Bedroom, Spare Room, Bathroom) {\n    // do one thing\n  }\n  case (Lounge, Kitchen, Hallway) {\n    // do  the other thing\n  }\n  case (Basement) {\n    // another thing\n  }\n  default {\n    // the player isn't in the house\n  }\n}\n</code></pre>\n<p>Alternatively, you could put all of the rooms inside another room which the player never sees. Then you can just do:</p>\n<pre><code>if (Contains (House, game.pov)) {\n  // your code\n}\n</code></pre>\n<p>This is probably the easiest to write, as you can move the rooms around using the GUI. However, it doesn't work if you have non-geographic lists of rooms (for example \"haunted rooms\" or \"dark rooms\"), because it doesn't work when a room can be in 2 different lists for different situations.</p>\n\n",
+      "PostDate": "2020-02-15T12:47:52.0486023Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "183a77c7-468b-42c6-9162-3ce3500e97ef",
+      "UserId": 454326,
+      "Username": "Brian5757",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/411c3e8cd4782d4a996f292940a61069?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi mrangel\r\nI have not used 'switch' in my code but I can see how useful it can be.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi mrangel<br>\nI have not used 'switch' in my code but I can see how useful it can be.</p>\n\n",
+      "PostDate": "2020-02-16T00:33:01.6779256Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

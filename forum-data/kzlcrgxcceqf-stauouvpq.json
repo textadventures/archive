@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "kzlcrgxcceqf-stauouvpq",
+    "ForumId": "10",
+    "Title": "I want to create a game with a display based on rooms with the map.",
+    "LastUpdated": "2017-12-12T02:58:53.7023768Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "fb5ca0d8-acea-480c-8114-c76bb026d7b9",
+      "UserId": 269531,
+      "Username": "RagnorokX",
+      "AvatarUrl": "http://i.imgur.com/ank0pTCb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I have 207 rooms to fit a 23 by 9 grid of rooms on the display. Each one is titled Tile1, Tile2, Tile3, etc. Since this is going to be a display, I need some way to either fit these into lists(23 lists for each of the x columns,) or to create a function that can return the name of the necessary tile with an x and a y value. The only problem is, I have no idea how to combine Tile with a Number to get an object name necessary for either putting the rooms into an object list or for a function to return them. Help?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I have 207 rooms to fit a 23 by 9 grid of rooms on the display. Each one is titled Tile1, Tile2, Tile3, etc. Since this is going to be a display, I need some way to either fit these into lists(23 lists for each of the x columns,) or to create a function that can return the name of the necessary tile with an x and a y value. The only problem is, I have no idea how to combine Tile with a Number to get an object name necessary for either putting the rooms into an object list or for a function to return them. Help?</p>\n\n",
+      "PostDate": "2017-12-12T02:58:53.7023768Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "f4530ed3-1aae-4371-9105-daf72bc5b707",
+      "UserId": 318253,
+      "Username": "K.V.",
+      "AvatarUrl": "http://i.imgur.com/FOIjtApb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello.\r\n\r\nSomething like this?  (Check out the debugger after play begins.  The rooms each have ```x_coordinate``` and ```y_coordinate```, and the game object will have your 23 lists of rooms set up, with 9 rooms on each.\r\n\r\n\r\n```\r\n<!--Saved by Quest 5.7.6404.15496-->\r\n<asl version=\"550\">\r\n  <include ref=\"English.aslx\" />\r\n  <include ref=\"Core.aslx\" />\r\n  <game name=\"Twenty-three BY Nine (207 rooms)\">\r\n    <gameid>cd9ae2ea-171e-481e-8eae-e022952ce0b3</gameid>\r\n    <version>1.0</version>\r\n    <firstpublished>2017</firstpublished>\r\n    <start type=\"script\">\r\n      MakeGrids\r\n    </start>\r\n  </game>\r\n  <object name=\"room\">\r\n    <inherit name=\"editor_room\" />\r\n    <enter type=\"script\">\r\n      targetRoom = FindRoom (5, 1)\r\n      msg (targetRoom)\r\n    </enter>\r\n    <object name=\"player\">\r\n      <inherit name=\"editor_object\" />\r\n      <inherit name=\"editor_player\" />\r\n    </object>\r\n  </object>\r\n  <object name=\"Tile\">\r\n    <inherit name=\"editor_room\" />\r\n  </object>\r\n  <function name=\"MakeGrids\"><![CDATA[\r\n    i = 0\r\n    while (i<207) {\r\n      newRoom = CloneObject (Tile)\r\n      newRoom.x_coordinate = i+1\r\n      newRoom.y_coordinate = i/9+1\r\n      nol = NewObjectList()\r\n      // set (game, \"room_list\"+(i/9+1), nol)\r\n      if (i%9 = 0) {\r\n        newArea = \"area\"+(i/9+1)\r\n        newArea = NewObjectList()\r\n      }\r\n      list add (newArea, newRoom)\r\n      set (game, \"room_list\"+(i/9+1), newArea)\r\n      i = i + 1\r\n    }\r\n  ]]></function>\r\n  <function name=\"FindRoom\" parameters=\"x, y\" type=\"object\">\r\n    foreach (obj, AllObjects()) {\r\n      if (HasAttribute(obj, \"x_coordinate\")) {\r\n        if (x = obj.x_coordinate) {\r\n          if (y = obj.y_coordinate) {\r\n            return (obj)\r\n          }\r\n        }\r\n      }\r\n    }\r\n  </function>\r\n</asl>\r\n```\r\n\r\n---\r\n![image](https://user-images.githubusercontent.com/30656341/33873525-f1754834-dee0-11e7-957a-e556713d544a.png)\r\n\r\n---\r\n![image](https://user-images.githubusercontent.com/30656341/33873537-fed889b4-dee0-11e7-9dbf-1551503587bd.png)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello.</p>\n<p>Something like this?  (Check out the debugger after play begins.  The rooms each have <code>x_coordinate</code> and <code>y_coordinate</code>, and the game object will have your 23 lists of rooms set up, with 9 rooms on each.</p>\n<pre><code>&lt;!--Saved by Quest 5.7.6404.15496--&gt;\n&lt;asl version=\"550\"&gt;\n  &lt;include ref=\"English.aslx\" /&gt;\n  &lt;include ref=\"Core.aslx\" /&gt;\n  &lt;game name=\"Twenty-three BY Nine (207 rooms)\"&gt;\n    &lt;gameid&gt;cd9ae2ea-171e-481e-8eae-e022952ce0b3&lt;/gameid&gt;\n    &lt;version&gt;1.0&lt;/version&gt;\n    &lt;firstpublished&gt;2017&lt;/firstpublished&gt;\n    &lt;start type=\"script\"&gt;\n      MakeGrids\n    &lt;/start&gt;\n  &lt;/game&gt;\n  &lt;object name=\"room\"&gt;\n    &lt;inherit name=\"editor_room\" /&gt;\n    &lt;enter type=\"script\"&gt;\n      targetRoom = FindRoom (5, 1)\n      msg (targetRoom)\n    &lt;/enter&gt;\n    &lt;object name=\"player\"&gt;\n      &lt;inherit name=\"editor_object\" /&gt;\n      &lt;inherit name=\"editor_player\" /&gt;\n    &lt;/object&gt;\n  &lt;/object&gt;\n  &lt;object name=\"Tile\"&gt;\n    &lt;inherit name=\"editor_room\" /&gt;\n  &lt;/object&gt;\n  &lt;function name=\"MakeGrids\"&gt;&lt;![CDATA[\n    i = 0\n    while (i&lt;207) {\n      newRoom = CloneObject (Tile)\n      newRoom.x_coordinate = i+1\n      newRoom.y_coordinate = i/9+1\n      nol = NewObjectList()\n      // set (game, \"room_list\"+(i/9+1), nol)\n      if (i%9 = 0) {\n        newArea = \"area\"+(i/9+1)\n        newArea = NewObjectList()\n      }\n      list add (newArea, newRoom)\n      set (game, \"room_list\"+(i/9+1), newArea)\n      i = i + 1\n    }\n  ]]&gt;&lt;/function&gt;\n  &lt;function name=\"FindRoom\" parameters=\"x, y\" type=\"object\"&gt;\n    foreach (obj, AllObjects()) {\n      if (HasAttribute(obj, \"x_coordinate\")) {\n        if (x = obj.x_coordinate) {\n          if (y = obj.y_coordinate) {\n            return (obj)\n          }\n        }\n      }\n    }\n  &lt;/function&gt;\n&lt;/asl&gt;\n</code></pre>\n<hr>\n<p><img src=\"https://user-images.githubusercontent.com/30656341/33873525-f1754834-dee0-11e7-957a-e556713d544a.png\" alt=\"image\"></p>\n<hr>\n<p><img src=\"https://user-images.githubusercontent.com/30656341/33873537-fed889b4-dee0-11e7-9dbf-1551503587bd.png\" alt=\"image\"></p>\n\n",
+      "PostDate": "2017-12-12T07:59:08.5548293Z",
+      "LastEditDate": "2017-12-12T08:06:35.9656925Z",
+      "link": null
+    },
+    {
+      "PostId": "ebe4ee24-71e6-4d20-824e-c14c15dcf328",
+      "UserId": 267336,
+      "Username": "jmnevil54",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5d73d7ec1dbe20a5cb46f02a6d53f187?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I would just make a string list. But that would be a really long list.\r\nAlso, it is possible to get things by their name. \"GetObject\"...",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I would just make a string list. But that would be a really long list.<br>\nAlso, it is possible to get things by their name. \"GetObject\"...</p>\n\n",
+      "PostDate": "2017-12-12T17:22:52.1866762Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "a21b9cb8-da70-4c35-a769-977a76444388",
+      "UserId": 318253,
+      "Username": "K.V.",
+      "AvatarUrl": "http://i.imgur.com/FOIjtApb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Oh, yeah.  I put that in there, but forgot to point it out.\r\n\r\n#### The function:\r\n```\r\n  <function name=\"FindRoom\" parameters=\"x, y\" type=\"object\">\r\n    foreach (obj, AllObjects()) {\r\n      if (HasAttribute(obj, \"x_coordinate\")) {\r\n        if (x = obj.x_coordinate) {\r\n          if (y = obj.y_coordinate) {\r\n            return (obj)\r\n          }\r\n        }\r\n      }\r\n    }\r\n  </function>\r\n```\r\n\r\n\r\n#### To use the function:\r\n```\r\ntargetRoom = FindRoom (5, 1)\r\nmsg (targetRoom)\r\n```\r\n\r\n---\r\n\r\n#### The output:\r\n\r\nObject: Tile5",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Oh, yeah.  I put that in there, but forgot to point it out.</p>\n<h4>The function:</h4>\n<pre><code>  &lt;function name=\"FindRoom\" parameters=\"x, y\" type=\"object\"&gt;\n    foreach (obj, AllObjects()) {\n      if (HasAttribute(obj, \"x_coordinate\")) {\n        if (x = obj.x_coordinate) {\n          if (y = obj.y_coordinate) {\n            return (obj)\n          }\n        }\n      }\n    }\n  &lt;/function&gt;\n</code></pre>\n<h4>To use the function:</h4>\n<pre><code>targetRoom = FindRoom (5, 1)\nmsg (targetRoom)\n</code></pre>\n<hr>\n<h4>The output:</h4>\n<p>Object: Tile5</p>\n\n",
+      "PostDate": "2017-12-12T18:14:28.9807609Z",
+      "LastEditDate": "2017-12-12T18:16:12.3954725Z",
+      "link": null
+    },
+    {
+      "PostId": "de11cbb9-d1fe-4b60-afb7-6dfb3a6c1f09",
+      "UserId": 269531,
+      "Username": "RagnorokX",
+      "AvatarUrl": "http://i.imgur.com/ank0pTCb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You are AWESOME!\r\nThanks a lot dude.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You are AWESOME!<br>\nThanks a lot dude.</p>\n\n",
+      "PostDate": "2017-12-13T02:46:42.6666335Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "9cb9550c-4958-434f-bd73-bb30f9f8cb15",
+      "UserId": 318253,
+      "Username": "K.V.",
+      "AvatarUrl": "http://i.imgur.com/FOIjtApb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "'Twas nada.\r\n\r\nThe Pixie, mrangel, and HK slapped me around for a month until I learned how to do that.\r\n\r\nYou are very welcome, though!\r\n\r\nOnce you're ready to set up objects to clone into the rooms (which would probably be the easiest way to handle nearly everything in the game, once all is said and done), I bet one of the aforementioned notables will pop in with some SUPER-AWESOME scripting (or with links to said scripts).\r\n\r\n---\r\n> \"The game is on!\"\r\n<sub>    -Watson's sidekick</sub>",
+      "EditableFormat": "markdown",
+      "HTML": "<p>'Twas nada.</p>\n<p>The Pixie, mrangel, and HK slapped me around for a month until I learned how to do that.</p>\n<p>You are very welcome, though!</p>\n<p>Once you're ready to set up objects to clone into the rooms (which would probably be the easiest way to handle nearly everything in the game, once all is said and done), I bet one of the aforementioned notables will pop in with some SUPER-AWESOME scripting (or with links to said scripts).</p>\n<hr>\n<blockquote>\n<p>\"The game is on!\"<br>\n<sub>    -Watson's sidekick</sub></p>\n</blockquote>\n\n",
+      "PostDate": "2017-12-13T02:59:58.8403314Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

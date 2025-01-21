@@ -1,0 +1,76 @@
+{
+  "Topic": {
+    "TopicId": "3r4uickbyec3phecg_l-ia",
+    "ForumId": "10",
+    "Title": "Inventory bug or am i doing something wrong?",
+    "LastUpdated": "2017-05-30T00:20:12.5456997Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "a3950ebe-2b3a-4594-ab69-9adacb2110ea",
+      "UserId": 309671,
+      "Username": "Tato64",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/bd34de6362885249b9be455851819dd3?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "So i made this command that basically goes like \r\n\"Take X\"\r\nIf it's the first time:\r\nAdds X to inventory and prompts \"I took X\"\r\nelse\r\nIt prompts \"I already have all the X i need!\"\r\n\r\nThing is, after that, if i input \"Inventory\" it says \"You arent carrying anything\"\r\n\r\nIs it a bug or am i doing something wrong?\r\n\r\n(I know Quest has a built-in \"Take\" command, but the game im working on is in spanish, problem is the spanish word it uses has a whole different meaning in Argentinian spanish, maybe there's a way to replace that word?)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>So i made this command that basically goes like<br>\n\"Take X\"<br>\nIf it's the first time:<br>\nAdds X to inventory and prompts \"I took X\"<br>\nelse<br>\nIt prompts \"I already have all the X i need!\"</p>\n<p>Thing is, after that, if i input \"Inventory\" it says \"You arent carrying anything\"</p>\n<p>Is it a bug or am i doing something wrong?</p>\n<p>(I know Quest has a built-in \"Take\" command, but the game im working on is in spanish, problem is the spanish word it uses has a whole different meaning in Argentinian spanish, maybe there's a way to replace that word?)</p>\n\n",
+      "PostDate": "2017-05-30T00:20:12.5456997Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "d713a159-0e82-460e-9ccc-44abe023c7e6",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "hmm... there's a lot of built-in underneath coding for the 'take' feature/ability ...\r\n\r\nI'm going to guess that it has to do with this:\r\n\r\nthe conceptual inventory is just the 'player' Player Object: any Object contained within the 'player' Object is in the 'inventory'\r\n\r\nbut, there's also likely a hidden 'inventory' Objectlist Attribute, and so, since you've only put/moved/set the Object inside of the 'player' Object, it's probably using the 'inventory' Objectlist Attribute to check for what items/Objects you got (but there's been no updating of it and/or you've not added your Object name to this 'inventory' Objectlist Attribute), when you do the 'inventory' command, and thus it says you don't have anything in the 'inventory'.\r\n\r\nAlso... make sure to check that it's successfully moving your Object into your 'player' Player Object, as it might not even be doing this... and if it's not, then that would also possibly be why the 'inventory' command is saying you got nothing in it too...\r\n\r\nyou can do this check this way (after you've done the moving Script/Function/command of course):\r\n\r\nmsg (\"The location of your Object is: \" + NAME_OF_YOUR_OBJECT.parent)\r\n\r\n// if it says 'player' (or whatever you renamed the 'player' Player Object as, meh), then you're good with this (we narrowed down the issue): something else is causing the 'inventory' command to say you got nothing.\r\n\r\n// if it doesn't... we need to get this working... and even then... you may still have the 'inventory' command saying you got nothing...\r\n\r\n------\r\n\r\neither, try to work with the built-in 'take' feature/ability (don't over-ride/over-write it!), or you got to figure out how it works (if my guessing on how it works above, is wrong, which could be likely, lol) and do all the things you need to do for it to work.\r\n\r\n-----\r\n\r\nor...\r\n\r\nyou can modify the 'take' (but this will be universal if you modify it's code/scripting of it - 'take' is a built-in 'Command' Element along with also being a built-in 'Verb' Element too - 'Verbs' actually are a 'Command', unless you only modify it for a specific Object):\r\n\r\nglobally/unversally change take:\r\n\r\nin the bottom left corner is: filter -> show library elements -> (toggle this on) -> then above in the left side's 'tree of stuff', you'll now see light grey text, this is all of the built-in stuff, which you can then modify (via doing this through the GUI/Editor, it forces you to copy, so you're not messing up the actual quest files)\r\n\r\nlocally (specific Object) change take:\r\n\r\n(I'm not familiar with the GUI/Editor... and am too lazy/tired to open it up to see how this is done exactly)\r\n\r\n-----\r\n\r\nor... maybe you can do something like this:\r\n\r\n```\r\n<command name=\"custom_take_command\">\r\n  <pattern>custom_take #object_parameter#</pattern> // there might be parsing issues (it might try to do the built-in 'take' Command instead of our (custom) 'custom_take_command' Command ... so I put in an underscore to be safe\r\n  <script>\r\n    firsttime {\r\n      do (object_parameter, \"take\") // make sure your Objects have the 'take' Verb toggled on for them if doing with the GUI/Editor or do the same in-code\r\n      msg (\"I took \" + object_parameter.name)\r\n    } otherwise {\r\n      msg (\"I already have all the \" + object_paramter.name + \" I need!\")\r\n    }\r\n  </script>\r\n</command>\r\n```\r\n\r\n-----------\r\n\r\nlet me know if none of this works and/or if you need help with any of it (if you're getting errors or whatever problems with it)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>hmm... there's a lot of built-in underneath coding for the 'take' feature/ability ...</p>\n<p>I'm going to guess that it has to do with this:</p>\n<p>the conceptual inventory is just the 'player' Player Object: any Object contained within the 'player' Object is in the 'inventory'</p>\n<p>but, there's also likely a hidden 'inventory' Objectlist Attribute, and so, since you've only put/moved/set the Object inside of the 'player' Object, it's probably using the 'inventory' Objectlist Attribute to check for what items/Objects you got (but there's been no updating of it and/or you've not added your Object name to this 'inventory' Objectlist Attribute), when you do the 'inventory' command, and thus it says you don't have anything in the 'inventory'.</p>\n<p>Also... make sure to check that it's successfully moving your Object into your 'player' Player Object, as it might not even be doing this... and if it's not, then that would also possibly be why the 'inventory' command is saying you got nothing in it too...</p>\n<p>you can do this check this way (after you've done the moving Script/Function/command of course):</p>\n<p>msg (\"The location of your Object is: \" + NAME_OF_YOUR_OBJECT.parent)</p>\n<p>// if it says 'player' (or whatever you renamed the 'player' Player Object as, meh), then you're good with this (we narrowed down the issue): something else is causing the 'inventory' command to say you got nothing.</p>\n<p>// if it doesn't... we need to get this working... and even then... you may still have the 'inventory' command saying you got nothing...</p>\n<hr>\n<p>either, try to work with the built-in 'take' feature/ability (don't over-ride/over-write it!), or you got to figure out how it works (if my guessing on how it works above, is wrong, which could be likely, lol) and do all the things you need to do for it to work.</p>\n<hr>\n<p>or...</p>\n<p>you can modify the 'take' (but this will be universal if you modify it's code/scripting of it - 'take' is a built-in 'Command' Element along with also being a built-in 'Verb' Element too - 'Verbs' actually are a 'Command', unless you only modify it for a specific Object):</p>\n<p>globally/unversally change take:</p>\n<p>in the bottom left corner is: filter -&gt; show library elements -&gt; (toggle this on) -&gt; then above in the left side's 'tree of stuff', you'll now see light grey text, this is all of the built-in stuff, which you can then modify (via doing this through the GUI/Editor, it forces you to copy, so you're not messing up the actual quest files)</p>\n<p>locally (specific Object) change take:</p>\n<p>(I'm not familiar with the GUI/Editor... and am too lazy/tired to open it up to see how this is done exactly)</p>\n<hr>\n<p>or... maybe you can do something like this:</p>\n<pre><code>&lt;command name=\"custom_take_command\"&gt;\n  &lt;pattern&gt;custom_take #object_parameter#&lt;/pattern&gt; // there might be parsing issues (it might try to do the built-in 'take' Command instead of our (custom) 'custom_take_command' Command ... so I put in an underscore to be safe\n  &lt;script&gt;\n    firsttime {\n      do (object_parameter, \"take\") // make sure your Objects have the 'take' Verb toggled on for them if doing with the GUI/Editor or do the same in-code\n      msg (\"I took \" + object_parameter.name)\n    } otherwise {\n      msg (\"I already have all the \" + object_paramter.name + \" I need!\")\n    }\n  &lt;/script&gt;\n&lt;/command&gt;\n</code></pre>\n<hr>\n<p>let me know if none of this works and/or if you need help with any of it (if you're getting errors or whatever problems with it)</p>\n\n",
+      "PostDate": "2017-05-30T02:00:00.9118787Z",
+      "LastEditDate": "2017-05-30T02:13:39.2464116Z"
+    },
+    {
+      "PostId": "a67e4ae5-fb63-48c7-b9b2-b92faee9bb79",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "P.S.\r\n\r\nyou can also copy the 'take' Command's scripting and paste it into a new Command, study how it works, and modify it to doing what you want, while leaving in all the rest that is needed, so that the 'inventory' command will work correctly.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>P.S.</p>\n<p>you can also copy the 'take' Command's scripting and paste it into a new Command, study how it works, and modify it to doing what you want, while leaving in all the rest that is needed, so that the 'inventory' command will work correctly.</p>\n\n",
+      "PostDate": "2017-05-30T02:16:39.6174643Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "089bae7d-e2f6-4223-8ef2-642a7b3c1074",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "If you are using the desktop version, you can modify the language file. You will probably find them here:\r\nC:\\Program Files (x86)\\Quest 5\\Core\\Languages\r\n\r\nCopy the spanish.aslx file to your game folder, and open it in a text editor, such as Notepad. There is some help on what you need to do here, but I guess most of it is already done:\r\nhttp://docs.textadventures.co.uk/quest/translating_quest.html\r\n\r\nGive the file a new name, argentinian_spanish.aslx. Then open your game withthe text editor, and on around the third line you will see a reference to the spanish file. Change that to argentinian_spanish.aslx, and it will use your modified version instead.\r\n\r\nGive a shout if you need more detail.\r\n\r\nIf you are using the web version, that is not an option. Despite what hegemonkhan says, there is no objectlist attribute, so that is not the issue. Exactl;y how is your command set up? What is the pattern? If you click on Code view, could you copy and paste the code into a post?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>If you are using the desktop version, you can modify the language file. You will probably find them here:<br>\nC:\\Program Files (x86)\\Quest 5\\Core\\Languages</p>\n<p>Copy the spanish.aslx file to your game folder, and open it in a text editor, such as Notepad. There is some help on what you need to do here, but I guess most of it is already done:<br>\nhttp://docs.textadventures.co.uk/quest/translating_quest.html</p>\n<p>Give the file a new name, argentinian_spanish.aslx. Then open your game withthe text editor, and on around the third line you will see a reference to the spanish file. Change that to argentinian_spanish.aslx, and it will use your modified version instead.</p>\n<p>Give a shout if you need more detail.</p>\n<p>If you are using the web version, that is not an option. Despite what hegemonkhan says, there is no objectlist attribute, so that is not the issue. Exactl;y how is your command set up? What is the pattern? If you click on Code view, could you copy and paste the code into a post?</p>\n\n",
+      "PostDate": "2017-05-30T07:11:03.4996121Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "b61f234a-22c9-455b-b060-15059d06dca6",
+      "UserId": 307193,
+      "Username": "lordpalandus",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/637feacf8e8a52834eaa284e96f879bf?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Can also just use the script \"add to inventory\" to add the object to your inventory. That I'd say is the simplest option available.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Can also just use the script \"add to inventory\" to add the object to your inventory. That I'd say is the simplest option available.</p>\n\n",
+      "PostDate": "2017-05-30T09:48:40.1245955Z",
+      "LastEditDate": null
+    }
+  ]
+}

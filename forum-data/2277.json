@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "2277",
+    "ForumId": "10",
+    "Title": "Rounding up numbers",
+    "LastUpdated": "2011-04-28T00:18:33+01:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "17332",
+      "UserId": 0,
+      "Username": "SquirrelUK",
+      "UserAvatar": null,
+      "UserGravatar": "558dda34e2c5d2212d49493b20a462c6",
+      "EditableText": "Hi,\n\nI'm designing a game where the programming includes a bit of mathematics to produce certain numeric variables. How do I make Quest round up a number, so I don't end up irritating my players by filling their screens with numbers like &quot;66.666666666666666666666666666...&quot;? Is there a way I can make the variable only return a whole number, or say, display a number to only 2 decimal points?\n\nAny help much appreciated.",
+      "EditableFormat": "bbcode",
+      "HTML": "Hi,<br/><br/>I'm designing a game where the programming includes a bit of mathematics to produce certain numeric variables. How do I make Quest round up a number, so I don't end up irritating my players by filling their screens with numbers like &quot;66.666666666666666666666666666...&quot;? Is there a way I can make the variable only return a whole number, or say, display a number to only 2 decimal points?<br/><br/>Any help much appreciated.",
+      "PostDate": "2010-05-19T13:33:17+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "17333",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "Here is an example of a &quot;round&quot; function which you can put into your game. You can call it like this:\n\n[code:3rjzdj7k]\n$round(%health%; 5)$\n[/code:3rjzdj7k]\n\nThat would round your &quot;health&quot; variable to 5 decimal places.\n\nHere is the function in a demo ASL file:\n\n[code:3rjzdj7k]\ndefine game &lt;Rounding&gt;\n\tasl-version &lt;410&gt;\n\tstart &lt;room&gt;\nend define\n\ndefine room &lt;room&gt;\n\tcommand &lt;round&gt; {\n\t\tmsg &lt;Enter the number you want to round&#58;&gt;\n\t\tset numeric &lt;number; $enternumber$&gt;\n\t\tmsg &lt;How many decimal places?&gt;\n\t\tset numeric &lt;dp; $enternumber$&gt;\n\t\tmsg &lt;Rounding %number% to %dp% decimal places&#58; $round(%number%; %dp%)$&gt;\n\t}\nend define\n\ndefine text &lt;intro&gt;\nType ROUND to test rounding&#46;\nend define\n\ndefine function &lt;enternumber&gt;\n\tset numeric &lt;value; 0&gt;\n\tset string &lt;input;&gt;\n\trepeat until (%value% = #input#) {\n\t\tenter &lt;input&gt;\n\t\tmsg &lt;- #input#&gt;\n\t\tset numeric &lt;value; #input#&gt;\n\t\tif (%value% &lt;&gt; #input#) then msg &lt;That is not a valid number! Please enter a valid number&#58;&gt;\n\t}\n\treturn &lt;%value%&gt;\nend define\n\ndefine function &lt;round&gt;\n\tset numeric &lt;round&#46;number; $parameter(1)$&gt;\n\tset numeric &lt;round&#46;dp; $parameter(2)$&gt;\n\tset numeric &lt;round&#46;decimalpos; $instr(%round&#46;number%; &#46;)$&gt;\n\tif (%round&#46;decimalpos% = 0) then {\n\t\treturn &lt;%round&#46;number%&gt;\n\t}\n\telse {\n\t\tset string &lt;round&#46;beforedp; $left(%round&#46;number%; {%round&#46;decimalpos%-1})$&gt;\n\t\tset string &lt;round&#46;afterdp; $mid(%round&#46;number%; {%round&#46;decimalpos%+1})$&gt;\n\t\tset string &lt;round&#46;afterdp; $left(#round&#46;afterdp#; %round&#46;dp%)$&gt;\n\t\treturn &lt;#round&#46;beforedp#&#46;#round&#46;afterdp#&gt;\n\t}\nend define\n[/code:3rjzdj7k]",
+      "EditableFormat": "bbcode",
+      "HTML": "Here is an example of a &quot;round&quot; function which you can put into your game. You can call it like this:<br/><br/><pre><code><br/>$round(%health%; 5)$<br/></code></pre><br/><br/>That would round your &quot;health&quot; variable to 5 decimal places.<br/><br/>Here is the function in a demo ASL file:<br/><br/><pre><code><br/>define game &lt;Rounding&gt;<br/>\tasl-version &lt;410&gt;<br/>\tstart &lt;room&gt;<br/>end define<br/><br/>define room &lt;room&gt;<br/>\tcommand &lt;round&gt; {<br/>\t\tmsg &lt;Enter the number you want to round&#58;&gt;<br/>\t\tset numeric &lt;number; $enternumber$&gt;<br/>\t\tmsg &lt;How many decimal places?&gt;<br/>\t\tset numeric &lt;dp; $enternumber$&gt;<br/>\t\tmsg &lt;Rounding %number% to %dp% decimal places&#58; $round(%number%; %dp%)$&gt;<br/>\t}<br/>end define<br/><br/>define text &lt;intro&gt;<br/>Type ROUND to test rounding&#46;<br/>end define<br/><br/>define function &lt;enternumber&gt;<br/>\tset numeric &lt;value; 0&gt;<br/>\tset string &lt;input;&gt;<br/>\trepeat until (%value% = #input#) {<br/>\t\tenter &lt;input&gt;<br/>\t\tmsg &lt;- #input#&gt;<br/>\t\tset numeric &lt;value; #input#&gt;<br/>\t\tif (%value% &lt;&gt; #input#) then msg &lt;That is not a valid number! Please enter a valid number&#58;&gt;<br/>\t}<br/>\treturn &lt;%value%&gt;<br/>end define<br/><br/>define function &lt;round&gt;<br/>\tset numeric &lt;round&#46;number; $parameter(1)$&gt;<br/>\tset numeric &lt;round&#46;dp; $parameter(2)$&gt;<br/>\tset numeric &lt;round&#46;decimalpos; $instr(%round&#46;number%; &#46;)$&gt;<br/>\tif (%round&#46;decimalpos% = 0) then {<br/>\t\treturn &lt;%round&#46;number%&gt;<br/>\t}<br/>\telse {<br/>\t\tset string &lt;round&#46;beforedp; $left(%round&#46;number%; {%round&#46;decimalpos%-1})$&gt;<br/>\t\tset string &lt;round&#46;afterdp; $mid(%round&#46;number%; {%round&#46;decimalpos%+1})$&gt;<br/>\t\tset string &lt;round&#46;afterdp; $left(#round&#46;afterdp#; %round&#46;dp%)$&gt;<br/>\t\treturn &lt;#round&#46;beforedp#&#46;#round&#46;afterdp#&gt;<br/>\t}<br/>end define<br/></code></pre>",
+      "PostDate": "2010-05-19T18:49:31+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "17335",
+      "UserId": 0,
+      "Username": "SquirrelUK",
+      "UserAvatar": null,
+      "UserGravatar": "558dda34e2c5d2212d49493b20a462c6",
+      "EditableText": "Thanks for your help again, Alex!",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks for your help again, Alex!",
+      "PostDate": "2010-05-21T18:25:57+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "18050",
+      "UserId": 0,
+      "Username": "SquirrelUK",
+      "UserAvatar": null,
+      "UserGravatar": "558dda34e2c5d2212d49493b20a462c6",
+      "EditableText": "Greetings,\n\nSorry to trouble you again on this. I've been trying the rounding fuction on the new version of the program and it isn't working...any advice?\n\nSquirrelUK",
+      "EditableFormat": "bbcode",
+      "HTML": "Greetings,<br/><br/>Sorry to trouble you again on this. I've been trying the rounding fuction on the new version of the program and it isn't working...any advice?<br/><br/>SquirrelUK",
+      "PostDate": "2011-04-27T21:47:07+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "18051",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "In what way is it not working?",
+      "EditableFormat": "bbcode",
+      "HTML": "In what way is it not working?",
+      "PostDate": "2011-04-28T00:18:33+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "1741",
+    "ForumId": "10",
+    "Title": "Random NPC",
+    "LastUpdated": "2007-08-22T02:11:40+01:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "13723",
+      "UserId": 0,
+      "Username": "Dr.Froth",
+      "UserAvatar": null,
+      "UserGravatar": "e87f2aa904ea379f7988d099701d6f04",
+      "EditableText": "Hey guys,\r\n\r\nDo any of you know how to make an non-player character move randomly through a small area (six rooms or so).\r\n\r\nI am interested in having the NPC move around and then to have a script execute when the NPC and the player are in the same room (whenever that occurs, if it occurs at all).\r\n\r\nAny thoughts, code, or ideas would be appreciated.\r\n\r\nThanks,\r\nDr. Froth",
+      "EditableFormat": "bbcode",
+      "HTML": "Hey guys,<br/><br/>Do any of you know how to make an non-player character move randomly through a small area (six rooms or so).<br/><br/>I am interested in having the NPC move around and then to have a script execute when the NPC and the player are in the same room (whenever that occurs, if it occurs at all).<br/><br/>Any thoughts, code, or ideas would be appreciated.<br/><br/>Thanks,<br/>Dr. Froth",
+      "PostDate": "2007-08-20T20:33:17+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "13727",
+      "UserId": 0,
+      "Username": "Elexxorine",
+      "UserAvatar": null,
+      "UserGravatar": "a220ee44d8fe2f07029cf1f61b98bf40",
+      "EditableText": "Do you mean to say move within a set area even if there are exits to outside this area?\r\n\r\nI have a very nice code for NPC movement. If you give the NPC properties 'mm' (moving mob) and 'amm' (active mm), then you need to change nothong in my code. Also if the NPC has property 'attackable', it can't go into rooms with property 'safe' (so enemies don't walk into towns, etc). Here you go:[code:2s4pj90y]define procedure &lt;mob_setup&gt;\n  \tfor each object in game &#123;\n\t\tif property &lt;#quest&#46;thing#; mm&gt; and property \n\n&lt;#quest&#46;thing#; amm&gt; then &#123;\n\t\t\tdo &lt;mob_mover&#40;#quest&#46;thing#&#41;&gt;\n\t\t&#125;\n\t&#125;\n   \nend define\n\ndefine procedure &lt;mob_mover&gt;\n\t\tset string &lt;directions&#91;0&#93;; up&gt;\n\t\tset string &lt;directions&#91;1&#93;; north&gt;\n\t\tset string &lt;directions&#91;2&#93;; northeast&gt;\n\t\tset string &lt;directions&#91;3&#93;; east&gt;\n\t\tset string &lt;directions&#91;4&#93;; southeast&gt;\n\t\tset string &lt;directions&#91;5&#93;; down&gt;\n\t\tset string &lt;directions&#91;6&#93;; south&gt;\n\t\tset string &lt;directions&#91;7&#93;; southwest&gt;\n\t\tset string &lt;directions&#91;8&#93;; west&gt;\n\t\tset string &lt;directions&#91;9&#93;; northwest&gt;\n\t\t\n\tset numeric &lt;dm; 0&gt;\n\tset string &lt;loc; $parameter&#40;1&#41;$&gt;\n\tset string &lt;loc; $locationof&#40;#loc#&#41;$&gt;\n\tset string &lt;mm; $parameter&#40;1&#41;$&gt;\n\t\n\tif property &lt;#mm#; attackable&gt; then &#123;\n\t\tfor &lt;i; 0; 9&gt; if property &lt;#loc#; #directions&#91;i&#93;#&gt; and not \n\nproperty &lt;$objectproperty&#40;#loc#; #directions&#91;i&#93;#&#41;$; safe&gt; then &#123;\n\t\t\tinc &lt;dm&gt;\n\t\t\tset string &lt;xdirpos&#91;dm&#93;; #directions&#91;i&#93;#&gt;\n\t\t\tset string &lt;xdirpla&#91;dm&#93;; $objectproperty&#40;#loc#; \n\n#directions&#91;i&#93;#&#41;$&gt;\n\t\t\tset numeric &lt;opposite; %i% + 5&gt;\n\t\t\tif &#40; %opposite% &gt; 9 &#41; then dec &lt;opposite; 10&gt;\n\t\t\tset string &lt;xdiropp&#91;dm&#93;; #directions&#91;opposite&#93;#&gt;\n\t\t\tset string &lt;pla; #xdiropp&#91;dm&#93;#&gt;\n\t\t\tset string &lt;xdiropl&#91;dm&#93;; #loc#&gt;\n\t\t&#125;\n\t\tset numeric &lt;dirc; $rand&#40;1; %dm%&#41;$&gt;\n\t\tset string &lt;alias; #&#40;mm&#41;&#58;alias#&gt;\n\t\tfor each object in &lt;#loc#&gt; if property &lt;#quest&#46;thing#; \n\nnetplayer&gt; then &#123;\n\t\t\tmsgto &lt;#quest&#46;thing#; |b$capfirst&#40;#alias#&#41;$|xb \n\nmoved #xdirpos&#91;dirc&#93;#&#46;&gt;\n\t\t&#125;\n\t\tfor each object in &lt;#xdirpla&#91;dirc&#93;#&gt; if property \n\n&lt;#quest&#46;thing#; netplayer&gt; then &#123;\n\t\t\tmsgto &lt;#quest&#46;thing#; |b$capfirst&#40;#alias#&#41;$|xb \n\nmoved from the #xdiropp&#91;dirc&#93;#&#46;&gt;\n\t\t&#125;\n\t\tmove &lt;#mm#; #xdirpla&#91;dirc&#93;#&gt;\n\t&#125;\n\telse &#123;\n\t\tfor &lt;i; 0; 9&gt; if property &lt;#loc#; #directions&#91;i&#93;#&gt; then &#123;\n\t\t\tinc &lt;dm&gt;\n\t\t\tset string &lt;xdirpos&#91;dm&#93;; #directions&#91;i&#93;#&gt;\n\t\t\tset string &lt;xdirpla&#91;dm&#93;; $objectproperty&#40;#loc#; \n\n#directions&#91;i&#93;#&#41;$&gt;\n\t\t\tset numeric &lt;opposite; %i% + 5&gt;\n\t\t\tif &#40; %opposite% &gt; 9 &#41; then dec &lt;opposite; 10&gt;\n\t\t\tset string &lt;xdiropp&#91;dm&#93;; #directions&#91;opposite&#93;#&gt;\n\t\t\tset string &lt;pla; #xdiropp&#91;dm&#93;#&gt;\n\t\t\tset string &lt;xdiropl&#91;dm&#93;; #loc#&gt;\n\t\t&#125;\n\t\tset numeric &lt;dirc; $rand&#40;1; %dm%&#41;$&gt;\n\t\tset string &lt;alias; #&#40;mm&#41;&#58;alias#&gt;\n\t\tfor each object in &lt;#loc#&gt; if property &lt;#quest&#46;thing#; \n\nnetplayer&gt; then &#123;\n\t\t\tmsgto &lt;#quest&#46;thing#; |b$capfirst&#40;#alias#&#41;$|xb \n\nmoved #xdirpos&#91;dirc&#93;#&#46;&gt;\n\t\t&#125;\n\t\tfor each object in &lt;#xdirpla&#91;dirc&#93;#&gt; if property \n\n&lt;#quest&#46;thing#; netplayer&gt; then &#123;\n\t\t\tmsgto &lt;#quest&#46;thing#; |b$capfirst&#40;#alias#&#41;$|xb \n\nmoved from the #xdiropp&#91;dirc&#93;#&#46;&gt;\n\t\t&#125;\n\t\tmove &lt;#mm#; #xdirpla&#91;dirc&#93;#&gt;\n\t&#125;\n\nend define[/code:2s4pj90y]Have 'mob_setup' run from a timer or in the afterturn stuff, btw.",
+      "EditableFormat": "bbcode",
+      "HTML": "Do you mean to say move within a set area even if there are exits to outside this area?<br/><br/>I have a very nice code for NPC movement. If you give the NPC properties 'mm' (moving mob) and 'amm' (active mm), then you need to change nothong in my code. Also if the NPC has property 'attackable', it can't go into rooms with property 'safe' (so enemies don't walk into towns, etc). Here you go:<pre><code>define procedure &lt;mob_setup&gt;<br/>  \tfor each object in game &#123;<br/>\t\tif property &lt;#quest&#46;thing#; mm&gt; and property <br/><br/>&lt;#quest&#46;thing#; amm&gt; then &#123;<br/>\t\t\tdo &lt;mob_mover&#40;#quest&#46;thing#&#41;&gt;<br/>\t\t&#125;<br/>\t&#125;<br/>   <br/>end define<br/><br/>define procedure &lt;mob_mover&gt;<br/>\t\tset string &lt;directions&#91;0&#93;; up&gt;<br/>\t\tset string &lt;directions&#91;1&#93;; north&gt;<br/>\t\tset string &lt;directions&#91;2&#93;; northeast&gt;<br/>\t\tset string &lt;directions&#91;3&#93;; east&gt;<br/>\t\tset string &lt;directions&#91;4&#93;; southeast&gt;<br/>\t\tset string &lt;directions&#91;5&#93;; down&gt;<br/>\t\tset string &lt;directions&#91;6&#93;; south&gt;<br/>\t\tset string &lt;directions&#91;7&#93;; southwest&gt;<br/>\t\tset string &lt;directions&#91;8&#93;; west&gt;<br/>\t\tset string &lt;directions&#91;9&#93;; northwest&gt;<br/>\t\t<br/>\tset numeric &lt;dm; 0&gt;<br/>\tset string &lt;loc; $parameter&#40;1&#41;$&gt;<br/>\tset string &lt;loc; $locationof&#40;#loc#&#41;$&gt;<br/>\tset string &lt;mm; $parameter&#40;1&#41;$&gt;<br/>\t<br/>\tif property &lt;#mm#; attackable&gt; then &#123;<br/>\t\tfor &lt;i; 0; 9&gt; if property &lt;#loc#; #directions&#91;i&#93;#&gt; and not <br/><br/>property &lt;$objectproperty&#40;#loc#; #directions&#91;i&#93;#&#41;$; safe&gt; then &#123;<br/>\t\t\tinc &lt;dm&gt;<br/>\t\t\tset string &lt;xdirpos&#91;dm&#93;; #directions&#91;i&#93;#&gt;<br/>\t\t\tset string &lt;xdirpla&#91;dm&#93;; $objectproperty&#40;#loc#; <br/><br/>#directions&#91;i&#93;#&#41;$&gt;<br/>\t\t\tset numeric &lt;opposite; %i% + 5&gt;<br/>\t\t\tif &#40; %opposite% &gt; 9 &#41; then dec &lt;opposite; 10&gt;<br/>\t\t\tset string &lt;xdiropp&#91;dm&#93;; #directions&#91;opposite&#93;#&gt;<br/>\t\t\tset string &lt;pla; #xdiropp&#91;dm&#93;#&gt;<br/>\t\t\tset string &lt;xdiropl&#91;dm&#93;; #loc#&gt;<br/>\t\t&#125;<br/>\t\tset numeric &lt;dirc; $rand&#40;1; %dm%&#41;$&gt;<br/>\t\tset string &lt;alias; #&#40;mm&#41;&#58;alias#&gt;<br/>\t\tfor each object in &lt;#loc#&gt; if property &lt;#quest&#46;thing#; <br/><br/>netplayer&gt; then &#123;<br/>\t\t\tmsgto &lt;#quest&#46;thing#; |b$capfirst&#40;#alias#&#41;$|xb <br/><br/>moved #xdirpos&#91;dirc&#93;#&#46;&gt;<br/>\t\t&#125;<br/>\t\tfor each object in &lt;#xdirpla&#91;dirc&#93;#&gt; if property <br/><br/>&lt;#quest&#46;thing#; netplayer&gt; then &#123;<br/>\t\t\tmsgto &lt;#quest&#46;thing#; |b$capfirst&#40;#alias#&#41;$|xb <br/><br/>moved from the #xdiropp&#91;dirc&#93;#&#46;&gt;<br/>\t\t&#125;<br/>\t\tmove &lt;#mm#; #xdirpla&#91;dirc&#93;#&gt;<br/>\t&#125;<br/>\telse &#123;<br/>\t\tfor &lt;i; 0; 9&gt; if property &lt;#loc#; #directions&#91;i&#93;#&gt; then &#123;<br/>\t\t\tinc &lt;dm&gt;<br/>\t\t\tset string &lt;xdirpos&#91;dm&#93;; #directions&#91;i&#93;#&gt;<br/>\t\t\tset string &lt;xdirpla&#91;dm&#93;; $objectproperty&#40;#loc#; <br/><br/>#directions&#91;i&#93;#&#41;$&gt;<br/>\t\t\tset numeric &lt;opposite; %i% + 5&gt;<br/>\t\t\tif &#40; %opposite% &gt; 9 &#41; then dec &lt;opposite; 10&gt;<br/>\t\t\tset string &lt;xdiropp&#91;dm&#93;; #directions&#91;opposite&#93;#&gt;<br/>\t\t\tset string &lt;pla; #xdiropp&#91;dm&#93;#&gt;<br/>\t\t\tset string &lt;xdiropl&#91;dm&#93;; #loc#&gt;<br/>\t\t&#125;<br/>\t\tset numeric &lt;dirc; $rand&#40;1; %dm%&#41;$&gt;<br/>\t\tset string &lt;alias; #&#40;mm&#41;&#58;alias#&gt;<br/>\t\tfor each object in &lt;#loc#&gt; if property &lt;#quest&#46;thing#; <br/><br/>netplayer&gt; then &#123;<br/>\t\t\tmsgto &lt;#quest&#46;thing#; |b$capfirst&#40;#alias#&#41;$|xb <br/><br/>moved #xdirpos&#91;dirc&#93;#&#46;&gt;<br/>\t\t&#125;<br/>\t\tfor each object in &lt;#xdirpla&#91;dirc&#93;#&gt; if property <br/><br/>&lt;#quest&#46;thing#; netplayer&gt; then &#123;<br/>\t\t\tmsgto &lt;#quest&#46;thing#; |b$capfirst&#40;#alias#&#41;$|xb <br/><br/>moved from the #xdiropp&#91;dirc&#93;#&#46;&gt;<br/>\t\t&#125;<br/>\t\tmove &lt;#mm#; #xdirpla&#91;dirc&#93;#&gt;<br/>\t&#125;<br/><br/>end define</code></pre>Have 'mob_setup' run from a timer or in the afterturn stuff, btw.",
+      "PostDate": "2007-08-21T11:31:10+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "13731",
+      "UserId": 0,
+      "Username": "Dr.Froth",
+      "UserAvatar": null,
+      "UserGravatar": "e87f2aa904ea379f7988d099701d6f04",
+      "EditableText": "Hey...that is great.  Thanks for sharing that Elex...cool.",
+      "EditableFormat": "bbcode",
+      "HTML": "Hey...that is great.  Thanks for sharing that Elex...cool.",
+      "PostDate": "2007-08-21T18:29:35+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "13732",
+      "UserId": 0,
+      "Username": "Elexxorine",
+      "UserAvatar": null,
+      "UserGravatar": "a220ee44d8fe2f07029cf1f61b98bf40",
+      "EditableText": "No problem, it's a cool code. Only ask you put like a 'with thanks to Elex' in the game credits or similar. lol.",
+      "EditableFormat": "bbcode",
+      "HTML": "No problem, it's a cool code. Only ask you put like a 'with thanks to Elex' in the game credits or similar. lol.",
+      "PostDate": "2007-08-21T19:39:23+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "13743",
+      "UserId": 0,
+      "Username": "witch wyzwurd",
+      "UserAvatar": null,
+      "UserGravatar": "05e3fb359c040589d773db02decd0770",
+      "EditableText": "I've got a similar idea coded out. If you want to view another block of code let me know.",
+      "EditableFormat": "bbcode",
+      "HTML": "I've got a similar idea coded out. If you want to view another block of code let me know.",
+      "PostDate": "2007-08-22T02:11:40+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

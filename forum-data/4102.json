@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "4102",
+    "ForumId": "10",
+    "Title": "Problems taking objects which aren't on the floor",
+    "LastUpdated": "2014-01-02T19:52:45+00:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "27365",
+      "UserId": 0,
+      "Username": "philtepper",
+      "UserAvatar": null,
+      "UserGravatar": "688a672f788cb0bbc0f717c5eecbd6bc",
+      "EditableText": "Suppose I enter a room to find a painting on the wall.  I can take the painting but want to be able to hang it back on the wall.  If I've defined a verb 'hang' and invoke it to hang the painting, I cannot then (re-)take it because I've not dropped it first.  Is there any way to overcome this, say by embedding some of the 'drop' code into my 'hang' functionality?\n\nAlso, is it possible to write code to modify displayverbs or inventoryverbs?  I've tried this by using \n\nAddtolist painting.inventoryverbs value text take\n\nbut get \n\nError running script&#058; Cannot modify the contents of this list as it is defined by an inherited type. Clone it before attempting to modify.\n\nfrom which I can't understand whether or not what I'm trying to do is possible.",
+      "EditableFormat": "bbcode",
+      "HTML": "Suppose I enter a room to find a painting on the wall.  I can take the painting but want to be able to hang it back on the wall.  If I've defined a verb 'hang' and invoke it to hang the painting, I cannot then (re-)take it because I've not dropped it first.  Is there any way to overcome this, say by embedding some of the 'drop' code into my 'hang' functionality?<br/><br/>Also, is it possible to write code to modify displayverbs or inventoryverbs?  I've tried this by using <br/><br/>Addtolist painting.inventoryverbs value text take<br/><br/>but get <br/><br/>Error running script&#058; Cannot modify the contents of this list as it is defined by an inherited type. Clone it before attempting to modify.<br/><br/>from which I can't understand whether or not what I'm trying to do is possible.",
+      "PostDate": "2014-01-02T18:37:55+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27367",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "To have the painting be back in the room (as opposed to owned by the player still), assign it back to the room. Something like:\n\n[code:1iv68mvt]painting&#46;parent = game&#46;pov&#46;parent[/code:1iv68mvt]\n\n(or &quot;player.parent&quot;). The player's parent should be the room the player is currently in.\n\nThere is a trick to make inventoryverbs work. The inventoryverbs attribute is defined in a base type, and you can't modify it until you create a fresh, modifiable copy in the object. To do that, use this seemingly useless statement before you attempt to add any verbs:\n\n[code:1iv68mvt]painting&#46;inventoryverbs =  painting&#46;inventoryverbs [/code:1iv68mvt]\n\nWhen you assign a list to an object's attribute, Quest makes a copy of it. By doing the above, it takes the current, un-modifiable list, creates a copy of it, and assigns it back to the inventoryverbs attribute. You should then be able to add items to it.",
+      "EditableFormat": "bbcode",
+      "HTML": "To have the painting be back in the room (as opposed to owned by the player still), assign it back to the room. Something like:<br/><br/><pre><code>painting&#46;parent = game&#46;pov&#46;parent</code></pre><br/><br/>(or &quot;player.parent&quot;). The player's parent should be the room the player is currently in.<br/><br/>There is a trick to make inventoryverbs work. The inventoryverbs attribute is defined in a base type, and you can't modify it until you create a fresh, modifiable copy in the object. To do that, use this seemingly useless statement before you attempt to add any verbs:<br/><br/><pre><code>painting&#46;inventoryverbs =  painting&#46;inventoryverbs </code></pre><br/><br/>When you assign a list to an object's attribute, Quest makes a copy of it. By doing the above, it takes the current, un-modifiable list, creates a copy of it, and assigns it back to the inventoryverbs attribute. You should then be able to add items to it.",
+      "PostDate": "2014-01-02T19:25:14+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27369",
+      "UserId": 0,
+      "Username": "philtepper",
+      "UserAvatar": null,
+      "UserGravatar": "688a672f788cb0bbc0f717c5eecbd6bc",
+      "EditableText": "Thanks again jaynabonne, you are a star.  Slightly ashamed that (even though at newbie status) I failed to think of assigning the painting to the room myself!",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks again jaynabonne, you are a star.  Slightly ashamed that (even though at newbie status) I failed to think of assigning the painting to the room myself!",
+      "PostDate": "2014-01-02T19:37:01+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27370",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "aside from simply using the built-in &quot;parent&quot; attribute as Jayna already explained, I think you could do:\n\n&quot;painting (hanging)&quot;\n\n(see Pixie's Clothing or Chase's Wearables libraries, ie equipment coding)\n\nbut, it'd involve some really advanced coding on top of the equipment coding (which isn't code-noobie friendly).\n\n-----------------\n\nthe game world is a bunch of Objects, which can have Objects within them.\n\nthink of these Objects as a family, with children and parents.\n\nyou've got the &quot;parent&quot; Object, which holds within it, the &quot;children&quot; Objects.\n\nthe far left sided &quot; -&gt; &quot; (arrows) is my way of showing the &quot;nesting~indenting&quot; = the parent'ing~children'ing\n\nwallet = parent object\n-&gt; $10_bill = child object\n-&gt; $5_bill = child object\n-&gt; $1_bill = child object\n\n************\nadditional examples:\n\nHK = parent (root) object of &quot;the 3 bills&quot;, &quot;HK's_pant's_pocket&quot;, and &quot;wallet&quot;\n-&gt; HK's_pant's_pocket = child of &quot;HK&quot; and parent of &quot;wallet&quot;\n-&gt;-&gt; wallet = child of &quot;HK's_pant's_pocket&quot; and parent of // &quot;the 3 bills&quot;\n-&gt;-&gt;-&gt; // the 3 bills = child objects of &quot;HK&quot;, &quot;HK's_pant's_pocket&quot;, and &quot;wallet&quot;\n\nC:\\ Drive = parent (root) Folder of &quot;program folder&quot; and &quot;C:\\ Drive&quot;\n-&gt; program folder = child folder of &quot;C:\\ Drive&quot; and parent of &quot;quest folder&quot;\n-&gt;-&gt; quest folder = child folder of &quot;program folder&quot; and &quot;C:\\ Drive&quot;\n\n**************\n\nso, in code, it'd look like this:\n\n$10_bill.parent = wallet\n$5_bill.parent = wallet\n$1_bill.parent = wallet\n\nthe 3 bills are within~attached to~held by the wallet\n\nthis is also how we can move objects around:\n\nold location of the $10_bill: $10_bill.parent = wallet\nnew location of the $10_bill: $10_bill.parent = bank\n\n-----------\n\nin the GUI~Editor, you'd just use the:\n\n&quot;MoveObject&quot; script (&quot;add a script&quot; button) within your Object's Verb's scripting\n\n&quot;painting&quot; (Object) -&gt; Verb (Tab) -&gt; Add -&gt; Name: &quot;hang&quot; -&gt; run as script (small drop down box) -&gt; add a script (small cirlce button) -&gt; Objects Script Category -&gt; &quot;MoveObject&quot; (script)",
+      "EditableFormat": "bbcode",
+      "HTML": "aside from simply using the built-in &quot;parent&quot; attribute as Jayna already explained, I think you could do:<br/><br/>&quot;painting (hanging)&quot;<br/><br/>(see Pixie's Clothing or Chase's Wearables libraries, ie equipment coding)<br/><br/>but, it'd involve some really advanced coding on top of the equipment coding (which isn't code-noobie friendly).<br/><br/>-----------------<br/><br/>the game world is a bunch of Objects, which can have Objects within them.<br/><br/>think of these Objects as a family, with children and parents.<br/><br/>you've got the &quot;parent&quot; Object, which holds within it, the &quot;children&quot; Objects.<br/><br/>the far left sided &quot; -&gt; &quot; (arrows) is my way of showing the &quot;nesting~indenting&quot; = the parent'ing~children'ing<br/><br/>wallet = parent object<br/>-&gt; $10_bill = child object<br/>-&gt; $5_bill = child object<br/>-&gt; $1_bill = child object<br/><br/>************<br/>additional examples:<br/><br/>HK = parent (root) object of &quot;the 3 bills&quot;, &quot;HK's_pant's_pocket&quot;, and &quot;wallet&quot;<br/>-&gt; HK's_pant's_pocket = child of &quot;HK&quot; and parent of &quot;wallet&quot;<br/>-&gt;-&gt; wallet = child of &quot;HK's_pant's_pocket&quot; and parent of // &quot;the 3 bills&quot;<br/>-&gt;-&gt;-&gt; // the 3 bills = child objects of &quot;HK&quot;, &quot;HK's_pant's_pocket&quot;, and &quot;wallet&quot;<br/><br/>C:\\ Drive = parent (root) Folder of &quot;program folder&quot; and &quot;C:\\ Drive&quot;<br/>-&gt; program folder = child folder of &quot;C:\\ Drive&quot; and parent of &quot;quest folder&quot;<br/>-&gt;-&gt; quest folder = child folder of &quot;program folder&quot; and &quot;C:\\ Drive&quot;<br/><br/>**************<br/><br/>so, in code, it'd look like this:<br/><br/>$10_bill.parent = wallet<br/>$5_bill.parent = wallet<br/>$1_bill.parent = wallet<br/><br/>the 3 bills are within~attached to~held by the wallet<br/><br/>this is also how we can move objects around:<br/><br/>old location of the $10_bill: $10_bill.parent = wallet<br/>new location of the $10_bill: $10_bill.parent = bank<br/><br/>-----------<br/><br/>in the GUI~Editor, you'd just use the:<br/><br/>&quot;MoveObject&quot; script (&quot;add a script&quot; button) within your Object's Verb's scripting<br/><br/>&quot;painting&quot; (Object) -&gt; Verb (Tab) -&gt; Add -&gt; Name: &quot;hang&quot; -&gt; run as script (small drop down box) -&gt; add a script (small cirlce button) -&gt; Objects Script Category -&gt; &quot;MoveObject&quot; (script)",
+      "PostDate": "2014-01-02T19:52:45+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

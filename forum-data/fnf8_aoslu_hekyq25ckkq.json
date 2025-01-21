@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "fnf8_aoslu_hekyq25ckkq",
+    "ForumId": "10",
+    "Title": "Item boxes",
+    "LastUpdated": "2020-07-13T04:30:23.2723745Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "6f59bee6-239a-4e23-94d3-2e25b6dc7e8f",
+      "UserId": 288526,
+      "Username": "matsumoto",
+      "AvatarUrl": "http://i.imgur.com/4E11r1Qb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello!\r\n\r\nI'm currently working on a game inspired in Resident Evil 1 and I'd like to make use of the limited inventory option, and since the project has many puzzle items, I'd like to create boxes where the player can deposit items.\r\n\r\nIdeally, the player can access these items from any \"item box\" he finds.\r\n\r\nThe reason for the boxes is to prevent players from dropping items in a room and then not finding them again or if for any reason the path becomes blocked later in the project he won't lose the items.\r\n\r\nI have looked around, but I still have no idea on how to do it, any suggestions are appreciated.\r\n\r\nSo I suppose I can summarize what I need:\r\n\r\n1. Make it so the player can't drop the items around the map;\r\n2. The item boxes are the only place the player can drop the items;\r\n3. The player should be able to access the items in the box from any item box he finds in the game.\r\n\r\nThanks in advance!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello!</p>\n<p>I'm currently working on a game inspired in Resident Evil 1 and I'd like to make use of the limited inventory option, and since the project has many puzzle items, I'd like to create boxes where the player can deposit items.</p>\n<p>Ideally, the player can access these items from any \"item box\" he finds.</p>\n<p>The reason for the boxes is to prevent players from dropping items in a room and then not finding them again or if for any reason the path becomes blocked later in the project he won't lose the items.</p>\n<p>I have looked around, but I still have no idea on how to do it, any suggestions are appreciated.</p>\n<p>So I suppose I can summarize what I need:</p>\n<ol>\n<li>Make it so the player can't drop the items around the map;</li>\n<li>The item boxes are the only place the player can drop the items;</li>\n<li>The player should be able to access the items in the box from any item box he finds in the game.</li>\n</ol>\n<p>Thanks in advance!</p>\n\n",
+      "PostDate": "2020-07-13T04:30:23.2723745Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "d340d2a2-1272-470a-9c5c-291da94e8617",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'd suggest giving the item box an attribute so you can easily identify them. Probably a boolean attribute `itembox` set to true. If you're using the web editor, which doesn't have an 'Attributes' tab, you'd do that by giving each box an initialisation script containing the line `this.itembox = true`.\r\n\r\nThen, for items that can only be put in a box and not dropped, you give the item a 'drop' script that looks like:\r\n```\r\nif (GetBoolean (destination, \"itembox\")) {\r\n  this.parent = destination\r\n  msg (\"You put it in the item box.\")\r\n}\r\nelse {\r\n  msg (\"This is probably too important to leave lying around.\")\r\n}\r\n```\r\nThen you can only put the object in item boxes. (The \"drop\" script is used when the player tries to put an item in a box, too; the `destination` variable lets you know where they're trying to put it)\r\n\r\n> 3. The player should be able to access the items in the box from any item box he finds in the game.\r\n\r\nI'd suggest something giving the boxes an `openscript` that looks like this (openscript is the script that is run when the box is opened, not the one that's run after it opens. It seems a lot of people pick the wrong one on the 'container' tab):\r\n```\r\nforeach (obj, AllObjects()) {\r\n  if (GetBoolean (obj, \"itembox\") and not obj = this) {\r\n    obj.isopen = false\r\n    foreach (item, GetDirectChildern (obj)) {\r\n      item.parent = this\r\n    }\r\n  }\r\n}\r\nOpenObject (this)\r\n```\r\n\r\nIt basically means that when you open an item box, it closes all other item boxes and teleports their contents into this one. (Closing the other boxes means that the player always needs to open them before taking anything out).\r\n\r\nIf you don't want the player to have to open the box every time, you could do it using the `game.roomenter` script instead, which is on the Scripts tab of the game object; but that's a little less efficient:\r\n```\r\nbox = null\r\nroom = game.pov.parent\r\nitems = NewObjectList()\r\nforeach (obj, AllObjects()) {\r\n  if (GetBoolean(obj, \"itembox\")) {\r\n    if (Contains (room, obj)) {\r\n      box = obj\r\n    }\r\n    else {\r\n      items = ListCombine (items, GetDirectChildren (obj))\r\n    }\r\n  }\r\n}\r\nif (not box = null) {\r\n  foreach (item, items) {\r\n    item.parent = box\r\n  }\r\n}\r\n```\r\nThis searches for all item boxes every time the player enters a room. If the box is in the current room, the variable `box` is set to it. Otherwise, the box's contents are added to the list `items`. After it's found them all, if one was in the current room, all the items on the list are moved there.\r\n\r\nHope that makes sense; I'm not too good at explaining these things sometimes.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'd suggest giving the item box an attribute so you can easily identify them. Probably a boolean attribute <code>itembox</code> set to true. If you're using the web editor, which doesn't have an 'Attributes' tab, you'd do that by giving each box an initialisation script containing the line <code>this.itembox = true</code>.</p>\n<p>Then, for items that can only be put in a box and not dropped, you give the item a 'drop' script that looks like:</p>\n<pre><code>if (GetBoolean (destination, \"itembox\")) {\n  this.parent = destination\n  msg (\"You put it in the item box.\")\n}\nelse {\n  msg (\"This is probably too important to leave lying around.\")\n}\n</code></pre>\n<p>Then you can only put the object in item boxes. (The \"drop\" script is used when the player tries to put an item in a box, too; the <code>destination</code> variable lets you know where they're trying to put it)</p>\n<blockquote>\n<ol start=\"3\">\n<li>The player should be able to access the items in the box from any item box he finds in the game.</li>\n</ol>\n</blockquote>\n<p>I'd suggest something giving the boxes an <code>openscript</code> that looks like this (openscript is the script that is run when the box is opened, not the one that's run after it opens. It seems a lot of people pick the wrong one on the 'container' tab):</p>\n<pre><code>foreach (obj, AllObjects()) {\n  if (GetBoolean (obj, \"itembox\") and not obj = this) {\n    obj.isopen = false\n    foreach (item, GetDirectChildern (obj)) {\n      item.parent = this\n    }\n  }\n}\nOpenObject (this)\n</code></pre>\n<p>It basically means that when you open an item box, it closes all other item boxes and teleports their contents into this one. (Closing the other boxes means that the player always needs to open them before taking anything out).</p>\n<p>If you don't want the player to have to open the box every time, you could do it using the <code>game.roomenter</code> script instead, which is on the Scripts tab of the game object; but that's a little less efficient:</p>\n<pre><code>box = null\nroom = game.pov.parent\nitems = NewObjectList()\nforeach (obj, AllObjects()) {\n  if (GetBoolean(obj, \"itembox\")) {\n    if (Contains (room, obj)) {\n      box = obj\n    }\n    else {\n      items = ListCombine (items, GetDirectChildren (obj))\n    }\n  }\n}\nif (not box = null) {\n  foreach (item, items) {\n    item.parent = box\n  }\n}\n</code></pre>\n<p>This searches for all item boxes every time the player enters a room. If the box is in the current room, the variable <code>box</code> is set to it. Otherwise, the box's contents are added to the list <code>items</code>. After it's found them all, if one was in the current room, all the items on the list are moved there.</p>\n<p>Hope that makes sense; I'm not too good at explaining these things sometimes.</p>\n\n",
+      "PostDate": "2020-07-13T10:41:27.8883307Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "f3dcad62-fc61-4c2a-80ab-a32c818c349e",
+      "UserId": 288526,
+      "Username": "matsumoto",
+      "AvatarUrl": "http://i.imgur.com/4E11r1Qb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I sorta understand what you are suggesting, however I can't really implement it.\r\n\r\nI manage to make the items \"undropable\" with the script you presented:\r\n\r\n    if (GetBoolean (destination, \"itembox\")) {\r\n      this.parent = destination\r\n      msg (\"You put it in the item box.\")\r\n    }\r\n    else {\r\n      msg (\"This is probably too important to leave lying around.\")\r\n    }\r\n\r\nHowever I do not understand what to do at the item box. How do I set the items to be dropped IN the box? I tried to use several verbs  but nothing worked, like ```Drop A on/in/inside box``` still produced the \"This is too important\" message.\r\n\r\nWhere am I getting this wrong?\r\n\r\nThanks again!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I sorta understand what you are suggesting, however I can't really implement it.</p>\n<p>I manage to make the items \"undropable\" with the script you presented:</p>\n<pre><code>if (GetBoolean (destination, \"itembox\")) {\n  this.parent = destination\n  msg (\"You put it in the item box.\")\n}\nelse {\n  msg (\"This is probably too important to leave lying around.\")\n}\n</code></pre>\n<p>However I do not understand what to do at the item box. How do I set the items to be dropped IN the box? I tried to use several verbs  but nothing worked, like <code>Drop A on/in/inside box</code> still produced the \"This is too important\" message.</p>\n<p>Where am I getting this wrong?</p>\n<p>Thanks again!</p>\n\n",
+      "PostDate": "2020-07-14T02:44:16.3993866Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "74092c5f-869d-46c9-bb1a-8b958a740599",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The command the player needs is \"put A in B\". I don't think you can do it with the 'drop' command; though it might be possible to change that.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The command the player needs is \"put A in B\". I don't think you can do it with the 'drop' command; though it might be possible to change that.</p>\n\n",
+      "PostDate": "2020-07-14T08:30:29.5992953Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "5381fa32-20c8-493f-ab62-a3e20df537e1",
+      "UserId": 288526,
+      "Username": "matsumoto",
+      "AvatarUrl": "http://i.imgur.com/4E11r1Qb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I think I understand it a little better now.\r\n\r\nI understand I have to create the command ```put #object# in #?#```, but how exactly do I configure it?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I think I understand it a little better now.</p>\n<p>I understand I have to create the command <code>put #object# in #?#</code>, but how exactly do I configure it?</p>\n\n",
+      "PostDate": "2020-07-14T17:20:49.955001Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e66ca6cc-301f-4c83-a841-5180909d5d71",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "No, `put #object1# in #object2#` is the built-in command that put an object into a container. If your item box is a container, the player should be able to put objects in it.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>No, <code>put #object1# in #object2#</code> is the built-in command that put an object into a container. If your item box is a container, the player should be able to put objects in it.</p>\n\n",
+      "PostDate": "2020-07-14T21:17:42.5530563Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

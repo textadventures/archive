@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "jvqi6mtbqkigtilf1zll3w",
+    "ForumId": "10",
+    "Title": "Recovering Source Code of my Old Game",
+    "LastUpdated": "2019-07-28T08:13:52.1293609Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "e1f5da8c-002f-48aa-a989-a5842ee6a882",
+      "UserId": 388596,
+      "Username": "Talist",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello. A while ago, I was working on a Quest game, but I ended up giving up on it. Later, I had to reset my computer and forgot to copy the source code over. But now I'd like to get it back. \r\n\r\nIt is uploaded to this site, and I wanted to know if there's any way to recover at least part of the original source. When I download it, I only get the .quest file that plays the game itself. I have looked around and found a post saying to rename this to a .zip file and then open it, which I did. I can get a .alsx file out of it, which if I open in notepad or something, looks like it has my game code. However, when I open this .alsx file in Quest itself, I get a strange bug where only the top bar and left hand side with the object tree is visible. The right hand side, where I would edit attributes of said objects, is not appearing.\r\n\r\nI can still add objects and play the game, but I can't edit any properties of any objects. Is there a way to recover any of this to be able to edit it again? Would it be possible to copy and paste parts of my .alsx file out into a blank one and open that in Quest.\r\n\r\nAny help with this would be appreciated. I have a combat system I'm rather proud of and want to recover if possible.\r\n\r\nEdit - I forgot to mention. I can use Quest to create a new blank game, and the editor in there works fine. So it seems like something in my old game is corrupted.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello. A while ago, I was working on a Quest game, but I ended up giving up on it. Later, I had to reset my computer and forgot to copy the source code over. But now I'd like to get it back.</p>\n<p>It is uploaded to this site, and I wanted to know if there's any way to recover at least part of the original source. When I download it, I only get the .quest file that plays the game itself. I have looked around and found a post saying to rename this to a .zip file and then open it, which I did. I can get a .alsx file out of it, which if I open in notepad or something, looks like it has my game code. However, when I open this .alsx file in Quest itself, I get a strange bug where only the top bar and left hand side with the object tree is visible. The right hand side, where I would edit attributes of said objects, is not appearing.</p>\n<p>I can still add objects and play the game, but I can't edit any properties of any objects. Is there a way to recover any of this to be able to edit it again? Would it be possible to copy and paste parts of my .alsx file out into a blank one and open that in Quest.</p>\n<p>Any help with this would be appreciated. I have a combat system I'm rather proud of and want to recover if possible.</p>\n<p>Edit - I forgot to mention. I can use Quest to create a new blank game, and the editor in there works fine. So it seems like something in my old game is corrupted.</p>\n\n",
+      "PostDate": "2019-07-28T08:13:52.1293609Z",
+      "LastEditDate": "2019-07-28T08:17:40.63433Z",
+      "link": null
+    },
+    {
+      "PostId": "e78ad4f0-adc7-48af-ad69-3786e1422a25",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "When you publish a game, it includes all of the core libraries. So for example, where your original file included the line `<include ref=\"Core.aslx\"/>`, the .aslx file within the .quest file will contain the entire contents of the file \"Core.aslx\".\r\n\r\nBy default, when you create a new game it includes 3 files: Core.aslx (which includes other files to pull in all of the core functions), CoreEditor.aslx (which contains details of which controls to display on each tab in the editor), and English.aslx (which contains all the templates and human-readable text for the player to see).\r\n\r\nWhen Quest is combining all these files together for publishing, it omits the information about the editor tabs, because it thinks you've finished editing. It also removes the two types `editor_object` and `editor_room`, which are used in the editor to determine which tabs to show for a given object.\r\n\r\nIt **might** work if you go back into the file and re-add the line `<include ref=\"CoreEditor.aslx\"/>`. I'd suggest making a backup before you do this, as Quest can be a little weird about what order included stuff should come in. You might have to put it at the start of the file, or after some of the other stuff.\r\n\r\nHowever, note that this might have issues.\r\n1. If the editor controls aren't properly labelled, try adding `<include ref=\"EditorEnglish.aslx\"/>` as well. I'm not sure if this will be necessary, or if it should come before or after the CoreEditor include.\r\n2. You will be using the editor tab-layout from the version of Quest you currently have installed, but the core functions from the version the game was originally created with. This means that the editor might show new features that don't actually work in your game.\r\n3. I haven't tested this; I'm answering off the top of my head, so if it doesn't work it might be better to ask someone who actually has a Windows machine with Quest on it.\r\n\r\nHope that helps :)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>When you publish a game, it includes all of the core libraries. So for example, where your original file included the line <code>&lt;include ref=\"Core.aslx\"/&gt;</code>, the .aslx file within the .quest file will contain the entire contents of the file \"Core.aslx\".</p>\n<p>By default, when you create a new game it includes 3 files: Core.aslx (which includes other files to pull in all of the core functions), CoreEditor.aslx (which contains details of which controls to display on each tab in the editor), and English.aslx (which contains all the templates and human-readable text for the player to see).</p>\n<p>When Quest is combining all these files together for publishing, it omits the information about the editor tabs, because it thinks you've finished editing. It also removes the two types <code>editor_object</code> and <code>editor_room</code>, which are used in the editor to determine which tabs to show for a given object.</p>\n<p>It <strong>might</strong> work if you go back into the file and re-add the line <code>&lt;include ref=\"CoreEditor.aslx\"/&gt;</code>. I'd suggest making a backup before you do this, as Quest can be a little weird about what order included stuff should come in. You might have to put it at the start of the file, or after some of the other stuff.</p>\n<p>However, note that this might have issues.</p>\n<ol>\n<li>If the editor controls aren't properly labelled, try adding <code>&lt;include ref=\"EditorEnglish.aslx\"/&gt;</code> as well. I'm not sure if this will be necessary, or if it should come before or after the CoreEditor include.</li>\n<li>You will be using the editor tab-layout from the version of Quest you currently have installed, but the core functions from the version the game was originally created with. This means that the editor might show new features that don't actually work in your game.</li>\n<li>I haven't tested this; I'm answering off the top of my head, so if it doesn't work it might be better to ask someone who actually has a Windows machine with Quest on it.</li>\n</ol>\n<p>Hope that helps :)</p>\n\n",
+      "PostDate": "2019-07-28T10:51:02.5089552Z",
+      "LastEditDate": "2019-07-28T16:36:25.3518395Z",
+      "link": null
+    },
+    {
+      "PostId": "654c25c1-abd5-4f2c-b2cb-6b73915ce852",
+      "UserId": 260569,
+      "Username": "DarkLizerd",
+      "AvatarUrl": "https://i.imgur.com/vjdH3t6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Make a short game... 3 or 4 rooms, and add a few objects...\r\nSave, then Publish it...\r\nChange the .Quest to .zip\r\nOpen both games in 2 copies of Quest and look at the two games side by side...\r\ndelete everything from the second copy (the one that was published) that is not in the first, original, version...\r\nCopy everything from the first version, that's missing in the second one...\r\nIF, you got all that right, the second version should look like the first and you should be able to see the game in the UI...\r\nNow... you know what to change to restore your game to be viewable in the UI...\r\n(Hopefully...)\r\nI'm testing this right now myself on a short game...\r\nLooks like it will take a little work, but still less than rebuilding it over from scratch!\r\n\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Make a short game... 3 or 4 rooms, and add a few objects...<br>\nSave, then Publish it...<br>\nChange the .Quest to .zip<br>\nOpen both games in 2 copies of Quest and look at the two games side by side...<br>\ndelete everything from the second copy (the one that was published) that is not in the first, original, version...<br>\nCopy everything from the first version, that's missing in the second one...<br>\nIF, you got all that right, the second version should look like the first and you should be able to see the game in the UI...<br>\nNow... you know what to change to restore your game to be viewable in the UI...<br>\n(Hopefully...)<br>\nI'm testing this right now myself on a short game...<br>\nLooks like it will take a little work, but still less than rebuilding it over from scratch!</p>\n\n",
+      "PostDate": "2019-07-28T14:41:44.6822152Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "2f2d3412-09a3-478a-bd52-19dcb92d7d80",
+      "UserId": 260569,
+      "Username": "DarkLizerd",
+      "AvatarUrl": "https://i.imgur.com/vjdH3t6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Or, maybe...\r\nJust add to each room and object:\r\n```\r\n<object name=\"island\">\r\n        <inherit name=\"editor_object\" /> \r\n\r\n<object name=\"room_12\">\r\n      <inherit name=\"editor_room\" /> \r\n```\r\nOh... You will need to add:\r\n```\r\n<include ref=\"CoreEditor.aslx\"/>\r\n```\r\n\r\nBefore the game name=\"What ever the name is.\" line...\r\n\r\nBut, I don't think you need all the (first part I said) because everything looks just fine...\r\nAltho, there are a few more tabs that may open up more options for each room...\r\n(Hmmm... new toys to play with...)\r\nNo... just \"core\" tab names... \r\nYea... add in this order:\r\n```\r\n<include ref=\"EditorEnglish.aslx\"/>\r\n  <include ref=\"CoreEditor.aslx\"/>\r\n    <game name=\"The Lost unicorn\">\r\n```\r\nAnd everything looks just like normal...\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Or, maybe...<br>\nJust add to each room and object:</p>\n<pre><code>&lt;object name=\"island\"&gt;\n        &lt;inherit name=\"editor_object\" /&gt; \n\n&lt;object name=\"room_12\"&gt;\n      &lt;inherit name=\"editor_room\" /&gt; \n</code></pre>\n<p>Oh... You will need to add:</p>\n<pre><code>&lt;include ref=\"CoreEditor.aslx\"/&gt;\n</code></pre>\n<p>Before the game name=\"What ever the name is.\" line...</p>\n<p>But, I don't think you need all the (first part I said) because everything looks just fine...<br>\nAltho, there are a few more tabs that may open up more options for each room...<br>\n(Hmmm... new toys to play with...)<br>\nNo... just \"core\" tab names...<br>\nYea... add in this order:</p>\n<pre><code>&lt;include ref=\"EditorEnglish.aslx\"/&gt;\n  &lt;include ref=\"CoreEditor.aslx\"/&gt;\n    &lt;game name=\"The Lost unicorn\"&gt;\n</code></pre>\n<p>And everything looks just like normal...</p>\n\n",
+      "PostDate": "2019-07-28T14:53:14.6844998Z",
+      "LastEditDate": "2019-07-28T15:18:44.0602173Z",
+      "link": null
+    },
+    {
+      "PostId": "ceda9bb2-83a6-4fa3-9021-f21740ade04f",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You already have some guides, here is my take.\r\n\r\n1. Rename from .quest to .zip (you may need to go into the Tools menu or View - Options of Windows explorer to get it to show the extension.\r\n\r\n2. Extract the .aslx file to another folder (i.e., unzip it).\r\n\r\n3. Open it in a text edit, such as Notepad.\r\n\r\n4. Change the first few lines to this (assuming it was in English):\r\n\r\n```\r\n<!--Saved by Quest 5.8.6809.15141-->\r\n<asl version=\"580\">\r\n  <include ref=\"English.aslx\" />\r\n  <include ref=\"Core.aslx\" />\r\n```\r\nPossibly the first and definitely the second will already be there, you need to add the third and fourth (the first does not matter).\r\n\r\nYou should now be able to open it in Quest. As others have said, Quest will not know it a thing is an item or room, so you will need to set that for each, but it is easier to do in Quest.\r\n\r\nAll the built-in functions, commands, etc. will be part of your game; you may want to delete them (if you are happy with XML that is easier to do from a text editor). Be carefully not to delete any you added yourself, they will be at the end (i.e., your functions will be at the end of the functions).",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You already have some guides, here is my take.</p>\n<ol>\n<li>\n<p>Rename from .quest to .zip (you may need to go into the Tools menu or View - Options of Windows explorer to get it to show the extension.</p>\n</li>\n<li>\n<p>Extract the .aslx file to another folder (i.e., unzip it).</p>\n</li>\n<li>\n<p>Open it in a text edit, such as Notepad.</p>\n</li>\n<li>\n<p>Change the first few lines to this (assuming it was in English):</p>\n</li>\n</ol>\n<pre><code>&lt;!--Saved by Quest 5.8.6809.15141--&gt;\n&lt;asl version=\"580\"&gt;\n  &lt;include ref=\"English.aslx\" /&gt;\n  &lt;include ref=\"Core.aslx\" /&gt;\n</code></pre>\n<p>Possibly the first and definitely the second will already be there, you need to add the third and fourth (the first does not matter).</p>\n<p>You should now be able to open it in Quest. As others have said, Quest will not know it a thing is an item or room, so you will need to set that for each, but it is easier to do in Quest.</p>\n<p>All the built-in functions, commands, etc. will be part of your game; you may want to delete them (if you are happy with XML that is easier to do from a text editor). Be carefully not to delete any you added yourself, they will be at the end (i.e., your functions will be at the end of the functions).</p>\n\n",
+      "PostDate": "2019-07-28T21:54:06.3916238Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "3503781c-a180-4f2d-842f-818317b45ae2",
+      "UserId": 388596,
+      "Username": "Talist",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Alright, I got it (mostly) working. Thank you everyone for your help. For the record, all I had to do was to add the two \"include\" tags that DarkLizerd mentioned, and now the editor windows are working again. I have a lot of system functions and such to get rid of though.\r\n\r\nI probably still will copy it over to a new file, mostly so I can be sure something won't break in the future, but it certainly will be much easier to do that now that I can see the structure and properties of the game itself.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Alright, I got it (mostly) working. Thank you everyone for your help. For the record, all I had to do was to add the two \"include\" tags that DarkLizerd mentioned, and now the editor windows are working again. I have a lot of system functions and such to get rid of though.</p>\n<p>I probably still will copy it over to a new file, mostly so I can be sure something won't break in the future, but it certainly will be much easier to do that now that I can see the structure and properties of the game itself.</p>\n\n",
+      "PostDate": "2019-07-29T07:15:38.7964278Z",
+      "LastEditDate": "2019-07-29T08:51:19.810358Z",
+      "link": null
+    }
+  ]
+}

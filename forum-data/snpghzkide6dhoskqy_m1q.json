@@ -1,0 +1,89 @@
+{
+  "Topic": {
+    "TopicId": "snpghzkide6dhoskqy_m1q",
+    "ForumId": "10",
+    "Title": "A context sensitive use menu, with hyperlinks",
+    "LastUpdated": "2017-01-12T04:39:33.6029047Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "85ca0e31-4446-4995-873c-6caca4dc56e2",
+      "UserId": 283832,
+      "Username": "scrimshaw04",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/8d126990ac9c6b79315d4db221bf6ef7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hey all. I'm trying to create a system where the player can click on a hyperlink for an object that has a 'use' verb attached to it, and then choose from a list of the usable items in their inventory. Here's what I've worked out so far:\r\n\r\n```\r\nuseList = NewStringList()\r\nforeach (item, ScopeInventory()) {\r\n  list add (useList, item.alias)\r\n}\r\nShowMenu (\"What would you like to use?\", useList, true) {\r\n  if (GetObject(result) = inventory_item) {\r\n    msg (\"You use the \" + this.alias)\r\n    --SCRIPT--\r\n  }\r\n  else {\r\n    msg (\"You can't use \" this.alias + \" on that.\")\r\n  }\r\n}\r\n```\r\n\r\nThere are three things that I'm not sure how to do. \r\n\r\nFirstly, how do I detect if the chosen item is a usable option? In the above code I'm currently trying to use if (GetObject(result) = inventory_item) to do that. \r\n\r\nSecondly, how would I execute the command of 'use inventory_item on other_item' using a script? I could run an attribute script, but since this would require two arguments, I'm not sure how to do it.\r\n\r\nLastly, once the player has selected an object, how do I print the object's alias?\r\n\r\nThanks!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hey all. I'm trying to create a system where the player can click on a hyperlink for an object that has a 'use' verb attached to it, and then choose from a list of the usable items in their inventory. Here's what I've worked out so far:</p>\n<pre><code>useList = NewStringList()\nforeach (item, ScopeInventory()) {\n  list add (useList, item.alias)\n}\nShowMenu (\"What would you like to use?\", useList, true) {\n  if (GetObject(result) = inventory_item) {\n    msg (\"You use the \" + this.alias)\n    --SCRIPT--\n  }\n  else {\n    msg (\"You can't use \" this.alias + \" on that.\")\n  }\n}\n</code></pre>\n<p>There are three things that I'm not sure how to do.</p>\n<p>Firstly, how do I detect if the chosen item is a usable option? In the above code I'm currently trying to use if (GetObject(result) = inventory_item) to do that.</p>\n<p>Secondly, how would I execute the command of 'use inventory_item on other_item' using a script? I could run an attribute script, but since this would require two arguments, I'm not sure how to do it.</p>\n<p>Lastly, once the player has selected an object, how do I print the object's alias?</p>\n<p>Thanks!</p>\n\n",
+      "PostDate": "2017-01-12T04:39:33.6029047Z",
+      "LastEditDate": "2017-01-12T04:45:57.6928939Z"
+    },
+    {
+      "PostId": "4340ee5c-3ac7-4b6c-9986-e65961414ed9",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I think (I could be wrong) the built in USE command will do this. Turn it on on the _Features_ tab, and see what happens with \"Use with another object\" bit.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I think (I could be wrong) the built in USE command will do this. Turn it on on the <em>Features</em> tab, and see what happens with \"Use with another object\" bit.</p>\n\n",
+      "PostDate": "2017-01-12T07:43:13.2892183Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "64a75b72-72e5-40ed-b2d9-2c586edc5a27",
+      "UserId": 283832,
+      "Username": "scrimshaw04",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/8d126990ac9c6b79315d4db221bf6ef7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Ah, that's very close to what I'm looking for! Unfortunately the list doesn't discriminate between objects. It lists every object in the room and the player's inventory that isn't scenery. Unfortunately because I have a random spawn system in my game, the spawned creatures also show up in the list, which I don't want, but I also don't want to mark them as scenery.\r\n\r\nMaybe there's a way to work around this... If I can find the original script for selfuseon then I might be able to alter it into what I'm looking for.\r\n\r\nEDIT: I think I've found the scripts, but I don't quite understand them yet. I'll keep working on it\r\n\r\nCreateUseMenuList\r\n\r\n```\r\nobjectlist = NewObjectList()\r\nobjectlist = ScopeReachableInventory()\r\nobjectlist = ListCombine (objectlist, ScopeReachableNotHeld())\r\nexcludelist = NewObjectList()\r\nlist add (excludelist, game.pov)\r\nlist add (excludelist, object)\r\ncandidates = NewObjectList()\r\ncandidates = ListExclude(RemoveSceneryObjects(objectlist), excludelist)\r\nreturn (candidates)\r\n```\r\n\r\nuse\r\n\r\n```\r\nif (HasScript(object, \"use\")) {\r\n  do (object, \"use\")\r\n}\r\nelse {\r\n  if (GetBoolean(object, \"use\")) {\r\n    menu = NewStringDictionary()\r\n    candidates = NewObjectList()\r\n    candidates = CreateUseMenuList (object)\r\n    if (ListCount(candidates) = 0) {\r\n      msg (Template(\"NoObjectsAvailable\"))\r\n    }\r\n    else {\r\n      GenerateMenuChoices (menu, candidates)\r\n      game.pov.usemenuobject = object\r\n      if (HasString(object, \"usemenuprompt\")) {\r\n        menucaption = object.usemenuprompt\r\n      }\r\n      else {\r\n        menucaption = Template(\"UseOnMenu\")\r\n      }\r\n      ShowMenu (menucaption, menu, true) {\r\n        if (result <> null) {\r\n          HandleUseOn (game.pov.usemenuobject, GetObject(result))\r\n          game.pov.usemenuobject = null\r\n        }\r\n      }\r\n    }\r\n  }\r\n  else {\r\n    msg (DynamicTemplate(\"CantUse\", object))\r\n  }\r\n}\r\n```\r\n\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Ah, that's very close to what I'm looking for! Unfortunately the list doesn't discriminate between objects. It lists every object in the room and the player's inventory that isn't scenery. Unfortunately because I have a random spawn system in my game, the spawned creatures also show up in the list, which I don't want, but I also don't want to mark them as scenery.</p>\n<p>Maybe there's a way to work around this... If I can find the original script for selfuseon then I might be able to alter it into what I'm looking for.</p>\n<p>EDIT: I think I've found the scripts, but I don't quite understand them yet. I'll keep working on it</p>\n<p>CreateUseMenuList</p>\n<pre><code>objectlist = NewObjectList()\nobjectlist = ScopeReachableInventory()\nobjectlist = ListCombine (objectlist, ScopeReachableNotHeld())\nexcludelist = NewObjectList()\nlist add (excludelist, game.pov)\nlist add (excludelist, object)\ncandidates = NewObjectList()\ncandidates = ListExclude(RemoveSceneryObjects(objectlist), excludelist)\nreturn (candidates)\n</code></pre>\n<p>use</p>\n<pre><code>if (HasScript(object, \"use\")) {\n  do (object, \"use\")\n}\nelse {\n  if (GetBoolean(object, \"use\")) {\n    menu = NewStringDictionary()\n    candidates = NewObjectList()\n    candidates = CreateUseMenuList (object)\n    if (ListCount(candidates) = 0) {\n      msg (Template(\"NoObjectsAvailable\"))\n    }\n    else {\n      GenerateMenuChoices (menu, candidates)\n      game.pov.usemenuobject = object\n      if (HasString(object, \"usemenuprompt\")) {\n        menucaption = object.usemenuprompt\n      }\n      else {\n        menucaption = Template(\"UseOnMenu\")\n      }\n      ShowMenu (menucaption, menu, true) {\n        if (result &lt;&gt; null) {\n          HandleUseOn (game.pov.usemenuobject, GetObject(result))\n          game.pov.usemenuobject = null\n        }\n      }\n    }\n  }\n  else {\n    msg (DynamicTemplate(\"CantUse\", object))\n  }\n}\n</code></pre>\n\n",
+      "PostDate": "2017-01-12T09:45:06.8515644Z",
+      "LastEditDate": "2017-01-12T10:33:30.5243467Z"
+    },
+    {
+      "PostId": "30242400-d1f1-4ccc-bd0e-1926239db1ca",
+      "UserId": 924,
+      "Username": "Pertex",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4cc1e52f99452e841ecf4cbee9eadde9?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I did not test it but this could work. Add an attribute to every object which should not be shown in the use menu e.g. \"spawnedcreature.nouse=true\"\r\nThen you could exclude objects with that attribute in the function CreateUseMenuList\r\n\r\n```\r\nobjectlist = NewObjectList()\r\nobjectlist = ScopeReachableInventory()\r\nobjectlist = ListCombine (objectlist, ScopeReachableNotHeld())\r\nexcludelist = NewObjectList()\r\nlist add (excludelist, game.pov)\r\nlist add (excludelist, object)\r\nforeach (item, objectlist) {\r\n   if (GetBoolean(item,\"nouse\") {\r\n\tlist add (excludelist, item)\r\n   }\r\n }\r\ncandidates = NewObjectList()\r\ncandidates = ListExclude(RemoveSceneryObjects(objectlist), excludelist)\r\nreturn (candidates)\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I did not test it but this could work. Add an attribute to every object which should not be shown in the use menu e.g. \"spawnedcreature.nouse=true\"<br>\nThen you could exclude objects with that attribute in the function CreateUseMenuList</p>\n<pre><code>objectlist = NewObjectList()\nobjectlist = ScopeReachableInventory()\nobjectlist = ListCombine (objectlist, ScopeReachableNotHeld())\nexcludelist = NewObjectList()\nlist add (excludelist, game.pov)\nlist add (excludelist, object)\nforeach (item, objectlist) {\n   if (GetBoolean(item,\"nouse\") {\n\tlist add (excludelist, item)\n   }\n }\ncandidates = NewObjectList()\ncandidates = ListExclude(RemoveSceneryObjects(objectlist), excludelist)\nreturn (candidates)\n</code></pre>\n\n",
+      "PostDate": "2017-01-12T14:09:05.2670018Z",
+      "LastEditDate": "2017-01-12T14:09:37.2000602Z"
+    },
+    {
+      "PostId": "383c966f-2461-40c5-828d-755e8810fff2",
+      "UserId": 283832,
+      "Username": "scrimshaw04",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/8d126990ac9c6b79315d4db221bf6ef7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "That works perfectly, and it's much simpler than the solution I had in mind. Thanks!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>That works perfectly, and it's much simpler than the solution I had in mind. Thanks!</p>\n\n",
+      "PostDate": "2017-01-14T09:41:07.321342Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24f4f013-e206-4365-9649-0d8ba1e7a120",
+      "UserId": 287034,
+      "Username": "101titan101",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a332ba7cfb662b37cdbb6cbc648407ef?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You're doing the lords work here scrim.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You're doing the lords work here scrim.</p>\n\n",
+      "PostDate": "2017-01-14T10:37:06.9270808Z",
+      "LastEditDate": null
+    }
+  ]
+}

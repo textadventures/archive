@@ -1,0 +1,89 @@
+{
+  "Topic": {
+    "TopicId": "j0buwhcaqem54spqbf73jg",
+    "ForumId": "10",
+    "Title": "a custom moving command",
+    "LastUpdated": "2016-07-31T00:53:51.2614337Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "fd9d04ec-0d76-4892-83a4-d346719b61f4",
+      "UserId": 12819,
+      "Username": "Tiffany Pratt",
+      "AvatarUrl": "https://graph.facebook.com/100001092686592/picture?width=80&height=80",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "ok so in my game. im adding a quick movement command where people can type the location they want to go to,\r\n\r\nthis command will mainly be used for vehicle movement.\r\n\r\nlike this: drive to [LocationName] is there a way  to make a  custom  type thing so when you type a location in the command you go to that  room....?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>ok so in my game. im adding a quick movement command where people can type the location they want to go to,</p>\n<p>this command will mainly be used for vehicle movement.</p>\n<p>like this: drive to [LocationName] is there a way  to make a  custom  type thing so when you type a location in the command you go to that  room....?</p>\n\n",
+      "PostDate": "2016-07-31T00:53:51.2614337Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "b5f7adab-2f85-4e21-8217-5d185320e69c",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "in the GUI~Editor:\r\n\r\nObjects -> Commands -> add -> (set it up, see below)\r\n\r\nto do the 'player.parent = object' Script seen code below, in the GUI~Editor:\r\n\r\n(run as script) -> add new script -> 'variables' section/category -> 'set a variable or attribute' Script -> (see below, for example)\r\n\r\nset variable player.parent = [EXPRESSION] object\r\n\r\n-------\r\n\r\nin code, here's an example of it:\r\n```\r\n<command name=\"goto_command\">\r\n  <pattern>drive to #object#</pattern>\r\n  <script>\r\n    player.parent = object\r\n  </script>\r\n</command>\r\n```\r\n\r\nhowever, you really need to put some checks/conditions on this, as you don't want to be able to go to any Object that you type-in for the input.\r\n\r\nan example of putting some conditions/checks on it:\r\n\r\n```\r\n<object name=\"room1\">\r\n  <attr name=\"type_of_object\" type=\"string\">room</attr>\r\n</object>\r\n\r\n<object name=\"room2\">\r\n  <attr name=\"type_of_object\" type=\"string\">room</attr>\r\n</object>\r\n\r\n<object name=\"tree1\">\r\n  <attr name=\"type_of_object\" type=\"string\">non_room</attr>\r\n</object>\r\n\r\n<object name=\"dog1\">\r\n  <attr name=\"type_of_object\" type=\"string\">non_room</attr>\r\n</object>\r\n\r\n<command name=\"goto_command\">\r\n  <pattern>drive to #object#</pattern>\r\n  <script>\r\n    if (object.type_of_object = \"room\") {\r\n      player.parent = object\r\n      msg (\"You suddenly find your self transported to the location you desired.\")\r\n    } else {\r\n      msg (\"You can't go to that, silly! Error: Wrong input, please type in the name of a 'Room Object', if you try again\")\r\n    }\r\n  </script>\r\n</command>\r\n```\r\n\r\nresults/outputs:\r\n\r\n1. input: drive to room1 ---> (you're moved to 'room1') and 'You suddenly find your self transported to the location you desired.'\r\n2. input: drive to room2 ---> (you're moved to 'room2') and 'You suddenly find your self transported to the location you desired.'\r\n3. input: drive to tree1 ---> 'You can't go to that, silly! Error: Wrong input, please type in the name of a 'Room Object', if you try again'\r\n4. input: drive to dog1 ---> 'You can't go to that, silly! Error: Wrong input, please type in the name of a 'Room Object', if you try again'",
+      "EditableFormat": "markdown",
+      "HTML": "<p>in the GUI~Editor:</p>\n<p>Objects -&gt; Commands -&gt; add -&gt; (set it up, see below)</p>\n<p>to do the 'player.parent = object' Script seen code below, in the GUI~Editor:</p>\n<p>(run as script) -&gt; add new script -&gt; 'variables' section/category -&gt; 'set a variable or attribute' Script -&gt; (see below, for example)</p>\n<p>set variable player.parent = [EXPRESSION] object</p>\n<hr>\n<p>in code, here's an example of it:</p>\n<pre><code>&lt;command name=\"goto_command\"&gt;\n  &lt;pattern&gt;drive to #object#&lt;/pattern&gt;\n  &lt;script&gt;\n    player.parent = object\n  &lt;/script&gt;\n&lt;/command&gt;\n</code></pre>\n<p>however, you really need to put some checks/conditions on this, as you don't want to be able to go to any Object that you type-in for the input.</p>\n<p>an example of putting some conditions/checks on it:</p>\n<pre><code>&lt;object name=\"room1\"&gt;\n  &lt;attr name=\"type_of_object\" type=\"string\"&gt;room&lt;/attr&gt;\n&lt;/object&gt;\n\n&lt;object name=\"room2\"&gt;\n  &lt;attr name=\"type_of_object\" type=\"string\"&gt;room&lt;/attr&gt;\n&lt;/object&gt;\n\n&lt;object name=\"tree1\"&gt;\n  &lt;attr name=\"type_of_object\" type=\"string\"&gt;non_room&lt;/attr&gt;\n&lt;/object&gt;\n\n&lt;object name=\"dog1\"&gt;\n  &lt;attr name=\"type_of_object\" type=\"string\"&gt;non_room&lt;/attr&gt;\n&lt;/object&gt;\n\n&lt;command name=\"goto_command\"&gt;\n  &lt;pattern&gt;drive to #object#&lt;/pattern&gt;\n  &lt;script&gt;\n    if (object.type_of_object = \"room\") {\n      player.parent = object\n      msg (\"You suddenly find your self transported to the location you desired.\")\n    } else {\n      msg (\"You can't go to that, silly! Error: Wrong input, please type in the name of a 'Room Object', if you try again\")\n    }\n  &lt;/script&gt;\n&lt;/command&gt;\n</code></pre>\n<p>results/outputs:</p>\n<ol>\n<li>input: drive to room1 ---&gt; (you're moved to 'room1') and 'You suddenly find your self transported to the location you desired.'</li>\n<li>input: drive to room2 ---&gt; (you're moved to 'room2') and 'You suddenly find your self transported to the location you desired.'</li>\n<li>input: drive to tree1 ---&gt; 'You can't go to that, silly! Error: Wrong input, please type in the name of a 'Room Object', if you try again'</li>\n<li>input: drive to dog1 ---&gt; 'You can't go to that, silly! Error: Wrong input, please type in the name of a 'Room Object', if you try again'</li>\n</ol>\n\n",
+      "PostDate": "2016-07-31T01:45:10.6310725Z",
+      "LastEditDate": "2016-07-31T01:49:53.9254701Z"
+    },
+    {
+      "PostId": "32db2da1-a7d8-41ce-9a0a-04db41ba382b",
+      "UserId": 109366,
+      "Username": "Marzipan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/96db8d4d178365a7065b1872e874bc83?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Tiffany, custom commands and IF THEN stuff are pretty simple things to learn that you'll come back to again and again for situations like this, and countless others. I'd recommend checking out the tutorial and playing around with them until you have them down, they really are absolutely vital. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Tiffany, custom commands and IF THEN stuff are pretty simple things to learn that you'll come back to again and again for situations like this, and countless others. I'd recommend checking out the tutorial and playing around with them until you have them down, they really are absolutely vital.</p>\n\n",
+      "PostDate": "2016-07-31T02:18:59.3443332Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "00704923-e79c-431e-82c6-e75153837bcc",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "It is certainly useful to go though the tutorial, but this is going into areas not covered so will not directly help. HK's solution will not work, because `#object#` will only match things in the present room or player inventory, and the destination room will not be that. Instead you need to match the text yourself.\r\n\r\nCreat a new command, and for the pattern, paste in this:\r\n```\r\ndrive to #text#\r\n```\r\nClick the \"Code view\" button, and paste this in (lines that start // are comments, and hopefully will help you understand what is going on, but this is not straightforward, so do not worry if it does not):\r\n```\r\n    handled = false\r\n    // check each object in the game world\r\n    foreach (obj, AllObjects()) {\r\n      flag = false\r\n      // does the text match the name or alias (if it has one)?\r\n      if (obj.name = text) {\r\n        flag = true\r\n      }\r\n      if (HasString(obj, \"alias\")) {\r\n        if (obj.alias = text) {\r\n          flag = true\r\n        }\r\n      }\r\n      if (flag) {\r\n        // We have a match so deal with it\r\n        handled = true\r\n        if (ListCount(ScopeExitsForRoom(obj)) = 0) {\r\n          // If the thing has no exits, assume it is not a room\r\n          msg (\"That's not the sort of thing you can drive to.\")\r\n        }\r\n        else if (obj = game.pov.parent) {\r\n          // Are we already there?\r\n          msg (\"You're already there.\")\r\n        }\r\n        else {\r\n          // Success! Give the message first, then Quest will\r\n          // handle room descriptions when the move is done\r\n          msg (\"You jump in your car and drive off...\")\r\n          player.parent = obj\r\n        }\r\n      }\r\n    }\r\n    if (not handled) {\r\n      // Failed to find a match, so report the error\r\n      msg (\"I have no idea what \\\"\" + text + \"\\\" means.\")\r\n    }\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>It is certainly useful to go though the tutorial, but this is going into areas not covered so will not directly help. HK's solution will not work, because <code>#object#</code> will only match things in the present room or player inventory, and the destination room will not be that. Instead you need to match the text yourself.</p>\n<p>Creat a new command, and for the pattern, paste in this:</p>\n<pre><code>drive to #text#\n</code></pre>\n<p>Click the \"Code view\" button, and paste this in (lines that start // are comments, and hopefully will help you understand what is going on, but this is not straightforward, so do not worry if it does not):</p>\n<pre><code>    handled = false\n    // check each object in the game world\n    foreach (obj, AllObjects()) {\n      flag = false\n      // does the text match the name or alias (if it has one)?\n      if (obj.name = text) {\n        flag = true\n      }\n      if (HasString(obj, \"alias\")) {\n        if (obj.alias = text) {\n          flag = true\n        }\n      }\n      if (flag) {\n        // We have a match so deal with it\n        handled = true\n        if (ListCount(ScopeExitsForRoom(obj)) = 0) {\n          // If the thing has no exits, assume it is not a room\n          msg (\"That's not the sort of thing you can drive to.\")\n        }\n        else if (obj = game.pov.parent) {\n          // Are we already there?\n          msg (\"You're already there.\")\n        }\n        else {\n          // Success! Give the message first, then Quest will\n          // handle room descriptions when the move is done\n          msg (\"You jump in your car and drive off...\")\n          player.parent = obj\n        }\n      }\n    }\n    if (not handled) {\n      // Failed to find a match, so report the error\n      msg (\"I have no idea what \\\"\" + text + \"\\\" means.\")\n    }\n</code></pre>\n\n",
+      "PostDate": "2016-08-05T22:29:22.8801378Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "cd069112-b122-4553-bedb-e0b1338611f3",
+      "UserId": 56551,
+      "Username": "XanMag",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4b45a3afd18077f76f6569225c422bdb?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I would do this one of two ways.\r\n1.  Create a command called \"drive\".\r\n2.  Print a message \"where would you like to go?\"\r\n3. Print a message with numbered options.  1. Blah, 2. Blah blah, etc.\r\n4.  Use a get input/switch script and move player to desired room.\r\n\r\nOR\r\n\r\n1.  Create a global command for each location the player can travel to.\r\n2. Run an If script to check if the player is in the proper room to drive from.  Then move player to desired location.\r\n\r\nYou can always add if statements to check for conditions that need met for each location.\r\n\r\nIf you choose this method, let me know.  I'll help.\r\n\r\nGood luck!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I would do this one of two ways.</p>\n<ol>\n<li>Create a command called \"drive\".</li>\n<li>Print a message \"where would you like to go?\"</li>\n<li>Print a message with numbered options.  1. Blah, 2. Blah blah, etc.</li>\n<li>Use a get input/switch script and move player to desired room.</li>\n</ol>\n<p>OR</p>\n<ol>\n<li>Create a global command for each location the player can travel to.</li>\n<li>Run an If script to check if the player is in the proper room to drive from.  Then move player to desired location.</li>\n</ol>\n<p>You can always add if statements to check for conditions that need met for each location.</p>\n<p>If you choose this method, let me know.  I'll help.</p>\n<p>Good luck!</p>\n\n",
+      "PostDate": "2016-08-06T01:59:04.6358232Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "9f2caa35-e5d4-4017-9def-c796fcfe960d",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "oops, thank you Pixie for pointing out my faulty code, I keep forgetting that when working directly with Objects (using #object#), it only searches/checks for Objects in the room that the Player is in, argh! As, I, myself, usually just use #text# and 'foreach(AllObjects)'check-convert it into an Object instead of using #object#, so that's why I'm unaware-forgetful about the issue with using Objects directly (using the #object#).\r\n\r\nmy apologies Tiffany, for the faulty code in my previous post.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>oops, thank you Pixie for pointing out my faulty code, I keep forgetting that when working directly with Objects (using #object#), it only searches/checks for Objects in the room that the Player is in, argh! As, I, myself, usually just use #text# and 'foreach(AllObjects)'check-convert it into an Object instead of using #object#, so that's why I'm unaware-forgetful about the issue with using Objects directly (using the #object#).</p>\n<p>my apologies Tiffany, for the faulty code in my previous post.</p>\n\n",
+      "PostDate": "2016-08-06T02:35:12.4229447Z",
+      "LastEditDate": "2016-08-06T02:39:27.0815779Z"
+    }
+  ]
+}

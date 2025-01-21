@@ -1,0 +1,143 @@
+{
+  "Topic": {
+    "TopicId": "6261",
+    "ForumId": "10",
+    "Title": "Advice on Cloning or something else!",
+    "LastUpdated": "2016-04-23T23:14:42+01:00",
+    "ReplyCount": 10
+  },
+  "Posts": [
+    {
+      "PostId": "42433",
+      "UserId": 0,
+      "Username": "Anonynn",
+      "UserAvatar": "7661_1463890118.jpg",
+      "UserGravatar": "2eea18890a69714beb5b926a7b559e64",
+      "EditableText": "So...I ran into a problem the other day. Someone got an article of clothing in my game and then ended up finding the same article of clothing later on. In the &quot;Object Inventory&quot; the second find of the clothing item was stated as &quot;worn&quot; and when they put the object on again, it double the stats that it's supposed to give. How I generally do things in my game is I create a list like &quot;Equipment&quot; for example, and build items there in the list and then set up scripts that moves those items into the game. \n\nI was wondering if there is a better way of doing this like for example cloning the main objects leaving those objects in the &quot;Equipment&quot; section and sending their clones into the game for the player to find? I'm not sure what I should do to solve this problem. \n\nAny advice?",
+      "EditableFormat": "bbcode",
+      "HTML": "So...I ran into a problem the other day. Someone got an article of clothing in my game and then ended up finding the same article of clothing later on. In the &quot;Object Inventory&quot; the second find of the clothing item was stated as &quot;worn&quot; and when they put the object on again, it double the stats that it's supposed to give. How I generally do things in my game is I create a list like &quot;Equipment&quot; for example, and build items there in the list and then set up scripts that moves those items into the game. <br/><br/>I was wondering if there is a better way of doing this like for example cloning the main objects leaving those objects in the &quot;Equipment&quot; section and sending their clones into the game for the player to find? I'm not sure what I should do to solve this problem. <br/><br/>Any advice?",
+      "PostDate": "2016-04-21T03:04:04+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42436",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "My game Deeper does this a lot. Here is an example of a function that takes a prototype object and a location, clones the prototype in the location and then modifies the description and price it to give variety.\n[code:3pt2llg7]\n  &lt;function name=&quot;CreateTreasure&quot; parameters=&quot;obj, room&quot;&gt;\n    o = CloneObjectAndMove(obj, room)\n    if (HasString(o, &quot;look&quot;)) o&#46;look = RandomisePlus(o&#46;look)\n    o&#46;price = o&#46;price - GetRandomInt(o&#46;price/-4, o&#46;price/4)\n  &lt;/function&gt;\n  \n  \n  \n &lt;function name=&quot;Randomise&quot; parameters=&quot;s&quot; type=&quot;string&quot;&gt;\n    mylist = Split (s, &quot;{&quot;)\n    output = StringListItem (mylist, 0)\n    list remove (mylist, output)\n    count = 0\n    foreach (s1, mylist) {\n      list1 = Split (s1, &quot;}&quot;)\n      if (not ListCount (list1) = 2) {\n        error (&quot;Unable to parse&#58; &quot; + s)\n      }\n      s2 = StringListItem (list1, 0)\n      list2 = Split (s2, &quot;|&quot;)\n      pos = GetRandomInt (0, ListCount (list2) - 1)\n      extra = StringListItem (list2, pos)\n      output = output + extra + StringListItem (list1, 1)\n      count = count + 1\n    }\n    return (output)\n  &lt;/function&gt;\n  \n  \n  \n  &lt;function name=&quot;RandomisePlus&quot; parameters=&quot;s&quot; type=&quot;string&quot;&gt;\n    s = Randomise(s)\n    s = Replace(s, &quot;%gem%&quot;, PickOneStr(&quot;ruby|sapphire|crystal|amethyst|emerald|diamond|opal|moonstone|chrysoberyl|garnet|jade|onyx|sunstone|topaz|tourmaline|turquoise&quot;))\n    s = Replace(s, &quot;%metal%&quot;, PickOneStr(&quot;electrum|gold|silver|white gold|crown gold|meteorite iron|mithril|adamantine|blood alloy&quot;))\n    s = Replace(s, &quot;%stone%&quot;, PickOneStr(&quot;alabaster|soapstone|chlorite|wonderstone|limestone|onyx|obsidian|marble|moonstone|coral|amber&quot;))\n    return (s)\n  &lt;/function&gt;\n  \n  \n  \n  &lt;!--\n  Randomly picks asubstring of the given string, or a string from a string list&#46; Substrings should be separated by a vertical bar&#46;\n  --&gt;\n  &lt;function name=&quot;PickOneStr&quot; parameters=&quot;lst&quot; type=&quot;string&quot;&gt;\n    if (TypeOf(lst) = &quot;string&quot;) {\n      lst = Split(lst, &quot;|&quot;)\n    }\n    index = GetRandomInt(0, ListCount(lst) - 1)\n    return (StringListItem(lst, index))\n&lt;/function&gt;\n  \n  [/code:3pt2llg7]",
+      "EditableFormat": "bbcode",
+      "HTML": "My game Deeper does this a lot. Here is an example of a function that takes a prototype object and a location, clones the prototype in the location and then modifies the description and price it to give variety.<br/><pre><code><br/>  &lt;function name=&quot;CreateTreasure&quot; parameters=&quot;obj, room&quot;&gt;<br/>    o = CloneObjectAndMove(obj, room)<br/>    if (HasString(o, &quot;look&quot;)) o&#46;look = RandomisePlus(o&#46;look)<br/>    o&#46;price = o&#46;price - GetRandomInt(o&#46;price/-4, o&#46;price/4)<br/>  &lt;/function&gt;<br/>  <br/>  <br/>  <br/> &lt;function name=&quot;Randomise&quot; parameters=&quot;s&quot; type=&quot;string&quot;&gt;<br/>    mylist = Split (s, &quot;{&quot;)<br/>    output = StringListItem (mylist, 0)<br/>    list remove (mylist, output)<br/>    count = 0<br/>    foreach (s1, mylist) {<br/>      list1 = Split (s1, &quot;}&quot;)<br/>      if (not ListCount (list1) = 2) {<br/>        error (&quot;Unable to parse&#58; &quot; + s)<br/>      }<br/>      s2 = StringListItem (list1, 0)<br/>      list2 = Split (s2, &quot;|&quot;)<br/>      pos = GetRandomInt (0, ListCount (list2) - 1)<br/>      extra = StringListItem (list2, pos)<br/>      output = output + extra + StringListItem (list1, 1)<br/>      count = count + 1<br/>    }<br/>    return (output)<br/>  &lt;/function&gt;<br/>  <br/>  <br/>  <br/>  &lt;function name=&quot;RandomisePlus&quot; parameters=&quot;s&quot; type=&quot;string&quot;&gt;<br/>    s = Randomise(s)<br/>    s = Replace(s, &quot;%gem%&quot;, PickOneStr(&quot;ruby|sapphire|crystal|amethyst|emerald|diamond|opal|moonstone|chrysoberyl|garnet|jade|onyx|sunstone|topaz|tourmaline|turquoise&quot;))<br/>    s = Replace(s, &quot;%metal%&quot;, PickOneStr(&quot;electrum|gold|silver|white gold|crown gold|meteorite iron|mithril|adamantine|blood alloy&quot;))<br/>    s = Replace(s, &quot;%stone%&quot;, PickOneStr(&quot;alabaster|soapstone|chlorite|wonderstone|limestone|onyx|obsidian|marble|moonstone|coral|amber&quot;))<br/>    return (s)<br/>  &lt;/function&gt;<br/>  <br/>  <br/>  <br/>  &lt;!--<br/>  Randomly picks asubstring of the given string, or a string from a string list&#46; Substrings should be separated by a vertical bar&#46;<br/>  --&gt;<br/>  &lt;function name=&quot;PickOneStr&quot; parameters=&quot;lst&quot; type=&quot;string&quot;&gt;<br/>    if (TypeOf(lst) = &quot;string&quot;) {<br/>      lst = Split(lst, &quot;|&quot;)<br/>    }<br/>    index = GetRandomInt(0, ListCount(lst) - 1)<br/>    return (StringListItem(lst, index))<br/>&lt;/function&gt;<br/>  <br/>  </code></pre>",
+      "PostDate": "2016-04-21T08:54:46+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42441",
+      "UserId": 0,
+      "Username": "Anonynn",
+      "UserAvatar": "7661_1463890118.jpg",
+      "UserGravatar": "2eea18890a69714beb5b926a7b559e64",
+      "EditableText": "Hmm. Looks really interesting. So I could use this in my game? Or would you have problems with that? Do you foresee anything having trouble carrying over from the code? Or should I create a modified version somehow? Also, thanks Pix!",
+      "EditableFormat": "bbcode",
+      "HTML": "Hmm. Looks really interesting. So I could use this in my game? Or would you have problems with that? Do you foresee anything having trouble carrying over from the code? Or should I create a modified version somehow? Also, thanks Pix!",
+      "PostDate": "2016-04-22T01:32:07+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42443",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Anything I post on the forum is free for others to use and modify as they see fit, so go ahead and do what you want with it.\n\nThinking about it, I should have explained how to use it. Set up your prototype as normal, but give is an integer attribute called &quot;price&quot;. Give it an alias too. For the description (the &quot;look&quot; attribute), you can put in a list of options like this:\n\nThe sword was {long|broken|rusty} and made of %metal%.\n\nIt will randomly select one of long, broken and rusty, and pick a metal from the list in RandomisePlus (you could use the text processor to get random text, but then it would change each time the item is examined; this way the description is set in stone when the item is created).\n\nThe %metal% thing is for when you want to use the same list of options several times. You can do %gem% and %stone%. The RandomisePlus is specific to what I wanted in my game, you may well want to add other options. Just realised you also need PickOneStr, so I edited my post to include that.",
+      "EditableFormat": "bbcode",
+      "HTML": "Anything I post on the forum is free for others to use and modify as they see fit, so go ahead and do what you want with it.<br/><br/>Thinking about it, I should have explained how to use it. Set up your prototype as normal, but give is an integer attribute called &quot;price&quot;. Give it an alias too. For the description (the &quot;look&quot; attribute), you can put in a list of options like this:<br/><br/>The sword was {long|broken|rusty} and made of %metal%.<br/><br/>It will randomly select one of long, broken and rusty, and pick a metal from the list in RandomisePlus (you could use the text processor to get random text, but then it would change each time the item is examined; this way the description is set in stone when the item is created).<br/><br/>The %metal% thing is for when you want to use the same list of options several times. You can do %gem% and %stone%. The RandomisePlus is specific to what I wanted in my game, you may well want to add other options. Just realised you also need PickOneStr, so I edited my post to include that.",
+      "PostDate": "2016-04-22T07:42:33+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42446",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Better still, use the code here:\n<!-- l --><a class=\"postlink-local\" href=\"http://forum.textadventures.co.uk/viewtopic.php?f=18&amp;t=6263\">viewtopic.php?f=18&amp;t=6263</a><!-- l -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Better still, use the code here:<br/><!-- l --><a class=\"postlink-local\" href=\"http://forum.textadventures.co.uk/viewtopic.php?f=18&amp;t=6263\">viewtopic.php?f=18&amp;t=6263</a><!-- l -->",
+      "PostDate": "2016-04-22T14:36:48+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42459",
+      "UserId": 0,
+      "Username": "Anonynn",
+      "UserAvatar": "7661_1463890118.jpg",
+      "UserGravatar": "2eea18890a69714beb5b926a7b559e64",
+      "EditableText": "Just curious do either one of those account for like &quot;text processor&quot; descriptions or &quot;size limitation&quot; functions? What I mean is, I have all articles of clothing in my game described in the player.object's, 'look at 'description when it's worn.",
+      "EditableFormat": "bbcode",
+      "HTML": "Just curious do either one of those account for like &quot;text processor&quot; descriptions or &quot;size limitation&quot; functions? What I mean is, I have all articles of clothing in my game described in the player.object's, 'look at 'description when it's worn.",
+      "PostDate": "2016-04-23T00:05:10+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42463",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Not sure I understand, but the functions on the other thread are compatible with text processor commands, so if you had a text processor command that tells the player is the garment is too big or too small, I think it will work.",
+      "EditableFormat": "bbcode",
+      "HTML": "Not sure I understand, but the functions on the other thread are compatible with text processor commands, so if you had a text processor command that tells the player is the garment is too big or too small, I think it will work.",
+      "PostDate": "2016-04-23T11:03:59+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42465",
+      "UserId": 0,
+      "Username": "Anonynn",
+      "UserAvatar": "7661_1463890118.jpg",
+      "UserGravatar": "2eea18890a69714beb5b926a7b559e64",
+      "EditableText": "Oh okay! \n\nWhat I meant was......well, for example. Let's say I have an item called:\n\n&quot;Dirty Shoe&quot; \n\nI set up the prototype... color red/blue/green, laces frayed/leather/string etc \n\nIn my player.object, &quot;look at&quot; script, I have the descriptions of the game's current clothing and how each piece fits on the player's body type and etc. If I were to use the Prototype Function. How would I program the text processor to modify the cloned item to fit in those descriptions? @_@ Does that make sense? \n\nLike for example. I have a fixed item..\n\n&quot;Brown Boots&quot; they look brown and are made of leather, and have so and so\n\n&quot;Prototype Boots&quot; they look colorinserthere and are made of bootmaterialhere, and have so and so",
+      "EditableFormat": "bbcode",
+      "HTML": "Oh okay! <br/><br/>What I meant was......well, for example. Let's say I have an item called:<br/><br/>&quot;Dirty Shoe&quot; <br/><br/>I set up the prototype... color red/blue/green, laces frayed/leather/string etc <br/><br/>In my player.object, &quot;look at&quot; script, I have the descriptions of the game's current clothing and how each piece fits on the player's body type and etc. If I were to use the Prototype Function. How would I program the text processor to modify the cloned item to fit in those descriptions? @_@ Does that make sense? <br/><br/>Like for example. I have a fixed item..<br/><br/>&quot;Brown Boots&quot; they look brown and are made of leather, and have so and so<br/><br/>&quot;Prototype Boots&quot; they look colorinserthere and are made of bootmaterialhere, and have so and so",
+      "PostDate": "2016-04-23T19:32:12+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42468",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Thinking about it, there is an issue for the text processor. The problem for any cloned item, whether from my functions or not, is that you will not know the name of the item in advance. If the prototype is &quot;boots&quot;, the first cline will be &quot;boots1&quot;, the second &quot;boots2&quot;, etc. The text processor requires the name of the object, eg:\n{if boots2.size&gt;4:they are too big for you. }\n\nSo I have updated my functions so you can use #### as a stand-in for the object name:\n{if ####.size&gt;4:they are too big for you. }\n\nSo the answer is now: Yes.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thinking about it, there is an issue for the text processor. The problem for any cloned item, whether from my functions or not, is that you will not know the name of the item in advance. If the prototype is &quot;boots&quot;, the first cline will be &quot;boots1&quot;, the second &quot;boots2&quot;, etc. The text processor requires the name of the object, eg:<br/>{if boots2.size&gt;4:they are too big for you. }<br/><br/>So I have updated my functions so you can use #### as a stand-in for the object name:<br/>{if ####.size&gt;4:they are too big for you. }<br/><br/>So the answer is now: Yes.",
+      "PostDate": "2016-04-23T21:29:16+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42470",
+      "UserId": 0,
+      "Username": "Anonynn",
+      "UserAvatar": "7661_1463890118.jpg",
+      "UserGravatar": "2eea18890a69714beb5b926a7b559e64",
+      "EditableText": "Great! \n\nActually, why wouldn't text processor work for that? I mean if you create a prototype &quot;boot&quot; and know in advance you'll be using a clone of that proto-type labeled boots1 ...couldn't you just type a predetermined description of &quot;boots1&quot; and leave #### for all the color and material names?",
+      "EditableFormat": "bbcode",
+      "HTML": "Great! <br/><br/>Actually, why wouldn't text processor work for that? I mean if you create a prototype &quot;boot&quot; and know in advance you'll be using a clone of that proto-type labeled boots1 ...couldn't you just type a predetermined description of &quot;boots1&quot; and leave #### for all the color and material names?",
+      "PostDate": "2016-04-23T23:09:58+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42471",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "If it is a value in the prototype, that will be fine. I was assuming your clone was a random size, and so you need to test the size of the clone, not the prototype.",
+      "EditableFormat": "bbcode",
+      "HTML": "If it is a value in the prototype, that will be fine. I was assuming your clone was a random size, and so you need to test the size of the clone, not the prototype.",
+      "PostDate": "2016-04-23T23:14:42+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

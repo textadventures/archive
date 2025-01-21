@@ -1,0 +1,123 @@
+{
+  "Topic": {
+    "TopicId": "ff3heiyqk0gkhombj-gj1a",
+    "ForumId": "10",
+    "Title": "Asking about Ask",
+    "LastUpdated": "2020-04-01T21:26:01.5810824Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "2307c98c-9ea2-402e-8671-eb5fa6247940",
+      "UserId": 142763,
+      "Username": "Forgewright",
+      "AvatarUrl": "http://i.imgur.com/Ea6HecZb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "This is a command ```sell #object#```\r\n```\r\nif (not HasAttribute(game.pov.parent, \"stock\")) {\r\n  msg (\"You can't sell stuff here.\")\r\n}\r\nelse if (not object.parent = game.pov) {\r\n  msg (\"You're not carrying \" + object.article + \".\")\r\n}\r\nelse if (HasAttribute(object, \"buy\")) {\r\n  Ask (\"Sell it for \" + object.price + \" gold?\") {\r\n    if (result = true) {\r\n      msg (\"You sell \" + object.article + \" for \" + object.price + \" gold.\")\r\n      game.pov.money = game.pov.money + object.price\r\n    }\r\n    if (GetBoolean(object, \"cloneme\")) {\r\n      RemoveObject (object)\r\n    }\r\n    else {\r\n      object.parent = game.pov.parent.stock\r\n      SetUpMerchandise (object)\r\n    }\r\n  }\r\n}\r\n```\r\nAll lines work up to and including the Ask line.  And the object is recognised. \r\nhowever in the \r\n```\r\nmsg (\"You sell \" + object.article + \" for \" + object.price + \" gold.\")\r\n```\r\nline, the object is not recognised as a variable or object.\r\nis this kosher or do I have an error in script?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>This is a command <code>sell #object#</code></p>\n<pre><code>if (not HasAttribute(game.pov.parent, \"stock\")) {\n  msg (\"You can't sell stuff here.\")\n}\nelse if (not object.parent = game.pov) {\n  msg (\"You're not carrying \" + object.article + \".\")\n}\nelse if (HasAttribute(object, \"buy\")) {\n  Ask (\"Sell it for \" + object.price + \" gold?\") {\n    if (result = true) {\n      msg (\"You sell \" + object.article + \" for \" + object.price + \" gold.\")\n      game.pov.money = game.pov.money + object.price\n    }\n    if (GetBoolean(object, \"cloneme\")) {\n      RemoveObject (object)\n    }\n    else {\n      object.parent = game.pov.parent.stock\n      SetUpMerchandise (object)\n    }\n  }\n}\n</code></pre>\n<p>All lines work up to and including the Ask line.  And the object is recognised.<br>\nhowever in the</p>\n<pre><code>msg (\"You sell \" + object.article + \" for \" + object.price + \" gold.\")\n</code></pre>\n<p>line, the object is not recognised as a variable or object.<br>\nis this kosher or do I have an error in script?</p>\n\n",
+      "PostDate": "2020-04-01T21:26:01.5810824Z",
+      "LastEditDate": "2020-04-01T21:38:21.0948857Z",
+      "link": null
+    },
+    {
+      "PostId": "2a348396-770a-430e-9bf7-b52bd37bc73f",
+      "UserId": 142763,
+      "Username": "Forgewright",
+      "AvatarUrl": "http://i.imgur.com/Ea6HecZb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I used the small ```ask``` and it works but with a pop-up which is not very pretty. What's up with that?\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I used the small <code>ask</code> and it works but with a pop-up which is not very pretty. What's up with that?</p>\n\n",
+      "PostDate": "2020-04-02T02:38:09.2518014Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "4677e1ff-3979-4475-9da0-817b4269112d",
+      "UserId": 277074,
+      "Username": "Dcoder",
+      "AvatarUrl": "https://i.imgur.com/O07mlRtb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I pretty sure what's happening here is that while the ```Ask``` script is waiting on a response, Quest will keep running the rest of the code that follows your above code.  By the time Quest gets there, the ```object``` variable no longer exists, so when the player gives a yes/no response, ```object.article``` no longer makes any sense to it.  I think you have to put an ```on ready``` script at the tail end of all the above code.\r\n\r\nA more detailed (but a bit confusing) explanation is in the documentation:\r\n\r\nhttp://docs.textadventures.co.uk/quest/blocks_and_scripts.html",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I pretty sure what's happening here is that while the <code>Ask</code> script is waiting on a response, Quest will keep running the rest of the code that follows your above code.  By the time Quest gets there, the <code>object</code> variable no longer exists, so when the player gives a yes/no response, <code>object.article</code> no longer makes any sense to it.  I think you have to put an <code>on ready</code> script at the tail end of all the above code.</p>\n<p>A more detailed (but a bit confusing) explanation is in the documentation:</p>\n<p>http://docs.textadventures.co.uk/quest/blocks_and_scripts.html</p>\n\n",
+      "PostDate": "2020-04-02T03:22:51.5929884Z",
+      "LastEditDate": "2020-04-02T03:38:42.8680515Z",
+      "link": null
+    },
+    {
+      "PostId": "3e4715f4-3833-4519-b0a1-527733871d39",
+      "UserId": 142763,
+      "Username": "Forgewright",
+      "AvatarUrl": "http://i.imgur.com/Ea6HecZb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Tried the on ready. no luck.\r\nthis works:\r\n```\r\nif (not HasAttribute(game.pov.parent, \"stock\")) {\r\n  msg (\"You can't sell stuff here.\")\r\n}\r\nelse if (not object.parent = game.pov) {\r\n  msg (\"You're not carrying \" + object.article + \".\")\r\n}\r\nelse if (HasAttribute(object, \"buy\")) {\r\n  msg (\"Sell it for \" + object.price + \" gold?\") \r\n  get input {\r\n    if (result = \"yes\") {\r\n      game.pov.money = game.pov.money + object.price\r\n      msg (\"Sold!\")\r\n    }\r\n    if (GetBoolean(object, \"cloneme\")) {\r\n      RemoveObject (object)\r\n    }\r\n    else {\r\n      object.parent = game.pov.parent.stock\r\n      SetUpMerchandise (object)\r\n    }\r\n  }\r\n}\r\n```\r\njust need to finish the \"no\" part of script .\r\n\r\nThanks Dcoder for once again helping me out.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Tried the on ready. no luck.<br>\nthis works:</p>\n<pre><code>if (not HasAttribute(game.pov.parent, \"stock\")) {\n  msg (\"You can't sell stuff here.\")\n}\nelse if (not object.parent = game.pov) {\n  msg (\"You're not carrying \" + object.article + \".\")\n}\nelse if (HasAttribute(object, \"buy\")) {\n  msg (\"Sell it for \" + object.price + \" gold?\") \n  get input {\n    if (result = \"yes\") {\n      game.pov.money = game.pov.money + object.price\n      msg (\"Sold!\")\n    }\n    if (GetBoolean(object, \"cloneme\")) {\n      RemoveObject (object)\n    }\n    else {\n      object.parent = game.pov.parent.stock\n      SetUpMerchandise (object)\n    }\n  }\n}\n</code></pre>\n<p>just need to finish the \"no\" part of script .</p>\n<p>Thanks Dcoder for once again helping me out.</p>\n\n",
+      "PostDate": "2020-04-02T03:59:01.4652357Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "c9baba6e-7f61-4187-a3f8-bcac503749fb",
+      "UserId": 277074,
+      "Username": "Dcoder",
+      "AvatarUrl": "https://i.imgur.com/O07mlRtb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm not sure why that works (get input vs. Ask), but I'm glad it does!\r\n\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm not sure why that works (get input vs. Ask), but I'm glad it does!</p>\n\n",
+      "PostDate": "2020-04-02T06:02:38.206644Z",
+      "LastEditDate": "2020-04-05T11:47:51.1191573Z",
+      "link": null
+    },
+    {
+      "PostId": "14ee9cb1-de4d-4acd-b960-06de244a6bd9",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You need to store the object in an attribute if you're using `Ask` or `ShowMenu`, because the player answering the question is next turn.\r\n\r\nAlso, I notice that in that script it asks the player if they want to sell the object - and if they select \"No\", they give away the object for free instead. I think the code for removing the object from the inventory should be inside the `if (result)` block.\r\n\r\nYou'd want something like:\r\n<pre><code>if (not HasAttribute(game.pov.parent, \"stock\")) {\r\n  msg (\"You can't sell stuff here.\")\r\n}\r\nelse if (not object.parent = game.pov) {\r\n  msg (\"You're not carrying \" + object.article + \".\")\r\n}\r\nelse if (HasAttribute(object, \"buy\")) {\r\n  <b style=\"border: 1px dotted green\">game.selling_object = object</b>\r\n  Ask (\"Sell it for \" + sell.object.price + \" gold?\") {\r\n    <b style=\"border: 1px dotted green\">object = game.selling_object</b>\r\n    if (result) {\r\n      msg (\"You sell \" + object.article + \" for \" + object.price + \" gold.\")\r\n      game.pov.money = game.pov.money + object.price<ul style=\"margin: 0px; color: blue\"><li style=\"list-style-type: '► '; color: #333333; margin-left: 1em\">if (GetBoolean(object, \"cloneme\")) {</li><li style=\"list-style-type: '► '; color: #333333; margin-left: 1em\">  RemoveObject (object)</li><li style=\"list-style-type: '► '; color: #333333; margin-left: 1em\">}</li><li style=\"list-style-type: '► '; color: #333333; margin-left: 1em\">else {</li><li style=\"list-style-type: '► '; color: #333333; margin-left: 1em\">  object.parent = game.pov.parent.stock</li><li style=\"list-style-type: '► '; color: #333333; margin-left: 1em\">  SetUpMerchandise (object)</li><li style=\"list-style-type: '► '; color: #333333: red; margin-left: 1em\">}</ul>    <span style=\"border: 1px dotted blue\">}</span>\r\n  }\r\n}</code></pre>",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You need to store the object in an attribute if you're using <code>Ask</code> or <code>ShowMenu</code>, because the player answering the question is next turn.</p>\n<p>Also, I notice that in that script it asks the player if they want to sell the object - and if they select \"No\", they give away the object for free instead. I think the code for removing the object from the inventory should be inside the <code>if (result)</code> block.</p>\n<p>You'd want something like:</p>\n<pre><code>if (not HasAttribute(game.pov.parent, \"stock\")) {\n  msg (\"You can't sell stuff here.\")\n}\nelse if (not object.parent = game.pov) {\n  msg (\"You're not carrying \" + object.article + \".\")\n}\nelse if (HasAttribute(object, \"buy\")) {\n  <b style=\"border: 1px dotted green\">game.selling_object = object</b>\n  Ask (\"Sell it for \" + sell.object.price + \" gold?\") {\n    <b style=\"border: 1px dotted green\">object = game.selling_object</b>\n    if (result) {\n      msg (\"You sell \" + object.article + \" for \" + object.price + \" gold.\")\n      game.pov.money = game.pov.money + object.price<ul style=\"margin: 0px; color: blue\"><li style=\"list-style-type: &quot;► &quot;; color: #333333; margin-left: 1em\">if (GetBoolean(object, \"cloneme\")) {</li><li style=\"list-style-type: &quot;► &quot;; color: #333333; margin-left: 1em\">  RemoveObject (object)</li><li style=\"list-style-type: &quot;► &quot;; color: #333333; margin-left: 1em\">}</li><li style=\"list-style-type: &quot;► &quot;; color: #333333; margin-left: 1em\">else {</li><li style=\"list-style-type: &quot;► &quot;; color: #333333; margin-left: 1em\">  object.parent = game.pov.parent.stock</li><li style=\"list-style-type: &quot;► &quot;; color: #333333; margin-left: 1em\">  SetUpMerchandise (object)</li><li style=\"list-style-type: &quot;► &quot;; color: #333333: red; margin-left: 1em\">}</li></ul>    <span style=\"border: 1px dotted blue\">}</span>\n  }\n}</code></pre>\n\n",
+      "PostDate": "2020-04-02T10:10:17.993726Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "988ba6bf-56fe-4795-9ca9-5a5635ed8091",
+      "UserId": 142763,
+      "Username": "Forgewright",
+      "AvatarUrl": "http://i.imgur.com/Ea6HecZb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I did a lot of editing and messed a few things up for sure, but I have been here many years and knew a code master would appear and get my ducks in a row.\r\n\r\nThanks to you both.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I did a lot of editing and messed a few things up for sure, but I have been here many years and knew a code master would appear and get my ducks in a row.</p>\n<p>Thanks to you both.</p>\n\n",
+      "PostDate": "2020-04-02T13:34:58.0013313Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "8d30b7cb-5aa7-4cdf-bae4-f0eb8e628c86",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "(I would actually have used something like `sell.object` rather than `game.selling_object` - my common practice is to save variables like that as attributes of the command itself. But nobody else round here seems to do it that way, so I figured it's less confusing to show the more common method.\r\n\r\nOne alternative I thought of was giving the sell command a pattern like: `^sell (?<object>.+?)(( for | ?@|) ?(?<text_price>\\d+)? ?(gold|g|))$`. Then the player can type \"sell bucket for 25 gold\" and the command runs without confirmation. But if they just type \"sell bucket\", or if they type a price that's higher than what the shopkeeper will actually offer, it displays a message like \"The shopkeeper says he'll give you 25 gold for that bucket, and not a penny more.\" followed by the options \"Yes, {command:sell bucket for 25 gold}\" and \"{command:No, I changed my mind}\". (The \"no\" command in this case would be a command which just says \"OK.\", just to make sure the player realises it's a choice. Kind of like a menu, but without needing to store any data)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>(I would actually have used something like <code>sell.object</code> rather than <code>game.selling_object</code> - my common practice is to save variables like that as attributes of the command itself. But nobody else round here seems to do it that way, so I figured it's less confusing to show the more common method.</p>\n<p>One alternative I thought of was giving the sell command a pattern like: <code>^sell (?&lt;object&gt;.+?)(( for | ?@|) ?(?&lt;text_price&gt;\\d+)? ?(gold|g|))$</code>. Then the player can type \"sell bucket for 25 gold\" and the command runs without confirmation. But if they just type \"sell bucket\", or if they type a price that's higher than what the shopkeeper will actually offer, it displays a message like \"The shopkeeper says he'll give you 25 gold for that bucket, and not a penny more.\" followed by the options \"Yes, {command:sell bucket for 25 gold}\" and \"{command:No, I changed my mind}\". (The \"no\" command in this case would be a command which just says \"OK.\", just to make sure the player realises it's a choice. Kind of like a menu, but without needing to store any data)</p>\n\n",
+      "PostDate": "2020-04-02T14:53:55.5385144Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

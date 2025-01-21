@@ -1,0 +1,47 @@
+{
+  "Topic": {
+    "TopicId": "5214",
+    "ForumId": "10",
+    "Title": "[SOLVED] Asking Yes/No questions on Quest online",
+    "LastUpdated": "2015-05-04T18:44:20+01:00",
+    "ReplyCount": 2
+  },
+  "Posts": [
+    {
+      "PostId": "35889",
+      "UserId": 0,
+      "Username": "adt94",
+      "UserAvatar": null,
+      "UserGravatar": "1abe7bbe17bed554c0a3cb7fe807dd66",
+      "EditableText": "Hi all,\n\nI'm at the end of writing a game where lying down on your bed causes the session to end. I've given warning about this to the player prior, but I also want them to be able to select &quot;yes/no&quot; when asked &quot;Are you sure?&quot; I've got everything else working but I can't seem to figure this out.\n\nI'm using Quest online on my Mac, and tried &quot;run script &gt; ask question &gt; Are you sure you would like to lie down?&quot; This throws up the options 1. Yes 2. No. So far, so good.\n\nBut I can't get it to work after this point. I tried &quot;if expression: 1&quot;, &quot;if expression: yes&quot;, etc., but it kept giving me an Int32 error. Clicking the hyperlinks in-game caused the same problem. I checked the Quest documentation and it said to use &quot;if expression: true&quot;. When I tried that, the error message disappeared, but regardless of whether the player clicked 1 or 2, it gave the same response.\n\nSo, to clarify: I want &quot;Are you sure?&quot; &quot;Yes&quot; &quot;Game over&quot;/ &quot;Are you sure?&quot; &quot;No&quot; &quot;Undo turn&quot;. What I have is this:\n\n[b:24nymepo]Ask (&quot;Are you sure you would like to lie down? You are sure to fall asleep; and by the atmosphere of a lucid dream about this place, there is no guarantee you'll ever find it again.&quot;) {\n  if (true) {\n    finish\n    msg (&quot;You fall asleep.&quot;)\n  }\n  else if (false) {\n    undo\n  }\n}[/b:24nymepo]\n\nAnd it will not differentiate between responses. It ends the game regardless to yes or no, or it undoes a turn regardless of yes or no, depending on whether I open with &quot;if: true&quot; or &quot;if: false&quot;.\n\nHow do I get the game to recognise whether the player answers yes or no, instead of ignoring their input entirely or throwing up an error? I used another yes/no question earlier in the game and I'm having the same problem.\n\nThank you very much in advance. Sorry if this doesn't make much sense; I'm writing while at the end of my tether! I'm ready for beta apart from this one issue...\n\nEdit: Also, I'm very new to this, so apologies if this is a silly question.\nEdit 2: I'm happy to discuss workarounds for this, but if it would be better in IF Answers that's fine. I should also clarify I've tried simply &quot;else&quot; as well as &quot;else if (false)&quot;. Just not sure why the else keeps getting overridden.",
+      "EditableFormat": "bbcode",
+      "HTML": "Hi all,<br/><br/>I'm at the end of writing a game where lying down on your bed causes the session to end. I've given warning about this to the player prior, but I also want them to be able to select &quot;yes/no&quot; when asked &quot;Are you sure?&quot; I've got everything else working but I can't seem to figure this out.<br/><br/>I'm using Quest online on my Mac, and tried &quot;run script &gt; ask question &gt; Are you sure you would like to lie down?&quot; This throws up the options 1. Yes 2. No. So far, so good.<br/><br/>But I can't get it to work after this point. I tried &quot;if expression: 1&quot;, &quot;if expression: yes&quot;, etc., but it kept giving me an Int32 error. Clicking the hyperlinks in-game caused the same problem. I checked the Quest documentation and it said to use &quot;if expression: true&quot;. When I tried that, the error message disappeared, but regardless of whether the player clicked 1 or 2, it gave the same response.<br/><br/>So, to clarify: I want &quot;Are you sure?&quot; &quot;Yes&quot; &quot;Game over&quot;/ &quot;Are you sure?&quot; &quot;No&quot; &quot;Undo turn&quot;. What I have is this:<br/><br/><span style=\"font-weight:bold;\">Ask (&quot;Are you sure you would like to lie down? You are sure to fall asleep; and by the atmosphere of a lucid dream about this place, there is no guarantee you'll ever find it again.&quot;) {<br/>  if (true) {<br/>    finish<br/>    msg (&quot;You fall asleep.&quot;)<br/>  }<br/>  else if (false) {<br/>    undo<br/>  }<br/>}</span><br/><br/>And it will not differentiate between responses. It ends the game regardless to yes or no, or it undoes a turn regardless of yes or no, depending on whether I open with &quot;if: true&quot; or &quot;if: false&quot;.<br/><br/>How do I get the game to recognise whether the player answers yes or no, instead of ignoring their input entirely or throwing up an error? I used another yes/no question earlier in the game and I'm having the same problem.<br/><br/>Thank you very much in advance. Sorry if this doesn't make much sense; I'm writing while at the end of my tether! I'm ready for beta apart from this one issue...<br/><br/>Edit: Also, I'm very new to this, so apologies if this is a silly question.<br/>Edit 2: I'm happy to discuss workarounds for this, but if it would be better in IF Answers that's fine. I should also clarify I've tried simply &quot;else&quot; as well as &quot;else if (false)&quot;. Just not sure why the else keeps getting overridden.",
+      "PostDate": "2015-05-04T17:29:36+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35890",
+      "UserId": 0,
+      "Username": "TinFoilMkIV",
+      "UserAvatar": null,
+      "UserGravatar": "d70c7b1a4be0b3fe6f68912d606f4298",
+      "EditableText": "for the 'Ask' function, the game creates a variable called 'result' where it saves your input. You can use this to pull the response for your if/else function.\n\nIt should look something like this\n[code:33n49gc0]\nAsk (&quot;Are you sure you would like to lie down? You are sure to fall asleep; and by the atmosphere of a lucid dream about this place, there is no guarantee you'll ever find it again&#46;&quot;) {\n if(result){\n  msg(&quot;You fall asleep&#46;&quot;)\n esle{\n  undo\n }\n}[/code:33n49gc0]\nSelecting 'Yes' sets result to true, and 'No' sets it to false, but you don't need an ifelse(false) because if it's not true, then it has to be false. Also in the case of result somehow not being either true or false, it still defaults to not ending the game, which in this case is probably desirable.\n\n\nThe problem with your code is you weren't checking a variable, you were just asking the game &quot;is true = true?&quot; which is always the case so it always goes with your first block of code. What you wanted to ask is &quot;is the players answer = yes?&quot;. The part you missed was actually referencing the players answer.",
+      "EditableFormat": "bbcode",
+      "HTML": "for the 'Ask' function, the game creates a variable called 'result' where it saves your input. You can use this to pull the response for your if/else function.<br/><br/>It should look something like this<br/><pre><code><br/>Ask (&quot;Are you sure you would like to lie down? You are sure to fall asleep; and by the atmosphere of a lucid dream about this place, there is no guarantee you'll ever find it again&#46;&quot;) {<br/> if(result){<br/>  msg(&quot;You fall asleep&#46;&quot;)<br/> esle{<br/>  undo<br/> }<br/>}</code></pre><br/>Selecting 'Yes' sets result to true, and 'No' sets it to false, but you don't need an ifelse(false) because if it's not true, then it has to be false. Also in the case of result somehow not being either true or false, it still defaults to not ending the game, which in this case is probably desirable.<br/><br/><br/>The problem with your code is you weren't checking a variable, you were just asking the game &quot;is true = true?&quot; which is always the case so it always goes with your first block of code. What you wanted to ask is &quot;is the players answer = yes?&quot;. The part you missed was actually referencing the players answer.",
+      "PostDate": "2015-05-04T18:28:31+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "35891",
+      "UserId": 0,
+      "Username": "adt94",
+      "UserAvatar": null,
+      "UserGravatar": "1abe7bbe17bed554c0a3cb7fe807dd66",
+      "EditableText": "Thanks so much, TinFoil. I'll go and try that now.\n\nEdit: It's worked, of course. You're a lifesaver. I was too stressed out to have ever figured that out.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks so much, TinFoil. I'll go and try that now.<br/><br/>Edit: It's worked, of course. You're a lifesaver. I was too stressed out to have ever figured that out.",
+      "PostDate": "2015-05-04T18:44:20+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

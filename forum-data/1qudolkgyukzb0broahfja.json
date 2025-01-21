@@ -1,0 +1,102 @@
+{
+  "Topic": {
+    "TopicId": "1qudolkgyukzb0broahfja",
+    "ForumId": "10",
+    "Title": "Logistics nightmare - need help.",
+    "LastUpdated": "2016-10-31T01:32:24.8140652Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "de8c16ee-de3e-4bbc-b498-a64d2c1477e6",
+      "UserId": 107651,
+      "Username": "OurJud",
+      "AvatarUrl": "http://i.imgur.com/wfM9qy6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm having a problem hiding a link (for which I'm using non-directional exits to create) when certain conditions are met.\r\n\r\nWhen the following sequence from start-up is followed the game behaves as it should (I'm only including the choices for simplicity):\r\n\r\n**Light fire** or **Outside** (choose **Outside**)\r\n**Gather wood** or **Shack** (choose **Gather wood** then **Shack**)\r\n**Light fire, Outside** or **Craft bow and arrow** (choose **Light fire** - Light fire link becomes inactive)\r\n**Outside** or **Craft bow and arrow** (choose Outside)\r\n**Gather wood** or **Shack** (choose **Gather wood** then **Shack**)\r\n**Outside** or **Craft Bow and Arrow** (choose **Craft bow and arrow** - **Craft bow and arrow** link becomes inactive)\r\n\r\nBut, if I choose **Craft bow and arrow** BEFORE **Light fire** at step 3, then go back outside to gather wood and re-enter the Shack, the **Craft Bow and arrow** link is live again.\r\n\r\nHere's the game: http://textadventures.co.uk/games/view/cvfcxi3f7estiwxujyyvpw/gamebook-test",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm having a problem hiding a link (for which I'm using non-directional exits to create) when certain conditions are met.</p>\n<p>When the following sequence from start-up is followed the game behaves as it should (I'm only including the choices for simplicity):</p>\n<p><strong>Light fire</strong> or <strong>Outside</strong> (choose <strong>Outside</strong>)<br>\n<strong>Gather wood</strong> or <strong>Shack</strong> (choose <strong>Gather wood</strong> then <strong>Shack</strong>)<br>\n<strong>Light fire, Outside</strong> or <strong>Craft bow and arrow</strong> (choose <strong>Light fire</strong> - Light fire link becomes inactive)<br>\n<strong>Outside</strong> or <strong>Craft bow and arrow</strong> (choose Outside)<br>\n<strong>Gather wood</strong> or <strong>Shack</strong> (choose <strong>Gather wood</strong> then <strong>Shack</strong>)<br>\n<strong>Outside</strong> or <strong>Craft Bow and Arrow</strong> (choose <strong>Craft bow and arrow</strong> - <strong>Craft bow and arrow</strong> link becomes inactive)</p>\n<p>But, if I choose <strong>Craft bow and arrow</strong> BEFORE <strong>Light fire</strong> at step 3, then go back outside to gather wood and re-enter the Shack, the <strong>Craft Bow and arrow</strong> link is live again.</p>\n<p>Here's the game: http://textadventures.co.uk/games/view/cvfcxi3f7estiwxujyyvpw/gamebook-test</p>\n\n",
+      "PostDate": "2016-10-31T01:32:24.8140652Z",
+      "LastEditDate": "2016-10-31T01:38:10.7802651Z"
+    },
+    {
+      "PostId": "a9fd89b9-9c4c-419d-af69-4d66632b5cdc",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You have this:\r\n```\r\nstop sound\r\nif (GetBoolean(player, \"firelit\")) {\r\n  play sound (\"firecrackling3.mp3\", false, true)\r\n  msg (\"Inside a shack. Another winter is drawing in. Room is warm.\")\r\n  MakeExitInvisible (firetrue)\r\n}\r\nelse if (not GetBoolean(player, \"firelit\")) {\r\n  msg (\"Inside a shack. Another winter is drawing in. Room is freezing.\")\r\n  MakeExitVisible (firetrue)\r\n  if (Got(wood)) {\r\n    MakeExitVisible (gotwood)\r\n  }\r\n}\r\nelse if (Got(hunting bow)) {\r\n  MakeExitInvisible (gotwood)\r\n}\r\n```\r\nYou have three blocks here. The first gets done if the fire is lit, the second if it is not lit, the third when it is neither lit nor not lit!\r\n\r\nI would suggest breaking it up so one section handles the fire and another the bow. \r\n```\r\nstop sound\r\n// Handle the fire\r\nif (GetBoolean(player, \"firelit\")) {\r\n  play sound (\"firecrackling3.mp3\", false, true)\r\n  msg (\"Inside a shack. Another winter is drawing in. Room is warm.\")\r\n  MakeExitInvisible (firetrue)\r\n}\r\nelse {\r\n  msg (\"Inside a shack. Another winter is drawing in. Room is freezing.\")\r\n  if (Got(wood)) {\r\n    MakeExitVisible (firetrue)\r\n  }\r\n  else {\r\n    MakeExitInvisible (firetrue)\r\n  }\r\n}\r\n// Handle the bow\r\nif (Got(wood) and not Got(hunting bow)) {\r\n  MakeExitInvisible (gotwood)\r\n}\r\nelse {\r\n  MakeExitInvisible (gotwood)\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You have this:</p>\n<pre><code>stop sound\nif (GetBoolean(player, \"firelit\")) {\n  play sound (\"firecrackling3.mp3\", false, true)\n  msg (\"Inside a shack. Another winter is drawing in. Room is warm.\")\n  MakeExitInvisible (firetrue)\n}\nelse if (not GetBoolean(player, \"firelit\")) {\n  msg (\"Inside a shack. Another winter is drawing in. Room is freezing.\")\n  MakeExitVisible (firetrue)\n  if (Got(wood)) {\n    MakeExitVisible (gotwood)\n  }\n}\nelse if (Got(hunting bow)) {\n  MakeExitInvisible (gotwood)\n}\n</code></pre>\n<p>You have three blocks here. The first gets done if the fire is lit, the second if it is not lit, the third when it is neither lit nor not lit!</p>\n<p>I would suggest breaking it up so one section handles the fire and another the bow.</p>\n<pre><code>stop sound\n// Handle the fire\nif (GetBoolean(player, \"firelit\")) {\n  play sound (\"firecrackling3.mp3\", false, true)\n  msg (\"Inside a shack. Another winter is drawing in. Room is warm.\")\n  MakeExitInvisible (firetrue)\n}\nelse {\n  msg (\"Inside a shack. Another winter is drawing in. Room is freezing.\")\n  if (Got(wood)) {\n    MakeExitVisible (firetrue)\n  }\n  else {\n    MakeExitInvisible (firetrue)\n  }\n}\n// Handle the bow\nif (Got(wood) and not Got(hunting bow)) {\n  MakeExitInvisible (gotwood)\n}\nelse {\n  MakeExitInvisible (gotwood)\n}\n</code></pre>\n\n",
+      "PostDate": "2016-10-31T08:22:23.0468675Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "aa606441-b0a6-4f61-b4a7-7af947a9ac71",
+      "UserId": 107651,
+      "Username": "OurJud",
+      "AvatarUrl": "http://i.imgur.com/wfM9qy6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thank you, but are those last two negative for the bow correct? If I have the wood, but not the bow, the **Craft bow and arrow** link should be there (because I have the materials need (the wood)?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thank you, but are those last two negative for the bow correct? If I have the wood, but not the bow, the <strong>Craft bow and arrow</strong> link should be there (because I have the materials need (the wood)?</p>\n\n",
+      "PostDate": "2016-10-31T13:03:20.1524612Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "eb0bcb16-2d19-44ba-a3e8-ebece0ca26e4",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Oh, right. Should be:\r\n```\r\n// Handle the bow\r\nif (Got(wood) and not Got(hunting bow)) {\r\n  MakeExitVisible (gotwood)\r\n}\r\nelse {\r\n  MakeExitInvisible (gotwood)\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Oh, right. Should be:</p>\n<pre><code>// Handle the bow\nif (Got(wood) and not Got(hunting bow)) {\n  MakeExitVisible (gotwood)\n}\nelse {\n  MakeExitInvisible (gotwood)\n}\n</code></pre>\n\n",
+      "PostDate": "2016-10-31T13:18:30.6856695Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3265a3b9-1fee-4d12-9a66-44bf26d1e106",
+      "UserId": 107651,
+      "Username": "OurJud",
+      "AvatarUrl": "http://i.imgur.com/wfM9qy6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Right, when I change the first **Invisible** to **Visible** in the bow section it works beautifully, but I'm having a similar issue with a **Hunt for food** option that is added to the forest room (triggered when the player crafts the bow inside the shack.\r\n\r\nI can get the link to appear and function as desired, but I need it to disappear on subsequent visits to the forest when the player has used it. I can get the link to become inactive, but not disappear like the **Light fire** one does. \r\n\r\nThis is how I have it:\r\n\r\n>msg (\"It was a long hunt, but a scrawny rabbit was eventually caught.<br/>\")\r\nSetObjectFlagOn (player, \"gotfood\")\r\nMakeExitInvisible (havebow)\r\n\r\nAnd then in the **After entering room** under the **Scripts** tab for Forest, I have:\r\n\r\n>if (GetBoolean(player, \"gotfood\")) {\r\n  MakeExitInvisible (havebow)\r\n}\r\n\r\nAs I say, this works in as much as it dactivates the link, but how do I get rid of it altogether like the **Light fire** link?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Right, when I change the first <strong>Invisible</strong> to <strong>Visible</strong> in the bow section it works beautifully, but I'm having a similar issue with a <strong>Hunt for food</strong> option that is added to the forest room (triggered when the player crafts the bow inside the shack.</p>\n<p>I can get the link to appear and function as desired, but I need it to disappear on subsequent visits to the forest when the player has used it. I can get the link to become inactive, but not disappear like the <strong>Light fire</strong> one does.</p>\n<p>This is how I have it:</p>\n<blockquote>\n<p>msg (\"It was a long hunt, but a scrawny rabbit was eventually caught.<br>\")<br>\nSetObjectFlagOn (player, \"gotfood\")<br>\nMakeExitInvisible (havebow)</p>\n</blockquote>\n<p>And then in the <strong>After entering room</strong> under the <strong>Scripts</strong> tab for Forest, I have:</p>\n<blockquote>\n<p>if (GetBoolean(player, \"gotfood\")) {<br>\nMakeExitInvisible (havebow)<br>\n}</p>\n</blockquote>\n<p>As I say, this works in as much as it dactivates the link, but how do I get rid of it altogether like the <strong>Light fire</strong> link?</p>\n\n",
+      "PostDate": "2016-10-31T13:28:08.0091387Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "2739d451-c8f1-4584-8616-8e0d9ae0f009",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I think the **Light fire** only disappears because the text is printed out again, it is not disappearing as such from the existing text. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I think the <strong>Light fire</strong> only disappears because the text is printed out again, it is not disappearing as such from the existing text.</p>\n\n",
+      "PostDate": "2016-10-31T15:11:11.168921Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "5b1898d3-b1e8-4445-8c76-54553ac7d4ba",
+      "UserId": 107651,
+      "Username": "OurJud",
+      "AvatarUrl": "http://i.imgur.com/wfM9qy6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Sorry, I don't know what you mean.\r\n\r\nWhen you gather wood and enter the shack the **Light fire** option is activated (because you collected wood), but once you've used it to light the fire (then exited to the forest and re-entered the shack) the link has disappeared (because the fire is already lit).\r\n\r\nWhat I don't understand is why I can't do the same with **Hunt for food**. Once you've used this link it fades and becomes 'dead', but still doesn't disappear altogether on subsequent visits to the forest.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Sorry, I don't know what you mean.</p>\n<p>When you gather wood and enter the shack the <strong>Light fire</strong> option is activated (because you collected wood), but once you've used it to light the fire (then exited to the forest and re-entered the shack) the link has disappeared (because the fire is already lit).</p>\n<p>What I don't understand is why I can't do the same with <strong>Hunt for food</strong>. Once you've used this link it fades and becomes 'dead', but still doesn't disappear altogether on subsequent visits to the forest.</p>\n\n",
+      "PostDate": "2016-10-31T15:18:08.6988674Z",
+      "LastEditDate": null
+    }
+  ]
+}

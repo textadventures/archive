@@ -1,0 +1,47 @@
+{
+  "Topic": {
+    "TopicId": "2729",
+    "ForumId": "10",
+    "Title": "input enhancement",
+    "LastUpdated": "2011-11-24T14:06:45+00:00",
+    "ReplyCount": 2
+  },
+  "Posts": [
+    {
+      "PostId": "19209",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "I found some nice features in an ifgame:\nif you just press return in the commandline without a command, it shows the roomdescription\nand if you insert only the name of an object, it displays the look-attribute of this object.\n\nI think its not possible to do something like this in the editor, so perhaps you could add it to Q5 as a standardfeature?",
+      "EditableFormat": "bbcode",
+      "HTML": "I found some nice features in an ifgame:<br/>if you just press return in the commandline without a command, it shows the roomdescription<br/>and if you insert only the name of an object, it displays the look-attribute of this object.<br/><br/>I think its not possible to do something like this in the editor, so perhaps you could add it to Q5 as a standardfeature?",
+      "PostDate": "2011-11-24T12:52:23+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "19210",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "I think the second thing can be done in CoreParser.aslx in function HandleSingleCommand:\n\n[code:1ne4z4wg]   \n&#46;&#46;&#46;\n if (thiscommand = null) {\n      found=false\n      object=GetObject (command )\n\t  if (object &lt;&gt; null ){\n\t\tforeach (visibleobject, ScopeVisible()) {\n\t\t\tif (object=visibleobject) {\n\t\t\t\tHandleCommand (&quot;look at &quot; + object&#46;name)\n\t\t\t\tfound=true\n\t\t\t}\n\t\t}\n\t  }\t\t\n\t  if (found=false){\n\t\tmsg (Template(&quot;UnrecognisedCommand&quot;))\n\t  }\t\t\n    }[/code:1ne4z4wg]\n\n\nHmmm, there iss a command in Q4 something like &quot;execute string as player typed&quot;. Is there a command in Q5 doing the same?",
+      "EditableFormat": "bbcode",
+      "HTML": "I think the second thing can be done in CoreParser.aslx in function HandleSingleCommand:<br/><br/><pre><code>   <br/>&#46;&#46;&#46;<br/> if (thiscommand = null) {<br/>      found=false<br/>      object=GetObject (command )<br/>\t  if (object &lt;&gt; null ){<br/>\t\tforeach (visibleobject, ScopeVisible()) {<br/>\t\t\tif (object=visibleobject) {<br/>\t\t\t\tHandleCommand (&quot;look at &quot; + object&#46;name)<br/>\t\t\t\tfound=true<br/>\t\t\t}<br/>\t\t}<br/>\t  }\t\t<br/>\t  if (found=false){<br/>\t\tmsg (Template(&quot;UnrecognisedCommand&quot;))<br/>\t  }\t\t<br/>    }</code></pre><br/><br/><br/>Hmmm, there iss a command in Q4 something like &quot;execute string as player typed&quot;. Is there a command in Q5 doing the same?",
+      "PostDate": "2011-11-24T13:47:20+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "19211",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "There was something similar in Q5 for a while, the &quot;look at&quot; regex had included &quot;(?&lt;object&gt;.*)&quot; which would match any object in the current scope.\n\nI can't remember why I removed it now...\n\nYour suggested change to CoreParser is another way of doing this, and arguably better.\n\nIn Q5 there is no equivalent of &quot;exec&quot; in Q4 (which was &quot;Execute a command as if it were typed by the player&quot;). It shouldn't be necessary now, as you can call all internal functionality (doing a &quot;look at&quot;, &quot;take&quot; etc.) by calling the relevant function (DoTake etc.) within Core.aslx (in Q4 there was often no way of directly calling internal behaviour).\n\nBut if you really need an equivalent you could just call the HandleCommand function.",
+      "EditableFormat": "bbcode",
+      "HTML": "There was something similar in Q5 for a while, the &quot;look at&quot; regex had included &quot;(?&lt;object&gt;.*)&quot; which would match any object in the current scope.<br/><br/>I can't remember why I removed it now...<br/><br/>Your suggested change to CoreParser is another way of doing this, and arguably better.<br/><br/>In Q5 there is no equivalent of &quot;exec&quot; in Q4 (which was &quot;Execute a command as if it were typed by the player&quot;). It shouldn't be necessary now, as you can call all internal functionality (doing a &quot;look at&quot;, &quot;take&quot; etc.) by calling the relevant function (DoTake etc.) within Core.aslx (in Q4 there was often no way of directly calling internal behaviour).<br/><br/>But if you really need an equivalent you could just call the HandleCommand function.",
+      "PostDate": "2011-11-24T14:06:45+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

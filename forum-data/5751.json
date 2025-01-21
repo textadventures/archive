@@ -1,0 +1,83 @@
+{
+  "Topic": {
+    "TopicId": "5751",
+    "ForumId": "10",
+    "Title": "\"Clear Previous Turn\" Not Working",
+    "LastUpdated": "2015-12-24T03:12:52+00:00",
+    "ReplyCount": 5
+  },
+  "Posts": [
+    {
+      "PostId": "39812",
+      "UserId": 0,
+      "Username": "chellkafka",
+      "UserAvatar": null,
+      "UserGravatar": "eff29d4fab3b92a9d9ccd647e42bf40f",
+      "EditableText": "For some reason, that command isn't working for a specific game of mine, but it does for others. \nDoes anyone know how to fix that or how to find out why?",
+      "EditableFormat": "bbcode",
+      "HTML": "For some reason, that command isn't working for a specific game of mine, but it does for others. <br/>Does anyone know how to fix that or how to find out why?<div><a href=\"/attachment/1423\">christmas.aslx</a></div>",
+      "PostDate": "2015-12-20T16:40:26+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39922",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "From what I can see by looking the Quest core code, a new turn section is created when the player enters a command. Whatever was output before that command is considered the last turn.\n\nIn your case, a command is never entered. You *are* using a {command} text processor command, but it's always within the context of a &quot;get input&quot;, which is eating the command. It comes in as the result of the &quot;get input&quot; and is never seen by the parser. (Which is fortunate, since you'd have to implement all those commands!) So a new text section is never created. \n\nIf you use the HTML tools to look at the output in the output divs, you'll see that all your output is inside the same section. A new section is never created. There ends up not being a &quot;last&quot; section.\n\nA simple way to fix it is to change this:\n\n[code:huoyym17]HidePreviousTurnOutput[/code:huoyym17]\nto this:\n\n[code:huoyym17]StartTurnOutputSection\nHidePreviousTurnOutput[/code:huoyym17]\nThat way, a new section is created and the current text then becomes the last output just before you hide it.\n\n(BTW, thanks very much for attaching a game file exhibiting the problem. It made solving it much easier, especially since I didn't know what &quot;Clear Previous Turn&quot; was to begin with.)",
+      "EditableFormat": "bbcode",
+      "HTML": "From what I can see by looking the Quest core code, a new turn section is created when the player enters a command. Whatever was output before that command is considered the last turn.<br/><br/>In your case, a command is never entered. You *are* using a {command} text processor command, but it's always within the context of a &quot;get input&quot;, which is eating the command. It comes in as the result of the &quot;get input&quot; and is never seen by the parser. (Which is fortunate, since you'd have to implement all those commands!) So a new text section is never created. <br/><br/>If you use the HTML tools to look at the output in the output divs, you'll see that all your output is inside the same section. A new section is never created. There ends up not being a &quot;last&quot; section.<br/><br/>A simple way to fix it is to change this:<br/><br/><pre><code>HidePreviousTurnOutput</code></pre><br/>to this:<br/><br/><pre><code>StartTurnOutputSection<br/>HidePreviousTurnOutput</code></pre><br/>That way, a new section is created and the current text then becomes the last output just before you hide it.<br/><br/>(BTW, thanks very much for attaching a game file exhibiting the problem. It made solving it much easier, especially since I didn't know what &quot;Clear Previous Turn&quot; was to begin with.)",
+      "PostDate": "2015-12-22T23:21:59+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39926",
+      "UserId": 0,
+      "Username": "OurJud",
+      "UserAvatar": "7473_1417206896.jpg",
+      "UserGravatar": "7892e1059c02a91b34ffd60deb7402ff",
+      "EditableText": "Jay! While you're in a 'hiding things' mood, take a look at this and see what your soft matter can come up with.\n\nIf you get a sense of deja vu while reading, then don't worry, it's because I had a lengthy thread on the issue last December.\n\n<!-- l --><a class=\"postlink-local\" href=\"http://forum.textadventures.co.uk/viewtopic.php?f=10&amp;t=5754\">viewtopic.php?f=10&amp;t=5754</a><!-- l --> (You can actually skip to the new developments when Alex joins in at post #4)",
+      "EditableFormat": "bbcode",
+      "HTML": "Jay! While you're in a 'hiding things' mood, take a look at this and see what your soft matter can come up with.<br/><br/>If you get a sense of deja vu while reading, then don't worry, it's because I had a lengthy thread on the issue last December.<br/><br/><!-- l --><a class=\"postlink-local\" href=\"http://forum.textadventures.co.uk/viewtopic.php?f=10&amp;t=5754\">viewtopic.php?f=10&amp;t=5754</a><!-- l --> (You can actually skip to the new developments when Alex joins in at post #4)",
+      "PostDate": "2015-12-23T00:33:09+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39929",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "[quote=&quot;jaynabonne&quot;:pscmp12j]From what I can see by looking the Quest core code, a new turn section is created when the player enters a command. Whatever was output before that command is considered the last turn.\n\nIn your case, a command is never entered. You *are* using a {command} text processor command, but it's always within the context of a &quot;get input&quot;, which is eating the command. It comes in as the result of the &quot;get input&quot; and is never seen by the parser. (Which is fortunate, since you'd have to implement all those commands!) So a new text section is never created. \n\nIf you use the HTML tools to look at the output in the output divs, you'll see that all your output is inside the same section. A new section is never created. There ends up not being a &quot;last&quot; section.\n\nA simple way to fix it is to change this:\n\n[code:pscmp12j]HidePreviousTurnOutput[/code:pscmp12j]\nto this:\n\n[code:pscmp12j]StartTurnOutputSection\nHidePreviousTurnOutput[/code:pscmp12j]\nThat way, a new section is created and the current text then becomes the last output just before you hide it.\n\n(BTW, thanks very much for attaching a game file exhibiting the problem. It made solving it much easier, especially since I didn't know what &quot;Clear Previous Turn&quot; was to begin with.)[/quote:pscmp12j]\n\n\nooo... I'm hoping this stuff will work for my problem... HK crosses his fingers...\n\n(are these command~functions, internal ones, or are they normal ones?)\n\nI wanted to do 'get input' and a 'text processor command hyperlink', it's for character creation, I'd love to be able to be use both in a single Function, and I hope your post Jay means that I can... (the reason for why I want to be able to do this: using get input for your choice selection, and using the hyperlink for a pedia enrty, either a 'ask' Function popup window or separate Functions usage of text area)\n\nanyways, could you look into and~or let me know if your post methods will allow for 'get input' and a 'text processor command hyperlink' to work in the same Function?",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>jaynabonne wrote:</cite>From what I can see by looking the Quest core code, a new turn section is created when the player enters a command. Whatever was output before that command is considered the last turn.<br/><br/>In your case, a command is never entered. You *are* using a {command} text processor command, but it's always within the context of a &quot;get input&quot;, which is eating the command. It comes in as the result of the &quot;get input&quot; and is never seen by the parser. (Which is fortunate, since you'd have to implement all those commands!) So a new text section is never created. <br/><br/>If you use the HTML tools to look at the output in the output divs, you'll see that all your output is inside the same section. A new section is never created. There ends up not being a &quot;last&quot; section.<br/><br/>A simple way to fix it is to change this:<br/><br/><pre><code>HidePreviousTurnOutput</code></pre><br/>to this:<br/><br/><pre><code>StartTurnOutputSection<br/>HidePreviousTurnOutput</code></pre><br/>That way, a new section is created and the current text then becomes the last output just before you hide it.<br/><br/>(BTW, thanks very much for attaching a game file exhibiting the problem. It made solving it much easier, especially since I didn't know what &quot;Clear Previous Turn&quot; was to begin with.)</blockquote><br/><br/><br/>ooo... I'm hoping this stuff will work for my problem... HK crosses his fingers...<br/><br/>(are these command~functions, internal ones, or are they normal ones?)<br/><br/>I wanted to do 'get input' and a 'text processor command hyperlink', it's for character creation, I'd love to be able to be use both in a single Function, and I hope your post Jay means that I can... (the reason for why I want to be able to do this: using get input for your choice selection, and using the hyperlink for a pedia enrty, either a 'ask' Function popup window or separate Functions usage of text area)<br/><br/>anyways, could you look into and~or let me know if your post methods will allow for 'get input' and a 'text processor command hyperlink' to work in the same Function?",
+      "PostDate": "2015-12-23T00:51:52+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39937",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "HK, have you taken a look at the file chellkafka posted? It sounds like it's what you're asking! It uses turnscripts, but each turnscript is self-contained, so you should be able to drop the same technique into a function instead.\n\nOurJud: I'll take a look when I get home from work tonight.",
+      "EditableFormat": "bbcode",
+      "HTML": "HK, have you taken a look at the file chellkafka posted? It sounds like it's what you're asking! It uses turnscripts, but each turnscript is self-contained, so you should be able to drop the same technique into a function instead.<br/><br/>OurJud: I'll take a look when I get home from work tonight.",
+      "PostDate": "2015-12-23T07:49:08+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39974",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "@ Jay:\n\nUnfortunately, I couldn't figure out how to get it to work, so I don't know if it can work, and I just don't understand the stuff well enough, to figure out how to get it to work, or if it can't work.\n\n...HOWEVER...\n\nI used your comment on how the 'get input' was eating up the Command's input... [b:2r84g0zm]and I got it to work! (YEAH!)[/b:2r84g0zm]\n\nI'm not sure if the way I did it is the most efficient way (not sure if there's &quot;stacking ~ non-tail-end&quot; recursion, and if there is, not sure how bad it is or isn't)",
+      "EditableFormat": "bbcode",
+      "HTML": "@ Jay:<br/><br/>Unfortunately, I couldn't figure out how to get it to work, so I don't know if it can work, and I just don't understand the stuff well enough, to figure out how to get it to work, or if it can't work.<br/><br/>...HOWEVER...<br/><br/>I used your comment on how the 'get input' was eating up the Command's input... <span style=\"font-weight:bold;\">and I got it to work! (YEAH!)</span><br/><br/>I'm not sure if the way I did it is the most efficient way (not sure if there's &quot;stacking ~ non-tail-end&quot; recursion, and if there is, not sure how bad it is or isn't)",
+      "PostDate": "2015-12-24T03:12:52+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

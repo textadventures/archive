@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "3162",
+    "ForumId": "10",
+    "Title": "A couple of questions",
+    "LastUpdated": "2014-02-21T15:52:19+00:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "21206",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Hi,\n\nI've been exploring Quest a little lately, and I've been not only enjoying it but am impressed with the programmng design behind it. I've made forays testing a few things, and I ran into two issues, which the attached file shows. It's the crude beginning of a taxi simulation. Perhaps this is pushing some boundaries, but I wanted to ask about them. \n\nYou can see both by running the game, hitting &quot;In&quot; to go into the Taxi, and then hit the &quot;up&quot; arrow to begin moving forward. It starts a timer which moves the taxi to the next step in the track every X seconds (depending on speed).\n\n1) I wanted some status items to appear only when the player was actually in the taxi. There is a function called SetTaxiStatus which is called at appropriate times, and to keep it simple, it always removes the status items in question (Location and Speed) and then adds them back in as needed. The way it is coded right now, despite the fact that I'm always adding the status items in the same order, they consistently swap positions in the output every time they're set. I was able to &quot;fix&quot; the problem by reversing the order in which the Location and Speed items were *removed* from the dictionary. (You can try this by simply moving the &quot;Remove from dictionary&quot; for Speed up above the Location remove in the first &quot;Then&quot; in SetTaxiStatus.) I assume this is an artifact of how the dictionary orders its keys.\n\nI mostly wanted to mention this in case anyone else runs into this problem and doesn't know how to work around it.\n\n2) The second item has to do with timers. If you sit and watch the game, it will move along happily from place to place. However, if you enter commands, it seems to reset the timer on each command, even if it's just hitting &lt;l&gt; &lt;enter&gt; over and over to do a look. So the timer never kicks off if input is happening. I assume this is by design, but I wanted to ask if there was any way to work around this, so that timers will kick off no matter what the user does.\n\nThanks!\n- Jay",
+      "EditableFormat": "bbcode",
+      "HTML": "Hi,<br/><br/>I've been exploring Quest a little lately, and I've been not only enjoying it but am impressed with the programmng design behind it. I've made forays testing a few things, and I ran into two issues, which the attached file shows. It's the crude beginning of a taxi simulation. Perhaps this is pushing some boundaries, but I wanted to ask about them. <br/><br/>You can see both by running the game, hitting &quot;In&quot; to go into the Taxi, and then hit the &quot;up&quot; arrow to begin moving forward. It starts a timer which moves the taxi to the next step in the track every X seconds (depending on speed).<br/><br/>1) I wanted some status items to appear only when the player was actually in the taxi. There is a function called SetTaxiStatus which is called at appropriate times, and to keep it simple, it always removes the status items in question (Location and Speed) and then adds them back in as needed. The way it is coded right now, despite the fact that I'm always adding the status items in the same order, they consistently swap positions in the output every time they're set. I was able to &quot;fix&quot; the problem by reversing the order in which the Location and Speed items were *removed* from the dictionary. (You can try this by simply moving the &quot;Remove from dictionary&quot; for Speed up above the Location remove in the first &quot;Then&quot; in SetTaxiStatus.) I assume this is an artifact of how the dictionary orders its keys.<br/><br/>I mostly wanted to mention this in case anyone else runs into this problem and doesn't know how to work around it.<br/><br/>2) The second item has to do with timers. If you sit and watch the game, it will move along happily from place to place. However, if you enter commands, it seems to reset the timer on each command, even if it's just hitting &lt;l&gt; &lt;enter&gt; over and over to do a look. So the timer never kicks off if input is happening. I assume this is by design, but I wanted to ask if there was any way to work around this, so that timers will kick off no matter what the user does.<br/><br/>Thanks!<br/>- Jay<div><a href=\"/attachment/343\">Space Taxi.aslx</a></div>",
+      "PostDate": "2012-08-17T17:01:59+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21209",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "Hi Jay, nice to have you here.\nI can't say much about the order of dictionary entries (perhaps Alex will do) but I am wondering why you are removing the status attributes. Why not updating the status pane with <!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/UpdateStatusAttributes\">http://quest5.net/wiki/UpdateStatusAttributes</a><!-- m --> ?\nI have a problem to understand your second issue. Do you want the timer to be stopped when the player sends a command?",
+      "EditableFormat": "bbcode",
+      "HTML": "Hi Jay, nice to have you here.<br/>I can't say much about the order of dictionary entries (perhaps Alex will do) but I am wondering why you are removing the status attributes. Why not updating the status pane with <!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/UpdateStatusAttributes\">http://quest5.net/wiki/UpdateStatusAttributes</a><!-- m --> ?<br/>I have a problem to understand your second issue. Do you want the timer to be stopped when the player sends a command?",
+      "PostDate": "2012-08-18T14:57:16+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21210",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "For the first question: I could rewrite the code to do that. Right now, I'm doing:\n\nRemoveMyAttributes\nif (in taxi)\n    Add Them in\n\nThat covers both adding and removing. But I could do it just as well as:\n\nif (in taxi)\n   Add them in\nelse\n   RemoveMyAttributes\n\nThat would solve the case of being long term in the taxi. However, since I only want them visible when in the taxi (and removed if not), then it doesn't solve it all, because you can see the same problem if you just get in and out of the taxi over and over. I need to have the variables not shown when outside the taxi. I didn't work out another way to do it beyond removing them. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->\n\nFor the second, it's the opposite: I want the timer to keep firing even if the user issues commands. Right now, it seems that if the user is issuing commands, the timer gets reset after each command. So if I have my timer delay set to three seconds, and the user hits some command (like &quot;l&quot;) over and over, once per second, then the timer never goes off. Once the user waits three seconds after making a command, *then* it goes off. That doesn't help with my realism. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->\n\nThanks for the reply!",
+      "EditableFormat": "bbcode",
+      "HTML": "For the first question: I could rewrite the code to do that. Right now, I'm doing:<br/><br/>RemoveMyAttributes<br/>if (in taxi)<br/>    Add Them in<br/><br/>That covers both adding and removing. But I could do it just as well as:<br/><br/>if (in taxi)<br/>   Add them in<br/>else<br/>   RemoveMyAttributes<br/><br/>That would solve the case of being long term in the taxi. However, since I only want them visible when in the taxi (and removed if not), then it doesn't solve it all, because you can see the same problem if you just get in and out of the taxi over and over. I need to have the variables not shown when outside the taxi. I didn't work out another way to do it beyond removing them. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --><br/><br/>For the second, it's the opposite: I want the timer to keep firing even if the user issues commands. Right now, it seems that if the user is issuing commands, the timer gets reset after each command. So if I have my timer delay set to three seconds, and the user hits some command (like &quot;l&quot;) over and over, once per second, then the timer never goes off. Once the user waits three seconds after making a command, *then* it goes off. That doesn't help with my realism. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --><br/><br/>Thanks for the reply!",
+      "PostDate": "2012-08-18T18:10:26+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21214",
+      "UserId": 0,
+      "Username": "guzmere",
+      "UserAvatar": "6360_1340718101.jpg",
+      "UserGravatar": "f5b5b6c64b9bea2411598f3a2db8121f",
+      "EditableText": "Hi Jaynabonne yes welcome to the forum also. And yes I understand what you are saying I too have this difficulty but not sure what to do with it. It happens for me when I want to use the delay timer such as. If someone types in to go to a location eg.\n(go cupboard) my reply would be ok hang on and then set a delay timer for 2 seconds to enable the player to get there in real time ( well sort of real time) it gives a sort of realism to the game. However if someone types in a command before the 2 seconds is up it throws a lot out. I shall keep an eye on this hoping that someone will help ( I suspect a few people) Terry  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Hi Jaynabonne yes welcome to the forum also. And yes I understand what you are saying I too have this difficulty but not sure what to do with it. It happens for me when I want to use the delay timer such as. If someone types in to go to a location eg.<br/>(go cupboard) my reply would be ok hang on and then set a delay timer for 2 seconds to enable the player to get there in real time ( well sort of real time) it gives a sort of realism to the game. However if someone types in a command before the 2 seconds is up it throws a lot out. I shall keep an eye on this hoping that someone will help ( I suspect a few people) Terry  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "PostDate": "2012-08-19T18:41:18+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27898",
+      "UserId": 0,
+      "Username": "tlk",
+      "UserAvatar": null,
+      "UserGravatar": "2d59720246577f1d45f7a580bf58be52",
+      "EditableText": "I know this is an old thread, but I just wanted to say thanks for posting it because it just solved a major headache for me. For the past day I've been spinning my wheels on the same problem with dictionary items swapping positions relative to how they were added, despite the fact that I have a half dozen other places in the game where I do things the exact same way and the output is how I want it. Never even considered just doing the removing/adding backwards...which of course I'm kicking myself for now since it seems so simple. I was getting mad at myself for spending so much time and effort on it since it only made a minor aesthetic difference to the game, but I'm a bit obsessive compulsive, so...heh. Anyway, thanks again!",
+      "EditableFormat": "bbcode",
+      "HTML": "I know this is an old thread, but I just wanted to say thanks for posting it because it just solved a major headache for me. For the past day I've been spinning my wheels on the same problem with dictionary items swapping positions relative to how they were added, despite the fact that I have a half dozen other places in the game where I do things the exact same way and the output is how I want it. Never even considered just doing the removing/adding backwards...which of course I'm kicking myself for now since it seems so simple. I was getting mad at myself for spending so much time and effort on it since it only made a minor aesthetic difference to the game, but I'm a bit obsessive compulsive, so...heh. Anyway, thanks again!",
+      "PostDate": "2014-02-21T15:52:19+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

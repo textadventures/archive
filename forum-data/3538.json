@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "3538",
+    "ForumId": "10",
+    "Title": "Random Error Message",
+    "LastUpdated": "2013-04-06T04:15:33+01:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "23400",
+      "UserId": 0,
+      "Username": "Sora574",
+      "UserAvatar": null,
+      "UserGravatar": "5691c27a3aa3e56e879a3f8545b28ef2",
+      "EditableText": "Okay so here's the problem...\nI was working on my stackable library, going about my business. Then, I finished it and decided to test it.\nI tested every possibility inside and out and I couldn't find any problems until I started using the 'use' command to unstack specific objects. Then, Quest would throw a random error saying: &quot;Error running script&#058; Collection was modified; enumeration operation may not execute.&quot; However, the script works -- it just throws out a pointless error.\n\nIt might be the demo, but I'm almost positive it's the library.\n\nEither way, the library is [url=http&#58;//forum&#46;textadventures&#46;co&#46;uk/viewtopic&#46;php?f=10&amp;t=3515:1b05wtm1]in this topic[/url:1b05wtm1]\nThe demo is here:\n[attachment=0:1b05wtm1]<!-- ia0 -->StackDemo.aslx<!-- ia0 -->[/attachment:1b05wtm1]\nCan anybody see what's wrong?",
+      "EditableFormat": "bbcode",
+      "HTML": "Okay so here's the problem...<br/>I was working on my stackable library, going about my business. Then, I finished it and decided to test it.<br/>I tested every possibility inside and out and I couldn't find any problems until I started using the 'use' command to unstack specific objects. Then, Quest would throw a random error saying: &quot;Error running script&#058; Collection was modified; enumeration operation may not execute.&quot; However, the script works -- it just throws out a pointless error.<br/><br/>It might be the demo, but I'm almost positive it's the library.<br/><br/>Either way, the library is <a href=\"http&#58;//forum&#46;textadventures&#46;co&#46;uk/viewtopic&#46;php?f=10&amp;t=3515\" rel=\"nofollow\">in this topic</a><br/>The demo is here:<br/><div><a href=\"/attachment/552\">StackDemo.aslx</a></div><br/>Can anybody see what's wrong?",
+      "PostDate": "2013-03-15T03:53:40+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "23462",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "This is a fundmental design consideration with Quest, and not a bug as such: you cannot modify a list while it's being enumerated with foreach. In your case, you are executing &quot;foreach&quot; in function use_container. Inside this foreach loop, you invoke &quot;useinstack&quot; on the object which destroys itself when done. When you destroy an object, Quest automatically sets all references to it to null and removes it from all containers that contain it. So it is removed from the list which still has an active &quot;foreach&quot; going on.\n\nWhen the foreach resumes, it throws the error.\n\nIt might seem like it's working, but the foreach actually terminates at that point (and probably all code after it).\n\nThere are a few ways around this, but they all involve changing your design slightly. Either the object shouldn't destroy itself, or the loop you use can be changed to a for loop, executing over the items in a different way. Or objects which are meant to be destroyed get moved to a holding place, which is then destroyed later. Or perhaps something else...\n\nBut touching a list while it's being enumerated is a no-no.",
+      "EditableFormat": "bbcode",
+      "HTML": "This is a fundmental design consideration with Quest, and not a bug as such: you cannot modify a list while it's being enumerated with foreach. In your case, you are executing &quot;foreach&quot; in function use_container. Inside this foreach loop, you invoke &quot;useinstack&quot; on the object which destroys itself when done. When you destroy an object, Quest automatically sets all references to it to null and removes it from all containers that contain it. So it is removed from the list which still has an active &quot;foreach&quot; going on.<br/><br/>When the foreach resumes, it throws the error.<br/><br/>It might seem like it's working, but the foreach actually terminates at that point (and probably all code after it).<br/><br/>There are a few ways around this, but they all involve changing your design slightly. Either the object shouldn't destroy itself, or the loop you use can be changed to a for loop, executing over the items in a different way. Or objects which are meant to be destroyed get moved to a holding place, which is then destroyed later. Or perhaps something else...<br/><br/>But touching a list while it's being enumerated is a no-no.",
+      "PostDate": "2013-03-16T10:29:27+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "23575",
+      "UserId": 0,
+      "Username": "Sora574",
+      "UserAvatar": null,
+      "UserGravatar": "5691c27a3aa3e56e879a3f8545b28ef2",
+      "EditableText": "Hmm... Well I tried to just move objects to a different location and it didn't work. It says the same thing",
+      "EditableFormat": "bbcode",
+      "HTML": "Hmm... Well I tried to just move objects to a different location and it didn't work. It says the same thing",
+      "PostDate": "2013-03-20T03:21:37+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "23638",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Sorry I didn't reply to this sooner... Would you be able to post that changed file here? Thanks!",
+      "EditableFormat": "bbcode",
+      "HTML": "Sorry I didn't reply to this sooner... Would you be able to post that changed file here? Thanks!",
+      "PostDate": "2013-03-21T13:34:42+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "23949",
+      "UserId": 0,
+      "Username": "Sora574",
+      "UserAvatar": null,
+      "UserGravatar": "5691c27a3aa3e56e879a3f8545b28ef2",
+      "EditableText": "Mkay first... Sorry it took so long for me to reply. I've been doing stuff, and I finally have time for me now lol.\n\nAnd apparently that time away refreshed my ideas because I took one look at the library and realized that half the stuff in the foreach in the use_container doesn't need to be there. I just moved it to outside of the foreach and it works perfectly now (as far as I know.)\n\nI should be publishing the new library tomorrow. Here's a sneak peek, though, if you want to test it out.\n[attachment=0:2xe4ecf3]<!-- ia0 -->StackDemo.aslx<!-- ia0 -->[/attachment:2xe4ecf3]\n[attachment=1:2xe4ecf3]<!-- ia1 -->StackLibrary.aslx<!-- ia1 -->[/attachment:2xe4ecf3]\n\nAnyways, thanks for the help.",
+      "EditableFormat": "bbcode",
+      "HTML": "Mkay first... Sorry it took so long for me to reply. I've been doing stuff, and I finally have time for me now lol.<br/><br/>And apparently that time away refreshed my ideas because I took one look at the library and realized that half the stuff in the foreach in the use_container doesn't need to be there. I just moved it to outside of the foreach and it works perfectly now (as far as I know.)<br/><br/>I should be publishing the new library tomorrow. Here's a sneak peek, though, if you want to test it out.<br/><div><a href=\"/attachment/577\">StackDemo.aslx</a></div><br/><div><a href=\"/attachment/576\">StackLibrary.aslx</a></div><br/><br/>Anyways, thanks for the help.",
+      "PostDate": "2013-04-06T04:15:33+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

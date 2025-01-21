@@ -1,0 +1,39 @@
+{
+  "Topic": {
+    "TopicId": "j_vvnvipvkufy49svfg0_g",
+    "ForumId": "10",
+    "Title": "Loaded saved game in web player has nothing in #divOutput",
+    "LastUpdated": "2024-09-20T02:12:23.9205386Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "8a3cd672-76cd-4ee0-8527-b17dd10b327b",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "```\r\nIRRELEVANT CODE REMOVED\r\n```\r\n\r\n---\r\n<s>That's how the web player saves the data from #divOutput.\r\n\r\nSo how can we retrieve that data?\r\n\r\n(I've tried reading the docs on ajax, but I can't figure this out at all.)</s>\r\n\r\nThe WebPlayer doesn't load the existing in-game text when loading a saved game unless you used the Save button to save. Using the save command will result in no existing in-game text when loading a saved game.",
+      "EditableFormat": "markdown",
+      "HTML": "<pre><code>IRRELEVANT CODE REMOVED\n</code></pre>\n<hr>\n<p><s>That's how the web player saves the data from #divOutput.</s></p><s>\n<p>So how can we retrieve that data?</p>\n</s><p><s>(I've tried reading the docs on ajax, but I can't figure this out at all.)</s></p>\n<p>The WebPlayer doesn't load the existing in-game text when loading a saved game unless you used the Save button to save. Using the save command will result in no existing in-game text when loading a saved game.</p>\n\n",
+      "PostDate": "2024-09-20T02:12:23.9205386Z",
+      "LastEditDate": "2024-10-07T19:39:08.4251412Z",
+      "link": null
+    },
+    {
+      "PostId": "71933590-912c-4dee-8de6-b5a70232fc26",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://i.imgur.com/Odr8Efkb.jpeg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Okay... After reading old posts and testing things:\r\n\r\nWhen playing online and saving your progress:\r\n- if you click the Save button to save, your divOutput will be there when you load your saved game\r\n- if you use the SAVE command, your divOutput will NOT be there when you load your saved game\r\n\r\n---\r\nThe save command in Quest 5.8.0 (which does not do anything I intended, and would be missing a call to `JS.afterSave()` even if `game.questplatform` ***did*** exist):\r\n\r\n```xml\r\n  <!-- Modified by KV to resolve issue with empty divOutput when saving online with this command. -->\r\n  <command name=\"save\">\r\n    <pattern type=\"string\">^save$</pattern>\r\n    <script>\r\n      if (HasAttribute(game, \"questplatform\")) {\r\n        if (game.questplatform = \"desktop\") {\r\n           request(RequestSave, \"\")\r\n        }\r\n        else {\r\n          JS.saveGame ()\r\n        }\r\n      }\r\n      else {\r\n        request(RequestSave, \"\")\r\n      }\r\n      game.suppressturnscripts = true\r\n    </script>\r\n  </command>\r\n```\r\n\r\n---\r\nThe save button only has this happening on click:\r\n```js\r\nsaveGame()\r\nafterSave()\r\n```\r\n\r\n---\r\nFirst, I believe the save command in Quest needs to be changed back to:\r\n```\r\n  <command name=\"save\">\r\n    <pattern type=\"string\">^save$</pattern>\r\n    <script>\r\n      request(RequestSave, \"\")\r\n      game.suppressturnscripts = true\r\n    </script>\r\n  </command>\r\n```\r\n\r\n---\r\nSecond, I've done this to **WebPlayer\\player.js** in my build of the web player:\r\n\r\n```js\r\nfunction sendCommand(text, metadata) {\r\n    if (_pauseMode || _waitingForSoundToFinish || _waitMode || !canSendCommand) return;\r\n    canSendCommand = false;\r\n    markScrollPosition();\r\n    if (text.toLowerCase().trim() == \"save\") {\r\n      //console.log(\"KV is bypassing the save command and emulating a Save button press!\");\r\n      saveGame();\r\n      afterSave();\r\n    }\r\n    else {\r\n      window.setTimeout(function () {\r\n          $(\"#fldUITickCount\").val(getTickCountAndStopTimer());\r\n          var data = new Object();\r\n          data[\"command\"] = text;\r\n          if (typeof metadata != \"undefined\") {\r\n              data[\"metadata\"] = metadata;\r\n          }\r\n          $(\"#fldUIMsg\").val(\"command \" + JSON.stringify(data));\r\n          $(\"#cmdSubmit\").click();\r\n      }, 100);\r\n    }\r\n    afterSendCommand();\r\n}\r\n```\r\n\r\n---\r\nAll the older games I can find have the Save button; so, I *want* to jump to conclusions and decide this will fix the issue with displaying the saved divOutput online with no possible side effects.\r\n\r\nI've been testing old and new games (and in between games), and I haven't had any issues (yet).",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Okay... After reading old posts and testing things:</p>\n<p>When playing online and saving your progress:</p>\n<ul>\n<li>if you click the Save button to save, your divOutput will be there when you load your saved game</li>\n<li>if you use the SAVE command, your divOutput will NOT be there when you load your saved game</li>\n</ul>\n<hr>\n<p>The save command in Quest 5.8.0 (which does not do anything I intended, and would be missing a call to <code>JS.afterSave()</code> even if <code>game.questplatform</code> <strong><em>did</em></strong> exist):</p>\n<pre><code>  &lt;!-- Modified by KV to resolve issue with empty divOutput when saving online with this command. --&gt;\n  &lt;command name=\"save\"&gt;\n    &lt;pattern type=\"string\"&gt;^save$&lt;/pattern&gt;\n    &lt;script&gt;\n      if (HasAttribute(game, \"questplatform\")) {\n        if (game.questplatform = \"desktop\") {\n           request(RequestSave, \"\")\n        }\n        else {\n          JS.saveGame ()\n        }\n      }\n      else {\n        request(RequestSave, \"\")\n      }\n      game.suppressturnscripts = true\n    &lt;/script&gt;\n  &lt;/command&gt;\n</code></pre>\n<hr>\n<p>The save button only has this happening on click:</p>\n<pre><code>saveGame()\nafterSave()\n</code></pre>\n<hr>\n<p>First, I believe the save command in Quest needs to be changed back to:</p>\n<pre><code>  &lt;command name=\"save\"&gt;\n    &lt;pattern type=\"string\"&gt;^save$&lt;/pattern&gt;\n    &lt;script&gt;\n      request(RequestSave, \"\")\n      game.suppressturnscripts = true\n    &lt;/script&gt;\n  &lt;/command&gt;\n</code></pre>\n<hr>\n<p>Second, I've done this to <strong>WebPlayer\\player.js</strong> in my build of the web player:</p>\n<pre><code>function sendCommand(text, metadata) {\n    if (_pauseMode || _waitingForSoundToFinish || _waitMode || !canSendCommand) return;\n    canSendCommand = false;\n    markScrollPosition();\n    if (text.toLowerCase().trim() == \"save\") {\n      //console.log(\"KV is bypassing the save command and emulating a Save button press!\");\n      saveGame();\n      afterSave();\n    }\n    else {\n      window.setTimeout(function () {\n          $(\"#fldUITickCount\").val(getTickCountAndStopTimer());\n          var data = new Object();\n          data[\"command\"] = text;\n          if (typeof metadata != \"undefined\") {\n              data[\"metadata\"] = metadata;\n          }\n          $(\"#fldUIMsg\").val(\"command \" + JSON.stringify(data));\n          $(\"#cmdSubmit\").click();\n      }, 100);\n    }\n    afterSendCommand();\n}\n</code></pre>\n<hr>\n<p>All the older games I can find have the Save button; so, I <em>want</em> to jump to conclusions and decide this will fix the issue with displaying the saved divOutput online with no possible side effects.</p>\n<p>I've been testing old and new games (and in between games), and I haven't had any issues (yet).</p>\n\n",
+      "PostDate": "2024-10-07T19:36:01.4576484Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

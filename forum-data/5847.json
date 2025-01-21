@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "5847",
+    "ForumId": "10",
+    "Title": "Expression to Dictionary issues",
+    "LastUpdated": "2016-01-11T06:33:47+00:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "40420",
+      "UserId": 0,
+      "Username": "Unadept",
+      "UserAvatar": null,
+      "UserGravatar": "056668dd85038941e105836c3cc35d03",
+      "EditableText": "Hey, guys,\n\nI'm having more trouble.  I promise for every problem I drop here, I struggle through and solve 6 -on average- on my own, so I'm really making an effort and not just begging for help the first second I hit a wall.\n\nMy problem now is that I have an object that I'm having display lists of items “purchased” in the game.  That's easy, and done.  Problem is, the player might want to sell those objects back, and thus I need to set a cost for the Strings put into the Stringlist in game.  I've decided to do that by creating a StringDictionary (game.purchases), and adding the Strings and associated costs there.  However, when I do that:\n\n[code:3mx2ergx]Error running script&#058; Error adding key '40mm-S, High Explosive &#91;5&#93;' to dictionary&#58; Unable to cast object of type 'System&#46;Int32' to type 'TextAdventures&#46;Quest&#46;Scripts&#46;IScript'&#46; [/code:3mx2ergx]\n\nThe code I'm using is:\n\n[code:3mx2ergx]  list add (this&#46;purchase, this&#46;listalias + &quot;, &quot; + this&#46;round + &quot; &#91;&quot; + result + &quot;&#93;&quot;)\n  &lt;b&gt;dictionary add (game&#46;purchases, this&#46;listalias + &quot;, &quot; + this&#46;round + &quot; &#91;&quot; + result + &quot;&#93;&quot;, (this&#46;cost*ToInt(result)))&lt;/b&gt;\n  player&#46;grace = player&#46;grace-(this&#46;cost*ToInt(result))\n  msg (result + &quot; rounds of &quot; + this&#46;listalias + &quot;, &quot; + this&#46;round + &quot; ammunition purchased for &quot; + (this&#46;cost*ToInt(result)) + &quot;G&#46;  &quot; + player&#46;grace + &quot;G left&#46;&quot;) [/code:3mx2ergx]\n\nSo, I want the specific caliber (this.listalias) + the type of ammo (this.round) + the number of rounds purchased (result) added to the dictionary and then associated with the actual item cost (this.cost*ToInt(result)).\n\nAll of this works great, except the dictionary part.  Then I get the error.  Do I have to convert this expression to a String, and if so, how?\n\nThanks again for the help, guys,\n\nUnadept",
+      "EditableFormat": "bbcode",
+      "HTML": "Hey, guys,<br/><br/>I'm having more trouble.  I promise for every problem I drop here, I struggle through and solve 6 -on average- on my own, so I'm really making an effort and not just begging for help the first second I hit a wall.<br/><br/>My problem now is that I have an object that I'm having display lists of items “purchased” in the game.  That's easy, and done.  Problem is, the player might want to sell those objects back, and thus I need to set a cost for the Strings put into the Stringlist in game.  I've decided to do that by creating a StringDictionary (game.purchases), and adding the Strings and associated costs there.  However, when I do that:<br/><br/><pre><code>Error running script&#058; Error adding key '40mm-S, High Explosive &#91;5&#93;' to dictionary&#58; Unable to cast object of type 'System&#46;Int32' to type 'TextAdventures&#46;Quest&#46;Scripts&#46;IScript'&#46; </code></pre><br/><br/>The code I'm using is:<br/><br/><pre><code>  list add (this&#46;purchase, this&#46;listalias + &quot;, &quot; + this&#46;round + &quot; &#91;&quot; + result + &quot;&#93;&quot;)<br/>  &lt;b&gt;dictionary add (game&#46;purchases, this&#46;listalias + &quot;, &quot; + this&#46;round + &quot; &#91;&quot; + result + &quot;&#93;&quot;, (this&#46;cost*ToInt(result)))&lt;/b&gt;<br/>  player&#46;grace = player&#46;grace-(this&#46;cost*ToInt(result))<br/>  msg (result + &quot; rounds of &quot; + this&#46;listalias + &quot;, &quot; + this&#46;round + &quot; ammunition purchased for &quot; + (this&#46;cost*ToInt(result)) + &quot;G&#46;  &quot; + player&#46;grace + &quot;G left&#46;&quot;) </code></pre><br/><br/>So, I want the specific caliber (this.listalias) + the type of ammo (this.round) + the number of rounds purchased (result) added to the dictionary and then associated with the actual item cost (this.cost*ToInt(result)).<br/><br/>All of this works great, except the dictionary part.  Then I get the error.  Do I have to convert this expression to a String, and if so, how?<br/><br/>Thanks again for the help, guys,<br/><br/>Unadept",
+      "PostDate": "2016-01-10T13:59:16+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40437",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Based on the error message, it looks like you have created game.purchases as a ScriptDictionary. But if you want to add the costs as integers, then just use a simple Dictionary. That can take values of any type (and you can even have different types within the same dictionary). The typed dictionaries (e.g. ScriptDictionary, StringDictionary, etc) can *only* take values of the type they hold, which is why you're getting the error.\n\nIf you do want to use a StringDictionary, then you'd need to convert the purchase total to a string before adding it to the dictionary.\n\n[code:277vhqhm]totalcost = ToString(this&#46;cost*ToInt(result)))[/code:277vhqhm]",
+      "EditableFormat": "bbcode",
+      "HTML": "Based on the error message, it looks like you have created game.purchases as a ScriptDictionary. But if you want to add the costs as integers, then just use a simple Dictionary. That can take values of any type (and you can even have different types within the same dictionary). The typed dictionaries (e.g. ScriptDictionary, StringDictionary, etc) can *only* take values of the type they hold, which is why you're getting the error.<br/><br/>If you do want to use a StringDictionary, then you'd need to convert the purchase total to a string before adding it to the dictionary.<br/><br/><pre><code>totalcost = ToString(this&#46;cost*ToInt(result)))</code></pre>",
+      "PostDate": "2016-01-10T21:21:57+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40458",
+      "UserId": 0,
+      "Username": "Unadept",
+      "UserAvatar": null,
+      "UserGravatar": "056668dd85038941e105836c3cc35d03",
+      "EditableText": "Fantastic, thanks jaynabonne, that makes sense.",
+      "EditableFormat": "bbcode",
+      "HTML": "Fantastic, thanks jaynabonne, that makes sense.",
+      "PostDate": "2016-01-11T06:26:56+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40459",
+      "UserId": 0,
+      "Username": "Unadept",
+      "UserAvatar": null,
+      "UserGravatar": "056668dd85038941e105836c3cc35d03",
+      "EditableText": "Worked perfectly, thanks again.",
+      "EditableFormat": "bbcode",
+      "HTML": "Worked perfectly, thanks again.",
+      "PostDate": "2016-01-11T06:33:47+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

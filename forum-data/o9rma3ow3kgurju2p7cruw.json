@@ -1,0 +1,141 @@
+{
+  "Topic": {
+    "TopicId": "o9rma3ow3kgurju2p7cruw",
+    "ForumId": "10",
+    "Title": "Some thoughts and questions on randomized trophy heads",
+    "LastUpdated": "2016-12-13T17:56:03.2113596Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "39800958-a002-4aab-b296-2cd53ce5d59f",
+      "UserId": 227864,
+      "Username": "Talon",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3b6191c9adc337e83fec8e293e3fc584?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Have a element of my game I did when I first started that i'd like to update and make somewhat more elegant and effective.  The basic concept is this, an old hunting lodge that has trophy heads on the wall, each game I'd like to have them change their look each game, so could be from a selection  bear, deer, wolf, lion, elephant, rhino head, and so on)\r\n\r\n\r\nNow while I've had no trouble setting it up using the random text in the processor, the only problem is each time a person looks at the trophy head it will randomly choose again, I know many people who'll look at things multiple times. I'd much rather the description be static throughout the play session.\r\n\r\nA complex method I thought might work is using a string list, take a value from it, set it to the heads description and set the script to only fire the first time its looked at. It seems there should be an easier way\r\n\r\nWhat I'd like to eventually have is the trophy head  to also show the species that could be linked to the description.. I think that would be using something like a switch, “if alias has deer, then description “Deer”)\r\n\r\nPixie's wonderful generating stuff post  though somehow lets me simply provide the options in text or a list attached to  an item and then the text is kept static through the play session, also letting you have some random in the alias as well(could be easily used to describe the condition of the trophy head)\r\n\r\nTalon\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Have a element of my game I did when I first started that i'd like to update and make somewhat more elegant and effective.  The basic concept is this, an old hunting lodge that has trophy heads on the wall, each game I'd like to have them change their look each game, so could be from a selection  bear, deer, wolf, lion, elephant, rhino head, and so on)</p>\n<p>Now while I've had no trouble setting it up using the random text in the processor, the only problem is each time a person looks at the trophy head it will randomly choose again, I know many people who'll look at things multiple times. I'd much rather the description be static throughout the play session.</p>\n<p>A complex method I thought might work is using a string list, take a value from it, set it to the heads description and set the script to only fire the first time its looked at. It seems there should be an easier way</p>\n<p>What I'd like to eventually have is the trophy head  to also show the species that could be linked to the description.. I think that would be using something like a switch, “if alias has deer, then description “Deer”)</p>\n<p>Pixie's wonderful generating stuff post  though somehow lets me simply provide the options in text or a list attached to  an item and then the text is kept static through the play session, also letting you have some random in the alias as well(could be easily used to describe the condition of the trophy head)</p>\n<p>Talon</p>\n\n",
+      "PostDate": "2016-12-13T17:56:03.2113596Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "d292fe81-66c9-4989-9adb-49bb13425a22",
+      "UserId": 168877,
+      "Username": "TinFoilMkIV",
+      "AvatarUrl": "http://i.imgur.com/j34jdCvb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "try http://docs.textadventures.co.uk/quest/scripts/firsttime.html to pick a random trophy then base the description off whatever value that pulls. That way any followup looks can pull the generated value to keep the description static per playthrough.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>try http://docs.textadventures.co.uk/quest/scripts/firsttime.html to pick a random trophy then base the description off whatever value that pulls. That way any followup looks can pull the generated value to keep the description static per playthrough.</p>\n\n",
+      "PostDate": "2016-12-13T20:05:04.7058605Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "a53cdc21-0e66-4869-b964-e60cdcbb9b61",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "indeed, using, 'firsttime/otherwise' Function, and using String/Object List Attributes, along with the 'GetRandomInt' Function and the 'StringListItem/ObjectListItem' Function, to select an item from the String/Object List Attribute, and then to store/save that into a String/Object Attribute, which you can then use to display the needed information, either just based from the string, or in using Objects, and if needed, using string concatenation for the displayment.\r\n\r\nan example, using an Objects design:\r\n\r\n```\r\n<object name=\"old_hunting_lodge_room_object\">\r\n</object>\r\n\r\n<object name=\"trophy_room_object\">\r\n  <attr name=\"parent\" type=\"object\">old_hunting_lodge_room_object</attr>\r\n  <object name=\"trophy_head_object\">\r\n    <attr name=\"alias\" type=\"string\">trophy head</attr>\r\n    <attr name=\"look\" type=\"script\">\r\n      firsttime {\r\n        trophy_data_object.trophy_object_attribute = ObjectListItem (trophy_data_object.trophy_objectlist_attribute, GetRandomInt (0, ListCount (trophy_data_object.trophy_objectlist_attribute) - 1))\r\n        invoke (trophy_data_object.trophy_object_attribute.look) // or, you can use: do (trophy_data_object.trophy_object_attribute, \"look\")\r\n      } otherwise {\r\n        invoke (trophy_data_object.trophy_object_attribute.look) // or, you can use: do (trophy_data_object.trophy_object_attribute, \"look\")\r\n      }\r\n    </attr>\r\n  </object>\r\n</object>\r\n\r\n<object name=\"trophy_data_object\">\r\n  <attr name=\"trophy_object_attribute\" type=\"object\">unknown_object</attr>\r\n  <attr name=\"trophy_objectlist_attribute\" type=\"objectlist\">bear_trophy_object;deer_trophy_object;wolf_trophy_object;lion_trophy_object;elephant_trophy_object;rhino_trophy_object</attr>\r\n  <object name=\"bear_trophy_object\">\r\n    <attr name=\"alias\" type=\"string\">bear trophy head</attr>\r\n    <attr name=\"species_string_attribute\" type=\"string\">bear</attr>\r\n    <attr name=\"look\" type=\"script\">\r\n      msg (\"YOUR_\" + UCase (this.species_string_attribute) + \"_DESCRIPTION\")\r\n    </attr>\r\n    // etc Attributes if you want/need/have them\r\n  </object>\r\n  <object name=\"deer_trophy_object\">\r\n    <attr name=\"alias\" type=\"string\">deer trophy head</attr>\r\n    <attr name=\"look\" type=\"script\">\r\n      msg (\"YOUR_\" + UCase (this.species_string_attribute) + \"_DESCRIPTION\")\r\n    </attr>\r\n    // etc Attributes if you want/need/have them\r\n  </object>\r\n  // etc trophy head Objects of yours\r\n  <object name=\"unknown_object\">\r\n    <attr name=\"alias\" type=\"string\">unknown alias</attr>\r\n    <attr name=\"species_string_attribute\" type=\"string\">unknown species</attr>\r\n    <attr name=\"look\" type=\"script\">\r\n      msg (\"YOUR_\" + UCase (this.species_string_attribute) + \"_DESCRIPTION\")\r\n    </attr>\r\n    // etc Attributes\r\n  </object>\r\n</object>\r\n```\r\n\r\nlet me know if you need any help understanding this or need anything explained, and/or if it doesn't work... if there's any errors...\r\n\r\n---------\r\n\r\nPixie can create a much better design, and likely add in the editor controls for it, but it's an example for you, even if not the best.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>indeed, using, 'firsttime/otherwise' Function, and using String/Object List Attributes, along with the 'GetRandomInt' Function and the 'StringListItem/ObjectListItem' Function, to select an item from the String/Object List Attribute, and then to store/save that into a String/Object Attribute, which you can then use to display the needed information, either just based from the string, or in using Objects, and if needed, using string concatenation for the displayment.</p>\n<p>an example, using an Objects design:</p>\n<pre><code>&lt;object name=\"old_hunting_lodge_room_object\"&gt;\n&lt;/object&gt;\n\n&lt;object name=\"trophy_room_object\"&gt;\n  &lt;attr name=\"parent\" type=\"object\"&gt;old_hunting_lodge_room_object&lt;/attr&gt;\n  &lt;object name=\"trophy_head_object\"&gt;\n    &lt;attr name=\"alias\" type=\"string\"&gt;trophy head&lt;/attr&gt;\n    &lt;attr name=\"look\" type=\"script\"&gt;\n      firsttime {\n        trophy_data_object.trophy_object_attribute = ObjectListItem (trophy_data_object.trophy_objectlist_attribute, GetRandomInt (0, ListCount (trophy_data_object.trophy_objectlist_attribute) - 1))\n        invoke (trophy_data_object.trophy_object_attribute.look) // or, you can use: do (trophy_data_object.trophy_object_attribute, \"look\")\n      } otherwise {\n        invoke (trophy_data_object.trophy_object_attribute.look) // or, you can use: do (trophy_data_object.trophy_object_attribute, \"look\")\n      }\n    &lt;/attr&gt;\n  &lt;/object&gt;\n&lt;/object&gt;\n\n&lt;object name=\"trophy_data_object\"&gt;\n  &lt;attr name=\"trophy_object_attribute\" type=\"object\"&gt;unknown_object&lt;/attr&gt;\n  &lt;attr name=\"trophy_objectlist_attribute\" type=\"objectlist\"&gt;bear_trophy_object;deer_trophy_object;wolf_trophy_object;lion_trophy_object;elephant_trophy_object;rhino_trophy_object&lt;/attr&gt;\n  &lt;object name=\"bear_trophy_object\"&gt;\n    &lt;attr name=\"alias\" type=\"string\"&gt;bear trophy head&lt;/attr&gt;\n    &lt;attr name=\"species_string_attribute\" type=\"string\"&gt;bear&lt;/attr&gt;\n    &lt;attr name=\"look\" type=\"script\"&gt;\n      msg (\"YOUR_\" + UCase (this.species_string_attribute) + \"_DESCRIPTION\")\n    &lt;/attr&gt;\n    // etc Attributes if you want/need/have them\n  &lt;/object&gt;\n  &lt;object name=\"deer_trophy_object\"&gt;\n    &lt;attr name=\"alias\" type=\"string\"&gt;deer trophy head&lt;/attr&gt;\n    &lt;attr name=\"look\" type=\"script\"&gt;\n      msg (\"YOUR_\" + UCase (this.species_string_attribute) + \"_DESCRIPTION\")\n    &lt;/attr&gt;\n    // etc Attributes if you want/need/have them\n  &lt;/object&gt;\n  // etc trophy head Objects of yours\n  &lt;object name=\"unknown_object\"&gt;\n    &lt;attr name=\"alias\" type=\"string\"&gt;unknown alias&lt;/attr&gt;\n    &lt;attr name=\"species_string_attribute\" type=\"string\"&gt;unknown species&lt;/attr&gt;\n    &lt;attr name=\"look\" type=\"script\"&gt;\n      msg (\"YOUR_\" + UCase (this.species_string_attribute) + \"_DESCRIPTION\")\n    &lt;/attr&gt;\n    // etc Attributes\n  &lt;/object&gt;\n&lt;/object&gt;\n</code></pre>\n<p>let me know if you need any help understanding this or need anything explained, and/or if it doesn't work... if there's any errors...</p>\n<hr>\n<p>Pixie can create a much better design, and likely add in the editor controls for it, but it's an example for you, even if not the best.</p>\n\n",
+      "PostDate": "2016-12-14T02:59:50.0600605Z",
+      "LastEditDate": "2016-12-14T03:05:19.5731767Z"
+    },
+    {
+      "PostId": "e8a0a641-0de7-44ba-bc8e-6ce23774224b",
+      "UserId": 227864,
+      "Username": "Talon",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3b6191c9adc337e83fec8e293e3fc584?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'll take a look at this sometime this evening or tomorrow morning, did get a workable placeholder(without changing the aliases of the objects) using the Pickonestr function(that might have been one of yours) and a prepopulated  stringlist, the first time the script picks one of the descriptions, then tells the player what it is, the followups just repeat the picked item from the list.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'll take a look at this sometime this evening or tomorrow morning, did get a workable placeholder(without changing the aliases of the objects) using the Pickonestr function(that might have been one of yours) and a prepopulated  stringlist, the first time the script picks one of the descriptions, then tells the player what it is, the followups just repeat the picked item from the list.</p>\n\n",
+      "PostDate": "2016-12-14T03:54:34.4771532Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "a6731493-91db-4577-8565-4366a065bc46",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I would create an object for each trophy head, in another room inaccessible to the player, and then have a script that runs before the player enters the room. Pick one at random and move it into the room. That way the player can do X DEER, because the deer head will be there.\r\n\r\nThat script could also modify the room description. Set it up originally for, say, the wolf trophy, but replace the word wolf as appropriate (\"this\" is a stand-n for the object the script is attached to, in this case the room):\r\n```\r\nthis.description = Replace (this.description, \"wolf\", \"deer\")\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I would create an object for each trophy head, in another room inaccessible to the player, and then have a script that runs before the player enters the room. Pick one at random and move it into the room. That way the player can do X DEER, because the deer head will be there.</p>\n<p>That script could also modify the room description. Set it up originally for, say, the wolf trophy, but replace the word wolf as appropriate (\"this\" is a stand-n for the object the script is attached to, in this case the room):</p>\n<pre><code>this.description = Replace (this.description, \"wolf\", \"deer\")\n</code></pre>\n\n",
+      "PostDate": "2016-12-14T08:19:14.334535Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "ca3d1570-90ec-4c86-86bf-95ce6058e866",
+      "UserId": 227864,
+      "Username": "Talon",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3b6191c9adc337e83fec8e293e3fc584?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The only problem with that Pixie is not from a technical angle but clutter, if i have multiple heads in the lodge, would have to have multiple of each type in the storeroom(Where i keep all my things that get moved in and out, locked off from players of course) or have the risk of a trophy head moving as its triggered again. so for 3 heads in the lodge i'd need a wolf wolf1 wolf2...right?. Just very many of heads for the effect. The larger the game gets the slower it seems to load... maybe i'm making things to big.\r\n\r\nThe room description angle is very interesting(for this and rather many  of other projects I have using random stuff), not sure i've ever used that sort in my games so far.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The only problem with that Pixie is not from a technical angle but clutter, if i have multiple heads in the lodge, would have to have multiple of each type in the storeroom(Where i keep all my things that get moved in and out, locked off from players of course) or have the risk of a trophy head moving as its triggered again. so for 3 heads in the lodge i'd need a wolf wolf1 wolf2...right?. Just very many of heads for the effect. The larger the game gets the slower it seems to load... maybe i'm making things to big.</p>\n<p>The room description angle is very interesting(for this and rather many  of other projects I have using random stuff), not sure i've ever used that sort in my games so far.</p>\n\n",
+      "PostDate": "2016-12-14T18:15:55.650337Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "cb710841-8481-4c5d-bbe6-f4f560d4fc44",
+      "UserId": 168877,
+      "Username": "TinFoilMkIV",
+      "AvatarUrl": "http://i.imgur.com/j34jdCvb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "If you want several heads as a single object then I'd create an attribute for each head and randomly assign them the first time they're looked at or otherwise would be displayed. You could use a list to store the descriptions for each possible head then display them in order based on your head variables.\r\n\r\nie: pseudo code\r\n<code>firsttime {\r\nhead1 = (random)\r\nhead2 = (random)\r\nhead3 = (random)\r\n}\r\n//description goes here\r\nOutputTextNoBr (\"On the left you see \" + StringListItem (this.list, this.head1))\r\nOutputTextNoBr (\"Next to it there is \" + StringListItem (this.list, this.head2))\r\nmsg (\"To the right is mounted \" + StringListItem (this.list, this.head2))\r\n</code>\r\n\r\nEDIT: the room description bit suggested by The Pixie is actually a great tool to randomize environments without object clutter but you lose the interactivity or more detailed descriptions for player inspection. That said if you're aiming for high quality you could use both including altered room descriptions to match variable objects.\r\n\r\nAlternatively you can use in room descriptions of items to blend them into the description without having to modify it, although you get the limitation of having the objects have to be at the end of the actual description, which depending on writing style and ability may or may not be an issue.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>If you want several heads as a single object then I'd create an attribute for each head and randomly assign them the first time they're looked at or otherwise would be displayed. You could use a list to store the descriptions for each possible head then display them in order based on your head variables.</p>\n<p>ie: pseudo code<br>\n<code>firsttime {<br>\nhead1 = (random)<br>\nhead2 = (random)<br>\nhead3 = (random)<br>\n}<br>\n//description goes here<br>\nOutputTextNoBr (\"On the left you see \" + StringListItem (this.list, this.head1))<br>\nOutputTextNoBr (\"Next to it there is \" + StringListItem (this.list, this.head2))<br>\nmsg (\"To the right is mounted \" + StringListItem (this.list, this.head2))<br>\n</code></p>\n<p>EDIT: the room description bit suggested by The Pixie is actually a great tool to randomize environments without object clutter but you lose the interactivity or more detailed descriptions for player inspection. That said if you're aiming for high quality you could use both including altered room descriptions to match variable objects.</p>\n<p>Alternatively you can use in room descriptions of items to blend them into the description without having to modify it, although you get the limitation of having the objects have to be at the end of the actual description, which depending on writing style and ability may or may not be an issue.</p>\n\n",
+      "PostDate": "2016-12-14T18:55:54.6262645Z",
+      "LastEditDate": "2016-12-14T19:00:50.2029791Z"
+    },
+    {
+      "PostId": "8c170ea5-6b29-4b72-8fe7-d7266c10fecd",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Why do you need three wolf heads? Surely you just need the room description to say there are three. Or can the player take them?\r\n\r\nSo have three heads in the room, and in the script that triggers when the player enters the room, modify their aliases and descriptions.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Why do you need three wolf heads? Surely you just need the room description to say there are three. Or can the player take them?</p>\n<p>So have three heads in the room, and in the script that triggers when the player enters the room, modify their aliases and descriptions.</p>\n\n",
+      "PostDate": "2016-12-14T20:27:56.1643758Z",
+      "LastEditDate": "2016-12-14T20:29:01.4745649Z"
+    },
+    {
+      "PostId": "5b47ba29-16f7-4fb5-a135-f77ecf78cc3c",
+      "UserId": 168877,
+      "Username": "TinFoilMkIV",
+      "AvatarUrl": "http://i.imgur.com/j34jdCvb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "At least in terms of mine, I was assuming that it was desired for the heads to be different animals. Granted my specific example has nothing preventing duplicates being selected.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>At least in terms of mine, I was assuming that it was desired for the heads to be different animals. Granted my specific example has nothing preventing duplicates being selected.</p>\n\n",
+      "PostDate": "2016-12-14T20:33:53.8756212Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "bf377093-14b2-4baa-a185-d5fe1fffb11b",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "my code handles/addresses what you'r discussing in these latest posts... though if you need to actually \"physically\" use the trophy heads, then some more coding is needed, such as in terms of simplicity, the 'Clone and Move (something like this)' Function.\r\n\r\nI have a single trophy Object in a room, and within an internal storage/data room, I have the various trophy head Objects. The code handles the randomization of the various trophy heads without doing any moving of Objects.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>my code handles/addresses what you'r discussing in these latest posts... though if you need to actually \"physically\" use the trophy heads, then some more coding is needed, such as in terms of simplicity, the 'Clone and Move (something like this)' Function.</p>\n<p>I have a single trophy Object in a room, and within an internal storage/data room, I have the various trophy head Objects. The code handles the randomization of the various trophy heads without doing any moving of Objects.</p>\n\n",
+      "PostDate": "2016-12-14T21:08:02.5340898Z",
+      "LastEditDate": null
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "461",
+    "ForumId": "10",
+    "Title": "Timers",
+    "LastUpdated": "2004-09-01T15:14:57+01:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "3069",
+      "UserId": 0,
+      "Username": "GameBoy",
+      "UserAvatar": null,
+      "UserGravatar": "554e89a053350b96f686f324a6049e9d",
+      "EditableText": "I've set some timers into my game, but it seems that the script only runs once, and not every time the interval reaches 0.\n\n[code:cak9tcfd]define timer &lt;food&gt;\n\tinterval &lt;20&gt;\n\taction &#123;\n\t\tmsg &lt;|bYou begin to feel hungry&#46;|xb&gt;\n\t\ttimeron &lt;food_two&gt;\n\t\ttimeroff &lt;food&gt;\n\t&#125;\n\tenabled\nend define\n\ndefine timer &lt;thirst&gt;\n\tinterval &lt;20&gt;\n\taction &#123;\n\t\tmsg &lt;|bYou begin to look parched&#46;|xb&gt;\n\t\ttimeron &lt;thirst_two&gt;\n\t\ttimeroff &lt;thirst&gt;\n\t&#125;\n\tenabled\nend define\n\ndefine timer &lt;food_two&gt;\n\tinterval &lt;10&gt;\n\taction &#123;\n\t\tset numeric &lt;hp; -5&gt;\n\t\tmsg &lt;|bYou feel hungry&#46;|xb&gt;\n\t&#125;\n\tdisabled\nend define\n\ndefine timer &lt;thirst_two&gt;\n\tinterval &lt;10&gt;\n\taction &#123;\n\t\tset numeric &lt;hp; -5&gt;\n\t\tmsg &lt;|bYou feel thirsty&#46;|xb&gt;\n\t&#125;\n\tdisabled\nend define[/code:cak9tcfd]\n\nThe timers work together, and once food has been eaten:\n\n[code:cak9tcfd]define room &lt;Items&gt;\n\n\tdefine object &lt;water&gt;\n\t\talias &lt;Water&gt;\n\t\ttake\n\t\tuse &#123;\n\t\t\tmsg &lt;|bYou drink the water&#46;|xb&gt;\n\t\t\ttimeroff &lt;thirst_two&gt;\n\t\t\ttimeron &lt;thirst&gt;\n\t\t&#125;\n\tend define\n\n\tdefine object &lt;Apple&gt;\n\t\ttake\n\t\tuse &#123;\n\t\t\tmsg &lt;|bYou bite into the apple&#46;|xb&gt;\n\t\t\ttimeroff &lt;food_two&gt;\n\t\t\ttimeron &lt;food&gt;\n\t\t&#125;\n\tend define\n\nend define[/code:cak9tcfd]\n\nThat sends the main food/thirst timer back off again.  I need it to take off 5 each time the timer hits 0 on food_two/thirst_two.\n\nOnce the HP reaches the 0 or less, the player will die.",
+      "EditableFormat": "bbcode",
+      "HTML": "I've set some timers into my game, but it seems that the script only runs once, and not every time the interval reaches 0.<br/><br/><pre><code>define timer &lt;food&gt;<br/>\tinterval &lt;20&gt;<br/>\taction &#123;<br/>\t\tmsg &lt;|bYou begin to feel hungry&#46;|xb&gt;<br/>\t\ttimeron &lt;food_two&gt;<br/>\t\ttimeroff &lt;food&gt;<br/>\t&#125;<br/>\tenabled<br/>end define<br/><br/>define timer &lt;thirst&gt;<br/>\tinterval &lt;20&gt;<br/>\taction &#123;<br/>\t\tmsg &lt;|bYou begin to look parched&#46;|xb&gt;<br/>\t\ttimeron &lt;thirst_two&gt;<br/>\t\ttimeroff &lt;thirst&gt;<br/>\t&#125;<br/>\tenabled<br/>end define<br/><br/>define timer &lt;food_two&gt;<br/>\tinterval &lt;10&gt;<br/>\taction &#123;<br/>\t\tset numeric &lt;hp; -5&gt;<br/>\t\tmsg &lt;|bYou feel hungry&#46;|xb&gt;<br/>\t&#125;<br/>\tdisabled<br/>end define<br/><br/>define timer &lt;thirst_two&gt;<br/>\tinterval &lt;10&gt;<br/>\taction &#123;<br/>\t\tset numeric &lt;hp; -5&gt;<br/>\t\tmsg &lt;|bYou feel thirsty&#46;|xb&gt;<br/>\t&#125;<br/>\tdisabled<br/>end define</code></pre><br/><br/>The timers work together, and once food has been eaten:<br/><br/><pre><code>define room &lt;Items&gt;<br/><br/>\tdefine object &lt;water&gt;<br/>\t\talias &lt;Water&gt;<br/>\t\ttake<br/>\t\tuse &#123;<br/>\t\t\tmsg &lt;|bYou drink the water&#46;|xb&gt;<br/>\t\t\ttimeroff &lt;thirst_two&gt;<br/>\t\t\ttimeron &lt;thirst&gt;<br/>\t\t&#125;<br/>\tend define<br/><br/>\tdefine object &lt;Apple&gt;<br/>\t\ttake<br/>\t\tuse &#123;<br/>\t\t\tmsg &lt;|bYou bite into the apple&#46;|xb&gt;<br/>\t\t\ttimeroff &lt;food_two&gt;<br/>\t\t\ttimeron &lt;food&gt;<br/>\t\t&#125;<br/>\tend define<br/><br/>end define</code></pre><br/><br/>That sends the main food/thirst timer back off again.  I need it to take off 5 each time the timer hits 0 on food_two/thirst_two.<br/><br/>Once the HP reaches the 0 or less, the player will die.",
+      "PostDate": "2004-09-01T06:57:00+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3070",
+      "UserId": 0,
+      "Username": "GameBoy",
+      "UserAvatar": null,
+      "UserGravatar": "554e89a053350b96f686f324a6049e9d",
+      "EditableText": "[b:14pszoqt]FIXED[/b:14pszoqt]\n\nInstead of trying to minus the value each time, i simply used to decrement tag instead, like so:\n\n[code:14pszoqt]\t\tdec &lt;hp; 5&gt;[/code:14pszoqt]",
+      "EditableFormat": "bbcode",
+      "HTML": "<span style=\"font-weight:bold;\">FIXED</span><br/><br/>Instead of trying to minus the value each time, i simply used to decrement tag instead, like so:<br/><br/><pre><code>\t\tdec &lt;hp; 5&gt;</code></pre>",
+      "PostDate": "2004-09-01T07:01:38+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3075",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "Yes, the problem was this syntax is incorrect:\n\n[code:22fpi0kx]\nset numeric &lt;hp; -5&gt;\n[/code:22fpi0kx]\n\nshould be\n\n[code:22fpi0kx]\nset numeric &lt;hp; %hp%-5&gt;\n[/code:22fpi0kx]",
+      "EditableFormat": "bbcode",
+      "HTML": "Yes, the problem was this syntax is incorrect:<br/><br/><pre><code><br/>set numeric &lt;hp; -5&gt;<br/></code></pre><br/><br/>should be<br/><br/><pre><code><br/>set numeric &lt;hp; %hp%-5&gt;<br/></code></pre>",
+      "PostDate": "2004-09-01T12:52:52+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3078",
+      "UserId": 0,
+      "Username": "GameBoy",
+      "UserAvatar": null,
+      "UserGravatar": "554e89a053350b96f686f324a6049e9d",
+      "EditableText": "ahh yes now i remember!  <!-- s:roll: --><img src=\"{SMILIES_PATH}/icon_rolleyes.gif\" alt=\":roll:\" title=\"Rolling Eyes\" /><!-- s:roll: -->    lol, thanks alex",
+      "EditableFormat": "bbcode",
+      "HTML": "ahh yes now i remember!  <!-- s:roll: --><img src=\"{SMILIES_PATH}/icon_rolleyes.gif\" alt=\":roll:\" title=\"Rolling Eyes\" /><!-- s:roll: -->    lol, thanks alex",
+      "PostDate": "2004-09-01T15:14:57+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

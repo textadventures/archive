@@ -1,0 +1,109 @@
+{
+  "Topic": {
+    "TopicId": "2rlixliiw0al3_ajddywew",
+    "ForumId": "15",
+    "Title": "Random silliness: Quest's \"invoke\" in JS",
+    "LastUpdated": "2020-12-11T17:40:43.8645245Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "b15e85f4-eefb-4779-b372-a19958bc057d",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Random I know.\r\nThis was an issue back with QuestJS, the one that tried to convert Quest 5.x games to javascript code. They had a problem that a function's parameters weren't known when it was created. Because Quest's `invoke` takes a script parameter, and a dictionary of parameters, and the parameter names come from the dictionary.\r\n\r\nIt randomly popped into my head how you could do this lately. So I present: a javascript function that messes with another javascript function.\r\n```\r\nfunction Quest_invoke (script, params) {\r\n  eval(\"(\" + script.toString().replace(/^\\s*(function\\s*.*?\\()/, \"$1\"+Object.keys(params).join(\",\")) + \")\").apply(null, Object.values(params));\r\n}\r\n\r\nfunction Quest_do (object, scriptname, params) {\r\n  eval(\"(\" + object[scriptname].toString().replace(/^\\s*(function\\s*.*?\\()/, \"$1\"+Object.keys(params).join(\",\")) + \")\").apply(object, Object.values(params));\r\n}\r\n```\r\nThis is probably useless now; but if someone wants to revive the idea of making a new engine to work with the old files it could be useful.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Random I know.<br>\nThis was an issue back with QuestJS, the one that tried to convert Quest 5.x games to javascript code. They had a problem that a function's parameters weren't known when it was created. Because Quest's <code>invoke</code> takes a script parameter, and a dictionary of parameters, and the parameter names come from the dictionary.</p>\n<p>It randomly popped into my head how you could do this lately. So I present: a javascript function that messes with another javascript function.</p>\n<pre><code>function Quest_invoke (script, params) {\n  eval(\"(\" + script.toString().replace(/^\\s*(function\\s*.*?\\()/, \"$1\"+Object.keys(params).join(\",\")) + \")\").apply(null, Object.values(params));\n}\n\nfunction Quest_do (object, scriptname, params) {\n  eval(\"(\" + object[scriptname].toString().replace(/^\\s*(function\\s*.*?\\()/, \"$1\"+Object.keys(params).join(\",\")) + \")\").apply(object, Object.values(params));\n}\n</code></pre>\n<p>This is probably useless now; but if someone wants to revive the idea of making a new engine to work with the old files it could be useful.</p>\n\n",
+      "PostDate": "2020-12-11T17:40:43.8645245Z",
+      "LastEditDate": "2020-12-11T19:07:59.0989941Z",
+      "link": null
+    },
+    {
+      "PostId": "eb69ff5a-2234-4dfb-a63d-7a89e5ca2ac1",
+      "UserId": 301690,
+      "Username": "Richard Headkid",
+      "AvatarUrl": "http://i.imgur.com/WUGXS8yb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "By default, you can't do ```eval``` due to the security settings in Quest 6.\r\n\r\nhttps://github.com/ThePix/QuestJS/wiki/Code-guidelines#content-security-policy",
+      "EditableFormat": "markdown",
+      "HTML": "<p>By default, you can't do <code>eval</code> due to the security settings in Quest 6.</p>\n<p>https://github.com/ThePix/QuestJS/wiki/Code-guidelines#content-security-policy</p>\n\n",
+      "PostDate": "2020-12-11T17:47:41.7965808Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "3fea899b-29bc-43c8-aea7-e5088a049267",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Sorry. You can delete this post if you want to keep irrelevant stuff off the forum.\r\n\r\nBut if you want to do this without eval, you should be able to use some terrible voodoo code like:\r\n```\r\nfunction Quest_invoke (script, params) {\r\n  var stash = Object.keys(params);\r\n  stash.push(script.toString().replace(/^.*?\\{(.*)\\}.*?$/s, \"$1\"));\r\n  stash.unshift(undefined);\r\n  var modified_script = new (Function.prototype.bind.apply(Function, stash));\r\n  modified_script.apply(null, Object.values(params));\r\n}\r\n```\r\n\r\n(more proof that I can't let go of an unsolved problem even when it's years past being relevant)\r\n\r\nFor reference:\r\n```\r\nnew (Function.prototype.bind.apply(SomeClassName, some_array));\r\n```\r\nis equivalent to:\r\n```\r\nnew SomeClassName(some_array[1], some_array[2], some_array[3] …)\r\n```\r\nI'm using that with the `Function` constructor, because I have an array of parameter names (from `Object.keys(params)`). So I can then call the newly created function by using its `apply` method to supply an array of parameter values rather than the parameters individually.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Sorry. You can delete this post if you want to keep irrelevant stuff off the forum.</p>\n<p>But if you want to do this without eval, you should be able to use some terrible voodoo code like:</p>\n<pre><code>function Quest_invoke (script, params) {\n  var stash = Object.keys(params);\n  stash.push(script.toString().replace(/^.*?\\{(.*)\\}.*?$/s, \"$1\"));\n  stash.unshift(undefined);\n  var modified_script = new (Function.prototype.bind.apply(Function, stash));\n  modified_script.apply(null, Object.values(params));\n}\n</code></pre>\n<p>(more proof that I can't let go of an unsolved problem even when it's years past being relevant)</p>\n<p>For reference:</p>\n<pre><code>new (Function.prototype.bind.apply(SomeClassName, some_array));\n</code></pre>\n<p>is equivalent to:</p>\n<pre><code>new SomeClassName(some_array[1], some_array[2], some_array[3] …)\n</code></pre>\n<p>I'm using that with the <code>Function</code> constructor, because I have an array of parameter names (from <code>Object.keys(params)</code>). So I can then call the newly created function by using its <code>apply</code> method to supply an array of parameter values rather than the parameters individually.</p>\n\n",
+      "PostDate": "2020-12-11T19:09:34.8077944Z",
+      "LastEditDate": "2020-12-11T20:56:28.5482331Z",
+      "link": null
+    },
+    {
+      "PostId": "cf5883e0-16fc-44e1-9493-a47a40874bad",
+      "UserId": 301690,
+      "Username": "Richard Headkid",
+      "AvatarUrl": "http://i.imgur.com/WUGXS8yb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Curses!\r\n\r\n```\r\nUncaught EvalError: call to Function() blocked by CSP\r\n    Quest_invoke debugger eval code:4\r\n    <anonymous> debugger eval code:12\r\ndebugger eval code:4:25\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Curses!</p>\n<pre><code>Uncaught EvalError: call to Function() blocked by CSP\n    Quest_invoke debugger eval code:4\n    &lt;anonymous&gt; debugger eval code:12\ndebugger eval code:4:25\n</code></pre>\n\n",
+      "PostDate": "2020-12-11T19:55:46.8507017Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "9d385655-41b7-4293-90a4-9d654e70c7db",
+      "UserId": 301690,
+      "Username": "Richard Headkid",
+      "AvatarUrl": "http://i.imgur.com/WUGXS8yb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> I can't let go of an unsolved problem even when it's years past being relevant\r\n\r\nNeither can I, good sir.  Neither can I.\r\n\r\nUnsolved problems haunt me.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>I can't let go of an unsolved problem even when it's years past being relevant</p>\n</blockquote>\n<p>Neither can I, good sir.  Neither can I.</p>\n<p>Unsolved problems haunt me.</p>\n\n",
+      "PostDate": "2020-12-11T19:56:34.9245608Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "a54a791e-aa5d-4cd0-879a-77690f29648c",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I wasn't sure if the Function constructor would count as an eval or not; guess I'm out of luck there.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I wasn't sure if the Function constructor would count as an eval or not; guess I'm out of luck there.</p>\n\n",
+      "PostDate": "2020-12-11T20:23:48.8609495Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "77a87b5a-9dee-4a23-949a-86f636bfd6fd",
+      "UserId": 301690,
+      "Username": "Richard Headkid",
+      "AvatarUrl": "http://i.imgur.com/WUGXS8yb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "It was a valiant effort.\r\n\r\nI would have used it, just to prove it could be done.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>It was a valiant effort.</p>\n<p>I would have used it, just to prove it could be done.</p>\n\n",
+      "PostDate": "2020-12-11T20:55:38.2411136Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

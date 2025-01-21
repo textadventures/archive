@@ -1,0 +1,131 @@
+{
+  "Topic": {
+    "TopicId": "1602",
+    "ForumId": "10",
+    "Title": "Object Drops in one Procedure",
+    "LastUpdated": "2007-02-19T13:08:45+00:00",
+    "ReplyCount": 9
+  },
+  "Posts": [
+    {
+      "PostId": "12646",
+      "UserId": 0,
+      "Username": "witch wyzwurd",
+      "UserAvatar": null,
+      "UserGravatar": "05e3fb359c040589d773db02decd0770",
+      "EditableText": "I'm meaning to group all of my drop {lose &lt;object name&gt;} commands in a procedure.  So I created a procedure titled &quot;drop_procedure&quot;.  Then for an object named &lt;ball&gt;, I programmed (cold code):\n\ndrop {\n         do &lt;drop_procedure&gt;\n        }\n\nThen within &quot;drop_procedure&quot; I programmed (using QDK):\n\nif &quot;#quest.originalcommand#&quot; is equal to &quot;drop #@ball#&quot; then Take &quot;ball&quot; from the player.\n\nBut the &quot;ball&quot; remains in the player's possession, which tells me my command doesn't work.  I've used only the &quot;Take...&quot; part of the command and the &quot;ball&quot; is dropped, so I know it's the first half of my command that is bad.  I've also tried lose #@ball#, drop @ball, drop ball, lose ball, etc.\n\nI've tried #quest.command# also.  I've even made up a silly &quot;equal to&quot; message like &quot;throw,&quot; but when I type in &quot;throw&quot; the ball is still not dropped.\n\nI want the player to be able to click &quot;Drop&quot; from the menu and have Quest process the command using my procedure (without using flags).  I have to use the string command because other objects are also listed in the procedure and I don't want them to be dropped if all I want to drop is the ball.\n\nI find it easiest to include all of my object's drop commands in one area, for quicker editing, reading, and comparing.\n\nI'm using 3.53 still, and need an answer for this version.\n\nThank You :}",
+      "EditableFormat": "bbcode",
+      "HTML": "I'm meaning to group all of my drop {lose &lt;object name&gt;} commands in a procedure.  So I created a procedure titled &quot;drop_procedure&quot;.  Then for an object named &lt;ball&gt;, I programmed (cold code):<br/><br/>drop {<br/>         do &lt;drop_procedure&gt;<br/>        }<br/><br/>Then within &quot;drop_procedure&quot; I programmed (using QDK):<br/><br/>if &quot;#quest.originalcommand#&quot; is equal to &quot;drop #@ball#&quot; then Take &quot;ball&quot; from the player.<br/><br/>But the &quot;ball&quot; remains in the player's possession, which tells me my command doesn't work.  I've used only the &quot;Take...&quot; part of the command and the &quot;ball&quot; is dropped, so I know it's the first half of my command that is bad.  I've also tried lose #@ball#, drop @ball, drop ball, lose ball, etc.<br/><br/>I've tried #quest.command# also.  I've even made up a silly &quot;equal to&quot; message like &quot;throw,&quot; but when I type in &quot;throw&quot; the ball is still not dropped.<br/><br/>I want the player to be able to click &quot;Drop&quot; from the menu and have Quest process the command using my procedure (without using flags).  I have to use the string command because other objects are also listed in the procedure and I don't want them to be dropped if all I want to drop is the ball.<br/><br/>I find it easiest to include all of my object's drop commands in one area, for quicker editing, reading, and comparing.<br/><br/>I'm using 3.53 still, and need an answer for this version.<br/><br/>Thank You :}",
+      "PostDate": "2007-02-12T12:35:52+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "12648",
+      "UserId": 0,
+      "Username": "Freak",
+      "UserAvatar": null,
+      "UserGravatar": "325ed9ac125e00c9937be0d3aea0916d",
+      "EditableText": "Try adding a line of debug code; right above that, put the line Print Text &quot;DEBUG: Comparing [#quest.originalcommand#] against [drop #@ball].&quot;",
+      "EditableFormat": "bbcode",
+      "HTML": "Try adding a line of debug code; right above that, put the line Print Text &quot;DEBUG: Comparing [#quest.originalcommand#] against [drop #@ball].&quot;",
+      "PostDate": "2007-02-12T12:52:28+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "12649",
+      "UserId": 0,
+      "Username": "witch wyzwurd",
+      "UserAvatar": null,
+      "UserGravatar": "05e3fb359c040589d773db02decd0770",
+      "EditableText": "Okay, that helped.  I learned that quest.originalcommand returns the object's alias rather than it's original name.  But...\n\nThe real name is: Ball\nThe alias is: Rubber Ball\nAnd it has alternative names, like: the rubber ball; the ball...\n\nSo now the ball is dropped using &quot;drop rubber ball&quot; but not using &quot;drop [b:3soutj4k]the rubber ball[/b:3soutj4k].&quot;  That's why I used #@Ball#, but when I do that I get the message: &quot;DEBUG: comparing [drop rubber ball] against [drop ]&quot;\n\nHow do I include all the names for an object then?  I know quest.command checks for synonyms, but an alt name for an object isn't a synonym.\n\nThanks",
+      "EditableFormat": "bbcode",
+      "HTML": "Okay, that helped.  I learned that quest.originalcommand returns the object's alias rather than it's original name.  But...<br/><br/>The real name is: Ball<br/>The alias is: Rubber Ball<br/>And it has alternative names, like: the rubber ball; the ball...<br/><br/>So now the ball is dropped using &quot;drop rubber ball&quot; but not using &quot;drop <span style=\"font-weight:bold;\">the rubber ball</span>.&quot;  That's why I used #@Ball#, but when I do that I get the message: &quot;DEBUG: comparing [drop rubber ball] against [drop ]&quot;<br/><br/>How do I include all the names for an object then?  I know quest.command checks for synonyms, but an alt name for an object isn't a synonym.<br/><br/>Thanks",
+      "PostDate": "2007-02-12T13:53:06+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "12650",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "There are a few ways you could do this:\n\n- Instead of checking the entire command, just check the object. #quest.lastobject# should equal the real name of the object, even if a synonym or alias or alt-name was used.\n- Call your procedure with a parameter, e.g. in your &quot;ball&quot; object code, use:\n\ndrop do &lt;drop_procedure(ball)&gt;\n\nThen in your procedure, check the parameter:\n\nif ( $parameter(1)$ = ball ) then ...",
+      "EditableFormat": "bbcode",
+      "HTML": "There are a few ways you could do this:<br/><br/>- Instead of checking the entire command, just check the object. #quest.lastobject# should equal the real name of the object, even if a synonym or alias or alt-name was used.<br/>- Call your procedure with a parameter, e.g. in your &quot;ball&quot; object code, use:<br/><br/>drop do &lt;drop_procedure(ball)&gt;<br/><br/>Then in your procedure, check the parameter:<br/><br/>if ( $parameter(1)$ = ball ) then ...",
+      "PostDate": "2007-02-12T14:07:08+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "12651",
+      "UserId": 0,
+      "Username": "Freak",
+      "UserAvatar": null,
+      "UserGravatar": "325ed9ac125e00c9937be0d3aea0916d",
+      "EditableText": "Add the value of &quot;$thisobject$&quot; to that text.  See if that helps.\n\nBTW, why do you even want to put all drop commands together?  I've generally found that it's more useful to organize actions by the objects involved than the verbs.",
+      "EditableFormat": "bbcode",
+      "HTML": "Add the value of &quot;$thisobject$&quot; to that text.  See if that helps.<br/><br/>BTW, why do you even want to put all drop commands together?  I've generally found that it's more useful to organize actions by the objects involved than the verbs.",
+      "PostDate": "2007-02-12T14:13:37+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "12656",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "Right, you need a prefix of &quot;the&quot;.. Not including &quot;the&quot; in the name.\n\nThen you can but as the name &quot;ball&quot; and Alias &quot;Rubber Ball&quot; and Alt &quot;ball;rubber ball; bl&quot;.",
+      "EditableFormat": "bbcode",
+      "HTML": "Right, you need a prefix of &quot;the&quot;.. Not including &quot;the&quot; in the name.<br/><br/>Then you can but as the name &quot;ball&quot; and Alias &quot;Rubber Ball&quot; and Alt &quot;ball;rubber ball; bl&quot;.",
+      "PostDate": "2007-02-12T15:15:18+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "12665",
+      "UserId": 0,
+      "Username": "witch wyzwurd",
+      "UserAvatar": null,
+      "UserGravatar": "05e3fb359c040589d773db02decd0770",
+      "EditableText": "[quote:39qsjokq]Instead of checking the entire command, just check the object. #quest.lastobject# should equal the real name of the object, even if a synonym or alias or alt-name was used.[/quote:39qsjokq] I went with this option and it works great! :} Thanks Alex\n[quote:39qsjokq]BTW, why do you even want to put all drop commands together?[/quote:39qsjokq]Well, it kinda went like this... Aaarrggghhh! Quest erased my drop and take scripts again in QDK (3.53), so I guess I'll open WordPad and cold-code these commands. :{ I know, instead of having to lose the scripts in the drop or take section within each object's window or switch back and forth from WordPad to QDK, I'll put them in the Procedure menu box so I can edit them there without a problem of QDK messing up.  And by going this this, I learnt that I like them together, because I can view them all together, so their messages have a continuity.\n\nDoes 4.0 get rid of that QDK error?",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><p>Instead of checking the entire command, just check the object. #quest.lastobject# should equal the real name of the object, even if a synonym or alias or alt-name was used.</p></blockquote> I went with this option and it works great! :} Thanks Alex<br/><blockquote><p>BTW, why do you even want to put all drop commands together?</p></blockquote>Well, it kinda went like this... Aaarrggghhh! Quest erased my drop and take scripts again in QDK (3.53), so I guess I'll open WordPad and cold-code these commands. :{ I know, instead of having to lose the scripts in the drop or take section within each object's window or switch back and forth from WordPad to QDK, I'll put them in the Procedure menu box so I can edit them there without a problem of QDK messing up.  And by going this this, I learnt that I like them together, because I can view them all together, so their messages have a continuity.<br/><br/>Does 4.0 get rid of that QDK error?",
+      "PostDate": "2007-02-12T18:42:10+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "12688",
+      "UserId": 0,
+      "Username": "007bond",
+      "UserAvatar": null,
+      "UserGravatar": "4c2673a2d8666a97b5c1082c5cf2e0e5",
+      "EditableText": "i don't understand what you're trying to do by manually creating a drop procedure.\r\nDoesn't it have a drop command built in?",
+      "EditableFormat": "bbcode",
+      "HTML": "i don't understand what you're trying to do by manually creating a drop procedure.<br/>Doesn't it have a drop command built in?",
+      "PostDate": "2007-02-15T07:47:35+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "12695",
+      "UserId": 0,
+      "Username": "witch wyzwurd",
+      "UserAvatar": null,
+      "UserGravatar": "05e3fb359c040589d773db02decd0770",
+      "EditableText": "Yah, it does 007, but if you've ever experienced the bug in 3.53 that changes your script when you haven't wanted that to happen, then you'd understand.",
+      "EditableFormat": "bbcode",
+      "HTML": "Yah, it does 007, but if you've ever experienced the bug in 3.53 that changes your script when you haven't wanted that to happen, then you'd understand.",
+      "PostDate": "2007-02-15T17:49:40+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "12756",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "QDK 3.53 does sometimes have problems where changing script somewhere leads to a change somewhere else.\r\n\r\nIn QDK 4.0, the script editing functionality has been completely rewritten, which means this can no longer happen.",
+      "EditableFormat": "bbcode",
+      "HTML": "QDK 3.53 does sometimes have problems where changing script somewhere leads to a change somewhere else.<br/><br/>In QDK 4.0, the script editing functionality has been completely rewritten, which means this can no longer happen.",
+      "PostDate": "2007-02-19T13:08:45+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

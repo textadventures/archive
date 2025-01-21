@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "2167",
+    "ForumId": "10",
+    "Title": "Apparent math bug & question about FOR loops",
+    "LastUpdated": "2009-07-26T23:09:34+01:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "16892",
+      "UserId": 0,
+      "Username": "Verbojuice",
+      "UserAvatar": null,
+      "UserGravatar": "f76bb56a20acc021a2a15027f3b928ba",
+      "EditableText": "Hi,\n\n[b:2ytxlwww]Apparent math bug[/b:2ytxlwww]\nQuest evaluates this wrongly: &lt;elemTot; (%Map_X_Max% - %Map_X_Min% + 1) * (%Map_Y_Max% - %Map_Y_Min% + 1)&gt;\nQuest evaluates this correctly: &lt;elemTot; (1 + %Map_X_Max% - %Map_X_Min%) * (1 + %Map_Y_Max% - %Map_Y_Min%)&gt;\n \nUsing value 32 in the variables should give 1024 but the first version gives 900.\n\n[b:2ytxlwww]Question about for loops[/b:2ytxlwww]\nThe following appears not to execute, though no error is generated. Debug shows that elemTot has a value of 1024. \n[quote:2ytxlwww]\tfor &lt;elemPtr; 1; elemTot&gt; {\n\t\tset string &lt;Map_Locn[elemPtr]; TEST-VALUE&gt;\n\t\tmsg &lt;Element %elemPtr% is #Map_Locn[elemPtr]#&gt;\n\t\t}[/quote:2ytxlwww]\nWhat I am dong wrong? Sample code attached.\n\nThanks, Verbojuice",
+      "EditableFormat": "bbcode",
+      "HTML": "Hi,<br/><br/><span style=\"font-weight:bold;\">Apparent math bug</span><br/>Quest evaluates this wrongly: &lt;elemTot; (%Map_X_Max% - %Map_X_Min% + 1) * (%Map_Y_Max% - %Map_Y_Min% + 1)&gt;<br/>Quest evaluates this correctly: &lt;elemTot; (1 + %Map_X_Max% - %Map_X_Min%) * (1 + %Map_Y_Max% - %Map_Y_Min%)&gt;<br/> <br/>Using value 32 in the variables should give 1024 but the first version gives 900.<br/><br/><span style=\"font-weight:bold;\">Question about for loops</span><br/>The following appears not to execute, though no error is generated. Debug shows that elemTot has a value of 1024. <br/><blockquote><p>\tfor &lt;elemPtr; 1; elemTot&gt; {<br/>\t\tset string &lt;Map_Locn[elemPtr]; TEST-VALUE&gt;<br/>\t\tmsg &lt;Element %elemPtr% is #Map_Locn[elemPtr]#&gt;<br/>\t\t}</p></blockquote><br/>What I am dong wrong? Sample code attached.<br/><br/>Thanks, Verbojuice<div><a href=\"/attachment/24\">RLD v01.asl</a></div>",
+      "PostDate": "2009-07-26T16:45:28+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16893",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "There definitely seems to be something weird with the maths there - I'll fix this bug for Quest 4.1.1.\n\nThe &quot;for&quot; loop isn't running because this line:\n\n[code:g8xvy1q2]\nfor &lt;elemPtr; 1; elemTot&gt; {\n[/code:g8xvy1q2]\n\nshould be:\n\n[code:g8xvy1q2]\nfor &lt;elemPtr; 1; %elemTot%&gt; {\n[/code:g8xvy1q2]",
+      "EditableFormat": "bbcode",
+      "HTML": "There definitely seems to be something weird with the maths there - I'll fix this bug for Quest 4.1.1.<br/><br/>The &quot;for&quot; loop isn't running because this line:<br/><br/><pre><code><br/>for &lt;elemPtr; 1; elemTot&gt; {<br/></code></pre><br/><br/>should be:<br/><br/><pre><code><br/>for &lt;elemPtr; 1; %elemTot%&gt; {<br/></code></pre>",
+      "PostDate": "2009-07-26T17:12:51+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16894",
+      "UserId": 0,
+      "Username": "Verbojuice",
+      "UserAvatar": null,
+      "UserGravatar": "f76bb56a20acc021a2a15027f3b928ba",
+      "EditableText": "Alex,\n\nThanks, I will get the hang of # and % at some point!",
+      "EditableFormat": "bbcode",
+      "HTML": "Alex,<br/><br/>Thanks, I will get the hang of # and % at some point!",
+      "PostDate": "2009-07-26T17:29:01+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16895",
+      "UserId": 0,
+      "Username": "Freak",
+      "UserAvatar": null,
+      "UserGravatar": "325ed9ac125e00c9937be0d3aea0916d",
+      "EditableText": "Maybe you're treating +/- as being right-associative instead of left-associative.",
+      "EditableFormat": "bbcode",
+      "HTML": "Maybe you're treating +/- as being right-associative instead of left-associative.",
+      "PostDate": "2009-07-26T20:07:41+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16896",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "Quest was always doing additions before subtractions. In v4.1.1 I've fixed this so that it does:\n\n- multiplications and divisions first, left-to-right\n- then, additions and subtractions, left-to-right",
+      "EditableFormat": "bbcode",
+      "HTML": "Quest was always doing additions before subtractions. In v4.1.1 I've fixed this so that it does:<br/><br/>- multiplications and divisions first, left-to-right<br/>- then, additions and subtractions, left-to-right",
+      "PostDate": "2009-07-26T23:09:34+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

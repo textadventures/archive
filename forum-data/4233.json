@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "4233",
+    "ForumId": "10",
+    "Title": "Print Inventory?",
+    "LastUpdated": "2014-03-14T08:39:39+00:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "28149",
+      "UserId": 0,
+      "Username": "michaelsahn",
+      "UserAvatar": null,
+      "UserGravatar": "3a9802e1b3c8187c840fa757ffeb896b",
+      "EditableText": "I'd like to turn off the display that shows the map, inventory, etc.  But I'd still like to use an inventory.  Instead, I'd like to print the player's inventory whenever the player moves to a room.\n\nTherefore:\n\n1. Game display of inventory, map, etc. is off.\n2. Player picks up object XXXXX.  It moves to player's inventory.\n3. Player moves to another room.\n4. Text prints: &quot;Player is carrying &quot;[u:1s43ir8o]XXXXX[/u:1s43ir8o].&quot;\n5. Player can use the inventory item by clicking on it, showing applicable verbs.\n\nIs there a way of doing this?\n\nThanks again -\n\nMike",
+      "EditableFormat": "bbcode",
+      "HTML": "I'd like to turn off the display that shows the map, inventory, etc.  But I'd still like to use an inventory.  Instead, I'd like to print the player's inventory whenever the player moves to a room.<br/><br/>Therefore:<br/><br/>1. Game display of inventory, map, etc. is off.<br/>2. Player picks up object XXXXX.  It moves to player's inventory.<br/>3. Player moves to another room.<br/>4. Text prints: &quot;Player is carrying &quot;<span style=\"text-decoration:underline;\">XXXXX</span>.&quot;<br/>5. Player can use the inventory item by clicking on it, showing applicable verbs.<br/><br/>Is there a way of doing this?<br/><br/>Thanks again -<br/><br/>Mike",
+      "PostDate": "2014-03-14T00:23:36+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "28150",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "This (the displayment of a list, such as your Inventory) is all I can help with:\n\n----------------------\n\nlinks:\n\n<!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/DisplayList\">http://quest5.net/wiki/DisplayList</a><!-- m -->\n<!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/ScopeInventory\">http://quest5.net/wiki/ScopeInventory</a><!-- m -->\n\n------------------\n\n[code:3637wx71]&lt;object name=&quot;player&quot;&gt;\n  &lt;inherit name=&quot;editor_object&quot; /&gt;\n  &lt;inherit name=&quot;editor_player&quot; /&gt;\n  &lt;attr name=&quot;changedparent&quot; type=&quot;script&quot;&gt;\n    DisplayList (ScopeInventory (), 0_or_1) // I think\n  &lt;/attr&gt;\n&lt;/object&gt;[/code:3637wx71]\n\nOR\n\n[code:3637wx71]&lt;object name=&quot;player&quot;&gt;\n  &lt;inherit name=&quot;editor_object&quot; /&gt;\n  &lt;inherit name=&quot;editor_player&quot; /&gt;\n  &lt;attr name=&quot;changedparent&quot; type=&quot;script&quot;&gt;\n    x=0\n    foreach (item_x, ScopeInventory()) {\n      x=x+1\n      msg (x + &quot;&#46; &quot; + item_x)\n    }\n  &lt;/attr&gt;\n&lt;/object&gt;[/code:3637wx71]",
+      "EditableFormat": "bbcode",
+      "HTML": "This (the displayment of a list, such as your Inventory) is all I can help with:<br/><br/>----------------------<br/><br/>links:<br/><br/><!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/DisplayList\">http://quest5.net/wiki/DisplayList</a><!-- m --><br/><!-- m --><a class=\"postlink\" href=\"http://quest5.net/wiki/ScopeInventory\">http://quest5.net/wiki/ScopeInventory</a><!-- m --><br/><br/>------------------<br/><br/><pre><code>&lt;object name=&quot;player&quot;&gt;<br/>  &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>  &lt;inherit name=&quot;editor_player&quot; /&gt;<br/>  &lt;attr name=&quot;changedparent&quot; type=&quot;script&quot;&gt;<br/>    DisplayList (ScopeInventory (), 0_or_1) // I think<br/>  &lt;/attr&gt;<br/>&lt;/object&gt;</code></pre><br/><br/>OR<br/><br/><pre><code>&lt;object name=&quot;player&quot;&gt;<br/>  &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>  &lt;inherit name=&quot;editor_player&quot; /&gt;<br/>  &lt;attr name=&quot;changedparent&quot; type=&quot;script&quot;&gt;<br/>    x=0<br/>    foreach (item_x, ScopeInventory()) {<br/>      x=x+1<br/>      msg (x + &quot;&#46; &quot; + item_x)<br/>    }<br/>  &lt;/attr&gt;<br/>&lt;/object&gt;</code></pre>",
+      "PostDate": "2014-03-14T00:35:18+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "28154",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "I changed HKs script a bit to display the room description and the verb list of the objects:\n\n[code:3szt4han]      &lt;changedparent type=&quot;script&quot;&gt;\n        ShowRoomDescription()\n        x = 0\n        foreach (item_x, ScopeInventory()) {\n          x = x+1\n          msg (x + &quot;&#46; {object&#58;&quot; + GetDisplayAlias(item_x)  +&quot;}&quot;)\n        }      \n      &lt;/changedparent&gt;[/code:3szt4han]\n\nGenerelly it is  not a good idea to use the changedparent script. You are overwriting the existing changedparent function which handles some scripts and attributes (eg enter schripts or map attributes). \nI would use a turnscript and check there, if the player has moved to another room",
+      "EditableFormat": "bbcode",
+      "HTML": "I changed HKs script a bit to display the room description and the verb list of the objects:<br/><br/><pre><code>      &lt;changedparent type=&quot;script&quot;&gt;<br/>        ShowRoomDescription()<br/>        x = 0<br/>        foreach (item_x, ScopeInventory()) {<br/>          x = x+1<br/>          msg (x + &quot;&#46; {object&#58;&quot; + GetDisplayAlias(item_x)  +&quot;}&quot;)<br/>        }      <br/>      &lt;/changedparent&gt;</code></pre><br/><br/>Generelly it is  not a good idea to use the changedparent script. You are overwriting the existing changedparent function which handles some scripts and attributes (eg enter schripts or map attributes). <br/>I would use a turnscript and check there, if the player has moved to another room",
+      "PostDate": "2014-03-14T07:52:31+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "28155",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "ah good to know, thanks Pertex, I didn't realize that there was built-in coding for the changedparent, so definately don't use this, and do as Pertex said, using a Turnscript + check, instead.\n\n(The script block is the same, and a check for whether you changed your location, but put it all inside of a Turnscript instead)",
+      "EditableFormat": "bbcode",
+      "HTML": "ah good to know, thanks Pertex, I didn't realize that there was built-in coding for the changedparent, so definately don't use this, and do as Pertex said, using a Turnscript + check, instead.<br/><br/>(The script block is the same, and a check for whether you changed your location, but put it all inside of a Turnscript instead)",
+      "PostDate": "2014-03-14T08:39:39+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "Topic": {
+    "TopicId": "7r_dphthiki_wxy1pk2rjg",
+    "ForumId": "10",
+    "Title": "Requesting help with getting the object's parent",
+    "LastUpdated": "2017-05-08T01:26:45.1236187Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "87790dc1-f7fd-464e-8c6a-18696d2aa796",
+      "UserId": 291519,
+      "Username": "Burr",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The basic gist is that when the player's stamina reaches 0, I want Quest to run a specific script that's dependent on which room the player is currently in. Obviously, the scripts will have the same name across all rooms, and all Quest would have to do is get the player's parent, and then run that object's specified script attribute.\r\nSort of a foreach (object, GetAllChildrenObjects (player.parent)), Do (object, \"script\") kind of deal, but getting the player's parent, rather than getting the player's children.\r\n\r\nI just can't figure out how to get Quest to get the player's parent in such a way that it can then set that parent to an open-ended object function, and run the object's script. Everything else before and after that part I've got, just not this one part. The best solution I've found is to tie it all to roomenter/exit, which works fine, except the player can deplete their stamina in the room, and suffer no consequences until they leave. Which isn't that big of a deal, I suppose, but I would really prefer to set this whole mess to the player's stamina change script so that the script runs immediately upon the conditions being met, rather than when the player leaves or enters a room. And I really don't want the change script to be a mile-long list of if/if else where the game tediously checks to see if the player.parent = \"room\", when something open-ended would free me up to just add rooms as needed, without having to go back and edit the change script each time.\r\nI've pored over the forums already, and I can't seem to find a solution.\r\n\r\nAny help with this would be greatly appreciated.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The basic gist is that when the player's stamina reaches 0, I want Quest to run a specific script that's dependent on which room the player is currently in. Obviously, the scripts will have the same name across all rooms, and all Quest would have to do is get the player's parent, and then run that object's specified script attribute.<br>\nSort of a foreach (object, GetAllChildrenObjects (player.parent)), Do (object, \"script\") kind of deal, but getting the player's parent, rather than getting the player's children.</p>\n<p>I just can't figure out how to get Quest to get the player's parent in such a way that it can then set that parent to an open-ended object function, and run the object's script. Everything else before and after that part I've got, just not this one part. The best solution I've found is to tie it all to roomenter/exit, which works fine, except the player can deplete their stamina in the room, and suffer no consequences until they leave. Which isn't that big of a deal, I suppose, but I would really prefer to set this whole mess to the player's stamina change script so that the script runs immediately upon the conditions being met, rather than when the player leaves or enters a room. And I really don't want the change script to be a mile-long list of if/if else where the game tediously checks to see if the player.parent = \"room\", when something open-ended would free me up to just add rooms as needed, without having to go back and edit the change script each time.<br>\nI've pored over the forums already, and I can't seem to find a solution.</p>\n<p>Any help with this would be greatly appreciated.</p>\n\n",
+      "PostDate": "2017-05-08T01:26:45.1236187Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "f55d9bea-9b94-4bf2-a3ed-27eda52934a6",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "you already have used the answer to your own question in your post, hehe.\r\n\r\nNAME_OF_OBJECT_OR_NAME_OF_OBJECT_VARIABLE.parent\r\n\r\n-------\r\n\r\nI don't quite understand what you want (I'm not clear on exactly what you want to do), but here's an example of something... hopefully it helps for whatever it is that you want to do.\r\n\r\n```\r\n<object name=\"room_1\">\r\n  <inherit name=\"example_type\" />\r\n</object>\r\n\r\n<object name=\"room_2\">\r\n  <inherit name=\"example_type\" />\r\n</object>\r\n\r\n<object name=\"book_1\">\r\n  <inherit name=\"book_type\" />\r\n  <attr name=\"parent\" type=\"object\">room_1</attr>\r\n</object>\r\n\r\n<object name=\"book_2\">\r\n  <inherit name=\"book_type\" />\r\n  <attr name=\"parent\" type=\"object\">room_1</attr>\r\n</object>\r\n\r\n<object name=\"book_3\">\r\n  <inherit name=\"book_type\" />\r\n  <attr name=\"parent\" type=\"object\">room_2</attr>\r\n</object>\r\n\r\n<object name=\"book_4\">\r\n  <inherit name=\"book_type\" />\r\n  <attr name=\"parent\" type=\"object\">room_2</attr>\r\n</object>\r\n\r\n<type name=\"book_type\">\r\n</type>\r\n\r\n<type name=\"example_type\">\r\n  <attr name=\"example_script\" type=\"script\">\r\n    msg (\"example scripting\")\r\n  </attr>\r\n</type>\r\n\r\n<object name=\"player\">\r\n  <attr name=\"parent\" type=\"object\">room_1</attr>\r\n  <attr name=\"stamina\" type=\"int\">100</attr>\r\n  <attr name=\"changedstamina\" type=\"script\">\r\n    if (this.stamina < 1) {\r\n      foreach (object_variable, GetDirectChildren(player.parent)) {\r\n        if (DoesInherit (object_variable, \"book_type\")) {\r\n          do (object_variable.parent, \"example_script\")\r\n        }\r\n      }\r\n    }\r\n  </attr>\r\n</object>\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>you already have used the answer to your own question in your post, hehe.</p>\n<p>NAME_OF_OBJECT_OR_NAME_OF_OBJECT_VARIABLE.parent</p>\n<hr>\n<p>I don't quite understand what you want (I'm not clear on exactly what you want to do), but here's an example of something... hopefully it helps for whatever it is that you want to do.</p>\n<pre><code>&lt;object name=\"room_1\"&gt;\n  &lt;inherit name=\"example_type\" /&gt;\n&lt;/object&gt;\n\n&lt;object name=\"room_2\"&gt;\n  &lt;inherit name=\"example_type\" /&gt;\n&lt;/object&gt;\n\n&lt;object name=\"book_1\"&gt;\n  &lt;inherit name=\"book_type\" /&gt;\n  &lt;attr name=\"parent\" type=\"object\"&gt;room_1&lt;/attr&gt;\n&lt;/object&gt;\n\n&lt;object name=\"book_2\"&gt;\n  &lt;inherit name=\"book_type\" /&gt;\n  &lt;attr name=\"parent\" type=\"object\"&gt;room_1&lt;/attr&gt;\n&lt;/object&gt;\n\n&lt;object name=\"book_3\"&gt;\n  &lt;inherit name=\"book_type\" /&gt;\n  &lt;attr name=\"parent\" type=\"object\"&gt;room_2&lt;/attr&gt;\n&lt;/object&gt;\n\n&lt;object name=\"book_4\"&gt;\n  &lt;inherit name=\"book_type\" /&gt;\n  &lt;attr name=\"parent\" type=\"object\"&gt;room_2&lt;/attr&gt;\n&lt;/object&gt;\n\n&lt;type name=\"book_type\"&gt;\n&lt;/type&gt;\n\n&lt;type name=\"example_type\"&gt;\n  &lt;attr name=\"example_script\" type=\"script\"&gt;\n    msg (\"example scripting\")\n  &lt;/attr&gt;\n&lt;/type&gt;\n\n&lt;object name=\"player\"&gt;\n  &lt;attr name=\"parent\" type=\"object\"&gt;room_1&lt;/attr&gt;\n  &lt;attr name=\"stamina\" type=\"int\"&gt;100&lt;/attr&gt;\n  &lt;attr name=\"changedstamina\" type=\"script\"&gt;\n    if (this.stamina &lt; 1) {\n      foreach (object_variable, GetDirectChildren(player.parent)) {\n        if (DoesInherit (object_variable, \"book_type\")) {\n          do (object_variable.parent, \"example_script\")\n        }\n      }\n    }\n  &lt;/attr&gt;\n&lt;/object&gt;\n</code></pre>\n\n",
+      "PostDate": "2017-05-08T01:50:25.4092483Z",
+      "LastEditDate": "2017-05-08T02:03:55.0066601Z"
+    },
+    {
+      "PostId": "c21918d9-5411-4e4f-babd-43b678feb3c1",
+      "UserId": 291519,
+      "Username": "Burr",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Really? Because I've tried \r\n```\r\nif (player.stamina <= 0) {\r\n  do (player.parent, \"script\")\r\n}\r\n```\r\nand got no results.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Really? Because I've tried</p>\n<pre><code>if (player.stamina &lt;= 0) {\n  do (player.parent, \"script\")\n}\n</code></pre>\n<p>and got no results.</p>\n\n",
+      "PostDate": "2017-05-08T01:57:06.3851301Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "47916f33-1c6d-4dc3-a27f-bf63e5a8876d",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "edited my previous post jsut now (sorry about that), so refresh and take a look at it.\r\n\r\n----------\r\n\r\nhmm... you probably can't use the 'dot' notation in the 'do' Function....\r\n\r\nyou can do these to circumvent:\r\n\r\n```\r\nparent_variable = player.parent\r\nif (player.stamina <= 0) {\r\n  do (parent_variable, \"script\")\r\n}\r\n\r\nor (if the above doesn't work):\r\n\r\nparent_variable = GetObject (player.parent)\r\nif (player.stamina <= 0) {\r\n  do (parent_variable, \"script\")\r\n}\r\n\r\nor if you want to do directly (I think you can can functions inside of function calls, but maybe you can't):\r\n\r\nif (player.stamina <= 0) {\r\n  do (GetObject (player.parent), \"script\")\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>edited my previous post jsut now (sorry about that), so refresh and take a look at it.</p>\n<hr>\n<p>hmm... you probably can't use the 'dot' notation in the 'do' Function....</p>\n<p>you can do these to circumvent:</p>\n<pre><code>parent_variable = player.parent\nif (player.stamina &lt;= 0) {\n  do (parent_variable, \"script\")\n}\n\nor (if the above doesn't work):\n\nparent_variable = GetObject (player.parent)\nif (player.stamina &lt;= 0) {\n  do (parent_variable, \"script\")\n}\n\nor if you want to do directly (I think you can can functions inside of function calls, but maybe you can't):\n\nif (player.stamina &lt;= 0) {\n  do (GetObject (player.parent), \"script\")\n}\n</code></pre>\n\n",
+      "PostDate": "2017-05-08T02:08:46.2194779Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "8bef3211-45c4-41ce-8b03-f72540c2b9f4",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "p.s.\r\n\r\nI'm assuming you named your universal scripts in your various rooms: script\r\n\r\nthis may be causing problems as the underlying code probably uses \"script\" too... you might want to re-name your script to something else, for example, see my first post, and my/its use of 'example_script' for its name, lol. You can name it whatever you want, but avoid any of the underlying code stuff, as you don't want to be over-writing it and wipe out its functionality.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>p.s.</p>\n<p>I'm assuming you named your universal scripts in your various rooms: script</p>\n<p>this may be causing problems as the underlying code probably uses \"script\" too... you might want to re-name your script to something else, for example, see my first post, and my/its use of 'example_script' for its name, lol. You can name it whatever you want, but avoid any of the underlying code stuff, as you don't want to be over-writing it and wipe out its functionality.</p>\n\n",
+      "PostDate": "2017-05-08T02:11:39.5418091Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "0fdef671-09b4-4d0d-9b89-8b0cbc0a1f15",
+      "UserId": 291519,
+      "Username": "Burr",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Got it!\r\nApparently the problem wasn't with the scripting per se, but rather the ordering of my if chain. I had a series of messages that would print when stamina was between certain amounts (primarily to avoid giving the player an exact number for something abstract like stamina) and for whatever reason the script wouldn't run if it was at the end of the chain. I put it at the top, and it ran just fine.\r\n\r\nThank you for the assistance hegemonkhan. Didn't mean to waste your time. I knew the answer was probably something stupid and simple, and sure enough.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Got it!<br>\nApparently the problem wasn't with the scripting per se, but rather the ordering of my if chain. I had a series of messages that would print when stamina was between certain amounts (primarily to avoid giving the player an exact number for something abstract like stamina) and for whatever reason the script wouldn't run if it was at the end of the chain. I put it at the top, and it ran just fine.</p>\n<p>Thank you for the assistance hegemonkhan. Didn't mean to waste your time. I knew the answer was probably something stupid and simple, and sure enough.</p>\n\n",
+      "PostDate": "2017-05-08T02:48:08.504452Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "ce581089-f8e5-4b7d-a864-847c35100ad0",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "'order of operations (scripting)' is a hassle (it's not easy to understand, as it takes good logic and carefully seeing what is going on step by step with your scripts)... and quest doesn't have good controls over it... BEWARE complex looping with 'get input' or 'show menu / ShowMenu' ...",
+      "EditableFormat": "markdown",
+      "HTML": "<p>'order of operations (scripting)' is a hassle (it's not easy to understand, as it takes good logic and carefully seeing what is going on step by step with your scripts)... and quest doesn't have good controls over it... BEWARE complex looping with 'get input' or 'show menu / ShowMenu' ...</p>\n\n",
+      "PostDate": "2017-05-08T13:27:06.6803269Z",
+      "LastEditDate": "2017-05-08T13:28:13.6744817Z"
+    },
+    {
+      "PostId": "e0bf5b25-c10b-41b7-862b-20e5d566c766",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "p.s.\r\n\r\nif you post your code that wasn't working, we could take a look at it and (hopefully be able to) explain why it isn't working to you, if you're interested in knowing why.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>p.s.</p>\n<p>if you post your code that wasn't working, we could take a look at it and (hopefully be able to) explain why it isn't working to you, if you're interested in knowing why.</p>\n\n",
+      "PostDate": "2017-05-08T13:31:05.1458444Z",
+      "LastEditDate": "2017-05-08T13:31:45.2743052Z"
+    }
+  ]
+}

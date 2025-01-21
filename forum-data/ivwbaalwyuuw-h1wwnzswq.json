@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "ivwbaalwyuuw-h1wwnzswq",
+    "ForumId": "10",
+    "Title": "Accessible inventory of previous player object (switching to new player object)",
+    "LastUpdated": "2024-02-03T21:35:00.197072Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "26121218-e8b6-4c00-935a-e5446d05be42",
+      "UserId": 676579,
+      "Username": "TBD_314",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/14b80434d54b612f445b9852ea13b965?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I just wanted to share a funny work around that I figured out by accident.\r\n\r\nSo my project hinges on the player becoming a robot and leaving their body behind, but I needed any possible objects that the player was already carrying to be accessible by the next player object. At first, I thought I would need to create an array for the player's inventory and drop each item one by one, but then I realized that you can just do this instead:\r\n\r\nTurn first player object into \"Object/room\" go to container tab, check \"can be opened\" box, then create a script that opens the player object when the player switches to the next player object. This worked like a charm!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I just wanted to share a funny work around that I figured out by accident.</p>\n<p>So my project hinges on the player becoming a robot and leaving their body behind, but I needed any possible objects that the player was already carrying to be accessible by the next player object. At first, I thought I would need to create an array for the player's inventory and drop each item one by one, but then I realized that you can just do this instead:</p>\n<p>Turn first player object into \"Object/room\" go to container tab, check \"can be opened\" box, then create a script that opens the player object when the player switches to the next player object. This worked like a charm!</p>\n\n",
+      "PostDate": "2024-02-03T21:35:00.197072Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "2b61d0a3-2eb2-44e4-8aa6-b16101248f47",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> create a script that opens the player object when the player switches to the next player object\r\n\r\nThis sounds like a pretty neat way of doing it\r\n\r\nAlthough:\r\n> Turn first player object into \"Object/room\" go to container tab, check \"can be opened\" box,\r\n\r\nNot sure why this bit is necessary",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>create a script that opens the player object when the player switches to the next player object</p>\n</blockquote>\n<p>This sounds like a pretty neat way of doing it</p>\n<p>Although:</p>\n<blockquote>\n<p>Turn first player object into \"Object/room\" go to container tab, check \"can be opened\" box,</p>\n</blockquote>\n<p>Not sure why this bit is necessary</p>\n\n",
+      "PostDate": "2024-02-03T23:39:34.7446956Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "d3e2252d-b298-4793-8b70-96e9931e44e1",
+      "UserId": 31991,
+      "Username": "daeun",
+      "AvatarUrl": "https://i.imgur.com/a59YNl7b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I am guessing your code requires the player to pick back up all the items, what if you can just add all to inventory instead:\r\n1. you should change \"bot\" in this script to whatever your robot is called. You need to create an object called temp and make temp invisible. Inside the \"transform robot\" button, add in this script.\r\n```\r\nforeach (item, ScopeInventory()) {\r\n  item.parent = temp\r\n}\r\nChangePOV (bot)\r\nforeach (item, GetDirectChildren(temp)) {\r\n  item.parent = game.pov\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I am guessing your code requires the player to pick back up all the items, what if you can just add all to inventory instead:</p>\n<ol>\n<li>you should change \"bot\" in this script to whatever your robot is called. You need to create an object called temp and make temp invisible. Inside the \"transform robot\" button, add in this script.</li>\n</ol>\n<pre><code>foreach (item, ScopeInventory()) {\n  item.parent = temp\n}\nChangePOV (bot)\nforeach (item, GetDirectChildren(temp)) {\n  item.parent = game.pov\n}\n</code></pre>\n\n",
+      "PostDate": "2024-02-04T02:31:14.7814848Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "32bb2135-db78-4a0d-8838-3ee99567c22a",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> I am guessing your code requires the player to pick back up all the items, what if you can just add all to inventory instead:\r\n\r\nI would have suggested something like this; although running the loop twice seems unnecessary. Why not:\r\n```\r\nitems = ScopeInventory()\r\nChangePOV (new_player)\r\nforeach (item, items) {\r\n  item.parent = new_player\r\n}\r\n```\r\n\r\nYou could even put this into the `game.changedpov` script if you really want to:\r\n```\r\nforeach (item, GetDirectChildren (oldvalue)) {\r\n  item.parent = game.pov\r\n}\r\nInitPOV (oldvalue, game.pov)\r\n```\r\n\r\nBut when I made a game with changing player objects, I found that it seemed more natural for the player to be able to take items from (and give items to) the previous player object as if they were a container.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>I am guessing your code requires the player to pick back up all the items, what if you can just add all to inventory instead:</p>\n</blockquote>\n<p>I would have suggested something like this; although running the loop twice seems unnecessary. Why not:</p>\n<pre><code>items = ScopeInventory()\nChangePOV (new_player)\nforeach (item, items) {\n  item.parent = new_player\n}\n</code></pre>\n<p>You could even put this into the <code>game.changedpov</code> script if you really want to:</p>\n<pre><code>foreach (item, GetDirectChildren (oldvalue)) {\n  item.parent = game.pov\n}\nInitPOV (oldvalue, game.pov)\n</code></pre>\n<p>But when I made a game with changing player objects, I found that it seemed more natural for the player to be able to take items from (and give items to) the previous player object as if they were a container.</p>\n\n",
+      "PostDate": "2024-02-04T23:18:50.5812369Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

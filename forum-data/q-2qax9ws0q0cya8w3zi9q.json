@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "q-2qax9ws0q0cya8w3zi9q",
+    "ForumId": "10",
+    "Title": "New Discovery -- Specific Object Capture Group Doesn't Work",
+    "LastUpdated": "2020-06-04T08:55:14.9002755Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "f3ee56ba-10d7-452b-ba44-b5eedc7e8d00",
+      "UserId": 277074,
+      "Username": "Dcoder",
+      "AvatarUrl": "https://i.imgur.com/O07mlRtb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "(Desktop TA, v5.8)\r\n\r\nIn a NEW game, I have a regex command named \"kick\" and an object named \"ball\".  The regex pattern for kick is ```^(kick) (?<object>ball)$```.  The object capture group will only work if the command is, literally, \"kick ball\".  It will NOT work for \"kick bal\".  If the ball's alias is \"football\", then \"kick football\" should work, but it also won't.  So ```(?<object>ball)``` is basically acting as ```(?<text>ball)``` -- the object has to be spelled EXACTLY as in the capture group; abbreviations, aliases, and alt names won't be recognized.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>(Desktop TA, v5.8)</p>\n<p>In a NEW game, I have a regex command named \"kick\" and an object named \"ball\".  The regex pattern for kick is <code>^(kick) (?&lt;object&gt;ball)$</code>.  The object capture group will only work if the command is, literally, \"kick ball\".  It will NOT work for \"kick bal\".  If the ball's alias is \"football\", then \"kick football\" should work, but it also won't.  So <code>(?&lt;object&gt;ball)</code> is basically acting as <code>(?&lt;text&gt;ball)</code> -- the object has to be spelled EXACTLY as in the capture group; abbreviations, aliases, and alt names won't be recognized.</p>\n\n",
+      "PostDate": "2020-06-04T08:55:14.9002755Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "bda592da-7a5b-4bc1-aa87-82e47c77800a",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I always take care to mention this issue when I suggest object patterns like that.\r\n\r\nI originally suggested the `^kick (?<object>ball)$` pattern in response to someone who had a command `kick ball` and wanted some code that would let them check if there was a ball in the current room. They were absolutely insistent that they didn't want to use `kick #object#` and then check if the object was a ball. They wanted the command to only work for that exact string.\r\n\r\nI have no idea why a user would want this behaviour, but they were absolutely sure about what they wanted. So I provided the `^kick (?<object>ball)$` pattern as a case of \"I still think this is a dumb thing to do, but it's the easiest way to do what you asked for\". The OP didn't want the command to accept partial names, because they don't use them.\r\n\r\nActually, there's a legitimate use case in \"click only\" games - because then the command typed will always include the object's alias exactly, so it might be easy to handle clones like this. But in most cases, I wouldn't recommend using a pattern like this. And even in those cases, I think it would be easier to use a `kick #object#` pattern and a simple check for the object's type. Or even a verb.\r\n\r\nSo, this capture group works entirely as intended.\r\n\r\nIf you want to make a pattern which does accept abbreviated names, you could use `^kick (?<object>b(a(ll?)?)?)$` - and for alternate names, you could use something like `^kick (?<object>f(o(o(t(b(a(ll?)?)?)?)?)?)?|b(a(ll?)?)?)$`.  However, in these cases you will find that the command will match other objects (for example, \"kick bal\" could match a balcony - patterns of this form impose constraints on *the command the player types*, not the object matched.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I always take care to mention this issue when I suggest object patterns like that.</p>\n<p>I originally suggested the <code>^kick (?&lt;object&gt;ball)$</code> pattern in response to someone who had a command <code>kick ball</code> and wanted some code that would let them check if there was a ball in the current room. They were absolutely insistent that they didn't want to use <code>kick #object#</code> and then check if the object was a ball. They wanted the command to only work for that exact string.</p>\n<p>I have no idea why a user would want this behaviour, but they were absolutely sure about what they wanted. So I provided the <code>^kick (?&lt;object&gt;ball)$</code> pattern as a case of \"I still think this is a dumb thing to do, but it's the easiest way to do what you asked for\". The OP didn't want the command to accept partial names, because they don't use them.</p>\n<p>Actually, there's a legitimate use case in \"click only\" games - because then the command typed will always include the object's alias exactly, so it might be easy to handle clones like this. But in most cases, I wouldn't recommend using a pattern like this. And even in those cases, I think it would be easier to use a <code>kick #object#</code> pattern and a simple check for the object's type. Or even a verb.</p>\n<p>So, this capture group works entirely as intended.</p>\n<p>If you want to make a pattern which does accept abbreviated names, you could use <code>^kick (?&lt;object&gt;b(a(ll?)?)?)$</code> - and for alternate names, you could use something like <code>^kick (?&lt;object&gt;f(o(o(t(b(a(ll?)?)?)?)?)?)?|b(a(ll?)?)?)$</code>.  However, in these cases you will find that the command will match other objects (for example, \"kick bal\" could match a balcony - patterns of this form impose constraints on <em>the command the player types</em>, not the object matched.</p>\n\n",
+      "PostDate": "2020-06-04T09:21:12.337408Z",
+      "LastEditDate": "2020-06-04T09:26:27.2866678Z",
+      "link": null
+    },
+    {
+      "PostId": "3ea0703a-9381-48ab-86e6-1d165e7ff9d6",
+      "UserId": 277074,
+      "Username": "Dcoder",
+      "AvatarUrl": "https://i.imgur.com/O07mlRtb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "```^kick (?<object>ball)$``` is really just ```^kick (?<text>ball)$```, and then ```object = GetObject(text)```, so I don't see how this capture group is particularly useful.  It would be much more useful if it would work capturing a specific object from different possible strings, just like ```^kick (?<object>.*)$``` does.\r\n\r\nThe flexibility it would add might not seem significant in simple commands, but in complicated commands with a lot of scripting and complex regex patterns, it definitely would be helpful.  In my own text game, I have many such complicated commands, and because of this lack of functionality, I've had to make multiple commands for the same command many times over, which really adds to the complexity (and confusion).  I would consider this to be a poorly designed feature.",
+      "EditableFormat": "markdown",
+      "HTML": "<p><code>^kick (?&lt;object&gt;ball)$</code> is really just <code>^kick (?&lt;text&gt;ball)$</code>, and then <code>object = GetObject(text)</code>, so I don't see how this capture group is particularly useful.  It would be much more useful if it would work capturing a specific object from different possible strings, just like <code>^kick (?&lt;object&gt;.*)$</code> does.</p>\n<p>The flexibility it would add might not seem significant in simple commands, but in complicated commands with a lot of scripting and complex regex patterns, it definitely would be helpful.  In my own text game, I have many such complicated commands, and because of this lack of functionality, I've had to make multiple commands for the same command many times over, which really adds to the complexity (and confusion).  I would consider this to be a poorly designed feature.</p>\n\n",
+      "PostDate": "2020-06-04T10:08:59.2535819Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "348ba981-8803-4bc1-8946-64b9319a1c58",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> `^kick (?<object>ball)$` is really just `^kick (?<text>ball)$`, and then `object = GetObject(text)`\r\n\r\nNo, it isn't. It matches the text against aliases of objects  in scope, just like the regular object matching. So if you want to force the player to type \"kick ball\" but there's more than one ball in the game (clones, for example, or multiple different balls), it will select the one in the room or present a disambigualtion menu.\r\n\r\nI still don't see a point to doing this. There are better ways to do it. But it serves a kind of a purpose; using a regex to achieve something that Quest otherwise can't do.\r\n\r\n>  I would consider this to be a poorly designed feature\r\n\r\nIt's a feature of the regular expression language, which was specifically designed to match patterns against strings. Regular expressions have no concept of objects.\r\n\r\nUsing a regex like that is an ugly workaround to fulfil an illogical request; but it gave the original poster exactly what he asked for.\r\n\r\nIf you want a command to only apply to a specific object, you need to do that in Quest code, not a regex.\r\n\r\n> It would be much more useful if it would work capturing a specific object from different possible strings\r\n\r\nThat pattern matches multiple possible objects against a single string, which is exactly what someone requested. I think that it's an illogical thing to ask for, but it's what they wanted.\r\n\r\nIf you want to match multiple strings against a single object, Quest already has features for that: verbs, `changecommandscope`, or some combination depending on your exact situation.\r\n\r\nYou're complaining that a hammer is badly designed because it damages your screws. It's not a bad feature; it just isn't the right tool for the job.\r\n\r\n(Sorry that sounds kind of condescending… was writing in a hurry before dinner)",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p><code>^kick (?&lt;object&gt;ball)$</code> is really just <code>^kick (?&lt;text&gt;ball)$</code>, and then <code>object = GetObject(text)</code></p>\n</blockquote>\n<p>No, it isn't. It matches the text against aliases of objects  in scope, just like the regular object matching. So if you want to force the player to type \"kick ball\" but there's more than one ball in the game (clones, for example, or multiple different balls), it will select the one in the room or present a disambigualtion menu.</p>\n<p>I still don't see a point to doing this. There are better ways to do it. But it serves a kind of a purpose; using a regex to achieve something that Quest otherwise can't do.</p>\n<blockquote>\n<p>I would consider this to be a poorly designed feature</p>\n</blockquote>\n<p>It's a feature of the regular expression language, which was specifically designed to match patterns against strings. Regular expressions have no concept of objects.</p>\n<p>Using a regex like that is an ugly workaround to fulfil an illogical request; but it gave the original poster exactly what he asked for.</p>\n<p>If you want a command to only apply to a specific object, you need to do that in Quest code, not a regex.</p>\n<blockquote>\n<p>It would be much more useful if it would work capturing a specific object from different possible strings</p>\n</blockquote>\n<p>That pattern matches multiple possible objects against a single string, which is exactly what someone requested. I think that it's an illogical thing to ask for, but it's what they wanted.</p>\n<p>If you want to match multiple strings against a single object, Quest already has features for that: verbs, <code>changecommandscope</code>, or some combination depending on your exact situation.</p>\n<p>You're complaining that a hammer is badly designed because it damages your screws. It's not a bad feature; it just isn't the right tool for the job.</p>\n<p>(Sorry that sounds kind of condescending… was writing in a hurry before dinner)</p>\n\n",
+      "PostDate": "2020-06-04T11:13:11.7744022Z",
+      "LastEditDate": "2020-06-04T20:21:46.6698784Z",
+      "link": null
+    },
+    {
+      "PostId": "32d134d7-78e4-461e-b2a0-5cb8482f20e4",
+      "UserId": 277074,
+      "Username": "Dcoder",
+      "AvatarUrl": "https://i.imgur.com/O07mlRtb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> No, it isn't. It matches the text against aliases of objects in scope, just like the regular object matching.\r\n\r\nBut the regular object matching also matches against abbreviations and alt names, so it does not act the same way.\r\n\r\n> If you want to match multiple strings against a single object, Quest already has features for that: verbs, changecommandscope, or some combination depending on your exact situation.\r\n\r\nI'm only using commands in my game.  I'm not familiar with ```changecommandscope```.  I see it briefly mentioned under \"Advanced Scope For Items\" in the documentation, but the explanation is inadequate.\r\n\r\n> You're complaining that a hammer is badly designed because it damages your screws. It's not a bad feature; it just isn't the right tool for the job.\r\n\r\nI disagree.  I'm complaining about that feature because it doesn't do much of anything.  As for the OP that you mentioned previously, I hear what you are saying, but that isn't the focus of what I'm talking about.\r\n\r\n>(Sorry that sounds kind of condescending…\r\n\r\nYou are right -- your tone very much comes across as condescending.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>No, it isn't. It matches the text against aliases of objects in scope, just like the regular object matching.</p>\n</blockquote>\n<p>But the regular object matching also matches against abbreviations and alt names, so it does not act the same way.</p>\n<blockquote>\n<p>If you want to match multiple strings against a single object, Quest already has features for that: verbs, changecommandscope, or some combination depending on your exact situation.</p>\n</blockquote>\n<p>I'm only using commands in my game.  I'm not familiar with <code>changecommandscope</code>.  I see it briefly mentioned under \"Advanced Scope For Items\" in the documentation, but the explanation is inadequate.</p>\n<blockquote>\n<p>You're complaining that a hammer is badly designed because it damages your screws. It's not a bad feature; it just isn't the right tool for the job.</p>\n</blockquote>\n<p>I disagree.  I'm complaining about that feature because it doesn't do much of anything.  As for the OP that you mentioned previously, I hear what you are saying, but that isn't the focus of what I'm talking about.</p>\n<blockquote>\n<p>(Sorry that sounds kind of condescending…</p>\n</blockquote>\n<p>You are right -- your tone very much comes across as condescending.</p>\n\n",
+      "PostDate": "2020-06-15T23:50:33.4436719Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

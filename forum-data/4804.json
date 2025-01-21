@@ -1,0 +1,119 @@
+{
+  "Topic": {
+    "TopicId": "4804",
+    "ForumId": "10",
+    "Title": "simple password sequence.",
+    "LastUpdated": "2014-11-25T12:55:07+00:00",
+    "ReplyCount": 8
+  },
+  "Posts": [
+    {
+      "PostId": "31872",
+      "UserId": 0,
+      "Username": "OurJud",
+      "UserAvatar": "7473_1417206896.jpg",
+      "UserGravatar": "7892e1059c02a91b34ffd60deb7402ff",
+      "EditableText": "I'm using the following script for a keypad password sequence that allows three attempts. It's taken from another thread, and works up to a certain point.\n\nYou have to trigger the password entry by typing 'use keypad' - which is fine for the first time, but I would like to bypass the need for 'use keypad' every time you want to try again.\n\nSo instead of:\n\nuse keypad &gt;&gt; enter password &gt;&gt; 2635 &gt;&gt; Access Denied \nuse keypad &gt;&gt; enter password &gt;&gt; 5567 &gt;&gt; Access Denied\nuse keypad &gt;&gt; enter password &gt;&gt; 9833 &gt;&gt; Access Denied\nfail/die/whatever\n\nI want:\n\nuse keypad &gt;&gt; enter password &gt;&gt; 2635 &gt;&gt; Access Denied\nenter password&gt;&gt; 5567 &gt;&gt; Access Denied\nenter password&gt;&gt; 9833 &gt;&gt; Access Denied\nfail/die/whatever",
+      "EditableFormat": "bbcode",
+      "HTML": "I'm using the following script for a keypad password sequence that allows three attempts. It's taken from another thread, and works up to a certain point.<br/><br/>You have to trigger the password entry by typing 'use keypad' - which is fine for the first time, but I would like to bypass the need for 'use keypad' every time you want to try again.<br/><br/>So instead of:<br/><br/>use keypad &gt;&gt; enter password &gt;&gt; 2635 &gt;&gt; Access Denied <br/>use keypad &gt;&gt; enter password &gt;&gt; 5567 &gt;&gt; Access Denied<br/>use keypad &gt;&gt; enter password &gt;&gt; 9833 &gt;&gt; Access Denied<br/>fail/die/whatever<br/><br/>I want:<br/><br/>use keypad &gt;&gt; enter password &gt;&gt; 2635 &gt;&gt; Access Denied<br/>enter password&gt;&gt; 5567 &gt;&gt; Access Denied<br/>enter password&gt;&gt; 9833 &gt;&gt; Access Denied<br/>fail/die/whatever",
+      "PostDate": "2014-11-24T00:47:11+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "31886",
+      "UserId": 0,
+      "Username": "Silver",
+      "UserAvatar": null,
+      "UserGravatar": "13024be5ccbb463906b024d5bd3cb5e8",
+      "EditableText": "You would set up a command called 'enter password'.\n\nNot sure how you'd make it so they have to use keypad the first time but they'd likely do that anyway. Forcing them to do so seems a bit anal though?",
+      "EditableFormat": "bbcode",
+      "HTML": "You would set up a command called 'enter password'.<br/><br/>Not sure how you'd make it so they have to use keypad the first time but they'd likely do that anyway. Forcing them to do so seems a bit anal though?",
+      "PostDate": "2014-11-24T09:22:13+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "31890",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "let me try to convey the conception using a computer's command line language:\n\necho a\necho b\necho c\n\noutputs:\na\nb\nc\n\n-------------\n\n:loop1\necho a\necho b\necho c\ngoto loop1\n\noutputs:\n\na\nb\nc\n(loops~repeats)\na\nb\nc\n(loops~repeats)\na\nb\nc\n(and on and on forever)\n\n------------\n\necho a\n:loop1\necho b\necho c\ngoto loop1\n\noutputs:\n\na\nb\nc\n(loops~repeats)\nb\nc\n(loops~repeats)\nb\nc\n(and on and on forever)\n\n-------------\n\necho a\necho b\n:loop1\necho c\ngoto loop1\n\noutputs:\n\na\nb\nc\n(loops~repeats)\nc\n(loops~repeats)\nc\n(and on and on forever)\n\n---------\n\nnow for your example of:\n\nuse keypad &gt;&gt; enter password &gt;&gt; 2635 &gt;&gt; Access Denied \nuse keypad &gt;&gt; enter password &gt;&gt; 5567 &gt;&gt; Access Denied\nuse keypad &gt;&gt; enter password &gt;&gt; 9833 &gt;&gt; Access Denied\n\necho use keypad\necho enter password\n:loop1\n(quest) get input\n(quest) if (not result = 0000) {\n-&gt; goto loop1\n(quest) } else if (result = 0000) {\n-&gt; echo The metal door opens.\n(quest) }\n\noutputs:\n\nuse keypad\nenter password\n_______ (awaiting input)\n(if wrong password)\n_______ (awaiting input again)\n(if wrong password)\n________ (awaiting input again)\n(and on and on)\n(but, if right password)\nThe metal door opens.\n\n---------------------\n\nin quest, Functions, holds the Scripts that you want to be looped, and the Function name itself (or in the GUI~Editor's Scripting: 'call function' -&gt; add~type in your function's name) 'summons' the Function to occur.\n\nso, using the computer's command line language:\n\n:loop1\necho a\necho b\necho c\ngoto loop1\n\nin quest, it looks like this:\n\n(an example using the 'start' Script of the Game Object)\n&lt;game name=&quot;xxx&quot;&gt;\n-&gt; &lt;start type=&quot;script&quot;&gt;\n-&gt;-&gt; function_1\n-&gt; &lt;/start&gt;\n&lt;/game&gt;\n\n&lt;function name=&quot;function_1&quot;&gt;\n-&gt; msg (&quot;a&quot;)\n-&gt; msg (&quot;b&quot;)\n-&gt; msg (&quot;c&quot;)\n-&gt; function_1\n&lt;/function&gt;\n\n---------------------\n\nso, using the computer's command line language:\n\necho a\n:loop1\necho b\necho c\ngoto loop1\n\nin quest, it looks like this\n\n(an example using the 'start' Script of the Game Object)\n&lt;game name=&quot;xxx&quot;&gt;\n-&gt; &lt;start type=&quot;script&quot;&gt;\n-&gt;-&gt; msg (&quot;a&quot;)\n-&gt;-&gt; function_1\n-&gt; &lt;/start&gt;\n&lt;/game&gt;\n\n&lt;function name=&quot;function_1&quot;&gt;\n-&gt; msg (&quot;b&quot;)\n-&gt; msg (&quot;c&quot;)\n-&gt; function_1\n&lt;/function&gt;\n\n--------------------\n\nso, using the computer's command line language:\n\necho a\necho b\n:loop1\necho c\ngoto loop1\n\nin quest, it looks like this\n\n(an example using the 'start' Script of the Game Object)\n&lt;game name=&quot;xxx&quot;&gt;\n-&gt; &lt;start type=&quot;script&quot;&gt;\n-&gt;-&gt; msg (&quot;a&quot;)\n-&gt;-&gt; msg (&quot;b&quot;)\n-&gt;-&gt; function_1\n-&gt; &lt;/start&gt;\n&lt;/game&gt;\n\n&lt;function name=&quot;function_1&quot;&gt;\n-&gt; msg (&quot;c&quot;)\n-&gt; function_1\n&lt;/function&gt;",
+      "EditableFormat": "bbcode",
+      "HTML": "let me try to convey the conception using a computer's command line language:<br/><br/>echo a<br/>echo b<br/>echo c<br/><br/>outputs:<br/>a<br/>b<br/>c<br/><br/>-------------<br/><br/>:loop1<br/>echo a<br/>echo b<br/>echo c<br/>goto loop1<br/><br/>outputs:<br/><br/>a<br/>b<br/>c<br/>(loops~repeats)<br/>a<br/>b<br/>c<br/>(loops~repeats)<br/>a<br/>b<br/>c<br/>(and on and on forever)<br/><br/>------------<br/><br/>echo a<br/>:loop1<br/>echo b<br/>echo c<br/>goto loop1<br/><br/>outputs:<br/><br/>a<br/>b<br/>c<br/>(loops~repeats)<br/>b<br/>c<br/>(loops~repeats)<br/>b<br/>c<br/>(and on and on forever)<br/><br/>-------------<br/><br/>echo a<br/>echo b<br/>:loop1<br/>echo c<br/>goto loop1<br/><br/>outputs:<br/><br/>a<br/>b<br/>c<br/>(loops~repeats)<br/>c<br/>(loops~repeats)<br/>c<br/>(and on and on forever)<br/><br/>---------<br/><br/>now for your example of:<br/><br/>use keypad &gt;&gt; enter password &gt;&gt; 2635 &gt;&gt; Access Denied <br/>use keypad &gt;&gt; enter password &gt;&gt; 5567 &gt;&gt; Access Denied<br/>use keypad &gt;&gt; enter password &gt;&gt; 9833 &gt;&gt; Access Denied<br/><br/>echo use keypad<br/>echo enter password<br/>:loop1<br/>(quest) get input<br/>(quest) if (not result = 0000) {<br/>-&gt; goto loop1<br/>(quest) } else if (result = 0000) {<br/>-&gt; echo The metal door opens.<br/>(quest) }<br/><br/>outputs:<br/><br/>use keypad<br/>enter password<br/>_______ (awaiting input)<br/>(if wrong password)<br/>_______ (awaiting input again)<br/>(if wrong password)<br/>________ (awaiting input again)<br/>(and on and on)<br/>(but, if right password)<br/>The metal door opens.<br/><br/>---------------------<br/><br/>in quest, Functions, holds the Scripts that you want to be looped, and the Function name itself (or in the GUI~Editor's Scripting: 'call function' -&gt; add~type in your function's name) 'summons' the Function to occur.<br/><br/>so, using the computer's command line language:<br/><br/>:loop1<br/>echo a<br/>echo b<br/>echo c<br/>goto loop1<br/><br/>in quest, it looks like this:<br/><br/>(an example using the 'start' Script of the Game Object)<br/>&lt;game name=&quot;xxx&quot;&gt;<br/>-&gt; &lt;start type=&quot;script&quot;&gt;<br/>-&gt;-&gt; function_1<br/>-&gt; &lt;/start&gt;<br/>&lt;/game&gt;<br/><br/>&lt;function name=&quot;function_1&quot;&gt;<br/>-&gt; msg (&quot;a&quot;)<br/>-&gt; msg (&quot;b&quot;)<br/>-&gt; msg (&quot;c&quot;)<br/>-&gt; function_1<br/>&lt;/function&gt;<br/><br/>---------------------<br/><br/>so, using the computer's command line language:<br/><br/>echo a<br/>:loop1<br/>echo b<br/>echo c<br/>goto loop1<br/><br/>in quest, it looks like this<br/><br/>(an example using the 'start' Script of the Game Object)<br/>&lt;game name=&quot;xxx&quot;&gt;<br/>-&gt; &lt;start type=&quot;script&quot;&gt;<br/>-&gt;-&gt; msg (&quot;a&quot;)<br/>-&gt;-&gt; function_1<br/>-&gt; &lt;/start&gt;<br/>&lt;/game&gt;<br/><br/>&lt;function name=&quot;function_1&quot;&gt;<br/>-&gt; msg (&quot;b&quot;)<br/>-&gt; msg (&quot;c&quot;)<br/>-&gt; function_1<br/>&lt;/function&gt;<br/><br/>--------------------<br/><br/>so, using the computer's command line language:<br/><br/>echo a<br/>echo b<br/>:loop1<br/>echo c<br/>goto loop1<br/><br/>in quest, it looks like this<br/><br/>(an example using the 'start' Script of the Game Object)<br/>&lt;game name=&quot;xxx&quot;&gt;<br/>-&gt; &lt;start type=&quot;script&quot;&gt;<br/>-&gt;-&gt; msg (&quot;a&quot;)<br/>-&gt;-&gt; msg (&quot;b&quot;)<br/>-&gt;-&gt; function_1<br/>-&gt; &lt;/start&gt;<br/>&lt;/game&gt;<br/><br/>&lt;function name=&quot;function_1&quot;&gt;<br/>-&gt; msg (&quot;c&quot;)<br/>-&gt; function_1<br/>&lt;/function&gt;",
+      "PostDate": "2014-11-24T10:26:51+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "31896",
+      "UserId": 0,
+      "Username": "OurJud",
+      "UserAvatar": "7473_1417206896.jpg",
+      "UserGravatar": "7892e1059c02a91b34ffd60deb7402ff",
+      "EditableText": "[quote=&quot;Silver&quot;:5b8gm17d]Not sure how you'd make it so they have to use keypad the first time but they'd likely do that anyway. Forcing them to do so seems a bit anal though?[/quote:5b8gm17d]\nWell, when I come to do this, it won't be a keypad at all, it will probably be a NPC asking the player a question.\n\nAnyway, I stupidly forgot to include the code I was using, which would have made things easier for everyone concerned.\n\n[code:5b8gm17d]if (not HasAttribute(game, &quot;keypadused&quot;)) {\n  game&#46;keypadused = 0\n}\nPrintCentered (&quot;PLEASE ENTER SECURITY CODE&quot;)\nget input {\n  if (result=&quot;4863&quot;) {\n    UnlockExit (office exit)\n    PrintCentered (&quot;PASSWORD ACCEPTED, ACCESS GRANTED,&quot;)\n    PrintCentered (&quot;OFFICE DOOR UNLOCKED&quot;)\n  }\n  else {\n    game&#46;keypadused = game&#46;keypadused+1\n    if (3&gt;game&#46;keypadused) {\n      PrintCentered (&quot;ACCESS DENIED&quot;)\n      PrintCentered (&quot;You notice a strange sound, like a machine being powered on&#46;&quot;)\n    }\n    else {\n      PrintCentered (&quot;ACCESS DENIED&#46; BEEEEEEEEP&#46; ACCESS DENIED&#46; BEEEEEEEEP&#46; ACCESS DENIED&#46; BEEEEEEEEP&#46; ACCESS DENIED&#46; BEEEEEEEEP&quot;)\n      PrintCentered (&quot;An alarm sounds&#46; The machine gun starts up&#46; There is no way you can escape in time&#46;&quot;)\n      PrintCentered (&quot;YOU ARE NOW DEAD&quot;)\n      finish\n    }\n  }\n}[/code:5b8gm17d]",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>Silver wrote:</cite>Not sure how you'd make it so they have to use keypad the first time but they'd likely do that anyway. Forcing them to do so seems a bit anal though?</blockquote><br/>Well, when I come to do this, it won't be a keypad at all, it will probably be a NPC asking the player a question.<br/><br/>Anyway, I stupidly forgot to include the code I was using, which would have made things easier for everyone concerned.<br/><br/><pre><code>if (not HasAttribute(game, &quot;keypadused&quot;)) {<br/>  game&#46;keypadused = 0<br/>}<br/>PrintCentered (&quot;PLEASE ENTER SECURITY CODE&quot;)<br/>get input {<br/>  if (result=&quot;4863&quot;) {<br/>    UnlockExit (office exit)<br/>    PrintCentered (&quot;PASSWORD ACCEPTED, ACCESS GRANTED,&quot;)<br/>    PrintCentered (&quot;OFFICE DOOR UNLOCKED&quot;)<br/>  }<br/>  else {<br/>    game&#46;keypadused = game&#46;keypadused+1<br/>    if (3&gt;game&#46;keypadused) {<br/>      PrintCentered (&quot;ACCESS DENIED&quot;)<br/>      PrintCentered (&quot;You notice a strange sound, like a machine being powered on&#46;&quot;)<br/>    }<br/>    else {<br/>      PrintCentered (&quot;ACCESS DENIED&#46; BEEEEEEEEP&#46; ACCESS DENIED&#46; BEEEEEEEEP&#46; ACCESS DENIED&#46; BEEEEEEEEP&#46; ACCESS DENIED&#46; BEEEEEEEEP&quot;)<br/>      PrintCentered (&quot;An alarm sounds&#46; The machine gun starts up&#46; There is no way you can escape in time&#46;&quot;)<br/>      PrintCentered (&quot;YOU ARE NOW DEAD&quot;)<br/>      finish<br/>    }<br/>  }<br/>}</code></pre>",
+      "PostDate": "2014-11-24T14:06:54+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "31900",
+      "UserId": 0,
+      "Username": "Silver",
+      "UserAvatar": null,
+      "UserGravatar": "13024be5ccbb463906b024d5bd3cb5e8",
+      "EditableText": "What I mean is the player is unlikely to know that they need to provide a password until they have spoken to the NPC or whatever anyway. The only time they might would be if they're playing the game for a second time - and they may well be grateful to avoid speaking to the NPC only to be told to do what they knew was coming anyway. I don't get the logic of forcing things to be done a certain way: especially when you're ostensibly simplifying the action.",
+      "EditableFormat": "bbcode",
+      "HTML": "What I mean is the player is unlikely to know that they need to provide a password until they have spoken to the NPC or whatever anyway. The only time they might would be if they're playing the game for a second time - and they may well be grateful to avoid speaking to the NPC only to be told to do what they knew was coming anyway. I don't get the logic of forcing things to be done a certain way: especially when you're ostensibly simplifying the action.",
+      "PostDate": "2014-11-24T16:51:25+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "31901",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "your code, actually is nearly 'spot on', OurJud !!!!\n\nmy edited code with the comments ( '// my comments' ) in the code for you:\n\n[code:291li383]if (not HasAttribute(game, &quot;keypadused&quot;)) {\n  game&#46;keypadused = 0\n  // excellent 'checking' code segment here, advanced thinking if you understand why to do this part! (or did you just copy it from someone else, and not understanding why it is done?)\n}\nif (game&#46;keypadused = 0) {\n  PrintCentered (&quot;PLEASE ENTER SECURITY CODE&quot;)\n}\nget input {\n  if (result=&quot;4863&quot;) {\n    UnlockExit (office exit)\n    PrintCentered (&quot;PASSWORD ACCEPTED, ACCESS GRANTED,&quot;)\n    PrintCentered (&quot;OFFICE DOOR UNLOCKED&quot;)\n  }\n  else {\n    // this 'game&#46;keypadused = game&#46;keypadused+1' can't go here, it can't go first before the 'check' (the 'if' Scrit) below\n    if (3 &gt; game&#46;keypadused) {\n      PrintCentered (&quot;ACCESS DENIED&quot;)\n      PrintCentered (&quot;You notice a strange sound, like a machine being powered on&#46;&quot;)\n      game&#46;keypadused = game&#46;keypadused + 1\n    }\n    else {\n      PrintCentered (&quot;ACCESS DENIED&#46; BEEEEEEEEP&#46; ACCESS DENIED&#46; BEEEEEEEEP&#46; ACCESS DENIED&#46; BEEEEEEEEP&#46; ACCESS DENIED&#46; BEEEEEEEEP&quot;)\n      PrintCentered (&quot;An alarm sounds&#46; The machine gun starts up&#46; There is no way you can escape in time&#46;&quot;)\n      PrintCentered (&quot;YOU ARE NOW DEAD&quot;)\n      finish\n    }\n  }\n}[/code:291li383]\n\nthe code however is missing some 'finishing' checks: once you open the door, if you do it again, it'll do the entire thing again, you don't have the 'checks' of 'if door open, if door closed', but this is a bit extra for now, unless you want to add this check into it now (try to guess~do it yourself, and I'll correct you if you did it wrong).\n\n--------\n\nit takes quite some time to get the ordering down and the 'checking' concept down, but you're learning this very quickly! Much moreso than me, hehe!",
+      "EditableFormat": "bbcode",
+      "HTML": "your code, actually is nearly 'spot on', OurJud !!!!<br/><br/>my edited code with the comments ( '// my comments' ) in the code for you:<br/><br/><pre><code>if (not HasAttribute(game, &quot;keypadused&quot;)) {<br/>  game&#46;keypadused = 0<br/>  // excellent 'checking' code segment here, advanced thinking if you understand why to do this part! (or did you just copy it from someone else, and not understanding why it is done?)<br/>}<br/>if (game&#46;keypadused = 0) {<br/>  PrintCentered (&quot;PLEASE ENTER SECURITY CODE&quot;)<br/>}<br/>get input {<br/>  if (result=&quot;4863&quot;) {<br/>    UnlockExit (office exit)<br/>    PrintCentered (&quot;PASSWORD ACCEPTED, ACCESS GRANTED,&quot;)<br/>    PrintCentered (&quot;OFFICE DOOR UNLOCKED&quot;)<br/>  }<br/>  else {<br/>    // this 'game&#46;keypadused = game&#46;keypadused+1' can't go here, it can't go first before the 'check' (the 'if' Scrit) below<br/>    if (3 &gt; game&#46;keypadused) {<br/>      PrintCentered (&quot;ACCESS DENIED&quot;)<br/>      PrintCentered (&quot;You notice a strange sound, like a machine being powered on&#46;&quot;)<br/>      game&#46;keypadused = game&#46;keypadused + 1<br/>    }<br/>    else {<br/>      PrintCentered (&quot;ACCESS DENIED&#46; BEEEEEEEEP&#46; ACCESS DENIED&#46; BEEEEEEEEP&#46; ACCESS DENIED&#46; BEEEEEEEEP&#46; ACCESS DENIED&#46; BEEEEEEEEP&quot;)<br/>      PrintCentered (&quot;An alarm sounds&#46; The machine gun starts up&#46; There is no way you can escape in time&#46;&quot;)<br/>      PrintCentered (&quot;YOU ARE NOW DEAD&quot;)<br/>      finish<br/>    }<br/>  }<br/>}</code></pre><br/><br/>the code however is missing some 'finishing' checks: once you open the door, if you do it again, it'll do the entire thing again, you don't have the 'checks' of 'if door open, if door closed', but this is a bit extra for now, unless you want to add this check into it now (try to guess~do it yourself, and I'll correct you if you did it wrong).<br/><br/>--------<br/><br/>it takes quite some time to get the ordering down and the 'checking' concept down, but you're learning this very quickly! Much moreso than me, hehe!",
+      "PostDate": "2014-11-24T20:28:42+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "31912",
+      "UserId": 0,
+      "Username": "OurJud",
+      "UserAvatar": "7473_1417206896.jpg",
+      "UserGravatar": "7892e1059c02a91b34ffd60deb7402ff",
+      "EditableText": "Alas, HK, none of that code is mine. I do say so in my OP, but it's worth mentioning again.\n\nI understand some of it, but could never have got thee myself.\n\n[quote=&quot;Silver&quot;:23dc1p1m]What I mean is the player is unlikely to know that they need to provide a password until they have spoken to the NPC or whatever anyway. The only time they might would be if they're playing the game for a second time - and they may well be grateful to avoid speaking to the NPC only to be told to do what they knew was coming anyway. I don't get the logic of forcing things to be done a certain way: especially when you're ostensibly simplifying the action.[/quote:23dc1p1m]\nI think we might be thinking along different lines here, SIlver. I'm not forcing the player to do anything - in fact quite the reverse. Each time you want to try entering the passkey in the above script, you have to type 'use keypad' each time. I was trying to do away with that step and allow players to go straight into trying another code should they get it wrong. The player is free to leave the area at any time they wish, by taking any of the exits available.\n\nAs I say, though, my plan is to have this 'password' as a character's name you're asked to provide to gain access somewhere.",
+      "EditableFormat": "bbcode",
+      "HTML": "Alas, HK, none of that code is mine. I do say so in my OP, but it's worth mentioning again.<br/><br/>I understand some of it, but could never have got thee myself.<br/><br/><blockquote><cite>Silver wrote:</cite>What I mean is the player is unlikely to know that they need to provide a password until they have spoken to the NPC or whatever anyway. The only time they might would be if they're playing the game for a second time - and they may well be grateful to avoid speaking to the NPC only to be told to do what they knew was coming anyway. I don't get the logic of forcing things to be done a certain way: especially when you're ostensibly simplifying the action.</blockquote><br/>I think we might be thinking along different lines here, SIlver. I'm not forcing the player to do anything - in fact quite the reverse. Each time you want to try entering the passkey in the above script, you have to type 'use keypad' each time. I was trying to do away with that step and allow players to go straight into trying another code should they get it wrong. The player is free to leave the area at any time they wish, by taking any of the exits available.<br/><br/>As I say, though, my plan is to have this 'password' as a character's name you're asked to provide to gain access somewhere.",
+      "PostDate": "2014-11-25T00:08:47+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "31923",
+      "UserId": 0,
+      "Username": "Silver",
+      "UserAvatar": null,
+      "UserGravatar": "13024be5ccbb463906b024d5bd3cb5e8",
+      "EditableText": "You could set up a command called 'type' (for example) and the game look for a value. Erm, someone more knowledgeable than me would probably have to explain although I'm sure it's touched upon in the tutorial perhaps under the 'attributes' section.",
+      "EditableFormat": "bbcode",
+      "HTML": "You could set up a command called 'type' (for example) and the game look for a value. Erm, someone more knowledgeable than me would probably have to explain although I'm sure it's touched upon in the tutorial perhaps under the 'attributes' section.",
+      "PostDate": "2014-11-25T08:53:41+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "31929",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "my code above will do it (I hope), see if it works. And see my previous post (with the 'echo' code stuff in it), as I try to explain it in concept. I think it's a pretty clear explanation (for once, as my posts are usually not clear at all), that you should be able to hopefully understand.",
+      "EditableFormat": "bbcode",
+      "HTML": "my code above will do it (I hope), see if it works. And see my previous post (with the 'echo' code stuff in it), as I try to explain it in concept. I think it's a pretty clear explanation (for once, as my posts are usually not clear at all), that you should be able to hopefully understand.",
+      "PostDate": "2014-11-25T12:55:07+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

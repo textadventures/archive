@@ -1,0 +1,47 @@
+{
+  "Topic": {
+    "TopicId": "3725",
+    "ForumId": "10",
+    "Title": "trouble with show menu and switch",
+    "LastUpdated": "2013-06-08T18:06:09+01:00",
+    "ReplyCount": 2
+  },
+  "Posts": [
+    {
+      "PostId": "25001",
+      "UserId": 0,
+      "Username": "scarletrose",
+      "UserAvatar": null,
+      "UserGravatar": "c9f79c28db01136c1ad6f2eef405db73",
+      "EditableText": "Hi, I'm trying to make my first game with quest and I'm having a problem creating a tutorial for some features of the game.\nI made a function called tutorial that you can call from anywhere in the game. I placed a list of topics in a menu list, offered the menu to the player and tried to put it in a switch to respond to every case, that's where things seems to go wrong.\n\nError running script&#058; Error compiling expression 'souls': Unknown object or variable 'souls'\n\nI have tried to put a message with the + result before the switch and the choice is displayed correctly, still I cannot use that in a switch to give the appropriate answer to each case\n\nhere is the code of the function\n[code:1rwyjld3]  &lt;function name=&quot;tutorial&quot;&gt;\n    menulist = NewStringList()\n    list add (menulist, &quot;souls&quot;)\n    list add (menulist, &quot;brimstones&quot;)\n    list add (menulist, &quot;prestige&quot;)\n    list add (menulist, &quot;surface&quot;)\n    list add (menulist, &quot;improving&quot;)\n    list add (menulist, &quot;thrall&quot;)\n    list add (menulist, &quot;end&quot;)\n    ShowMenu (&quot;choose a topic&quot;, menulist, false) {\n      ClearScreen\n      switch (result) {\n        case (souls) {\n          msg (&quot;bla bla bla souls bla bla&quot;)\n          tutorial\n        }\n      }\n    }\n  &lt;/function&gt;[/code:1rwyjld3] \n\nwhat am i doing wrong?\n\n[size=85:1rwyjld3]also, there is a way to show the description of the room you are in as if you just entered? I would like to clean the screen and rewrite it when the tutorial ends[/size:1rwyjld3]",
+      "EditableFormat": "bbcode",
+      "HTML": "Hi, I'm trying to make my first game with quest and I'm having a problem creating a tutorial for some features of the game.<br/>I made a function called tutorial that you can call from anywhere in the game. I placed a list of topics in a menu list, offered the menu to the player and tried to put it in a switch to respond to every case, that's where things seems to go wrong.<br/><br/>Error running script&#058; Error compiling expression 'souls': Unknown object or variable 'souls'<br/><br/>I have tried to put a message with the + result before the switch and the choice is displayed correctly, still I cannot use that in a switch to give the appropriate answer to each case<br/><br/>here is the code of the function<br/><pre><code>  &lt;function name=&quot;tutorial&quot;&gt;<br/>    menulist = NewStringList()<br/>    list add (menulist, &quot;souls&quot;)<br/>    list add (menulist, &quot;brimstones&quot;)<br/>    list add (menulist, &quot;prestige&quot;)<br/>    list add (menulist, &quot;surface&quot;)<br/>    list add (menulist, &quot;improving&quot;)<br/>    list add (menulist, &quot;thrall&quot;)<br/>    list add (menulist, &quot;end&quot;)<br/>    ShowMenu (&quot;choose a topic&quot;, menulist, false) {<br/>      ClearScreen<br/>      switch (result) {<br/>        case (souls) {<br/>          msg (&quot;bla bla bla souls bla bla&quot;)<br/>          tutorial<br/>        }<br/>      }<br/>    }<br/>  &lt;/function&gt;</code></pre> <br/><br/>what am i doing wrong?<br/><br/><span style=\"font-size:85\">also, there is a way to show the description of the room you are in as if you just entered? I would like to clean the screen and rewrite it when the tutorial ends</span>",
+      "PostDate": "2013-06-08T17:05:38+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25002",
+      "UserId": 0,
+      "Username": "Liam315",
+      "UserAvatar": null,
+      "UserGravatar": "ded290a24d340d761d42c897d08111aa",
+      "EditableText": "As your menu options are strings, you need to enter your cases within &quot;quotation marks.&quot;\n\n[code:t1qev9xz]    list add (menulist, &quot;end&quot;)\n    ShowMenu (&quot;choose a topic&quot;, menulist, false) {\n      ClearScreen\n      switch (result) {\n        case (&quot;souls&quot;) {\n          msg (&quot;bla bla bla souls bla bla&quot;)[/code:t1qev9xz]\n\nAs for showing the room description again, it depends on whether or not you use any scripts for room descriptions. If you only have text for all rooms, it's as simple as:\n\n[code:t1qev9xz]msg (game&#46;pov&#46;parent&#46;description)[/code:t1qev9xz]\n\nIf you have scripts for some room descriptions, then you need to use an if script to distinguish between the two.\n\n[code:t1qev9xz]\nif (HasString(game&#46;pov&#46;parent,&quot;description&quot;)) {\n  msg (game&#46;pov&#46;parent&#46;description)\n}\nelse {\n  do (game&#46;pov&#46;parent,&quot;description&quot;)\n}\n[/code:t1qev9xz]\n\nThere's probably a function already built in that someone might know about, but if you wanted to write the script yourself that's how you could achieve it.",
+      "EditableFormat": "bbcode",
+      "HTML": "As your menu options are strings, you need to enter your cases within &quot;quotation marks.&quot;<br/><br/><pre><code>    list add (menulist, &quot;end&quot;)<br/>    ShowMenu (&quot;choose a topic&quot;, menulist, false) {<br/>      ClearScreen<br/>      switch (result) {<br/>        case (&quot;souls&quot;) {<br/>          msg (&quot;bla bla bla souls bla bla&quot;)</code></pre><br/><br/>As for showing the room description again, it depends on whether or not you use any scripts for room descriptions. If you only have text for all rooms, it's as simple as:<br/><br/><pre><code>msg (game&#46;pov&#46;parent&#46;description)</code></pre><br/><br/>If you have scripts for some room descriptions, then you need to use an if script to distinguish between the two.<br/><br/><pre><code><br/>if (HasString(game&#46;pov&#46;parent,&quot;description&quot;)) {<br/>  msg (game&#46;pov&#46;parent&#46;description)<br/>}<br/>else {<br/>  do (game&#46;pov&#46;parent,&quot;description&quot;)<br/>}<br/></code></pre><br/><br/>There's probably a function already built in that someone might know about, but if you wanted to write the script yourself that's how you could achieve it.",
+      "PostDate": "2013-06-08T17:36:11+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25003",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "To show the room description, call ShowRoomDescriptionI(). <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "To show the room description, call ShowRoomDescriptionI(). <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2013-06-08T18:06:09+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

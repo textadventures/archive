@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "groifgeg1k2hxyftoovq2g",
+    "ForumId": "10",
+    "Title": "Hiding visible items in containers in  inventory",
+    "LastUpdated": "2024-03-23T18:54:58.1927781Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "43175447-5cc8-4cdb-996d-681600280311",
+      "UserId": 579655,
+      "Username": "Jennifer Wren",
+      "AvatarUrl": "https://i.imgur.com/t1XUS1Kb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Is there any way to edit what the inventory shows and what it doesn't. Can items inside containers be listed when looked at, instead of showing up in inventory?\r\n ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Is there any way to edit what the inventory shows and what it doesn't. Can items inside containers be listed when looked at, instead of showing up in inventory?</p>\n\n",
+      "PostDate": "2024-03-23T18:54:58.1927781Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "67727676-ed0f-4cbb-a3c1-45dbb2f8619c",
+      "UserId": 31991,
+      "Username": "daeun",
+      "AvatarUrl": "https://i.imgur.com/Xvt8zzBb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I have not tried it yet, but you can take a look at this link\r\n> [Checkbox] Hide children until it is looked at\r\n\r\n\r\nhttps://docs.textadventures.co.uk/quest/tutorial/using_containers.html",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I have not tried it yet, but you can take a look at this link</p>\n<blockquote>\n<p>[Checkbox] Hide children until it is looked at</p>\n</blockquote>\n<p>https://docs.textadventures.co.uk/quest/tutorial/using_containers.html</p>\n\n",
+      "PostDate": "2024-03-25T10:16:44.455623Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "0fa61dc8-9d56-4a26-90cd-44e439c32dc7",
+      "UserId": 579655,
+      "Username": "Jennifer Wren",
+      "AvatarUrl": "https://i.imgur.com/t1XUS1Kb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I don't know why, looking back at that, I was not more clear. I had meant for that to say, is there any way to hide things in containers long term. Whenever you look at some container, the items inside become visible, but they also stay visible which is a nuisance  if you have a lot of same items.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I don't know why, looking back at that, I was not more clear. I had meant for that to say, is there any way to hide things in containers long term. Whenever you look at some container, the items inside become visible, but they also stay visible which is a nuisance  if you have a lot of same items.</p>\n\n",
+      "PostDate": "2024-03-28T09:09:59.4460139Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "c4d274e4-bdef-4bba-a707-cf4c6567ff02",
+      "UserId": 31991,
+      "Username": "daeun",
+      "AvatarUrl": "https://i.imgur.com/Xvt8zzBb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Okay, I just tried and it is indeed strange.\r\nAfter clicking the checkbox of \"Hide children until it is looked at\" and/or \"List children when object is looked at or opened.\"\r\n1. The player can look at candybox and find \"It contains a blue candy and a lollipop.\"\r\n2. But, when candybox is inside inventory, the candybox's look at suddenly becomes disabled???\r\n3. After clicking once look at which is working, the second, third and future times of look at suddenly stops working.\r\n\r\nSo I went into the first tab of candybox \"Setup\",\r\nAt description, look at: Run script\r\nAnd I typed in the following code which solves the issues listed.\r\n```\r\ncandybox.listchildren = true\r\n```\r\n\r\nBasically containers have the open and close verb, when you click close, the children disappears temporarily, or is there a reason why you are avoiding using the automatically created close verb?\r\n\r\n___________________________\r\n\r\nHowever even the above code does not seems perfect, when the container is not opened, the player still cannot see the children. The player needs to open the container first before he can sees the children.\r\n\r\nSo you can try the following code or modify it.\r\n```\r\ncandybox.isopen = true\r\ncandybox.hidechildren = false\r\ncandybox.listchildren = true\r\n```\r\n_______________________________________\r\n\r\nSo perhaps, there is a reason you do not want to use the close verb,\r\nthen you can try the following code or modify it:\r\n```\r\ncandybox.isopen = true\r\ncandybox.hidechildren = false\r\ncandybox.listchildren = true\r\nSetTimeout (3) {\r\n  candybox.isopen = false\r\n  candybox.hidechildren = true\r\n  candybox.listchildren = false\r\n}\r\n```\r\n\r\n________________________________________________\r\n\r\nAnd surprisingly, after using the above final code, \r\nYou can now uncheck the container checkbox, meaning candybox is not a container,\r\nbut yet, it still list the children when look at.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Okay, I just tried and it is indeed strange.<br>\nAfter clicking the checkbox of \"Hide children until it is looked at\" and/or \"List children when object is looked at or opened.\"</p>\n<ol>\n<li>The player can look at candybox and find \"It contains a blue candy and a lollipop.\"</li>\n<li>But, when candybox is inside inventory, the candybox's look at suddenly becomes disabled???</li>\n<li>After clicking once look at which is working, the second, third and future times of look at suddenly stops working.</li>\n</ol>\n<p>So I went into the first tab of candybox \"Setup\",<br>\nAt description, look at: Run script<br>\nAnd I typed in the following code which solves the issues listed.</p>\n<pre><code>candybox.listchildren = true\n</code></pre>\n<p>Basically containers have the open and close verb, when you click close, the children disappears temporarily, or is there a reason why you are avoiding using the automatically created close verb?</p>\n<hr>\n<p>However even the above code does not seems perfect, when the container is not opened, the player still cannot see the children. The player needs to open the container first before he can sees the children.</p>\n<p>So you can try the following code or modify it.</p>\n<pre><code>candybox.isopen = true\ncandybox.hidechildren = false\ncandybox.listchildren = true\n</code></pre>\n<hr>\n<p>So perhaps, there is a reason you do not want to use the close verb,<br>\nthen you can try the following code or modify it:</p>\n<pre><code>candybox.isopen = true\ncandybox.hidechildren = false\ncandybox.listchildren = true\nSetTimeout (3) {\n  candybox.isopen = false\n  candybox.hidechildren = true\n  candybox.listchildren = false\n}\n</code></pre>\n<hr>\n<p>And surprisingly, after using the above final code,<br>\nYou can now uncheck the container checkbox, meaning candybox is not a container,<br>\nbut yet, it still list the children when look at.</p>\n\n",
+      "PostDate": "2024-03-28T10:07:35.4458962Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e45ad4c7-c079-498f-b012-e922ec4e2154",
+      "UserId": 579655,
+      "Username": "Jennifer Wren",
+      "AvatarUrl": "https://i.imgur.com/t1XUS1Kb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thank you for being so persistent I had to realize I hadn't tried that. I just didn't want a lot o GB extra verbs, but I think I was misjudgimg their usefulness after all. \r\nThanks again. It's helped me.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thank you for being so persistent I had to realize I hadn't tried that. I just didn't want a lot o GB extra verbs, but I think I was misjudgimg their usefulness after all.<br>\nThanks again. It's helped me.</p>\n\n",
+      "PostDate": "2024-03-28T19:01:25.642393Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

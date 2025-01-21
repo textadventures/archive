@@ -1,0 +1,63 @@
+{
+  "Topic": {
+    "TopicId": "qfskjzd8okgf_fj4eldntq",
+    "ForumId": "10",
+    "Title": "ListContains functions creates and unknown variable error",
+    "LastUpdated": "2016-11-12T17:35:38.4225744Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "9d8cf8a6-ca60-49de-afee-8bc2a758180d",
+      "UserId": 275287,
+      "Username": "initnupt",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello! I'm totally new to quest and I've been able to figure a lot of stuff out with the forums and tutorials but I'm running into an issue.\r\n\r\nMy game script starts by creating an empty string list called PeopleList and then adding some items to it using this code:\r\n\r\n<pre><code>PeopleList = NewStringList()\r\nlist add (PeopleList, \"Name1\")\r\nlist add (PeopleList, \"Name2\")</code></pre>\r\n\r\nI then use this code to ask the player for a name and I want to check the name against PeopleList and return one response if the name is on the list and another if it's not on the list:\r\n\r\n<pre><code>TextFX_Typewriter (\">> Who are you?\", 100)\r\n      get input {\r\n        if (ListContains (PeopleList, result) ) {\r\n          TextFX_Typewriter (\"Lovely to see you again, \" + result + \". Let's begin.\", 100)\r\n        }\r\n        else {\r\n          TextFX_Typewriter (\"I'm sorry, your name isn't on the list, I'm afraid I can't let you in.\", 100)\r\n        }</pre></code>\r\n\r\nWhen I run this code and enter a name, I get the following:\r\n\"Error running script: Error compiling expression 'ListContains (PeopleList, result) ': Unknown object or variable 'PeopleList'\"\r\n\r\nCan anyone explain what's going on here?\r\n\r\nThanks!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello! I'm totally new to quest and I've been able to figure a lot of stuff out with the forums and tutorials but I'm running into an issue.</p>\n<p>My game script starts by creating an empty string list called PeopleList and then adding some items to it using this code:</p>\n<pre><code>PeopleList = NewStringList()\nlist add (PeopleList, \"Name1\")\nlist add (PeopleList, \"Name2\")</code></pre>\n<p>I then use this code to ask the player for a name and I want to check the name against PeopleList and return one response if the name is on the list and another if it's not on the list:</p>\n<pre><code>TextFX_Typewriter (\"&gt;&gt; Who are you?\", 100)\n      get input {\n        if (ListContains (PeopleList, result) ) {\n          TextFX_Typewriter (\"Lovely to see you again, \" + result + \". Let's begin.\", 100)\n        }\n        else {\n          TextFX_Typewriter (\"I'm sorry, your name isn't on the list, I'm afraid I can't let you in.\", 100)\n        }</code></pre>\n<p>When I run this code and enter a name, I get the following:<br>\n\"Error running script: Error compiling expression 'ListContains (PeopleList, result) ': Unknown object or variable 'PeopleList'\"</p>\n<p>Can anyone explain what's going on here?</p>\n<p>Thanks!</p>\n\n",
+      "PostDate": "2016-11-12T17:35:38.4225744Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "ece804e2-3b91-45ab-aa37-1175f82f5349",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I think the problem is `PeopleList` goes out of scope. As you have defined it, it is a variable that is local to that bit of code, and Quest forgets it when it finishes that script. Occasionally it will even forget it within a script, for example with the `ShowMenu` function. The solution is to use attributes instead, and the easiest way to do that is to prepend `game.` to every `PeopleList, so for example:\r\n```\r\ngame.PeopleList = NewStringList()",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I think the problem is <code>PeopleList</code> goes out of scope. As you have defined it, it is a variable that is local to that bit of code, and Quest forgets it when it finishes that script. Occasionally it will even forget it within a script, for example with the <code>ShowMenu</code> function. The solution is to use attributes instead, and the easiest way to do that is to prepend <code>game.</code> to every `PeopleList, so for example:</p>\n<pre><code>game.PeopleList = NewStringList()\n</code></pre>\n\n",
+      "PostDate": "2016-11-12T21:33:18.8621711Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "edc94bf5-a379-475a-b5bd-db75f70c14da",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "as Pixie said:\r\n\r\nuse Attribute VARIABLES, as they're global/permanent (so long as the Object containing it, exists or still exists, of course):\r\n\r\n```\r\nNAME_OF_OBJECT.NAME_OF_ATTRIBUTE\r\n// or:\r\nNAME_OF_OBJECT.NAME_OF_ATTRIBUTE = VALUE_OR_EXPRESSION\r\n```\r\n\r\n------------\r\n\r\nso, some examples:\r\n\r\n```\r\n// in-code scripting:\r\n\r\ngame.sex_list = split (\"male; female\", \";\")\r\n// or:\r\ngame.sex_list = NewStringList ()\r\nlist add (game.sex_list, \"male\")\r\nlist add (game.sex_list, \"female\")\r\n\r\n// aslx/xml 'creation' tag blocks:\r\n\r\n(the 'game' Game Object, already exists, as it must exist, but you can add new Attributes to it)\r\n\r\n<game name=\"xxx\">\r\n  <attr name=\"sex_list\" type=\"simplestringlist\">male;female</attr>\r\n</game>\r\n\r\n// ----------------------\r\n\r\n// in-code scripting:\r\n\r\nplayer.spell_list = split (\"fireball; icespike; earthquake; windslash\", \";\")\r\n// or:\r\nplayer.spell_list = NewStringList ()\r\nlist add (player.spell_list, \"fireball\")\r\nlist add (game.spell_list, \"icespike\")\r\nlist add (game.spell_list, \"earthquake\")\r\nlist add (game.spell_list, \"windslash\")\r\n\r\n// aslx/xml 'creation' tag blocks:\r\n\r\n(there must be a designated Player Object, either the default 'player' Player Object or your own Player Object, and that Player Object must be within a Room Object, quest requires it)\r\n\r\n<object name=\"room\">\r\n</object>\r\n\r\n<object name=\"player\">\r\n  <attr name='parent\" type=\"object\">room</attr>\r\n  <attr name=\"spell_list\" type=\"simplestringlist\">fireball;icespike;earthquake;windslash</attr>\r\n</object>\r\n\r\n// -------------\r\n\r\nand you can do the same with your own custom Objects and giving them Attributes (List Attributes for this topic, of course)\r\n```\r\n\r\nse here for more guides/help/examples if you haven't already found them:\r\n\r\nhttp://textadventures.co.uk/forum/samples/topic/5559/attributes-and-if-script-guide-by-hk\r\nhttp://textadventures.co.uk/forum/samples/topic/5137/list-and-dictionary-extensive-guide-by-hk\r\nhttp://textadventures.co.uk/forum/samples/topic/5138/explore-and-travel-code-sample-by-hk\r\nhttp://textadventures.co.uk/forum/quest/topic/3348/noobie-hks-help-me-thread#22483\r\nhttp://textadventures.co.uk/forum/quest/topic/3348/noobie-hks-help-me-thread#22486\r\n\r\n------\r\n\r\nask if you need any help, explanation, or whatever",
+      "EditableFormat": "markdown",
+      "HTML": "<p>as Pixie said:</p>\n<p>use Attribute VARIABLES, as they're global/permanent (so long as the Object containing it, exists or still exists, of course):</p>\n<pre><code>NAME_OF_OBJECT.NAME_OF_ATTRIBUTE\n// or:\nNAME_OF_OBJECT.NAME_OF_ATTRIBUTE = VALUE_OR_EXPRESSION\n</code></pre>\n<hr>\n<p>so, some examples:</p>\n<pre><code>// in-code scripting:\n\ngame.sex_list = split (\"male; female\", \";\")\n// or:\ngame.sex_list = NewStringList ()\nlist add (game.sex_list, \"male\")\nlist add (game.sex_list, \"female\")\n\n// aslx/xml 'creation' tag blocks:\n\n(the 'game' Game Object, already exists, as it must exist, but you can add new Attributes to it)\n\n&lt;game name=\"xxx\"&gt;\n  &lt;attr name=\"sex_list\" type=\"simplestringlist\"&gt;male;female&lt;/attr&gt;\n&lt;/game&gt;\n\n// ----------------------\n\n// in-code scripting:\n\nplayer.spell_list = split (\"fireball; icespike; earthquake; windslash\", \";\")\n// or:\nplayer.spell_list = NewStringList ()\nlist add (player.spell_list, \"fireball\")\nlist add (game.spell_list, \"icespike\")\nlist add (game.spell_list, \"earthquake\")\nlist add (game.spell_list, \"windslash\")\n\n// aslx/xml 'creation' tag blocks:\n\n(there must be a designated Player Object, either the default 'player' Player Object or your own Player Object, and that Player Object must be within a Room Object, quest requires it)\n\n&lt;object name=\"room\"&gt;\n&lt;/object&gt;\n\n&lt;object name=\"player\"&gt;\n  &lt;attr name='parent\" type=\"object\"&gt;room&lt;/attr&gt;\n  &lt;attr name=\"spell_list\" type=\"simplestringlist\"&gt;fireball;icespike;earthquake;windslash&lt;/attr&gt;\n&lt;/object&gt;\n\n// -------------\n\nand you can do the same with your own custom Objects and giving them Attributes (List Attributes for this topic, of course)\n</code></pre>\n<p>se here for more guides/help/examples if you haven't already found them:</p>\n<p>http://textadventures.co.uk/forum/samples/topic/5559/attributes-and-if-script-guide-by-hk<br>\nhttp://textadventures.co.uk/forum/samples/topic/5137/list-and-dictionary-extensive-guide-by-hk<br>\nhttp://textadventures.co.uk/forum/samples/topic/5138/explore-and-travel-code-sample-by-hk<br>\nhttp://textadventures.co.uk/forum/quest/topic/3348/noobie-hks-help-me-thread#22483<br>\nhttp://textadventures.co.uk/forum/quest/topic/3348/noobie-hks-help-me-thread#22486</p>\n<hr>\n<p>ask if you need any help, explanation, or whatever</p>\n\n",
+      "PostDate": "2016-11-12T22:28:15.0606629Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "275e48f0-ac4c-499a-9c9e-de9ab091f042",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "P.S.\r\n\r\nin-code, the List Attribute's Values (the list's items) must be enclosed in double quotes, unless you're using an Objectlist Attribute (which unfortunately for whatever reason can't be done in the GUI/Editor or was left out of the GUI/Editor, but it can still be done in-code). An Objectlist Attribute's Values (its items), are object references, so that Object must actually exist or still exist.\r\n\r\nor, unless you're using a String VARIABLE, or unless you've got a Function which returns a string value. I think the 'list add' can use/have a VARIABLE/Function in it, but the 'split' can't have a VARIABLE/Function in it",
+      "EditableFormat": "markdown",
+      "HTML": "<p>P.S.</p>\n<p>in-code, the List Attribute's Values (the list's items) must be enclosed in double quotes, unless you're using an Objectlist Attribute (which unfortunately for whatever reason can't be done in the GUI/Editor or was left out of the GUI/Editor, but it can still be done in-code). An Objectlist Attribute's Values (its items), are object references, so that Object must actually exist or still exist.</p>\n<p>or, unless you're using a String VARIABLE, or unless you've got a Function which returns a string value. I think the 'list add' can use/have a VARIABLE/Function in it, but the 'split' can't have a VARIABLE/Function in it</p>\n\n",
+      "PostDate": "2016-11-12T22:38:52.0215094Z",
+      "LastEditDate": "2016-11-12T22:40:30.383508Z"
+    }
+  ]
+}

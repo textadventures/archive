@@ -1,0 +1,83 @@
+{
+  "Topic": {
+    "TopicId": "3177",
+    "ForumId": "10",
+    "Title": "Double-Locked Door?",
+    "LastUpdated": "2012-08-29T01:12:12+01:00",
+    "ReplyCount": 5
+  },
+  "Posts": [
+    {
+      "PostId": "21281",
+      "UserId": 0,
+      "Username": "182crazyking",
+      "UserAvatar": null,
+      "UserGravatar": "54bbdc03f4145a66b9d80bb0d2c58573",
+      "EditableText": "Hey guys, real speedy question here. How would I create a door that requires two parameters to unlock?\n\nHere's the scenario: I have a room (D5 Door Gate) that has a locked exit (D5_Door) to a second room (D5 Entrance Corridor).\nThe player needs to swipe two keycards (Access Cards 1 and 2, respectively) into their respective readers (Readers 1 and 2, respectively). That then opens the door.\n\nNow, what I have now is a script that goes like this (sorry about not posting the actual core script; I don't know how to get it from the editor):\n[code:3dslyvtw]Use (Access Card 1) on (Reader 1)\nPrint &quot;You swipe the card, and a light on the machine turns green&#46;&quot; / Switch on dummy_gate_1[/code:3dslyvtw]\n\n[code:3dslyvtw]Use (Access Card 2) on (Reader 2)\nPrint &quot;You swipe the card, and a light on the machine turns green&#46;&quot; / Switch on summy_gate_2[/code:3dslyvtw]\n\n[code:3dslyvtw]After switching on dummy_gate_1\nIf&#58; Object is switched on (object&#58; dummy_gate_1)\nThen&#58;\nIf&#58; Object is switched on (object&#58; dummy_gate_2)\nThen&#58;\nPrint &quot;The door slowly rises&#46;&quot;\nUnlock exit (exit&#58; D5_door)[/code:3dslyvtw]\n\nThe reason I used the objects dummy_gate_1 and _2 (Invisible objects) is because I don't want crafty players bypassing the key card hunt by just saying &quot;switch on Reader 1.&quot; There's probably a way to fix that, which would be nice to know.\n\nAlso, by using the two &quot;If&quot; scripts in a row, I was basically trying to make an &quot;and&quot; gate. Is there a way to do this that works?\nCheers, guys!",
+      "EditableFormat": "bbcode",
+      "HTML": "Hey guys, real speedy question here. How would I create a door that requires two parameters to unlock?<br/><br/>Here's the scenario: I have a room (D5 Door Gate) that has a locked exit (D5_Door) to a second room (D5 Entrance Corridor).<br/>The player needs to swipe two keycards (Access Cards 1 and 2, respectively) into their respective readers (Readers 1 and 2, respectively). That then opens the door.<br/><br/>Now, what I have now is a script that goes like this (sorry about not posting the actual core script; I don't know how to get it from the editor):<br/><pre><code>Use (Access Card 1) on (Reader 1)<br/>Print &quot;You swipe the card, and a light on the machine turns green&#46;&quot; / Switch on dummy_gate_1</code></pre><br/><br/><pre><code>Use (Access Card 2) on (Reader 2)<br/>Print &quot;You swipe the card, and a light on the machine turns green&#46;&quot; / Switch on summy_gate_2</code></pre><br/><br/><pre><code>After switching on dummy_gate_1<br/>If&#58; Object is switched on (object&#58; dummy_gate_1)<br/>Then&#58;<br/>If&#58; Object is switched on (object&#58; dummy_gate_2)<br/>Then&#58;<br/>Print &quot;The door slowly rises&#46;&quot;<br/>Unlock exit (exit&#58; D5_door)</code></pre><br/><br/>The reason I used the objects dummy_gate_1 and _2 (Invisible objects) is because I don't want crafty players bypassing the key card hunt by just saying &quot;switch on Reader 1.&quot; There's probably a way to fix that, which would be nice to know.<br/><br/>Also, by using the two &quot;If&quot; scripts in a row, I was basically trying to make an &quot;and&quot; gate. Is there a way to do this that works?<br/>Cheers, guys!",
+      "PostDate": "2012-08-28T05:41:10+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21282",
+      "UserId": 0,
+      "Username": "sgreig",
+      "UserAvatar": null,
+      "UserGravatar": "9117185af66d72729b195384e3a446f0",
+      "EditableText": "Does that script you have not work? Or are you just looking for alternative ways to accomplish what you're talking about?\n\nThe way I would approach something like this would be to put a flag on each of the readers. So when you use the respective card on each reader, I would put something like this in the script&#058;\n\nReader 1:\n[code:2f7fqfn4]\nif (reader1&#46;flag = true) {\n   if (reader2&#46;flag = true) {\n      msg (&quot;The door slowly rises&#46;&quot;)\n      UnlockExit (D5_door)\n   }\n}\nelse {\n   msg (&quot;You swipe the card, and a light on the machine turns green&#46;&quot;)\n   reader1&#46;flag = true\n}\n[/code:2f7fqfn4]\n\nReader 2:\n[code:2f7fqfn4]\nif (reader2&#46;flag = true) {\n   if (reader1&#46;flag = true) {\n      msg (&quot;The door slowly rises&#46;&quot;)\n      UnlockExit (D5_door)\n   }\n}\nelse {\n   msg (&quot;You swipe the card, and a light on the machine turns green&#46;&quot;)\n   reader2&#46;flag = true\n}\n[/code:2f7fqfn4]\n\nThis way it doesn't matter in which order you swipe the cards, the door will still open. If you want them to have to be swiped in a specific order, the script would be fairly easy to modify for that. Also, using this method you don't have to create invisible dummy objects. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Does that script you have not work? Or are you just looking for alternative ways to accomplish what you're talking about?<br/><br/>The way I would approach something like this would be to put a flag on each of the readers. So when you use the respective card on each reader, I would put something like this in the script&#058;<br/><br/>Reader 1:<br/><pre><code><br/>if (reader1&#46;flag = true) {<br/>   if (reader2&#46;flag = true) {<br/>      msg (&quot;The door slowly rises&#46;&quot;)<br/>      UnlockExit (D5_door)<br/>   }<br/>}<br/>else {<br/>   msg (&quot;You swipe the card, and a light on the machine turns green&#46;&quot;)<br/>   reader1&#46;flag = true<br/>}<br/></code></pre><br/><br/>Reader 2:<br/><pre><code><br/>if (reader2&#46;flag = true) {<br/>   if (reader1&#46;flag = true) {<br/>      msg (&quot;The door slowly rises&#46;&quot;)<br/>      UnlockExit (D5_door)<br/>   }<br/>}<br/>else {<br/>   msg (&quot;You swipe the card, and a light on the machine turns green&#46;&quot;)<br/>   reader2&#46;flag = true<br/>}<br/></code></pre><br/><br/>This way it doesn't matter in which order you swipe the cards, the door will still open. If you want them to have to be swiped in a specific order, the script would be fairly easy to modify for that. Also, using this method you don't have to create invisible dummy objects. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2012-08-28T08:57:55+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21284",
+      "UserId": 0,
+      "Username": "182crazyking",
+      "UserAvatar": null,
+      "UserGravatar": "54bbdc03f4145a66b9d80bb0d2c58573",
+      "EditableText": "[quote=&quot;sgreig&quot;:rq9vu8nf]Does that script you have not work? Or are you just looking for alternative ways to accomplish what you're talking about?[/quote:rq9vu8nf]\nIt doesn't; I swipe both readers and the script doesn't run.\n\n[quote=&quot;sgreig&quot;:rq9vu8nf]The way I would approach something like this would be to put a flag on each of the readers. So when you use the respective card on each reader, I would put something like this in the script&#058;\n\n--snip--\n\nThis way it doesn't matter in which order you swipe the cards, the door will still open. If you want them to have to be swiped in a specific order, the script would be fairly easy to modify for that. Also, using this method you don't have to create invisible dummy objects. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->[/quote:rq9vu8nf]\nOh, nice, I'll try that once I get home from school. I kinda thought that my method of using two &quot;If:&quot;s in a row to create an &quot;and&quot; gate screwed up the code. Guess not. Cheers, mate! <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>sgreig wrote:</cite>Does that script you have not work? Or are you just looking for alternative ways to accomplish what you're talking about?</blockquote><br/>It doesn't; I swipe both readers and the script doesn't run.<br/><br/><blockquote><cite>sgreig wrote:</cite>The way I would approach something like this would be to put a flag on each of the readers. So when you use the respective card on each reader, I would put something like this in the script&#058;<br/><br/>--snip--<br/><br/>This way it doesn't matter in which order you swipe the cards, the door will still open. If you want them to have to be swiped in a specific order, the script would be fairly easy to modify for that. Also, using this method you don't have to create invisible dummy objects. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --></blockquote><br/>Oh, nice, I'll try that once I get home from school. I kinda thought that my method of using two &quot;If:&quot;s in a row to create an &quot;and&quot; gate screwed up the code. Guess not. Cheers, mate! <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "PostDate": "2012-08-28T15:09:36+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21285",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "You can do it with &quot;and&quot; but then you have to type the scriptexpression:\n[attachment=0:3ngf2fie]<!-- ia0 -->if.jpg<!-- ia0 -->[/attachment:3ngf2fie]",
+      "EditableFormat": "bbcode",
+      "HTML": "You can do it with &quot;and&quot; but then you have to type the scriptexpression:<br/><div><img src=\"/attachment/355\" alt=\"if.jpg\" /></div>",
+      "PostDate": "2012-08-28T15:47:12+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21286",
+      "UserId": 0,
+      "Username": "sgreig",
+      "UserAvatar": null,
+      "UserGravatar": "9117185af66d72729b195384e3a446f0",
+      "EditableText": "[quote=&quot;Pertex&quot;:1joqup2y]You can do it with &quot;and&quot; but then you have to type the scriptexpression:\n[attachment=0:1joqup2y]<!-- ia0 -->if.jpg<!-- ia0 -->[/attachment:1joqup2y][/quote:1joqup2y]\n\nOr in the case of my code example, I guess it would be:\n\n[code:1joqup2y]\nif (reader1&#46;flag = true) and (reader2&#46;flag = true) {\n  msg (&quot;The door slowly slides open&#46;&quot;)\n  UnlockExit (D5_door)\n}\nelse {\n  reader1&#46;flag = true\n}\n[/code:1joqup2y]\n\nand the same for reader 2, but change the else part to &quot;reader2.flag = true&quot;. Pertex's suggestion will work as well, but it still requires you to use the two invisible dummy objects, which is really not necessary. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>Pertex wrote:</cite>You can do it with &quot;and&quot; but then you have to type the scriptexpression:<br/><!-- ia0 -->if.jpg<!-- ia0 --></blockquote><br/><br/>Or in the case of my code example, I guess it would be:<br/><br/><pre><code><br/>if (reader1&#46;flag = true) and (reader2&#46;flag = true) {<br/>  msg (&quot;The door slowly slides open&#46;&quot;)<br/>  UnlockExit (D5_door)<br/>}<br/>else {<br/>  reader1&#46;flag = true<br/>}<br/></code></pre><br/><br/>and the same for reader 2, but change the else part to &quot;reader2.flag = true&quot;. Pertex's suggestion will work as well, but it still requires you to use the two invisible dummy objects, which is really not necessary. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2012-08-28T21:47:34+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21287",
+      "UserId": 0,
+      "Username": "182crazyking",
+      "UserAvatar": null,
+      "UserGravatar": "54bbdc03f4145a66b9d80bb0d2c58573",
+      "EditableText": "Alrighty! I'm back from trying pretty much everything ever. What I ended up with was (non-standard code because I [i:5fiq75xb]still[/i:5fiq75xb] can't figure out how to get that code that you guys have, short of writing it manually) :\n[code:5fiq75xb]If&#58; object has flag | object | reader1 | flag name | true\nthen&#58;\n     If&#58; object has flag | object | reader2 | flag name | true\n     then&#58;\n     Print&#58; message | The door slowly rises&#46;\n     Unlock exit | exit | D5_door\nElse&#58;\nPrint&#58; message | A light on the machine turns green&#46;\nSet flag | object | reader1 | flag name | true[/code:5fiq75xb]\n\nAnd pretty much the same thing for Reader 2. After swiping the respective cards, I got two consecutive &quot;A light on the machine turns green.&quot; messages, but nothing happened. Then I realized that I had to swipe a card on it's reader once more so that it would preform the check to see if both objects have a flag again.\nI'm gonna cheat my way out of this by adding a button to press when both readers are active that runs the check. So consider my problem effectively solved! Thanks, both of you! <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Alrighty! I'm back from trying pretty much everything ever. What I ended up with was (non-standard code because I <span style=\"font-style:italic;\">still</span> can't figure out how to get that code that you guys have, short of writing it manually) :<br/><pre><code>If&#58; object has flag | object | reader1 | flag name | true<br/>then&#58;<br/>     If&#58; object has flag | object | reader2 | flag name | true<br/>     then&#58;<br/>     Print&#58; message | The door slowly rises&#46;<br/>     Unlock exit | exit | D5_door<br/>Else&#58;<br/>Print&#58; message | A light on the machine turns green&#46;<br/>Set flag | object | reader1 | flag name | true</code></pre><br/><br/>And pretty much the same thing for Reader 2. After swiping the respective cards, I got two consecutive &quot;A light on the machine turns green.&quot; messages, but nothing happened. Then I realized that I had to swipe a card on it's reader once more so that it would preform the check to see if both objects have a flag again.<br/>I'm gonna cheat my way out of this by adding a button to press when both readers are active that runs the check. So consider my problem effectively solved! Thanks, both of you! <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "PostDate": "2012-08-29T01:12:12+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

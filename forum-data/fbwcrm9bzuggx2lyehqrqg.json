@@ -1,0 +1,47 @@
+{
+  "Topic": {
+    "TopicId": "fbwcrm9bzuggx2lyehqrqg",
+    "ForumId": "10",
+    "Title": "Code Logic Question[SOLVED]",
+    "LastUpdated": "2016-07-05T21:07:11.3174152Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "b015787f-0262-4d77-a6e0-eda16f3fe567",
+      "UserId": 248029,
+      "Username": "Anonynn",
+      "UserAvatar": null,
+      "UserGravatar": "2eea18890a69714beb5b926a7b559e64",
+      "EditableText": "So I redesigned my water system to make it more simple and it works great, except for one little part. On the \"water container object\" (waterskin) there is a verb that checks for a \"watersource boolean\". This verb is called \"Fill\". In theory, if there is a watersource=True, then it should fill the water container object but the player can currently fill the container anywhere they want. \r\n\r\nSo the water object is: fresh_water, attribute boolean, watersource\r\nThe water container is: waterskin, attribute boolean, full, attribute boolean fresh_water, attribute boolean dirty_water, \r\n\r\nif (waterskin.full=False) {\r\n  if (fresh_water.watersource=True) {\r\n    msg (\"<br/>You fill your waterskin with the fresh water!! It looks delicious!<br/>\")\r\n    waterskin.full = True\r\n    waterskin.fresh_water = True\r\n  }\r\n  else if (dirty_water.watersource=True) {\r\n    msg (\"<br/>You fill your waterskin with some dirty water. It looks...disgusting.<br/>\")\r\n    waterskin.full = True\r\n    waterskin.dirty_water = True\r\n  }\r\n  else {\r\n    msg (\"<br/>You'll need something to fill it with first!<br/>\")\r\n  }\r\n}\r\nelse if (waterskin.full=True) {\r\n  msg (\"<br/>You'll need to dump, or drink the old contents first!<br/>\")\r\n}\r\n\r\nI know I'm missing SOMETHING. But what?\r\n\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>So I redesigned my water system to make it more simple and it works great, except for one little part. On the \"water container object\" (waterskin) there is a verb that checks for a \"watersource boolean\". This verb is called \"Fill\". In theory, if there is a watersource=True, then it should fill the water container object but the player can currently fill the container anywhere they want.</p>\n<p>So the water object is: fresh_water, attribute boolean, watersource<br>\nThe water container is: waterskin, attribute boolean, full, attribute boolean fresh_water, attribute boolean dirty_water,</p>\n<p>if (waterskin.full=False) {<br>\nif (fresh_water.watersource=True) {<br>\nmsg (\"<br>You fill your waterskin with the fresh water!! It looks delicious!<br>\")<br>\nwaterskin.full = True<br>\nwaterskin.fresh_water = True<br>\n}<br>\nelse if (dirty_water.watersource=True) {<br>\nmsg (\"<br>You fill your waterskin with some dirty water. It looks...disgusting.<br>\")<br>\nwaterskin.full = True<br>\nwaterskin.dirty_water = True<br>\n}<br>\nelse {<br>\nmsg (\"<br>You'll need something to fill it with first!<br>\")<br>\n}<br>\n}<br>\nelse if (waterskin.full=True) {<br>\nmsg (\"<br>You'll need to dump, or drink the old contents first!<br>\")<br>\n}</p>\n<p>I know I'm missing SOMETHING. But what?</p>\n\n",
+      "PostDate": "2016-07-05T21:07:11.3174152Z",
+      "LastEditDate": "2016-07-12T17:50:22.9676232Z"
+    },
+    {
+      "PostId": "11dcb008-55f5-4e2d-a4dc-70bdf124b00e",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Look at the second line. Why would fresh_water object not be a watersource? The freshwater object always has watersource set to true. If the waterskin is not full, then the second line will always be true, so the skin gets filled with clean water every time.\r\n\r\nWhat you really want to do is to check what water source is present in the room, if any, and see if that is clean or dirty.\r\n\r\n\r\nBy the way, you do not need to test a Boolean against a value:\r\n```\r\nif (waterskin.full=False) {\r\n->\r\nif (not waterskin.full) {\r\n```\r\nAlso, you do not need two flags on the water source for clean and dirty. If it is clean, it is not dirty. You just need the one flag (I suggest dirty, because mixing clean and dirty will make dirty).",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Look at the second line. Why would fresh_water object not be a watersource? The freshwater object always has watersource set to true. If the waterskin is not full, then the second line will always be true, so the skin gets filled with clean water every time.</p>\n<p>What you really want to do is to check what water source is present in the room, if any, and see if that is clean or dirty.</p>\n<p>By the way, you do not need to test a Boolean against a value:</p>\n<pre><code>if (waterskin.full=False) {\n-&gt;\nif (not waterskin.full) {\n</code></pre>\n<p>Also, you do not need two flags on the water source for clean and dirty. If it is clean, it is not dirty. You just need the one flag (I suggest dirty, because mixing clean and dirty will make dirty).</p>\n\n",
+      "PostDate": "2016-07-05T21:23:27.9643995Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "d9f9e5af-7e97-455b-9976-5abd55a12d41",
+      "UserId": 248029,
+      "Username": "Anonynn",
+      "UserAvatar": null,
+      "UserGravatar": "2eea18890a69714beb5b926a7b559e64",
+      "EditableText": "This is what I went with :) Thanks for pointing out my dumminess Pix!\r\n\r\nif (waterskin.full=True) {\r\n  msg (\"<br/>You'll need to <i>dump</i>, or <i>drink</i> the old contents first!<br/>\")\r\n}\r\nelse {\r\n  if (ListContains(ScopeVisible(), fresh_water)) {\r\n    msg (\"<br/>You fill your waterskin with some fresh water!! It looks delicious!<br/>\")\r\n    waterskin.full = True\r\n    waterskin.fresh_water = True\r\n  }\r\n  else if (ListContains(ScopeVisible(), dirty_water)) {\r\n    msg (\"<br/>You fill your waterskin with some dirty water. It looks...disgusting.<br/>\")\r\n    waterskin.full = True\r\n    waterskin.dirty_water = True\r\n  }\r\n  else {\r\n    msg (\"<br/>You'll need something to fill it with first!<br/>\")\r\n  }\r\n}",
+      "EditableFormat": "markdown",
+      "HTML": "<p>This is what I went with :) Thanks for pointing out my dumminess Pix!</p>\n<p>if (waterskin.full=True) {<br>\nmsg (\"<br>You'll need to <i>dump</i>, or <i>drink</i> the old contents first!<br>\")<br>\n}<br>\nelse {<br>\nif (ListContains(ScopeVisible(), fresh_water)) {<br>\nmsg (\"<br>You fill your waterskin with some fresh water!! It looks delicious!<br>\")<br>\nwaterskin.full = True<br>\nwaterskin.fresh_water = True<br>\n}<br>\nelse if (ListContains(ScopeVisible(), dirty_water)) {<br>\nmsg (\"<br>You fill your waterskin with some dirty water. It looks...disgusting.<br>\")<br>\nwaterskin.full = True<br>\nwaterskin.dirty_water = True<br>\n}<br>\nelse {<br>\nmsg (\"<br>You'll need something to fill it with first!<br>\")<br>\n}<br>\n}</p>\n\n",
+      "PostDate": "2016-07-07T05:53:50.2551503Z",
+      "LastEditDate": "2016-07-07T05:54:09.6247908Z"
+    }
+  ]
+}

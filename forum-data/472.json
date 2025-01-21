@@ -1,0 +1,155 @@
+{
+  "Topic": {
+    "TopicId": "472",
+    "ForumId": "10",
+    "Title": "How do you teach QDK basic math?",
+    "LastUpdated": "2004-09-29T02:34:12+01:00",
+    "ReplyCount": 11
+  },
+  "Posts": [
+    {
+      "PostId": "3169",
+      "UserId": 0,
+      "Username": "MatCauthon137",
+      "UserAvatar": null,
+      "UserGravatar": "2dbc07e4b190f3e9ef32628a9a3cedb4",
+      "EditableText": "ok, here is the deal, changing numeric variables, that's easy. It's also easy to increment (add) or decrement (subtract) those numeric variables. Here is what I want to do that I just can't seem to grasp. Let's say we have a numeric variable, we will call it health. Then let's say we have another numeric variable, which we'll call cures used. I want \"cures used\" to be incremented by 6% of \"health\" every time \"health\" is changed. How do I accomplish this?",
+      "EditableFormat": "bbcode",
+      "HTML": "ok, here is the deal, changing numeric variables, that's easy. It's also easy to increment (add) or decrement (subtract) those numeric variables. Here is what I want to do that I just can't seem to grasp. Let's say we have a numeric variable, we will call it health. Then let's say we have another numeric variable, which we'll call cures used. I want \"cures used\" to be incremented by 6% of \"health\" every time \"health\" is changed. How do I accomplish this?",
+      "PostDate": "2004-09-11T20:56:59+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3170",
+      "UserId": 0,
+      "Username": "007bond",
+      "UserAvatar": null,
+      "UserGravatar": "4c2673a2d8666a97b5c1082c5cf2e0e5",
+      "EditableText": "That's very complex, and hard to do.  I don't know if Quest supports percentage increments.  You'll have to ask Alex",
+      "EditableFormat": "bbcode",
+      "HTML": "That's very complex, and hard to do.  I don't know if Quest supports percentage increments.  You'll have to ask Alex",
+      "PostDate": "2004-09-11T22:44:37+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3176",
+      "UserId": 0,
+      "Username": "I think Im Dead",
+      "UserAvatar": null,
+      "UserGravatar": "662782b48efa4728f8d0773b83c01ddf",
+      "EditableText": "Alright my math might be a little off here but let's give it a try you want...\n\nStatus Variable \"Health\" = 100 (Current/Full)\nNumeric Variable \"Cures_Used\" = 6%(Health)\n\nAnd everytime \"Health\" changes, you want \"Cures_Used\" to change to reflect an increase equal to 6% of the new value of \"Health\"\n\nThis seems pretty simple math of... \n\n(%Health% / 100) * 6 + \"Cures_Used\" = \"Cures_Used\"\n\nQuest doesn't do math all on one line and has to split it up into operations, like you do when you do it in your head basically, well, most people. After thinking about it like that, it's just a simple matter of going into qdk and telling it to do it. \n\nI made two status variables, Health &amp; Cures_Used. When our health status variable changes, it's script tells it to set a new numeric variable called \"Cures_Div\" with a value of %Health%(whatever our Health variable is equal to) divided by 100, this gives us the value of 1% of our total health. Now we set another new numeric variable called \"Cures_Sum\" to have a value of %Cures_Div% multiplied by 6, thus setting \"Cures_Sum\" to 6% of our current health value. Finally we increment our \"Cures_Used\" status variable by a value of \"Cures_Sum\" or + 6% of current health.\n\nRealistically, in a scenario where a character repeatedly loses health without gaining any back, this would result in diminishing returns, the \"Cures_Used\" would always be incremented by less and less unless the character is healed. To counteract this, since I don't know if it's what you were planning for, you would want to do the same math as here but against a characters maximum health to always be guaranteed the same percentage, of course, it would change if the maximum health changed.\n\nFor those not in the know about Quest's ability to use simple mathematical functions such as +, -, *, and /, I highly suggest you read the manual. It will start making sense a couple times through, and honestly, isn't very long at all. Here's the code straight from QDK, it should be inserted alongside anyother status variables defined in your define game block.\n \n[code:jglzmlw1]\n\tdefine variable &lt;Health&gt;\n\t\ttype numeric\n\t\tvalue &lt;100&gt;\n\t\tdisplay &lt;Health&#58; !&gt;\n\t\tonchange &#123;\n\t\t\tset numeric &lt;Cures_Div; %Health% / 100&gt;\n\t\t\tset numeric &lt;Cures_Sum; %Cures_Div% * 6&gt;\n\t\t\tinc &lt;Cures_Used; %Cures_Sum%&gt;\n\t\t&#125;\n\tend define\n\tdefine variable &lt;Cures_Used&gt;\n\t\ttype numeric\n\t\tvalue &lt;0&gt;\n\t\tdisplay &lt;Cures Used&#58; !&gt;\n\tend define\n[/code:jglzmlw1]\n\nEdit you wanted Cures_Used to increment, not just be equal to 6% of health, ok i'll revise this quickly.",
+      "EditableFormat": "bbcode",
+      "HTML": "Alright my math might be a little off here but let's give it a try you want...<br/><br/>Status Variable \"Health\" = 100 (Current/Full)<br/>Numeric Variable \"Cures_Used\" = 6%(Health)<br/><br/>And everytime \"Health\" changes, you want \"Cures_Used\" to change to reflect an increase equal to 6% of the new value of \"Health\"<br/><br/>This seems pretty simple math of... <br/><br/>(%Health% / 100) * 6 + \"Cures_Used\" = \"Cures_Used\"<br/><br/>Quest doesn't do math all on one line and has to split it up into operations, like you do when you do it in your head basically, well, most people. After thinking about it like that, it's just a simple matter of going into qdk and telling it to do it. <br/><br/>I made two status variables, Health &amp; Cures_Used. When our health status variable changes, it's script tells it to set a new numeric variable called \"Cures_Div\" with a value of %Health%(whatever our Health variable is equal to) divided by 100, this gives us the value of 1% of our total health. Now we set another new numeric variable called \"Cures_Sum\" to have a value of %Cures_Div% multiplied by 6, thus setting \"Cures_Sum\" to 6% of our current health value. Finally we increment our \"Cures_Used\" status variable by a value of \"Cures_Sum\" or + 6% of current health.<br/><br/>Realistically, in a scenario where a character repeatedly loses health without gaining any back, this would result in diminishing returns, the \"Cures_Used\" would always be incremented by less and less unless the character is healed. To counteract this, since I don't know if it's what you were planning for, you would want to do the same math as here but against a characters maximum health to always be guaranteed the same percentage, of course, it would change if the maximum health changed.<br/><br/>For those not in the know about Quest's ability to use simple mathematical functions such as +, -, *, and /, I highly suggest you read the manual. It will start making sense a couple times through, and honestly, isn't very long at all. Here's the code straight from QDK, it should be inserted alongside anyother status variables defined in your define game block.<br/> <br/><pre><code><br/>\tdefine variable &lt;Health&gt;<br/>\t\ttype numeric<br/>\t\tvalue &lt;100&gt;<br/>\t\tdisplay &lt;Health&#58; !&gt;<br/>\t\tonchange &#123;<br/>\t\t\tset numeric &lt;Cures_Div; %Health% / 100&gt;<br/>\t\t\tset numeric &lt;Cures_Sum; %Cures_Div% * 6&gt;<br/>\t\t\tinc &lt;Cures_Used; %Cures_Sum%&gt;<br/>\t\t&#125;<br/>\tend define<br/>\tdefine variable &lt;Cures_Used&gt;<br/>\t\ttype numeric<br/>\t\tvalue &lt;0&gt;<br/>\t\tdisplay &lt;Cures Used&#58; !&gt;<br/>\tend define<br/></code></pre><br/><br/>Edit you wanted Cures_Used to increment, not just be equal to 6% of health, ok i'll revise this quickly.",
+      "PostDate": "2004-09-12T04:18:10+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3185",
+      "UserId": 0,
+      "Username": "MatCauthon137",
+      "UserAvatar": null,
+      "UserGravatar": "2dbc07e4b190f3e9ef32628a9a3cedb4",
+      "EditableText": "ok, \"i think I'm dead\" that is a little complicated, but I think I understand what you are saying, thank you. I will test it and see if it works like i expect it to.",
+      "EditableFormat": "bbcode",
+      "HTML": "ok, \"i think I'm dead\" that is a little complicated, but I think I understand what you are saying, thank you. I will test it and see if it works like i expect it to.",
+      "PostDate": "2004-09-12T16:10:16+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3190",
+      "UserId": 0,
+      "Username": "MatCauthon137",
+      "UserAvatar": null,
+      "UserGravatar": "2dbc07e4b190f3e9ef32628a9a3cedb4",
+      "EditableText": "Ok, I understand how in most games, you only want a whole number. But in this game (trying to make it as realistic as possible, trust me) I need it to stop rounding the numbers when it displays them as a status variable. Isn't there any way to get it to display the status variable up to 2 decimal places, i.e. \"You currently carry 22.53 bottles of heal.\"  I know I may be reaching on this one, but if that's not possible, I think I have a way around it, i could simply display two seperate variables, one for full bottles and one for partial bottles, but it needs to stop rounding up. 23.65 = 24 (basic math) but I want it to equal 23 full bottles, and then the other status variable can handle the rest, does this make any sense?",
+      "EditableFormat": "bbcode",
+      "HTML": "Ok, I understand how in most games, you only want a whole number. But in this game (trying to make it as realistic as possible, trust me) I need it to stop rounding the numbers when it displays them as a status variable. Isn't there any way to get it to display the status variable up to 2 decimal places, i.e. \"You currently carry 22.53 bottles of heal.\"  I know I may be reaching on this one, but if that's not possible, I think I have a way around it, i could simply display two seperate variables, one for full bottles and one for partial bottles, but it needs to stop rounding up. 23.65 = 24 (basic math) but I want it to equal 23 full bottles, and then the other status variable can handle the rest, does this make any sense?",
+      "PostDate": "2004-09-12T17:54:11+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3191",
+      "UserId": 0,
+      "Username": "I think Im Dead",
+      "UserAvatar": null,
+      "UserGravatar": "662782b48efa4728f8d0773b83c01ddf",
+      "EditableText": "As far as I know, Quest doesn't natively support this. \n\nIt would be nice if Alex added an option to turn on or off the rounding.\n\nThere may be a way around this, it would involve using two seperate variables, one for bottles filled, and one for filled amount of the current bottle, but I'm thinking it might depend on when Quest actually does the rounding up. If Quest never does the mathematical work of finding the remainder after dividing by 100(the .53 or whatever), then there really is no way to process that information.\n\nAnother way to possibly get around this problem would depend on wether or not Quest will round a number down if it's decimal value is below .50. If Quest does this, which honestly I've never tried otherwise I'd know, would be to divide the 1% into something to see if it came out as either 0 or 1, if it was rounded down to 0 then you could alternately try to divide it by 2/4/8/whatever to determine wether to add .50/.25/.125 respectively.\n\nNow that I wrote all that out, I think there's a much easier way to do it. I'll think about this a little more and make a few math tests/examples to try and figure this out.",
+      "EditableFormat": "bbcode",
+      "HTML": "As far as I know, Quest doesn't natively support this. <br/><br/>It would be nice if Alex added an option to turn on or off the rounding.<br/><br/>There may be a way around this, it would involve using two seperate variables, one for bottles filled, and one for filled amount of the current bottle, but I'm thinking it might depend on when Quest actually does the rounding up. If Quest never does the mathematical work of finding the remainder after dividing by 100(the .53 or whatever), then there really is no way to process that information.<br/><br/>Another way to possibly get around this problem would depend on wether or not Quest will round a number down if it's decimal value is below .50. If Quest does this, which honestly I've never tried otherwise I'd know, would be to divide the 1% into something to see if it came out as either 0 or 1, if it was rounded down to 0 then you could alternately try to divide it by 2/4/8/whatever to determine wether to add .50/.25/.125 respectively.<br/><br/>Now that I wrote all that out, I think there's a much easier way to do it. I'll think about this a little more and make a few math tests/examples to try and figure this out.",
+      "PostDate": "2004-09-12T19:00:26+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3192",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "One thing you could possibly try is doing the maths with [i:djo57j59]string[/i:djo57j59] variables rather than numeric variables. Numeric variables are stored as integers, which is why they'll get rounded. I'm not saying string variable maths will definitely work, but it's something to try.",
+      "EditableFormat": "bbcode",
+      "HTML": "One thing you could possibly try is doing the maths with <span style=\"font-style:italic;\">string</span> variables rather than numeric variables. Numeric variables are stored as integers, which is why they'll get rounded. I'm not saying string variable maths will definitely work, but it's something to try.",
+      "PostDate": "2004-09-12T20:52:48+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3193",
+      "UserId": 0,
+      "Username": "I think Im Dead",
+      "UserAvatar": null,
+      "UserGravatar": "662782b48efa4728f8d0773b83c01ddf",
+      "EditableText": "Naw, just gives you a pretty little string variable with a value of \"health / 100\". I'm trying to throw together a number parsing function real quick, we'll see.\n\nNumber Parsing won't work because Quest won't save numbers with a decimal/period in them into strings. \n\nIt does however store the whole string with decimals/periods into the #quest.command# and #quest.originalcommand# strings. It would be nice if we the users could somehow create our own magical variables that aren't held to the same standards as others.\n\nIt's ridiculously aggrivating to come up with a million different ways of working around Quest's limitations only to find another one is in place for no reason.\n\nHow about releasing a build that doesn't parse periods(and anything following them) out of the text buffer before storing it into variables.",
+      "EditableFormat": "bbcode",
+      "HTML": "Naw, just gives you a pretty little string variable with a value of \"health / 100\". I'm trying to throw together a number parsing function real quick, we'll see.<br/><br/>Number Parsing won't work because Quest won't save numbers with a decimal/period in them into strings. <br/><br/>It does however store the whole string with decimals/periods into the #quest.command# and #quest.originalcommand# strings. It would be nice if we the users could somehow create our own magical variables that aren't held to the same standards as others.<br/><br/>It's ridiculously aggrivating to come up with a million different ways of working around Quest's limitations only to find another one is in place for no reason.<br/><br/>How about releasing a build that doesn't parse periods(and anything following them) out of the text buffer before storing it into variables.",
+      "PostDate": "2004-09-12T21:24:19+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3196",
+      "UserId": 0,
+      "Username": "007bond",
+      "UserAvatar": null,
+      "UserGravatar": "4c2673a2d8666a97b5c1082c5cf2e0e5",
+      "EditableText": "What would be nice if Quest gave you the option of selecteing whether you want it stored as an Integer data type or a Single data type.  You programmers will know what I mean",
+      "EditableFormat": "bbcode",
+      "HTML": "What would be nice if Quest gave you the option of selecteing whether you want it stored as an Integer data type or a Single data type.  You programmers will know what I mean",
+      "PostDate": "2004-09-13T08:41:46+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3252",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "number 1. God, people don't know maths nowadays *shakes head*\n\nNumber 2. ITID - why not just leave the numbers without deviding by 100 and then \"move the decimal point\" across 2 (or introduce it into the string response) and then that'll do!\n\nNumber 3: Alex, couldn't you just get a free maths parser off the net to do more complex maths stuff (like equations etc on the same line, and also squares and cosine functions.... I have a .dll stored from the net which is supposedly freeware and does this.... dunno though).\n\nNumber 4. Maybe a double feature would be a good idea, having numeric and dnumeric variables allowing people to get more specific results easier without moving the decimal all over the place.",
+      "EditableFormat": "bbcode",
+      "HTML": "number 1. God, people don't know maths nowadays *shakes head*<br/><br/>Number 2. ITID - why not just leave the numbers without deviding by 100 and then \"move the decimal point\" across 2 (or introduce it into the string response) and then that'll do!<br/><br/>Number 3: Alex, couldn't you just get a free maths parser off the net to do more complex maths stuff (like equations etc on the same line, and also squares and cosine functions.... I have a .dll stored from the net which is supposedly freeware and does this.... dunno though).<br/><br/>Number 4. Maybe a double feature would be a good idea, having numeric and dnumeric variables allowing people to get more specific results easier without moving the decimal all over the place.",
+      "PostDate": "2004-09-18T08:41:46+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3282",
+      "UserId": 0,
+      "Username": "007bond",
+      "UserAvatar": null,
+      "UserGravatar": "4c2673a2d8666a97b5c1082c5cf2e0e5",
+      "EditableText": "I think I may have found a free maths parser, after a bit of hunting.  Alex, if you'd like to try it out, I can email it to you.\nWhat these forums really need is a file upload function (like vbforums.com has)",
+      "EditableFormat": "bbcode",
+      "HTML": "I think I may have found a free maths parser, after a bit of hunting.  Alex, if you'd like to try it out, I can email it to you.<br/>What these forums really need is a file upload function (like vbforums.com has)",
+      "PostDate": "2004-09-19T01:15:50+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3427",
+      "UserId": 0,
+      "Username": "007bond",
+      "UserAvatar": null,
+      "UserGravatar": "4c2673a2d8666a97b5c1082c5cf2e0e5",
+      "EditableText": "Alex, just wondering if you had seen my last post.  I posted this just to bring it up.",
+      "EditableFormat": "bbcode",
+      "HTML": "Alex, just wondering if you had seen my last post.  I posted this just to bring it up.",
+      "PostDate": "2004-09-29T02:34:12+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

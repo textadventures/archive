@@ -1,0 +1,83 @@
+{
+  "Topic": {
+    "TopicId": "3831",
+    "ForumId": "10",
+    "Title": "The official \"Spieltgeist needs help\" thread",
+    "LastUpdated": "2013-07-28T21:26:54+01:00",
+    "ReplyCount": 5
+  },
+  "Posts": [
+    {
+      "PostId": "25606",
+      "UserId": 0,
+      "Username": "Spieltgeist",
+      "UserAvatar": null,
+      "UserGravatar": "7f354622074d732960fd2e1e299d2aac",
+      "EditableText": "I figure I'll just use one thread for all future help I'll need instead of making a new thread each time.\n\nMy newest problem is getting menus to work correctly. I followed the tutorial but every time I try to get it to run, I get the utterly confounding &quot;Error running script&#058; Error compiling expression 'yesno': Unknown object or variable 'yesno'&quot;\n\nI specified yesno as a NewStringList() in the game's start up script\n[code:3uojjxzy]yesno = NewStringList()\nlist add (yesno, &quot;Yes&quot;)\nlist add (yesno, &quot;No&quot;)[/code:3uojjxzy]\n\nJust like that. But it doesn't seem to actually do anything. Here's the code for when the menu actually gets called.\n\n[code:3uojjxzy]if (GetBoolean(Victim, &quot;killanyway&quot;)) {\n  ShowMenu (&quot;place holder text&quot;, yesno, false) {\n    if (result = &quot;yes&quot;) {\n      msg (&quot;&lt;br/&gt;long unpleasant text scene&quot;)\n    }\n    else if (result = &quot;No&quot;) {\n      msg (&quot;There's sure to be a weapon around here somewhere&#46;&quot;)\n    }[/code:3uojjxzy]\n\nThis is the same problem for all the menus as well. Like I said I followed the tutorial for this one, and tried using the name &quot;menulist&quot; instead of yesno and got the same problem. Any ideas?",
+      "EditableFormat": "bbcode",
+      "HTML": "I figure I'll just use one thread for all future help I'll need instead of making a new thread each time.<br/><br/>My newest problem is getting menus to work correctly. I followed the tutorial but every time I try to get it to run, I get the utterly confounding &quot;Error running script&#058; Error compiling expression 'yesno': Unknown object or variable 'yesno'&quot;<br/><br/>I specified yesno as a NewStringList() in the game's start up script<br/><pre><code>yesno = NewStringList()<br/>list add (yesno, &quot;Yes&quot;)<br/>list add (yesno, &quot;No&quot;)</code></pre><br/><br/>Just like that. But it doesn't seem to actually do anything. Here's the code for when the menu actually gets called.<br/><br/><pre><code>if (GetBoolean(Victim, &quot;killanyway&quot;)) {<br/>  ShowMenu (&quot;place holder text&quot;, yesno, false) {<br/>    if (result = &quot;yes&quot;) {<br/>      msg (&quot;&lt;br/&gt;long unpleasant text scene&quot;)<br/>    }<br/>    else if (result = &quot;No&quot;) {<br/>      msg (&quot;There's sure to be a weapon around here somewhere&#46;&quot;)<br/>    }</code></pre><br/><br/>This is the same problem for all the menus as well. Like I said I followed the tutorial for this one, and tried using the name &quot;menulist&quot; instead of yesno and got the same problem. Any ideas?",
+      "PostDate": "2013-07-28T19:57:29+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25607",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "luckily, this is a very simple fix, one small thing that you're missing in your understanding here:\n\nCommands, Functions, Turnscripts, Object Types, and Objects don't need any parents (they don't need to be attached to anything).\n\nAttributes (strings, scripts, booleans, integers, doubles, lists, dictionaries, verbs ~ I think, and etc) need parents (they need to be attached to something).\n\nall you got to do, is to add your &quot;yesno&quot; simplestringlist attribute to (for example) a global~permanent object, such as for an example, your Game Object.\n\n[code:2il6pj6z]&lt;game name=&quot;blah&quot;&gt;\n  &lt;yesno type=&quot;simplestringlist&quot;&gt;yes; no&lt;/yesno&gt;\n&lt;/game&gt;[/code:2il6pj6z]\n\nand then in your code, you need this:\n\n[code:2il6pj6z]show menu (&quot;Do you choose Yes or No?&quot;, game&#46;yesno, false) {\n  // whatever script\n}[/code:2il6pj6z]\n\nfor this to really make sense, think of using a &quot;strength&quot; integer attribute. A &quot;strength&quot; attribute for what? You can't just have a &quot;floating&quot; strength attribute, not attached to anything. Quest needs attributes to be attached to something, such as objects, like &quot;HK&quot; and &quot;orc&quot;, HK.strength vs orc.strength, hehe <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "EditableFormat": "bbcode",
+      "HTML": "luckily, this is a very simple fix, one small thing that you're missing in your understanding here:<br/><br/>Commands, Functions, Turnscripts, Object Types, and Objects don't need any parents (they don't need to be attached to anything).<br/><br/>Attributes (strings, scripts, booleans, integers, doubles, lists, dictionaries, verbs ~ I think, and etc) need parents (they need to be attached to something).<br/><br/>all you got to do, is to add your &quot;yesno&quot; simplestringlist attribute to (for example) a global~permanent object, such as for an example, your Game Object.<br/><br/><pre><code>&lt;game name=&quot;blah&quot;&gt;<br/>  &lt;yesno type=&quot;simplestringlist&quot;&gt;yes; no&lt;/yesno&gt;<br/>&lt;/game&gt;</code></pre><br/><br/>and then in your code, you need this:<br/><br/><pre><code>show menu (&quot;Do you choose Yes or No?&quot;, game&#46;yesno, false) {<br/>  // whatever script<br/>}</code></pre><br/><br/>for this to really make sense, think of using a &quot;strength&quot; integer attribute. A &quot;strength&quot; attribute for what? You can't just have a &quot;floating&quot; strength attribute, not attached to anything. Quest needs attributes to be attached to something, such as objects, like &quot;HK&quot; and &quot;orc&quot;, HK.strength vs orc.strength, hehe <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "PostDate": "2013-07-28T20:33:30+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25608",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "[Edited just now, due to forgetting to change game.yesno to global_lists_object.yesno in the showmenu script]\n\nerr, let me do this again, using your code, so that it is clear as to what you need to do (an example only as I'm not quite sure how you're setting this up):\n\n(I'm going to create a &quot;global lists object&quot;, in this case. It's a little more &quot;advanced&quot; then simple using the Game Object, as it lets you organize your code stuff better for yourself, for example, all of our created lists, will be ~stored as~attached to~ this global lists object)\n\n[code:30seu6yx]&lt;global_lists_object type=&quot;object&quot;&gt;\n  &lt;inherit name=&quot;editor_object&quot; /&gt;\n  &lt;parent&gt;null&lt;/parent&gt;\n&lt;/global_lists_object&gt;\n\n&lt;verb name=&quot;blah&quot;&gt;\n  firsttime {\n    global_lists_object&#46;yesno = NewStringList()\n    list add (global_lists_object&#46;yesno, &quot;Yes&quot;)\n    list add (global_lists_object&#46;yesno, &quot;No&quot;)\n    on ready {\n      if (GetBoolean(this&#46;Victim, &quot;killanyway&quot;)) {\n        ShowMenu (&quot;place holder text&quot;, global_lists_object&#46;yesno, false) {\n          if (result = &quot;yes&quot;) {\n            msg (&quot;&lt;br/&gt;long unpleasant text scene&quot;)\n          } else if (result = &quot;No&quot;) {\n            msg (&quot;There's sure to be a weapon around here somewhere&#46;&quot;)\n          }\n        }\n      }\n    }\n  } otherwise {\n    if (GetBoolean(this&#46;Victim, &quot;killanyway&quot;)) {\n        ShowMenu (&quot;place holder text&quot;, game&#46;yesno, false) {\n          if (result = &quot;yes&quot;) {\n            msg (&quot;&lt;br/&gt;long unpleasant text scene&quot;)\n          } else if (result = &quot;No&quot;) {\n            msg (&quot;There's sure to be a weapon around here somewhere&#46;&quot;)\n          }\n        }\n      }\n    }\n  }\n&lt;/verb&gt;[/code:30seu6yx]",
+      "EditableFormat": "bbcode",
+      "HTML": "[Edited just now, due to forgetting to change game.yesno to global_lists_object.yesno in the showmenu script]<br/><br/>err, let me do this again, using your code, so that it is clear as to what you need to do (an example only as I'm not quite sure how you're setting this up):<br/><br/>(I'm going to create a &quot;global lists object&quot;, in this case. It's a little more &quot;advanced&quot; then simple using the Game Object, as it lets you organize your code stuff better for yourself, for example, all of our created lists, will be ~stored as~attached to~ this global lists object)<br/><br/><pre><code>&lt;global_lists_object type=&quot;object&quot;&gt;<br/>  &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>  &lt;parent&gt;null&lt;/parent&gt;<br/>&lt;/global_lists_object&gt;<br/><br/>&lt;verb name=&quot;blah&quot;&gt;<br/>  firsttime {<br/>    global_lists_object&#46;yesno = NewStringList()<br/>    list add (global_lists_object&#46;yesno, &quot;Yes&quot;)<br/>    list add (global_lists_object&#46;yesno, &quot;No&quot;)<br/>    on ready {<br/>      if (GetBoolean(this&#46;Victim, &quot;killanyway&quot;)) {<br/>        ShowMenu (&quot;place holder text&quot;, global_lists_object&#46;yesno, false) {<br/>          if (result = &quot;yes&quot;) {<br/>            msg (&quot;&lt;br/&gt;long unpleasant text scene&quot;)<br/>          } else if (result = &quot;No&quot;) {<br/>            msg (&quot;There's sure to be a weapon around here somewhere&#46;&quot;)<br/>          }<br/>        }<br/>      }<br/>    }<br/>  } otherwise {<br/>    if (GetBoolean(this&#46;Victim, &quot;killanyway&quot;)) {<br/>        ShowMenu (&quot;place holder text&quot;, game&#46;yesno, false) {<br/>          if (result = &quot;yes&quot;) {<br/>            msg (&quot;&lt;br/&gt;long unpleasant text scene&quot;)<br/>          } else if (result = &quot;No&quot;) {<br/>            msg (&quot;There's sure to be a weapon around here somewhere&#46;&quot;)<br/>          }<br/>        }<br/>      }<br/>    }<br/>  }<br/>&lt;/verb&gt;</code></pre>",
+      "PostDate": "2013-07-28T20:57:41+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25609",
+      "UserId": 0,
+      "Username": "Spieltgeist",
+      "UserAvatar": null,
+      "UserGravatar": "7f354622074d732960fd2e1e299d2aac",
+      "EditableText": "Mhm! That fixed it alright. I'll have to remember to attach these list thingies onto other things. Thanks a lot friend. I think that's about all the problems I had for today. Tune in next week when I mistype a variable and break the entire game!",
+      "EditableFormat": "bbcode",
+      "HTML": "Mhm! That fixed it alright. I'll have to remember to attach these list thingies onto other things. Thanks a lot friend. I think that's about all the problems I had for today. Tune in next week when I mistype a variable and break the entire game!",
+      "PostDate": "2013-07-28T21:06:06+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25610",
+      "UserId": 0,
+      "Username": "Spieltgeist",
+      "UserAvatar": null,
+      "UserGravatar": "7f354622074d732960fd2e1e299d2aac",
+      "EditableText": "Actually, that might be a good feature for future version. An easy to add list system in the same fashion of the way one would add an object.",
+      "EditableFormat": "bbcode",
+      "HTML": "Actually, that might be a good feature for future version. An easy to add list system in the same fashion of the way one would add an object.",
+      "PostDate": "2013-07-28T21:12:35+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25611",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "yep, it's really useful, you can use (nonparented: &lt;parent&gt;null&lt;/parent&gt;) objects as &quot;data storage&quot; objects, here's some ideas for them:\n\n&quot;global_events_object&quot;\n&quot;global_flags_or_booleans_object&quot;\n&quot;player_storage_object&quot;\n&quot;global_monsters_object&quot;\n&quot;global_items_object&quot;\n&quot;dialogue_lists_or_dictionaries_object&quot;\n&quot;game_storage_object&quot;\n&quot;global_spells_object&quot;\n&quot;global_weapons_object&quot;\n&quot;global_armors_object&quot;\n&quot;global_npcs_object&quot;\n\nfor an example of using it:\n\n[code:1d8dh5bx]&lt;command name=&quot;fight&quot;&gt;\n  &lt;pattern&gt;fight #text#&lt;/pattern&gt;\n  &lt;script&gt;\n    if (text = &quot;red orc&quot;) {\n      monster = GetObject (global_monsters_object&#46;orc_list&#46;red_orc)\n      fight_function (player,monster)\n    } else if (text = &quot;lion&quot;) {\n      monster = GetObject (global_monsters_object&#46;animal_list&#46;lion)\n      fight_function (player,monster)\n    } else if (text = &quot;fire dragon&quot;) {\n      monster = GetObject (global_monsters_object&#46;dragon_list&#46;fire_dragon)\n      fight_function (player,monster)\n    } else {\n      msg (&quot;blah&quot;)\n    }\n  &lt;/script&gt;\n&lt;/command&gt;\n\n&lt;function name=&quot;fight_function&quot; parameters=&quot;monster&quot;&gt;\n  // blah blah blah scripts\n&lt;/function&gt;\n\n&lt;global_monsters_object type=&quot;object&quot;&gt;\n  &lt;inherit name=&quot;editor_object&quot; /&gt;\n  &lt;parent&gt;null&lt;/parent&gt;\n  &lt;orc_list type=&quot;objectlist&quot;&gt;green_orc;blue_orc;red_orc&lt;/orc_list&gt;\n  &lt;dragon_list type=&quot;objectlist&quot;&gt;earth_dragon;water_dragon;air_dragon;fire_dragon&lt;/dragon_list&gt;\n  &lt;animal_list type=&quot;objectlist&quot;&gt;snake;wolf;lion;tiger;bear&lt;/animal_list&gt;\n&lt;/global_monsters_object&gt;[/code:1d8dh5bx]",
+      "EditableFormat": "bbcode",
+      "HTML": "yep, it's really useful, you can use (nonparented: &lt;parent&gt;null&lt;/parent&gt;) objects as &quot;data storage&quot; objects, here's some ideas for them:<br/><br/>&quot;global_events_object&quot;<br/>&quot;global_flags_or_booleans_object&quot;<br/>&quot;player_storage_object&quot;<br/>&quot;global_monsters_object&quot;<br/>&quot;global_items_object&quot;<br/>&quot;dialogue_lists_or_dictionaries_object&quot;<br/>&quot;game_storage_object&quot;<br/>&quot;global_spells_object&quot;<br/>&quot;global_weapons_object&quot;<br/>&quot;global_armors_object&quot;<br/>&quot;global_npcs_object&quot;<br/><br/>for an example of using it:<br/><br/><pre><code>&lt;command name=&quot;fight&quot;&gt;<br/>  &lt;pattern&gt;fight #text#&lt;/pattern&gt;<br/>  &lt;script&gt;<br/>    if (text = &quot;red orc&quot;) {<br/>      monster = GetObject (global_monsters_object&#46;orc_list&#46;red_orc)<br/>      fight_function (player,monster)<br/>    } else if (text = &quot;lion&quot;) {<br/>      monster = GetObject (global_monsters_object&#46;animal_list&#46;lion)<br/>      fight_function (player,monster)<br/>    } else if (text = &quot;fire dragon&quot;) {<br/>      monster = GetObject (global_monsters_object&#46;dragon_list&#46;fire_dragon)<br/>      fight_function (player,monster)<br/>    } else {<br/>      msg (&quot;blah&quot;)<br/>    }<br/>  &lt;/script&gt;<br/>&lt;/command&gt;<br/><br/>&lt;function name=&quot;fight_function&quot; parameters=&quot;monster&quot;&gt;<br/>  // blah blah blah scripts<br/>&lt;/function&gt;<br/><br/>&lt;global_monsters_object type=&quot;object&quot;&gt;<br/>  &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>  &lt;parent&gt;null&lt;/parent&gt;<br/>  &lt;orc_list type=&quot;objectlist&quot;&gt;green_orc;blue_orc;red_orc&lt;/orc_list&gt;<br/>  &lt;dragon_list type=&quot;objectlist&quot;&gt;earth_dragon;water_dragon;air_dragon;fire_dragon&lt;/dragon_list&gt;<br/>  &lt;animal_list type=&quot;objectlist&quot;&gt;snake;wolf;lion;tiger;bear&lt;/animal_list&gt;<br/>&lt;/global_monsters_object&gt;</code></pre>",
+      "PostDate": "2013-07-28T21:26:54+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

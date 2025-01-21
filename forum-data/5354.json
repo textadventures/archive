@@ -1,0 +1,119 @@
+{
+  "Topic": {
+    "TopicId": "5354",
+    "ForumId": "10",
+    "Title": "Problem with drop script",
+    "LastUpdated": "2015-07-14T06:58:56+01:00",
+    "ReplyCount": 8
+  },
+  "Posts": [
+    {
+      "PostId": "37085",
+      "UserId": 0,
+      "Username": "Forgewright",
+      "UserAvatar": "6526_1436782372.jpg",
+      "UserGravatar": "7cd39eda147e41376a7192dbd0bb386e",
+      "EditableText": "If you take a look at the uploaded game, I have a script for picking up sand and it works great. I move clawfuls of sand from a dummy room to the player inventory. However when I tried the same type of script on dropping of the sand I get &quot;You don't have it&quot;. I don't want the player to have type &quot;Clawful of sand&quot; or have to use the inventory panel drop box. I want all the options. And of course the dreaded &quot; Which sand do you mean&quot; list will pop up. \n\nIs it necessary to change the games DoDrop function. I'm not sure why my drop script for sand is not following the script. I assume the coding is first checking to see if I have the sand which I don't. I don't want to change the game drop script for everything I drop.\n\nAny ideas? \n\n[attachment=0:ps4kw1qc]<!-- ia0 -->Redemption 3.aslx<!-- ia0 -->[/attachment:ps4kw1qc]",
+      "EditableFormat": "bbcode",
+      "HTML": "If you take a look at the uploaded game, I have a script for picking up sand and it works great. I move clawfuls of sand from a dummy room to the player inventory. However when I tried the same type of script on dropping of the sand I get &quot;You don't have it&quot;. I don't want the player to have type &quot;Clawful of sand&quot; or have to use the inventory panel drop box. I want all the options. And of course the dreaded &quot; Which sand do you mean&quot; list will pop up. <br/><br/>Is it necessary to change the games DoDrop function. I'm not sure why my drop script for sand is not following the script. I assume the coding is first checking to see if I have the sand which I don't. I don't want to change the game drop script for everything I drop.<br/><br/>Any ideas? <br/><br/><div><a href=\"/attachment/1267\">Redemption 3.aslx</a></div>",
+      "PostDate": "2015-07-12T18:24:35+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "37086",
+      "UserId": 0,
+      "Username": "adammadam",
+      "UserAvatar": null,
+      "UserGravatar": "e43d166c99170d707dca54a644ba0652",
+      "EditableText": "I'm not sure if this is useful but one idea I had is maybe you could make it a hidden attribute and an object also, the first time the player picks up sand they get a clawful of sand and their hidden sand attribute becomes +1, the second time they don't get any more objects but their sand attribute becomes +2, but this wouldnt change how it appears in the inventory, but could allow you to make the player need a certain amount to do certain things still.  And then I guess when the player types drop sand, you could make them drop the sand object and set their sand attribute to 0.",
+      "EditableFormat": "bbcode",
+      "HTML": "I'm not sure if this is useful but one idea I had is maybe you could make it a hidden attribute and an object also, the first time the player picks up sand they get a clawful of sand and their hidden sand attribute becomes +1, the second time they don't get any more objects but their sand attribute becomes +2, but this wouldnt change how it appears in the inventory, but could allow you to make the player need a certain amount to do certain things still.  And then I guess when the player types drop sand, you could make them drop the sand object and set their sand attribute to 0.",
+      "PostDate": "2015-07-12T18:58:32+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "37088",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "The problem is that Quest does object name resolution in a strictly syntactic way, without paying attention to any sort of semantic information. (I'm not dissing Quest - it's not an easy problem to solve.) It will go through the same process for &quot;drop&quot; as it does for &quot;take&quot;, and this object name resolution happens long before the verb or command kicks in. So even changing DoDrop won't fix the problem - the disambiguation menu happens before it even gets to the command.\n\nBasically, if you give the name &quot;sand&quot; to your &quot;clawful of sand&quot;, then you have two sand objects in the same room, period, and there's no way around that short of hacking the parser to special case this situation (in a way I haven't explored, so I can't offer any insight yet).\n\nThe only suggestion I have is to have the sand in the room disappear (or become hidden) when you pick it up. Then the sand in your inventory will take precedence, which means you need to have all the same behavior for that sand (e.g. the look text) as it does when in the room. So you can still look at the sand and all that, but it's now looking at the one in your inventory. If it has the same description, it will be indistinguishable behavior to the player.  I did a test where, when you pick up the clawful of sand, it sets the &quot;visible&quot; flag of the floor sand to false, as well as adding the alias &quot;sand&quot; to the clawful one. It might be worth a try, just to see if it's close to what you want done.",
+      "EditableFormat": "bbcode",
+      "HTML": "The problem is that Quest does object name resolution in a strictly syntactic way, without paying attention to any sort of semantic information. (I'm not dissing Quest - it's not an easy problem to solve.) It will go through the same process for &quot;drop&quot; as it does for &quot;take&quot;, and this object name resolution happens long before the verb or command kicks in. So even changing DoDrop won't fix the problem - the disambiguation menu happens before it even gets to the command.<br/><br/>Basically, if you give the name &quot;sand&quot; to your &quot;clawful of sand&quot;, then you have two sand objects in the same room, period, and there's no way around that short of hacking the parser to special case this situation (in a way I haven't explored, so I can't offer any insight yet).<br/><br/>The only suggestion I have is to have the sand in the room disappear (or become hidden) when you pick it up. Then the sand in your inventory will take precedence, which means you need to have all the same behavior for that sand (e.g. the look text) as it does when in the room. So you can still look at the sand and all that, but it's now looking at the one in your inventory. If it has the same description, it will be indistinguishable behavior to the player.  I did a test where, when you pick up the clawful of sand, it sets the &quot;visible&quot; flag of the floor sand to false, as well as adding the alias &quot;sand&quot; to the clawful one. It might be worth a try, just to see if it's close to what you want done.",
+      "PostDate": "2015-07-12T23:15:21+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "37090",
+      "UserId": 0,
+      "Username": "Forgewright",
+      "UserAvatar": "6526_1436782372.jpg",
+      "UserGravatar": "7cd39eda147e41376a7192dbd0bb386e",
+      "EditableText": "Thanks to both of you. I want to try every way to find out how things like this work. Hell I was proud of myself getting all the bugs out of the :take&quot; script. Then &quot;wham&quot;, the &quot;drop&quot; kick in the nads.   Is there a &quot;taken&quot; attribute with a Boolean value during gameplay that could be changed from false to true for sand? Either this or the game just checks the sand parent.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks to both of you. I want to try every way to find out how things like this work. Hell I was proud of myself getting all the bugs out of the :take&quot; script. Then &quot;wham&quot;, the &quot;drop&quot; kick in the nads.   Is there a &quot;taken&quot; attribute with a Boolean value during gameplay that could be changed from false to true for sand? Either this or the game just checks the sand parent.",
+      "PostDate": "2015-07-13T05:55:47+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "37091",
+      "UserId": 0,
+      "Username": "XanMag",
+      "UserAvatar": "7161_1436827710.jpg",
+      "UserGravatar": "4b45a3afd18077f76f6569225c422bdb",
+      "EditableText": "My solution (if I understand your problem correctly)...\n\nwould be to name the 'sand' object something like 'sediment' or 'detritus' or 'worn path' and forget the whole problem all together.  But, you obviously would know that so I don't think that is what you want.\n\nOr... and I haven't tried this (edit: yes I did... see below)... could you add a command to the room like 'look at sand; x sand; look at floor; etc; etc;' and add the proper print message script (and not have an actual 'object' named 'sand' in there at all)?  This could give you a descriptive feedback you'll want.  Also, could you add a command like 'get sand; get floor; take floor; etc; etc' and add a script to that which moves 'clawful of sand' to your inventory from your 'holdingroom''?  The add a script which moves 'drop sand' to 'holdingroom' again.  You could just add to the in-room description the seeming presence of the sandy/dirty floor so the player recognizes it as relevant.  Just thinking out loud... I've never tried to add a command for built-in Quest commands like take and drop.\n\n^Of course, you would have to throw in your 'If' commands to your take/drop command to check if player is carrying sand already.\n\nGot bored and just tried it out.  Seems like the above works correctly.  If this were my game, I'd be happy with the results!  <!-- s:lol: --><img src=\"{SMILIES_PATH}/icon_lol.gif\" alt=\":lol:\" title=\"Laughing\" /><!-- s:lol: -->  Good luck!\n\nHappy Gaming.\n\nXanMag",
+      "EditableFormat": "bbcode",
+      "HTML": "My solution (if I understand your problem correctly)...<br/><br/>would be to name the 'sand' object something like 'sediment' or 'detritus' or 'worn path' and forget the whole problem all together.  But, you obviously would know that so I don't think that is what you want.<br/><br/>Or... and I haven't tried this (edit: yes I did... see below)... could you add a command to the room like 'look at sand; x sand; look at floor; etc; etc;' and add the proper print message script (and not have an actual 'object' named 'sand' in there at all)?  This could give you a descriptive feedback you'll want.  Also, could you add a command like 'get sand; get floor; take floor; etc; etc' and add a script to that which moves 'clawful of sand' to your inventory from your 'holdingroom''?  The add a script which moves 'drop sand' to 'holdingroom' again.  You could just add to the in-room description the seeming presence of the sandy/dirty floor so the player recognizes it as relevant.  Just thinking out loud... I've never tried to add a command for built-in Quest commands like take and drop.<br/><br/>^Of course, you would have to throw in your 'If' commands to your take/drop command to check if player is carrying sand already.<br/><br/>Got bored and just tried it out.  Seems like the above works correctly.  If this were my game, I'd be happy with the results!  <!-- s:lol: --><img src=\"{SMILIES_PATH}/icon_lol.gif\" alt=\":lol:\" title=\"Laughing\" /><!-- s:lol: -->  Good luck!<br/><br/>Happy Gaming.<br/><br/>XanMag",
+      "PostDate": "2015-07-13T07:16:21+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "37093",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Forgewright: yes, it uses the parent attribute to determine whether the parent is currently holding an item or not.\n\nXanMag: That's actually a good idea! By providing an overriding, specific command, you can take control over what happens. You do have to implement it <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->, but it is a workable approach to the problem.",
+      "EditableFormat": "bbcode",
+      "HTML": "Forgewright: yes, it uses the parent attribute to determine whether the parent is currently holding an item or not.<br/><br/>XanMag: That's actually a good idea! By providing an overriding, specific command, you can take control over what happens. You do have to implement it <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->, but it is a workable approach to the problem.",
+      "PostDate": "2015-07-13T07:58:34+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "37094",
+      "UserId": 0,
+      "Username": "Forgewright",
+      "UserAvatar": "6526_1436782372.jpg",
+      "UserGravatar": "7cd39eda147e41376a7192dbd0bb386e",
+      "EditableText": "XanMag, I'm about 4 or 5 months into coding Javascript. I will spend the next few days trying out your remedy. Or.....If you still have the script, you could hook a brother up with a copy. Otherwise I'll be adding 6 more posts to this thread crying the blues and begging for help..... <!-- s:? --><img src=\"{SMILIES_PATH}/icon_confused.gif\" alt=\":?\" title=\"Confused\" /><!-- s:? -->",
+      "EditableFormat": "bbcode",
+      "HTML": "XanMag, I'm about 4 or 5 months into coding Javascript. I will spend the next few days trying out your remedy. Or.....If you still have the script, you could hook a brother up with a copy. Otherwise I'll be adding 6 more posts to this thread crying the blues and begging for help..... <!-- s:? --><img src=\"{SMILIES_PATH}/icon_confused.gif\" alt=\":?\" title=\"Confused\" /><!-- s:? -->",
+      "PostDate": "2015-07-13T08:47:27+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "37098",
+      "UserId": 0,
+      "Username": "XanMag",
+      "UserAvatar": "7161_1436827710.jpg",
+      "UserGravatar": "4b45a3afd18077f76f6569225c422bdb",
+      "EditableText": "Let me know if there are problems or if it isn't quite what you want.\n\n[attachment=0:6dndazqx]<!-- ia0 -->redemption sand problem.zip<!-- ia0 -->[/attachment:6dndazqx]",
+      "EditableFormat": "bbcode",
+      "HTML": "Let me know if there are problems or if it isn't quite what you want.<br/><br/><div><a href=\"/attachment/1269\">redemption sand problem.zip</a></div>",
+      "PostDate": "2015-07-13T13:40:23+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "37114",
+      "UserId": 0,
+      "Username": "Forgewright",
+      "UserAvatar": "6526_1436782372.jpg",
+      "UserGravatar": "7cd39eda147e41376a7192dbd0bb386e",
+      "EditableText": "I ran the game without reading the code and was happy with the results you got. Then when I saw how simple a fix it was, Welll let's just say I was embarrassed. Having all the tools and the skill to know how and when to use them is the trick. You can build a bridge to the moon or just say you did.\nor something like that......",
+      "EditableFormat": "bbcode",
+      "HTML": "I ran the game without reading the code and was happy with the results you got. Then when I saw how simple a fix it was, Welll let's just say I was embarrassed. Having all the tools and the skill to know how and when to use them is the trick. You can build a bridge to the moon or just say you did.<br/>or something like that......",
+      "PostDate": "2015-07-14T06:58:56+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

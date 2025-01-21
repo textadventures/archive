@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "5995",
+    "ForumId": "10",
+    "Title": "Beginner help",
+    "LastUpdated": "2016-02-25T20:32:54+00:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "41445",
+      "UserId": 0,
+      "Username": "Particleman",
+      "UserAvatar": null,
+      "UserGravatar": "1552ba33055897e9532be49e80d66a54",
+      "EditableText": "Hello, all.\n\nSo, I'm a bit new to Quest. I've gone through the tutorials, I've played around a little, and I've come up against some hindrances that I can't find documentation for. It probably exists, but the information given for commands isn't exactly... informative. I've read through some of the forums, and the [url=http&#58;//forum&#46;textadventures&#46;co&#46;uk/viewtopic&#46;php?f=10&amp;t=5909:1zrhnja5]Script Template 2[/url:1zrhnja5] has some of the same questions I did, but I'm looking at it from a different way.\nNow, I don't know javascript, but I know programming basics (And, oddly, enough, I know programming Basic; though it has been a long time since I've used it), so I'm not afraid of scripting, and I'm willing to learn how things work so that I can improve my skills.\n\nThat said, on to my situation:\nI'm trying to list an objects children in the room description. I don't use the auto-list option, because I want it to feel more natural, and I don't think it would be too difficult to do. Essentially, the setup works like this:\n\nYou are in a room. There is nothing here but a table. On the table is a ball and a flower. The smell of lilac hangs in the air.\n\nSo, what I want to do is something like this, I just don't know the language behind it:\n\nYou are in a room. There is nothing here but a table. {If table has children, then: On the table is {list children}.}{If room has children with tag Item, then: Lying on the floor is {list children with tag Item}.}\n\nI appreciate the help in advance. I may have other issues in the future, and this will sort of be my go to spot for help, so if you can't help with this issue, maybe you can help with a future one.  Thanks again.",
+      "EditableFormat": "bbcode",
+      "HTML": "Hello, all.<br/><br/>So, I'm a bit new to Quest. I've gone through the tutorials, I've played around a little, and I've come up against some hindrances that I can't find documentation for. It probably exists, but the information given for commands isn't exactly... informative. I've read through some of the forums, and the <a href=\"http&#58;//forum&#46;textadventures&#46;co&#46;uk/viewtopic&#46;php?f=10&amp;t=5909\" rel=\"nofollow\">Script Template 2</a> has some of the same questions I did, but I'm looking at it from a different way.<br/>Now, I don't know javascript, but I know programming basics (And, oddly, enough, I know programming Basic; though it has been a long time since I've used it), so I'm not afraid of scripting, and I'm willing to learn how things work so that I can improve my skills.<br/><br/>That said, on to my situation:<br/>I'm trying to list an objects children in the room description. I don't use the auto-list option, because I want it to feel more natural, and I don't think it would be too difficult to do. Essentially, the setup works like this:<br/><br/>You are in a room. There is nothing here but a table. On the table is a ball and a flower. The smell of lilac hangs in the air.<br/><br/>So, what I want to do is something like this, I just don't know the language behind it:<br/><br/>You are in a room. There is nothing here but a table. {If table has children, then: On the table is {list children}.}{If room has children with tag Item, then: Lying on the floor is {list children with tag Item}.}<br/><br/>I appreciate the help in advance. I may have other issues in the future, and this will sort of be my go to spot for help, so if you can't help with this issue, maybe you can help with a future one.  Thanks again.",
+      "PostDate": "2016-02-25T15:05:01+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "41448",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "There are different ways to do this.\n\nThe non-scripting way is to have the table be a container, and set it up as a surface, and put the things on the table inside it.\n\nIf you turn on &quot;in-room descriptions&quot; on the features tab of the game object, you can then add a description to each object on its setup, and that will get used in the room descriptions. The disadvantage is it is the same for all rooms.\n\nThe way I would do it is as described in this post in the thread you found:\n<!-- l --><a class=\"postlink-local\" href=\"http://forum.textadventures.co.uk/viewtopic.php?f=10&amp;t=5909&amp;start=15#p41061\">viewtopic.php?f=10&amp;t=5909&amp;start=15#p41061</a><!-- l -->\n\nIt overrides the built-in ShowRoomDescription function, (so can only be done in the off-line editor, and as written is not compatible with the light/dark system).\n[code:3q4k1nqq]    if (HasScript(game&#46;pov&#46;parent, &quot;description&quot;)) {\n      do (game&#46;pov&#46;parent, &quot;description&quot;)\n    }\n    else {\n      objects = FormatObjectList(&quot;&quot;, GetNonTransparentParent(game&#46;pov&#46;parent), &quot;and&quot;, &quot;&quot;)\n      if (not objects = &quot;&quot; and HasString(game&#46;pov&#46;parent, &quot;lookwith&quot;)) {\n        fulldesc = Replace(game&#46;pov&#46;parent&#46;lookwith, &quot;%&quot;, objects)\n      }\n      else {\n        fulldesc = game&#46;pov&#46;parent&#46;description\n        if (not objects = &quot;&quot;) {\n          fulldesc = fulldesc + &quot; You can see &quot; + objects + &quot; here&#46;&quot;\n        }\n      }\n      if (LengthOf(fulldesc) &gt; 0) {\n        msg (fulldesc)\n      }\n    }[/code:3q4k1nqq]\nWhat it does is makes a list of objects, and if the room has an attribute &quot;lookwith&quot; and there are objects present, it uses that. The disadvantage of that is all objects are lumped together.",
+      "EditableFormat": "bbcode",
+      "HTML": "There are different ways to do this.<br/><br/>The non-scripting way is to have the table be a container, and set it up as a surface, and put the things on the table inside it.<br/><br/>If you turn on &quot;in-room descriptions&quot; on the features tab of the game object, you can then add a description to each object on its setup, and that will get used in the room descriptions. The disadvantage is it is the same for all rooms.<br/><br/>The way I would do it is as described in this post in the thread you found:<br/><!-- l --><a class=\"postlink-local\" href=\"http://forum.textadventures.co.uk/viewtopic.php?f=10&amp;t=5909&amp;start=15#p41061\">viewtopic.php?f=10&amp;t=5909&amp;start=15#p41061</a><!-- l --><br/><br/>It overrides the built-in ShowRoomDescription function, (so can only be done in the off-line editor, and as written is not compatible with the light/dark system).<br/><pre><code>    if (HasScript(game&#46;pov&#46;parent, &quot;description&quot;)) {<br/>      do (game&#46;pov&#46;parent, &quot;description&quot;)<br/>    }<br/>    else {<br/>      objects = FormatObjectList(&quot;&quot;, GetNonTransparentParent(game&#46;pov&#46;parent), &quot;and&quot;, &quot;&quot;)<br/>      if (not objects = &quot;&quot; and HasString(game&#46;pov&#46;parent, &quot;lookwith&quot;)) {<br/>        fulldesc = Replace(game&#46;pov&#46;parent&#46;lookwith, &quot;%&quot;, objects)<br/>      }<br/>      else {<br/>        fulldesc = game&#46;pov&#46;parent&#46;description<br/>        if (not objects = &quot;&quot;) {<br/>          fulldesc = fulldesc + &quot; You can see &quot; + objects + &quot; here&#46;&quot;<br/>        }<br/>      }<br/>      if (LengthOf(fulldesc) &gt; 0) {<br/>        msg (fulldesc)<br/>      }<br/>    }</code></pre><br/>What it does is makes a list of objects, and if the room has an attribute &quot;lookwith&quot; and there are objects present, it uses that. The disadvantage of that is all objects are lumped together.",
+      "PostDate": "2016-02-25T15:40:22+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "41456",
+      "UserId": 0,
+      "Username": "Particleman",
+      "UserAvatar": null,
+      "UserGravatar": "1552ba33055897e9532be49e80d66a54",
+      "EditableText": "[quote:3r7nodop]If you turn on &quot;in-room descriptions&quot; on the features tab of the game object, you can then add a description to each object on its setup, and that will get used in the room descriptions. The disadvantage is it is the same for all rooms.[/quote:3r7nodop]\nThe other disadvantage, I think, is that it won't list an item's children, will it? It would just list that there was a table, not what was sitting on the table.\n\nI'll have to take a closer look at the code later; I'm out of time right now. I'm a little concerned that it doesn't work with light and dark, but I can jimmy-rig that with tags if I need to.",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><p>If you turn on &quot;in-room descriptions&quot; on the features tab of the game object, you can then add a description to each object on its setup, and that will get used in the room descriptions. The disadvantage is it is the same for all rooms.</p></blockquote><br/>The other disadvantage, I think, is that it won't list an item's children, will it? It would just list that there was a table, not what was sitting on the table.<br/><br/>I'll have to take a closer look at the code later; I'm out of time right now. I'm a little concerned that it doesn't work with light and dark, but I can jimmy-rig that with tags if I need to.",
+      "PostDate": "2016-02-25T20:05:33+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "41457",
+      "UserId": 0,
+      "Username": "XanMag",
+      "UserAvatar": "7161_1436827710.jpg",
+      "UserGravatar": "4b45a3afd18077f76f6569225c422bdb",
+      "EditableText": "[quote=&quot;Particleman&quot;:9i1yevcb][quote:9i1yevcb]\nThe other disadvantage, I think, is that it won't list an item's children, will it? It would just list that there was a table, not what was sitting on the table.[/quote:9i1yevcb][/quote:9i1yevcb]\nSo, you want the children to be listed with the parent when the room is described?  If I understand correctly, all you need to do is not tick the tab to 'hide the children until object is looked at'.  Right?",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>Particleman wrote:</cite><blockquote><p><br/>The other disadvantage, I think, is that it won't list an item's children, will it? It would just list that there was a table, not what was sitting on the table.</blockquote></p></blockquote><br/>So, you want the children to be listed with the parent when the room is described?  If I understand correctly, all you need to do is not tick the tab to 'hide the children until object is looked at'.  Right?",
+      "PostDate": "2016-02-25T20:32:54+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

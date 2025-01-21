@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "npmyyeipskqccajrsvflcq",
+    "ForumId": "10",
+    "Title": "Figured out how to use Pixie's Debug Tool in online editor ",
+    "LastUpdated": "2018-06-12T18:53:17.4357061Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "c676090e-6432-427c-863b-bf84a3c36879",
+      "UserId": 363321,
+      "Username": "infofiend",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The Pixie provided some debug tools back in 2016:\r\n\r\n<https://textadventures.co.uk/forum/quest/topic/d3yfsxzzckwbhy-weev7pq/debug-tools>\r\n\r\nWhich created helpful :\r\n\r\nCHEAT MOVE My bedroom\r\nCHEAT GET lantern\r\nCHEAT SET player.health=60\r\nCHEAT SET Mary.parent = lounge\r\nCHEAT SET bronze sword.inventoryverbs = Split(\"Lookat;Drop;Destroy\", \";\")\r\n\r\nSo the first one moves you to another room, the second puts an item in your inventory, the third sets an attribute just as in normal Quest code.\r\n\r\n**The Problem**\r\nIf you're using the online editor and you copy all of the code, the editor throws up the message \"Sorry, an internal error occured.\" and reloads.  For some reason, the case expressions and the regex variable must be entered manually (I believe because they contain quotation marks). \r\n\r\n**The Work-Around**\r\nSet up a new command. Set it to use a regular expression instead of a command pattern, and put this in:\r\n```^cheat (?<text1>move|set|get) (?<text2>.+)$```\r\n\r\nThen paste in this code:\r\n```\r\nswitch (LCase(text1)) {\r\n\r\n\r\n}\r\n```\r\n\r\nThen, **using the online script editor**, create 3 case expressions (make sure to include the quotes) within switch that was created:\r\n```\"move\"```\r\n```\"get\"```\r\n```\"set\"```\r\n\r\nThen, within the \"move\" case, paste the following code:\r\n```\r\n    o = GetObject(text2)\r\n    if (o=null) {\r\n      error (\"I cannot find a location called \" + text2)\r\n    }\r\n    else {\r\n      set (player, \"parent\", o)\r\n    }\r\n```\r\n\r\nWithin the \"get\" case, paste the following code:\r\n```\r\n    o = GetObject(text2)\r\n    if (o = null) {\r\n      error (\"I cannot find an object called \" + text2)\r\n    }\r\n    else {\r\n      o.parent = player\r\n    }\r\n```\r\n\r\nWithin the \"set\" case, there are 3 steps.  1st, paste the following code:\r\n```\r\n    if (not IsRegexMatch(regex, text2)) {\r\n      error (\"Sorry, wrong format\")\r\n    }\r\n    dict = Populate(regex, text2)\r\n    obj = GetObject(StringDictionaryItem(dict, \"object\"))\r\n    if (obj=null) {\r\n      error (\"Sorry, object not recognized\")\r\n    }\r\n    att = StringDictionaryItem(dict, \"attribute\")\r\n    value = Eval(StringDictionaryItem(dict, \"value\"))\r\n    set (obj, att, value)\r\n ```\r\n\r\n2nd, **use the online script editor** to set a variable or attribute, and enter \r\n```regex```  =  ```\"(?<object>.+)\\\\.(<attribute>\\\\S+)\\\\s*=\\\\s*(<value>.+)\"```\r\ninto the expression box. \r\n\r\n3rd, move that line of code to the top of the \"set\" case.\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The Pixie provided some debug tools back in 2016:</p>\n<p><a href=\"https://textadventures.co.uk/forum/quest/topic/d3yfsxzzckwbhy-weev7pq/debug-tools\">https://textadventures.co.uk/forum/quest/topic/d3yfsxzzckwbhy-weev7pq/debug-tools</a></p>\n<p>Which created helpful :</p>\n<p>CHEAT MOVE My bedroom<br>\nCHEAT GET lantern<br>\nCHEAT SET player.health=60<br>\nCHEAT SET Mary.parent = lounge<br>\nCHEAT SET bronze sword.inventoryverbs = Split(\"Lookat;Drop;Destroy\", \";\")</p>\n<p>So the first one moves you to another room, the second puts an item in your inventory, the third sets an attribute just as in normal Quest code.</p>\n<p><strong>The Problem</strong><br>\nIf you're using the online editor and you copy all of the code, the editor throws up the message \"Sorry, an internal error occured.\" and reloads.  For some reason, the case expressions and the regex variable must be entered manually (I believe because they contain quotation marks).</p>\n<p><strong>The Work-Around</strong><br>\nSet up a new command. Set it to use a regular expression instead of a command pattern, and put this in:<br>\n<code>^cheat (?&lt;text1&gt;move|set|get) (?&lt;text2&gt;.+)$</code></p>\n<p>Then paste in this code:</p>\n<pre><code>switch (LCase(text1)) {\n\n\n}\n</code></pre>\n<p>Then, <strong>using the online script editor</strong>, create 3 case expressions (make sure to include the quotes) within switch that was created:<br>\n<code>\"move\"</code><br>\n<code>\"get\"</code><br>\n<code>\"set\"</code></p>\n<p>Then, within the \"move\" case, paste the following code:</p>\n<pre><code>    o = GetObject(text2)\n    if (o=null) {\n      error (\"I cannot find a location called \" + text2)\n    }\n    else {\n      set (player, \"parent\", o)\n    }\n</code></pre>\n<p>Within the \"get\" case, paste the following code:</p>\n<pre><code>    o = GetObject(text2)\n    if (o = null) {\n      error (\"I cannot find an object called \" + text2)\n    }\n    else {\n      o.parent = player\n    }\n</code></pre>\n<p>Within the \"set\" case, there are 3 steps.  1st, paste the following code:</p>\n<pre><code>    if (not IsRegexMatch(regex, text2)) {\n      error (\"Sorry, wrong format\")\n    }\n    dict = Populate(regex, text2)\n    obj = GetObject(StringDictionaryItem(dict, \"object\"))\n    if (obj=null) {\n      error (\"Sorry, object not recognized\")\n    }\n    att = StringDictionaryItem(dict, \"attribute\")\n    value = Eval(StringDictionaryItem(dict, \"value\"))\n    set (obj, att, value)\n</code></pre>\n<p>2nd, <strong>use the online script editor</strong> to set a variable or attribute, and enter<br>\n<code>regex</code>  =  <code>\"(?&lt;object&gt;.+)\\\\.(&lt;attribute&gt;\\\\S+)\\\\s*=\\\\s*(&lt;value&gt;.+)\"</code><br>\ninto the expression box.</p>\n<p>3rd, move that line of code to the top of the \"set\" case.</p>\n\n",
+      "PostDate": "2018-06-12T18:53:17.4357061Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "1028ed40-3188-486a-9131-a6eafd7aee02",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The issue with the regex is that the online editor's code view breaks when attempting to save a piece of code that includes a `<` and `>` pair within a quoted string.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The issue with the regex is that the online editor's code view breaks when attempting to save a piece of code that includes a <code>&lt;</code> and <code>&gt;</code> pair within a quoted string.</p>\n\n",
+      "PostDate": "2018-06-15T21:14:06.6455423Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "a1a8ed57-01ca-4122-bd08-eaca88865a40",
+      "UserId": 194873,
+      "Username": "ShadowsEdge19",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a24333a42009e96c558cb89dc0c26d30?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You can always use the <! [CDATA[]]> tag to avoid it complaining about the < or > use.\r\nP.s. remove the space in the above tag when implementing, trying to show it in full here doesn't work since it thinks its meant to be used.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You can always use the &lt;! [CDATA[]]&gt; tag to avoid it complaining about the &lt; or &gt; use.<br>\nP.s. remove the space in the above tag when implementing, trying to show it in full here doesn't work since it thinks its meant to be used.</p>\n\n",
+      "PostDate": "2018-06-16T00:02:35.9269094Z",
+      "LastEditDate": "2018-06-16T00:04:04.5539745Z",
+      "link": null
+    },
+    {
+      "PostId": "7c7ce088-eaf4-44b8-bc7c-bc2c419ae991",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> You can always use the <&zwj;![CDATA[]]> tag to avoid it complaining about the < or > use.\r\n\r\nI've never seen that work with the online editor.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>You can always use the &lt;‍![CDATA[]]&gt; tag to avoid it complaining about the &lt; or &gt; use.</p>\n</blockquote>\n<p>I've never seen that work with the online editor.</p>\n\n",
+      "PostDate": "2018-06-16T08:17:07.803183Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "1618622e-328b-4411-a3c8-99f1c4d51251",
+      "UserId": 194873,
+      "Username": "ShadowsEdge19",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a24333a42009e96c558cb89dc0c26d30?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "What about doing \"/<\"?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>What about doing \"/&lt;\"?</p>\n\n",
+      "PostDate": "2018-06-16T17:58:49.5951301Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "Topic": {
+    "TopicId": "4153",
+    "ForumId": "10",
+    "Title": "Unlock box with key",
+    "LastUpdated": "2014-01-24T23:03:06+00:00",
+    "ReplyCount": 9
+  },
+  "Posts": [
+    {
+      "PostId": "27610",
+      "UserId": 0,
+      "Username": "peter edwards",
+      "UserAvatar": null,
+      "UserGravatar": "02c5602040b4c55e45dee5d49ffbb279",
+      "EditableText": "I'm writing a game in which I have a lockable box and a key. Using the &quot;container page&quot; I have made the box unlockable with the command &quot;unlock box&quot;. So far, so good. If, however, the player types &quot;unlock box with key&quot; he gets the message &quot;That won't work&quot;. How can I make this style of command work, in addition to the simpler &quot;unlock box&quot;?  Any help gratefully received (but please keep it simple if possible!)",
+      "EditableFormat": "bbcode",
+      "HTML": "I'm writing a game in which I have a lockable box and a key. Using the &quot;container page&quot; I have made the box unlockable with the command &quot;unlock box&quot;. So far, so good. If, however, the player types &quot;unlock box with key&quot; he gets the message &quot;That won't work&quot;. How can I make this style of command work, in addition to the simpler &quot;unlock box&quot;?  Any help gratefully received (but please keep it simple if possible!)",
+      "PostDate": "2014-01-23T12:09:24+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27612",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "You can easily do this in the container tab:\n[attachment=0:3j24mkx7]<!-- ia0 -->lock.jpg<!-- ia0 -->[/attachment:3j24mkx7]",
+      "EditableFormat": "bbcode",
+      "HTML": "You can easily do this in the container tab:<br/><div><img src=\"/attachment/838\" alt=\"lock.jpg\" /></div>",
+      "PostDate": "2014-01-23T15:20:29+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27618",
+      "UserId": 0,
+      "Username": "peter edwards",
+      "UserAvatar": null,
+      "UserGravatar": "02c5602040b4c55e45dee5d49ffbb279",
+      "EditableText": "Thank you for your swift reply, Pertex. I do appreciate it, but actually that part was not a problem. It allows you to use the command &quot;unlock box&quot; and, if you have the key, the box will unlock with the appropriate message. What I need is to be able to have the player say &quot;unlock box [u:eduzt8ur]with key[/u:eduzt8ur]&quot; and get the same response. I would like this to happen [u:eduzt8ur]in addition[/u:eduzt8ur] to the &quot;unlock box&quot; command.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thank you for your swift reply, Pertex. I do appreciate it, but actually that part was not a problem. It allows you to use the command &quot;unlock box&quot; and, if you have the key, the box will unlock with the appropriate message. What I need is to be able to have the player say &quot;unlock box <span style=\"text-decoration:underline;\">with key</span>&quot; and get the same response. I would like this to happen <span style=\"text-decoration:underline;\">in addition</span> to the &quot;unlock box&quot; command.",
+      "PostDate": "2014-01-23T19:11:26+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27634",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "OK, I got it. Then you need a new command\n\n[code:2bhgwxn9]\n  &lt;command name=&quot;unlockwith&quot;&gt;\n    &lt;pattern&gt;unlock #text# with #text2#&lt;/pattern&gt;\n    &lt;script&gt;\n      obj = GetObject(text)\n      key = GetObject(text2)\n      if (obj = null) {\n        msg (Template(&quot;UnresolvedObject&quot;) + &quot; (&quot; + text + &quot;)&quot;)\n      }\n      else if (key = null) {\n        msg (Template(&quot;UnresolvedObject&quot;) + &quot; (&quot; + text2 + &quot;)&quot;)\n      }\n      else if (HasAttribute (obj, &quot;key&quot;)) {\n        if (obj&#46;key=key) {\n          HandleSingleCommand (&quot;unlock &quot;+ text)\n        }\n      }\n      else {\n         msg(Template(NoKey))\n      }\n    &lt;/script&gt;\n  &lt;/command&gt;\n[/code:2bhgwxn9]",
+      "EditableFormat": "bbcode",
+      "HTML": "OK, I got it. Then you need a new command<br/><br/><pre><code><br/>  &lt;command name=&quot;unlockwith&quot;&gt;<br/>    &lt;pattern&gt;unlock #text# with #text2#&lt;/pattern&gt;<br/>    &lt;script&gt;<br/>      obj = GetObject(text)<br/>      key = GetObject(text2)<br/>      if (obj = null) {<br/>        msg (Template(&quot;UnresolvedObject&quot;) + &quot; (&quot; + text + &quot;)&quot;)<br/>      }<br/>      else if (key = null) {<br/>        msg (Template(&quot;UnresolvedObject&quot;) + &quot; (&quot; + text2 + &quot;)&quot;)<br/>      }<br/>      else if (HasAttribute (obj, &quot;key&quot;)) {<br/>        if (obj&#46;key=key) {<br/>          HandleSingleCommand (&quot;unlock &quot;+ text)<br/>        }<br/>      }<br/>      else {<br/>         msg(Template(NoKey))<br/>      }<br/>    &lt;/script&gt;<br/>  &lt;/command&gt;<br/></code></pre>",
+      "PostDate": "2014-01-24T09:14:09+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27636",
+      "UserId": 0,
+      "Username": "peter edwards",
+      "UserAvatar": null,
+      "UserGravatar": "02c5602040b4c55e45dee5d49ffbb279",
+      "EditableText": "Many thanks again, Pertex. I'm completely inexperienced in programming in the code view, but will carefully compare your listing with other commands to try and find out how to use it. If you can give me any hints, I'd be grateful.",
+      "EditableFormat": "bbcode",
+      "HTML": "Many thanks again, Pertex. I'm completely inexperienced in programming in the code view, but will carefully compare your listing with other commands to try and find out how to use it. If you can give me any hints, I'd be grateful.",
+      "PostDate": "2014-01-24T10:59:59+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27637",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "If you are working with the gui, you can do this:\n1. Create a new command\n2. Click on 'Code View'\n3. Copy the following code above into the code view window as shown in the picture\n\n[code:14jp2ne9]     obj = GetObject(text)\n      key = GetObject(text2)\n      if (obj = null) {\n        msg (Template(&quot;UnresolvedObject&quot;) + &quot; (&quot; + text + &quot;)&quot;)\n      }\n      else if (key = null) {\n        msg (Template(&quot;UnresolvedObject&quot;) + &quot; (&quot; + text2 + &quot;)&quot;)\n      }\n      else if (HasAttribute (obj, &quot;key&quot;)) {\n        if (obj&#46;key=key) {\n          HandleSingleCommand (&quot;unlock &quot;+ text)\n        }\n      }\n      else {\n         msg(Template(NoKey))\n      }[/code:14jp2ne9]\n\n\n[attachment=0:14jp2ne9]<!-- ia0 -->unlock.jpg<!-- ia0 -->[/attachment:14jp2ne9]",
+      "EditableFormat": "bbcode",
+      "HTML": "If you are working with the gui, you can do this:<br/>1. Create a new command<br/>2. Click on 'Code View'<br/>3. Copy the following code above into the code view window as shown in the picture<br/><br/><pre><code>     obj = GetObject(text)<br/>      key = GetObject(text2)<br/>      if (obj = null) {<br/>        msg (Template(&quot;UnresolvedObject&quot;) + &quot; (&quot; + text + &quot;)&quot;)<br/>      }<br/>      else if (key = null) {<br/>        msg (Template(&quot;UnresolvedObject&quot;) + &quot; (&quot; + text2 + &quot;)&quot;)<br/>      }<br/>      else if (HasAttribute (obj, &quot;key&quot;)) {<br/>        if (obj&#46;key=key) {<br/>          HandleSingleCommand (&quot;unlock &quot;+ text)<br/>        }<br/>      }<br/>      else {<br/>         msg(Template(NoKey))<br/>      }</code></pre><br/><br/><br/><div><img src=\"/attachment/840\" alt=\"unlock.jpg\" /></div>",
+      "PostDate": "2014-01-24T11:47:05+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27640",
+      "UserId": 0,
+      "Username": "peter edwards",
+      "UserAvatar": null,
+      "UserGravatar": "02c5602040b4c55e45dee5d49ffbb279",
+      "EditableText": "Thanks, Pertex, I'm getting there! But not quite there yet! I have assumed the word text to be box, and text2 to be key. When I type unlock box with key, I get the following error message. I'm confident you know what I've done wrong!\n\nError running script&#058; Error compiling expression 'GetObject(box)': FunctionCallElement: Could find not function 'GetObject(Element)'",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks, Pertex, I'm getting there! But not quite there yet! I have assumed the word text to be box, and text2 to be key. When I type unlock box with key, I get the following error message. I'm confident you know what I've done wrong!<br/><br/>Error running script&#058; Error compiling expression 'GetObject(box)': FunctionCallElement: Could find not function 'GetObject(Element)'",
+      "PostDate": "2014-01-24T16:41:23+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27648",
+      "UserId": 0,
+      "Username": "peter edwards",
+      "UserAvatar": null,
+      "UserGravatar": "02c5602040b4c55e45dee5d49ffbb279",
+      "EditableText": "P.S.\n\nPertex, this is what the code looks like now.\n\nobj = GetObject(box)\nkey = GetObject(key)\nif (obj = null) {\n  msg (Template(&quot;UnresolvedObject&quot;) + &quot; (&quot; + box + &quot;)&quot;)\n}\nelse if (key = null) {\n  msg (Template(&quot;UnresolvedObject&quot;) + &quot; (&quot; + key + &quot;)&quot;)\n}\nelse if (HasAttribute (obj, &quot;key&quot;)) {\n  if (obj.key=key) {\n    HandleSingleCommand (&quot;unlock &quot;+ box)\n  }\n}\nelse {\n  msg (Template(NoKey))\n}\n\nDoes this help?",
+      "EditableFormat": "bbcode",
+      "HTML": "P.S.<br/><br/>Pertex, this is what the code looks like now.<br/><br/>obj = GetObject(box)<br/>key = GetObject(key)<br/>if (obj = null) {<br/>  msg (Template(&quot;UnresolvedObject&quot;) + &quot; (&quot; + box + &quot;)&quot;)<br/>}<br/>else if (key = null) {<br/>  msg (Template(&quot;UnresolvedObject&quot;) + &quot; (&quot; + key + &quot;)&quot;)<br/>}<br/>else if (HasAttribute (obj, &quot;key&quot;)) {<br/>  if (obj.key=key) {<br/>    HandleSingleCommand (&quot;unlock &quot;+ box)<br/>  }<br/>}<br/>else {<br/>  msg (Template(NoKey))<br/>}<br/><br/>Does this help?",
+      "PostDate": "2014-01-24T22:13:56+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27649",
+      "UserId": 0,
+      "Username": "george",
+      "UserAvatar": null,
+      "UserGravatar": "dc6fe8e6172303d85249a13c9a49c1ff",
+      "EditableText": "This might help, you don't need to substitute box and key for text and text2 in the code. Leave text and text2 as is. Quest knows that text and text2 become box and key once the command happens.",
+      "EditableFormat": "bbcode",
+      "HTML": "This might help, you don't need to substitute box and key for text and text2 in the code. Leave text and text2 as is. Quest knows that text and text2 become box and key once the command happens.",
+      "PostDate": "2014-01-24T22:23:04+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27650",
+      "UserId": 0,
+      "Username": "peter edwards",
+      "UserAvatar": null,
+      "UserGravatar": "02c5602040b4c55e45dee5d49ffbb279",
+      "EditableText": "Thank you, Pertex and George. It now works!",
+      "EditableFormat": "bbcode",
+      "HTML": "Thank you, Pertex and George. It now works!",
+      "PostDate": "2014-01-24T23:03:06+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

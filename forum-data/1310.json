@@ -1,0 +1,119 @@
+{
+  "Topic": {
+    "TopicId": "1310",
+    "ForumId": "10",
+    "Title": "look at #object#",
+    "LastUpdated": "2006-09-15T19:18:58+01:00",
+    "ReplyCount": 8
+  },
+  "Posts": [
+    {
+      "PostId": "10996",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "Erm... As we're on the subject of over-riding things..\n\ncommand &lt;look #@object; look at #@object#&gt;\n\nDoesn't work, while:\n\ncommand &lt;look at #@object#; look #@object#&gt;\n\nDoes..\n\nAny reason?\n\nWhat I mean by &quot;doesn't work&quot; is that, when typing &quot;look at ball&quot;, I was getting it coming back with the standard &quot;I can't find that object here&quot;, instead of a blank/response.",
+      "EditableFormat": "bbcode",
+      "HTML": "Erm... As we're on the subject of over-riding things..<br/><br/>command &lt;look #@object; look at #@object#&gt;<br/><br/>Doesn't work, while:<br/><br/>command &lt;look at #@object#; look #@object#&gt;<br/><br/>Does..<br/><br/>Any reason?<br/><br/>What I mean by &quot;doesn't work&quot; is that, when typing &quot;look at ball&quot;, I was getting it coming back with the standard &quot;I can't find that object here&quot;, instead of a blank/response.",
+      "PostDate": "2006-09-14T23:46:10+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "10997",
+      "UserId": 0,
+      "Username": "davidw",
+      "UserAvatar": null,
+      "UserGravatar": "5d9c9199ac213c3e7284cd76a2262c4a",
+      "EditableText": "There's a hash - # - missing in the first one. Would that make a difference?",
+      "EditableFormat": "bbcode",
+      "HTML": "There's a hash - # - missing in the first one. Would that make a difference?",
+      "PostDate": "2006-09-14T23:59:48+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11001",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "Oops, sorry..\nThat's a typo - and not a direct copy/paste.",
+      "EditableFormat": "bbcode",
+      "HTML": "Oops, sorry..<br/>That's a typo - and not a direct copy/paste.",
+      "PostDate": "2006-09-15T01:25:47+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11004",
+      "UserId": 0,
+      "Username": "Freak",
+      "UserAvatar": null,
+      "UserGravatar": "325ed9ac125e00c9937be0d3aea0916d",
+      "EditableText": "I've got it.  What #@...# really does is:\n\n1)  Try to match the whole command, storing the #...# as a string.\n2)  If it matches, then try to disambiguate the stored string.\n2a)  If it can disambiguate, run the command.\n2b)  If it can't disambiguate, give an error and fail.\n3)  If it doesn't match, go to next command.\n\nSo when you do  &quot;look at #@object#&quot;, &quot;look #@object#&quot;, with command &quot;look mirror&quot;, it will:\n- try to match &quot;look mirror&quot; to &quot;look at #object#&quot;\n- Since it can't match, it goes on to the next phrasing\n- try to match &quot;look mirror&quot; to &quot;look #object#&quot;, and succeeds with #object# == &quot;mirror&quot;\n- try to disambiguate &quot;mirror&quot;, succeeds.\n\n\nBut when you do  &quot;look #@object#&quot;, &quot;look at #@object#&quot;\nIf you try &quot;look at mirror&quot;:\n- match &quot;look at mirror&quot; against &quot;look #object#&quot;, succeeds with #object# == &quot;at mirror&quot;\n- try to disambiguate &quot;at mirror&quot; fails\n- Since the disambiguation failed, it doesn't try any further commands.",
+      "EditableFormat": "bbcode",
+      "HTML": "I've got it.  What #@...# really does is:<br/><br/>1)  Try to match the whole command, storing the #...# as a string.<br/>2)  If it matches, then try to disambiguate the stored string.<br/>2a)  If it can disambiguate, run the command.<br/>2b)  If it can't disambiguate, give an error and fail.<br/>3)  If it doesn't match, go to next command.<br/><br/>So when you do  &quot;look at #@object#&quot;, &quot;look #@object#&quot;, with command &quot;look mirror&quot;, it will:<br/>- try to match &quot;look mirror&quot; to &quot;look at #object#&quot;<br/>- Since it can't match, it goes on to the next phrasing<br/>- try to match &quot;look mirror&quot; to &quot;look #object#&quot;, and succeeds with #object# == &quot;mirror&quot;<br/>- try to disambiguate &quot;mirror&quot;, succeeds.<br/><br/><br/>But when you do  &quot;look #@object#&quot;, &quot;look at #@object#&quot;<br/>If you try &quot;look at mirror&quot;:<br/>- match &quot;look at mirror&quot; against &quot;look #object#&quot;, succeeds with #object# == &quot;at mirror&quot;<br/>- try to disambiguate &quot;at mirror&quot; fails<br/>- Since the disambiguation failed, it doesn't try any further commands.",
+      "PostDate": "2006-09-15T01:49:07+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11005",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "No..\n\n#@object# simply searches for objects in the current room (or in your inventory). If they have alias's then they put the object's real name in the string.. If not - then the real name goes in the string.\nIf the object isn't found, then a false is returned and the command isn't run.\n\n.. You may be correct in the way it tries to match the command typed against the commands listed..",
+      "EditableFormat": "bbcode",
+      "HTML": "No..<br/><br/>#@object# simply searches for objects in the current room (or in your inventory). If they have alias's then they put the object's real name in the string.. If not - then the real name goes in the string.<br/>If the object isn't found, then a false is returned and the command isn't run.<br/><br/>.. You may be correct in the way it tries to match the command typed against the commands listed..",
+      "PostDate": "2006-09-15T10:49:01+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11006",
+      "UserId": 0,
+      "Username": "Freak",
+      "UserAvatar": null,
+      "UserGravatar": "325ed9ac125e00c9937be0d3aea0916d",
+      "EditableText": "Nope, if it can match the command to variables, it will either successfully disambiguate or abort.\n\nFor example, try creating a room with obj_john_smith (alias &quot;John Smith&quot;, alts &quot;John&quot; and &quot;Smith&quot;) and obj_frank (alias &quot;Frank&quot;).  Create a verb &quot;show #@object1# #@object2#&quot;, which does &quot;msg &lt;You show '#object2#' to '#object1#'&gt;&quot;.\n\nFirst, try &quot;show Frank John Smith&quot;.  It works as expected.\nThen, try &quot;show John Smith Frank&quot;.  It won't work.  (If you put in a &quot;John Doe&quot; object in the room and retry, then it will prompt for disambiguation and then abort.)\n\nWhat happens is, in each case, it will set #object1# and #object2# to the appropriate subphrases, matching each string non-greedily.\n(First try, #object1# == &quot;Frank&quot;, #obect2# == &quot;John Smith&quot;.  Second try, #object1# == &quot;John&quot;, #object2# == &quot;Smith Frank&quot;)\nThen, after having matched each phrase to the string, it will attempt to disambiguate the objects.\n(First try, it manages to succeed.  Second try, it fails.)",
+      "EditableFormat": "bbcode",
+      "HTML": "Nope, if it can match the command to variables, it will either successfully disambiguate or abort.<br/><br/>For example, try creating a room with obj_john_smith (alias &quot;John Smith&quot;, alts &quot;John&quot; and &quot;Smith&quot;) and obj_frank (alias &quot;Frank&quot;).  Create a verb &quot;show #@object1# #@object2#&quot;, which does &quot;msg &lt;You show '#object2#' to '#object1#'&gt;&quot;.<br/><br/>First, try &quot;show Frank John Smith&quot;.  It works as expected.<br/>Then, try &quot;show John Smith Frank&quot;.  It won't work.  (If you put in a &quot;John Doe&quot; object in the room and retry, then it will prompt for disambiguation and then abort.)<br/><br/>What happens is, in each case, it will set #object1# and #object2# to the appropriate subphrases, matching each string non-greedily.<br/>(First try, #object1# == &quot;Frank&quot;, #obect2# == &quot;John Smith&quot;.  Second try, #object1# == &quot;John&quot;, #object2# == &quot;Smith Frank&quot;)<br/>Then, after having matched each phrase to the string, it will attempt to disambiguate the objects.<br/>(First try, it manages to succeed.  Second try, it fails.)",
+      "PostDate": "2006-09-15T11:52:29+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11007",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "Disambiguation occurs when there is more than one object with the same name/alt/alias.\nDisambiguation does NOT occur when there is only one object referred to.\n\nI am not disagree'ing with how the parser works - taking what you type literally (eg command &lt;do[space]#string#[space]#string2#&gt;).\n\nI also don't think it stores the #object# and then tries to get the object name.\nI'd basically go down the list, then split the string according to the command, and then try to resolve the object names.. More logical than splitting, finding the command, then analysing each string - overwriting themselves.",
+      "EditableFormat": "bbcode",
+      "HTML": "Disambiguation occurs when there is more than one object with the same name/alt/alias.<br/>Disambiguation does NOT occur when there is only one object referred to.<br/><br/>I am not disagree'ing with how the parser works - taking what you type literally (eg command &lt;do[space]#string#[space]#string2#&gt;).<br/><br/>I also don't think it stores the #object# and then tries to get the object name.<br/>I'd basically go down the list, then split the string according to the command, and then try to resolve the object names.. More logical than splitting, finding the command, then analysing each string - overwriting themselves.",
+      "PostDate": "2006-09-15T16:20:48+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11008",
+      "UserId": 0,
+      "Username": "Freak",
+      "UserAvatar": null,
+      "UserGravatar": "325ed9ac125e00c9937be0d3aea0916d",
+      "EditableText": "My wording was careless.  I used &quot;disambiguation&quot; to refer to any call to &quot;$getobjectname(...)$&quot;, whether it prompted the player for a choice or not.  And whether the behavior I described is logical or not, it is the way Quest appears to work.",
+      "EditableFormat": "bbcode",
+      "HTML": "My wording was careless.  I used &quot;disambiguation&quot; to refer to any call to &quot;$getobjectname(...)$&quot;, whether it prompted the player for a choice or not.  And whether the behavior I described is logical or not, it is the way Quest appears to work.",
+      "PostDate": "2006-09-15T16:31:24+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11015",
+      "UserId": 0,
+      "Username": "Arbutus",
+      "UserAvatar": null,
+      "UserGravatar": "8592c0fe872d1d1e7468550ad6cf381c",
+      "EditableText": "It is always good practice to list commands long to short:\n\n[code:258irelq]command &lt;look at #@object#;look #@object#&gt;[/code:258irelq]\n\nWhen the command &quot;look at ball&quot; is entered but the command code is arranged short to long:\n\n[code:258irelq]command &lt;look #@object#;look at #@object#&gt;[/code:258irelq]\n\n...then Quest uses the first command &quot;look #@object#&quot; and interprets the object as &quot;at ball&quot; and of course cannot find such an object.",
+      "EditableFormat": "bbcode",
+      "HTML": "It is always good practice to list commands long to short:<br/><br/><pre><code>command &lt;look at #@object#;look #@object#&gt;</code></pre><br/><br/>When the command &quot;look at ball&quot; is entered but the command code is arranged short to long:<br/><br/><pre><code>command &lt;look #@object#;look at #@object#&gt;</code></pre><br/><br/>...then Quest uses the first command &quot;look #@object#&quot; and interprets the object as &quot;at ball&quot; and of course cannot find such an object.",
+      "PostDate": "2006-09-15T19:18:58+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

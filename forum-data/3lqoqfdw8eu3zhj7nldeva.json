@@ -1,0 +1,39 @@
+{
+  "Topic": {
+    "TopicId": "3lqoqfdw8eu3zhj7nldeva",
+    "ForumId": "10",
+    "Title": "\"if\" statements",
+    "LastUpdated": "2023-02-10T14:51:12.2235078Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "bbc3db00-5df3-4e1c-8adc-192a696308b0",
+      "UserId": 512464,
+      "Username": "PenPlush",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/c7052a628b6cb364c3280dd6b5deb201?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I am working on a game and I need the game to write text similar to this.\r\n\r\n\"The year is 2099, 65 years after the end of the world. you're name is \" + (player.alias) + \"You are sided with \" + (player.faction)\r\n\r\nthat would work fine on its own as an expression however it isn't quite what I need. I'm hoping to have the game print a specific message depending on which faction the player decides to start the game with.\r\n\r\nEx:\r\n-If the player sides with faction 1: \"You come from F1, a militaristic faction suffering from greed amongst it's ranks.\r\n-If you side with faction 2: \"You come from the faction known as F2, You and your brothers preach the word of the cultic church.\"\r\n\r\nI hope this makes some kind of sense.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I am working on a game and I need the game to write text similar to this.</p>\n<p>\"The year is 2099, 65 years after the end of the world. you're name is \" + (player.alias) + \"You are sided with \" + (player.faction)</p>\n<p>that would work fine on its own as an expression however it isn't quite what I need. I'm hoping to have the game print a specific message depending on which faction the player decides to start the game with.</p>\n<p>Ex:<br>\n-If the player sides with faction 1: \"You come from F1, a militaristic faction suffering from greed amongst it's ranks.<br>\n-If you side with faction 2: \"You come from the faction known as F2, You and your brothers preach the word of the cultic church.\"</p>\n<p>I hope this makes some kind of sense.</p>\n\n",
+      "PostDate": "2023-02-10T14:51:12.2235078Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "7a6a0b95-a526-4a89-94bb-ac6e7dc506b4",
+      "UserId": 629874,
+      "Username": "GeminiNeule",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/9389e52d9e54b6af823cac64629bf3f0?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You can do this in several ways. Examples below both include the faction being a number (player.faction) as well as a string (player.factionname)\r\n\r\nWithin the text processor:\r\n```{if player.faction=1:You are sided with faction 1}{if player.faction=2:You are sided with faction 2}{if player.factionname=three:You are sided with faction 3}```\r\n\r\nUsing a script with if:\r\n\r\n```\r\nmsg (\"<br/>If with number:\")\r\nif (player.faction=1) {\r\n  msg (\"Faction One (number)\")\r\n}\r\nelse if (player.faction=2) {\r\n  msg (\"Faction Two (number)\")\r\n}\r\nelse if (player.faction=3) {\r\n  msg (\"Faction Three (number)\")\r\n}\r\nmsg (\"<br/>If with text:\")\r\nif (player.factionname=\"one\") {\r\n  msg (\"Faction One (text)\")\r\n}\r\nelse if (player.factionname=\"two\") {\r\n  msg (\"Faction Two (text)\")\r\n}\r\nelse if (player.factionname=\"three\") {\r\n  msg (\"Faction Three (text)\")\r\n}\r\n```\r\n\r\nOr using a switch statement in a script:\r\n```\r\nmsg (\"<br/>Switch with number:\")\r\nswitch (player.faction) {\r\n  case (1) {\r\n    msg (\"Faction one (number)\")\r\n  }\r\n  case (2) {\r\n    msg (\"Faction two (number)\")\r\n  }\r\n  case (3) {\r\n    msg (\"Faction three (number)\")\r\n  }\r\n}\r\nmsg (\"<br/>Switch with text:\")\r\nswitch (player.factionname) {\r\n  case (\"one\") {\r\n    msg (\"Faction one (text)\")\r\n  }\r\n  case (\"two\") {\r\n    msg (\"Faction two (text)\")\r\n  }\r\n  case (\"three\") {\r\n    msg (\"Faction three (text)\")\r\n  }\r\n}\r\n```\r\n\r\nDepending on how often this text is used, you could also store the description as an attribute, preferable to a faction object. If you are using the gamebook type: You can use a page as \"faction object\".  Do something like this early on, for example in the setup script of your game.\r\n\r\n```\r\nfaction_a.factionnumber = 1\r\nfaction_a.factionname = \"one\"\r\nfaction_a.factiondescription = \"This is the description for faction 1\"\r\n```\r\n\r\nWhen the player decides to join that faction:\r\n```\r\nplayer.factionobject = faction_a\r\n```\r\n\r\nLater on you would not need to have an if when giving out the faction description.\r\n```\r\nmsg (\"<br/>Skript accessing faction object<br/>\")\r\nlocalfaction = player.factionobject\r\nmsg (player.factionobject.factiondescription)\r\nmsg (localfaction.factiondescription)\r\n```\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You can do this in several ways. Examples below both include the faction being a number (player.faction) as well as a string (player.factionname)</p>\n<p>Within the text processor:<br>\n<code>{if player.faction=1:You are sided with faction 1}{if player.faction=2:You are sided with faction 2}{if player.factionname=three:You are sided with faction 3}</code></p>\n<p>Using a script with if:</p>\n<pre><code>msg (\"&lt;br/&gt;If with number:\")\nif (player.faction=1) {\n  msg (\"Faction One (number)\")\n}\nelse if (player.faction=2) {\n  msg (\"Faction Two (number)\")\n}\nelse if (player.faction=3) {\n  msg (\"Faction Three (number)\")\n}\nmsg (\"&lt;br/&gt;If with text:\")\nif (player.factionname=\"one\") {\n  msg (\"Faction One (text)\")\n}\nelse if (player.factionname=\"two\") {\n  msg (\"Faction Two (text)\")\n}\nelse if (player.factionname=\"three\") {\n  msg (\"Faction Three (text)\")\n}\n</code></pre>\n<p>Or using a switch statement in a script:</p>\n<pre><code>msg (\"&lt;br/&gt;Switch with number:\")\nswitch (player.faction) {\n  case (1) {\n    msg (\"Faction one (number)\")\n  }\n  case (2) {\n    msg (\"Faction two (number)\")\n  }\n  case (3) {\n    msg (\"Faction three (number)\")\n  }\n}\nmsg (\"&lt;br/&gt;Switch with text:\")\nswitch (player.factionname) {\n  case (\"one\") {\n    msg (\"Faction one (text)\")\n  }\n  case (\"two\") {\n    msg (\"Faction two (text)\")\n  }\n  case (\"three\") {\n    msg (\"Faction three (text)\")\n  }\n}\n</code></pre>\n<p>Depending on how often this text is used, you could also store the description as an attribute, preferable to a faction object. If you are using the gamebook type: You can use a page as \"faction object\".  Do something like this early on, for example in the setup script of your game.</p>\n<pre><code>faction_a.factionnumber = 1\nfaction_a.factionname = \"one\"\nfaction_a.factiondescription = \"This is the description for faction 1\"\n</code></pre>\n<p>When the player decides to join that faction:</p>\n<pre><code>player.factionobject = faction_a\n</code></pre>\n<p>Later on you would not need to have an if when giving out the faction description.</p>\n<pre><code>msg (\"&lt;br/&gt;Skript accessing faction object&lt;br/&gt;\")\nlocalfaction = player.factionobject\nmsg (player.factionobject.factiondescription)\nmsg (localfaction.factiondescription)\n</code></pre>\n\n",
+      "PostDate": "2023-02-10T16:37:10.0274396Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}
