@@ -5,20 +5,53 @@ import { getCollection, getEntry } from 'astro:content';
 const allPosts = await getCollection('forum');
 
 allPosts.sort((a, b) => {
-	const dateA = new Date(a.data.Posts[a.data.Posts.length - 1].PostDate).getTime();
-	const dateB = new Date(b.data.Posts[b.data.Posts.length - 1].PostDate).getTime();
-	return dateB - dateA;
+    const dateA = new Date(a.data.Posts[a.data.Posts.length - 1].PostDate).getTime();
+    const dateB = new Date(b.data.Posts[b.data.Posts.length - 1].PostDate).getTime();
+    return dateB - dateA;
+});
+
+const dateFormatter = new Intl.DateTimeFormat('en-GB', {
+  day: '2-digit',
+  month: 'short',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false
 });
 
 ---
 
+<style>
+    .topic-date {
+        white-space: nowrap;
+    }
+</style>
+
 <Layout>
-	<h1>Forums</h1>
-	<ul>
-		{allPosts.map((post) => (
-			<li>
-				<a href={`/forums/${post.id}`}>{post.data.Topic.Title}</a>
-			</li>
-		))}
-	</ul>
+    <h1>Forums</h1>
+
+    <table class="table forum-topics">
+        <thead>
+            <tr>
+                <th class="col-xs-9">Topic</th>
+                <th class="col-xs-1">Replies</th>
+                <th class="col-xs-2">Last Post</th>
+            </tr>
+        </thead>
+        <tbody>
+            {allPosts.map((post) => (
+                <tr>
+                    <td>
+                        <a href={`/forums/${post.id}`}>{post.data.Topic.Title}</a>
+                    </td>
+                    <td>
+                        {post.data.Posts.length - 1}
+                    </td>
+                    <td class="topic-date">
+                        {dateFormatter.format(new Date(post.data.Posts[post.data.Posts.length - 1].PostDate))}
+                    </td>
+                </tr>
+            ))}
+        </tbody>
+    </table>
 </Layout>
