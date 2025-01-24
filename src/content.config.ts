@@ -19,7 +19,7 @@ const PostSchema = z.object({
 const forum = defineCollection({
     loader: glob({
         pattern: "**/*.json",
-        base: "./src/data/forums/samples",
+        base: "./src/data/forums/quest",
     }),
     schema: z.object({
         Topic: z.object({
