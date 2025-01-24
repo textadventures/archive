@@ -1,4 +1,5 @@
 ---
+import type { Post } from "../../content.config";
 import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 
@@ -20,9 +21,22 @@ const dateFormatter = new Intl.DateTimeFormat("en-GB", {
     minute: "2-digit",
     hour12: false,
 });
+
+function getAvatarUrl(post: Post) {
+    if (post.AvatarUrl) {
+        return post.AvatarUrl;
+    }
+    if (post.UserAvatar) {
+        return `/forumattachments/avatars/${post.UserAvatar}`;
+    }
+    if (post.UserGravatar) {
+        return `https://www.gravatar.com/avatar/${post.UserGravatar}?d=retro`;
+    }
+    return "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y";
+}
 ---
 
-<style>
+<style is:global>
     .post-row {
         display: flex;
         align-items: flex-start;
@@ -30,6 +44,10 @@ const dateFormatter = new Intl.DateTimeFormat("en-GB", {
     .avatar-column {
         flex: 0 0 auto;
         width: 60px; /* Fixed width for avatar */
+    }
+    .avatar-column img {
+        max-width: 46px;
+        max-height: 46px;
     }
     .content-column {
         flex: 1 1 auto;
@@ -44,37 +62,35 @@ const dateFormatter = new Intl.DateTimeFormat("en-GB", {
         white-space: pre-wrap; /* Ensure code blocks wrap */
         word-break: break-word; /* Handle long lines in code */
     }
-    </style>
+    img {
+        max-width: 100%; /* Ensure images don't exceed container */
+    }
+</style>
 
 <Layout title={post.data.Topic.Title}>
     <h2>{post.data.Topic.Title}</h2>
 
     <div class="container my-4">
-        <!-- Forum Topic -->
         <div class="forum-topic">
             {post.data.Posts.map((post) => (
                 <div class="post-row mb-3">
-                    <!-- Avatar Column -->
                     <div class="avatar-column me-3">
                         <img
-                            src="https://i.imgur.com/Odr8Efkb.jpeg"
-                            alt="User Avatar"
-                            class="rounded-circle"
-                            style="width: 60px; height: 60px;"
+                            src={getAvatarUrl(post)}
+                            alt=""
                         />
                     </div>
-                    <!-- Post Content Column -->
                     <div class="content-column">
                         <div class="d-flex justify-content-between">
-                            <h6 class="mb-0">{post.Username}</h6>
+                            <h6 class="mb-0"><b>{post.Username}</b></h6>
                             <small class="text-muted">{dateFormatter.format(
                                 new Date(post.PostDate),
                             )}</small>
                         </div>
-                        <!-- Post Content -->
                         <div class="content-container mt-2" set:html={post.HTML} />
                     </div>
                 </div>
+                <hr/>
             ))}
         </div>
     </div>
