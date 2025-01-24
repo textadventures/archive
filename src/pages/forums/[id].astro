@@ -1,5 +1,5 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
@@ -11,9 +11,71 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
+
+const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+});
 ---
+
+<style>
+    .post-row {
+        display: flex;
+        align-items: flex-start;
+    }
+    .avatar-column {
+        flex: 0 0 auto;
+        width: 60px; /* Fixed width for avatar */
+    }
+    .content-column {
+        flex: 1 1 auto;
+        min-width: 0; /* Prevent overflow */
+    }
+    .content-container {
+        max-width: 100%; /* Prevent content from exceeding container */
+        overflow-wrap: break-word; /* Handle long words or links */
+        word-break: break-word; /* Break words if necessary */
+    }
+    pre {
+        white-space: pre-wrap; /* Ensure code blocks wrap */
+        word-break: break-word; /* Handle long lines in code */
+    }
+    </style>
 
 <Layout title={post.data.Topic.Title}>
     <h2>{post.data.Topic.Title}</h2>
-    {post.data.Posts.map((post) => <div set:html={post.HTML} />)}    
+
+    <div class="container my-4">
+        <!-- Forum Topic -->
+        <div class="forum-topic">
+            {post.data.Posts.map((post) => (
+                <div class="post-row mb-3">
+                    <!-- Avatar Column -->
+                    <div class="avatar-column me-3">
+                        <img
+                            src="https://i.imgur.com/Odr8Efkb.jpeg"
+                            alt="User Avatar"
+                            class="rounded-circle"
+                            style="width: 60px; height: 60px;"
+                        />
+                    </div>
+                    <!-- Post Content Column -->
+                    <div class="content-column">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="mb-0">{post.Username}</h6>
+                            <small class="text-muted">{dateFormatter.format(
+                                new Date(post.PostDate),
+                            )}</small>
+                        </div>
+                        <!-- Post Content -->
+                        <div class="content-container mt-2" set:html={post.HTML} />
+                    </div>
+                </div>
+            ))}
+        </div>
+    </div>
 </Layout>
