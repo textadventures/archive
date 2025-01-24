@@ -1,0 +1,53 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="sample">
+    <gameid>5da66255-f7d2-42b8-ae2c-c9bc41d6093f</gameid>
+    <version>1.0</version>
+    <autodescription_youarein type="int">0</autodescription_youarein>
+    <autodescription_description type="int">1</autodescription_description>
+    <autodescription_youarein_useprefix type="boolean">false</autodescription_youarein_useprefix>
+    <underlinehyperlinks />
+    <appendobjectdescription type="boolean">false</appendobjectdescription>
+  </game>
+  <object name="large room">
+    <inherit name="editor_room" />
+    <description type="script">
+      msg ("I am in a large room.")
+    </description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+    <object name="Planks">
+      <inherit name="editor_object" />
+      <take type="script">
+        if (GetBoolean(Planks, "needed")) {
+          msg ("ok I'll get the planks")
+          MoveObject (Planks, player)
+        }
+        else {
+          msg ("I honestly don't think I'll need them.")
+        }
+      </take>
+      <look type="script">
+        msg ("the planks are too heavy to carry around.")
+      </look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+    </object>
+    <exit alias="east" to="Bridge">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="Bridge">
+    <inherit name="editor_room" />
+    <description type="script"><![CDATA[
+      msg ("I'm at the start of a bridge, part of it seems to have collapsed.<br/>It looks as though I will need those planks after all. I'll go back<br/>and fetch them!")
+      SetObjectFlagOn (Planks, "needed")
+    ]]></description>
+    <exit alias="west" to="large room">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+</asl>

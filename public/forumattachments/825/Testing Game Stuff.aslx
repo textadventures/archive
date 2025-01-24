@@ -1,0 +1,120 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Testing Game Stuff">
+    <gameid>d67ec73f-f879-4911-9d88-c02ea527c534</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="television">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <alias>tv</alias>
+      <switchedon type="boolean">false</switchedon>
+      <look type="script">
+        watch_function
+      </look>
+      <watch type="script">
+        watch_function
+      </watch>
+      <channel type="script"><![CDATA[
+        if (IsSwitchedOn (television)) {
+          msg ("What channel do you want to watch?")
+          msg ("(1) FOXNEWS (2) CNN (3) MSNBC (4) BBC (5) C-SPAN")
+          msg ("Type in the number of the channel that you want, please.")
+          get input {
+            if (IsInt (result)) {
+              if (ToInt (result) > 0 and ToInt (result) < 6) {
+                global_data_object.channel_choice = ToInt (result)
+                global_data_object.channel_name = StringDictionaryItem (global_data_object.channel_conversion, ToString (global_data_object.channel_choice))
+                msg ("You turn to " + global_data_object.channel_name + " channel.")
+              }
+              else {
+                invoke (television.channel)
+              }
+            }
+            else {
+              invoke (television.channel)
+            }
+          }
+        } else {
+          msg ("You can't change the channel, while the tv is still turned off.")
+        }
+      ]]></channel>
+    </object>
+  </object>
+  <object name="global_data_object">
+    <inherit name="editor_object" />
+    <attr name="channel_choice" type="int">1</attr>
+    <channel_list type="stringlist">
+      <value>1</value>
+      <value>2</value>
+      <value>3</value>
+      <value>4</value>
+      <value>5</value>
+    </channel_list>
+    <channel_conversion type="stringdictionary">
+      <item>
+        <key>1</key>
+        <value>FOXNEWS</value>
+      </item>
+      <item>
+        <key>2</key>
+        <value>CNN</value>
+      </item>
+      <item>
+        <key>3</key>
+        <value>MSNBC</value>
+      </item>
+      <item>
+        <key>4</key>
+        <value>BBC</value>
+      </item>
+      <item>
+        <key>5</key>
+        <value>C-SPAN</value>
+      </item>
+    </channel_conversion>
+    <attr name="channel_name">unknown</attr>
+  </object>
+  <verb>
+    <property>watch</property>
+    <pattern>watch</pattern>
+    <defaultexpression>"You can't watch " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>channel</property>
+    <pattern>channel</pattern>
+    <defaultexpression>"You can't change the channel of the tv."</defaultexpression>
+  </verb>
+  <function name="watch_function">
+    if (IsSwitchedOn (television)) {
+      msg ("You look at the tv and watch what is on the screen...")
+      if (global_data_object.channel_choice = 1) {
+        msg ("FOXNEWS")
+      }
+      else if (global_data_object.channel_choice = 2) {
+        msg ("CNN")
+      }
+      else if (global_data_object.channel_choice = 3) {
+        msg ("MSNBC")
+      }
+      else if (global_data_object.channel_choice = 4) {
+        msg ("BBC")
+      }
+      else if (global_data_object.channel_choice = 5) {
+        msg ("C-SPAN")
+      }
+    }
+    else {
+      msg ("You look at the tv and see a black screen, as it is turned off.")
+    }
+  </function>
+</asl>

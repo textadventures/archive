@@ -1,0 +1,96 @@
+<!--
+  Pseudo-closure library
+  
+  == Overview ==
+  
+  This library supports a sort of "pseudo-closure" - a single entity that references
+  not only a script to be run but also variables to be available to that script when
+  run. It supports both standalone scripts as well as script attributes on objects.
+  It's not automatic like with Javascript, but it can still be very useful.
+  
+  A simple example:
+  
+  closure = Closure_Create(player, "OnBattleComplete")
+  Closure_AddParameter(closure, "enemy", enemy)
+  
+  Then at some point in time, by invoking:
+  
+  Closure_Call(closure)
+  
+  the script attribute "OnBattleComplete" of object "player" will be called with
+  parameter "enemy" set to the value of the variable enemy at the time it was added.
+  
+  This class can also be used as an alternative syntax for invoking a script with parameters.
+
+  == Usage ==
+  
+  To create a closure, call "Closure_Create". This function takes an object
+  parameter and a script parameter. It has form:
+  
+  closure = Closure_Create(object, script)
+  
+  There are two ways to invoke this function:
+  
+  1) To "do" the script attribute of an object, pass the desired object as "object"
+  and the script attrubute *name* as the script parameter. This is the standard method.
+  
+  2) To "invoke" a standalone script, pass null for the object and the actual script
+  body for "script". (Note that since Closure_Create will be called in the context
+  of an expression, you can't use the trailing { script } form of parameter passing.)
+  
+  Once the closure has been created, you may optionally add parameters/variables to be
+  available to the script when it's run. To do so, use the Closure_AddParameter method:
+  
+  Closure_AddParameter(closure, name, value)
+  
+  This will make the variable "name" with value "value" available to the script embodied
+  by the closure "closure" when it is called.
+  
+  At this point, you now have a single variable which can be passed around which encapsulates:
+  - A script to be called
+  - An object to call it on (if desired)
+  - Variables to be available when run (if desired)
+  
+  The closure will exist until all references to it are gone. It may be stored in a variable,
+  passed to functions, or stored in an object attribute.
+  
+  To invoke a closure, simply call Closure_Call, passing the desired closure as the sole parameter:
+  
+  Closure_Call(closure)
+  
+  The contained script will be called, with any previously set parameters available.
+
+  A closure may be called as many times as desired.
+
+  Revision History:
+  0.7 - Jay Nabonne (2013-05-06)
+-->
+<library>
+  <!-- Create a closure. -->
+  <function name="Closure_Create" parameters="object,script" type="list">
+    closure = NewList()
+    list add(closure, object)
+    list add(closure, script)
+    list add(closure, NewDictionary())
+    return (closure)
+  </function>
+
+  <!-- Add a parameter to a closure. -->
+  <function name="Closure_AddParameter" parameters="closure, name, value">
+    dictionary add(closure[2], name, value)
+  </function>
+
+  <!-- Call a closure -->
+  <function name="Closure_Call" parameters="closure">
+    <![CDATA[
+    object = closure[0]
+    script = closure[1] 
+    params = closure[2]
+    if (object = null) {
+      invoke (script, params)
+    } else {
+      do (object, script, params)
+    }
+    ]]>
+  </function>
+</library>

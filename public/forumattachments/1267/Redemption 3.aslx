@@ -1,0 +1,236 @@
+<!--Saved by Quest 5.6.5621.18142-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Redemption 3">
+    <gameid>375d1487-038a-4738-83c7-01a8891b219f</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+    <attr name="autodescription_youcango" type="int">3</attr>
+    <attr name="autodescription_description" type="int">2</attr>
+    <attr name="autodescription_youcansee" type="int">4</attr>
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <command_newline />
+    <echohyperlinks type="boolean">false</echohyperlinks>
+    <autodisplayverbs type="boolean">false</autodisplayverbs>
+    <showhealth />
+  </game>
+  <object name="model room">
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <displayverbs type="stringlist">
+      <value>Look at</value>
+    </displayverbs>
+    <usestandardverblist type="boolean">false</usestandardverblist>
+    <descprefix type="string"></descprefix>
+    <drop type="boolean">false</drop>
+    <alias>model room for mount mormont</alias>
+    <object name="Floor">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <scenery />
+      <alias>floor</alias>
+      <look>The floor is made of stone and has sand on it from years of being trodden on by orcs and other creatures held here by Karnuke, the evil mage.</look>
+      <feature_container />
+      <listchildren type="boolean">false</listchildren>
+      <alt type="stringlist">
+        <value>ground</value>
+        <value>under my feet</value>
+        <value>under me</value>
+        <value>below me</value>
+        <value>stone floor</value>
+      </alt>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <take type="script">
+        msg ("You made me chuckle.")
+        Ask ("Did you mean you wanted to take the sand thats on the floor?") {
+          if (result = true) {
+            if (Got(Clawful of sand1)) {
+              msg ("Your claws can't carry any more sand, it keeps spilling back on the floor.")
+            }
+            else if (Got(Clawful of sand)) {
+              msg ("You scoop up some sand and carry it with you.")
+              MoveObject (Clawful of sand1, player)
+            }
+            else {
+              MoveObject (Clawful of sand, player)
+            }
+          }
+          else {
+            msg ("All righty then......")
+            if (result = false) {
+            }
+          }
+        }
+      </take>
+      <drop type="script">
+        if (Got(Clawful of sand1)) {
+          MoveObject (Clawful of sand1, )
+        }
+      </drop>
+      <object name="sand">
+        <inherit name="editor_object" />
+        <scenery />
+        <look>This sand was formed from years of trodding orcs and other creatures held here by Karnuke, the evil mage. It looks like a mix of sand and dirt.</look>
+        <takemsg>You reach down and scoop up some sand, carrying it with you.</takemsg>
+        <feature_usegive />
+        <use />
+        <alt type="stringlist">
+          <value>dirt</value>
+        </alt>
+        <take type="script">
+          if (Got(Clawful of sand1)) {
+            msg ("You greedy bastard! You already have sand spilling out of your claws and you want more? Leave some of that awesome sand for somebody else...Get it?  ")
+          }
+          else if (Got(Clawful of sand)) {
+            if (not Got(Clawful of sand1)) {
+              msg ("You reach down and scoop up a clawful of sand and carry it with you.")
+              MoveObject (Clawful of sand1, player)
+            }
+            else {
+            }
+          }
+          else if (not Got(Clawful of sand)) {
+            msg ("You reach down and scoop up a clawful of sand and carry it with you.")
+            MoveObject (Clawful of sand, player)
+          }
+        </take>
+        <ontake type="script">
+          set (player, "take", false)
+        </ontake>
+        <drop type="script">
+          if (Got(Clawful of sand)) {
+            MoveObject (Clawful of sand, holdingroom)
+            msg ("You drop a Clawful of sand.")
+          }
+          else if (Got(Clawful of sand1)) {
+            MoveObject (Clawful of sand1, holdingroom)
+            msg ("You drop the other Clawfull of sand.")
+          }
+        </drop>
+      </object>
+      <object name="small parts">
+        <inherit name="editor_object" />
+        <alt type="stringlist">
+          <value>parts</value>
+          <value>small part</value>
+          <value>part</value>
+        </alt>
+        <scenery />
+        <look>Chunks of stone that have fallen from the ceiling after being pushed loose by roots. </look>
+        <take type="boolean">false</take>
+        <takemsg>This little piece of rock wants to stay right where it is. I know its here, you know its here, lets move along shall we?</takemsg>
+        <drop />
+      </object>
+    </object>
+    <object name="Ceiling">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <scenery />
+      <look>The ceiling tends to arch up and across from wall to wall. Smooth to the touch except where small parts have fallen in, pushed by roots that hang down here and there.</look>
+      <feature_container />
+      <alt type="stringlist">
+        <value>roof</value>
+        <value>top of room</value>
+        <value>above me</value>
+        <value>stone ceiling</value>
+      </alt>
+      <drop type="boolean">false</drop>
+      <take type="script">
+        msg ("It's sad really...thinking you can take a ceiling. ")
+      </take>
+      <object name="roots">
+        <inherit name="editor_object" />
+        <scenery />
+        <look>Some areas of the ceilings show the edges of huge roots that pushed though and follow the contour of the stone. There are smaller strands that bunch up and hang down. Most of the thin strands have been broken off by wear of passing orcs or perhaps they broke them off to make passing easier.</look>
+        <takemsg>You reach up, grabbing a handful of  the roots. You  twist them until they break off and carry them with you.</takemsg>
+        <dropmsg>You throw the roots down... I'm not sure why you wanted them in the first place.....</dropmsg>
+        <take type="script">
+          if (Got(Clawful of sand1)) {
+            msg ("You greedy bastard! You already have sand spilling out of your claws and you want more? Leave some of that awesome sand for somebody else...Get it?  ")
+          }
+          else if (Got(Clawful of sand)) {
+            if (not Got(Clawful of sand1)) {
+              msg ("You reach down a scoop up a clawful of sand and carry it with you.")
+              MoveObject (Clawful of sand1, player)
+            }
+            else {
+            }
+          }
+          else if (not Got(Clawful of sand)) {
+            msg ("You reach down a scoop up a clawful of sand and carry it with you.")
+            MoveObject (Clawful of sand, player)
+          }
+        </take>
+      </object>
+    </object>
+    <object name="Walls">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>The walls curve from the floor to the ceiling and are made of stone. They are gray and smooth to the touch.</look>
+      <alt type="stringlist">
+        <value>wall</value>
+        <value>stone wall</value>
+      </alt>
+      <take type="script">
+        msg ("Really.... You want to take a wall? If you manage that, let me know.......")
+      </take>
+    </object>
+    <object name="stone">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>The stone which makes up the ceiling, walls and floor have a weird shine to them. Dark grey and resemble glass in many places. Perhaps the mountain was formed by lava pushing up from the depths and created volcanic rock.</look>
+      <alt type="stringlist">
+        <value>rock</value>
+        <value>shiny rock</value>
+        <value>volcanic rock</value>
+      </alt>
+      <take type="script">
+        msg ("You can't beak the hardened surface to get any....")
+      </take>
+    </object>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="namedmale" />
+      <inherit name="switchable" />
+      <inherit name="editor_player" />
+      <drop type="boolean">false</drop>
+      <alias>Eanatas</alias>
+      <scenery />
+      <look>A vicious demon from Hell. You're very intimidating to normal humans. Your skin is a reddish hue and your face is terrifing. There are giant fangs coming out of your mouth dripping with saliva. The dark red eyes bulging from their sockets  seem to stare right through wherever they are looking.</look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+      <feature_player />
+      <feature_switchable />
+      <attr name="pov_look">A vicious demon from Hell. You're very intimidating to normal humans. Your skin is a reddish hue and your face is terrifing. There are giant fangs coming out of your mouth dripping with saliva. The dark red eyes bulging from their sockets  seem to stare right through wherever they are looking.</attr>
+    </object>
+  </object>
+  <object name="holdingroom">
+    <inherit name="editor_room" />
+    <object name="Clawful of sand">
+      <inherit name="editor_object" />
+      <alias>Clawful of sand</alias>
+      <alt type="stringlist">
+        <value>dirt</value>
+      </alt>
+      <look>This sand was formed from years of trodding orcs and other creatures held here by Karnuke, the evil mage. It looks like a mix of sand and dirt.</look>
+      <take />
+      <scenery />
+    </object>
+    <object name="Clawful of sand1">
+      <inherit name="editor_object" />
+      <alias>Clawful of sand</alias>
+      <look>This sand was formed from years of trodding orcs and other creatures held here by Karnuke, the evil mage. It looks like a mix of sand and dirt.</look>
+      <take />
+      <scenery />
+      <alt type="stringlist">
+        <value>dirt</value>
+      </alt>
+    </object>
+  </object>
+</asl>

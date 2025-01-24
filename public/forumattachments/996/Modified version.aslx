@@ -1,0 +1,1435 @@
+<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <template name="UnresolvedObject">I can't see that.</template>
+  <template name="UnresolvedLocation">You can't go that way.</template>
+  <template name="NoObjectsAvailable">There are no objects available.</template>
+  <template name="UnrecognisedCommand">That sentence isn't one I recognise.</template>
+  <dynamictemplate name="DefaultGive">"That will not work."</dynamictemplate>
+  <dynamictemplate name="DefaultKill">"You cannot do that."</dynamictemplate>
+  <dynamictemplate name="DefaultSmell">"You smell "  + object.article + ", but you do not notice anything out of the ordinary."</dynamictemplate>
+  <game name="Modified version">
+    <gameid>1826f393-319a-4a91-b3b5-bb194134cceb</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+    <subtitle type="string"></subtitle>
+    <author>Anonymous</author>
+    <cover>SchoolGirlGroup.jpg</cover>
+    <category>Mystery</category>
+    <feature_pictureframe />
+    <feature_asktell />
+    <showscore type="boolean">false</showscore>
+    <feature_lightdark />
+    <gridmap type="boolean">false</gridmap>
+    <attr name="autodescription_youarein" type="int">0</attr>
+    <attr name="autodescription_description" type="int">1</attr>
+    <showhealth />
+    <backgroundimage>6d9d1817_vbattach160621.jpeg</backgroundimage>
+    <setbackgroundopacity type="boolean">false</setbackgroundopacity>
+    <backgroundopacity type="double">0</backgroundopacity>
+    <defaultbackground>Black</defaultbackground>
+    <underlinehyperlinks type="boolean">false</underlinehyperlinks>
+    <menubackground>WhiteSmoke</menubackground>
+    <setcustompadding type="boolean">false</setcustompadding>
+    <showborder />
+    <setcustomwidth type="boolean">false</setcustomwidth>
+    <showpanes />
+    <showlocation />
+    <custompaddingright type="int">20</custompaddingright>
+    <custompaddingleft type="int">20</custompaddingleft>
+    <menuhoverbackground>WhiteSmoke</menuhoverbackground>
+    <defaultfont>'Times New Roman', Times, serif</defaultfont>
+    <showcommandbar />
+    <defaultlinkforeground>Turquoise</defaultlinkforeground>
+    <defaultforeground>White</defaultforeground>
+    <deactivatecommandlinks type="boolean">false</deactivatecommandlinks>
+    <description><![CDATA[Here you can pick up items in wardrobe manually.<br/><br/>(Type "help" to learn how to navigate the game.)<br/>]]></description>
+    <defaultwebfont>Play</defaultwebfont>
+    <attr name="command_newline" type="boolean">false</attr>
+    <echohyperlinks />
+    <attr name="autodescription_description_newline" type="boolean">false</attr>
+    <attr name="autodescription_youcango_newline" type="boolean">false</attr>
+    <attr name="autodescription_youcansee_newline" type="boolean">false</attr>
+    <attr name="autodescription_youarein_newline" type="boolean">false</attr>
+    <autodescription />
+    <changeroom_newline />
+    <autodisplayverbs type="boolean">false</autodisplayverbs>
+    <difficulty>Hard</difficulty>
+    <cruelty>Cruel</cruelty>
+    <pov type="object">player</pov>
+    <onhealthzero type="script">
+      finish
+    </onhealthzero>
+    <start type="script">
+      JS.testOnline ()
+    </start>
+  </game>
+  <object name="New Game">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <descprefix type="string"></descprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <alias>Welcome to Time Quest</alias>
+    <picture>SchoolGirlGroup.jpg</picture>
+    <description><![CDATA[Now you can pick up items in wardrobe manually.<br/><br/>(Type "help" to learn how to navigate the game.)]]></description>
+    <exitslistprefix type="string"></exitslistprefix>
+    <beforeenter type="script">
+      play sound ("Romantic Piano Instrumental Music-Beautiful Mind.mp3", false, true)
+    </beforeenter>
+    <firstenter type="script">
+    </firstenter>
+    <enter type="script">
+      wait {
+        MoveObject (player, bedroom)
+      }
+    </enter>
+    <onexit type="script">
+      ClearScreen
+    </onexit>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <feature_player />
+      <attr name="pov_look" type="script"><![CDATA[
+        if (player.health=100) {
+          msg ("Other then some old scars, you look perfectly fine.")
+        }
+        else if (player.health>80) {
+          msg ("A few cuts and bruises cause you some discomfort, but it is nothing serious.")
+        }
+        else if (player.health>60) {
+          msg ("You have taken serious damage and blood is slowly trickling from your open wounds. The pain you feel is sharp, but endurable.")
+        }
+        else if (player.health>30) {
+          msg ("Your mobility is severly reduced as broken bones and wide open wounds inflict severe pain at your attempts to move.")
+        }
+        else if (player.health>0) {
+          msg ("You are barely alive and are having a hard time remaining conscious. You should heal yourself as soon as possible.")
+        }
+      ]]></attr>
+    </object>
+  </object>
+  <object name="Create your character">
+    <inherit name="editor_room" />
+    <descprefix type="string"></descprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <exitslistprefix type="string"></exitslistprefix>
+    <description type="string"></description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <enter type="script">
+      msg ("What is your name?")
+      get input {
+        ClearScreen
+        player.alias = result
+        msg ("Very well, " + player.alias + "." + " How old are you" + "?")
+        get input {
+          ClearScreen
+          player.age = result
+          msg ("Now please type your height in centimeters.")
+          get input {
+            ClearScreen
+            player.height = result
+            msg ("And how much do you weigh in kilograms?")
+            get input {
+              ClearScreen
+              player.weight = result
+              ShowMenu ("Are you a male or a female?", Split ("Male;Female", ";"), false) {
+                ClearScreen
+                player.gender = result
+                ShowMenu (" Now choose your race. " + " This will determine your general appearance and skin tone.", Split ("European;African;Asian;Arab;Amerindian", ";"), false) {
+                  player.race = result
+                  ClearScreen
+                  ShowMenu ("Now please describe the color of your hair.", Split ("Black;Light brown;Dark brown;Blonde;Gray;Red;Green;Purple;Blue", ";"), false) {
+                    player.hairc = result
+                    ClearScreen
+                    ShowMenu ("How long is your hair?", Split ("Bald;Short;Medium length;Long", ";"), false) {
+                      player.hairl = result
+                      ClearScreen
+                      ShowMenu ("Now please describe your eye color.", Split ("Blue;Green;Brown;Gray", ";"), false) {
+                        player.eye = result
+                        ClearScreen
+                        msg ("")
+                        if (player.hairl="Bald") {
+                          ClearScreen
+                          msg ("You successfully created your character. Your name is " + player.alias + " and you are a " + LCase (player.age) + " year old " + LCase (player.gender) + "."  + " With your " + LCase (player.height) + " cm, " + LCase (player.weight) + " kg and " + LCase (player.eye) + " eyes you look like an average person of " + LCase (player.race) + " origin. One thing to note however is that you are bald, but even with no hair you are still an attractive individual as if you were born to wear such a look.")
+                          msg ("")
+                          msg ("You are finished. Press a key to continue.")
+                          wait {
+                            MoveObject (player, main deck)
+                          }
+                        }
+                        else {
+                          ClearScreen
+                          msg ("You successfully created your character. Your name is " + player.alias + " and you are a " + LCase (player.age) + " year old " + LCase (player.gender) + "."  + " With your " + LCase (player.height) + " cm, " + LCase (player.weight) + " kg and " + LCase (player.eye) + " eyes you look like an average person of " + LCase (player.race) + " origin. Another thing to note is that your " + LCase (player.hairl) + " " + LCase (player.hairc) + " hair gives nice facial structure to your otherwise symmetrical face.")
+                          msg ("")
+                          msg ("You are finished. Press a key to continue.")
+                          wait {
+                            MoveObject (player, main deck)
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    </enter>
+    <beforeenter type="script">
+      ClearScreen
+    </beforeenter>
+  </object>
+  <command name="Help me">
+    <pattern>shout help; scream help; yell help; shout help me; yell help me; scream help me; help me; scream; shout; yell; shout for help; scream for help; yell for help</pattern>
+    <script>
+      msg ("You desperately shout for help, but nobody comes to your aid.")
+    </script>
+  </command>
+  <command name="Examine player">
+    <pattern>look at health; look at status; examine health; examine status; look at status; look at player; examine player; look at character; examine character</pattern>
+    <script><![CDATA[
+      if (player.health=100) {
+        msg ("You look perfectly fine.")
+      }
+      else if (player.health>80) {
+        msg ("A few cuts and bruises cause you some discomfort, but it is nothing serious.")
+      }
+      else if (player.health>60) {
+        msg ("You have taken serious damage and blood is slowly trickling from your open wounds. The pain you feel is sharp, but endurable.")
+      }
+      else if (player.health>30) {
+        msg ("Your mobility is severly reduced as broken bones and wide open wounds inflict severe pain at your attempts to move.")
+      }
+      else if (player.health>0) {
+        msg ("You are barely alive and are having a hard time remaining conscious. You should heal yourself as soon as possible.")
+      }
+    ]]></script>
+  </command>
+  <command>
+    <pattern>help</pattern>
+    <script><![CDATA[
+      msg ("<b>Quick Help</b><br/>- Useful general commands: HELP (brings up the Quick Help), LOOK AT PLAYER (examines your injuries),<br/>- Objects: Try LOOK AT..., SPEAK TO..., TAKE..., DROP..., OPEN..., GIVE... TO..., USE... ON/WITH...<br/>- Inventory: See which items you are carrying by typing I, INV or INVENTORY.<br/>- Moving around: Press the compass buttons, or type GO NORTH, SOUTH, E, GO TO WEST...<br/><br/><b>The commands do not work! What to do?</b><br/>Sometimes you will try a command and a message will pop up telling you that you can't do something or that you should try rephrasing your sentence. Before you give up on your command and try something else, you should always check the spelling first. If spelling is correct try to simplify your sentence. Text adventure games generally do not handle complex sentences too well, so try to keep things simple. For example, instead of LOOK AT A/THE LAMP try just LOOK AT LAMP. If your command still does not work, try using synonyms or similar words.")
+    ]]></script>
+  </command>
+  <command>
+    <pattern>fuck you; fuck; shit; eat shit; fuck you asshole; </pattern>
+    <script>
+      msg ("Swearing won't help you.")
+    </script>
+  </command>
+  <object name="home">
+    <inherit name="editor_room" />
+    <object name="bedroom">
+      <inherit name="editor_room" />
+      <picture type="string"></picture>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <scenery />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <exitslistprefix>You can go to</exitslistprefix>
+      <description type="script"><![CDATA[
+        ClearScreen
+        picture ("bedroom_by_sc_anime_girl-d5sp1gn.jpg")
+        if (IsSwitchedOn(alarm clock)) {
+          msg ("You wake up to the sound of an alarm clock which keeps ringing annoyingly every half a minute! The sound is making you go crazy, but at least you are awake for your first day at school.<br/>---")
+        }
+        else {
+          msg ("You are standing in a small bedroom with faded wooden floor and boring white walls, but the room is more than adequete for an aspiring student such as yourself and it offers everything you need.<br/><br/>Not only do you have your own bed and a wardrobe, but you also have your very own wooden desk with a computer and a flimsy old chair that sits right across the bathroom. An empty Cola bottle rests on your own little refrigerator and a cheap plastic chair serves as a table for your little netbook.<br/><br/>An old radiator keeps you warm during cold winter days, and a window above it can be opened when you need a breath of fresh air. A couple of posters and a houseplant on the bedside cabinet make the bedroom feel like a true home while the weights under your bed ensure you are always in shape. In fact the room seems to be in mint condition except for the crumbled papers left lying on the floor. I guess you didn't feel like throwing them in the garbage box under your bed.<br/>---")
+        }
+      ]]></description>
+      <beforeenter type="script">
+      </beforeenter>
+      <enter type="script">
+      </enter>
+      <look type="script"><![CDATA[
+        ClearScreen
+        picture ("6lUYCsU.jpg")
+        if (IsSwitchedOn(communication panel)) {
+          msg ("You are standing in Chronocorp's exploration shuttle 'Explorer XII\". You see two empty seats in the cockpit in front of you. The cockpit itself is cramped with computers and monitors which constantly flicker as they show new data. A wide window above them is revealing a view of planet Earth as well as some stars in the distant part of the Universe. Behind you there is a separate storage room filled with boxes and various supplies.<br/><br/>A red lamp on the communication panel in the cockpit is signaling that someone is trying to contact you.<br/>---")
+        }
+        else {
+          msg ("You are standing in Chronocorp's exploration shuttle 'Explorer XII\". You see two empty seats in the cockpit in front of you. The cockpit itself is cramped with computers and monitors which constantly flicker as they show new data. A wide window above them is revealing a view of planet Earth as well as some stars in the distant part of the Universe. Behind you there is a separate storage room filled with boxes and various supplies.<br/>---")
+        }
+      ]]></look>
+      <firstenter type="script">
+      </firstenter>
+      <beforefirstenter type="script">
+        ClearScreen
+        MakeObjectInvisible (school outfit)
+        MakeObjectInvisible (school bag)
+        MakeObjectInvisible (pencil)
+        MakeObjectInvisible (calculator)
+        MakeObjectInvisible (books)
+      </beforefirstenter>
+      <command>
+        <pattern>look at room; examine room; look at bedroom; examine bedroom; look at area; examine area; show room; show bedroom description; show room description; show area; show area description</pattern>
+        <script>
+          ShowRoomDescription
+        </script>
+      </command>
+      <exit to="bathroom">
+        <lookonly type="boolean">false</lookonly>
+        <look>Its just a bathroom. There is nothing special about it.</look>
+        <locked type="boolean">false</locked>
+        <runscript />
+        <script type="script">
+          if (IsSwitchedOn(alarm clock)) {
+            msg ("You won't be getting far as long as that clock keeps irritating you.")
+          }
+          else {
+            MoveObject (player, bathroom)
+          }
+        </script>
+      </exit>
+      <exit to="outside">
+        <lookonly type="boolean">false</lookonly>
+        <runscript />
+        <look>If you want to know how it looks outside you first have to go out, genius.</look>
+        <script type="script">
+          if (IsSwitchedOn(alarm clock)) {
+            msg ("You can't leave that clock ringing. Your land lady already complained about it.")
+          }
+          else if (not GetBoolean(player, "dressed")) {
+            msg ("You cannot go out half naked. Put on some clothes and don't forget your school bag.")
+          }
+          else {
+            MoveObject (player, outside)
+          }
+        </script>
+      </exit>
+      <object name="alarm clock">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <visible />
+        <scenery />
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <feature_usegive />
+        <alt type="stringlist" />
+        <feature_switchable />
+        <switchedon />
+        <listen>Annoying, isn't it?</listen>
+        <throw>Destroying that clock would certainly make your morning more pleasant, but unfortunately it is the only thing that can wake you up so you better take good care of it.</throw>
+        <push>You push the clock a bit to the side, but after realizing that it is too close to the edge you pull it back to its original spot.</push>
+        <pull>You pull the clock a bit to the side, but after realizing that it is too close to the edge you push it back to its original spot.</pull>
+        <touch>It feels like it is made out of metal.</touch>
+        <move>You push the clock a bit to the side, but after realizing that it is too close to the edge you pull it back to its original spot.</move>
+        <read>It is seven o'clock.</read>
+        <take />
+        <takemsg>You pick up the alarm clock.</takemsg>
+        <kill>Destroying that clock would certainly make your morning more pleasant, but unfortunately it is the only thing that can wake you up so you better take good care of it.</kill>
+        <hit>Destroying that clock would certainly make your morning more pleasant, but unfortunately it is the only thing that can wake you up so you better take good care of it.</hit>
+        <turn>You turn the clock around and achieve absolutely nothing.</turn>
+        <drop type="boolean">false</drop>
+        <dropmsg>Nah.. This might actually come in handy.</dropmsg>
+        <look type="script">
+          if (IsSwitchedOn(alarm clock)) {
+            msg ("The clock is producing one of the most annoying sounds you ever had misfortune of listening. If it keeps ringing like that it will wake up the whole neighbourhood!")
+          }
+          else {
+            msg ("It is an old fashioned alarm clock with a very annoying twin bell system. Luckily it is not ringing at the moment.")
+          }
+        </look>
+        <use type="script">
+          msg ("Use it? How?")
+        </use>
+        <turnoff type="script">
+          if (ListContains(ScopeReachable(), this)) {
+            if (not this.switchedon) {
+              msg (DynamicTemplate("AlreadySwitchedOff", this))
+            }
+            else {
+              if (HasString(this, "switchoffmsg")) {
+                msg (this.switchoffmsg)
+              }
+              else {
+                msg (DynamicTemplate("SwitchedOff", this))
+              }
+              this.switchedon = false
+              msg ("After turning the clock off you decide to slowly get out of bed. ")
+              wait {
+                ShowRoomDescription
+              }
+            }
+          }
+          else {
+            msg (DynamicTemplate("DefaultTurnOff", this))
+          }
+        </turnoff>
+        <turnon type="script">
+          if (IsSwitchedOn(alarm clock)) {
+            msg ("It is already on.")
+          }
+          else {
+            msg ("You don't want that annoying alarm to start ringing again.")
+          }
+        </turnon>
+      </object>
+      <command>
+        <pattern>look at pockets; examine pockets; look at pocket; examine pocket; search pocket; search pockets</pattern>
+        <script>
+          if (ListContains(ScopeVisible(), school outfit)) {
+            msg ("There are no pockets on your outfit.")
+          }
+          else {
+            msg ("What are you talking about?")
+          }
+        </script>
+      </command>
+      <object name="seat">
+        <inherit name="editor_object" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <scenery />
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <alt type="stringlist">
+          <value>chair; seats; chairs</value>
+        </alt>
+        <feature_usegive />
+        <look type="script">
+          msg ("Just some leather seats. There is nothing special about them.")
+        </look>
+        <use type="script">
+          MoveObject (player, cockpit)
+        </use>
+        <sit type="script">
+          MoveObject (player, cockpit)
+        </sit>
+      </object>
+      <object name="bed">
+        <inherit name="editor_object" />
+        <alt type="stringlist">
+          <value>bunk beds</value>
+        </alt>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <feature_usegive />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <scenery />
+        <search>You won't find any girls there if that is what you were hoping.</search>
+        <sit>As much as you would like nothing more than to sit on the bed and waste time doing absolutely nothing, you can't! You have to go to school, so get a move on.</sit>
+        <smell>It smells somehow familiar, which shouldn't really surprise you since you are the only person who uses this bed.</smell>
+        <touch>It feels very comfortable.</touch>
+        <hit>Dear oh dear. That won't help you.</hit>
+        <kill>Look, this is not Call of Duty! If you want to kill stuff you chose the wrong game.</kill>
+        <use type="script">
+          msg ("You have to go to school. There is no time for lounging about.")
+        </use>
+        <lie type="script">
+          msg ("You have to go to school. There is no time for lounging about.")
+        </lie>
+        <look type="script">
+          msg ("The bed is not too big, but it is certainly spacious enough to let you stretch comfortably when you sleep. The fluffy pillow and soft sheets no doubt contribute to the overall comfort, which might explain why you have such a hard time waking up in the morning.")
+        </look>
+      </object>
+      <object name="pillow">
+        <inherit name="editor_object" />
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <scenery />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <alt type="stringlist" />
+        <feature_usegive />
+        <hit>If you want to get your aggression out I think you chose the wrong game.</hit>
+        <takemsg>How on earth will you carry that pillow with you all the way to school? Just leave it be.</takemsg>
+        <kill>If you want to kill stuff you should play Call of Duty.</kill>
+        <move>Nah.. its fine the way it is.</move>
+        <pull>Nah.. its fine the way it is.</pull>
+        <push>Nah.. its fine the way it is.</push>
+        <sit>Why would you sit on your only pillow? It could absorb the smell of your... well I think you get the idea.</sit>
+        <smell>It smells like your hair.</smell>
+        <throw>Nah.. its fine the way it is.</throw>
+        <touch>It feels soft and comfortable. Touching it however only makes you want to go back to sleeping again.</touch>
+        <turn>You turn the pillow around and achieve absolutely nothing.</turn>
+        <lie>You have to go to school. Can you stop dicking around?</lie>
+        <look type="script">
+          msg ("It looks very soft and fluffy.")
+        </look>
+        <use type="script">
+          msg ("You have to go to school. Can you stop dicking around?")
+        </use>
+      </object>
+      <object name="refrigerator">
+        <inherit name="editor_object" />
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>Use</value>
+        </displayverbs>
+        <feature_usegive />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <alt type="stringlist">
+          <value>computers</value>
+        </alt>
+        <scenery />
+        <alias>fridge</alias>
+        <open>You open the refrigerator and after finding nothing inside, you decide to close it again.</open>
+        <throw>Now, why would you want to do that?</throw>
+        <sit>This is no time to lounge about. You will be late for school.</sit>
+        <touch>Its cold to the touch. What did you expect?</touch>
+        <hit>Calm down. There is no need for aggression.</hit>
+        <kill>Calm down. There is no need for aggression. Besides, you can't kill a non living thing.</kill>
+        <eat>When people say they ate the whole refrigerator, they are speaking figuratively.</eat>
+        <drink>And how do you intend to do that?</drink>
+        <look type="script">
+          msg ("This small refrigerator has barely enough room for one meal, but it serves its purpose if for nothing else then for holding empty bottles on its surface.")
+        </look>
+        <use type="script">
+          msg ("I don't think that is possible, buddy.")
+        </use>
+        <pull type="script">
+          if (GetBoolean(refrigerator, "moved")) {
+            msg ("Its not blocking the wardrobe door anymore, so leave it be.")
+          }
+          else {
+            msg ("You pull the refrigerator away from wardrobe, just far enough to be able to open the wardrobe door.")
+            SetObjectFlagOn (refrigerator, "moved")
+          }
+        </pull>
+        <push type="script">
+          msg ("You push the refrigerator away from wardrobe, just enough so that you can open the wardrobe door.")
+          SetObjectFlagOn (refrigerator, "moved")
+        </push>
+        <move type="script">
+          if (GetBoolean(refrigerator, "moved")) {
+            msg ("Its not blocking the wardrobe door anymore, so leave it be.")
+          }
+          else {
+            msg ("You move the refrigerator away from wardrobe, just far enough to be able to open the wardrobe door.")
+            SetObjectFlagOn (refrigerator, "moved")
+          }
+        </move>
+      </object>
+      <object name="sheet">
+        <inherit name="editor_object" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <scenery />
+        <feature_usegive />
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <takemsg>Nah.. its not like you will go to sleep any time soon, so you better leave it on the bed.</takemsg>
+        <hit>If you want to get your aggression out I think you chose the wrong game.</hit>
+        <kill>If you want to kill stuff you should play Call of Duty.</kill>
+        <lie>You have to go to school. Get a move on already.</lie>
+        <sit>As much as you would like nothing more than to sit on the bed and waste time doing absolutely nothing, you can't! You have to go to school, so stop screwing around.</sit>
+        <move>Nah.. its fine the way it is.</move>
+        <pull>Nah.. its fine the way it is.</pull>
+        <push>Nah.. its fine the way it is.</push>
+        <search>You won't find any girls there if that is what you were hoping.</search>
+        <smell>Its your sheet, so how do you think it smells?</smell>
+        <touch>It feels soft to the touch.</touch>
+        <turn>There is no time for turning the sheets around.</turn>
+        <wear>You can't be walking around like a super-hero! Perhaps you should stop reading the Avengers so much.</wear>
+        <look type="script">
+          msg ("The sheet looks soft and comfortable. Just looking at it makes you want to go back to sleep.")
+        </look>
+        <use type="script">
+          msg ("You just woke up. Can you stop thinking about that comfortably soft sheet?")
+        </use>
+      </object>
+      <object name="window">
+        <inherit name="editor_object" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <scenery />
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <alt type="stringlist">
+          <value>earth; sun; universe; stars</value>
+        </alt>
+        <feature_usegive />
+        <look type="script">
+          msg ("Through the window in the cockpit you can see a beautiful view of planet Earth. Sun is slowly rising behind it and further behind you see the vast universe filled with countless stars.")
+        </look>
+        <use type="script">
+          msg ("You can't do that.")
+        </use>
+      </object>
+      <object name="wardrobe">
+        <inherit name="editor_object" />
+        <inherit name="openable" />
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <scenery />
+        <feature_usegive />
+        <alt type="stringlist" />
+        <smell>It smells like fresh clothes.</smell>
+        <feature_container />
+        <listchildren />
+        <listchildrenprefix>It contains</listchildrenprefix>
+        <look type="script">
+          msg ("The wardrobe is made out of cheep wood and judging by its size you definitely cannot fit too many things in there.")
+        </look>
+        <search type="script">
+          do (this, "openscript")
+        </search>
+        <use type="script">
+          msg ("You can use a computer or a knife or a toaster or a remote control, but how in the name of common sense do you use a wardrobe? Why don't you try something more sensible, hmm?")
+        </use>
+        <openscript type="script"><![CDATA[
+          if (GetBoolean(wardrobe, "opened")) {
+            msg ("You take another look inside the wardrobe.")
+            HelperOpenObject (wardrobe)
+            ListPrefix = "It contains"
+          }
+          else if (GetBoolean(refrigerator, "moved")) {
+            msg ("You open the wardrobe door and notice a school <font color=\"#00FFFF\">outfit</font> and a school <font color=\"#00FFFF\">bag</font> inside.")
+            MakeObjectVisible (school outfit)
+            MakeObjectVisible (school bag)
+            HelperOpenObject (wardrobe)
+            SetObjectFlagOn (wardrobe, "opened")
+          }
+          else {
+            msg ("The wardrobe door is blocked by the refrigerator.")
+          }
+        ]]></openscript>
+        <closescript type="script">
+          msg ("You close the wardrobe.")
+          HelperCloseObject (wardrobe)
+        </closescript>
+        <touch type="script"><![CDATA[
+          if (GetBoolean(wardrobe, "opened")) {
+            msg ("The wardrobe door opens to the smallest touch. It must be broken.")
+            wait {
+              HelperOpenObject (wardrobe)
+            }
+          }
+          else if (GetBoolean(refrigerator, "moved")) {
+            msg ("You gently touch the wardrobe to feel the wood, however to your surprise the door slowly creeks open by itself and you notice a school <font color=\"#00FFFF\">outfit</font> and a school <font color=\"#00FFFF\">bag</font> inside.")
+            MakeObjectVisible (school outfit)
+            MakeObjectVisible (school bag)
+            HelperOpenObject (wardrobe)
+            SetObjectFlagOn (wardrobe, "opened")
+          }
+          else {
+            msg ("It feels like cheap wood.")
+          }
+        ]]></touch>
+        <knock type="script"><![CDATA[
+          if (GetBoolean(wardrobe, "opened")) {
+            msg ("The wardrobe door opens to the smallest touch. It must be broken.")
+            wait {
+              HelperOpenObject (wardrobe)
+            }
+          }
+          else if (GetBoolean(refrigerator, "moved")) {
+            msg ("You knock on the wardrobe for some reason and to your surprise the door slowly creeks opens by itself, leading you to an uncomfortable conclusion that there must be an invisible person living there. That, or the door is just broken. In any case, inside the wardrobe you notice a school <font color=\"#00FFFF\">outfit</font> and a school <font color=\"#00FFFF\">bag</font>.")
+            MakeObjectVisible (school outfit)
+            MakeObjectVisible (school bag)
+            HelperOpenObject (wardrobe)
+            SetObjectFlagOn (wardrobe, "opened")
+          }
+          else {
+            msg ("This might shock you, but there is nobody inside you know?")
+          }
+        ]]></knock>
+        <object name="school bag">
+          <inherit name="editor_object" />
+          <inherit name="openable" />
+          <usedefaultprefix />
+          <drop type="boolean">false</drop>
+          <alt type="stringlist" />
+          <displayverbs type="stringlist">
+            <value>Look at</value>
+          </displayverbs>
+          <feature_usegive />
+          <scenery type="boolean">false</scenery>
+          <dropmsg>You can't go to school without your school bag.</dropmsg>
+          <hit>Violent, aren't we?</hit>
+          <kill>No! You can't kill the bag.</kill>
+          <wear>You put the school bag on your back.</wear>
+          <move>You can't move things in your inventory.</move>
+          <pull>Easy now! You don't want to tear it apart.</pull>
+          <push>You can't move things in your inventory.</push>
+          <throw>You need it.</throw>
+          <alias>bag</alias>
+          <feature_container />
+          <isopen type="boolean">false</isopen>
+          <close />
+          <transparent type="boolean">false</transparent>
+          <take />
+          <takemsg><![CDATA[You pick up the school <font color="#00FFFF">bag</font>.]]></takemsg>
+          <look type="script">
+            msg ("The bag is made out of  lightweight and durable synthetic fabrics, and it can help you carry many useful things. Just don't expect to put an elephant in there.")
+          </look>
+          <use type="script">
+            msg ("What do you mean use it?")
+          </use>
+          <search type="script"><![CDATA[
+            if (GetBoolean(school bag, "opened")) {
+              msg ("You open the bag again and take a look inside.")
+              wait {
+                HelperOpenObject (school bag)
+                invoke (inventory.script)
+              }
+            }
+            else if (ListContains(ScopeVisible(), school bag)) {
+              msg ("Upon searching the bag you find some <font color=\"#00FFFF\">books</font>, a <font color=\"#00FFFF\">pencil</font> and a <font color=\"#00FFFF\">calculator</font>.")
+              AddToInventory (pencil)
+              AddToInventory (books)
+              AddToInventory (calculator)
+              MakeObjectVisible (books)
+              MakeObjectVisible (calculator)
+              MakeObjectVisible (pencil)
+              HelperOpenObject (school bag)
+              SetObjectFlagOn (school bag, "opened")
+            }
+            else {
+              msg ("What are you talking about?")
+            }
+          ]]></search>
+          <openscript type="script"><![CDATA[
+            if (GetBoolean(school bag, "opened")) {
+              msg ("You open the bag again and take a look inside.")
+              wait {
+                HelperOpenObject (school bag)
+                invoke (inventory.script)
+              }
+            }
+            else if (ListContains(ScopeVisible(), school bag)) {
+              msg ("Upon searching the bag you find some <font color=\"#00FFFF\">books</font>, a <font color=\"#00FFFF\">pencil</font> and a <font color=\"#00FFFF\">calculator</font>.")
+              AddToInventory (pencil)
+              AddToInventory (books)
+              AddToInventory (calculator)
+              MakeObjectVisible (books)
+              MakeObjectVisible (calculator)
+              MakeObjectVisible (pencil)
+              HelperOpenObject (school bag)
+              SetObjectFlagOn (school bag, "opened")
+            }
+            else {
+              msg ("What are you talking about?")
+            }
+          ]]></openscript>
+          <closescript type="script">
+            msg ("You close the bag.")
+            HelperCloseObject (school bag)
+          </closescript>
+        </object>
+        <object name="school outfit">
+          <inherit name="editor_object" />
+          <usedefaultprefix />
+          <scenery type="boolean">false</scenery>
+          <displayverbs type="stringlist">
+            <value>Look at</value>
+            <value>Take</value>
+          </displayverbs>
+          <alt type="stringlist">
+            <value>clothes</value>
+            <value>uniform</value>
+            <value>school uniform</value>
+          </alt>
+          <feature_usegive />
+          <drop type="boolean">false</drop>
+          <dropmsg>You will need your clothes. Trust me.</dropmsg>
+          <alias>outfit</alias>
+          <smell>The clothes have been freshly washed and they smell like lily flowers.</smell>
+          <take />
+          <takemsg><![CDATA[You pick up the school <font color="#00FFFF">outfit</font>.]]></takemsg>
+          <look type="script">
+            if (not ListContains(ScopeVisible(), school outfit)) {
+              msg ("What outfit?")
+            }
+            else {
+              msg ("The outfit is actually a school uniform made out of usual clothes that students wear in schools all over Japan.")
+            }
+          </look>
+          <use type="script">
+            msg ("You put the outfit on.")
+            SetObjectFlagOn (player, "dressed")
+          </use>
+          <wear type="script">
+            if (GetBoolean(player, "dressed")) {
+              msg ("Oh dear,.. Look, you are already wearing it, so there is no need to put it on again.")
+            }
+            else {
+              msg ("You put the outfit on.")
+              SetObjectFlagOn (player, "dressed")
+            }
+          </wear>
+          <search type="script">
+            if (ListContains(ScopeVisible(), school outfit)) {
+              msg ("Your outfit doesn't have any pockets, so there is nothing to search.")
+            }
+            else {
+              msg ("What are you talking about?")
+            }
+          </search>
+          <undress type="script">
+            if (GetBoolean(player, "dressed")) {
+              msg ("You take your school outfit off.")
+              SetObjectFlagOff (player, "dressed")
+            }
+            else {
+              msg ("To undress you first need to have some clothes on. Dear oh dear,.. sometimes I even wonder how you manage to tie your own shoe laces.")
+            }
+          </undress>
+        </object>
+      </object>
+      <command>
+        <pattern>sleep on bed; rest on bed; sleep on the bed; rest on the bed</pattern>
+        <unresolved>That does not work.</unresolved>
+        <script>
+          msg ("You have to go to school. There is no time for lounging about.")
+        </script>
+      </command>
+      <object name="pencil">
+        <inherit name="editor_object" />
+        <scenery type="boolean">false</scenery>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <drop type="boolean">false</drop>
+      </object>
+      <object name="calculator">
+        <inherit name="editor_object" />
+        <scenery type="boolean">false</scenery>
+        <drop type="boolean">false</drop>
+      </object>
+      <object name="books">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <scenery type="boolean">false</scenery>
+        <alias>pack of books</alias>
+        <drop type="boolean">false</drop>
+      </object>
+      <command>
+        <pattern>put on some clothes; put on clothes; put on outfit; put on school outfit; dress up; put on shool uniform; put on uniform.</pattern>
+        <unresolved>That does't work.</unresolved>
+        <script>
+          if (GetBoolean(player, "dressed")) {
+            msg ("Oh dear,.. Look, you are already wearing it, so there is no need to put it on again.")
+          }
+          else {
+            msg ("You put the outfit on.")
+            SetObjectFlagOn (player, "dressed")
+          }
+        </script>
+      </command>
+      <command>
+        <pattern>undress</pattern>
+        <unresolved>That doesn't work.</unresolved>
+        <script>
+          if (GetBoolean(player, "dressed")) {
+            msg ("You take your school outfit off.")
+            SetObjectFlagOff
+          }
+          else {
+            msg ("To undress you first need to have some clothes on. Dear oh dear,.. sometimes I even wonder how you manage to tie your own shoe laces.")
+          }
+        </script>
+      </command>
+    </object>
+    <object name="outside">
+      <inherit name="editor_room" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <picture>xL7hdjA.jpg</picture>
+      <exitslistprefix>You can go to</exitslistprefix>
+      <beforeenter type="script">
+        ClearScreen
+      </beforeenter>
+      <description type="script"><![CDATA[
+        msg ("You find yourself in a small storage area where you keep medical and repair equipment. There are some metal boxes mounted on the nearby walls and 4 containers lie wide open.<br/>---")
+      ]]></description>
+      <exit to="bedroom" />
+      <object name="boxes1">
+        <inherit name="editor_object" />
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <scenery type="boolean">false</scenery>
+        <open>You will have to go to the storage room to be able to do that.</open>
+        <feature_usegive />
+        <alias>boxes</alias>
+        <look type="script">
+          msg ("You see some boxes in the storage room, but you will have to come closer to see what is inside them.")
+        </look>
+        <search type="script">
+          msg ("You will have to go to the storage room to be able to do that.")
+        </search>
+        <use type="script">
+          msg ("You can't do that.")
+        </use>
+      </object>
+      <object name="equipment1">
+        <inherit name="editor_object" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <scenery type="boolean">false</scenery>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <alt type="stringlist">
+          <value>supplies</value>
+        </alt>
+        <feature_usegive />
+        <alias>equipment</alias>
+        <look type="script">
+          msg ("In the storage you can see some medical and repair equipment, but you will have to come closer to be able to examine it in more detail.")
+        </look>
+        <use type="script">
+          msg ("You can't do that.")
+        </use>
+      </object>
+    </object>
+    <object name="communication screen">
+      <inherit name="editor_room" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <beforeenter type="script"><![CDATA[
+        ClearScreen
+        picture ("433457-1920x1080.jpg")
+        msg ("A female android Viconia appears on the communication panel screen.<br/><br/>''Greetings " + player.alias + "!'' she says with a surprisingly feminine voice. ''Are you ready for your your first mission?''")
+      ]]></beforeenter>
+      <enter type="script">
+        speak_to_android_female_mission
+      </enter>
+      <object name="android female">
+        <inherit name="female" />
+        <inherit name="editor_object" />
+        <visible />
+        <scenery />
+        <alt type="stringlist">
+          <value>Viconia</value>
+        </alt>
+        <look type="script">
+          msg ("You see Viconia, newest line of Chronocorp's female androids. Other than some electrical circuits and plastic plates visible on her body, she looks like a typical blonde european female. She has blue eyes, which are further illuminated by the circuitry in her head.")
+        </look>
+        <enter type="script">
+        </enter>
+        <beforeenter type="script">
+        </beforeenter>
+      </object>
+    </object>
+    <object name="bathroom">
+      <inherit name="editor_room" />
+      <scenery />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <exitslistprefix>You can go to</exitslistprefix>
+      <description type="script"><![CDATA[
+        ClearScreen
+        picture ("800px-Hills_Hotel_Bathroom.png")
+        if (IsSwitchedOn(communication panel)) {
+          msg ("You are sitting in the cockpit. You see flying controls and a computer, which constantly flickers as it shows new information on the nearby screen. A wide window in front of you is revealing an unforgetable and extremely beautiful view of planet Earth as well as some stars in the distant part of the Universe.<br/><br/>A red lamp on the communication panel is signaling that someone is trying to contact you.<br/>---")
+        }
+        else {
+          msg ("You are sitting in the cockpit. You see flying controls and a computer, which constantly flickers as it shows new information on the nearby screen. A wide window in front of you is revealing an unforgetable and extremely beautiful view of planet Earth as well as some stars in the distant part of the Universe.<br/>---")
+        }
+      ]]></description>
+      <look type="script"><![CDATA[
+        ClearScreen
+        picture ("487335.png")
+        if (IsSwitchedOn(communication panel)) {
+          msg ("You are sitting in the cockpit of Chronocorp's space shuttle. Computers and monitors around you flicker as they show new data. You also see a wide window in front of you, revealing a beautiful view of planet Earth as well as some stars in the distant part of the Universe.<br/><br/>A red lamp on the communication panel is signaling that someone is trying to contact you.<br/>---")
+        }
+        else {
+          msg ("You are sitting in the cockpit of Chronocorp's space shuttle. Computers and monitors around you flicker as they show new data. You also see a wide window in front of you, revealing a beautiful view of planet Earth as well as some stars in the distant part of the Universe.<br/>---")
+        }
+      ]]></look>
+      <object name="computer">
+        <inherit name="editor_object" />
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>Use</value>
+        </displayverbs>
+        <feature_usegive />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <alt type="stringlist">
+          <value>computers</value>
+        </alt>
+        <scenery />
+        <look type="script">
+          if (IsSwitchedOn(communication panel)) {
+            msg ("Computer is connected to the nearby monitors which constantly flicker as they show new information. A red lamp on the communication panel is signaling that someone is trying to contact you.")
+          }
+          else {
+            msg ("Computer is connected to the nearby monitors which constantly flicker as they show new information.")
+          }
+        </look>
+        <use type="script">
+          MoveObject (player, database)
+        </use>
+      </object>
+      <object name="monitor">
+        <inherit name="editor_object" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <alias>monitors</alias>
+        <alt type="stringlist">
+          <value>monitors; screens; screen; data; information</value>
+        </alt>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <feature_usegive />
+        <scenery />
+        <look type="script">
+          msg ("The data on the monitors shows various information coming from the computer. If you want to examine this information in more detail you will have to use the computer.")
+        </look>
+        <use type="script">
+          msg ("The data on the monitors shows various information coming from the computer. If you want to examine this information in more detail you will have to use the computer.")
+        </use>
+      </object>
+      <object name="communication panel">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <visible />
+        <scenery />
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <feature_usegive />
+        <alt type="stringlist">
+          <value>red lamp; red light; communication screen</value>
+        </alt>
+        <feature_switchable />
+        <switchedon />
+        <look type="script">
+          if (IsSwitchedOn(communication panel)) {
+            msg ("A red lamp on the communication panel is signaling that someone is trying to contact you.")
+          }
+          else {
+            msg ("The lamp on the communication panel is switched off, which means nobody is trying to contact you at this moment.")
+          }
+        </look>
+        <use type="script">
+          if (IsSwitchedOn(communication panel)) {
+            SwitchOff (communication panel)
+            MoveObject (player, communication screen)
+          }
+          else if (GetBoolean(android female, "viconia_angry")) {
+            msg ("There is no response.")
+          }
+          else {
+            MoveObject (player, communication screen1)
+          }
+        </use>
+      </object>
+      <exit to="bedroom" />
+      <command>
+        <pattern>look at room; examine room; look at laboratory; examine laboratory; look at area; examine area</pattern>
+        <script>
+          ShowRoomDescription
+        </script>
+      </command>
+      <object name="window1">
+        <inherit name="editor_object" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <scenery />
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <alt type="stringlist">
+          <value>earth; sun; universe; stars</value>
+        </alt>
+        <alias>window</alias>
+        <feature_usegive />
+        <usemenuprompt type="string"></usemenuprompt>
+        <look type="script">
+          msg ("Through the window in the cockpit you can see a beautiful view of planet Earth. Sun is slowly rising behind it and further behind you see the vast universe filled with countless stars.")
+        </look>
+        <use type="script">
+          msg ("You can't do that.")
+        </use>
+      </object>
+      <object name="flying controls1">
+        <inherit name="editor_object" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <scenery />
+        <feature_usegive />
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <alias>flying controls</alias>
+        <look type="script">
+          msg ("The flying controls in the cockpit allow you to navigate the shuttle.")
+        </look>
+        <use type="script">
+          msg ("Note: Here you need to add flyin commands.")
+        </use>
+      </object>
+    </object>
+    <object name="database">
+      <inherit name="editor_room" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <description type="script">
+      </description>
+      <beforeenter type="script"><![CDATA[
+        ClearScreen
+        picture ("Stargate_Computer_Screen_by_Duratec.jpg")
+        msg ("As you access the database, several options appear on the nearby screen.<br/><br/>1. Current mission<br/>2. Astropedia<br/>3. Shuttle information<br/>4. Scan<br/>5. Repair<br/>6. Exit")
+      ]]></beforeenter>
+      <enter type="script">
+        use_computer
+      </enter>
+    </object>
+    <object name="communication screen1">
+      <inherit name="editor_room" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alias>communication screen</alias>
+      <beforeenter type="script"><![CDATA[
+        ClearScreen
+        picture ("433457-1920x1080.jpg")
+        msg ("A female android Viconia appears on the communication panel screen.<br/><br/>''Greetings " + player.alias + "'' she says with her feminine voice. ''What can I help you with?''")
+      ]]></beforeenter>
+      <enter type="script">
+        speak_to_android_female
+      </enter>
+      <object name="android female1">
+        <inherit name="female" />
+        <inherit name="editor_object" />
+        <visible />
+        <scenery />
+        <alt type="stringlist">
+          <value>Viconia</value>
+        </alt>
+        <alias>android female</alias>
+        <look type="script">
+          msg ("You see Viconia, newest line of Chronocorp's female androids. Other than some electrical circuits and plastic plates visible on her body, she looks like a typical blonde european female. She has blue eyes, which are further illuminated by the circuitry in her head.")
+        </look>
+        <enter type="script">
+        </enter>
+        <beforeenter type="script">
+        </beforeenter>
+      </object>
+    </object>
+  </object>
+  <command>
+    <pattern>go see #object#; go look at #object#; go examine #object#; go take a look at #object#; go and look at #object#; go and see #object#; go and examine #object#; go and take a look at #object#</pattern>
+    <unresolved>If you want to look at something try using "look at" or "examine" command.</unresolved>
+    <script>
+      msg ("If you want to look at something try using \"look at\" or \"examine\" command.")
+    </script>
+  </command>
+  <verb>
+    <pattern>undress #object#; take off #object#; remove #object#</pattern>
+    <property>undress</property>
+    <defaulttext>You can't do that.</defaulttext>
+  </verb>
+  <function name="speak_to_android_female"><![CDATA[
+    get input {
+      if (IsRegexMatch ("(gliese)", LCase (result))) {
+        msg ("<br/>\"Gliese 667 Cc lies in the constellation Scorpius, 22.7 light years away from Earth. It was discovered long ago, back in 2009. Colonization and exploration started 87 years ago, when we began jumping through space for the first time. Gliese 667 Cc has proven to be rich with chronomite and since there are still some areas we haven't explored, it is a good training ground for rookies such as yourself. When you arrive there, the first thing you may notice is that you've put on a few pounds under the planet's greater gravity. You may also think you're losing your sight, since this planet's dim red dwarf sun shines only a fraction of light of our Sun. The planet's year is only four weeks long and the surface temperature is approximately 30 °C. This is thanks to water that has been found there. If you want more information about Gliese 667 Cc, you can check the database on your computer.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(chronomite)", LCase (result))) {
+        msg ("<br/>\"Chronomite was discovered in the year 2661, exactly 353 years ago by the famous astronomer Vladimir Blazkowicz under the frozen core of Pluto. Scientists quickly learned that this rare material can be used to unleash almost limitless amounts of energy and it wasn't long before we found a way to safely harvest and exploit it. You see, a single chronomite atom is so unstable that it bends space-time around itself, but if you bring another chronomite atom into the equasion they become one of the most stable molecules in the Universe. Space travel is based on breaking the molecules of two chronomite atoms and making the jump through bent space-time that occurs as a consequence.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(constellation|scorpius|constellation scorpius)", LCase (result))) {
+        msg ("<br/>\"The constellation Scorpius is located near the centre of the Milky Way galaxy. It contains a number of bright stars, most of which are members of the Scorpius-Centaurus association, which is the closest stellar association to our solar system.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(earth)", LCase (result))) {
+        msg ("<br/>Female android looks at you with a slightly annoyed expression. \"What can I tell you about Earth that you do not already know for yourself? I am not your personal Astropedia, rookie.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(vladimir blazkowicz|vladimir|blazkowicz)", LCase (result))) {
+        msg ("<br/>\"Vladimir Blazkowic was the famous astronaut who discovered chronomite 353 years ago, but not many people know that he was also the founder of Chronocorp corporation. After his astronaut days, he used his fame and knowledge to attract huge investements into space mining; a risky endeavour which almost ruined him financially. Luckily he found chronomite on Pluto and managed to make a huge profit by exporting it to Earth.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(coordinates|mission details|mission|assignment)", LCase (result))) {
+        msg ("<br/>\"Your mission is pretty sraightforward. Travel to Gliese 667 Cc and try to find new chronomite deposits. To reach Gliese 667 Cc the coordinates are RA 17h 18m 57.16483s DEC 34°59'23.1416''. Once you reach the planet, you should scan the area for chronomite between latitudes 42° and 47° N and longitudes 13° and 20° E. There is a 100.000 credits reward for any space explorer who finds a new deposit of chronomite, so be thorough. Whether you find any chronomite or not, you are to contact the nearest mining colony when you are done and wait for further instructions there. Your copilot should be arriving shortly after you are finished with your first mission.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(exoplanet|extrasolar planet|exoplanets|extrasolar planets)", LCase (result))) {
+        msg ("<br/>\"An exoplanet also known as extrasolar planet is a planet outside the solar system. Around 18.010.000 such planets have been discovered and classified so far, including 461.000 multiple planetary systems. Chronomite has only been found on Pluto and Gliese 667 Cc so far, but there are millions of other candidates so we are sure there is more chronomite out there just waiting for someone to discover it. It is a daunting task and the Universe is simply too huge to explore, but we have to keep trying. Even Gliese 667 Cc still has many unexplored areas, but only a few dozen for which our geologists say it might contain chronomite.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(database|computer)", LCase (result))) {
+        msg ("<br/>\"You can always use your computer to access the Chronocorp's database where you can check for new missions and information about your current assignments. It is really self explanatory.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(yourself|viconia|android|who are you|androids|what are you)", LCase (result))) {
+        msg ("<br/>\"Android commonly refers to a synthetic organism designed to look and act like a human. I am a female android Viconia, serial number 667981. Although we have still not achieved the level of complexity that would classify us as sentient beings, advancements in android technology have allowed the design of functional and realistic humanlike behavior, which makes us an invaluable asset to Chronocorp.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(pluto)", LCase (result))) {
+        msg ("<br/>\"Discovered in 1930, Pluto was originally classified as the ninth planet in our solar system, however its status as a major planet fell into question following further study of it. Today Pluto is most known for its large deposits of chronomite.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(chronocorp|corporation)", LCase (result))) {
+        msg ("<br/>\"Chronocorp was founded by the famous astronaut Vladimir Blazkowic. After his astronaut days, he used his fame and knowledge to attract huge investements into space mining; a risky endeavour which almost ruined him financially, but luckily he found chronomite on Pluto and managed to make a huge profit by exporting it to Earth. Today Chronocorp employs over two billion people, half of which work and live in the mining colonies far away from Earth.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(milky way|galaxy)", LCase (result))) {
+        msg ("<br/>\"A galaxy is a massive, gravitationally bound system consisting of stars, stellar remnants, an interstellar medium of gas and dust, and dark matter, an important but poorly understood component. Milky way is just one out of 200 bilion galaxies in the visible Universe and it is also the galaxy that is home to our Solar System.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(solar system|planetary system|solar systems|planetary systems)", LCase (result))) {
+        msg ("<br/>\"The Solar System consists of the star and the objects that orbit it, whether they orbit it directly or by orbiting other objects that orbit it directly. Of those objects that orbit the star directly, the largest are usually planets, which form the planetary system around the star.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(astropedia)", LCase (result))) {
+        msg ("<br/>Android female smiles sarcastically. \"Have you never been on the net? I swear, sometimes you humans ask about the most unbelievable things.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(scorpius-centaurus association|scorpius-centaurus|association)", LCase (result))) {
+        msg ("<br/>\"It is the closest stellar association to our solar system.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(thanks|thank you)", LCase (result))) {
+        msg ("<br/>\"You are quite welcome. Now is there anything else I can help you with?\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(bye|goodbye|farewell)", LCase (result))) {
+        msg ("<br/>\"Thank you for your time, space explorer. Good luck on your mission.\"")
+        wait {
+          MoveObject (player, cockpit)
+        }
+      }
+      else if (IsRegexMatch ("(hi|hello|good day|greetings|good morning|good evening)", LCase (result))) {
+        msg ("<br/>\"Greetings to you too, space explorer.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(any other|alone|by myself|crew|nobody else|anybody else|anyone else)", LCase (result))) {
+        msg ("<br/>\"As I have already explained, we do not have enough space explorers to send you off with a crew, but we have made a deal with one of the mechanics who will join you on Gliese 667 Cc once you are finished with your mission. She goes by the name Victoria Redfield and is quite a capable mechanic. We are stretched thin in our effort to find more chronomite on new planets and there are just not enough space explorers out there to meet our demand.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(colonies|colony)", LCase (result))) {
+        msg ("<br/>\"There are currently one bilion people working in the colonies throughout our galaxy. The majority is located on Pluto and Gliese 667 Cc where we found huge deposits of chronomite.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(lack|shortage)", LCase (result))) {
+        msg ("<br/>\"As you probably know chronomite is extremely difficult to find and although we currently own rich deposits on Pluto and Gliese 667 Cc, high demand is putting a lot of preassure on our corporation. With such a demand for chronomite the current supplies will dry out within the next 20 years, so we have to expand to other planets and we are stretched thin at the moment.\"")
+        speak_to_android_female
+      }
+      else if (IsRegexMatch ("(fuck|shit|bitch|whore|screw|idiot|stupid|idiotic|fucking|shiting|skank|sex|asshole|ass|butthole|butt|moron|retard|dumb|arse|arsehole|bimbo|bastard|dag|dweeb|deadbeat|dick|dickhead|freak|fruitcake|floosie|floozie|floozy||gasbag|goose|honky|jerk|kook|lardass|lardbutt|lard-butt|lard-ass|lard-arse|limey|loudmouth|metalic breath|bad breath|louse|meathead|old bat|pig|swine|nut|nutter|scum|scumbag|smartass|smart-ass|smartarse|smart-arse|tightass|tight-ass|twit|twat|yokel|airhead|cock|bampot|barmpot|barmy|berk|bint|testicles|bollocks|bugger|piss|vagina|lick|shite|skanky|trollop|dunce|dimwit|tard|fuck ass|fuck arse|fuck-ass|fuck-arse|stooge|faggot|terd|dipshit|dipshite|asswipe|arsewipe|ass-wipe|arse-wipe|drone|dumbass|dumb-ass|dumb-arse|douchebag|douche|douche-bag|mofo|mother fucker|motherfucker|fucker|mother-fucker|dope|fag|mothafucka|fagbag|fag-bag|cunt|pussy|cum|dick-brain|dick-breath|dickbrain|dickbreath|meat-head|metal breath|knob head|turd|fool)", LCase (result))) {
+        msg ("<br/>Android female looks at you bitterly. \"That was rude! I have reported your behavior to Chronocorp's conduct manager who will take a fine out of your next salary. According to the conduct protocol 175 section B, I am to inform you about the usage of Astropedia if you have any questions regarding your mission. Also, according to the conduct protocol 176 section A, the insulted party is allowed to cease all communication and will not be fined for insulting back. So, have a good one, asshole!\"")
+        wait {
+          SetObjectFlagOn (android female, "viconia_angry")
+          MoveObject (player, cockpit)
+        }
+      }
+      else {
+        msg ("<br/>\"I apologize, but my programming allows me to respond only to topics that are relevant to your current mission.\"")
+        speak_to_android_female
+      }
+    }
+  ]]></function>
+  <function name="use_computer"><![CDATA[
+    get input {
+      if (IsRegexMatch ("(1|one|mission)", LCase (result))) {
+        msg ("<br/>\"Travel to Gliese 667 Cc and try to find new chronomite deposits. To reach Gliese 667 Cc the coordinates are RA 17h 18m 57.16483s DEC 34°59'23.1416''. Once you reach the planet, you should scan the area for chronomite between latitudes 42° and 47° N and longitudes 13° and 20° E. There is a 100.000 credits reward for any space explorer who finds a new deposit of chronomite, so be thorough. Whether you find any chronomite or not, you are to contact the nearest mining colony when you are done and wait for further instructions there.\"")
+        use_computer
+      }
+      else if (IsRegexMatch ("(2|two|astropedia)", LCase (result))) {
+        msg ("<br/>\"Type in the topic you wish to know more about. Once you are finished, type \"exit\" to return to the database.\"")
+        use_astropedia
+      }
+      else if (IsRegexMatch ("(3|three|shuttle|information)", LCase (result))) {
+        msg ("<br/><b>Shuttle name:</b> Explorer XII<br/><b>Class:</b> C7<br/><b>Status:</b> All systems and functions operational and working on 100%.<br/><br/><b>Current crew members:</b><br/> 1.) " + player.alias + " <br/><br/><b>Description:</b> Chronocorp's newest line of shuttles designed for space exploration features a new engine that requires far less chronomite for creating stable wormholes in the space–time continuum. This makes space exploration much cheaper and much more efficient.")
+        use_computer
+      }
+      else if (IsRegexMatch ("(4|four|scan)", LCase (result))) {
+        msg ("<br/>\"Scanning area for chronomite... ... ... Chronomite not found.\"")
+        use_computer
+      }
+      else if (IsRegexMatch ("(6|six|exit)", LCase (result))) {
+        wait {
+          msg ("<br/>The screen slowly fades.")
+          MoveObject (player, cockpit)
+        }
+      }
+      else if (IsRegexMatch ("(5|five|repair)", LCase (result))) {
+        msg ("<br/>\"All systems and functions operational and working on 100%. Repair not required.\"")
+        use_computer
+      }
+      else {
+        msg ("<br/>\"Please choose one of the topics from the list.\"")
+        use_computer
+      }
+    }
+  ]]></function>
+  <function name="use_astropedia"><![CDATA[
+    get input {
+      if (IsRegexMatch ("(gliese)", LCase (result))) {
+        msg ("<br/>\"Gliese 667 Cc lies in the constellation Scorpius, 22.7 light years away from Earth. It was discovered long ago, back in 2009. Colonization and exploration started 87 years ago, when we began jumping through space for the first time. The planet's year is only four weeks long and the surface temperature is approximately 30 °C. This is thanks to water that has been found there. Gliese 667 Cc is also rich with chronomite and geologists speculate there might be more of it hidden in some areas that have not yet been explored thoroughly.\"")
+        use_astropedia
+      }
+      else if (IsRegexMatch ("(chronomite)", LCase (result))) {
+        msg ("<br/>\"Chronomite was discovered in the year 2661, exactly 353 years ago by the famous astronomer Vladimir Blazkowicz under the frozen core of Pluto. Scientists quickly learned that this rare material can be used to unleash almost limitless amounts of energy and it wasn't long before we found a way to safely harvest and exploit it. A single chronomite atom is so unstable that it bends space-time around itself, but if one brings another chronomite atom into the equasion they become one of the most stable molecules in the Universe. Space travel is based on breaking the molecules of two chronomite atoms and making the jump through bent space-time that occurs as a consequence.\"")
+        use_astropedia
+      }
+      else if (IsRegexMatch ("(constellation|scorpius|constellation scorpius)", LCase (result))) {
+        msg ("<br/>\"The constellation Scorpius is located near the centre of the Milky Way galaxy. It contains a number of bright stars, most of which are members of the Scorpius-Centaurus association, which is the closest stellar association to our solar system.\"")
+        use_astropedia
+      }
+      else if (IsRegexMatch ("(earth|world|blue planet|terra|gaia)", LCase (result))) {
+        msg ("<br/>\"Earth, also known as \"World\" and sometimes referred to as the \"Blue Planet\" the \"Terra\" or \"Gaia\", is the third-closest planet to the Sun, the densest planet in the Solar System, the largest of the Solar System's four terrestrial planets and the only celestial body known to accommodate life. It is home to millions of species, including a global population of humans, that are supported and nourished by its biosphere and minerals.\"")
+        use_astropedia
+      }
+      else if (IsRegexMatch ("(vladimir blazkowicz|vladimir|blazkowicz)", LCase (result))) {
+        msg ("<br/>\"Vladimir Blazkowic was the famous astronaut who discovered chronomite 353 years ago, but not many people know that he was also the founder of Chronocorp corporation. After his astronaut days, he used his fame and knowledge to attract huge investements into space mining; a risky endeavour which almost ruined him financially. Luckily he found chronomite on Pluto and managed to make a huge profit by exporting it to Earth.\"")
+        use_astropedia
+      }
+      else if (IsRegexMatch ("(exoplanet|extrasolar planet|exoplanets|extrasolar planets)", LCase (result))) {
+        msg ("<br/>\"An exoplanet also known as extrasolar planet is a planet outside the solar system. Around 18.010.000 such planets have been discovered and classified so far, including 461.000 multiple planetary systems. Chronomite has only been found on Pluto and Gliese 667 Cc so far.\"")
+        use_astropedia
+      }
+      else if (IsRegexMatch ("(viconia|android|androids)", LCase (result))) {
+        msg ("<br/>\"Android commonly refers to a synthetic organism designed to look and act like a human. Viconia model is one of the most well known android models used by the Chronocorp corporation since it features almost humanlike behavior that is further enhanced by access to vast knowledge base that can be found on the net. Although androids have still not achieved the level of complexity that would classify them as sentient beings, advancements in android technology make them a valuable asset to any household or organization.\"")
+        use_astropedia
+      }
+      else if (IsRegexMatch ("(pluto)", LCase (result))) {
+        msg ("<br/>\"Discovered in 1930, Pluto was originally classified as the ninth planet in our solar system, however its status as a major planet fell into question following further study of it. Today Pluto is most known for its large deposits of chronomite.\"")
+        use_astropedia
+      }
+      else if (IsRegexMatch ("(chronocorp|corporation)", LCase (result))) {
+        msg ("<br/>\"Chronocorp was founded by the famous astronaut Vladimir Blazkowic. After his astronaut days, he used his fame and knowledge to attract huge investements into space mining; a risky endeavour which almost ruined him financially, but luckily he found chronomite on Pluto and managed to make a huge profit by exporting it to Earth. Today Chronocorp employs over two billion people, half of which work and live in the mining colonies far away from Earth.\"")
+        use_astropedia
+      }
+      else if (IsRegexMatch ("(milky way|galaxy)", LCase (result))) {
+        msg ("<br/>\"A galaxy is a massive, gravitationally bound system consisting of stars, stellar remnants, an interstellar medium of gas and dust, and dark matter, an important but poorly understood component. Milky way is just one out of 200 bilion galaxies in the visible Universe and it is also the galaxy that is home to our Solar System.\"")
+        use_astropedia
+      }
+      else if (IsRegexMatch ("(solar system|planetary system|solar systems|planetary systems)", LCase (result))) {
+        msg ("<br/>\"The Solar System consists of the star and the objects that orbit it, whether they orbit it directly or by orbiting other objects that orbit it directly. Of those objects that orbit the star directly, the largest are usually planets, which form the planetary system around the star.")
+        use_astropedia
+      }
+      else if (IsRegexMatch ("(astropedia|net)", LCase (result))) {
+        msg ("<br/>\"It is a global system of interconnected networks that carries an extensive range of information resources and services.\"")
+        use_astropedia
+      }
+      else if (IsRegexMatch ("(scorpius-centaurus association|scorpius-centaurus|association)", LCase (result))) {
+        msg ("<br/>\"It is the closest stellar association to our solar system.\"")
+        use_astropedia
+      }
+      else if (IsRegexMatch ("(exit)", LCase (result))) {
+        msg ("<br/>As you access the database, several options appear on the nearby screen.<br/><br/>1. Current mission<br/>2. Astropedia<br/>3. Shuttle information<br/>4. Scan<br/>5. Repair<br/>6. Exit")
+        use_computer
+      }
+      else if (IsRegexMatch ("(colonies|colony)", LCase (result))) {
+        msg ("<br/>\"There are currently one bilion people working in the colonies throughout our galaxy. The majority is located on Pluto and Gliese 667 Cc where we found huge deposits of chronomite.\"")
+        use_astropedia
+      }
+      else {
+        msg ("<br/>\"That topic is not relevant for your current mission.\"")
+        use_astropedia
+      }
+    }
+  ]]></function>
+  <function name="checkOnline" parameters="answer">
+    if (UCase(answer)="TRUE") {
+      AddExternalStylesheet ("http://astral.zz.mu/style-black-online.css")
+    }
+    else {
+      AddExternalStylesheet (GetFileUrl("style-black-offline.js"))
+    }
+  </function>
+  <function name="speak_to_android_female_mission">
+    ShowMenu ("", Split ("What mission are you talking about?;If you are talking about mission to Gliese 667 Cc, then yes I am ready.;Actually I am having second thoughts about this.", ";"), false) {
+      android female.choice = result
+      msg ("")
+      if (android female.choice="What mission are you talking about?") {
+        msg ("\"Mission to Gliese 667 Cc, of course\" she continues friendly. \"It's an earthlike exoplanet in the constellation Scorpius, 22.7 light years away from Earth.\"")
+        speak_to_android_female_mission_details
+      }
+      else if (android female.choice="If you are talking about mission to Gliese 667 Cc, then yes I am ready.") {
+        msg ("")
+        msg ("\"Good!\" she smiles friendly. \"Gliese 667 Cc is habitable and very similar to Earth, so I am sure you will like it there.\"")
+        speak_to_android_female_mission_accept
+      }
+      else if (android female.choice="Actually I am having second thoughts about this.") {
+        msg ("")
+        msg ("\"Oh don't worry!\" she smiles friendly. \"Gliese 667 Cc may lie far away, but it is very similar to Earth and I am sure you will like it there. Besides, you can't just quit after the money Chronocorp poured into your education.\"")
+        speak_to_android_female_mission_decline
+      }
+    }
+  </function>
+  <function name="speak_to_android_female_mission_details">
+    ShowMenu ("", Split ("Very well. Can you brief me on mission details?;22.7 light years away from Earth?! Sorry, but I am suddenly having second thoughts about this trip.", ";"), false) {
+      android female.choice = result
+      msg ("")
+      if (android female.choice="Very well. Can you brief me on mission details?") {
+        msg ("")
+        msg ("Viconia nods and continues: \"That's why I'm here. Your mission is pretty sraightforward. Travel to Gliese 667 Cc and try to find new chronomite deposits.There is a 100.000 credits reward for any space explorer who finds a new deposit of chronomite, so be thorough! Also if you have any questions, now would be a good time to ask them - otherwise you can always access mission database on your computer for more details.\"")
+        speak_to_android_female_mission_questions
+      }
+      else if (android female.choice="22.7 light years away from Earth?! Sorry, but I am suddenly having second thoughts about this trip.") {
+        msg ("")
+        msg ("\"Oh don't worry!\" she smiles friendly. \"Gliese 667 Cc may lie far away, but it is very similar to Earth and I am sure you will like it there. Besides, you can't just quit after the money Chronocorp poured into your education.\"")
+        speak_to_android_female_mission_decline
+      }
+    }
+  </function>
+  <function name="speak_to_android_female_questions">
+    ShowMenu ("", Split ("Is anyone else joining me?;What do you know about Gliese 667 Cc?;Tell me more about chronomite.;What can you tell me about Chronocorp?;I will be needing coordinates to Gliese 667 Cc, as well as coordinates to the scan area.;How do I access mission database on my computer?;I have no more questions. Goodbye.", ";"), false) {
+      android female.choice = result
+      msg ("")
+      if (android female.choice="Is anyone else joining me?") {
+        msg ("")
+        msg ("\"We do not have enough space explorers to send you off with a crew, but we have made a deal with one of the mechanics who will join you on Gliese 667 Cc once you are finished with your mission. Her name is Victoria Redfield and is quite a capable mechanic. We are stretched thin in our effort to find more chronomite on new planets and there are just not enough space explorers out there to meet our demand.\"")
+        speak_to_android_female_questions
+      }
+      else if (android female.choice="What do you know about Gliese 667 Cc?") {
+        msg ("")
+        msg ("\"Gliese 667 Cc lies in the constellation Scorpius, 22.7 light years away from Earth. It was discovered long ago, back in 2009. Colonization and exploration started 87 years ago, when we began jumping through space for the first time. Gliese 667 Cc has proven to be rich with chronomite and since there are still some areas we haven't explored, it is a good training ground for rookies such as yourself. When you arrive there, the first thing you may notice is that you've put on a few pounds under the planet's greater gravity. You may also think you're losing your sight, since this planet's dim red dwarf sun shines only a fraction of light of our Sun. The planet's year is only four weeks long and the surface temperature is approximately 30 °C. This is thanks to water that has been found there.\"")
+        speak_to_android_female_questions
+      }
+      else if (android female.choice="Tell me more about chronomite.") {
+        msg ("")
+        msg ("\"Chronomite was discovered in the year 2661, exactly 353 years ago by the famous astronomer Vladimir Blazkowicz under the frozen core of Pluto. Scientists quickly learned that this rare material can be used to unleash almost limitless amounts of energy and it wasn't long before we found a way to safely harvest and exploit it. You see, a single chronomite atom is so unstable that it bends space-time around itself, but bring many chronomite atoms into the equasion and they become one of the most stable molecules in the Universe. Space travel is based on breaking the molecules of chronomite atoms and making the jump through bent space-time that occurs as a consequence.\"")
+        speak_to_android_female_questions
+      }
+      else if (android female.choice="What can you tell me about Chronocorp?") {
+        msg ("")
+        msg ("\"Chronocorp was founded by the famous astronaut Vladimir Blazkowic. After his astronaut days, he used his fame and knowledge to attract huge investements into space mining; a risky endeavour which almost ruined him financially, but luckily he found chronomite on Pluto and managed to make a huge profit by exporting it to Earth. Today Chronocorp employs over two billion people, half of which work and live in the mining colonies far away from Earth.\"")
+        speak_to_android_female_questions
+      }
+      else if (android female.choice="I will be needing coordinates to Gliese 667 Cc, as well as coordinates to the scan area.") {
+        msg ("")
+        msg ("\"Of course.\" Viconia says. \"To reach Gliese 667 Cc the coordinates are RA 17h 18m 57.16483s DEC 34°59'23.1416''. Once you reach the planet, you should scan the area for chronomite between latitudes 42° and 47° N and longitudes 13° and 20° E. I know you humans have trouble remembering all these numbers, so I have uploaded the coordinates to your mission database.\"")
+        speak_to_android_female_questions
+      }
+      else if (android female.choice="How do I access mission database on my computer?") {
+        msg ("")
+        msg ("\"Just use your computer in the cockpit and then choose the relevant tab. It's not rocket science you know.\"")
+        speak_to_android_female_questions
+      }
+      else if (android female.choice="I have no more questions. Goodbye.") {
+        msg ("")
+        msg ("Viconia smiles and waves at you. \"Good luck, " + player.alias + "!")
+        MoveObject (player, cockpit)
+      }
+    }
+  </function>
+  <function name="speak_to_android_female_mission_decline">
+    ShowMenu ("", Split ("So be it then. Can you brief me on mission details?;Nothing you say will make me change my mind! I am not going and that's final!", ";"), false) {
+      android female.choice = result
+      msg ("")
+      if (android female.choice="So be it then. Can you brief me on mission details?") {
+        msg ("")
+        msg ("Viconia nods and continues: \"That's why I'm here. Your mission is pretty sraightforward. Travel to Gliese 667 Cc and try to find new chronomite deposits.There is a 100.000 credits reward for any space explorer who finds a new deposit of chronomite, so be thorough! Also if you have any questions, now would be a good time to ask them - otherwise you can always access mission database on your computer for more details.\"")
+        speak_to_android_female_questions
+      }
+      else if (android female.choice="Nothing you say will make me change my mind! I am not going and that's final!") {
+        msg ("")
+        msg ("Viconia looks at you with disappointment: \"I don't understand this sudden change of heart, but if that is your decision, Chronocorp will respect it. Of course, you will have to pay off your debt to Chronocorp for education and legal costs, which will be very difficult if you are not in the right line of work, but its your call.\"")
+        finish
+      }
+    }
+  </function>
+  <function name="speak_to_android_female_mission_accept">
+    ShowMenu ("", Split ("Can you brief me on mission details?", ";"), false) {
+      android female.choice = result
+      msg ("")
+      if (android female.choice="Can you brief me on mission details?") {
+        msg ("")
+        msg ("Viconia nods and continues: \"That's why I'm here. Your mission is pretty sraightforward. Travel to Gliese 667 Cc and try to find new chronomite deposits.There is a 100.000 credits reward for any space explorer who finds a new deposit of chronomite, so be thorough! Also if you have any questions, now would be a good time to ask them - otherwise you can always access mission database on your computer for more details.\"")
+        speak_to_android_female_questions
+      }
+    }
+  </function>
+  <javascript src="online.js" />
+</asl>

@@ -1,0 +1,212 @@
+<library>
+
+	
+	<dynamictemplate name="SitNotPossible">"You can't sit on it."</dynamictemplate>
+	<dynamictemplate name="GetUpNotPossible">"You can't get up."</dynamictemplate>
+	<dynamictemplate  name="GetUp">"You get up."</dynamictemplate >
+	<dynamictemplate name="NotSitting">"You are not sitting anyway."</dynamictemplate>
+	<dynamictemplate name="Sitting">"You sit upon " + object.article + "."</dynamictemplate>
+	<dynamictemplate name="GettingUp">"You get up from " + object.article + "."</dynamictemplate>
+	<dynamictemplate name="AlreadySitting">"You are already sitting."</dynamictemplate>
+	<dynamictemplate name="AlreadyStanding">"You are already standing."</dynamictemplate>
+	
+	<command name="sit">
+    <pattern>sit on #object#;sit upon #object#;sit down on #object#;sit down upon #object#</pattern>
+		<script>
+				DoSiton(object)
+		</script>
+  </command>
+
+	<command name="getup">
+    <pattern>get up from #object#;get up #object#;stand up from #object#;stand up #object#;leave #object#</pattern>
+		<script>
+			DoGetup(object)
+		</script>
+	</command>
+	
+	<command name="getup2">
+    <pattern>get up;stand up</pattern>
+		<script>
+			DoGetup2()
+		</script>
+	</command>
+	
+	<function name="IsSitting" value="boolean">
+		return (player.sitting)
+	</function>
+	
+	<function name="DoSiton" parameters="object">
+		if (HasBoolean(player,"sitting")=false){
+			player.sitting=false
+		}
+		if (DoesInherit(object, "_siton")) {
+			if ( not player.sitting){
+				if(object.sitmsg = null) {
+					msg(DynamicTemplate("Sitting", object))
+				} else {
+					msg(object.sitmsg)
+				}
+				
+				player.sitting=true
+				object.sitting=true
+
+				object.displayverbs =  sittingdummy.displayverbs
+				list remove(object.displayverbs, "Sit on")
+				list add(object.displayverbs,"Get up")
+				
+				//do after
+				if (HasScript(object, "onaftersiton")) {
+					do(object, "onaftersiton")
+				} else if(HasString(object, "onaftersiton")) {
+					msg(object.onaftersiton)
+				}
+			} else {
+				msg(DynamicTemplate("AlreadySitting", object))
+			}
+		} else {
+			msg(DynamicTemplate("SitNotPossible", object))
+		}
+	</function>
+
+	<function name="DoGetup" parameters="object">
+		if (HasBoolean(player,"sitting")=false){
+			player.sitting=false
+		}
+		if (DoesInherit(object, "_siton")) {
+			if ( player.sitting){
+				if(object.getupmsg = null) {
+					msg(template ("GetUp"))
+				} else {
+					msg(object.getupmsg)
+				}
+				
+				player.sitting=false
+				object.sitting=false
+
+				object.displayverbs =  sittingdummy.displayverbs
+				list remove(object.displayverbs, "Get up")
+				
+				//do after
+				if (HasScript(object, "onaftergetup")) {
+					do(object, "onaftergetup")
+				} else if(HasString(object, "onaftergetup")) {
+					msg(object.onaftergetup)
+				}	
+			} else {
+				msg(DynamicTemplate("AlreadyStanding", object))
+			}
+		} else {
+			msg(DynamicTemplate("GetUpNotPossible", object))
+		}		
+	</function>
+	
+	<function name="DoGetup2">
+		if (HasBoolean(player,"sitting")=false){
+			player.sitting=false
+		}
+		if (player.sitting) {
+			if(object.getupmsg = null) {
+				msg(template ("GetUp"))
+			} else {
+				msg(object.getupmsg)
+			}
+			
+			player.sitting=false
+
+			foreach(obj, AllObjects()) {
+				if ( GetBolean(obj,"sitting")){
+					object.displayverbs =  sittingdummy.displayverbs
+					player.sitting=false
+					obj.sitting=false
+					list remove(object.displayverbs, "Get up")
+				}
+			}
+			
+			//do after
+			if (HasScript(object, "onaftergetup")) {
+				do(object, "onaftergetup")
+			} else if(HasString(object, "onaftergetup")) {
+				msg(object.onaftergetup)
+			}	
+		} else {
+			msg(DynamicTemplate("AlreadyStanding", ""))
+		}		
+	</function>
+	
+	
+	<object name="sittingdummy">
+		<inherit name="_siton" />
+	</object>
+	
+	<type name="_siton">
+		<sitting type="boolean">false</sitting>
+		<displayverbs type="list">Look at; Take; Sit on</displayverbs>
+	</type>
+	<!-- Interface -->
+	<tab>
+		<parent>_ObjectEditor</parent>
+		<caption>Sit/Get up</caption>
+		<mustnotinherit>editor_room; defaultplayer</mustnotinherit>
+		
+		<control>
+			<controltype>title</controltype>
+			<caption>Sit on / Get up</caption>
+		</control>
+		
+		<control>
+			<controltype>dropdowntypes</controltype>
+			<caption>Can you sit on it?</caption>
+			<types>*=No; _siton=Yes</types>
+			<width>150</width>
+		</control>
+		
+		<control>
+			<mustinherit>_siton</mustinherit>
+			<controltype>textbox</controltype>
+			<attribute>sitmsg</attribute>
+			<caption>Message to print when sitting on (leave blank for default)</caption>
+			<nullable/>
+		</control>
+		
+		<control>
+			<mustinherit>_siton</mustinherit>
+			<controltype>textbox</controltype>
+			<attribute>getupmsg</attribute>
+			<caption>Message to print when getting up (leave blank for default)</caption>
+			<nullable/>
+		</control>
+		
+		<control>
+			<mustinherit>_siton</mustinherit>
+			<controltype>title</controltype>
+			<caption>After sitting on</caption>
+		</control>
+		
+		<control>
+			<mustinherit>_siton</mustinherit>
+			<selfcaption>After sitting on object</selfcaption>
+			<controltype>multi</controltype>
+			<attribute>onaftersiton</attribute>
+			<types>null=None; string=Text; script=Run script</types>
+			<editors>string=textbox</editors>
+			<expand/>
+		</control>
+		
+		<control>
+			<mustinherit>_siton</mustinherit>
+			<controltype>title</controltype>
+			<caption>After getting up</caption>
+		</control>
+		
+		<control>
+			<mustinherit>_siton</mustinherit>
+			<selfcaption>After getting up object</selfcaption>
+			<controltype>multi</controltype>
+			<attribute>onaftergetup</attribute>
+			<types>null=None; string=Text; script=Run script</types>
+			<editors>string=textbox</editors>
+			<expand/>
+		</control>
+		
+	</tab>
+</library>

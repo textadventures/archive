@@ -1,0 +1,97 @@
+<!--Saved by Quest 5.1.4393.23459-->
+<asl version="510">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="ADVENTURE WORLD 1">
+    <gameid>f05a5c44-5884-48db-b6ee-95faa94f267b</gameid>
+    <version>1.0</version>
+    <description><![CDATA[<b></b>]]></description>
+    <author>Derek Bistricky</author>
+    <defaultfontsize type="int">11</defaultfontsize>
+    <category>RPG</category>
+    <defaultfont>Arial Black</defaultfont>
+    <defaultbackground>Black</defaultbackground>
+    <defaultforeground>White</defaultforeground>
+    <start type="script">
+      game.displayroomdescriptionstart = false
+      msg ("My introduction is here.")
+      msg ("Press any key")
+      wait {
+        msg ("Here you can do.")
+        OnEnterRoom (null)
+      }
+    </start>
+  </game>
+  <object name="Prison Cell">
+    <inherit name="editor_room" />
+    <description><![CDATA[<br/><br/><b>The prison cell is small. <br/>The floors are damp. <br/>There is little light, except that, coming from the Prison Guard Post.</b>]]></description>
+    <picture type="string"></picture>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <alt>Derek</alt>
+    </object>
+    <exit name="Cell exit" alias="east" to="Prison Guard Post">
+      <inherit name="eastdirection" />
+      <lookonly type="boolean">false</lookonly>
+      <locked />
+      <lockmessage>The closed Cell Gate blocks your way.</lockmessage>
+    </exit>
+    <object name="floor">
+      <alt>ground</alt>
+      <scenery />
+      <look><![CDATA[<b>You look at the floor and see a key near the cell door.</b>]]></look>
+    </object>
+    <object name="key">
+      <inherit name="editor_object" />
+      <take />
+      <drop type="boolean">false</drop>
+      <takemsg>You pick up the key.  It could come in handy.</takemsg>
+      <scenery />
+      <look><![CDATA[<b>The key is old and rusty.</b>]]></look>
+      <Use type="string"></Use>
+      <selfuseon type="scriptdictionary">
+        <item key="Cell Gate"><![CDATA[
+          msg ("The Cell Gate unlocks.<br/>")
+        ]]></item>
+      </selfuseon>
+    </object>
+    <object name="Cell Gate">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <look><![CDATA[<b>The cell gate is built of thick black bars. It is very rusty.</b>]]></look>
+      <close type="boolean">false</close>
+      <alt>gate</alt>
+      <open />
+      <autounlock />
+      <canlockopen type="boolean">false</canlockopen>
+      <key type="object">key</key>
+      <onunlock type="script">
+        UnlockExit (Cell exit)
+      </onunlock>
+    </object>
+  </object>
+  <verb>
+    <property>Use</property>
+    <pattern>Use</pattern>
+    <defaultexpression>"You can't Use " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Prison Guard Post">
+    <inherit name="editor_room" />
+    <description><![CDATA[<b>Just outside the Prison Cell is a large wooden desk with chair.</b> <br/><br/><br/><br/><br/>]]></description>
+    <exit alias="west" to="Prison Cell">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="wooden desk">
+      <inherit name="editor_object" />
+      <alt>desk</alt>
+      <drop type="boolean">false</drop>
+      <look><![CDATA[<b>The wooden desk is definately old. Beyond dirt, stains and what appears to be some blood, the top of the desk has carved in it the numbers <u>6932</u>.</b> <br/><b>On top of the desk is a large lit candle in a brass candle holder.</b> <br/><b>You also notice this desk contains a drawer.</b>
+<br/><br/><br/><br/>      ]]></look>
+    </object>
+    <object name="Candle">
+      <inherit name="editor_object" />
+      <alt>lit candle</alt>
+    </object>
+  </object>
+</asl>

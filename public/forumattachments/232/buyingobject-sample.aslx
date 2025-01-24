@@ -1,0 +1,60 @@
+<!--Saved by Quest 5.1.4426.19610-->
+<asl version="510">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="buyingobject-sample">
+    <gameid>e3546d64-2750-4968-90d9-9d588e19edc7</gameid>
+    <version>1.0</version>
+    <description type="string"></description>
+  </game>
+  <object name="shop">
+    <inherit name="editor_room" />
+    <alias>Shop</alias>
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+    <exit alias="east" to="East Room">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="object">
+      <inherit name="editor_object" />
+      <alias>Object of Great Desire</alias>
+      <take type="script">
+        if (GetBoolean(object, "paid")) {
+          MoveObject (object, player)
+        }
+        else {
+          msg ("The shopkeeper says, \"Hey! You haven't paid for that yet!!\"")
+        }
+      </take>
+    </object>
+    <object name="shopkeeper">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <alias>Shopkeeper</alias>
+    </object>
+  </object>
+  <object name="East Room">
+    <inherit name="editor_room" />
+    <exit alias="west" to="shop">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="wallet">
+      <inherit name="editor_object" />
+      <alias>Wallet</alias>
+      <take />
+    </object>
+  </object>
+  <command name="paying">
+    <pattern>pay for #object#</pattern>
+    <script>
+      if (Got(wallet)) {
+        msg ("The shopkeeper processes your payment and thanks you.")
+        object.paid = true
+      }
+      else {
+        msg ("You don't seem to have your wallet.")
+      }
+    </script>
+  </command>
+</asl>

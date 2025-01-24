@@ -1,0 +1,738 @@
+<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="We Walk Among the Dead">
+    <gameid>4490a34b-a4f9-49c3-b64f-c28a4aec1b3c</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <category>Horror</category>
+    <difficulty>Medium</difficulty>
+    <cruelty>Nasty</cruelty>
+    <cover>cover art.jpg</cover>
+    <gridmap type="boolean">false</gridmap>
+    <feature_limitinventory />
+    <feature_lightdark />
+    <feature_asktell />
+    <appendobjectdescription />
+    <backgroundimage>cover art.jpg</backgroundimage>
+    <setbackgroundopacity />
+    <backgroundopacity type="double">0.2</backgroundopacity>
+    <autodescription_youarein_newline />
+    <autodescription_youcansee_newline />
+    <autodescription_youcango_newline />
+    <autodescription_description_newline />
+    <mapsize type="int">100</mapsize>
+    <menuforeground>Cyan</menuforeground>
+    <menubackground>YellowGreen</menubackground>
+    <menuhoverforeground>Cyan</menuhoverforeground>
+    <defaultforeground>GoldenRod</defaultforeground>
+    <defaultlinkforeground>DarkSeaGreen</defaultlinkforeground>
+    <defaultfontsize type="int">18</defaultfontsize>
+    <menufontsize type="int">10</menufontsize>
+    <pov type="object">player</pov>
+    <start type="script"><![CDATA[
+      PrintCentered ("Shots echo though the halls as scream fll your ears. The blasting of the sirens make it hard to image this being a dream. You stir in your bunk only thinking its another riot. Rolling over to your side a loud BANG hits the cell door you open your eyes to look at what is going on. Astonished and in disbelief as the horror unfolds in front of you. <br/><br/><br/><br/>")
+      wait {
+        play sound ("Tornado_Siren_II-Delilah-747233690.wav", false, true)
+      }
+    ]]></start>
+    <object name="zombie_2">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <dead type="boolean">false</dead>
+      <Health type="int">3</Health>
+      <damage type="script">
+        DecreaseObjectCounter (player, "Health")
+        DecreaseObjectCounter (player, "Health")
+        DecreaseObjectCounter (player, "Health")
+        DecreaseObjectCounter (player, "Health")
+        DecreaseObjectCounter (player, "Health")
+      </damage>
+      <attack type="script">
+        if (RandomChance(50)) {
+          do (player, "damage")
+        }
+        if (RandomChance(50)) {
+          do (zombie_2, "damage")
+        }
+        if (zombie_2.Health = 0) {
+          set (zombie_2, "dead", True)
+          if (zombie_2.dead = True) {
+            msg ("Thank God its dead, no worries.")
+          }
+        }
+      </attack>
+    </object>
+  </game>
+  <object name="your_cell">
+    <inherit name="editor_room" />
+    <description type="string"></description>
+    <dark type="boolean">false</dark>
+    <darkroomdescription type="script">
+    </darkroomdescription>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <feature_player />
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>Health</key>
+          <value></value>
+        </item>
+        <item>
+          <key>Hunger</key>
+          <value></value>
+        </item>
+        <item>
+          <key>Thurst</key>
+          <value></value>
+        </item>
+        <item>
+          <key>Days</key>
+          <value></value>
+        </item>
+        <item>
+          <key>Sanity</key>
+          <value></value>
+        </item>
+        <item>
+          <key>Weapon</key>
+          <value></value>
+        </item>
+      </statusattributes>
+      <Health type="int">75</Health>
+      <Hunger type="int">50</Hunger>
+      <Thurst type="int">45</Thurst>
+      <Days type="int">0</Days>
+      <Sanity type="int">50</Sanity>
+      <maxobjects type="int">5</maxobjects>
+      <maxvolume type="int">35</maxvolume>
+      <containerfullmessage>There's no room left.</containerfullmessage>
+      <containermaxobjects>Its full no more room for anything.</containermaxobjects>
+      <Weapon type="object">player</Weapon>
+      <damage type="script">
+        if (player.Weapon = player) {
+          msg ("You should find a weapon first..")
+        }
+        else {
+          DecreaseObjectCounter (zombie_2, "Health")
+          DecreaseObjectCounter (zombie_2, "Health")
+          DecreaseObjectCounter (zombie_2, "Health")
+        }
+      </damage>
+      <attr name="drop_weapon" type="script">
+      </attr>
+    </object>
+    <object name="cell_door">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+      <feature_container />
+      <attr name="feature_switchable" type="boolean">false</attr>
+      <listchildren />
+      <contentsprefix>on which there is</contentsprefix>
+      <hidechildren />
+      <autounlock />
+      <autoopen type="boolean">false</autoopen>
+      <canlockopen type="boolean">false</canlockopen>
+      <inroomdescription>The cell door is straight steel bars with a chock hole in its center.</inroomdescription>
+      <key type="object">cell_key</key>
+      <look type="script">
+        firsttime {
+          msg ("Looking out you see a an  Correctonal Officer ripping apart the flesh of an Inmate!")
+          if (not Got(cell_key)) {
+            picture ("feeding pic.jpg")
+            MakeObjectVisible (corpse_1)
+            MakeObjectVisible (zombie_1)
+          }
+        }
+        otherwise {
+          msg ("Its just the hallway")
+        }
+      </look>
+      <description type="script">
+      </description>
+      <openscript type="script">
+        if (Got(cell_key)) {
+          create exit ("hallway", your_cell, hallway_1)
+        }
+        else if (not Got(cell_key)) {
+          msg ("The cell door is locked you need to find a key.")
+        }
+        play sound ("", false, false)
+      </openscript>
+      <onlock type="script">
+        msg ("Ok cells locked!")
+      </onlock>
+      <onunlock type="script">
+        msg ("Cells unlocked!")
+      </onunlock>
+    </object>
+    <object name="Toliet">
+      <inherit name="editor_object" />
+      <alias>toliet</alias>
+      <inroomdescription>Toliets attached to the sink with with a bigger flush button by the look of it..</inroomdescription>
+      <flush type="script">
+        play sound ("toilet-flush-1.mp3", true, false)
+        Ask ("Feel better?") {
+          msg ("Good now lets go.")
+          play sound ("Tornado_Siren_II-Delilah-747233690.wav", false, true)
+        }
+      </flush>
+    </object>
+    <object name="bunk">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <inroomdescription>Its a single bunk with mattress pad and  blanket scattered about.</inroomdescription>
+      <feature_container />
+      <listchildren />
+      <laydown type="script">
+      </laydown>
+      <hidechildren />
+      <look>Theres something under the bunk here.</look>
+      <contentsprefix>which is </contentsprefix>
+      <object name="corispondence_box">
+        <inherit name="editor_object" />
+        <inherit name="container_closed" />
+        <feature_container />
+        <openmsg>Hopefully you find some thing to help you escape this cell.</openmsg>
+        <hidechildren type="boolean">false</hidechildren>
+        <listchildren />
+        <onopen type="script"><![CDATA[
+          msg ("What do we have in here?<br/><br/><br/>")
+        ]]></onopen>
+        <onclose type="script">
+        </onclose>
+        <object name="chips">
+          <inherit name="editor_object" />
+          <take />
+          <takemsg>Small bag of Lays</takemsg>
+          <displayverbs type="stringlist">
+            <value>Look at</value>
+            <value>Take</value>
+          </displayverbs>
+          <volume type="int">2</volume>
+          <eat type="script">
+            IncreaseObjectCounter (player, "Hunger")
+            IncreaseObjectCounter (player, "Hunger")
+            IncreaseObjectCounter (player, "Hunger")
+            IncreaseObjectCounter (player, "Health")
+            IncreaseObjectCounter (player, "Health")
+            EnableTimer (health)
+            DecreaseObjectCounter (player, "Thurst")
+            DecreaseObjectCounter (player, "Thurst")
+            msg ("MMM not much but it will have to do.")
+            MoveObject (chips, stash_room)
+          </eat>
+          <dropmsg>Sure if you like to throw away food. (Must be American)</dropmsg>
+        </object>
+        <object name="tumbler_cup">
+          <inherit name="editor_object" />
+          <inherit name="container_limited" />
+          <take />
+          <feature_container />
+          <isopen type="boolean">false</isopen>
+          <volume type="int">0</volume>
+          <inventoryverbs type="stringlist">
+            <value>Look at</value>
+            <value>Use</value>
+            <value>Drop</value>
+            <value>Open</value>
+            <value>Close</value>
+          </inventoryverbs>
+          <feature_usegive />
+          <transparent type="boolean">false</transparent>
+          <listchildren />
+          <hidechildren />
+          <maxvolume type="int">10</maxvolume>
+          <containermaxobjects>Jugs full.. Nice!</containermaxobjects>
+          <onopen type="script">
+          </onopen>
+          <drink type="script"><![CDATA[
+            if (GetInt(tumbler_cup, "volume") >= 2) {
+              IncreaseObjectCounter (player, "Thurst")
+              IncreaseObjectCounter (player, "Thurst")
+              DecreaseObjectCounter (tumbler_cup, "volume")
+              DecreaseObjectCounter (tumbler_cup, "volume")
+              msg ("Ahh! Much better..")
+            }
+            if (GetInt(tumbler_cup, "volume") <= 1) {
+              msg ("All out need to find something to drink!")
+            }
+          ]]></drink>
+        </object>
+        <object name="pen">
+          <inherit name="editor_object" />
+          <take />
+          <damage type="int">3</damage>
+          <volume type="int">1</volume>
+          <ontake type="script">
+          </ontake>
+          <equip type="script"><![CDATA[
+            if (Got(pen)) {
+              set (player, "Weapon", pen)
+            }
+            else if (not Got(pen)) {
+              msg ("Helps to pick it up first..<br/>")
+            }
+          ]]></equip>
+          <drop type="script">
+            set (player, "Weapon", player)
+            MoveObjectHere (pen)
+          </drop>
+        </object>
+      </object>
+    </object>
+    <object name="sink">
+      <inherit name="switchable" />
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <feature_switchable />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Switch on</value>
+        <value>Switch off</value>
+      </displayverbs>
+      <feature_container />
+      <listchildren />
+      <listchildrenprefix>water</listchildrenprefix>
+      <close type="boolean">false</close>
+      <open type="boolean">false</open>
+      <isopen type="boolean">false</isopen>
+      <hidechildren type="boolean">false</hidechildren>
+      <volume type="int">0</volume>
+      <take type="boolean">false</take>
+      <inroomdescription>The sink is shinny chrome sinkwith a on and off button.</inroomdescription>
+      <onswitchon type="script">
+        play sound ("filling-sink-1.mp3", false, true)
+        HelperOpenObject (sink)
+      </onswitchon>
+      <onswitchoff type="script">
+        stop sound
+        HelperCloseObject (sink)
+        play sound ("Tornado_Siren_II-Delilah-747233690.wav", false, true)
+      </onswitchoff>
+      <object name="water">
+        <inherit name="editor_object" />
+        <take type="boolean">false</take>
+        <visible />
+        <look>Thank the Lord water.</look>
+        <volume type="int">10</volume>
+        <takemsg>That should do for a while..</takemsg>
+        <dropmsg>Why would you do that?</dropmsg>
+        <attr name="feature_edible" type="boolean">false</attr>
+        <attr name="fill_jug" type="script"><![CDATA[
+          IncreaseObjectCounter (tumbler_cup, "volume")
+          IncreaseObjectCounter (tumbler_cup, "volume")
+          IncreaseObjectCounter (tumbler_cup, "volume")
+          IncreaseObjectCounter (tumbler_cup, "volume")
+          IncreaseObjectCounter (tumbler_cup, "volume")
+          IncreaseObjectCounter (tumbler_cup, "volume")
+          IncreaseObjectCounter (tumbler_cup, "volume")
+          IncreaseObjectCounter (tumbler_cup, "volume")
+          IncreaseObjectCounter (tumbler_cup, "volume")
+          IncreaseObjectCounter (tumbler_cup, "volume")
+          if (GetInt(tumbler_cup, "volume") >= 10) {
+            msg ("Jugs full that should do a little while.")
+          }
+          else {
+            msg ("The more the better..")
+          }
+        ]]></attr>
+      </object>
+    </object>
+    <object name="zombie_1">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <alias>zombie</alias>
+      <Health type="int">3</Health>
+      <dead type="boolean">false</dead>
+      <attack type="scriptdictionary">
+        <item key="pen"><![CDATA[
+          DecreaseObjectCounter (zombie_1, "Health")
+          msg ("You attacked jabbing at the thing but noot quite killing it!")
+          if (zombie_1.Health = 0) {
+            set (zombie_1, "dead", True)
+          }
+          if (zombie_1.dead = True) {
+            MakeObjectInvisible (pen)
+            MakeObjectInvisible (zombie_1)
+            MoveObject (pen, hallway_1)
+            msg ("<br/>You give one final shove of the pen into the creatures eyesocket!<br/>Blood gushes from puncture of the pen<br/>(WHAT THE HELL IS HAPPENING? <br/>What was that thing? <br/>Why was he eating that man I need to get out of this cell..)<br/><br/>")
+          }
+        ]]></item>
+      </attack>
+    </object>
+    <object name="corpse_1">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <visible type="boolean">false</visible>
+      <scenery type="boolean">false</scenery>
+      <feature_container />
+      <hidechildren type="boolean">false</hidechildren>
+      <listchildren />
+      <listchildrenprefix>cell_key</listchildrenprefix>
+      <alias>corpse</alias>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look>The body of a mangled guard lies motionless, blood seeps from under the corpse ozzing into your cell.</look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Search</value>
+      </displayverbs>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <isopen type="boolean">false</isopen>
+      <search type="script">
+        if (not ListContains(ScopeVisible(), zombie_1)) {
+          HelperOpenObject (corpse_1)
+        }
+        else {
+          msg ("Are you kinding that thing will tear me apart, need to find a way to kill it.")
+        }
+      </search>
+      <onopen type="script">
+        MakeObjectVisible (cell_key)
+        msg ("Nice a key this should be of help!")
+      </onopen>
+      <object name="cell_key">
+        <inherit name="editor_object" />
+        <take />
+        <takemsg>You take the key ring.</takemsg>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>Take</value>
+        </displayverbs>
+        <visible />
+        <alias>Guard Keys</alias>
+        <dropmsg>Ok but remember where they are you might need them.</dropmsg>
+        <ontake type="script">
+          RemoveObject (corpse_1)
+        </ontake>
+      </object>
+    </object>
+  </object>
+  <object name="hallway_1">
+    <inherit name="editor_room" />
+    <description>In the hallway mangled bodies line the floor. There are cells all around.</description>
+    <object name="corpse">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <inherit name="surface" />
+      <look>Pour bastard his loss my gain.</look>
+      <feature_container />
+      <hidechildren />
+      <listchildren />
+      <listchildrenprefix>cell_key</listchildrenprefix>
+      <visible />
+    </object>
+    <exit alias="west" to="hallway_2">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="east" to="hallway_3">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="zombie">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <visible />
+      <take type="boolean">false</take>
+      <look type="script">
+        firsttime {
+          MakeObjectVisible (pen)
+          msg ("You see the pen portuding from the zombie's now oozing eye socket. (As if they weren't gross enough already...)")
+        }
+        otherwise {
+          msg ("Mangled rotting corpse! I wonder how this happened?")
+        }
+      </look>
+    </object>
+  </object>
+  <object name="stash_room">
+    <inherit name="editor_room" />
+  </object>
+  <verb>
+    <property>fill_jug</property>
+    <pattern>fill_jug</pattern>
+    <defaultexpression>"You can't fill_jug " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>attack</property>
+    <pattern>attack</pattern>
+    <defaultexpression>"You can't attack " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>flush</property>
+    <pattern>flush</pattern>
+    <defaultexpression>"You can't flush " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>laydown</property>
+    <pattern>lay down</pattern>
+    <defaultexpression>"You can't lay down " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="hallway_2">
+    <inherit name="editor_room" />
+    <description type="script"><![CDATA[
+      firsttime {
+        msg ("Further west down the hall you see more cells with barred windows across the hall from them. <br/>The smell of decaying flesh overwhelms you, you begin to gag on the stifling air around you. <br/>Needing fresh air you vomit wondering if you should continue on..")
+        DecreaseObjectCounter (player, "Sanity")
+      }
+      otherwise {
+        msg ("Further west down the hall you see more cells with barred windows across the hall from them.<br/>God its still that awful smell of rotting flesh.")
+      }
+    ]]></description>
+    <exit alias="east" to="hallway_1">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="in" to="open_cell_2">
+      <inherit name="indirection" />
+    </exit>
+  </object>
+  <object name="hallway_3">
+    <inherit name="editor_room" />
+    <description type="script"><![CDATA[
+      firsttime {
+        msg ("You make your way down the hall, <br/>stopping you see there's another cell open.")
+      }
+      otherwise {
+        msg ("Just another long hallway filled with cells and more barred windows.")
+      }
+    ]]></description>
+    <exit alias="west" to="hallway_1">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="in" to="open_cell_1">
+      <inherit name="indirection" />
+    </exit>
+  </object>
+  <object name="hallway_4">
+    <inherit name="editor_room" />
+  </object>
+  <object name="hallway_5">
+    <inherit name="editor_room" />
+  </object>
+  <object name="open_cell_1">
+    <inherit name="editor_room" />
+    <exit alias="out" to="hallway_3">
+      <inherit name="outdirection" />
+    </exit>
+    <object name="toliet_1">
+      <inherit name="editor_object" />
+    </object>
+    <object name="sink_2">
+      <inherit name="editor_object" />
+    </object>
+    <object name="bunk_2">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <feature_container />
+      <hidechildren />
+      <listchildren />
+      <object name="dead_zombie">
+        <inherit name="editor_object" />
+        <inherit name="male" />
+        <inherit name="container_open" />
+        <feature_container />
+        <search type="script">
+          HelperOpenObject (dead_zombie)
+        </search>
+        <look>Poor dead bastard looks like he never stood a chance.</look>
+        <isopen type="boolean">false</isopen>
+        <listchildren />
+        <object name="shiv">
+          <inherit name="editor_object" />
+          <look>Its a sharpened piece of hanger wrapped in paper, cloth and tape for a handle..</look>
+          <equip type="script"><![CDATA[
+            if (Got(shiv)) {
+              set (player, "Weapon", shiv)
+            }
+            else if (not Got(shiv)) {
+              msg ("Helps to pick it up first..<br/>")
+            }
+          ]]></equip>
+        </object>
+      </object>
+    </object>
+  </object>
+  <object name="open_cell_2">
+    <inherit name="editor_room" />
+    <exit alias="out" to="hallway_2">
+      <inherit name="outdirection" />
+    </exit>
+    <object name="toliet">
+      <inherit name="editor_object" />
+      <alias>toliet</alias>
+    </object>
+    <object name="bunk_1">
+      <inherit name="editor_object" />
+      <alias>bunk</alias>
+    </object>
+    <object name="sink_1">
+      <inherit name="editor_object" />
+      <alias>sink</alias>
+    </object>
+    <object name="debris">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <take type="boolean">false</take>
+      <feature_container />
+      <listchildren />
+      <search type="script">
+        firsttime {
+          msg ("Rumaging through the papers you find some matches.")
+        }
+      </search>
+      <object name="match_book">
+        <inherit name="editor_object" />
+        <inherit name="container_limited" />
+        <take />
+        <alias>Lucky Strike</alias>
+        <attr name="feature_lightdark" type="boolean">false</attr>
+        <lightsource type="boolean">false</lightsource>
+        <takemsg>Nice matches can always use these.</takemsg>
+        <volume type="int">1</volume>
+        <feature_container />
+        <maxvolume type="int">1</maxvolume>
+        <containerfullmessage>Full book of matches.</containerfullmessage>
+        <containermaxobjects>All matches seem to be in here.</containermaxobjects>
+        <listchildren />
+        <isopen type="boolean">false</isopen>
+        <hidechildren type="boolean">false</hidechildren>
+        <listchildrenprefix>matches</listchildrenprefix>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>Take</value>
+        </displayverbs>
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Drop</value>
+          <value>Open</value>
+          <value>Close</value>
+        </inventoryverbs>
+        <onopen type="script">
+        </onopen>
+        <object name="matches">
+          <inherit name="editor_object" />
+          <inherit name="switchable" />
+          <volume type="int">1</volume>
+          <feature_lightdark />
+          <lightsource />
+          <limit type="int">10</limit>
+          <lightstrength>weak</lightstrength>
+          <attr name="feature_usegive" type="boolean">false</attr>
+          <attr name="max_limit" type="int">10</attr>
+          <feature_switchable />
+          <inventoryverbs type="stringlist">
+            <value>Light</value>
+          </inventoryverbs>
+          <displayverbs type="stringlist">
+            <value>Look at</value>
+            <value>Take</value>
+          </displayverbs>
+          <use type="script"><![CDATA[
+            set (matches, "lightsource", True)
+            DecreaseObjectCounter (matches, "limit")
+            msg ("It provides a little light..")
+            if (GetInt(matches, "limit") <= 0) {
+              msg ("All out of matches.")
+            }
+          ]]></use>
+          <onswitchon type="script"><![CDATA[
+            DecreaseObjectCounter (matches, "limit")
+            SetLight (your_cell)
+            msg ("It provides a little light..")
+            EnableTimer (matches_light)
+            if (GetInt(matches, "limit") <= 0) {
+              msg ("All out of matches.")
+            }
+          ]]></onswitchon>
+          <light type="script"><![CDATA[
+            if (GetInt(matches, "limit") > 1) {
+              SwitchOn (matches)
+            }
+          ]]></light>
+          <onswitchoff type="script">
+          </onswitchoff>
+        </object>
+      </object>
+    </object>
+  </object>
+  <verb>
+    <property>equip</property>
+    <pattern>equip</pattern>
+    <defaultexpression>"You can't equip " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>light</property>
+    <pattern>light</pattern>
+    <defaultexpression>"You can't light " + object.article + "."</defaultexpression>
+  </verb>
+  <function name="Zed_AI">
+  </function>
+  <timer name="ripping_flesh">
+    <interval>10</interval>
+    <enabled type="boolean">false</enabled>
+    <script>
+      play sound ("Stab And Tear Flesh-SoundBible.com-455812566.wav", false, true)
+    </script>
+  </timer>
+  <timer name="hunger">
+    <interval>65</interval>
+    <enabled />
+    <script>
+      DecreaseObjectCounter (player, "Hunger")
+      DecreaseObjectCounter (player, "Hunger")
+      DecreaseObjectCounter (player, "Hunger")
+    </script>
+  </timer>
+  <timer name="thurst">
+    <interval>60</interval>
+    <enabled />
+    <script>
+      DecreaseObjectCounter (player, "Thurst")
+      DecreaseObjectCounter (player, "Thurst")
+      DecreaseObjectCounter (player, "Thurst")
+      DecreaseObjectCounter (player, "Thurst")
+    </script>
+  </timer>
+  <timer name="health">
+    <interval>5</interval>
+    <script><![CDATA[
+      if (GetInt(player, "Health") > 100) {
+        DecreaseObjectCounter (player, "Health")
+      }
+    ]]></script>
+  </timer>
+  <timer name="siren">
+    <interval>14</interval>
+    <enabled type="boolean">false</enabled>
+    <script>
+      play sound ("Tornado_Siren_II-Delilah-747233690.wav", false, true)
+    </script>
+  </timer>
+  <timer name="day_counter">
+    <interval>300</interval>
+    <enabled />
+    <script>
+      IncreaseObjectCounter (player, "Days")
+    </script>
+  </timer>
+  <timer name="matches_light">
+    <interval>5</interval>
+    <script>
+      SetDark (your_cell)
+      msg ("Ouch! Burns at least I know I'm alive. (like thats a great thing.)")
+      DisableTimer (matches_light)
+      SwitchOff (matches)
+      HelperCloseObject (match_book)
+    </script>
+  </timer>
+</asl>

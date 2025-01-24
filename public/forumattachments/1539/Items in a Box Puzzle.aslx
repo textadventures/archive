@@ -1,0 +1,242 @@
+<!--Saved by Quest 5.6.5783.24153-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Items in a Box Puzzle">
+    <gameid>f1162207-4cf6-4192-95bd-4df801b04aff</gameid>
+    <version>1.0</version>
+    <firstpublished>2016</firstpublished>
+    <feature_limitinventory />
+  </game>
+  <object name="simple room">
+    <inherit name="editor_room" />
+    <alias>simple item in a box puzzle</alias>
+    <object name="marshmallow">
+      <inherit name="editor_object" />
+      <look>Yep.  A soft, squishy marshmallow.</look>
+      <eat>As tempting as it is, no.</eat>
+      <take />
+    </object>
+    <object name="box">
+      <inherit name="editor_object" />
+      <inherit name="container_limited" />
+      <look>The box is decorated colorfully and is open.  Of course it is open, it has no lid!  Placing the correct object in the box will unlock the door!</look>
+      <takemsg>The box is fastened securely to the floor.</takemsg>
+      <feature_container />
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <containermaxobjects>The box cannot hold any more!</containermaxobjects>
+      <containerfullmessage>The box cannot hold any more!</containerfullmessage>
+    </object>
+    <object name="door">
+      <inherit name="editor_object" />
+      <look>There is a door on the north wall but there are no handles!  There must be another way to open it!</look>
+      <takemsg>You can't.</takemsg>
+    </object>
+    <object name="golf ball">
+      <inherit name="editor_object" />
+      <look>It's a beat up, old golf ball.</look>
+      <take />
+    </object>
+    <object name="die">
+      <inherit name="editor_object" />
+      <look>It's a game die, but there are no number on it.</look>
+      <take />
+      <roll>It's not meant for rolling or tossing.</roll>
+    </object>
+    <command name="die placed cmd">
+      <pattern>put die in box; place die in box; deposit die in box</pattern>
+      <script>
+        msg ("When you drop the die in the box, the door on the north wall disappears!  You may now go north!")
+        UnlockExit (locked1)
+        MakeObjectInvisible (door)
+        MakeExitVisible (locked1)
+      </script>
+    </command>
+    <exit name="locked1" alias="north" to="tougher room">
+      <inherit name="northdirection" />
+      <locked />
+      <lockmessage>This is blocked by an unopenable door at the moment!</lockmessage>
+      <visible type="boolean">false</visible>
+    </exit>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+  </object>
+  <verb>
+    <property>roll</property>
+    <pattern>roll; toss</pattern>
+    <defaultexpression>"You can't roll; toss " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="tougher room">
+    <inherit name="editor_room" />
+    <BoxFilledCount type="int">3</BoxFilledCount>
+    <changedBoxFilledCount type="script"><![CDATA[
+      if (tougher room.BoxFilledCount = 0) {
+        MakeObjectVisible (fabulous sword)
+        MoveObject (fabulous sword, pedastal)
+        msg ("<br/>You hear a shimmering sound and notice that a sword has appeared on the pedastal!")
+      }
+    ]]></changedBoxFilledCount>
+    <object name="slot 1">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <look>It's a triangular slot.</look>
+      <feature_container />
+      <close type="boolean">false</close>
+      <open type="boolean">false</open>
+    </object>
+    <object name="slot 2">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <look>It's a round shaped slot.</look>
+      <feature_container />
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+    </object>
+    <object name="slot 3">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <look>It's a square shaped slot.</look>
+      <feature_container />
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+    </object>
+    <object name="hockey puck">
+      <inherit name="editor_object" />
+      <look>It's a hockey puck.</look>
+      <take type="script">
+        if (Contains (slot 3,slab)) {
+          msg ("It is where it should be!  Leave it alone!")
+        }
+        else {
+          msg ("Taken.")
+          AddToInventory (hockey puck)
+        }
+      </take>
+    </object>
+    <object name="pyramid souvenir">
+      <inherit name="editor_object" />
+      <look>Must have been bought in an Egyptian gift shop?</look>
+      <take type="script">
+        if (Contains (slot 1,pyramid souvenir)) {
+          msg ("This is in the proper place.  No need to move it!")
+        }
+        else {
+          msg ("Taken.")
+          AddToInventory (pyramid souvenir)
+        }
+      </take>
+    </object>
+    <object name="slab">
+      <inherit name="editor_object" />
+      <look>It's a small stone square a little bigger than a coaster.</look>
+      <take type="script">
+        if (Contains (slot 3,slab)) {
+          msg ("It is where it belongs.  You do not need to take it!")
+        }
+        else {
+          msg ("Taken, bacon.")
+          AddToInventory (slab)
+        }
+      </take>
+    </object>
+    <command name="pyramid slot 1 cmd">
+      <pattern type="string">^(put|place) (the |)(pyramid|triangle|souvenir|pyramid souvenir) (on|into|in|onto) (the |)(slot 1|1)</pattern>
+      <script>
+        if (Got(pyramid souvenir)) {
+          msg ("You place the object into slot 1 and it fits perfectly!")
+          MoveObject (pyramid souvenir, slot 1)
+          tougher room.BoxFilledCount = tougher room.BoxFilledCount - 1
+        }
+        else {
+          msg ("You are not carrying that item.")
+        }
+      </script>
+    </command>
+    <command name="pyramid wrong slot cmd">
+      <pattern type="string">^(put|place) (the |)(pyramid|triangle|souvenir|pyramid souvenir) (on|into|in|onto) (the |)(slot 2|2|3|slot 3)</pattern>
+      <script>
+        if (Got(pyramid souvenir)) {
+          msg ("It does not appear to fit into that slot.")
+        }
+        else {
+          msg ("You are not carrying that item.")
+        }
+      </script>
+    </command>
+    <object name="pedastal">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <look type="script">
+        if (Contains (pedastal,fabulous sword)) {
+          msg ("It's a pedastal on which rests a fabulous sword!")
+        }
+        else {
+          msg ("It's an old pedastal and there ain't nothin' on it!")
+        }
+      </look>
+      <visible />
+      <scenery />
+      <feature_container />
+    </object>
+    <command name="puck slot 2 cmd">
+      <pattern type="string">^(put|place) (the |)(puck|hockey|hockey puck) (on|into|in|onto) (the |)(slot 2|2)</pattern>
+      <script>
+        if (Got(hockey puck)) {
+          msg ("You place the object into slot 2 and it fits perfectly!")
+          MoveObject (hockey puck, slot 2)
+          tougher room.BoxFilledCount = tougher room.BoxFilledCount - 1
+        }
+        else {
+          msg ("You are not carrying that item.")
+        }
+      </script>
+    </command>
+    <command name="puck wrong slot">
+      <pattern type="string">^(put|place) (the |)(puck|hockey|hockey puck) (on|into|in|onto) (the |)(slot 1|1|slot 3|3)</pattern>
+      <script>
+        if (Got(hockey puck)) {
+          msg ("It does not appear to fit into that slot.")
+        }
+        else {
+          msg ("You are not carrying that item.")
+        }
+      </script>
+    </command>
+    <command name="slab slot 3 cmd">
+      <pattern type="string">^(put|place) (the |)(slab) (on|into|in|onto) (the |)(slot 3|3)</pattern>
+      <script>
+        if (Got(slab)) {
+          msg ("You place the object into slot 1 and it fits perfectly!")
+          MoveObject (slab, slot 3)
+          tougher room.BoxFilledCount = tougher room.BoxFilledCount - 1
+        }
+        else {
+          msg ("You are not carrying that item.")
+        }
+      </script>
+    </command>
+    <command name="slab wrong slot">
+      <pattern type="string">^(put|place) (the |)(slab) (on|into|in|onto) (the |)(slot 1|1|slot 1|1|slot 2|2)</pattern>
+      <script>
+        if (Got(slab)) {
+          msg ("It does not appear to fit into that slot.")
+        }
+        else {
+          msg ("You are not carrying that item.")
+        }
+      </script>
+    </command>
+    <object name="fabulous sword">
+      <inherit name="editor_object" />
+      <look>It's a fabulous sword!</look>
+      <take />
+      <visible type="boolean">false</visible>
+    </object>
+    <exit alias="south" to="simple room">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+</asl>

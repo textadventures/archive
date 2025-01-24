@@ -1,0 +1,181 @@
+<!--Saved by Quest 5.5.5328.26617-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="The End.">
+    <inherit name="theme_novella" />
+    <gameid>8c51bbec-7ac2-4afa-8b43-b3945093f9cd</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+    <menufont>Georgia, serif</menufont>
+    <underlinehyperlinks type="boolean">false</underlinehyperlinks>
+    <defaultwebfont>Roboto</defaultwebfont>
+    <defaultbackground>White</defaultbackground>
+    <customwidth type="int">900</customwidth>
+    <enablehyperlinks type="boolean">false</enablehyperlinks>
+    <gridmap />
+    <feature_lightdark />
+    <appendobjectdescription />
+    <feature_asktell />
+    <showlocation type="boolean">false</showlocation>
+    <attr name="autodescription_youcansee" type="int">0</attr>
+    <attr name="autodescription_youcango" type="int">3</attr>
+    <attr name="autodescription_description" type="int">4</attr>
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <autodescription_description_newline />
+    <author>Passerine</author>
+    <category>Horror</category>
+    <autodescription />
+    <showdescriptiononenter />
+    <start type="script">
+    </start>
+  </game>
+  <object name="Players_Bedroom">
+    <inherit name="editor_room" />
+    <description type="string"></description>
+    <alias>Bedroom</alias>
+    <attr name="grid_width" type="int">3</attr>
+    <attr name="grid_length" type="int">3</attr>
+    <darkroomdescription type="script">
+      SetObjectFlagOn (Bedroom, "dark")
+      msg ("Looks like someone has turned off the lights. I should flip the lightswitch.")
+    </darkroomdescription>
+    <firstenter type="script"><![CDATA[
+      msg ("<b>---</b><br/>You wake up in a cold sweat, gasping for air.<br/><br/>You had another nightmare. One about him.<br/><br/>He's haunted you for weeks now, ever since you saw him in the backyard. You can't take another sleepless night . You don't know what he his, or what he wants, but you know you need a way to end this. To end <i>him</i>.<br/><b>---</b>")
+    ]]></firstenter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <alias>myself</alias>
+      <look>You're wearing boxers and a plain white T-Shirt.</look>
+      <attr name="pov_look">You're wearing boxers and a plain white T-Shirt.</attr>
+    </object>
+    <object name="lightswitch">
+      <inherit name="editor_object" />
+      <look>Turns the lights on/off.</look>
+      <inroomdescription type="string"></inroomdescription>
+      <attr name="feature_lightdark" type="boolean">false</attr>
+      <lightstrength>weak</lightstrength>
+      <alt type="stringlist">
+        <value>lights</value>
+        <value>light</value>
+        <value>switch</value>
+      </alt>
+      <flip type="script">
+        if (GetBoolean(Bedroom, "dark")) {
+          SetLight (Bedroom)
+          msg ("The lights are now on.")
+        }
+        else if (not GetBoolean(Bedroom, "dark")) {
+          SetDark (Bedroom)
+          msg ("The lights are now off.")
+        }
+      </flip>
+    </object>
+    <object name="bed">
+      <inherit name="editor_object" />
+      <inroomdescription type="string"></inroomdescription>
+      <look><![CDATA[You sleep here. This is where <i>he</i> visits you.<br/><br/>You can look under it.]]></look>
+      <alias>bed</alias>
+      <article>your</article>
+      <lookunder type="script">
+        MakeObjectVisible (shotgun)
+        MakeObjectVisible (shells)
+        msg ("You see your shotgun and 3 shells.")
+      </lookunder>
+    </object>
+    <exit alias="north" to="Hallway">
+      <inherit name="northdirection" />
+      <lockmessage>Someone locked the door.</lockmessage>
+      <look>This door leads to the hallway. You get an uneasy feeling from the door.</look>
+    </exit>
+    <object name="shotgun">
+      <inherit name="editor_object" />
+      <visible />
+      <alt type="stringlist">
+        <value>gun</value>
+      </alt>
+      <take />
+      <takemsg>You feel a little safer with this by your side.</takemsg>
+      <drop />
+      <bullets type="int">0</bullets>
+      <ammo type="int">0</ammo>
+      <look><![CDATA[{if shotgun.ammo=0:It's not loaded.} <br/>{if shotgun.ammo=3:It's got three shells in it.}<br/>{if shotgun.ammo=2:It's got two shells in it.}<br/>{if shotgun.ammo=1:One shot left. Better make it count.}]]></look>
+      <scenery />
+      <inroomdescription>A shotgun is propped against the wall.</inroomdescription>
+      <load type="script"><![CDATA[
+        if (not Got(shotgun)) {
+          msg ("You need to be carrying both the shotgun and the shells.")
+        }
+        else if (not Got(shells)) {
+          msg ("You need to be carrying both the shotgun and the shells.")
+        }
+        else {
+          msg ("You load the shells into the gun and cock it with a satisfying <i>ka-thunk</i>.")
+          RemoveObject (shells)
+          shotgun.ammo = shotgun.ammo + 3
+        }
+      ]]></load>
+    </object>
+    <object name="shells">
+      <inherit name="editor_object" />
+      <visible />
+      <alt type="stringlist" />
+      <take />
+      <takemsg>You'll need these.</takemsg>
+      <drop />
+      <attr name="feature_usegive" type="boolean">false</attr>
+      <inroomdescription>Some shotgun shells lie here.</inroomdescription>
+      <look>There are three of them.</look>
+      <scenery />
+      <ontake type="script">
+      </ontake>
+    </object>
+    <object name="the target">
+      <inherit name="editor_object" />
+      <look><![CDATA[Perhaps the inside of a house isn't the best place for this!<br/><br/>...oh well, shoot it anyway.]]></look>
+      <inroomdescription>A target is set up here.</inroomdescription>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <visible />
+      <shoot type="script"><![CDATA[
+        msg ("You aim at the target and squeeze the trigger!")
+        if (shotgun.ammo>0) {
+          msg ("There's a deafening boom and the gun butts painfully hard back against your shoulder as you blow a smoking hole in the target!")
+          shotgun.ammo = shotgun.ammo-1
+        }
+        else {
+          msg ("...but the gun is empty!")
+        }
+      ]]></shoot>
+      <scenery />
+    </object>
+  </object>
+  <verb>
+    <property>flip</property>
+    <pattern>flip</pattern>
+    <defaultexpression>"You can't flip " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Hallway">
+    <inherit name="editor_room" />
+    <attr name="grid_width" type="int">3</attr>
+    <attr name="grid_length" type="int">9</attr>
+    <exit alias="south" to="Players_Bedroom">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>lookunder</property>
+    <pattern>look under</pattern>
+    <defaultexpression>"You can't look under " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>load</property>
+    <pattern>load</pattern>
+    <defaultexpression>"You can't load " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>shoot</property>
+    <pattern>shoot</pattern>
+    <defaultexpression>"You can't shoot " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

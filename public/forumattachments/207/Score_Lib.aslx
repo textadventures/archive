@@ -1,0 +1,54 @@
+<library>
+
+  <!--
+
+A very simple module that lets the writer easily add scores to the game.
+To use:
+
+1. In the start script on the game item, call the InitScore function with the following parameters
+  a. The maximum (or winning) score, as an integer.
+  b. A list of ranks, separated by commas, as a string. Remember to enclose in double quotes.
+  c. A boolean, indicating if you have status attributes.
+     Use true to indicate you have, false to otherwise.
+2. When the player does something score worthy, call the IncScore function.
+   This takes two parameters, the first an identifying string, the second the amount
+   to increase the score by. The function will only change the score if the identifying string
+   is not recognised; i.e., if the player does the same thing several times, only the first time
+   will affect the score.
+
+That is all that is required. The score will be displayed as an attribute, and if the player
+types "score", she will get her score, rank and a list of achievements.
+
+Optionally, you might prefer to modify the score command so it calls PrintScore, rather than
+PrintFullScore, so there is no list of achievements (you will need to give your new command a new
+name, but the same pattern). Optionally you may want to have your own PrintScore (say for another language). You will then require your own command that calls your new function. both of these are illustrated in 
+Al_Score_Demo.
+
+This should be robust enough to handle nagative scores and scores over the maximum score.
+
+Feel free to modify this code as you wish.
+
+
+The Pixie
+the_pix@hotmail.com
+
+  -->
+
+  <function name="InitScore" parameters="max, status">
+    game.score_max = max
+    player.affection = 0
+    if (not status) {
+      player.statusattributes = NewStringDictionary()
+    }
+    dictionary add (player.statusattributes, "affection")
+  </function>
+  <function name="IncScore" parameters="str, inc">
+    if (not DictionaryContains(game.score_achievements, str)) {
+      player.affection = player.affection + inc
+      dictionary add (game.score_achievements, str, ToString(inc))
+    }
+  </function>
+  <function name="GetScore" type="int">
+    return (player.affection)
+  </function>
+  </library>

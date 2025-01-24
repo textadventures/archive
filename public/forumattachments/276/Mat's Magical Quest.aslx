@@ -1,0 +1,641 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <template name="UnrecognisedCommand">What on earth are you talking about?</template>
+  <template name="DefaultHelp"><![CDATA[<u>Mat's Magical Quest Quick Help</u><br/><br/>
+<b>- Moving around:</b>  Press the compass buttons, or type GO NORTH, SOUTH, E, GO TO...<br/>
+<b>- Objects:</b>  Try LOOK AT..., SPEAK TO..., TAKE..., DROP..., OPEN..., GIVE... TO..., USE... ON/WITH...<br/>
+<b>- Inventory:</b>  See which items you are carrying by typing I, INV or INVENTORY.<br/>
+<b>- Shortcuts:</b>  Press the up arrow and down arrow to scroll through commands you have already typed in. Try X... as a shortcut for LOOK AT...<br/>
+<b>Misc::</b> The next turn after referring to an object or character, you can use IT, HIM etc. as appropriate to refer to it/him/etc. again. If you make a mistake when typing an object's name, type OOPS followed by your correction.        ]]></template>
+  <dynamictemplate name="DefaultTurnOn">"You can't activate " + object.article + "."</dynamictemplate>
+  <dynamictemplate name="DefaultTurnOff">"You can't deactivate " + object.article + " ."</dynamictemplate>
+  <game name="Mat's Magical Quest">
+    <gameid>ceec02c5-a09d-4775-94ef-fc2a22f765ab</gameid>
+    <version>1.0</version>
+    <author>The Ramblin' Gambler</author>
+    <showhealth />
+    <category>Fantasy</category>
+    <start type="script"><![CDATA[
+      msg ("You wake up and your head is spinning. No, the room is spinning. That's it, the room is spinning  slowly. Then this is no ordinary room. This must be a room in a Magic Mansion. Not a Mansion, the Mansion. This is where the mistake was made. You try to remember. You try to think at all. You were in The Spell-atory. Someone was there. Right, Fonpeggeful was there. Why was your sister in the Spell-atory. She snuck in. Now you remember, you tried to stop her, but she had a wand. Her wand. You had left yours in The Bed Chamber. She was trying to learn a new spell. Wait, she was doing what? She's way too young. Spells were not meant for Apprentices. Not without an Elder's guidance anyway. What was the spell? Trans-locate? Dis-appear? Both? Yes, both. She was trying to find a way to combine them. Why? It doesn't matter why, she failed. She was killed in the attempt. There were bright lights. Lots of colors. Colors? Blue lightning. Green flames. Red...what? Red something. Like the color of blood. Was it blood? There was no blood. It was strange. She died, and there was no blood. She just disappeared. What was she chanting. You can't concentrate, for some reason you can still hear her voice. What is she saying? That can't be right. She wasn't asking for help when you saw her. Why can you hear her in your mind now? \"Help? Help how? Aren't you dead?\" Too many images. You were knocked back. You hit something. The table maybe? Head hurts. Blackness setting in. you begin to drift off to sleep again. \"I can't help you. You are dead. You are dead. You are...\" Fragments begin to coalesce in your mind. She isn't dead. She can't be. That fading. Those lights. Like a Dis-appear. Only combined with the morphing effect of the Trans-locate. She's here, she's inside. She's trapped somewhere. How do I get her out. All I have to do is...<br/>Press Any Key To Continue...")
+      wait {
+        msg (" <br/>You wake up on your bed. Your head is spinning. No, the room is spinning. \"I'm coming.\" You drift back into blackness...<br/>Press Any Key To Continue...")
+        wait {
+          msg ("<br/>You wake up on the floor by the bed. Your head is spinning. No, the room is spinninng. You try to stand up. Blackness begins to set in again...<br/>Press Any Key To Continue...")
+          wait {
+            msg (" <br/>You wake up on the floor by the Door-pad. Your head is spinning. No, the room is spinning...<br/>Press Any Key To Continue...<br/>")
+            wait {
+            }
+          }
+        }
+      }
+    ]]></start>
+    <onhealthzero type="script">
+      msg ("OK. You're dead.")
+      finish
+    </onhealthzero>
+  </game>
+  <verb name="turnon">
+    <property>turnon</property>
+    <pattern>turn on #object#; turn #object# on; switch on #object#; switch #object# on; activate #object#</pattern>
+    <defaulttemplate>DefaultTurnOn</defaulttemplate>
+  </verb>
+  <verb name="turnoff">
+    <property>turnoff</property>
+    <pattern>turn off #object#; turn #object# off; switch off #object#; switch #object# off; deactivate #object#</pattern>
+    <defaulttemplate>DefaultTurnOff</defaulttemplate>
+  </verb>
+  <object name="bedroom1">
+    <inherit name="editor_room" />
+    <alias>Bed Chamber</alias>
+    <description>This is your Royal Bed Chamber in the Grand Mystic House of the Elders of the Magic of Muhkenzee. It is richly decorated, and we mean richly. There is...a bed. That's it. Just a bed. Nothing special here. Are you sure we are in the right bed chamber? The Door-pad is on the floor near the southeast wall with it's corresponding painting above it.</description>
+    <usedefaultprefix />
+    <object name="wall1">
+      <inherit name="editor_object" />
+      <inherit name="container_limited" />
+      <scenery />
+      <usedefaultprefix />
+      <alias>Wall</alias>
+      <look>The walls are made of brick and are a drab grey in color. They are unadorned, and very boring, save for one painting hanging right above the Door-Pad on the southeast wall.</look>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <transparent />
+      <containermaxobjects>You can't hang that here.</containermaxobjects>
+      <listchildren type="boolean">false</listchildren>
+    </object>
+    <object name="ceiling1">
+      <inherit name="editor_object" />
+      <alias>Ceiling</alias>
+      <scenery />
+      <look>The ceiling appears to have been repaired recently. Perhaps there was some type of leak?</look>
+    </object>
+    <object name="floor1">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <look>It is a floor. Plain grey stone with no carpeting.</look>
+      <scenery />
+      <listchildren />
+      <listchildrenprefix>On the floor there is</listchildrenprefix>
+      <alias>Floor</alias>
+    </object>
+    <object name="bedexit1">
+      <inherit name="switchable" />
+      <inherit name="editor_object" />
+      <alias>Door-Pad</alias>
+      <alt>door; pad; doorpad</alt>
+      <look>This is the Door-pad. As the room spins, the Door-pad will point in a different direction. So the room you left to come in here, may not be the room you enter when you leave here.</look>
+      <switchonmsg>The Door-Pad is now active.</switchonmsg>
+      <switchoffmsg>The Door-Pad is now inactive.</switchoffmsg>
+      <switchedondesc>The Door-pad is flashing from bright blue to dark red and back again. That means that it is active.</switchedondesc>
+      <switchedoffdesc>The Door-pad is dull and grey. There is no light coming from it at all. This means the Door-pad is inactive and will need to be ACTIVATEd before it can be used.</switchedoffdesc>
+      <displayverbs>Look at; Take; Switch on; Switch off</displayverbs>
+      <turnon type="scriptdictionary">
+        <item key="wand1">
+          if (Got(wand1)) {
+            if (wand1.green = true) {
+              if (bedexit1.switchedon) {
+                msg (DynamicTemplate("AlreadySwitchedOn", bedexit1))
+              }
+              else {
+                if (HasString(bedexit1, "switchonmsg")) {
+                  msg (bedexit1.switchonmsg)
+                }
+                else {
+                  msg (DynamicTemplate("SwitchedOn", bedexit1))
+                }
+                bedexit1.switchedon = true
+              }
+            }
+            else {
+              msg ("Nothing happened. Did you remember to CALIBRATE your wand?")
+            }
+          }
+          else {
+            msg ("You aren't carrying a wand.")
+          }
+        </item>
+      </turnon>
+      <turnoff type="scriptdictionary">
+        <item key="wand1">
+          if (Got(wand1)) {
+            if (wand1.green = true) {
+              if (not bedexit1.switchedon) {
+                msg (DynamicTemplate("AlreadySwitchedOff", bedexit1))
+              }
+              else {
+                if (HasString(bedexit1, "switchoffmsg")) {
+                  msg (bedexit1.switchoffmsg)
+                }
+                else {
+                  msg (DynamicTemplate("SwitchedOff", bedexit1))
+                }
+                bedexit1.switchedon = false
+              }
+            }
+            else {
+              msg ("Nothing happened. Did you remember to CALIBRATE your wand?")
+            }
+          }
+          else {
+            msg ("You aren't carrying a wand.")
+          }
+        </item>
+      </turnoff>
+      <use type="script">
+        if (not IsSwitchedOn(bedexit1)) {
+          msg ("You can't use an inactive Door-Pad. You must ACTIVATE it first.")
+        }
+        else if (not Got(wand1)) {
+          msg ("How do you expect to cast Trans-Locate without your wand?")
+        }
+        else if (bedexit1.unwise = true) {
+          MoveObject (player, unwise)
+        }
+      </use>
+      <unwise />
+      <scenery type="boolean">false</scenery>
+    </object>
+    <object name="bed1">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <alias>Bed</alias>
+      <speak>What do you expect the bed to say? Will you sleep with me?</speak>
+      <usedefaultprefix />
+      <hidechildren />
+      <listchildren />
+      <listchildrenprefix>It contains</listchildrenprefix>
+      <sit>You feel restless. You should be using this time to help your sister, not lounging about. You stand up again.</sit>
+      <lie>You feel restless. You should be using this time to help your sister, not lounging about. You stand up again.</lie>
+      <contentsprefix>on which there is</contentsprefix>
+      <scenery type="boolean">false</scenery>
+      <look type="script">
+        msg ("It looks very similar to a...umm...bed?")
+      </look>
+      <object name="wand1">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <alias>Wand</alias>
+        <take />
+        <takemsg>Oh, the glorious power that fills this wand. As soon as it touches your hand, you feel the power flowing into you. This is why you became an Elder of the Magic of Muhkenzee.</takemsg>
+        <dropmsg>Ok, but you might want to remember where it is, you may need it later.</dropmsg>
+        <giveto>Hey! Don't give me away, you'll need me later.</giveto>
+        <look type="script">
+          msg ("This is the Royal Wand of the Grand Mystic Powers of the Elders of the Magic of Muhkenzee.")
+          if (not IsSwitchedOn(wand1)) {
+            msg ("It is currently deactivated.")
+          }
+          else if (wand1.green = true) {
+            msg ("It glows green, so it is currently calibrated for activations.")
+          }
+          else if (wand1.red = true) {
+            msg ("It is currently calibrated for starting fires.")
+          }
+          else if (wand1.blue = true) {
+            msg ("It is currently calibrated for restoring and re-pairing things.")
+          }
+          else {
+            msg ("It is not calibrated.")
+          }
+        </look>
+        <speak type="script">
+          firsttime {
+            msg ("I'm pretty smart but I'm still learning. If you see something you don't understand, ask me about it (ASK WAND ABOUT...). If you find out something I don't know, tell me about it (TELL WAND ABOUT...)")
+          }
+          otherwise {
+            msg ("I am the Royal Wand of the Grand Mystic Elders of the Magic of Muhkenzee. How can I help you on your quest today?")
+          }
+        </speak>
+        <calibrate type="script">
+          if (Got(wand1)) {
+            if (not IsSwitchedOn(wand1)) {
+              msg ("The wand is not active.")
+            }
+            else {
+              calibrate1
+            }
+          }
+          else {
+            msg ("You aren't carrying a wand.")
+          }
+        </calibrate>
+        <ontake type="script">
+          firsttime {
+            msg ("You have gained the wand. It will be your companion throughout your quest. If at any point you get stuck, try talking to the wand.")
+          }
+        </ontake>
+        <askdefault type="script">
+          msg ("Oh, I don't know about that.")
+        </askdefault>
+        <telldefault type="script">
+          msg ("That's good to know.")
+        </telldefault>
+        <turnon type="script">
+          if (Got(wand1)) {
+            if (this.switchedon) {
+              msg (DynamicTemplate("AlreadySwitchedOn", this))
+            }
+            else {
+              if (HasString(this, "switchonmsg")) {
+                msg (this.switchonmsg)
+              }
+              else {
+                msg (DynamicTemplate("SwitchedOn", this))
+              }
+              this.switchedon = true
+              calibrate1
+            }
+          }
+          else {
+            msg ("You aren't carrying a wand.")
+          }
+        </turnon>
+        <ask type="scriptdictionary">
+          <item key="door pad">
+            if (player.parent = bedroom1) {
+              msg ("Door-pads are lazy by nature, and will sometimes go in-active. You will need to ACTIVATE them before they can be used. Places with Door-pads are not necessarily locked in place. That is to say, some rooms spin or rotate. If you don't like where a Door-pad leads, try waiting for the room to turn.  There is always a painting above a Door-Pad giving an indication of where it leads to.")
+            }
+          </item>
+          <item key="door-pads door-pad doorpad">
+            msg ("Door-pads are lazy by nature, and will sometimes go in-active. You will need to ACTIVATE them before they can be used. Places with Door-pads are not necessarily locked in place. That is to say, some rooms spin or rotate. If you don't like where a Door-pad leads, try waiting for the room to turn.  There is always a painting above a Door-Pad giving an indication of where it leads to.")
+          </item>
+          <item key="wand wands"><![CDATA[
+            msg ("In order to use a Magic Wand it must be activated.<br/>Magic Wands can only be used for one purpose at a time. In order to change a wand's \"purpose\", you must re-calibrate it. To re-calibrate a wand type CALIBRATE WAND.")
+          ]]></item>
+        </ask>
+        <green type="boolean">false</green>
+        <red type="boolean">false</red>
+        <blue type="boolean">false</blue>
+        <turnoff type="script">
+          if (Got(wand1)) {
+            if (not this.switchedon) {
+              msg (DynamicTemplate("AlreadySwitchedOff", this))
+            }
+            else {
+              if (HasString(this, "switchoffmsg")) {
+                msg (this.switchoffmsg)
+              }
+              else {
+                msg (DynamicTemplate("SwitchedOff", this))
+              }
+              this.switchedon = false
+            }
+          }
+          else {
+            msg ("You aren't carrying a wand.")
+          }
+        </turnoff>
+        <volume type="int">1</volume>
+      </object>
+    </object>
+    <exit alias="out" to="spellroom1">
+      <inherit name="outdirection" />
+    </exit>
+    <object name="painting1">
+      <inherit name="editor_object" />
+      <alias>Painting</alias>
+      <scenery type="boolean">false</scenery>
+      <look type="script">
+        if (bedexit1.unwise = true) {
+          msg ("The painting is of a Door-Pad in the land of unwise.")
+        }
+      </look>
+      <takemsg>If you take it down, you will never know where the Door-Pad leads.</takemsg>
+    </object>
+  </object>
+  <verb name="sit on">
+    <defaulttext>You can't sit on that.</defaulttext>
+    <multiobjectdefault>You can't sit on those.</multiobjectdefault>
+    <multiobjectmenuempty>There's nothing here, you want to sit on the floor?</multiobjectmenuempty>
+  </verb>
+  <verb name="lie on">
+    <defaulttext>It looks hard and uncomfortable, and you aren't THAT tired.</defaulttext>
+    <multiobjectdefault>They look hard and uncomfortable, and you aren't THAT tired.</multiobjectdefault>
+    <multiobjectmenuempty>There's nothing here, you want to lie on the floor?</multiobjectmenuempty>
+  </verb>
+  <verb>
+    <property>calibrate</property>
+    <pattern>calibrate</pattern>
+    <defaultexpression>"You can't calibrate " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="unwise">
+    <inherit name="editor_room" />
+    <description>This looks like a very unwise place to be.</description>
+    <beforeenter type="script">
+      msg ("That was...unwise.")
+      finish
+    </beforeenter>
+    <alias>Unwise</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>The</prefix>
+  </object>
+  <object name="spellroom1">
+    <inherit name="editor_room" />
+    <alias>Spell-atory</alias>
+    <description>This is the Spell-atory. Ingredients are combined here from the Liquid Store-age and the Powder Store-age to make potions. This is also where spells are designed and learned using wands and ready-made potions. In the center of the room is an Altar. An old Wooden Cabinet hangs on the wall to the east. There is a Pile of Wood stacked against the south wall. A Table holding a Vase of Flowers is near the west wall. To the north, on the floor, is a niche for a Very Large Urn. The Door-pad is on the floor next to the Pile of Wood, with it's corresponding painting above it.</description>
+    <firstenter type="script">
+      msg ("As you enter the room, your wand and the spellbook begin carrying on a conversation. A talking book. Who knew?")
+    </firstenter>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>The</prefix>
+    <object name="altar1">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <look>This is the Royal Altar of the Grand Mystic Powers of the Elders of the Magic of Muhkenzee. It is made of solid gold extracted from the mines to the far north of the Un-Wise. Rubies, emeralds and other gems decorate the altar. From this altar you can feel a power eminating, almost filling the room with light. No wonder there are no candles in here.</look>
+      <contentsprefix>on which there is</contentsprefix>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <transparent />
+      <listchildren />
+      <listchildrenprefix>On the altar there is</listchildrenprefix>
+      <containermaxobjects>Nothing else fits.</containermaxobjects>
+      <alias>Altar</alias>
+      <object name="spellbook1">
+        <inherit name="editor_object" />
+        <inherit name="openable" />
+        <alias>Spellbook</alias>
+        <alt>book</alt>
+        <look>This is the Royal Spell-book of the Grand Mystic Powers of the Elders of the Magic of Muhkenzee. In this book are all of the spells and knowledge gained throughout the ages. It is fairly thick, and made of what appears to be blue leather, although it is apparent no dye was used in it's making. The parchment papers are all filled with different styles of handwriting, each with a spell and signature of the ancient Elder who designed the spell. One page towards the back of the book is blank, indicating more spells can be added. </look>
+        <take type="script">
+          if (IsSwitchedOn(spellexit1)) {
+            msg ("As you lift the book, a strange light fills the room. The light begins to pulse faster and faster until it matches the speed of the flashing Door-pad, and then both stop. The exit is now closed. The Elders must have wanted this book to remain in this room.")
+          }
+          else {
+            msg ("As you lift the book, a light shoots out of the altar towards the Door-pad, ensuring it is locked. The Elders must have wanted this book to remain in this room.")
+          }
+          SwitchOff (spellexit1)
+          AddToInventory (spellbook1)
+          msg ("For some reason this has also caused your wand to cast Dis-appear on itself.")
+          RemoveObject (wand1)
+          MakeObjectInvisible (wand1)
+          firsttime {
+            MakeObjectVisible (key1)
+            msg ("Look at that. There is a key on the altar where the Spellbook was laying.")
+          }
+        </take>
+        <speak>Welcome, Elder Matrim. You are fortunate you escaped that aweful predicament with your sister. I tried to warn her, but alas, I am only a talking book. Feel free to leaf through me and take any spells you feel are necessary.</speak>
+        <isopen type="boolean">false</isopen>
+        <drop type="boolean">false</drop>
+        <volume type="int">50</volume>
+        <dropmsg>Do not drop that. It is a very old book. You should instead place it back on the altar.</dropmsg>
+      </object>
+      <object name="key1">
+        <inherit name="editor_object" />
+        <alias>Cabinet Key</alias>
+        <visible type="boolean">false</visible>
+        <look>This is an old skeleton key that will fit the lock on the potion cabinet.</look>
+        <volume type="int">1</volume>
+        <take />
+      </object>
+    </object>
+    <object name="cabinet1">
+      <inherit name="editor_object" />
+      <inherit name="container_lockable" />
+      <inherit name="container_closed" />
+      <alias>Cabinet</alias>
+      <look>This is an old wooden cabinet. The wood is cracked and appears to have not been polished in a very long time. The metal hinges appear rusty, but in good working order. This is the cabinet where potions are stored.</look>
+      <listchildren />
+      <listchildrenprefix>It contains</listchildrenprefix>
+      <key type="object">key1</key>
+      <autoopen />
+    </object>
+    <object name="wood1">
+      <inherit name="editor_object" />
+      <alias>Pile of Chopped Wood</alias>
+      <look type="script">
+        msg ("This is the Never-Ending Pile of Wood. It can be burned to heat the potions as they are mixed. As you watch, another piece of wood is added to the pile through a magic portal from Wood Processing.")
+        if (wood1.lit = true) {
+          msg ("The blaze from the fire engulfing the wood is generating an extreme amount of heat.")
+        }
+      </look>
+      <lit type="boolean">false</lit>
+      <light type="script">
+        if (Got(wand1)) {
+          if (wood1.lit = true) {
+            msg ("It's already burning.")
+          }
+          else {
+            if (wand1.red = true) {
+              msg ("Sparks fly from the wand and strike the Never-Ending Pile of Wood. A small fire ignites, which rapidly encompasses the entire pile.")
+              set (wood1, "lit", true)
+            }
+            else {
+              msg ("Nothing happens. Did you remember to CALIBRATE your wand?")
+            }
+          }
+        }
+        else {
+          msg ("Elders don't use matches and you don't have a wand.")
+        }
+      </light>
+      <restore type="script">
+        if (Got()) {
+          if (wand1.blue = true) {
+            msg ("There is no need to restore the wood from here. There are dwarves working very hard in Wood Processing to do that.")
+          }
+          else {
+            msg ("Nothing happens. Did you remember to CALIBRATE your wand?")
+          }
+        }
+        else {
+          msg ("You aren't carrying a wand.")
+        }
+      </restore>
+      <takemsg>No need to take this wood anywhere.</takemsg>
+      <listchildren type="boolean">false</listchildren>
+      <listchildrenprefix>It contains</listchildrenprefix>
+    </object>
+    <object name="spellexit1">
+      <inherit name="switchable" />
+      <inherit name="editor_object" />
+      <alias>Door-Pad</alias>
+      <alt>door; pad; doorpad</alt>
+      <look>This is the Door-pad. As the room spins, the Door-pad will point in a different direction. So the room you left to come in here, may not be the room you enter when you leave here.</look>
+      <switchonmsg>The Door-Pad is now active.</switchonmsg>
+      <switchoffmsg>The Door-Pad is now inactive.</switchoffmsg>
+      <switchedondesc>The Door-pad is flashing from bright blue to dark red and back again. That means that it is active.</switchedondesc>
+      <switchedoffdesc>The Door-pad is dull and grey. There is no light coming from it at all. This means the Door-pad is inactive and will need to be ACTIVATEd before it can be used.</switchedoffdesc>
+      <displayverbs>Look at; Take; Switch on; Switch off</displayverbs>
+      <turnon type="scriptdictionary">
+        <item key="wand1">
+          if (Got(wand1)) {
+            if (wand1.green = true) {
+              if (bedexit1.switchedon) {
+                msg (DynamicTemplate("AlreadySwitchedOn", bedexit1))
+              }
+              else {
+                if (HasString(bedexit1, "switchonmsg")) {
+                  msg (bedexit1.switchonmsg)
+                }
+                else {
+                  msg (DynamicTemplate("SwitchedOn", bedexit1))
+                }
+                bedexit1.switchedon = true
+              }
+            }
+            else {
+              msg ("Nothing happened. Did you remember to CALIBRATE your wand?")
+            }
+          }
+          else {
+            msg ("You aren't carrying a wand.")
+          }
+        </item>
+      </turnon>
+      <turnoff type="scriptdictionary">
+        <item key="wand1">
+          if (Got(wand1)) {
+            if (wand1.green = true) {
+              if (not bedexit1.switchedon) {
+                msg (DynamicTemplate("AlreadySwitchedOff", bedexit1))
+              }
+              else {
+                if (HasString(bedexit1, "switchoffmsg")) {
+                  msg (bedexit1.switchoffmsg)
+                }
+                else {
+                  msg (DynamicTemplate("SwitchedOff", bedexit1))
+                }
+                bedexit1.switchedon = false
+              }
+            }
+            else {
+              msg ("Nothing happened. Did you remember to CALIBRATE your wand?")
+            }
+          }
+          else {
+            msg ("You aren't carrying a wand.")
+          }
+        </item>
+      </turnoff>
+      <use type="script">
+        if (not IsSwitchedOn(spellexit1)) {
+          msg ("You can't use an inactive Door-Pad. You must ACTIVATE it first.")
+        }
+        else if (not Got(wand1)) {
+          msg ("How do you expect to cast Trans-Locate without your wand?")
+        }
+        else if (spellexit1.bedroom1 = true) {
+          MoveObject (player, bedroom1)
+        }
+      </use>
+      <unwise />
+      <scenery type="boolean">false</scenery>
+      <bedroom1 />
+    </object>
+    <object name="wall2">
+      <inherit name="editor_object" />
+      <inherit name="container_limited" />
+      <scenery />
+      <usedefaultprefix />
+      <alias>Wall</alias>
+      <look>The walls are made of brick and are a drab grey in color. They are unadorned, and very boring, save for one painting hanging right above the Door-Pad on the south wall.</look>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <transparent />
+      <containermaxobjects>You can't hang that here.</containermaxobjects>
+      <listchildren type="boolean">false</listchildren>
+    </object>
+    <object name="painting2">
+      <inherit name="editor_object" />
+      <alias>Painting</alias>
+      <scenery type="boolean">false</scenery>
+      <look type="script">
+        if (spellexit1.bedroom1 = true) {
+          msg ("The painting is of a Door-Pad in the your Bed Chamber.")
+        }
+      </look>
+      <takemsg>If you take it down, you will never know where the Door-Pad leads.</takemsg>
+    </object>
+    <object name="table1">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <alias>Table</alias>
+      <look type="script">
+        if (table1.whole = true) {
+          msg ("An old rickety table stands here. There are some smoke stains and burn marks as if the fire from the Never-Ending Pile of Wood got a little too close a time or two.")
+        }
+        else {
+          msg ("It's broke.")
+        }
+      </look>
+      <whole />
+      <contentsprefix>on which there is</contentsprefix>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <transparent />
+      <maxvolume type="int">50</maxvolume>
+      <containerfullmessage>If you put too much more on this table it will collapse.</containerfullmessage>
+      <listchildren />
+      <listchildrenprefix>It contains</listchildrenprefix>
+    </object>
+    <turnscript name="table1collapse">
+      <enabled />
+      <script><![CDATA[
+        table1collapse1 = GetVolume ( table1 )
+        if (table1collapse1>50) {
+          msg ("With too much wieght on the rickety old Table, it has collapsed.")
+          set (table1, "whole", not true)
+        }
+      ]]></script>
+    </turnscript>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <volume type="int">0</volume>
+      <maxvolume type="int">100</maxvolume>
+      <containerfullmessage>You are already carrying too much.</containerfullmessage>
+    </object>
+  </object>
+  <verb>
+    <property>light</property>
+    <pattern>light</pattern>
+    <defaultexpression>"You can't light " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>restore</property>
+    <pattern>restore</pattern>
+    <defaultexpression>"You can't restore " + object.article + "."</defaultexpression>
+  </verb>
+  <function name="WaitForKeyPress">
+    request (Wait, "")
+  </function>
+  <function name="calibrate1"><![CDATA[
+    calibratelist = NewStringList()
+    list add (calibratelist, "Activations")
+    list add (calibratelist, "Lighting Fires")
+    list add (calibratelist, "Restoring and Re-Pairing")
+    show menu ("Wand Calibration", calibratelist, true) {
+      if (result<>null) {
+        if (result="Activations") {
+          set (wand1, "green", true)
+          set (wand1, "red", not true)
+          set (wand1, "blue", not true)
+        }
+        else if (result="Lighting Fires") {
+          set (wand1, "red", true)
+          set (wand1, "green", not true)
+          set (wand1, "blue", not true)
+        }
+        else if (result="Restoring and Re-Pairing") {
+          set (wand1, "blue", true)
+          set (wand1, "green", not true)
+          set (wand1, "red", not true)
+        }
+      }
+      else {
+        msg ("The wand will not work right if it is not calibrated properly.")
+        set (wand1, "green", not true)
+      }
+    }
+  ]]></function>
+  <timer name="wood1timer">
+    <interval>137</interval>
+    <enabled />
+    <script>
+      if (wood1.lit = true) {
+        set (wood1, "lit", not true)
+        msg ("The in the Spell-atory has burned out.")
+      }
+    </script>
+  </timer>
+</asl>

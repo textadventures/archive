@@ -1,0 +1,36 @@
+<!--Saved by Quest 5.6.5621.18142-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="FormatCurrency">
+    <gameid>273c3146-02eb-4c1c-ae6b-971def5458c8</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <money type="int">0</money>
+    </object>
+  </object>
+  <command>
+    <pattern>beg</pattern>
+    <script>
+      amount = GetRandomInt(1, 100) * 5
+      player.money = player.money + amount
+
+      msg("You received " + FormatMoney(amount) + ". You now have " + FormatMoney(player.money))
+    </script>
+  </command>
+  <function name="FormatMoney" parameters="cents" type="string">
+    <![CDATA[
+	  s = ToString(cents)
+	  if (LengthOf(s) < 3) {
+	  	s = Right("000" + s, 3)
+	  }
+	  return("$" + Left(s, LengthOf(s)-2) + "." + Right(s, 2))
+      ]]>
+  </function>
+</asl>

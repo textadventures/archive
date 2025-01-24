@@ -1,0 +1,88 @@
+    <asl version="520">
+      <include ref="English.aslx" />
+      <include ref="Core.aslx" />
+      <game name="Testing Game Stuff">
+        <gameid>cd102f9d-370a-4bda-b6ea-ca42288f619c</gameid>
+        <version>1.0</version>
+        <start type="script">
+          msg ("What is your name?")
+          get input {
+            player.alias = result
+            msg (player.alias)
+            show menu ("What is your gender?", split ("male;female" , ";"), false) {
+              player.gender = result
+              if (HasAttribute(player, "male")) {
+                SetObjectFlagOn (player, "male")
+              }
+              else {
+                SetObjectFlagOn (player, "female")
+              }
+              show menu ("What is your race?", split ("human;elf;dwarf" , ";"), false) {
+                player.race = result
+                switch (player.race) {
+                  case ("human") {
+                    SetObjectFlagOn (player, "human")
+                  }
+                  case ("elf") {
+                    SetObjectFlagOn (player, "elf")
+                  }
+                  case ("dwarf") {
+                    SetObjectFlagOn (player, "dwarf")
+                  }
+                }
+                show menu ("What is your class?", split ("warrior;cleric;mage;thief" , ";"), false) {
+                  player.class = result
+                  switch (player.class) {
+                    case ("warrior") {
+                      SetObjectFlagOn (player, "warrior")
+                    }
+                    case ("cleric") {
+                      SetObjectFlagOn (player, "cleric")
+                    }
+                    case ("mage") {
+                      SetObjectFlagOn (player, "mage")
+                    }
+                    case ("thief") {
+                      SetObjectFlagOn (player, "thief")
+                    }
+                  }
+                  msg (player.alias + " is a " + LCase (player.gender) + " " + LCase (player.race) + " " + LCase (player.class) + ".")
+                  player.strength = 10                
+                }
+              }
+            }
+          }
+        </start>
+      </game>
+      <object name="room">
+        <inherit name="editor_room" />
+        <object name="player">
+          <inherit name="defaultplayer" />
+          <turns type="int">0</turns>
+          <statusattributes type="stringdictionary">turns = ;strength = </statusattributes>
+          <strength type="int">0</strength>
+          <changedstrength type="script">
+            firsttime {
+              switch (GetString (player, "race")) {
+                case ("human") {
+                  player.strength = player.strength + 5
+                }
+                case ("elf") {
+                  player.strength = player.strength + 0
+                }
+                case ("dwarf") {
+                  player.strength = player.strength + 10
+                }
+              }
+            }
+          </changedstrength>
+          <race type="list">human; elf; dwarf</race>
+        </object>
+      </object>
+      <turnscript name="turns script">
+        <enabled />
+        <script>
+          player.turns = player.turns + 1
+        </script>
+      </turnscript>
+    </asl>

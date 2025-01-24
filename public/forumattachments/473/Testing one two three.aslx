@@ -1,0 +1,108 @@
+<!--Saved by Quest 5.3.4762.29157-->
+<asl version="530">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <dynamictemplate name="UnresolvedObject">"There is no " + object.name + " here."</dynamictemplate>
+  <game name="Testing one two three">
+    <gameid>3858bee3-dc9d-4096-bad7-074602a3a291</gameid>
+    <version>1.0</version>
+    <author>Adam</author>
+    <defaultfont>'Times New Roman', Times, serif</defaultfont>
+    <menufont>'Times New Roman', Times, serif</menufont>
+    <autodescription_youarein_useprefix type="boolean">false</autodescription_youarein_useprefix>
+    <enablehyperlinks />
+    <menufontsize type="int">12</menufontsize>
+    <pov type="object">player</pov>
+  </game>
+  <object name="side of the road">
+    <inherit name="editor_room" />
+    <description type="script">
+      msg ("You are on the side of the road. It's dark out, but you notice that the headlights of a " + ObjectLink(car) + " parked on the side of the road are on.")
+    </description>
+    <object name="player">
+      <inherit name="editor_object" />
+      <alias>me</alias>
+      <alt>myself; self</alt>
+      <look>Lookin' good.</look>
+    </object>
+    <object name="car">
+      <inherit name="openable" />
+      <alias>car</alias>
+      <scenery />
+      <look>It's a black sedan. It looks new, too. You see that the light inside the car is on.</look>
+      <description>You sit in the driver's seat and immediately notice that the glass in front of the spedometer is broken. You wonder what happened.</description>
+      <exitslistprefix>You can get</exitslistprefix>
+      <displayverbs>Look at; Open; Close; Enter</displayverbs>
+      <openscript type="script">
+        msg ("The door is unlocked.  You open it.")
+        MakeObjectVisible (inside the car)
+        HelperOpenObject (car)
+        HelperOpenObject (car_door)
+      </openscript>
+      <closescript type="script">
+        msg ("You shut the car door.")
+        MakeObjectInvisible (inside the car)
+        HelperCloseObject (car)
+        HelperCloseObject (car_door)
+      </closescript>
+      <getin type="script">
+        if (car.isopen = True) {
+          MoveObject (player, car)
+        }
+        else {
+          msg ("The door is closed.")
+        }
+      </getin>
+      <object name="glovebox">
+        <inherit name="editor_object" />
+        <inherit name="container_closed" />
+        <visible type="boolean">false</visible>
+        <listchildren />
+        <object name="flashlight">
+          <inherit name="editor_object" />
+          <look>It's a long flashlight.  It's not too heavy, and it seems to work.</look>
+          <take />
+        </object>
+      </object>
+      <exit name="outside the car" alias="out of the car" to="side of the road">
+        <inherit name="outdirection" />
+        <script type="script">
+          MakeObjectInvisible (glovebox)
+          MoveObject (player, side of the road)
+        </script>
+      </exit>
+      <object name="car_door">
+        <inherit name="editor_object" />
+        <inherit name="openable" />
+        <alias>door</alias>
+        <scenery />
+        <look>It's just a regular car door. Everything looks to be in order.</look>
+        <closescript type="script">
+          msg ("You shut the car door.")
+          MakeObjectInvisible (outside the car)
+          HelperCloseObject (car)
+          HelperCloseObject (car_door)
+        </closescript>
+        <openscript type="script">
+          msg ("You open the car door.")
+          MakeObjectVisible (outside the car)
+          HelperOpenObject (car)
+          HelperOpenObject (car_door)
+        </openscript>
+      </object>
+    </object>
+    <exit name="inside the car" alias="inside the car" to="car">
+      <inherit name="indirection" />
+      <visible type="boolean">false</visible>
+      <script type="script">
+        MakeObjectVisible (glovebox)
+        MoveObject (player, car)
+      </script>
+    </exit>
+  </object>
+  <verb>
+    <property>getin</property>
+    <pattern>get in; enter; sit in</pattern>
+    <defaultexpression>"You can't get in; enter; sit in " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

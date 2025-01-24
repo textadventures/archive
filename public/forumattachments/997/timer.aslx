@@ -1,0 +1,66 @@
+<!--Saved by Quest 5.5.5328.26617-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Timer">
+    <gameid>baead432-8626-4fd4-bf68-ce38f37b4e8e</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <turncount type="int">0</turncount>
+      <lastfireball type="int">0</lastfireball>
+      <object name="spellbook">
+        <inherit name="editor_object" />
+        <drop type="boolean">false</drop>
+        <inventoryverbs type="stringlist">
+          <value>Cast fireball</value>
+          <value>Cast frostbite</value>
+          <value>Cast lightning storm</value>
+        </inventoryverbs>
+        <alias>Spellbook</alias>
+      </object>
+    </object>
+  </object>
+  <command name="cast fireball">
+    <pattern>cast fireball spellbook</pattern>
+    <script>
+      CastElementalSpell ("Fireball", 20, 5)
+    </script>
+  </command>
+  <command name="cast frostbite">
+    <pattern>cast frostbite spellbook</pattern>
+    <script>
+      CastElementalSpell ("Frostbite", 5, 2)
+    </script>
+  </command>
+  <command name="cast lightning storm">
+    <pattern>cast lightning storm spellbook</pattern>
+    <script>
+      CastElementalSpell ("Lightning Storm", 50, 10)
+    </script>
+  </command>
+  <function name="CastElementalSpell" parameters="name, hits, cooldown"><![CDATA[
+    if (not HasInt(player, "last_" + name)) {
+      set (player, "last_" + name, -cooldown)
+    }
+    if ((GetInt(player, "last_" + name) + cooldown) < player.turncount) {
+      msg ("You cast a " + name + ", doing " + hits + " hits to all the monsters around you.")
+      set (player, "last_" + name, player.turncount)
+    }
+    else {
+      msg ("You cannot cast a " + name + " yet (" + (GetInt(player, "last_" + name) + cooldown + 1 - player.turncount) + " seconds).")
+    }
+  ]]></function>
+  <timer name="player_cooldown_timer">
+    <interval>1</interval>
+    <enabled />
+    <script>
+      player.turncount = player.turncount + 1
+    </script>
+  </timer>
+</asl>

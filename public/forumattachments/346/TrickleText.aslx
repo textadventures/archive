@@ -1,0 +1,44 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="TrickleText">
+    <gameid>578b0d08-85cf-4421-8664-7412d368cf8a</gameid>
+    <version>1.0</version>
+    <start type="script">
+      SetFontSize (32)
+      delay = "100"
+      s = TrickleText(" ", " ", delay)
+      s = TrickleText("In the beginning,", s, delay)
+      s = TrickleText("there was a Quest.", s, delay)
+      s = TrickleText(" ", s, delay)
+      s = TrickleText(" ", s, delay)
+      s = TrickleText(" ", s, delay)
+      s = TrickleText("Prepare yourself... ", s, delay)
+      SetFontSize (9)
+      msg ("Press any key to begin.")
+      wait {
+        ClearScreen
+      }
+    </start>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+  </object>
+  <function name="TrickleText" parameters="text, staticText, delay" type="string"><![CDATA[
+    s = ""
+    for (i, 1, LengthOf(text), 1) {
+      s = s + Mid(text, i, 1)
+      ClearScreen
+      PrintCentered (staticText)
+      PrintCentered (s)
+      if (not EndsWith(s, " ")) {
+        request (Pause, delay)
+      }
+    }
+    return (staticText + "<br/>" + s)
+  ]]></function>
+</asl>

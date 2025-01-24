@@ -1,0 +1,1304 @@
+<!--Saved by Quest 5.3.4762.29157-->
+<asl version="530">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Curse!">
+    <gameid>6eec900a-c8de-418b-95f0-3fe52adb651d</gameid>
+    <version>1.0</version>
+    <menufontsize type="int">12</menufontsize>
+    <menufont>Comic Sans MS</menufont>
+    <defaultfont>Comic Sans MS</defaultfont>
+    <defaultfontsize type="int">15</defaultfontsize>
+    <autodescription_youcansee type="int">4</autodescription_youcansee>
+    <autodescription_description type="int">2</autodescription_description>
+  </game>
+  <object name="darkness">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description><![CDATA[It's a very constricted place - in fact there's hardly room to cough in here! <br/>]]></description>
+    <object name="lid">
+      <inherit name="editor_object" />
+      <scenery />
+      <feel>It's loose. One good push should do it, you feel!</feel>
+      <push type="script">
+        ClearScreen
+        msg ("With a crash the heavy lid falls away. The light that enters is dim but seems dazzling to your bloodshot eyes.")
+        MoveObject (player, coffin)
+        create exit ("", "out", coffin, crypt, "")
+      </push>
+      <lift type="script">
+        ClearScreen
+        msg ("With a crash the heavy lid falls away. The light that enters is dim but seems dazzling to your bloodshot eyes.")
+        MoveObject (player, coffin)
+        create exit ("", "out", coffin, crypt, "")
+      </lift>
+    </object>
+    <command name="gyrfalcon">
+      <pattern>gyrfalcon</pattern>
+      <script>
+        MoveObject (player, C1)
+        MoveObject (orb, shrine)
+        MoveObject (book, shrine)
+      </script>
+    </command>
+    <object name="coffin2">
+      <inherit name="editor_object" />
+      <alias>coffin</alias>
+      <scenery />
+      <feel>You feel around with your hands. Above you seems to be some sort of lid.</feel>
+    </object>
+    <object name="around">
+      <inherit name="editor_object" />
+      <scenery />
+      <feel>You feel around with your hands. Above you seems to be some sort of lid.</feel>
+    </object>
+  </object>
+  <object name="crypt">
+    <inherit name="editor_room" />
+    <description><![CDATA[A cold gloomy place. The ceiling is festooned with cobwebs. A stone cross on a pedestal can be seen in the faint moonlight that filters down from an open doorway high in the eastern wall. A flight of worn stone steps leads up through the doorway.<br/>A great sarcophagus is lying on the floor. ]]></description>
+    <picture>crypt.jpg</picture>
+    <beforeenter type="script">
+      ClearScreen
+    </beforeenter>
+    <exit alias="in" to="coffin">
+      <inherit name="indirection" />
+    </exit>
+    <exit alias="up" to="west end of a church">
+      <inherit name="updirection" />
+    </exit>
+    <object name="cobwebs">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <scenery />
+      <alt>webs</alt>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <hidechildren />
+      <listchildren />
+      <object name="spider">
+        <inherit name="editor_object" />
+        <take />
+        <look>Breakfast, perhaps?</look>
+        <eat type="script">
+          msg ("You seem to have a somewhat bizzare appetite...")
+          RemoveObject (spider)
+        </eat>
+      </object>
+    </object>
+    <object name="sarcophagus">
+      <inherit name="editor_object" />
+      <take type="boolean">false</take>
+      <close type="boolean">false</close>
+      <scenery />
+      <look>A great stone structure with a heavy stone cover.</look>
+      <alt>cover</alt>
+    </object>
+    <object name="cross">
+      <inherit name="editor_object" />
+      <alt>crucifix</alt>
+      <scenery />
+      <look><![CDATA[For some reason it makes you feel very uncomfortable. A mixture of fear, and hope.<br/><br/>You remember when it was a source of love and joy to you. Maybe again, one day - perhaps tonight...]]></look>
+    </object>
+    <object name="stone lid">
+      <inherit name="editor_object" />
+      <alias>lid</alias>
+      <scenery />
+    </object>
+    <object name="crowbar">
+      <inherit name="editor_object" />
+      <take />
+      <look>A large iron lever.</look>
+      <selfuseon type="scriptdictionary">
+        <item key="sarcophagus">
+          if (not Got(crowbar)) {
+            msg ("You aren't carrying it!")
+          }
+          else if (Got(crowbar)) {
+            if (GetBoolean(sarcophagus, "open")) {
+              msg ("It's already open.")
+            }
+            else if (not GetBoolean(sarcophagus, "open")) {
+              msg ("You lever the lid off the sarcophagus - revealing a skeleton.")
+              SetObjectFlagOn (sarcophagus, "open")
+              MoveObject (skeleton, crypt)
+            }
+          }
+        </item>
+      </selfuseon>
+    </object>
+    <object name="steps">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <scenery />
+      <look>They lead up - and down of course from the other way! </look>
+      <alt>stairs; flight</alt>
+    </object>
+    <object name="ceiling">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>Cobwebby, as I said.</look>
+    </object>
+    <object name="black coffin">
+      <inherit name="editor_object" />
+      <scenery type="boolean">false</scenery>
+      <look>Just your size!</look>
+    </object>
+    <object name="walls">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <scenery />
+      <look>Old, cold stone.</look>
+      <alt>floor</alt>
+    </object>
+    <object name="pedestal">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>The Roman numerals LV are carved in the stone.</look>
+    </object>
+    <object name="doorway">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>It's a doorway! Something which lets you pass from one side of a wall to the other...</look>
+    </object>
+    <object name="moonlight">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>Now your eyes have become accustomed to the light, you see that it is quite colourful, as if shining through stained glass windows.</look>
+    </object>
+  </object>
+  <object name="coffin">
+    <inherit name="editor_room" />
+    <description type="string"></description>
+  </object>
+  <object name="west end of a church">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <description>The ancient furnishings include oaken pews and a stone font. There are double doors to the south, and a small open door to the west.</description>
+    <descprefix>You are at</descprefix>
+    <exit alias="down" to="crypt">
+      <inherit name="downdirection" />
+    </exit>
+    <exit alias="east" to="east end of the church">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="door2">
+      <inherit name="editor_object" />
+      <inherit name="container_lockable" />
+      <look>It is open and leads to the bell tower.</look>
+      <scenery />
+      <alias>small door</alias>
+      <hidechildren />
+      <listchildren />
+      <key type="object">small key</key>
+    </object>
+    <exit alias="west" to="bell tower">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="pews">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>Made of age-blackened oak, they look most uncomfortable. Not much chance of snoozing during the sermon!</look>
+      <alt>pew</alt>
+      <lookunder type="script">
+        MoveObject (dust, west end of a church)
+        msg ("Looks very dusty.")
+      </lookunder>
+      <object name="dust">
+        <inherit name="editor_object" />
+        <scenery />
+        <look type="script">
+          if (GetBoolean(large iron key, "found")) {
+            msg ("The caretaker has been a little careless!")
+          }
+          else if (not GetBoolean(large iron key, "found")) {
+            MoveObject (large iron key, west end of a church)
+            SetObjectFlagOn (large iron key, "found")
+            msg ("You find a large iron key.")
+          }
+        </look>
+      </object>
+    </object>
+    <object name="doors">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <inherit name="plural" />
+      <close type="boolean">false</close>
+      <openmsg>The great doors swing pondorously open to the moonlit, but somewhat misty night.</openmsg>
+      <scenery />
+      <look>Massive iron-bound oak doors, leading out to the churchyard.</look>
+      <unlockmessage>You unlock the church doors with the iron key.</unlockmessage>
+      <key type="object">large iron key</key>
+      <onunlock type="script">
+        play sound ("DoorCreak.wav", false, false)
+        create exit ("", "south", west end of a church, outside the church doors, "")
+      </onunlock>
+    </object>
+    <object name="font">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <scenery />
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <transparent />
+      <hidechildren />
+      <listchildren />
+      <look>A mediaeval structure made of granite.</look>
+      <object name="key under water">
+        <inherit name="editor_object" />
+        <alt type="list"></alt>
+        <look>It's lying under the water.</look>
+        <alias>wet key</alias>
+        <take type="script">
+          if (not GetBoolean(pair of gloves, "worn")) {
+            msg ("Your hand recoils from the touch of the holy water!")
+          }
+          else if (GetBoolean(pair of gloves, "worn")) {
+            msg ("You take the key.")
+            RemoveObject (key under water)
+            AddToInventory (small key)
+          }
+        </take>
+      </object>
+    </object>
+  </object>
+  <object name="east end of the church">
+    <inherit name="editor_room" />
+    <description>You stand in the silence of the carpeted Sanctuary before a stone altar covered in a white altar cloth. You sense that peace is close at hand...</description>
+    <descprefix>You are at</descprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <picture>altar4.jpg</picture>
+    <exit alias="west" to="west end of a church">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="altar">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>It is covered with a white cloth.</look>
+    </object>
+    <object name="cloth">
+      <inherit name="editor_object" />
+      <alt>altar cloth</alt>
+      <scenery />
+      <look><![CDATA[It is embroidered all round the edges with the letters <i><b>LV</b></i>]]></look>
+    </object>
+    <object name="carpet">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>It's old and worn.</look>
+      <lift>You see a brass engraving depicting a knight kneeling before the altar. He is reading from a large book, and the altar has moved to reveal the secret tomb.</lift>
+      <lookunder>You see a brass engraving depicting a knight kneeling before the altar. He is reading from a large book, and the altar has moved to reveal the secret tomb.</lookunder>
+    </object>
+    <object name="cross2">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>A small gold cross.</look>
+    </object>
+    <object name="candles">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <scenery />
+      <look>White unlit wax candles in gold candlesticks.</look>
+    </object>
+  </object>
+  <object name="outside the church doors">
+    <inherit name="editor_room" />
+    <descprefix>You are</descprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <firstenter type="script">
+      play sound ("WolfHowl.wav", false, false)
+    </firstenter>
+    <exit alias="east" to="G1">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="north" to="west end of a church">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="G1">
+    <inherit name="editor_room" />
+    <alias>cemetery. Thick mist swirls about your feet.</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <exit alias="north" to="G2">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="east" to="G8">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="south" to="G8">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="west" to="G8">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="mist">
+      <inherit name="editor_object" />
+      <scenery />
+      <look type="script">
+        msg ("Enough to make you lose your sense of direction...")
+      </look>
+    </object>
+  </object>
+  <object name="G2">
+    <inherit name="editor_room" />
+    <alias>cemetery. Thick mist swirls about your feet.</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <enter type="script">
+      play sound ("Owl.wav", false, false)
+    </enter>
+    <exit alias="east" to="G3">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="north" to="G8">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="west" to="G8">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="south" to="G8">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="mist2">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>nist</alt>
+      <look type="script">
+        msg ("Enough to make you lose your sense of direction...")
+      </look>
+    </object>
+  </object>
+  <object name="G3">
+    <inherit name="editor_room" />
+    <alias>cemetery. Thick mist swirls about your feet.</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <exit alias="south" to="G4">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="north" to="G8">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="east" to="G8">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="west" to="G8">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="mist3">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>mist</alt>
+      <look type="script">
+        msg ("Enough to make you lose your sense of direction...")
+      </look>
+    </object>
+  </object>
+  <object name="G4">
+    <inherit name="editor_room" />
+    <alias>cemetery. Thick mist swirls about your feet.</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <exit alias="east" to="G8">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="north" to="G8">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="west" to="G8">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="south" to="open grave">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="mist4">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>mist</alt>
+      <look type="script">
+        msg ("Enough to make you lose your sense of direction...")
+      </look>
+    </object>
+  </object>
+  <object name="open grave">
+    <inherit name="editor_room" />
+    <descprefix>You are by</descprefix>
+    <picture type="string"></picture>
+    <enter type="script">
+      if (not GetBoolean(werewolf, "gone")) {
+        ClearScreen
+        SetFramePicture ("werewolf.jpg")
+        msg ("A werewolf stands there, snarling. It will not let you pass!")
+        play sound ("WerewolfGrowl.wav", true, false)
+      }
+      else if (GetBoolean(werewolf, "gone")) {
+        SetFramePicture ("open grave.jpg")
+      }
+    </enter>
+    <exit alias="south" to="G5">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="north" to="G8">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="east" to="G8">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="west" to="G8">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="werewolf">
+      <inherit name="editor_object" />
+      <alt>wolf</alt>
+      <look>Looks ferocious! And hungry...</look>
+    </object>
+  </object>
+  <object name="G5">
+    <inherit name="editor_room" />
+    <alias>cemetery. Thick mist swirls about your feet.</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <exit alias="east" to="G6">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="south" to="G8">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="north" to="G8">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="west" to="G8">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="mist5">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>mist</alt>
+      <look type="script">
+        msg ("Enough to make you lose your sense of direction...")
+      </look>
+    </object>
+  </object>
+  <object name="G6">
+    <inherit name="editor_room" />
+    <alias>cemetery. Thick mist swirls about your feet.</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <exit alias="west" to="G7">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="north" to="G8">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="east" to="G8">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="south" to="G8">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="mist6">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>mist</alt>
+      <look type="script">
+        msg ("Enough to make you lose your sense of direction...")
+      </look>
+    </object>
+  </object>
+  <object name="G7">
+    <inherit name="editor_room" />
+    <alias>cemetery. Thick mist swirls about your feet.</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <enter type="script">
+      play sound ("Owl.wav", false, false)
+    </enter>
+    <exit alias="north" to="outside the church doors">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="west" to="G8">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="south" to="G8">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="east" to="G8">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="mist7">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>mist</alt>
+      <look type="script">
+        msg ("Enough to make you lose your sense of direction...")
+      </look>
+    </object>
+  </object>
+  <object name="G8">
+    <inherit name="editor_room" />
+    <description type="string"></description>
+    <alias>cemetery. Thick mist swirls about your feet.</alias>
+    <descprefix>You are in</descprefix>
+    <enter type="script"><![CDATA[
+      SetTurnTimeout (5) {
+        ClearScreen
+        SetFramePicture ("bat.jpg")
+        msg ("<br/>You writhe in agony as the first rays of the rising sun appear over the yew trees and strike your skin.<br/><br/>Swiftly turning into the form of a bat, you wing your way back to your coffin.<br/><br/>Your quest has ended for tonight!")
+        finish
+      }
+    ]]></enter>
+    <firstenter type="script">
+      play sound ("Owl.wav", false, false)
+    </firstenter>
+    <exit alias="north" to="G9">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="south" to="G9">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="east" to="G9">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="west" to="G9">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="mist8">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>mist</alt>
+      <look type="script">
+        msg ("Enough to make you lose your sense of direction...")
+      </look>
+    </object>
+  </object>
+  <object name="bell tower">
+    <inherit name="editor_room" />
+    <description>There is a small cupboard under the stairs.</description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <exit alias="up" to="belfry">
+      <inherit name="updirection" />
+    </exit>
+    <exit alias="east" to="west end of a church">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="cupboard">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <hidechildren />
+      <listchildren />
+      <scenery />
+      <unlockmessage>Unlocking the door with the small key,  you open the cupboard. </unlockmessage>
+      <openmsg> </openmsg>
+      <look>A small store cupboard.</look>
+      <key type="object">small key</key>
+      <object name="bread">
+        <inherit name="editor_object" />
+        <alt>bread</alt>
+        <take />
+        <drop />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>some</prefix>
+        <look>Hard, stale and mouldy. Most unappetising!</look>
+        <eat type="script">
+          if (not GetBoolean(bread, "warned")) {
+            msg ("I really wouldn't!")
+            SetObjectFlagOn (bread, "warned")
+          }
+          else if (GetBoolean(bread, "warned")) {
+            msg ("Fair enough! You were warned. You gulp it down.")
+            RemoveObject (bread)
+          }
+        </eat>
+      </object>
+    </object>
+  </object>
+  <object name="belfry">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <picture>belfry.jpg</picture>
+    <description>A great bell hangs from a massive beam.</description>
+    <exit alias="down" to="bell tower">
+      <inherit name="downdirection" />
+    </exit>
+    <object name="bell">
+      <inherit name="editor_object" />
+      <look>Inscribed on the bell are the words "In honour of the Reverend E.NESS for his work in designing the layout of the cemetery."</look>
+      <scenery />
+      <alt>bells</alt>
+      <take type="script">
+        msg ("You're joking, of course!")
+      </take>
+    </object>
+    <object name="beam">
+      <inherit name="editor_object" />
+      <look>Besides supporting the bell, it also carries large quantities of bat droppings.</look>
+      <scenery />
+    </object>
+    <object name="droppings">
+      <inherit name="editor_object" />
+      <look>Poo!</look>
+      <alt>dung; poo</alt>
+      <scenery />
+      <take />
+      <eat>Your appetite may be bizzare, but really..!</eat>
+      <count>What? A little anally retentive perhaps. (More than you can say about the bats!) Anyway, there are 55...</count>
+    </object>
+  </object>
+  <object name="grave">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <description>The walls are of damp earth and entwined roots. The odd earthworm peeps out inquisitively.</description>
+    <exit alias="up" to="open grave">
+      <inherit name="updirection" />
+    </exit>
+    <object name="earthworm">
+      <inherit name="editor_object" />
+      <alt>worm</alt>
+      <scenery />
+      <look>It eyes you in hungry anticipation!</look>
+    </object>
+    <object name="roots">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <scenery />
+      <pull type="script">
+        msg ("The earth crumbles around the root and falls away revealing a dark hole to the east.")
+        create exit ("", "east", grave, underground cell, "")
+      </pull>
+      <take type="script">
+        msg ("The earth crumbles around the root and falls away revealing a dark hole to the east.")
+        create exit ("", "east", grave, underground cell, "")
+      </take>
+      <look type="script">
+        if (not GetBoolean(underground cell, "open")) {
+          msg ("The earth crumbles around the root and falls away revealing a dark hole to the east.")
+          create exit ("", "east", grave, underground cell, "")
+          SetObjectFlagOn (underground cell, "open")
+        }
+        else {
+          msg ("Just a root...")
+        }
+      </look>
+    </object>
+    <object name="pair of gloves">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <inherit name="container_open" />
+      <look>They are gardening gloves. Nicely lined...</look>
+      <take />
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <ondrop type="script">
+        if (player.parent = G8) {
+          RemoveObject (pair of gloves)
+        }
+        else if (player.parent = G9) {
+          RemoveObject (pair of gloves)
+        }
+        SetObjectFlagOff (pair of gloves, "worn")
+      </ondrop>
+      <wear type="script">
+        if (GetBoolean(pair of gloves, "worn")) {
+          msg ("You're already wearing them.")
+        }
+        else if (not GetBoolean(pair of gloves, "worn")) {
+          if (not Got(pair of gloves)) {
+            msg ("You need to pick them up first.")
+          }
+          else if (Got(pair of gloves)) {
+            msg ("You put them on.")
+            SetObjectFlagOn (pair of gloves, "worn")
+          }
+        }
+      </wear>
+      <object name="lining">
+        <inherit name="editor_object" />
+        <scenery />
+        <look>It is well SEWN all the way back!</look>
+      </object>
+    </object>
+  </object>
+  <object name="underground cell">
+    <inherit name="editor_room" />
+    <exit alias="west" to="grave">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="brassbound chest">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <isopen type="boolean">false</isopen>
+      <hidechildren />
+      <listchildren />
+      <look>It is old, heavy and, of course, bound in brass!</look>
+      <object name="small coin lying on the bottom">
+        <inherit name="editor_object" />
+        <take />
+        <look>A heavy gold piece. On one side is the engraving of a knight.</look>
+        <scenery type="boolean">false</scenery>
+        <ontake type="script">
+          RemoveObject (small coin lying on the bottom)
+          AddToInventory (coin)
+        </ontake>
+      </object>
+      <object name="bottom">
+        <inherit name="editor_object" />
+        <scenery />
+        <look>It's false!</look>
+        <take type="boolean">false</take>
+        <lift type="script">
+          if (GetBoolean(bottom, "moved")) {
+            msg ("Nothing more to see!")
+          }
+          else if (not GetBoolean(bottom, "moved")) {
+            msg ("You move the false bottom aside.")
+            MoveObject (book, brassbound chest)
+            SetObjectFlagOn (bottom, "moved")
+          }
+        </lift>
+      </object>
+    </object>
+  </object>
+  <object name="G9">
+    <inherit name="editor_room" />
+    <alias>cemetery. Thick mist swirls about your feet.</alias>
+    <exit alias="south" to="G8">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="north" to="G8">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="west" to="G8">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="east" to="G8">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="mist9">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>mist</alt>
+      <look type="script">
+        msg ("Enough to make you lose your sense of direction...")
+      </look>
+    </object>
+  </object>
+  <object name="coin">
+    <inherit name="editor_object" />
+    <look>A heavy gold piece. On one side is the engraving of a knight.</look>
+    <ondrop type="script">
+      if (player.parent = G8) {
+        RemoveObject (coin)
+      }
+      else if (player.parent = G9) {
+        RemoveObject (coin)
+      }
+    </ondrop>
+    <giveto type="scriptdictionary">
+      <item key="statue"><![CDATA[
+        play sound ("StatueMove2.wav", true, false)
+        play sound ("sword.wav", true, false)
+        msg ("There is a grinding noise. Suddenly and swiftly the statue's sword-arm descends and splits you asunder!<br/><br/>Your ghost is doomed to wander the catacombs for eternity (or until you complete this adventure, whichever comes sooner!)")
+        finish
+      ]]></item>
+    </giveto>
+  </object>
+  <object name="book">
+    <inherit name="editor_object" />
+    <inherit name="openable" />
+    <take />
+    <look>It is a very heavy, leather-bound volume of great age and written in Latin.</look>
+    <read>What page? (Remember - the book's in Latin!)</read>
+    <ondrop type="script">
+      if (player.parent = G8) {
+        RemoveObject (book)
+      }
+      else if (player.parent = G9) {
+        RemoveObject (book)
+      }
+    </ondrop>
+  </object>
+  <verb>
+    <property>lift</property>
+    <pattern>lift</pattern>
+    <defaultexpression>"You can't lift " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="LV">
+    <pattern>LV</pattern>
+    <script>
+      if (not ListContains(ScopeVisible(), book)) {
+        msg ("What are you talking about?")
+      }
+      else if (ListContains(ScopeVisible(), book)) {
+        if (not player.parent = east end of the church) {
+          msg ("As you read the strange words of power - nothing happens!")
+        }
+        else if (player.parent = east end of the church) {
+          if (not GetBoolean(altar, "open")) {
+            play sound ("Grating.wav", false, false)
+            msg ("On uttering the mystic words of power, you see the heavy altar grind to one side to reveal a dark opening leading downwards.")
+            create exit ("", "down", east end of the church, shrine, "")
+            SetObjectFlagOn (altar, "open")
+          }
+          else if (GetBoolean(altar, "open")) {
+            msg ("You've already done that!")
+          }
+        }
+      }
+    </script>
+  </command>
+  <object name="shrine">
+    <inherit name="editor_room" />
+    <exit alias="up" to="east end of the church">
+      <inherit name="updirection" />
+    </exit>
+    <exit alias="north" to="C3">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="statue">
+      <inherit name="editor_object" />
+      <alt>knight</alt>
+      <look type="script">
+        if (not GetBoolean(statue, "orb")) {
+          msg ("It is the statue of a knight on a plinth. The knight's right arm is held aloft bearing a mighty sword. Its left arm is outstretched with hand open, palm uppermost.")
+        }
+        else if (GetBoolean(statue, "orb")) {
+          if (not GetBoolean(statue, "unarmed")) {
+            msg ("You see a statue with sword lowered and a stone orb gripped in its left hand.")
+          }
+          else if (GetBoolean(statue, "unarmed")) {
+            msg ("The sword-less statue grips a stone orb in its left hand.")
+          }
+        }
+      </look>
+    </object>
+    <object name="plinth">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>There is an inscription which reads "...if thou doth that which is evil, be afraid; for he beareth not the sword in vain..."</look>
+    </object>
+    <object name="stone sword">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>sword</alt>
+      <look><![CDATA[You can't reach it.<br/>]]></look>
+    </object>
+    <object name="hand">
+      <inherit name="editor_object" />
+      <inherit name="container_limited" />
+      <scenery />
+      <look>A stone hand...</look>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <hidechildren type="boolean">false</hidechildren>
+      <listchildren />
+      <transparent />
+    </object>
+    <turnscript name="one">
+      <enabled />
+      <script><![CDATA[
+        if (Contains (hand,orb)) {
+          msg ("You place the orb in the statue's left hand. The orb turns to stone and the hand grips it firmly.<br/><br/>")
+          play sound ("StatueMove2.wav", true, false)
+          msg (" Slowly the knight's sword-arm descends.")
+          SetObjectFlagOn (statue, "orb")
+          MoveObject (sword, shrine)
+          RemoveObject (orb)
+          MoveObject (stone orb, hand)
+          RemoveObject (stone sword)
+        }
+        else if (Contains (hand,coin)) {
+          msg ("You place the coin in the statue's left hand. You become aware or a gentle rumbling. Suddenly and swiftly...")
+          play sound ("StatueMove2.wav", true, false)
+          play sound ("sword.wav", true, false)
+          msg ("...the statue brings down his sword, and unerringly splits you asunder!<br/>Just as well  you're undead. Maybe tomorrow...")
+          finish
+        }
+      ]]></script>
+    </turnscript>
+  </object>
+  <object name="tapestry room">
+    <inherit name="editor_room" />
+    <description>You see the woven picture of a knight slaying a vampire with a sword.</description>
+    <picture>tapestry3.jpg</picture>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <exit alias="down" to="damp cell">
+      <inherit name="downdirection" />
+    </exit>
+    <exit alias="southeast" to="C1">
+      <inherit name="southeastdirection" />
+    </exit>
+  </object>
+  <object name="damp cell">
+    <inherit name="editor_room" />
+    <description>There is a portcullis in the south wall. A dark tunnel leads south towards a flickering light. Nearby, a large iron wheel is set in the wall. There is the strong pungent smell of rats, and a furtive scrabbling noise behind the portcullis.</description>
+    <picture>portcullis.jpg</picture>
+    <enter type="script">
+      if (ListContains(ScopeVisible(), bread)) {
+        if (not Got(bread)) {
+          RemoveObject (bread)
+          MoveObject (rat, damp cell)
+          msg ("You see a large, fat black rat nibbling at the bread.")
+        }
+      }
+    </enter>
+    <exit alias="up" to="tapestry room">
+      <inherit name="updirection" />
+    </exit>
+    <object name="portcullis">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>Made of iron, it's rusty but still very strong.</look>
+    </object>
+    <object name="wheel">
+      <inherit name="editor_object" />
+      <take />
+      <look>A large iron wheel, pitted with rust. </look>
+      <turn type="script">
+        if (not GetBoolean(player, "strong")) {
+          msg ("You heave and strain but don't have the strength to budge it. Rats!")
+        }
+        else {
+          msg ("You turn the wheel with ease. With a grating noise, the portcullis rises.")
+          create exit ("", "south", damp cell, tomb, "")
+        }
+      </turn>
+    </object>
+  </object>
+  <object name="tomb">
+    <inherit name="editor_room" />
+    <description type="string"></description>
+    <enter type="script"><![CDATA[
+      if (GetBoolean(tomb, "vampire")) {
+        ClearScreen
+        msg ("Suddenly the stench of death engulfs you. You recognise the smell of the creature that had turned you into a vampire all those years ago.")
+        play sound ("DeathBreath.wav", false, true)
+        SetFramePicture ("vampire5.jpg")
+        SetTimeout (5) {
+          if (not Got(sword)) {
+            play sound ("Scream.wav", true, false)
+            msg ("<br/>As the beast approaches you, you realise that your bid for release has failed!<br/>")
+            msg ("Maybe next time?")
+            finish
+          }
+          else if (Got(sword)) {
+            msg ("As the beast approaches you, you raise the Sword of Power and strike the hateful creature.<br/>It crumbles to dust!<br/><br/>")
+            play sound ("sword.wav", false, false)
+            SetTimeout (1) {
+              msg ("<br/><br/>(Press any key)")
+              wait {
+                ClearScreen
+                SetFramePicture ("saved.jpg")
+                msg ("A great joy fills your heart as you realise that your soul is at last at rest. You are free... ")
+                finish
+              }
+            }
+          }
+        }
+      }
+      if (not GetBoolean(tomb, "visited")) {
+        msg ("A dreadful stench pervades the air.<br/>Despite a huge open fire in the west wall, it is deathly cold. ")
+        SetObjectFlagOn (tomb, "visited")
+      }
+      else if (GetBoolean(tomb, "visited")) {
+        if (not GetBoolean(tomb, "vampire")) {
+          msg ("The stench is growing stronger!")
+          SetObjectFlagOn (tomb, "vampire")
+        }
+      }
+    ]]></enter>
+    <object name="fire">
+      <inherit name="editor_object" />
+      <scenery />
+      <enter>Are you sure? Better check it out first!</enter>
+      <look type="script"><![CDATA[
+        msg ("It's cold! Merely an illusion!<br/>You can pass through to the west.")
+        create exit ("", "west", tomb, Orb Room, "")
+      ]]></look>
+    </object>
+    <exit alias="north" to="damp cell">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="Orb Room">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <description type="string"></description>
+    <enter type="script">
+      if (not GetBoolean(orb, "taken")) {
+        SetFramePicture ("RoomPillarOrb.jpg")
+        msg ("A pillar stands in the centre of the room, carrying a beautiful orb.")
+      }
+      else if (GetBoolean(orb, "taken")) {
+        SetFramePicture ("RoomPillar.jpg")
+        msg ("A pillar stands in the centre of the room.")
+      }
+    </enter>
+    <exit alias="east" to="tomb">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="orb">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>A glowing and beautiful object. Must be worth a king's ransom - or at least a knight's ransom!</look>
+      <take type="script">
+        if (GetBoolean(statue, "orb")) {
+          msg ("It's now an integral part of the statue.")
+        }
+        else {
+        }
+        msg ("You pick it up.")
+        SetObjectFlagOn (orb, "taken")
+        AddToInventory (orb)
+        if (player.parent = Orb Room) {
+          SetFramePicture ("RoomPillar.jpg")
+        }
+      </take>
+      <giveto type="scriptdictionary">
+        <item key="statue"><![CDATA[
+          play sound ("StatueMove2.wav", false, false)
+          msg ("You place the orb in the statue's left hand. The orb turns to stone and the hand grips it firmly.<br/><br/> Slowly the knight's sword-arm descends.")
+          SetObjectFlagOn (statue, "orb")
+          MoveObject (sword, shrine)
+          RemoveObject (orb)
+          MoveObject (stone orb, hand)
+          RemoveObject (stone sword)
+        ]]></item>
+      </giveto>
+    </object>
+    <object name="pillar">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>A tall Ionic pillar, with a shallow concavity on its upper surface. </look>
+    </object>
+  </object>
+  <object name="rat">
+    <inherit name="editor_object" />
+    <look>A large, fat black rat.</look>
+    <take />
+    <eat type="script">
+      if (not Got(rat)) {
+        msg ("You don't have it!")
+      }
+      else {
+        msg ("Revolting though it is, you feel new strength surging through your veins.")
+        RemoveObject (rat)
+        SetObjectFlagOn (player, "strong")
+      }
+    </eat>
+  </object>
+  <object name="C1">
+    <inherit name="editor_room" />
+    <description>Vaulted tunnels run in all directions.</description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <alias>catacombs</alias>
+    <exit alias="north" to="C2">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="south" to="C2">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="east" to="C2">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="tunnel">
+      <inherit name="editor_object" />
+      <scenery />
+      <alias>tunnels</alias>
+      <look type="script">
+        if (not GetBoolean(tunnel, "exit")) {
+          create exit ("", "nw", C1, tapestry room, "")
+          SetObjectFlagOn (tunnel, "exit")
+        }
+        SetFramePicture ("Light End Tunnel.jpg")
+        msg ("You see a flickering light down a tiny winding tunnel to the north west.")
+      </look>
+    </object>
+    <exit alias="west" to="C2">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="C2">
+    <inherit name="editor_room" />
+    <description>Vaulted tunnels run in all directions.</description>
+    <alias>catacombs</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <exit alias="north" to="C1">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="south" to="C3">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="east" to="C1">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="tunnel2">
+      <inherit name="editor_object" />
+      <scenery />
+      <alias>tunnels</alias>
+      <look>It may be your imagination, but the darkness seems a little less intense...</look>
+    </object>
+    <exit alias="west" to="C1">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="C3">
+    <inherit name="editor_room" />
+    <description>Vaulted tunnels run in all directions. You see light to the south.</description>
+    <alias>catacombs.</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <picture>tunnels.jpg</picture>
+    <exit alias="north" to="C2">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="south" to="shrine">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="east" to="C2">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="tunnel3">
+      <inherit name="editor_object" />
+      <alias>tunnels</alias>
+      <scenery />
+      <look>Apart from the light to the south, the other tunnels look pretty dark.</look>
+    </object>
+    <exit alias="west" to="C2">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="sword">
+    <inherit name="editor_object" />
+    <take />
+    <look><![CDATA[A huge, double-edged weapon. On the blade is inscribed "<b>THE VAMPIRE SLAYER</b> - made in Sheffield"]]></look>
+    <ontake type="script">
+      SetObjectFlagOn (statue, "unarmed")
+    </ontake>
+  </object>
+  <object name="stone orb">
+    <inherit name="editor_object" />
+    <alt>orb</alt>
+    <scenery type="boolean">false</scenery>
+    <look>It is a stone orb - an integral part of the statue.</look>
+  </object>
+  <object name="large iron key">
+    <inherit name="editor_object" />
+    <alt type="list"></alt>
+    <take />
+    <alias>iron key</alias>
+    <look>It is a very large iron key.</look>
+  </object>
+  <verb>
+    <property>lookunder</property>
+    <pattern>look under</pattern>
+    <defaultexpression>"You can't look under " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="small key">
+    <inherit name="editor_object" />
+    <take />
+    <alt type="list"></alt>
+    <look>It is a small brass key.</look>
+  </object>
+  <verb>
+    <property>remove</property>
+    <pattern>remove</pattern>
+    <defaultexpression>"You can't remove " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="CURSE">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <descprefix type="string"></descprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <picture>vampire3.jpg</picture>
+    <description><![CDATA[<b></b>]]></description>
+    <alias>CURSE!</alias>
+    <enter type="script"><![CDATA[
+      ClearScreen
+      SetFontSize (16)
+      wait {
+        ClearScreen
+        MoveObject (player, darkness)
+      }
+      msg ("CURSE!<br/><br/><br/>(Press any key)")
+    ]]></enter>
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+  </object>
+  <object name="bone">
+    <inherit name="editor_object" />
+    <take />
+    <look>Old and dry - not meaty at all!</look>
+    <alt>bones</alt>
+    <throw type="script">
+      if (not ListContains(ScopeVisible(), werewolf)) {
+        msg ("Bye-bye bone!")
+        RemoveObject (bone)
+      }
+      else {
+        ClearFramePicture
+        msg ("The werewolf catches the bone and trots away happily, tail wagging.")
+        SetObjectFlagOn (werewolf, "gone")
+        create exit ("", "down", open grave, grave, "")
+        ClearFramePicture
+        SetFramePicture ("open grave.jpg")
+        RemoveObject (werewolf)
+        RemoveObject (bone)
+        msg ("You are by an open grave.")
+      }
+    </throw>
+    <giveto type="scriptdictionary">
+      <item key="werewolf">
+        ClearFramePicture
+        msg ("The werewolf catches the bone and trots away happily, tail wagging.")
+        SetObjectFlagOn (werewolf, "gone")
+        create exit ("", "down", open grave, grave, "")
+        ClearFramePicture
+        SetFramePicture ("open grave.jpg")
+        RemoveObject (werewolf)
+        RemoveObject (bone)
+        msg ("You are by an open grave.")
+      </item>
+    </giveto>
+  </object>
+  <object name="skeleton">
+    <inherit name="editor_object" />
+    <scenery />
+    <look type="script">
+      msg ("Just a pile of mouldering bones, really.")
+      MoveObject (bone, crypt)
+    </look>
+  </object>
+  <command name="shazzam">
+    <pattern>shazzam</pattern>
+    <script>
+      MoveObject (player, crypt)
+    </script>
+  </command>
+  <verb>
+    <property>feel</property>
+    <pattern>feel</pattern>
+    <defaultexpression>"You can't feel " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>enter</property>
+    <pattern>enter</pattern>
+    <defaultexpression>"You can't enter " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>count</property>
+    <pattern>count</pattern>
+    <defaultexpression>"You can't count " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

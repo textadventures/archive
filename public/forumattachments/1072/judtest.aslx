@@ -1,0 +1,412 @@
+<!--Saved by Quest 5.5.5328.26617-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <include ref="dimsome.aslx" />
+  <game name="cloud9">
+    <gameid>e55fa912-0986-479b-a1c1-bdd07ab89b48</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <css><![CDATA[
+    
+       <style type="text/css">
+        div#txtCommandDiv {
+            border:0;
+            background: no-repeat;
+            font-size:10pt;
+            font-family:'Trebuchet MS', Helvetica, sans-serif;
+            
+          }
+          input#txtCommand {
+            outline:none;
+            border:0;
+            font-size:10px;
+            margin:0;
+            padding:0;
+            max-width: 1000px;
+          }
+          
+          </style>
+    
+                                                                                            ]]></css>
+    <showtitle type="boolean">false</showtitle>
+    <enablehyperlinks type="boolean">false</enablehyperlinks>
+    <defaultfontsize type="int">10</defaultfontsize>
+    <setbackgroundopacity />
+    <backgroundopacity type="double">1</backgroundopacity>
+    <showpanes type="boolean">false</showpanes>
+    <showcommandbar />
+    <showlocation type="boolean">false</showlocation>
+    <showborder type="boolean">false</showborder>
+    <attr name="autodescription_youcansee" type="int">0</attr>
+    <attr name="autodescription_youcango" type="int">0</attr>
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <autodescription />
+    <setcustomwidth />
+    <customwidth type="int">1270</customwidth>
+    <setcustompadding />
+    <custompaddingright type="int">500</custompaddingright>
+    <custompaddingleft type="int">100</custompaddingleft>
+    <defaultfont>'Trebuchet MS', Helvetica, sans-serif</defaultfont>
+    <defaultwebfont>ABeeZee</defaultwebfont>
+    <defaultbackground>Black</defaultbackground>
+    <defaultforeground>LightGrey</defaultforeground>
+    <showdescriptiononenter />
+    <attr name="changeroom_newline" type="boolean">false</attr>
+    <attr name="autodescription_youarein" type="int">0</attr>
+    <cover>futurecity 2.jpg</cover>
+    <custompaddingbottom type="int">100</custompaddingbottom>
+    <echocommand />
+    <attr name="autodescription_youcango_newline" type="boolean">false</attr>
+    <appendobjectdescription type="boolean">false</appendobjectdescription>
+    <category>Sci-Fi</category>
+    <autodisplayverbs type="boolean">false</autodisplayverbs>
+    <start type="script">
+    </start>
+    <turnscript>
+      <enabled />
+      <script>
+        JS.eval ("$('div[id^=\"divOutputAlign\"]').css('opacity', '0.5');")
+        JS.eval ("getCurrentDiv().css('opacity', '1.0');")
+      </script>
+    </turnscript>
+  </game>
+  <verb name="wear">
+    <pattern>wear #object#</pattern>
+    <property>wear</property>
+    <defaulttemplate>DefaultWear</defaulttemplate>
+  </verb>
+  <command name="go">
+    <pattern type="string"><![CDATA[^enter (?<exit>.*)$|^go to (?<exit>.*)$|^go (?<exit>.*)$|^(?<exit>north|east|south|west|northeast|northwest|southeast|southwest|in|out|up|down|n|e|s|w|ne|nw|se|sw|o|u|d)$]]></pattern>
+    <unresolved>You can't go there.</unresolved>
+    <script>
+      if (exit.visible) {
+        if (exit.locked) {
+          msg (exit.lockmessage)
+        }
+        else if (exit.runscript) {
+          if (HasScript(exit, "script")) {
+            do (exit, "script")
+          }
+        }
+        else if (exit.lookonly) {
+          msg ("You can't go there.")
+        }
+        else {
+          game.pov.parent = exit.to
+        }
+      }
+      else {
+        msg ("You can't go there.")
+      }
+    </script>
+  </command>
+  <object name="intro">
+    <inherit name="editor_room" />
+    <description type="script"><![CDATA[
+      picture ("futurecity 3.jpg")
+      msg ("2145 and civilisation is not as it were. Cities are overcrowded and illegal narcotics rife. You can hardly blame these people, though - mind-drugs are just about their only escape from this hell-hole we call earth.<br/><br/>Most of the stuff out there is harmless enough; Virtual Dream Enhancers, Deep Sleepers, Instant Inebriates... but there's a new one on the market, and a particularity dangerous one at that. On the street, it goes by the name of Cloud9 - Trapemiumbenzodipotream if you want to get chemical. It's primary purpose is recreational, offering a euphoric high like nothing before, but the come-downs are devastating, triggering suicidal desires in many users, and unbridled aggression in others.<br/><br/>The enforcement department, such as they are, have turned a blind eye to the problem - no doubt paid off by the drugs developers, but there are many who want to see it gone for good.<br/><br/>One such man has good reason. He lost his daughter to the drug and is willing to pay good money to anyone who can bring the production of Cloud9 to a stop, by whatever means possible. He doesn't advertise the job, for obvious reasons, but he's heard of your record and reputation for getting jobs done.<br/><br/>A fee was agreed and you shook hands before going home to get a good night's sleep - probably your last for the foreseeable.<br/><br/>Stand by...")
+      SetTimeout (5) {
+        MoveObject (player, bedroom)
+      }
+    ]]></description>
+  </object>
+  <object name="bedroom">
+    <inherit name="editor_room" />
+    <description type="script"><![CDATA[
+      firsttime {
+        msg ("<br/><br/>The soft, female tones of your alarm clock drift into your subconcious. \"Good morning, sir, this is your eight am wake-up call.\"")
+        SetTimeout (3) {
+          msg ("<br/><br/>You throw back the covers with a groan, and climb out of bed.<br/><br/>An expanse of glass overlooks the darkened city below.  You can't remember the last time you saw a clear sky.<br/><br/>A door leads to the bathroom while an archway gives access to the lounge area.")
+        }
+      }
+      otherwise {
+        if (GetBoolean(bedroom, "clothesgone")) {
+          msg ("Your bed lies unmade on the far wall.<br/><br/>A door leads to the bathroom while an archway gives access to the lounge area. ")
+        }
+        else {
+          msg ("Your bed lies unmade on the far wall. Last night's clothes are draped over a chair.<br/><br/>A door leads to the bathroom while an archway gives access to the lounge area. ")
+          SetObjectFlagOn (clothes, "clothesgone")
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <exit alias="lounge" to="lounge" />
+    <exit alias="bathroom" to="bathroom" />
+    <object name="bed">
+      <inherit name="editor_object" />
+      <drop type="boolean">false</drop>
+      <look>The bed is as wide as it is long. The ruffled sheets are a mixture of tasteful chocolate browns and beiges.</look>
+      <feature_usegive />
+      <climb type="string"></climb>
+      <lie>You climb on the bed and close your eyes.</lie>
+      <takemsg>It's bolted to the floor.</takemsg>
+      <use type="script">
+        msg ("You climb on the bed and close your eyes.")
+      </use>
+    </object>
+    <object name="clothes">
+      <inherit name="editor_object" />
+      <take />
+      <drop type="boolean">false</drop>
+      <scenery />
+      <look>A crumpled pair of black slacks, red shirt and a pair of suede shoes.</look>
+      <wear type="script">
+        if (GetBoolean(player, "clotheson")) {
+          msg ("You're already wearing the clothes.")
+        }
+        else {
+          msg ("You give the clothes a quick smell before shrugging and putting them on.")
+          SetObjectFlagOn (player, "clotheson")
+        }
+      </wear>
+    </object>
+    <object name="window">
+      <inherit name="editor_object" />
+      <takemsg>If you do that, your room will collapse. Now stop being silly.</takemsg>
+      <look>You step up to the window and notice the grime on the outside of the glass. Below, the city streets are glistening, reflecting the many neons lining the sidewalks.</look>
+    </object>
+  </object>
+  <object name="lounge">
+    <inherit name="editor_room" />
+    <description type="script"><![CDATA[
+      if (Got(gun)) {
+        if (Got(cellphone)) {
+          msg ("The lounge is large and open-plan. It's why you choose the apartment... that and the security of having your own, retina-scan operated elevator. It came at a price, but you had money... back then.<br/><br/>A kitchen lies at the far end. A door leads to your bedroom and an elevator gives access to the streets outside.<br/><br/>There is a smoked-glass coffee table here.")
+        }
+        else {
+          msg ("The lounge is large and open-plan. It's why you choose the apartment... that and the security of having your own, retina-scan operated elevator. It came at a price, but you had money... back then.<br/><br/>A kitchen lies at the far end. A door leads to your bedroom and an elevator gives access to the streets outside.<br/><br/>There is a smoked-glass coffee table on which sits a cellphone.")
+        }
+      }
+      else {
+        if (Got(cellphone)) {
+          msg ("The lounge is large and open-plan. It's why you choose the apartment... that and the security of having your own, retina-scan operated elevator. It came at a price, but you had money... back then.<br/><br/>A kitchen lies at the far end. A door leads to your bedroom and an elevator gives access to the streets outside.<br/><br/>There is a smoked-glass coffee table on which sits a gun.")
+        }
+        else {
+          msg ("The lounge is large and open-plan. It's why you choose the apartment... that and the security of having your own, retina-scan operated elevator. It came at a price, but you had money... back then.<br/><br/>A kitchen lies at the far end. A door leads to your bedroom and an elevator gives access to the streets outside.<br/><br/>There is a smoked-glass coffee table on which sits a gun and a cellphone.")
+        }
+      }
+    ]]></description>
+    <onexit type="script">
+    </onexit>
+    <enter type="script">
+    </enter>
+    <exit to="bedroom" />
+    <exit to="kitchen" />
+    <object name="gun">
+      <inherit name="editor_object" />
+      <look>An Oracle Snubnose. Discreet, but packs a mighty whallop.</look>
+      <take />
+      <takemsg>You grab the gun and slip into your trouser waist.</takemsg>
+      <feature_usegive />
+      <fire type="string"></fire>
+      <drop type="boolean">false</drop>
+      <dropmsg>You think better and decide to keep hold of it for now.</dropmsg>
+      <use type="script">
+        msg ("You fire the pistol and gunshot noise fills the air.")
+      </use>
+    </object>
+    <object name="cellphone">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <look>A Pear ePhone 6 in black.</look>
+      <take />
+      <takemsg>You grab the phone and drop it into your pocket.</takemsg>
+      <feature_usegive />
+      <feature_switchable />
+      <dropmsg>You think better and decide to keep hold of it for now.</dropmsg>
+      <onswitchon type="script">
+      </onswitchon>
+      <onswitchoff type="script">
+      </onswitchoff>
+    </object>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <exit alias="lift; elevator" to="elevator">
+      <scenery type="boolean">false</scenery>
+      <locked type="boolean">false</locked>
+      <visible />
+    </exit>
+  </object>
+  <object name="bathroom">
+    <inherit name="editor_room" />
+    <description><![CDATA[As you enter the bathroom the ceiling panel lights buzz and flicker into life . You inspect your reflection, rubbing at the stuble on your face and contemplating a shave.<br/><br/>A razor sits on the small glass shelf beneath the mirror.<br/><br/>To your right is the toilet, and to your left a wet-room.]]></description>
+    <object name="razor">
+      <inherit name="editor_object" />
+      <take />
+      <takemsg>You pick it up and check the blades. Looks clean enough.</takemsg>
+      <dropmsg>You place the razor back on the shelf.</dropmsg>
+      <look>It's a simple three-bladed razor and looks relatively new.</look>
+      <alt type="stringlist" />
+      <feature_usegive />
+      <use type="script"><![CDATA[
+        msg ("You lather your face with shaving cream and begin scraping away at the three-day stubble.<br/><br/>Five minutes later and clean shaven, you feel remarkable refreshed.")
+      ]]></use>
+    </object>
+    <object name="toilet">
+      <inherit name="editor_object" />
+      <look>Nothing out of the ordinary here - just a bog-standard bog.</look>
+      <takemsg>It's bolted to the floor</takemsg>
+      <drop type="boolean">false</drop>
+      <feature_usegive />
+      <sit>It's not the most comfortable place to sit.</sit>
+      <use type="script">
+        if (GetBoolean(player, "boguse")) {
+          msg ("You've already been.")
+        }
+        else {
+          msg ("You approach the toilet and pull out your member. The flow comes easily and you sigh as you feel your bladder emptying.")
+          SetObjectFlagOn (player, "boguse")
+        }
+      </use>
+    </object>
+    <object name="wetroom">
+      <inherit name="editor_object" />
+      <look>The wetroom takes up half the bathroom space, and it's a big bathroom.</look>
+      <takemsg>Don't be silly.</takemsg>
+      <feature_usegive />
+      <alt type="stringlist">
+        <value>shower</value>
+      </alt>
+      <use type="script"><![CDATA[
+        if (GetBoolean(player, "hadshower")) {
+          msg ("You've already showered.")
+        }
+        else {
+          msg ("You turn on the shower and step under the steaming jet of water coming from the multiple heads. You wash away last night's filth, standing with your head bowed. The sensation of the water cascading over your face is wonderful.<br/><br/>Ten minutes later you step out and begin patting yourself dry with a towel.")
+          SetObjectFlagOn (player, "hadshower")
+        }
+      ]]></use>
+    </object>
+    <exit alias="bedroom" to="bedroom" />
+  </object>
+  <verb name="dress">
+    <property>dress</property>
+    <pattern>dress #object#</pattern>
+    <defaultexpression>"You can't dress " + object.article + "."</defaultexpression>
+    <defaulttemplate>DefaultDress</defaulttemplate>
+  </verb>
+  <object name="kitchen">
+    <inherit name="editor_room" />
+    <description><![CDATA[A seldom used place, at least for cooking, evident by the pristine hob in the work surface. The lounge is situated at the opposite end and an elevator in the wall to you left leads to the streets outside.<br/><br/>A silver fridge sits at one end.]]></description>
+    <object name="fridge">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <look>Nothing special. Its the same fridge you've had for the last four years.</look>
+      <attr name="feature_usegive" type="boolean">false</attr>
+      <feature_container />
+      <use type="script">
+        msg ("The smell of something long past its sell-by date rushes your nostrils. You recoil and close the door.")
+      </use>
+      <openscript type="script">
+        msg ("The stench of something long past its sell-by day invades your nostrils. You recoil and close the door.")
+      </openscript>
+    </object>
+    <object name="hob">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <look>It's a hob, unused.</look>
+      <feature_switchable />
+      <switchonmsg>The hob is now on.</switchonmsg>
+      <switchoffmsg>The hob is off.</switchoffmsg>
+    </object>
+    <exit to="lounge" />
+    <exit alias="lift" />
+  </object>
+  <object name="outside">
+    <inherit name="editor_room" />
+    <alias>street</alias>
+    <description type="script"><![CDATA[
+      firsttime {
+        msg ("As the elevator doors open and you step out into the street for the first time that day, an overwhelming sense of misery hits you. It's been raining again and dirty puddles have collected where ever you want to step. Rubbish seems to be everywhere you look; empty food cartons, cigarette packets, bottles... the sanitory droids must still be in maintainence.<br/><br/>Food stalls line the whole length of the street and you can't walk five paces without banging shoulders with someone. You remember the first time you moved here, constantly apologising and exscusing yourself for every little bump and collision. Not any more, and especially not today.<br/><br/>You eventually find an unoccupide side-street and stop for a cigarette while you consider your options.<br/><br/>Over on the east block is Dawsons - the electronics company owned by your employer, the man who lost his daughtert to Cloud9 and who's paying you a large sum of money to bring the developers of the drug to justice. You've discussed the contract and conditions already, but maybe there's more he can tell you about his daughter.<br/><br/>And then there's the users themselves, of course, over to the west side of town, where few dare to venture.")
+      }
+      otherwise {
+        msg ("Food stalls line the street and people are milling about everywhere. Dawsons Electronics lies to the east. West will take you to the slums.")
+      }
+    ]]></description>
+    <object name="retscan">
+      <inherit name="editor_object" />
+      <alias>scanner</alias>
+      <alt type="stringlist">
+        <value>retina scanner</value>
+        <value>retina check</value>
+        <value>retina scan</value>
+      </alt>
+      <unlock type="string"></unlock>
+      <feature_usegive />
+      <use type="script"><![CDATA[
+        firsttime {
+          msg ("You approach the scanner and rest your head againsts the rubber surround. A soft red light pans across your eyes and emits a high-piched bleep.")
+          UnlockExit (retscanopen)
+        }
+        otherwise {
+          msg ("You rest your head againsts the rubber surround and wait for the beep.<br/><br/>The lift doors open and you step inside.")
+          MoveObject (player, elevator2)
+        }
+      ]]></use>
+    </object>
+    <exit alias="dawsons" to="dawsons">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="slums" to="the slums">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <verb name="fire">
+    <property>fire</property>
+    <pattern>fire #object#</pattern>
+    <defaultexpression type="string"></defaultexpression>
+  </verb>
+  <object name="elevator">
+    <inherit name="editor_room" />
+    <alias>lift</alias>
+    <open />
+    <feature_usegive />
+    <description type="script"><![CDATA[
+      msg ("Going down.<br/><br/>Please wait...<br/>")
+      SetTimeout (4) {
+        MoveObject (player, outside)
+      }
+    ]]></description>
+    <use type="script">
+      msg ("Going down...")
+      MoveObject (player, outside)
+    </use>
+    <exit to="outside" />
+  </object>
+  <object name="elevator2">
+    <inherit name="editor_room" />
+    <alias>lift</alias>
+    <open />
+    <feature_usegive />
+    <description type="script"><![CDATA[
+      msg ("Going up.<br/><br/>Please wait...<br/>")
+      SetTimeout (4) {
+        MoveObject (player, lounge)
+      }
+    ]]></description>
+    <use type="script">
+      msg ("Going up...")
+      MoveObject (player, lounge)
+    </use>
+    <exit alias="lift" to="lounge" />
+  </object>
+  <object name="dawsons">
+    <inherit name="editor_room" />
+    <description>Dawson Electronics</description>
+    <alias>dawsons</alias>
+  </object>
+  <object name="the slums">
+    <inherit name="editor_room" />
+    <description>The Slums</description>
+    <alias>slums</alias>
+  </object>
+  <function name="InitUserInterface"><![CDATA[
+    JS.eval ("$('#txtCommandDiv').prepend('&gt;&nbsp;')")
+    request (SetInterfaceString, "TypeHereLabel=")
+    OutputTextNoBr (game.css)
+  ]]></function>
+</asl>

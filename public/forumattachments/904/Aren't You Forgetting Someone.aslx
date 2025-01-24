@@ -1,0 +1,76 @@
+﻿<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="GamebookCore.aslx" />
+  <game name="Aren't You Forgetting Someone?">
+    <gameid>435bf65f-28b6-4123-864b-21e508ffca39</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <author>by Elizabeth (Gnizam)</author>
+    <cover>Aren't you forgetting someone.png</cover>
+    <description><![CDATA[Emptiness, despair, darkness are the only words you can use to describe this.. well you don't really know. Hell? Yeah, that sounds about right. It's like you're dreaming, but it doesn't seem like it's all entirely made up. <br/>You feel empty and you don't remember anything. It feels like you're in a room full of people, yet no one's there.<br/>You don't know how to get out, you don't even know if it's possible. All you can do now is search through the hazy images and static noise for an answer.]]></description>
+    <defaultbackground>Black</defaultbackground>
+    <defaultforeground>White</defaultforeground>
+    <defaultlinkforeground>Red</defaultlinkforeground>
+    <showborder type="boolean">false</showborder>
+    <customwidth type="int">700</customwidth>
+    <setcustompadding type="boolean">false</setcustompadding>
+    <setcustomwidth type="boolean">false</setcustomwidth>
+    <defaultwebfont>Open Sans</defaultwebfont>
+  </game>
+  <object name="Beginning">
+    <description><![CDATA[You've been in this hell for about an hour now. You don’t know where you are or who you are. You feel a deep emptiness inside of you, you want it to go away. You can’t feel a thing and You're afraid to open your eyes to the awaiting darkness.<br/>]]></description>
+    <options type="stringdictionary">
+      <item>
+        <key>Continue to Drift</key>
+        <value>Keep drifting</value>
+      </item>
+    </options>
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+  </object>
+  <object name="Continue to Drift">
+    <description><![CDATA[<i>Am I even alive?</i><br/><br/>You don’t know anymore. You wish this didn't feel so real. You want to wake up in a panic, only to realize it was just a dream.<br/>You distantly recall memories of learning how to read, or how to walk. But you don't know how you learned this things, or who taught you. It feels so lonely, not knowing anyone or anything.<br/>Maybe you should {page:Open Your Eyes:open your eyes}?]]></description>
+    <options type="stringdictionary">
+      <item>
+        <key>Open Your Eyes</key>
+        <value>esfr</value>
+      </item>
+    </options>
+  </object>
+  <object name="Death End One" />
+  <object name="Live End Two" />
+  <object name="Open Your Eyes">
+    <description><![CDATA[<i>There’s nothing else I can do, I have to open my eyes!</i><br/><br/>But it’s just so hard, you don’t know what you’ll see. <br/>Your eyes flutter open, you are no longer in the darkened abyss, but a small kitchen stacked with dirty pots and pans. Toy cars and small dolls litter the floor. {page:Encounter Child 1st:A small flash of movement caught your eye}, and you couldn't help but notice how {page:Back Yard:unreasonably bright it was.}]]></description>
+  </object>
+  <object name="Encounter Child 1st">
+    <description>Some text</description>
+  </object>
+  <object name="Back Yard">
+    <description>Some back text</description>
+  </object>
+  <function name="HandleCommand" parameters="command">
+    <![CDATA[
+    if (command = "undo") {
+      // ignore
+    }
+    else {
+      newpage = GetObject(command)
+      if (newpage = null) {
+        msg ("Error - no page named '" + command + "'")
+      }
+      else {
+        if (not game.clearlastpage and HasAttribute(player.parent, "options")) {
+          if (DictionaryContains(player.parent.options, command)) {
+            optiontext = StringDictionaryItem(player.parent.options, command)
+            msg ("<b>" + optiontext + "</b>")
+            msg ("")
+          }
+          JS.disableAllCommandLinks()
+        }
+        player.parent = GetObject(command)
+      }
+    }
+    ]]>
+  </function>
+</asl>

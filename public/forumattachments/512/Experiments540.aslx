@@ -1,0 +1,167 @@
+<!--Saved by Quest 5.4.4807.34548-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Experiments540">
+    <gameid>ba1ee291-7806-4d0a-8739-668cda6c3e16</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <showscore type="boolean">false</showscore>
+    <showhealth />
+    <underlinehyperlinks type="boolean">false</underlinehyperlinks>
+    <onhealthzero type="script">
+      msg ("You are dead! (Since this is a demo, I'lll let you have 25 health back, to keep you going.)")
+      IncreaseHealth (25)
+    </onhealthzero>
+    <object name="marble prime">
+      <inherit name="editor_object" />
+      <inherit name="prime_object" />
+      <alias>held marble</alias>
+      <look>It's a little glass ball.</look>
+      <replicant type="object">marble replicant</replicant>
+    </object>
+    <object name="Potion1 Prime">
+      <inherit name="editor_object" />
+      <inherit name="prime_object" />
+      <alias>Healing Potion</alias>
+      <look>It's a glass vial containing a blessed liquid for healing minor injuries.</look>
+      <replicant type="object">Potion1 Replicant</replicant>
+      <drink type="script"><![CDATA[
+        if (DecQ(this, 1)=True) {
+          msg ("You drink a healing potion, \"GULP!\"<br/>You gain 20 health.")
+          IncreaseHealth (20)
+        }
+        else {
+          msg ("You drink a healing potion, \"GULP!\"<br/>You gain 20 health.")
+          IncreaseHealth (20)
+          RemoveObject (this)
+        }
+      ]]></drink>
+    </object>
+  </game>
+  <object name="Basement">
+    <inherit name="editor_room" />
+    <description>It's dank in here—cold, dark, and dank. There is a small window near the ceiling in one corner, but it only helps a little.</description>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="window">
+      <inherit name="editor_object" />
+    </object>
+    <object name="marble replicant">
+      <inherit name="editor_object" />
+      <inherit name="replicant_object" />
+      <alias>marble</alias>
+      <look>It's a little glass ball.</look>
+      <prime type="object">marble prime</prime>
+    </object>
+    <object name="marble replicant1">
+      <inherit name="editor_object" />
+      <inherit name="replicant_object" />
+      <alias>marble</alias>
+      <look>It's a little glass ball.</look>
+      <prime type="object">marble prime</prime>
+    </object>
+    <object name="marble replicant2">
+      <inherit name="editor_object" />
+      <inherit name="replicant_object" />
+      <alias>marble</alias>
+      <look>It's a little glass ball.</look>
+      <prime type="object">marble prime</prime>
+    </object>
+    <object name="Potion1 Replicant">
+      <inherit name="editor_object" />
+      <inherit name="replicant_object" />
+      <alias>Healing Potion</alias>
+      <look>It's a glass vial containing a blessed liquid for healing minor injuries.</look>
+      <prime type="object">Potion1 Prime</prime>
+      <drink>You have to take it before you can drink it. Don't worry, I won't make you open it.</drink>
+      <use type="script">
+        msg ("You have to take it before you can drink it. Don't worry, I won't make you open it.")
+      </use>
+    </object>
+    <object name="Potion1 Replicant1">
+      <inherit name="editor_object" />
+      <inherit name="replicant_object" />
+      <alias>Healing Potion</alias>
+      <look>It's a glass vial containing a blessed liquid for healing minor injuries.</look>
+      <prime type="object">Potion1 Prime</prime>
+      <drink>You have to take it before you can drink it. Don't worry, I won't make you open it.</drink>
+      <use type="script">
+        msg ("You have to take it before you can drink it. Don't worry, I won't make you open it.")
+      </use>
+    </object>
+    <object name="Potion1 Replicant2">
+      <inherit name="editor_object" />
+      <inherit name="replicant_object" />
+      <alias>Healing Potion</alias>
+      <look>It's a glass vial containing a blessed liquid for healing minor injuries.</look>
+      <prime type="object">Potion1 Prime</prime>
+      <drink>You have to take it before you can drink it. Don't worry, I won't make you open it.</drink>
+      <use type="script">
+        msg ("You have to take it before you can drink it. Don't worry, I won't make you open it.")
+      </use>
+    </object>
+    <object name="metal pole">
+      <inherit name="editor_object" />
+      <look>It's the center support for the floor above. Jagged metal juts out all over it. It looks like someone tried to cleave it in half. It probably wouldn't be too safe to touch it...</look>
+      <touch type="script"><![CDATA[
+        msg ("\"YEE-OUCH!\"<br/>You can't help crying out, as you are cut by the jagged metal on the pole.")
+        DecreaseHealth (25)
+      ]]></touch>
+    </object>
+  </object>
+  <type name="replicant_object">
+    <quantity type="int">1</quantity>
+    <prime type="object">player</prime>
+    <take type="script">
+      msg ("You take the " + this.alias + ".")
+      if (Got(this.prime)) {
+        IncQ (this.prime, this.quantity)
+        RemoveObject (this)
+      }
+      else {
+        RemoveObject (this)
+        AddToInventory (this.prime)
+      }
+    </take>
+  </type>
+  <type name="prime_object">
+    <quantity type="int">1</quantity>
+    <unit type="string"></unit>
+    <drop type="script"><![CDATA[
+      if (this.quantity>1) {
+        msg ("You drop a " + this.alias + ".")
+        CloneObjectAndMove (this.replicant, player.parent)
+        DecQ (this, 1)
+      }
+      else {
+        msg ("You drop the " + this.alias + ".")
+        CloneObjectAndMove (this.replicant, player.parent)
+        RemoveObject (this)
+      }
+    ]]></drop>
+    <changedquantity type="script"><![CDATA[
+      if (this.quantity>1) {
+        set (this, "listalias", this.alias + ": " + this.quantity + " " + this.unit)
+      }
+      else {
+        set (this, "listalias", this.alias)
+      }
+    ]]></changedquantity>
+    <replicant type="object">player</replicant>
+  </type>
+  <function name="IncQ" parameters="objectq, increment">
+    set (objectq, "quantity", objectq.quantity+increment)
+  </function>
+  <function name="DecQ" parameters="objectq, decrement" type="boolean"><![CDATA[
+    if (decrement>objectq.quantity) {
+      return (False)
+    }
+    else {
+      set (objectq, "quantity", objectq.quantity-decrement)
+      return (True)
+    }
+  ]]></function>
+</asl>

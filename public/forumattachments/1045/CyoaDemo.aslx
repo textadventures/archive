@@ -1,0 +1,99 @@
+    <!--Saved by Quest 5.4.4873.16527-->
+    <asl version="540">
+      <include ref="English.aslx" />
+      <include ref="Core.aslx" />
+      <game name="CYOA Experiment">
+        <gameid>e6dbd742-97ef-4fef-bc34-12f7a3b2cdfc</gameid>
+        <version>1.1</version>
+        <firstpublished>2013</firstpublished>
+        <autodescription type="boolean">false</autodescription>
+        <showpanes type="boolean">false</showpanes>
+        <showcommandbar type="boolean">false</showcommandbar>
+        <echocommand type="boolean">false</echocommand>
+        <autodisplayverbs type="boolean">false</autodisplayverbs>
+        <currentcyoasection type="string"></currentcyoasection>
+      </game>
+      <object name="page1">
+        <inherit name="editor_room" />
+        <inherit name="page" />
+        <desc type="script">
+        <![CDATA[
+           msg("You are in your bedroom<br/><br/>")
+        ]]>
+        </desc>
+        <object name="player">
+          <inherit name="editor_object" />
+          <inherit name="editor_player" />
+          <ana type="int">0</ana>
+        </object>
+        <exit name="exit_get_dressed" alias="Get Dressed" to="get_dressed">
+          <inherit name="northdirection" />
+          <runscript />
+          <script type="script">
+            game.pov.parent = this.to
+            player.dressed = true
+          </script>
+        </exit>
+        <exit name="exit_leave" alias="Leave" to="leave">
+          <inherit name="southdirection" />
+        </exit>
+      </object>
+      <object name="get_dressed">
+        <inherit name="editor_room" />
+        <inherit name="page" />
+        <desc type="script">
+        <![CDATA[
+           msg("You quickly pull on your clothes.<br/>")
+        ]]></desc>
+        <exit name="exit_leave2" alias="Leave" to="leave">
+          <inherit name="eastdirection" />
+          <runscript />
+          <script type="script">
+            game.pov.parent = this.to
+            player.ana = 1
+          </script>
+        </exit>
+      </object>
+      <object name="leave">
+        <inherit name="editor_room" />
+        <inherit name="page" />
+        <desc type="script">
+          if (GetBoolean (player, "dressed")) {
+            msg ("You leave the bedroom.")
+          }
+          else {
+            msg ("Still naked, you leave the bedroom.")
+          }
+        </desc>
+      </object>
+      <function name="StartSection">
+       game.currentcyoasection = StartNewOutputSection()
+      </function>
+      <function name="EndSection">
+       EndOutputSection(game.currentcyoasection)
+      </function>
+      <function name="HideSection">
+      <![CDATA[
+         if (game.currentcyoasection <> "") {
+            HideOutputSection(game.currentcyoasection)
+            game.currentcyoasection = ""
+         }
+      ]]>
+      </function>
+      <type name="page">
+        <description type="script">
+        <![CDATA[
+           HideSection
+           do (this, "desc")
+           StartSection
+           sl = NewStringList ()
+           foreach (obj, ScopeExitsForRoom (this)) {
+             list add (sl, "{exit:" + obj.name + "}")
+           }
+           s = Join (sl, "<br/>")
+           msg(s)
+           EndSection
+        ]]></description>
+      
+      </type>
+    </asl>

@@ -1,0 +1,199 @@
+<!--Saved by Quest 5.6.5621.18142-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Redemption2">
+    <gameid>2b866ef5-3b7b-4948-8315-fa53a8d86c8f</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+    <showtitle type="boolean">false</showtitle>
+    <attr name="feature_pictureframe" type="boolean">false</attr>
+    <multiplecommands />
+    <command_newline />
+    <defaultfontsize type="int">14</defaultfontsize>
+    <appendobjectdescription />
+    <autodescription />
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <pov type="object">player</pov>
+    <start type="script"><![CDATA[
+      picture ("GargoyleComp0027.jpg")
+      msg ("You are quite an intimadating creature brought to earth from Hell by a mage wanting to gain control of the country of Bristol. He was once a High Mage of the King's court but after defying the King he was sentenced to death but escaped. His powers have grown after accepting the blessing of the evil Goddess Hessis. <br/><br/>You are bound by the evil that corrupts this mage, Karnuke, and he will stop at nothing to exact his revenge upon the people of Bristol. Your own evil is being tested after your exploration of the areas surrounding Mount Mormont. Something inside you has changed. Something inside you wants out....<br/><br/>")
+    ]]></start>
+    <roomenter type="script">
+      set (player.parent, "transparent", true)
+    </roomenter>
+  </game>
+  <command>
+    <pattern>land</pattern>
+    <script>
+      if (not IsSwitchedOn(player)) {
+        msg ("You are not flying...")
+        ShowRoomDescription
+      }
+      else {
+        msg ("You pull in your wings and land...")
+        SwitchOff (player)
+        stop sound
+        play sound ("146977__jwmalahy__desk-thud.wav", true, false)
+        set (player, "You are", "walking")
+        ShowRoomDescription
+      }
+    </script>
+  </command>
+  <command>
+    <pattern>fly</pattern>
+    <script><![CDATA[
+      if (not IsSwitchedOn(player)) {
+        play sound ("244982__ani-music__wing-flap-flag-flapping-5a.wav", false, true)
+        SwitchOn (player)
+        msg ("<br/>You spread your wings and take flight.")
+        ShowRoomDescription
+        set (player, "You are", "flying")
+        EnableTurnScript (flyingturncounter)
+        player.attackbonus = player.attackbonus + 8
+        player.damagebonus = player.damagebonus + 8
+        player.agility = player.agility + 8
+        player.defence = player.defence * 2
+      }
+      else {
+        msg ("<br/>Hear that flapping sound. It's a pretty good indicator that your ass is flying.")
+        ShowRoomDescription
+      }
+    ]]></script>
+  </command>
+  <command>
+    <pattern>turn</pattern>
+    <script>
+      if (IsSwitchedOn(player)) {
+        msg ("Let's just agree that turning to stone while flying is not your best option.....")
+      }
+      else if (player.turn = "Stone") {
+        msg ("You turn back to flesh.")
+        set (player, "turn", "Stone")
+        play sound ("Reverse-SoundBible.com-643522429.wav", true, false)
+      }
+      else if (player.turn = "Flesh") {
+        msg ("You turn to stone.")
+        set (player, "turn", "Stone")
+        play sound ("Reverse-SoundBible.com-643522429.wav", false, false)
+        transform
+      }
+    </script>
+  </command>
+  <object name="Bristol">
+    <inherit name="container_open" />
+    <alias>Bristol</alias>
+    <descprefix type="string"></descprefix>
+    <attr name="feature_container" type="boolean">false</attr>
+    <open type="boolean">false</open>
+    <close type="boolean">false</close>
+    <scenery />
+    <displayverbs type="stringlist">
+      <value>Look at</value>
+    </displayverbs>
+    <object name="Mount Mormont">
+      <inherit name="container_open" />
+      <alias>Mount Mormont</alias>
+      <attr name="feature_container" type="boolean">false</attr>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <scenery />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <usestandardverblist />
+      <object name="Floor">
+        <inherit name="surface" />
+        <inherit name="editor_object" />
+        <scenery />
+        <alias>Floor</alias>
+        <look>The floor has a layer of sand and dirt which has been ground by passing orcs and other creatures that are held here by Karnuke, the evil mage.</look>
+        <transparent />
+        <feature_container />
+        <open />
+        <close type="boolean">false</close>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <usestandardverblist />
+        <hidechildren type="boolean">false</hidechildren>
+        <object name="Sand">
+          <inherit name="editor_object" />
+          <scenery />
+          <alt type="stringlist">
+            <value>dirt</value>
+          </alt>
+          <usestandardverblist type="boolean">false</usestandardverblist>
+          <look>Looks like sand with some dirt mixed in.....</look>
+          <takemsg>Ok, you scoop up some sand and carry it with you</takemsg>
+          <alias>sand</alias>
+          <ontake type="script">
+            CloneObjectAndMove (Sand, player)
+          </ontake>
+          <take />
+        </object>
+        <object name="Cave">
+          <inherit name="container_open" />
+          <transparent />
+          <descprefix type="string"></descprefix>
+          <usedefaultprefix />
+          <scenery />
+          <alias>Cave</alias>
+          <attr name="feature_container" type="boolean">false</attr>
+          <open type="boolean">false</open>
+          <close type="boolean">false</close>
+          <displayverbs type="stringlist">
+            <value>Look at</value>
+          </displayverbs>
+          <usestandardverblist />
+          <object name="player">
+            <inherit name="editor_object" />
+            <inherit name="editor_player" />
+            <inherit name="switchable" />
+            <inherit name="namedmale" />
+            <turn>Flesh</turn>
+            <hitpoints type="int">30</hitpoints>
+            <feature_switchable />
+            <switchonmsg>"You spread your wings and begin to fly."</switchonmsg>
+            <switchoffmsg>"You pull in your wings and glide to a landing.</switchoffmsg>
+            <usedefaultprefix type="boolean">false</usedefaultprefix>
+            <alias>Eanatas</alias>
+            <look>A vicious demon from Hell. You are aligned within the fire elements,  giving you an advantage over others whom are susceptable to fire and making you a more resistant to fire attacks. Flying or turning to stone will give you advantages as well.</look>
+            <drop type="boolean">false</drop>
+          </object>
+        </object>
+        <object name="Ceiling">
+          <inherit name="editor_object" />
+          <scenery />
+          <look>The ceiling arches from wall to wall. There are roots that break though here and there, no doubt from the few mighty trees that grow on the suface of Mount Mormont.</look>
+          <alias>Ceiling</alias>
+          <displayverbs type="stringlist">
+            <value>Look at</value>
+          </displayverbs>
+          <usestandardverblist />
+          <object name="roots">
+            <inherit name="editor_object" />
+          </object>
+        </object>
+        <object name="Walls">
+          <inherit name="editor_object" />
+          <inherit name="surface" />
+          <alt type="stringlist">
+            <value>wall</value>
+          </alt>
+          <displayverbs type="stringlist">
+            <value>Look at</value>
+          </displayverbs>
+          <look>The walls are carved from the stone mountain. They are gray and curve outward from the floor and arch back into the ceiling.</look>
+          <drop type="boolean">false</drop>
+          <inroomdescription type="string"></inroomdescription>
+          <visible />
+          <scenery />
+          <alias>walls</alias>
+          <usestandardverblist type="boolean">false</usestandardverblist>
+          <feature_container />
+        </object>
+      </object>
+    </object>
+  </object>
+</asl>

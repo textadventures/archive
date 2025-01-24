@@ -1,0 +1,350 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="TA-GB Hybrid Demo">
+    <gameid>54109f4e-23aa-4696-9e13-7e25155fe5e3</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <showcommandbar type="boolean">false</showcommandbar>
+    <attr name="autodescription_youarein" type="int">0</attr>
+    <attr name="autodescription_youcansee" type="int">0</attr>
+    <attr name="autodescription_youcango" type="int">0</attr>
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <showpanes type="boolean">false</showpanes>
+    <category>Educational</category>
+    <pov type="object">player</pov>
+  </game>
+  <object name="page1">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>Page 1</alias>
+    <description type="script"><![CDATA[
+      msg ("You are on Page 1<br/><br/>> Make sure your text displays (first parameter) is matched up with the pages/rooms (second parameter), and that none of the room names/displays have the delimiting character in their names.<br/>> You can change the delimiter (third parameter) to anything you'd like if that is the case.  Here I have colons (:) as the delimiter.<br/>> The fourth parameter is a boolean that you can set to <b>true</b> or <b>false</b><br/>>> true = randomize room links<br/>>> false = do not randomize room links")
+      firsttime {
+        SetObjectFlagOn (page1, "visited")
+      }
+      rand_pagemenu ("(Page 2):(Page 3):(Page 4)", "page2:page3:page4", ":", true)
+    ]]></description>
+    <beforeenter type="script">
+      ClearScreen
+    </beforeenter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+  </object>
+  <object name="page2">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>Page 2</alias>
+    <description type="script"><![CDATA[
+      msg ("You are on Page 2<br/><br/>>This function, along with some ingenuity and imagination can lead up to some great games.")
+      firsttime {
+        SetObjectFlagOn (page2, "visited")
+      }
+      rand_pagemenu ("(Page 1):(Page 3):(Page 4)", "page1:page3:page4", ":", true)
+    ]]></description>
+    <beforeenter type="script">
+      ClearScreen
+    </beforeenter>
+  </object>
+  <object name="page3">
+    <inherit name="editor_room" />
+    <alias>Page 3</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      msg ("You are on Page 3<br/><br/>>The function randomizes the output of the menu, eliminating the redunancy of \"oh hey i just have 2 click on da first option, then 2nd, then 1st again, then 3rd...\"<br/>> Also, this page's function has been set to not randomize the list of rooms by the fourth parameter, so it should show:<br/>>> Page 1<br/>>> Page 2<br/>>> Page 4")
+      firsttime {
+        SetObjectFlagOn (page3, "visited")
+      }
+      rand_pagemenu ("(Page 1):(Page 2):(Page 4)", "page1:page2:page4", ":", false)
+    ]]></description>
+    <beforeenter type="script">
+      ClearScreen
+    </beforeenter>
+  </object>
+  <object name="page4">
+    <inherit name="editor_room" />
+    <alias>Page 4</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      msg ("You are on Page 4<br/><br/>This is a demo of the \"rand_premade_stringlist\" function:  It can take a premade stringlist and randomize the items in it.<br/><br/>Here you must visit all pages to reveal a fourth option.")
+      base_list = Split("(Page 1),(Page 2),(Page 3)",",")
+      seen_pages = 0
+      for (derp, 1, 3, 1) {
+        switch (derp) {
+          case (1) {
+            page_in_question = page1
+          }
+          case (2) {
+            page_in_question = page2
+          }
+          case (3) {
+            page_in_question = page3
+          }
+        }
+        if (GetBoolean(page_in_question, "visited")) {
+          seen_pages = seen_pages +1
+        }
+      }
+      if (seen_pages = 3) {
+        list add (base_list, "(Final Battle)")
+      }
+      list = rand_premade_stringlist(base_list)
+      ShowMenu ("", list, false) {
+        switch (result) {
+          case ("(Page 1)") {
+            page_to_go = page1
+          }
+          case ("(Page 2)") {
+            page_to_go = page2
+          }
+          case ("(Page 3)") {
+            page_to_go = page3
+          }
+          case ("(Final Battle)") {
+            page_to_go = battle_page
+          }
+        }
+        MoveObject (player, page_to_go)
+      }
+    ]]></description>
+    <beforeenter type="script">
+      ClearScreen
+    </beforeenter>
+  </object>
+  <object name="battle_page">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>Let's get ready to rumble!</alias>
+    <description type="script"><![CDATA[
+      game.restart_battle => {
+        game.player_hp = 100
+        game.enemy_hp = 100
+        invoke (game.display_stats)
+        invoke (game.battle_script)
+      }
+      game.display_stats => {
+        msg ("Player HP: " + game.player_hp)
+        msg ("Monster HP: " + game.enemy_hp)
+      }
+      game.battle_script => {
+        if (game.enemy_hp < 1) {
+          msg ("Congratulations!<br/><br/>You defeated Shockwave!")
+        }
+        else if (game.player_hp < 1) {
+          msg ("")
+          msg ("Shockwave pounded his chest in victory!  ")
+          msg ("<center><font size=5 color=#ff0000>GAME OVER</font></center>")
+          restart_boss = Split("Restart Boss Battle?",",")
+          ShowMenu ("", restart_boss, false) {
+            ClearScreen
+            invoke (game.restart_battle)
+            invoke (game.game.battle_script)
+          }
+        }
+        else {
+          random_sequence = GetRandomInt(1,3)
+          game.skywarp_move = GetRandomInt(1,2)
+          OutputTextNoBr ("Shockwave")
+          switch (random_sequence) {
+            case (1) {
+              OutputTextNoBr (" went up to a pile of construction materials and pulled out a ")
+              if (game.skywarp_move = 1) {
+                OutputTextNoBr (" long, thin pipe")
+              }
+              else {
+                OutputTextNoBr (" steel girder")
+              }
+              msg (", holding it like a baseball pipe as he charged at Tyson.  Thinking quickly, Tyson...")
+              battle_list = rand_stringlist ("(Power-Jumped out of the way),(Blasted him)",",")
+              ShowMenu ("", battle_list, false) {
+                ClearScreen
+                if (result = "(Blasted him)") {
+                  game.enemy_hp = game.enemy_hp -10
+                }
+                else {
+                  game.player_hp = game.player_hp -20
+                }
+                invoke (game.display_stats)
+                if (result = "(Power-Jumped out of the way)") {
+                  OutputTextNoBr (" Tyson pressed the up arrow on the Power Pad's D-Pad, dashing out of the way for now... but as Tyson decended back down Shockwave swung his ")
+                  if (game.skywarp_move = 1) {
+                    OutputTextNoBr (" pipe")
+                  }
+                  else {
+                    OutputTextNoBr (" steel girder")
+                  }
+                  OutputTextNoBr ("-baseball bat and slammed the Game Master all the way to the other side of the feild")
+                  if (game.player_hp < 1) {
+                    msg ("!  Tyson crashed into a {random:bunk:tow}er hard enough to be blipped out of existance!")
+                  }
+                  else {
+                    msg ("!")
+                  }
+                }
+                else {
+                  OutputTextNoBr ("Tyson raised both his Blasters at Shockwave and fired at the robot's")
+                  if (game.skywarp_move = 1) {
+                    OutputTextNoBr ("pipe")
+                  }
+                  else {
+                    OutputTextNoBr ("steel girder")
+                  }
+                  msg ("-like {random:baseball bat:slugger}, vaporizing moments before Shockwave tried to swing it at him!  While wondering where his weapon went, Tyson shot Shockwave with a series of blasts!")
+                }
+                invoke (game.battle_script)
+              }
+            }
+            case (2) {
+              OutputTextNoBr (" grabbed a ")
+              if (game.skywarp_move = 1) {
+                OutputTextNoBr (" mining laser and fired blasts of kinetic energy ")
+              }
+              else {
+                OutputTextNoBr (" nail gun and fired long, sharp steel nails ")
+              }
+              msg (" at Tyson, forcing the Game Master to go into cover behind some construction materials. Thinking quickly, Tyson...")
+              battle_list = rand_stringlist ("(Power-Jump and Blast him),(Make a diversion),(Blasted him around the corner)",",")
+              ShowMenu ("", battle_list, false) {
+                ClearScreen
+                if (result = "(Make a diversion)") {
+                  game.enemy_hp = game.enemy_hp -10
+                }
+                else {
+                  game.player_hp = game.player_hp -20
+                }
+                invoke (game.display_stats)
+                if (result = "(Make a diversion)") {
+                  OutputTextNoBr (" Tyson took out one of his Blasters and tossed it to the far left, which got Shockwave's attention long enough for the Game Master to fire his other Blaster at the giant robot a couple times. ")
+                }
+                else if (result = "(Blasted him around the corner)") {
+                  OutputTextNoBr (" Tyson poked his Blaster around the corner and fired a few blasts, but that gave his general location away to Shockwave as the robot concentrated his ")
+                  if (game.skywarp_move = 1) {
+                    msg ("mining blasts at the Game Master, ")
+                  }
+                  else {
+                    msg (" nail gun flechettes at the Game Master, ")
+                  }
+                  if (game.player_hp < 1) {
+                    msg ("blipping the puny human out of existance!")
+                  }
+                  else {
+                    msg (" doing immense damage!")
+                  }
+                }
+                else if (result = "(Power-Jump and Blast him)") {
+                  OutputTextNoBr (" Tyson pressed up on the Power Pad's D-Pad, which sent him flying into the air.  On the way down as Tyson took aim, the robot concentrated his plasma fire at the Game Master, ")
+                  if (game.player_hp < 1) {
+                    msg ("vaporizing the puny human mid-air. ")
+                  }
+                  else {
+                    msg (" doing immense damage as Tyson crash-landed. ")
+                  }
+                }
+                invoke (game.battle_script)
+              }
+            }
+            case (3) {
+              msg (" {random:igni:activa}ted his rocket pack, flying straight up into the air as he fired lilac blasts of energy from his plasma gatling at Tyson.  As the lilac plasma bolts closed in on him, Tyson quickly...")
+              battle_list = rand_stringlist ("(Dashed forward),(Blasted Shockwave)",",")
+              ShowMenu ("", battle_list, false) {
+                ClearScreen
+                if (result = "(Dashed forward)") {
+                  game.enemy_hp = game.enemy_hp -10
+                }
+                else {
+                  game.player_hp = game.player_hp -20
+                }
+                invoke (game.display_stats)
+                if (result = "(Dashed forward)") {
+                  OutputTextNoBr (" Tyson pressed an arrow on the Power Pad's D-Pad, which sent him dashing forward underneath Shockwave.  As Shockwave took the time to adjust his aim, Tyson took the time to take aim with his Blaster and shoot up the giant robot as Shockwave crash-landed.")
+                }
+                else {
+                  OutputTextNoBr ("Despite the the plasma bolts concentrating on him, Tyson stood his ground as he fired at Shockwave, but the blasts {random:were intercepted by the rapid plasma fire mid-air:fell short against Shockwave's armor} as Tyson was then ")
+                  if (game.player_hp < 1) {
+                    msg (" vaporized.")
+                  }
+                  else {
+                    msg (" stuck by multiple blasts of plasma.")
+                  }
+                }
+                invoke (game.battle_script)
+              }
+            }
+          }
+        }
+      }
+      invoke (game.restart_battle)
+    ]]></description>
+  </object>
+  <function name="rand_pagemenu" parameters="choices, destinations, delimiter, randomizer">
+    game.return_list = NewStringList()
+    game.location_list = NewStringList()
+    link_list = Split(choices,delimiter)
+    room_list = Split(destinations,delimiter)
+    if (randomizer = true) {
+      for (o, 0, ListCount(link_list) -1, 1) {
+        rand_link = GetRandomInt(0,ListCount(link_list)-1)
+        choosen_link = ListItem(link_list,rand_link)
+        choosen_page = ListItem(room_list,rand_link)
+        list remove (link_list, choosen_link)
+        list remove (room_list, choosen_page)
+        list add (game.return_list, choosen_link)
+        list add (game.location_list, choosen_page)
+      }
+    }
+    else {
+      foreach (o, link_list) {
+        list add (game.return_list, o)
+      }
+      foreach (o, room_list) {
+        list add (game.location_list, o)
+      }
+    }
+    ShowMenu ("", game.return_list, false) {
+      intItem = 0
+      gotItem = 0
+      foreach (o, game.return_list) {
+        if (o = result) {
+          gotItem = intItem
+        }
+        intItem = intItem +1
+      }
+      location_in_question = ListItem(game.location_list,gotItem)
+      MoveObject (player, GetObject(location_in_question))
+    }
+  </function>
+  <function name="rand_stringlist" parameters="item_list, delimiter" type="stringlist">
+    // The first parameter are the names of the pages in a delimited list.
+    //
+    // This is a list of the different pages you want implemented in a delimited split function
+    return_list = NewStringList()
+    link_list = Split(item_list,delimiter)
+    // Here I took the guess work out of counting the # of items in the link_list in this loop function
+    for (o, 0, ListCount(link_list) -1, 1) {
+      // This gets an integer value from ZERO to the # of items in link_list
+      rand_link = GetRandomInt(0,ListCount(link_list)-1)
+      // Then using that integer value it selects an item from the list
+      choosen_link = ListItem(link_list,rand_link)
+      // Whatever is selected goes through a switch function which prints out a page link.  Here you'll have to edit the page text as well as what page it is going to:
+      //
+      // Once we're done with that item, we remove it from the list and add an extra space between links so it looks like a mudane list of page links.
+      list remove (link_list, choosen_link)
+      list add (return_list, choosen_link)
+    }
+    return (return_list)
+  </function>
+  <function name="rand_premade_stringlist" parameters="list" type="stringlist">
+    // This is to randomize a pre-made stringlist.  Say if the options in a menu have to change due to different conditions like the player's race then we would have the make the stringlist ahead of time without randomization... but that would be no fun.
+    return_list = NewStringList()
+    for (o, 0, ListCount(list) -1, 1) {
+      intrand = GetRandomInt(0,ListCount(list) -1)
+      item_in_question = ListItem(list,intrand)
+      list add (return_list, item_in_question)
+      list remove (list, item_in_question)
+    }
+    return (return_list)
+  </function>
+</asl>

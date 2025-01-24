@@ -1,0 +1,293 @@
+<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <include ref="CombatLibrary1.aslx" />
+  <game name="Dungeon">
+    <gameid>e5dc64fb-1d86-4c7e-bdf0-b2aa3bd47252</gameid>
+    <version>0.0.0.1 Pre-Alpha</version>
+    <firstpublished>2014</firstpublished>
+    <author><![CDATA[Fiskie & Luxun]]></author>
+    <gridmap />
+    <showscore type="boolean">false</showscore>
+    <showhealth type="boolean">false</showhealth>
+    <feature_lightdark />
+    <feature_asktell />
+    <appendobjectdescription />
+    <attr name="command_newline" type="boolean">false</attr>
+    <category>Fantasy</category>
+    <changeroom_newline />
+    <autodescription type="boolean">false</autodescription>
+    <subtitle>Not the final title.</subtitle>
+    <feature_pictureframe />
+    <start type="script">
+      msg ("You wake up in a dark room. Your head hurts, and you can't remember much, just who you are. ")
+      msg ("You do remember, right? What is your name?")
+      get input {
+        player.alias = result
+        msg ("Good, you remember that your name is " + player.alias)
+        gender = Split ("Male;Female",";")
+        ShowMenu ("Okay, do you remember your gender?", gender, false) {
+          switch (result) {
+            case ("Male") {
+              player.sex = "male"
+            }
+            case ("Female") {
+              player.sex = "female"
+            }
+          }
+          msg ("Good, you're still a " + player.sex)
+          msg ("Wait, how hard did you hit your head? Who is asking you these questions?")
+          msg ("The voice in your head falls silent..")
+          msg ("The room is very dark, and smells vaguely of rotting flesh. After a minute your eyes adjust to the small amount of light coming from a small hole in the wall, and you see you are not alone. there is a skeletal {command:look at corpse:corpse} in the room with you. There is also a {command:look at door:door} to the north, which appears to be locked.")
+        }
+      }
+    </start>
+    <onhealthzero type="script">
+      msg ("Your health has reached zero, and you have died. Good job!")
+      finish
+    </onhealthzero>
+    <pov type="object">player</pov>
+  </game>
+  <object name="Cell">
+    <inherit name="editor_room" />
+    <description type="string"></description>
+    <dark type="boolean">false</dark>
+    <attr name="grid_borderwidth" type="int">2</attr>
+    <attr name="grid_label" type="string"></attr>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <attack type="int">2</attack>
+      <defence type="int">0</defence>
+      <armour type="int">0</armour>
+      <hitpoints type="int">25</hitpoints>
+      <status>-</status>
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>status</key>
+          <value></value>
+        </item>
+        <item>
+          <key>equippedstatus</key>
+          <value>!</value>
+        </item>
+        <item>
+          <key>hitpoints</key>
+          <value>Hit points: !</value>
+        </item>
+      </statusattributes>
+      <equippedstatus>Wielding: nothing</equippedstatus>
+      <object name="fists">
+        <inherit name="weapon" />
+        <inherit name="editor_object" />
+        <alias>fists</alias>
+        <damagedicenumber type="int">2</damagedicenumber>
+        <damagedicesides type="int">6</damagedicesides>
+      </object>
+    </object>
+    <object name="Corpse">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <drop type="boolean">false</drop>
+      <attr name="feature_container" type="boolean">false</attr>
+      <isopen type="boolean">false</isopen>
+      <look>This person has been dead a long time, and all that is left of him is bones, and his ragged clothes. Upon closer inspection, you notice he seems to have something in his {command:open pocket:pocket }. </look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+    </object>
+    <exit name="cell exit" alias="north" to="Hall 1">
+      <inherit name="northdirection" />
+      <locked />
+      <lockmessage>The door is indeed locked. no amount of kicking or punching budges it, it only leaves your toes and knuckles sore.</lockmessage>
+    </exit>
+    <object name="pocket">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <feature_container />
+      <openmsg>You slowly open the pocket, noticing what appears to be a {command:take lockpick:lockpick} inside.</openmsg>
+      <scenery />
+      <look>The pocket of the pants that the corpse is wearing appears to have {command:open pocket:something}  inside it.</look>
+      <object name="Lockpick">
+        <inherit name="editor_object" />
+        <look>This is a rusty old lockpick, it appears as though it's previous owner never got a chance to use it. It looks as though it only has one use left in it before it breaks due to the rust.</look>
+        <scenery type="boolean">false</scenery>
+        <take />
+        <takemsg>You take the lockpick, and wonder what happened to the previous owner that he never got a chance to use it. On closer inspection, the pick is quite rusty, as though it could break at any moment. You think you could use this to {command:pick lock:pick the lock.}</takemsg>
+      </object>
+    </object>
+    <object name="door">
+      <inherit name="editor_object" />
+      <look>The door is indeed locked. no amount of kicking or punching budges it, it only leaves your toes and knuckles sore.</look>
+      <alt type="stringlist">
+        <value>lock</value>
+      </alt>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist" />
+      <picklock type="scriptdictionary">
+        <item key="Lockpick">
+          UnlockExit (cell exit)
+          msg ("You manage to pick the lock, but while doing so, the rust proves to be too much for the lockpick and it snaps. However, you can now {command:go north:go through the door.}")
+          RemoveObject (Lockpick)
+        </item>
+      </picklock>
+    </object>
+    <object name="Corpse Arm">
+      <inherit name="weapon" />
+      <inherit name="editor_object" />
+      <take />
+      <takemsg>You rip the arm off the corpse. It makes a sickening noise and tears off easily.</takemsg>
+      <attackbonus type="int">0</attackbonus>
+      <damagebonus type="int">9999</damagebonus>
+      <scenery />
+      <look>It looks like you could use this arm as a club, and do slightly more damage than your bare fists.</look>
+      <damagedicesides type="int">6</damagedicesides>
+      <damagedicenumber type="int">2</damagedicenumber>
+    </object>
+  </object>
+  <object name="Hall 1">
+    <inherit name="editor_room" />
+    <description>You enter the room and notice it is more of a hallway. there is a single torch lighting the hallway, and you can see a door on both the {command: go east:east} and {command:go west:west} sides, as well as what appears to be another {command:go north:cell to the north}. There appears to be some kind of a {command:look at slime:green slime} on the wall.</description>
+    <attr name="grid_width" type="int">3</attr>
+    <exit alias="south" to="Cell">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="north" to="cell2">
+      <inherit name="northdirection" />
+      <locked />
+      <lockmessage>The cell appears to be locked. you cannot hear anything on the other side of the heavy door.</lockmessage>
+    </exit>
+    <object name="North Cell Door">
+      <inherit name="editor_object" />
+      <look>The cell appears to be locked. you cannot hear anything on the other side of the heavy door.</look>
+    </object>
+    <object name="South Cell Door">
+      <inherit name="editor_object" />
+      <look>This is the cell from where you came, and the door is still unlocked.</look>
+    </object>
+    <exit alias="west" to="Room 1">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="east" to="Room 2">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="slime">
+      <inherit name="editor_object" />
+      <inherit name="edible" />
+      <alt type="stringlist">
+        <value>green slime</value>
+      </alt>
+      <scenery />
+      <look>The slime is slimey, and that's about it.</look>
+      <take />
+      <takemsg>You scoop up as much of the slimey slime as you can, placing it into your pocket. You can't help asking yourself why you decided to do that. </takemsg>
+      <feature_usegive />
+      <feature_edible />
+      <eatmsg>You eat the slime, and are amazed by the delicious taste, and the fact that you feel much better! However, you are worried about the possible side effects of eating green slime you found on the wall.</eatmsg>
+      <eathealth type="int">20</eathealth>
+      <linkcolour>Green</linkcolour>
+    </object>
+  </object>
+  <verb>
+    <property>picklock</property>
+    <pattern>pick</pattern>
+    <defaultexpression>"You can't pick lock " + object.article + "."</defaultexpression>
+    <multiobjectdefault>You fail to pick the lock with that item.</multiobjectdefault>
+    <multiobjectmenuempty>There are no objects available to pick the lock with.</multiobjectmenuempty>
+  </verb>
+  <verb>
+    <property>equip</property>
+    <pattern>equip;draw</pattern>
+    <defaultexpression>"You can't draw " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>unequip</property>
+    <pattern>unequip;sheathe</pattern>
+    <defaultexpression>"You can't sheathe " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>attack</property>
+    <pattern>attack;fight;strike;kill;slash;stab;hit;strike</pattern>
+    <defaultexpression>"You can't attack " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="cell2">
+    <inherit name="editor_room" />
+    <exit alias="south" to="Hall 1">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="Room 1">
+    <inherit name="editor_room" />
+    <firstenter type="script">
+      msg ("There is an orc in here, and this is placeholder text!")
+    </firstenter>
+    <exit alias="east" to="Hall 1">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="Orc">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <inherit name="monster" />
+      <hitpoints type="int">9999</hitpoints>
+      <damagedicenumber type="int">999</damagedicenumber>
+    </object>
+  </object>
+  <object name="Room 2">
+    <inherit name="editor_room" />
+    <exit alias="west" to="Hall 1">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <type name="weapon">
+    <attackbonus type="int">0</attackbonus>
+    <damagebonus type="int">0</damagebonus>
+    <damagedicenumber type="int">1</damagedicenumber>
+    <damagedicesides type="int">4</damagedicesides>
+    <take />
+    <inventoryverbs type="stringlist">
+      <value>Look at</value>
+      <value>Drop</value>
+      <value>Equip</value>
+    </inventoryverbs>
+    <equip type="script">
+      if (this.parent = game.pov) {
+        if (not game.pov.equipped = fists and not game.pov.equipped = null) {
+          msg ("You put away your " + game.pov.equipped.alias + " and draw your " + this.alias + ".")
+        }
+        else {
+          msg ("You draw your " + this.alias + ".")
+        }
+        game.pov.equipped = this
+        this.inventoryverbs = Split ("Look at;Drop;Unequip", ";")
+        game.pov.equippedstatus = "Wielding: " + this.alias
+      }
+      else {
+        msg ("You don't have it.")
+      }
+    </equip>
+    <unequip type="script">
+      if (this.parent = game.pov) {
+        msg ("You put away your " + game.pov.equipped.alias + ".")
+        game.pov.equipped = fists
+        this.inventoryverbs = Split ("Look at;Drop;Equip", ";")
+        game.pov.equippedstatus = "Wielding: nothing"
+      }
+      else {
+        msg ("You don't have it.")
+      }
+    </unequip>
+  </type>
+  <walkthrough name="Get Out of Cell">
+    <steps type="simplestringlist">
+      Fiskie
+      1
+      open pocket
+      take lockpick
+      pick lock
+      2
+      n
+    </steps>
+  </walkthrough>
+</asl>

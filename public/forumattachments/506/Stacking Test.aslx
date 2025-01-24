@@ -1,0 +1,270 @@
+<!--Saved by Quest 5.4.4807.34548-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Stacking Test">
+    <gameid>83fe6da1-7c90-4891-a686-b1475cef702d</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <showhealth type="boolean">false</showhealth>
+    <start type="script">
+      game.apple_list = NewObjectList()
+    </start>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="apple1">
+      <inherit name="editor_object" />
+      <take />
+      <alias>apple</alias>
+      <isfirstonlist type="boolean">false</isfirstonlist>
+      <issecondonlist type="boolean">false</issecondonlist>
+      <isthirdonlist type="boolean">false</isthirdonlist>
+      <ontake type="script"><![CDATA[
+        if (ListCount(game.apple_list) > 0) {
+          if (ListCount(game.apple_list) = 1) {
+            this.issecondonlist = true
+          }
+          if (ListCount(game.apple_list) = 2) {
+            this.isthirdonlist = true
+          }
+          list add (game.apple_list, this)
+          if (apple2.isfirstonlist) {
+            apple2.alias = apple2.originalalias + " (" + ListCount(game.apple_list) + ")"
+          }
+          else if (apple3.isfirstonlist) {
+            apple3.alias = apple3.originalalias + " (" + ListCount(game.apple_list) + ")"
+          }
+          MakeObjectInvisible (this)
+        }
+        else {
+          list add (game.apple_list, this)
+          this.isfirstonlist = true
+          this.alias = this.originalalias + " (" + ListCount(game.apple_list) + ")"
+        }
+      ]]></ontake>
+      <ondrop type="script">
+        this.alias = this.originalalias
+        if (this.isfirstonlist) {
+          this.isfirstonlist = false
+          list remove (game.apple_list, this)
+          if (apple2.issecondonlist) {
+            MakeObjectVisible (apple2)
+            apple2.alias = apple2.originalalias + " (" + ListCount(game.apple_list) + ")"
+            apple2.issecondonlist = false
+            apple2.isfirstonlist = true
+            if (apple3.isthirdonlist) {
+              apple3.isthirdonlist = false
+              apple3.issecondonlist = true
+            }
+          }
+          else if (apple3.issecondonlist) {
+            MakeObjectVisible (apple3)
+            apple3.alias = apple3.originalalias + " (" + ListCount(game.apple_list) + ")"
+            apple3.issecondonlist = false
+            apple3.isfirstonlist = true
+            if (apple2.isthirdonlist) {
+              apple2.isthirdonlist = false
+              apple2.issecondonlist = true
+            }
+          }
+        }
+        else if (this.issecondonlist) {
+          this.issecondonlist = false
+          list remove (game.apple_list, this)
+          if (apple2.isthirdonlist) {
+            apple3.alias = apple3.originalalias + " (" + ListCount(game.apple_list) + ")"
+            apple2.isthirdonlist = false
+            apple2.issecondonlist = true
+          }
+          else if (apple3.isthirdonlist) {
+            apple2.alias = apple2.originalalias + " (" + ListCount(game.apple_list) + ")"
+            apple3.isthirdonlist = false
+            apple3.issecondonlist = true
+          }
+        }
+        else if (this.isthirdonlist) {
+          this.isthirdonlist = false
+          list remove (game.apple_list, this)
+          if (apple2.isfirstonlist) {
+            apple2.alias = apple2.originalalias + " (" + ListCount(game.apple_list) + ")"
+          }
+          if (apple3.isfirstonlist) {
+            apple3.alias = apple3.originalalias + " (" + ListCount(game.apple_list) + ")"
+          }
+        }
+      </ondrop>
+      <originalalias>apple</originalalias>
+    </object>
+    <object name="apple2">
+      <inherit name="editor_object" />
+      <take />
+      <alias>apple</alias>
+      <isfirstonlist type="boolean">false</isfirstonlist>
+      <issecondonlist type="boolean">false</issecondonlist>
+      <isthirdonlist type="boolean">false</isthirdonlist>
+      <ontake type="script"><![CDATA[
+        if (ListCount(game.apple_list) > 0) {
+          if (ListCount(game.apple_list) = 1) {
+            this.issecondonlist = true
+          }
+          if (ListCount(game.apple_list) = 2) {
+            this.isthirdonlist = true
+          }
+          list add (game.apple_list, this)
+          if (apple1.isfirstonlist) {
+            apple1.alias = apple1.originalalias + " (" + ListCount(game.apple_list) + ")"
+          }
+          else if (apple3.isfirstonlist) {
+            apple3.alias = apple3.originalalias + " (" + ListCount(game.apple_list) + ")"
+          }
+          MakeObjectInvisible (this)
+        }
+        else {
+          list add (game.apple_list, this)
+          this.isfirstonlist = true
+          this.alias = this.originalalias + " (" + ListCount(game.apple_list) + ")"
+        }
+      ]]></ontake>
+      <ondrop type="script">
+        this.alias = this.originalalias
+        if (this.isfirstonlist) {
+          this.isfirstonlist = false
+          list remove (game.apple_list, this)
+          if (apple1.issecondonlist) {
+            MakeObjectVisible (apple1)
+            apple1.alias = apple1.originalalias + " (" + ListCount(game.apple_list) + ")"
+            apple1.issecondonlist = false
+            apple1.isfirstonlist = true
+            if (apple3.isthirdonlist) {
+              apple3.isthirdonlist = false
+              apple3.issecondonlist = true
+            }
+          }
+          else if (apple3.issecondonlist) {
+            MakeObjectVisible (apple3)
+            apple3.alias = apple3.originalalias + " (" + ListCount(game.apple_list) + ")"
+            apple3.issecondonlist = false
+            apple3.isfirstonlist = true
+            if (apple1.isthirdonlist) {
+              apple1.isthirdonlist = false
+              apple1.issecondonlist = true
+            }
+          }
+        }
+        else if (this.issecondonlist) {
+          this.issecondonlist = false
+          list remove (game.apple_list, this)
+          if (apple1.isthirdonlist) {
+            apple3.alias = apple3.originalalias + " (" + ListCount(game.apple_list) + ")"
+            apple1.isthirdonlist = false
+            apple1.issecondonlist = true
+          }
+          else if (apple3.isthirdonlist) {
+            apple1.alias = apple2.originalalias + " (" + ListCount(game.apple_list) + ")"
+            apple3.isthirdonlist = false
+            apple3.issecondonlist = true
+          }
+        }
+        else if (this.isthirdonlist) {
+          this.isthirdonlist = false
+          list remove (game.apple_list, this)
+          if (apple1.isfirstonlist) {
+            apple1.alias = apple1.originalalias + " (" + ListCount(game.apple_list) + ")"
+          }
+          if (apple3.isfirstonlist) {
+            apple3.alias = apple3.originalalias + " (" + ListCount(game.apple_list) + ")"
+          }
+        }
+      </ondrop>
+      <originalalias>apple</originalalias>
+    </object>
+    <object name="apple3">
+      <inherit name="editor_object" />
+      <take />
+      <alias>apple</alias>
+      <isfirstonlist type="boolean">false</isfirstonlist>
+      <issecondonlist type="boolean">false</issecondonlist>
+      <isthirdonlist type="boolean">false</isthirdonlist>
+      <ontake type="script"><![CDATA[
+        if (ListCount(game.apple_list) > 0) {
+          if (ListCount(game.apple_list) = 1) {
+            this.issecondonlist = true
+          }
+          if (ListCount(game.apple_list) = 2) {
+            this.isthirdonlist = true
+          }
+          list add (game.apple_list, this)
+          if (apple1.isfirstonlist) {
+            apple1.alias = apple1.originalalias + " (" + ListCount(game.apple_list) + ")"
+          }
+          else if (apple2.isfirstonlist) {
+            apple2.alias = apple2.originalalias + " (" + ListCount(game.apple_list) + ")"
+          }
+          MakeObjectInvisible (this)
+        }
+        else {
+          list add (game.apple_list, this)
+          this.isfirstonlist = true
+          this.alias = this.originalalias + " (" + ListCount(game.apple_list) + ")"
+        }
+      ]]></ontake>
+      <ondrop type="script">
+        this.alias = this.originalalias
+        if (this.isfirstonlist) {
+          this.isfirstonlist = false
+          list remove (game.apple_list, this)
+          if (apple1.issecondonlist) {
+            MakeObjectVisible (apple1)
+            apple1.alias = apple1.originalalias + " (" + ListCount(game.apple_list) + ")"
+            apple1.issecondonlist = false
+            apple1.isfirstonlist = true
+            if (apple2.isthirdonlist) {
+              apple2.isthirdonlist = false
+              apple2.issecondonlist = true
+            }
+          }
+          else if (apple2.issecondonlist) {
+            MakeObjectVisible (apple2)
+            apple2.alias = apple2.originalalias + " (" + ListCount(game.apple_list) + ")"
+            apple2.issecondonlist = false
+            apple2.isfirstonlist = true
+            if (apple1.isthirdonlist) {
+              apple1.isthirdonlist = false
+              apple1.issecondonlist = true
+            }
+          }
+        }
+        else if (this.issecondonlist) {
+          this.issecondonlist = false
+          list remove (game.apple_list, this)
+          if (apple1.isthirdonlist) {
+            apple2.alias = apple2.originalalias + " (" + ListCount(game.apple_list) + ")"
+            apple1.isthirdonlist = false
+            apple1.issecondonlist = true
+          }
+          else if (apple2.isthirdonlist) {
+            apple1.alias = apple1.originalalias + " (" + ListCount(game.apple_list) + ")"
+            apple2.isthirdonlist = false
+            apple2.issecondonlist = true
+          }
+        }
+        else if (this.isthirdonlist) {
+          this.isthirdonlist = false
+          list remove (game.apple_list, this)
+          if (apple1.isfirstonlist) {
+            apple1.alias = apple1.originalalias + " (" + ListCount(game.apple_list) + ")"
+          }
+          if (apple2.isfirstonlist) {
+            apple2.alias = apple2.originalalias + " (" + ListCount(game.apple_list) + ")"
+          }
+        }
+      </ondrop>
+      <originalalias>apple</originalalias>
+    </object>
+  </object>
+</asl>

@@ -1,0 +1,158 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="Nederlands.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Speldam">
+    <gameid>f4aac32a-4007-4c11-b12f-9d2e67a8a0a5</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <subtitle>Zoek je weg naar de eindopdracht</subtitle>
+    <author>M.C.Koops</author>
+    <attr name="autodescription_youarein_newline" type="boolean">false</attr>
+    <category>Educational</category>
+    <difficulty>Easy</difficulty>
+    <cruelty type="string"></cruelty>
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <attr name="autodescription_description" type="int">2</attr>
+    <attr name="autodescription_youcansee" type="int">3</attr>
+    <attr name="autodescription_youcango" type="int">4</attr>
+    <defaultbackground>DarkGreen</defaultbackground>
+    <defaultforeground>Yellow</defaultforeground>
+    <defaultlinkforeground>Orange</defaultlinkforeground>
+    <showscore />
+  </game>
+  <object name="room1">
+    <inherit name="editor_room" />
+    <alias>Verwarring</alias>
+    <description>Je bent in Verwarring. Het wegdek waarop je loopt is nat, het is behoorlijk frisjes en je moet nog vandaag een les voorbereiden....deze droom is niet zo fijn.</description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <objectslistprefix>Je ziet</objectslistprefix>
+    <picture>verwarring.jpg</picture>
+    <exitslistprefix>Je kan naar</exitslistprefix>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="camera">
+      <inherit name="editor_object" />
+      <usestandardverblist type="boolean">false</usestandardverblist>
+      <gender>de</gender>
+      <article>de</article>
+      <use />
+      <useindividualverblist type="boolean">false</useindividualverblist>
+      <take />
+      <takemsg>je stopt de camera in je zak, je weet maar nooit..</takemsg>
+      <linkcolour>Orange</linkcolour>
+    </object>
+    <exit alias="noord" to="Lezen">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="oost" to="Kijken">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="Lezen">
+    <inherit name="editor_room" />
+    <objectslistprefix>Je ziet</objectslistprefix>
+    <description><![CDATA[Je loopt in noordelijke richting en vindt een weggetje tussen de struiken.<br/>Daarachter staat een grote boekenkast, vol met boeken, tijdschirften, hoofdstukken, paragrafen, losse letters.<br/>Het duizelt je.<br/>Omdat er nu geen weg terug meer lijkt besluit je er het beste van te maken.<br/>]]></description>
+    <picture>verwarring_noord.jpg</picture>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <object name="gouden artikel">
+      <inherit name="editor_object" />
+      <take />
+      <takemsg>pak</takemsg>
+      <ontake type="script">
+        DisplayHttpLink ("Gamification", "http://www.slideshare.net/pvandenboer/whitepaper-introductie-in-gamification", false)
+      </ontake>
+    </object>
+    <exit name="lezen_terug" alias="zuid" to="room1">
+      <inherit name="southdirection" />
+      <locked />
+    </exit>
+    <object name="Geest van verwondering">
+      <inherit name="editor_object" />
+      <inherit name="female" />
+      <look>De weg terug kan geopend worden na het lezen van het gouden artikel.</look>
+      <ontsluit type="script"><![CDATA[
+        msg ("Je spreekt de geest aan, ze reageert traaag maar zegt na engfe tijd: \"Zeg me, op welke bladzijde wordt gesproken over:<br/>\"de aandacht vasthouden met gevoelens van verwondering, ontzag en mysterie\"")
+        get input {
+          if (result = "14") {
+            UnlockExit (lezen_terug)
+            msg ("Je hebt de opdracht \"spelerstypen\" vrijgespeeld.")
+          }
+          else {
+            msg ("\"Dat is niet juist, ik kan je er niet door laten\"")
+          }
+        }
+      ]]></ontsluit>
+      <speak type="script"><![CDATA[
+        msg ("Op welke bladzijde wordt er gesproken over:<br/>\"aandacht vasthouden door gevoelens van verwondering, ontzag en mysterie\"")
+        get input {
+          if (result="21") {
+            UnlockExit (lezen_terug)
+            msg ("De terugweg is ontsloten")
+          }
+          else if (result <>"21") {
+            msg ("Jammer, probeer het nog een keer")
+          }
+        }
+      ]]></speak>
+    </object>
+  </object>
+  <verb>
+    <property>talk</property>
+    <pattern>talk</pattern>
+    <defaultexpression>"You can't talk " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Kijken">
+    <inherit name="editor_room" />
+    <exit name="kijken_terug" alias="west" to="room1">
+      <inherit name="westdirection" />
+      <locked />
+    </exit>
+    <object name="Geest van vergissingen">
+      <inherit name="editor_object" />
+      <inherit name="namedmale" />
+      <look><![CDATA[Deze geest wil je vertellen over Paul Andersen, de man die zijn klas in een videogame veranderde.<br/>Er ligt hier ergens een stickje met een filmpje van hem. Als je een camera hebt...<br/><br/>]]></look>
+      <displayverbs type="stringlist">
+        <value>Kijk naar</value>
+        <value>Praat tegen</value>
+      </displayverbs>
+      <useindividualverblist type="boolean">false</useindividualverblist>
+      <drop type="boolean">false</drop>
+      <usedefaultprefix />
+      <askdefault type="script">
+      </askdefault>
+      <s type="string"></s>
+      <speak type="string"></speak>
+      <speakto type="script">
+        firsttime {
+          msg ("You must do following... (speak to me again)")
+        }
+        otherwise {
+          msg ("Type something!")
+          get input {
+            msg ("Your answer is: " +result)
+          }
+        }
+      </speakto>
+    </object>
+    <object name="MemoryStick">
+      <inherit name="editor_object" />
+      <take />
+      <takemsg>zo, die heb ik!</takemsg>
+      <use />
+      <usemenuprompt>Deze kan je gebruiken met</usemenuprompt>
+      <selfuseon type="scriptdictionary">
+        <item key="camera">
+          DisplayHttpLink ("Paul Andersons TedxTalk", "http://tedxtalks.ted.com/video/TEDxBozeman-Paul-Andersen-Class", false)
+        </item>
+      </selfuseon>
+    </object>
+  </object>
+  <verb>
+    <pattern>speak to</pattern>
+    <property>speakto</property>
+    <defaulttext>blabla</defaulttext>
+  </verb>
+</asl>

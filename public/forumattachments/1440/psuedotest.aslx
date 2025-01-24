@@ -1,0 +1,135 @@
+<!--Saved by Quest 5.6.5783.24153-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="psuedotest">
+    <gameid>8a93393e-a1df-4067-8e35-f3fc09f6ea27</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="treasure_chest">
+      <inherit name="editor_object" />
+        <contents type="stringlist">
+          <value>doubloon</value>
+          <value>jewel</value>
+          <value>ingot</value>
+          <value>artifact</value>
+          <value>idol</value>
+        </contents>
+    </object>
+  </object>
+  <command>
+    <pattern>reroll</pattern>
+    <script>
+      doubloons_dice = DiceRoll("1d5")
+      jewels_dice = DiceRoll("1d5")
+      ingots_dice = DiceRoll("1d5")
+      artifacts_dice = DiceRoll("1d5")
+      idols_dice = DiceRoll("1d5")
+      if (doubloons_dice = 5) {
+        treasure_chest.doubloons = DiceRoll("1d5") + 1
+      }
+      else if (doubloons_dice = 4) {
+        treasure_chest.doubloons = 1
+      }
+      else {
+        treasure_chest.doubloons = 0
+      }
+      if (jewels_dice = 5) {
+        treasure_chest.jewels = DiceRoll("1d5") + 1
+      }
+      else if (jewels_dice = 4) {
+        treasure_chest.jewels = 1
+      }
+      else {
+        treasure_chest.jewels = 0
+      }
+      if (ingots_dice = 5) {
+        treasure_chest.ingots = DiceRoll("1d5") + 1
+      }
+      else if (ingots_dice = 4) {
+        treasure_chest.ingots = 1
+      }
+      else {
+        treasure_chest.ingots = 0
+      }
+      if (artifacts_dice = 5) {
+        treasure_chest.artifacts = DiceRoll("1d5") + 1
+      }
+      else if (artifacts_dice = 4) {
+        treasure_chest.artifacts = 1
+      }
+      else {
+        treasure_chest.artifacts = 0
+      }
+      if (idols_dice = 5) {
+        treasure_chest.idols = DiceRoll("1d5") + 1
+      }
+      else if (idols_dice = 4) {
+        treasure_chest.idols = 1
+      }
+      else {
+        treasure_chest.idols = 0
+      }
+      msg ("The treasure chest contains " + GetPseudoObjectContents(treasure_chest) + ".")
+    </script>
+  </command>
+
+  <function name="GetPseudoObjectDisplayValues" parameters="object" type="dictionary">
+	values = NewDictionary()
+	contents = object.contents
+	foreach(item, contents) {
+	    attribute = item + "s"
+	    if (HasAttribute(object, attribute)) {
+	        value = GetAttribute(object,attribute)
+	        if (value > 0) {
+	            dictionary add(values, item, value)
+	        }
+	    }
+	}
+	return(values)
+  </function>
+
+  <function name="GetPseudoValueString" parameters="values, value" type="string">
+     <![CDATA[
+        item_count = DictionaryItem(values, value)
+        item_s = item_count + " " + value
+        if (item_count <> 1) {
+            item_s = item_s + "s"
+        }
+        return(item_s)
+     ]]>
+  </function>
+
+  <function name="GetPseudoObjectContents" parameters="object" type="string">
+  <![CDATA[
+    values = GetPseudoObjectDisplayValues(object)
+    count = DictionaryCount(values)
+    if (count = 0) {
+        return("nothing")
+    }
+
+    s = ""
+    index = 0
+    foreach (value, values) {
+        item_s = GetPseudoValueString(values, value)
+        if (index > 0) {
+            if (index = count-1) {
+                s = s + " and "
+            } else {
+                s = s + ", "
+            }
+        }
+        s = s + item_s
+        index = index + 1
+    }
+    return (s)
+    ]]>
+  </function>
+</asl>

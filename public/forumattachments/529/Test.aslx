@@ -1,0 +1,59 @@
+<!--Saved by Quest 5.4.4812.28144-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Stacking demo">
+    <gameid>888780ba-1544-491b-bb3a-5c79c0a88037</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <author>Igor Levicki</author>
+    <category>Educational</category>
+    <difficulty>Easy</difficulty>
+    <cruelty>Merciful</cruelty>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="pad">
+      <inherit name="editor_object" />
+      <look>You can touch this pad to spawn an apple.</look>
+      <inventoryverbs type="stringlist" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Touch</value>
+      </displayverbs>
+      <drop type="boolean">false</drop>
+      <touch type="script">
+        obj = GetObject("apple")
+        if (obj = null) {
+          create ("apple")
+          obj = GetObject("apple")
+        }
+        else {
+          CloneObject (obj)
+        }
+        StackObject (obj)
+      </touch>
+      <alias>touch-sensitive pad</alias>
+    </object>
+  </object>
+  <function name="StackObject" parameters="obj">
+    stack = GetObject(obj.name + "_stack")
+    if (stack = null) {
+      create (obj.name + "_stack")
+      stack = GetObject(obj.name + "_stack")
+      stack.container = true
+      stack.count = 1
+      stack.parent = player
+      obj.parent = stack
+    }
+    else {
+      obj.parent = stack
+      stack.count = stack.count + 1
+    }
+    stack.alias = obj.name + " (" + stack.count + ")"
+  </function>
+</asl>

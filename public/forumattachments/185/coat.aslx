@@ -1,0 +1,44 @@
+<!--Saved by Quest 5.1.4393.23459-->
+<asl version="510">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="coat">
+    <gameid>1983a121-1a2e-4cec-8c59-f9c06de242b5</gameid>
+    <description type="string"></description>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+    <object name="coat">
+      <inherit name="editor_object" />
+      <alias>coat</alias>
+      <take />
+      <ondrop type="script">
+        coat.alias = "coat"
+      </ondrop>
+      <ontake type="script">
+        coat.alias = "coat (worn)"
+      </ontake>
+    </object>
+    <object name="rock">
+      <inherit name="editor_object" />
+      <alias>rock</alias>
+      <climb type="script">
+        if (ListCount ( ScopeInventory () ) =1 and coat.parent=player and right(coat.alias,6)="(worn)" ) {
+          player.parent = room2
+        }
+        else {
+          msg ("Nothing happens")
+        }
+      </climb>
+    </object>
+  </object>
+  <object name="room2">
+    <inherit name="editor_room" />
+    <exit alias="north" to="room">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+</asl>

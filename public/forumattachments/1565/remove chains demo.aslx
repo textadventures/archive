@@ -1,0 +1,55 @@
+<!--Saved by Quest 5.5.5328.26617-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="remove chains demo">
+    <gameid>26a1bcbe-be77-4cbd-a697-e41d514ff904</gameid>
+    <version>1.0</version>
+    <firstpublished>2016</firstpublished>
+  </game>
+  <object name="Basement">
+    <inherit name="editor_room" />
+    <description><![CDATA[A dingy grey room with one bare, grimy lightbulb overhead illuminating the concrete walls and floors. <br/><br/>{if chains.cut=False:A steel chain shackles you to the wall.}<br/>{if chains.cut=True:The worthless chains no longer bind you.}<br/>]]></description>
+    <object name="hacksaw">
+      <inherit name="editor_object" />
+      <look>A saw for cutting through metal. How convenient that it is here.</look>
+      <take />
+    </object>
+    <object name="chains">
+      <inherit name="editor_object" />
+      <scenery />
+      <look type="script">
+        if (chains.cut=False) {
+          msg ("They bind you to the wall, and are far too strong to break.")
+        }
+        else if (chains.cut=True) {
+          msg ("They're worthless now that you've sawn through them.")
+        }
+      </look>
+      <cut type="boolean">false</cut>
+      <visible />
+      <alias>chain; chains; shackle; shackles</alias>
+    </object>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+  </object>
+  <command name="cut chains">
+    <pattern>cut chains; cut chain; saw through chain; saw through chains; use saw on chains; use saw on chain</pattern>
+    <script>
+      if (not Got(hacksaw)) {
+        msg ("You don't have anything to cut them with.")
+      }
+      else if (Got(hacksaw)) {
+        if (chains.cut = true) {
+          msg ("You're already free of the chains!")
+        }
+        else if (chains.cut = false) {
+          msg ("You saw through the chains with the hacksaw. You're free!")
+          set (chains, "cut", true)
+        }
+      }
+    </script>
+  </command>
+</asl>

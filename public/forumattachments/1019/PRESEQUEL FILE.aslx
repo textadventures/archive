@@ -1,0 +1,339 @@
+<!--Saved by Quest 5.5.5328.26617-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Borderlands: The Pre-Sequel: The Text Adventure">
+    <inherit name="theme_retro" />
+    <gameid>13501a94-becf-43cf-9351-8c633e150a20</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <enablehyperlinks type="boolean">false</enablehyperlinks>
+    <showlocation type="boolean">false</showlocation>
+    <showpanes type="boolean">false</showpanes>
+    <showcommandbar />
+  </game>
+  <command name="inventory">
+    <pattern type="string">^i$|^inv$|^show inventory$|^open inventory$|^inventory$</pattern>
+    <script>
+      list = FormatObjectList(Template("CarryingListHeader"), game.pov, Template("And"), ".")
+      if (list = "") {
+        msg (Template("NotCarryingAnything"))
+      }
+      else {
+        msg (list)
+      }
+    </script>
+  </command>
+  <command name="lookat">
+    <pattern>look #object#; look at #object#; x #object#; examine #object#; exam #object#; ex #object#</pattern>
+    <script>
+      if (GetBoolean(object, "hidechildren")) {
+        object.hidechildren = false
+      }
+      if (TypeOf(object, "look") = "script") {
+        do (object, "look")
+      }
+      else {
+        lookdesc = ""
+        if (HasString(object, "look")) {
+          lookdesc = object.look
+        }
+        if (LengthOf(lookdesc) = 0) {
+          lookdesc = Template("DefaultObjectDescription")
+        }
+        if (GetBoolean(object, "switchedon")) {
+          if (HasString(object, "switchedondesc")) {
+            lookdesc = lookdesc + " " + object.switchedondesc
+          }
+        }
+        else {
+          if (HasString(object, "switchedoffdesc")) {
+            lookdesc = lookdesc + " " + object.switchedoffdesc
+          }
+        }
+        isDark = CheckDarkness()
+        if (isDark and not GetBoolean(object, "lightsource")) {
+          lookdesc = DynamicTemplate("LookAtDarkness", object)
+        }
+        msg (lookdesc)
+      }
+      ListObjectContents (object)
+    </script>
+  </command>
+  <command name="drop">
+    <pattern>drop #object#</pattern>
+    <multiple>
+      return (GetDirectChildren(game.pov))
+    </multiple>
+    <script>
+      msg ("Why would -- why would you DROP a gun? You LOVE guns.")
+    </script>
+  </command>
+  <command name="jump">
+    <pattern type="string">^jump$</pattern>
+    <script>
+      msg ("You jump far higher than you've jumped in most videogames. You're like \"dude what\"")
+    </script>
+  </command>
+  <object name="the Moon">
+    <inherit name="editor_room" />
+    <descprefix>You are on</descprefix>
+    <description>Your inventory is full.</description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <alt type="stringlist" />
+      <object name="gun1">
+        <inherit name="editor_object" />
+        <alias>gun</alias>
+        <look>It's a real nice gun. It's, like, blue, and it's got a spinny thing on it, and it glows in the dark.</look>
+        <drop type="boolean">false</drop>
+        <dropmsg>What? No. Guns are awesome.</dropmsg>
+      </object>
+      <object name="gun2">
+        <inherit name="editor_object" />
+        <alias>another gun</alias>
+        <look>This is another gun. It looks like a cowboy gun. </look>
+        <drop type="boolean">false</drop>
+        <dropmsg>Nah man that gun is super sick, you want to keep it</dropmsg>
+      </object>
+      <object name="gun3">
+        <inherit name="editor_object" />
+        <alias>like eight other guns</alias>
+        <look>These guns are pretty sweet and there are, like, eight of them. </look>
+        <drop type="boolean">false</drop>
+        <dropmsg>You want to drop, like, EIGHT guns? That's RIDICULOUS. That's SO many guns.</dropmsg>
+      </object>
+    </object>
+    <object name="scavs">
+      <inherit name="editor_object" />
+      <alias>Scavs</alias>
+      <hordenumber type="int">209</hordenumber>
+      <gender>they</gender>
+      <article>them</article>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <shottext type="stringlist">
+        <value>You shoot a scav.</value>
+        <value>A scav's head explodes.</value>
+        <value>Another bullet finds its mark.</value>
+        <value>You kill a scav. His family mourns.</value>
+        <value>Another scav explodes in viscera.</value>
+        <value>A scav says something like "please don't" but he doesn't get through "don't" before his entire head explodes so he just says "dooooohhhhh" and you laugh really really hard.</value>
+        <value>You kill a scav.</value>
+        <value>One less scav on the moon.</value>
+        <value>The scav says something Australian before he dies. You don't speak Australian.</value>
+        <value>Moon murder.</value>
+        <value>You kill a scav and it is funny.</value>
+        <value>You shoot a scav and by sheer coincidence you also fart at the same time. You spend the next eight years of your life laughing without pause.</value>
+        <value>Scav-a-splode.</value>
+        <value>The scav dies.</value>
+        <value>You kill yet another scav.</value>
+        <value>You one-shot the scav because you are like level 99 in a level 10 area.</value>
+        <value>He says a dumb joke as he dies.</value>
+        <value>Another dead scav.</value>
+        <value>You kill a scav and get even more XP.</value>
+        <value>Killing that scav made you feel more complete.</value>
+        <value>You are good at videogames.</value>
+        <value>Yet another dead scav.</value>
+        <value>You shoot the scav in the chest and he falls over.</value>
+        <value>You shoot the scav in the stomach. He tumbles backward.</value>
+        <value>You shoot the scav in the ankle and he explodes.</value>
+        <value>You shoot a scav in the head. He crumples.</value>
+        <value>You level up.</value>
+        <value>The scav drops a piece of loot, but it's not as good as what you have.</value>
+        <value>The scav drops an incredible piece of loot, far better than anything you have. You've got a sentimental attachment to the guns you already have, however, so instead of equipping the gun you give it to a poor homeless child who can't afford a gun of her own.</value>
+        <value>You shoot a scav. Also, your character is a girl. Maybe think about how the patriarchy subtly shapes your everyday assumptions, chump.</value>
+        <value>You kill the scav, then spare a few minutes to re-spec your skill points.</value>
+        <value>The scav's body ragdolls and flies off into the endless void of space.</value>
+        <value>Clean kill.</value>
+        <value>Good shot.</value>
+        <value>You miss. Then you shoot again, and you hit.</value>
+        <value>Critical hit. Lotsa blood. Your character makes a dumb joke.</value>
+        <value>The scav's body flies into the air like a ballet dancer who has been shot multiple times in a zero-g environment.</value>
+        <value>You shoot the scav and, unrelatedly, remember that today is your friend Samit's birthday. You consider sending him a card, until you realize you don't really care for Samit.</value>
+        <value>The bullet ricochets off a scav's head and finds its home in another's sternum.</value>
+        <value>You hit a scav in the neck and he dies gurgling blood into the airless night.</value>
+        <value>You shoot a scav. It's great.</value>
+        <value>The scav dies violently.</value>
+        <value>The scav says a line of battle dialog you've heard before so you kill him.</value>
+        <value>The scav is alive, and then he isn't.</value>
+        <value>The scav regrets the life decisions that brought him to this moment.</value>
+        <value>The scav dies violently, blood shooting from his you've just been typing shoot scav randomly or pressing the up arrow and enter for the past three minutes so it doesn't even matter what I put here. Booty salads.</value>
+        <value>The scav is like "what."</value>
+        <value>You kill the hell out of the scav.</value>
+        <value>Boom.</value>
+        <value>Squish.</value>
+        <value>Pow.</value>
+        <value>Blammo.</value>
+        <value>Ka-kow.</value>
+        <value>Pop!</value>
+        <value>Smash!</value>
+        <value>Headshot!</value>
+        <value>Bang!</value>
+        <value>Gross!</value>
+        <value>Violence!</value>
+      </shottext>
+      <speak>You want to TALK to the scavs? What are you, a BABY? A big dumb BABY who likes to TALK their way through problems? What kind of game do you think this is? Have you even checked your inventory? God, what are you even -- why don't you just try to KISS the scavs, you big dumb baby?</speak>
+      <kiss>Nobody likes a smartass.</kiss>
+      <fart>Ahahahah oh my god</fart>
+      <buttslam>You double jump and, with a perfectly timed press of the crouch button, come SLAMMING down to the moon's surface. Your Oz kit is buffed with cryo damage, so the scavs near you are frozen. Better shoot 'em and finish the job.</buttslam>
+      <look type="script">
+        msg ("There are " + scavs.hordenumber + " Scavs screaming at you. They all have complex personalities and sympathetic backstories.")
+      </look>
+      <shoot type="script"><![CDATA[
+        this.hordenumber = this.hordenumber - 1
+        if (this.hordenumber = 0) {
+          msg ("You stand atop a mountain of scav corpses. Finally, your epic journey has come to a conclusion. A great deal of bloodshed, tears and laughter brought you to this moment, but you've made it. Your character arc is complete. The army is dead. You are victorious.<br/><br/>COLONEL ZARPEDON jetpacks in, frowning really big. <br/><br/>\"I don't --\"<br/><br/>She sighs. She gestures lazily at the mountain of corpses that were once her army.<br/><br/>\"How --\"<br/><br/>She buries her face in her palm.<br/><br/>\"I guess we should fight,\" she says, but before she gets out the \"T\" in \"fight\" you've exploded her into fifty bloody chunks and like a hundred pieces of super-rare loot. Like, there's a bunch of blue ones, and one or two purple ones and -- oh man.<br/><br/>Oh man.<br/><br/>An orange! A legendary. It's got, like, the best stats. You equip it and it's the best thing. It is your actual favorite thing. You feel like you have high-fived god. <br/><br/>You are really good at videogames.<br/><br/>----------------------------<br/><br/>THE END<br/><br/>Congratulations! You scored 209 out of 209 points.")
+          finish
+        }
+        else if (this.hordenumber = 200) {
+          msg ("Noticing how many scavs you've shot, the nefarious COLONEL ZARPEDON arrives. \"Ha HA,\" she sneers. \"You may have killed nine members of my scav army, but there's no WAY you'll kill the rest! I will be VICTORIOUS!\"<br/><br/>Still cackling, she jetpacks away into the distance. Just before she disappears over the horizon, she calls out:<br/><br/>\"You suck\"<br/><br/>Your heart beats faster. Your face goes red. Your stomach clenches. <br/><br/>NOBODY tells you that you suck.<br/><br/>NOBODY.")
+        }
+        else if (this.hordenumber = 150) {
+          msg ("Your eyes turn skyward as you hear the telltale blast of COLONEL ZARPEDON's jetpack. <br/><br/>\"You are stronger than I thought,\" she says. \"I see my scavs haven't killed you yet,\" she says. \"You've been a thorn in my side for too long,\" she says. \"We meet again,\" she says. \"You and I aren't so different,\" she says. \"This is where it ends,\" she says. \"You have no chance,\" she says. \"You will pay,\" she says.<br/><br/>She flies away.")
+        }
+        else if (this.hordenumber = 100) {
+          msg ("You hear COLONEL ZARPEDON land behind you.<br/><br/>\"Look. We've both been through a lot,\" she says. \"You and I have both lost so much to this horrible war. Can't we just end it? Can't we agree to disagree? Can't we both go our separate ways?\"<br/><br/>She sniffs, avoids your gaze. You think you see a tear forming at the corner of her eye.<br/><br/>\"Just -- think about it, okay?\"<br/><br/>She jetpacks away into the distance.")
+        }
+        else if (this.hordenumber = 99) {
+          msg ("\"Goddammit,\" Colonel Zarpedon says over the radio as another scav explodes.")
+        }
+        else if (this.hordenumber = 50) {
+          msg ("Your radio crackles to life.<br/><br/>\"It's too late,\" COLONEL ZARPDON says. \"My master plan is already in motion. I've used all of my power, all my knowledge, and all my Eridian artifacts to empower my scav army.<br/><br/>\"Yes, you once tore through them with no effort. But that was then. Now, my remaining fifty scavs are invulnerable. All-powerful. Immortal. The blood of the Eridians flows through their veins, just as it flows through mine. Their strength is unparalleled, and they shall never die.\"")
+        }
+        else if (this.hordenumber = 25) {
+          msg ("\"WHAT THE HELL,\" Zarpedon shouts over the radio as another scav falls to your weaponry.")
+        }
+        else if (this.hordenumber = 10) {
+          msg ("COLONEL ZARPEDON is already cackling when your radio pushes her dulcet tones into your ears.<br/><br/>\"You have been defeated,\" she says. \"It's too late now. I've started a self-destruct sequence inside the very core of the moon itself. Only one of my scav soldiers holds the key to disarming the bomb, and they will NEVER give up the plan -- they will die, happily, before allowing you to save this perverted moon and the poor souls living on it. And I will never tell you WHICH of my soldiers has the failsafe.<br/><br/>\"You have only a few minutes before the moon explodes, killing you and I and everyone else on it. Savor your time well, Vault Hunter. There is nothing you can do.\"")
+        }
+        else if (this.hordenumber = 5) {
+          msg ("The scav collapses to the cold, hard surface of the moon. A shining metal cylinder, no bigger than a marker, rolls out of his vest. A large, red button adorns one end of the cylinder, which tumbles end over end on its journey to reach the ground. <br/><br/>It finally lands, button-side down. <br/><br/>You hear a loud \"click\" in the ground beneath you.<br/><br/>\"BOMB DISARMED,\" a computerized voice says. <br/><br/>\"AHHHH YOU ARE THE WORST THAT BOMB TOOK ME LIKE EIGHT HOURS,\" Colonel Zarpedon screams over the ECHOnet. \"I HATE YOU SO MUCH. GOD. GOD JEEZ GOD. I HATE YOU.\"")
+        }
+        else {
+          shotindex = GetRandomInt(0, ListCount(this.shottext)-1)
+          shottext = StringListItem(this.shottext, shotindex)
+          msg (shottext + " There are " + this.hordenumber + " scavs left.")
+        }
+      ]]></shoot>
+    </object>
+    <object name="moon">
+      <inherit name="editor_object" />
+      <visible />
+      <alias>the moon</alias>
+      <look><![CDATA[It's real pretty. There are stars, meteors, craters, severed arms, volcanos and mountains as far as the eye can see. <br/><br/>"Mmmm," you say. "Mmmm boy. That's some good moon."]]></look>
+      <scenery />
+    </object>
+    <object name="pandora">
+      <inherit name="editor_object" />
+      <visible />
+      <alias>pandora</alias>
+      <look>It's cool, but right now it's not as cool as the moon. It's, like, old. You've been there before. Old stuff is whatever. You're all about NEW. And the moon is NEW. Double jumping. Butt slamming. NEW.</look>
+      <scenery />
+    </object>
+  </object>
+  <verb>
+    <property>shoot</property>
+    <pattern>shoot</pattern>
+    <defaultexpression>"You can't shoot " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>fart</property>
+    <pattern>fart</pattern>
+    <defaultexpression>"You can't fart " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>buttslam</property>
+    <pattern>butt slam</pattern>
+    <defaultexpression>"You can't butt slam " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="fart">
+    <unresolved>Pahahah oh my god</unresolved>
+    <pattern>fart</pattern>
+    <script>
+      msg ("Pahahah oh my god")
+    </script>
+  </command>
+  <command name="sports">
+    <pattern>sports</pattern>
+    <unresolved>SHUT UP SAMIT</unresolved>
+    <script>
+      msg ("SHUT UP SAMIT")
+    </script>
+  </command>
+  <command name="take cover">
+    <pattern>take cover</pattern>
+    <unresolved>take cover</unresolved>
+    <script>
+      msg ("You take cover behind a rock or a barrel or a chest-high wall or something. It's, like...it's okay. It feels okay. You wing some enemies as you peek out from behind cover. But you could be, like, double jumping and butt slamming and stuff. That's way more fun. Dunno why you're not doing that.")
+    </script>
+  </command>
+  <command name="double jump">
+    <pattern>double jump</pattern>
+    <script>
+      msg ("Oh my god it's like twice as good as normal jumping")
+    </script>
+  </command>
+  <command name="melee">
+    <pattern>melee</pattern>
+    <unresolved type="string"></unresolved>
+    <script>
+      msg ("You smack a scav in the face with your fist. It pops his oxygen bubble and he begins to suffocate. You watch him kind of dance around as the air leaves his body. It's poetic, in a really dumb way. Eventually, his oxygen bubble reforms and he's back to snarling Australian epithets at you.")
+    </script>
+  </command>
+  <command name="change gun">
+    <pattern>change gun</pattern>
+    <script>
+      msg ("You switch guns. Your new gun is better in some ways, but worse in others. You have to make decisions about when to switch guns and part of you is like, \"yeah, that's great, I'm being strategic,\" and another part is like \"yeah but I wish I could just use one gun all the time and have it kill everything,\" and that part of your brain is a really bad game designer.")
+    </script>
+  </command>
+  <command name="doublejump">
+    <pattern>doublejump</pattern>
+    <script>
+      msg ("Oh my god it's like twice as good as normal jumping")
+    </script>
+  </command>
+  <command name="switch gun">
+    <pattern>switch gun</pattern>
+    <script>
+      msg ("You switch guns. Your new gun is better in some ways, but worse in others. You have to make decisions about when to switch guns and part of you is like, \"yeah, that's great, I'm being strategic,\" and another part is like \"yeah but I wish I could just use one gun all the time and have it kill everything,\" and that part of your brain is a really bad game designer.")
+    </script>
+  </command>
+  <command name="action skill">
+    <pattern>action skill</pattern>
+    <script>
+      msg ("You use your action skill -- a special, uberpowerful ability that only you possess, unless three other people are in your game and playing as the same character in which case four people possess it. But it's super awesome, and violent, and really helps you out. It doesn't kill anyone, cause it's a support skill, but man -- it's so good. You feel great. You're just -- wow. Mm. Feels good, you know? Mm.")
+    </script>
+  </command>
+  <command name="use action skill">
+    <pattern>use action skill</pattern>
+    <script>
+      msg ("You use your action skill -- a special, uberpowerful ability that only you possess, unless three other people are in your game and playing as the same character in which case four people possess it. But it's super awesome, and violent, and really helps you out. It doesn't kill anyone, cause it's a support skill, but man -- it's so good. You feel great. You're just -- wow. Mm. Feels good, you know? Mm.")
+    </script>
+  </command>
+  <command name="loot">
+    <pattern>loot</pattern>
+    <script>
+      msg ("You grab everything. You open boxes. You open lockers. You get money and ammo. You hit the \"use\" button a lot. It's super sick. It's great.")
+    </script>
+  </command>
+  <command name="crouch">
+    <pattern>crouch</pattern>
+    <script>
+      msg ("You're crouching. Cool. Hope you're psyched.")
+    </script>
+  </command>
+  <command name="stand">
+    <pattern>stand</pattern>
+    <script>
+      msg ("You're standing again. What a journey that was.")
+    </script>
+  </command>
+  <command name="stand up">
+    <pattern>stand up</pattern>
+    <script>
+      msg ("You're standing again. What a journey that was.")
+    </script>
+  </command>
+</asl>

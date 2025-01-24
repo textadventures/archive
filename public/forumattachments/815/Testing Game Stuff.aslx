@@ -1,0 +1,74 @@
+<asl version="540">
+  <include ref="English.aslx"/>
+  <include ref="Core.aslx"/>
+  <game name="Testing Game Stuff">
+    <gameid>d67ec73f-f879-4911-9d88-c02ea527c534</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <start type="script">
+      character_creation_function
+    </start>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <gender_string type="string">unknown</gender_string>
+      <race_string type="string">unknown</race_string>
+      <strength_integer type="int">0</strength_integer>
+      <statusattributes type="simplestringdictionary">alias=Alias: !;gender_string=Gender: !;race_string=Race: !;strength_integer=Strength: !</statusattributes>
+    </object>
+  </object>
+  <function name="character_creation_function">
+    alias_character_creation_function
+    on ready {
+      gender_character_creation_function
+      on ready {
+        race_character_creation_function
+      }
+    }
+  </function>
+  <function name="alias_character_creation_function">
+    msg ("What is your name?")
+    get input {
+      // the quest engine already~automatically sets the variable for you: result = user's typed-in input
+      // "alias" is a built-in attribute, so don't need to self-create it on the "player" Player Object.
+      player.alias=result
+    }
+  </function>
+  <function name="gender_character_creation_function">
+    show menu ("What is your gender?", split ("male;female;other",";"), false) {
+      // the quest engine already~automatically sets the variable for you: result = user's selected menu choice
+      player.gender_string=result
+	  if (player.gender_string="other") {
+        msg ("Please choose either 'male' or 'female' please! Do NOT choose 'other', okay?!")
+        gender_character_creation_function
+      }
+    }
+  </function>
+  <function name="race_character_creation_function">
+    show menu ("What is your race?", global_data_object.race_string_list, false) {
+      // the quest engine already~automatically sets the variable for you: result = user's selected menu choice
+      player.race_string=result
+      race_based_strength_addition_function
+    }
+  </function>
+  <function name="race_based_strength_addition_function">
+    switch (player.race_string) {
+      case ("human") {
+        player.strength_integer=player.strength_integer + 2
+      }
+      case ("dwarf") {
+        player.strength_integer=player.strength_integer + 3
+      }
+      case ("elf") {
+        player.strength_integer=player.strength_integer + 1
+      }
+    }
+  </function>
+  <object name="global_data_object">
+    <inherit name="editor_object" />
+    <race_string_list type="simplestringlist">human;dwarf;elf</race_string_list>
+  </object>
+</asl>

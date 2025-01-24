@@ -1,0 +1,1620 @@
+<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <include ref="CoreCombat.aslx" />
+  <game name="Craft Island">
+    <gameid>78d569e0-d5fe-4b3e-9e3b-584f2b3835f5</gameid>
+    <version>0.1</version>
+    <firstpublished>2014</firstpublished>
+    <feature_limitinventory />
+    <setcustomwidth type="boolean">false</setcustomwidth>
+    <setcustompadding type="boolean">false</setcustompadding>
+    <gridmap />
+    <attr name="feature_pictureframe" type="boolean">false</attr>
+    <feature_lightdark />
+    <difficulty>Medium</difficulty>
+    <cruelty>Tough</cruelty>
+    <attr name="autodescription_youarein_newline" type="boolean">false</attr>
+    <attr name="autodescription_youcansee_newline" type="boolean">false</attr>
+    <attr name="autodescription_description_newline" type="boolean">false</attr>
+    <attr name="autodescription_youcango_newline" type="boolean">false</attr>
+    <category>Simulation</category>
+    <description>Days have gone by since you went on a cruise, crashing into a government asylum they do every thing to cover up the cruise wrekage. With no body looking for it is up to you to survive. How many days will you survive on the Island? Use your knowledge to craft and build from resources around the Island, use traps to capture animals and fire to cook them with.  Use campfires and get creative to make you a water container to boil some water drink, also use the campfires and cabin to reduce you exposer to the elements.</description>
+    <author>Michael Oldham</author>
+    <cover>Help-Castaway.jpg</cover>
+    <backgroundimage type="string"></backgroundimage>
+    <setbackgroundopacity />
+    <backgroundopacity type="double">0.3</backgroundopacity>
+    <attr name="campfire present" type="boolean">false</attr>
+    <povstatusattributes type="stringdictionary" />
+    <pov type="object">player</pov>
+    <start type="script">
+    </start>
+    <attr name="fire sound" type="script">
+      if (game.pov.parent = basic campfire) {
+        if (basic campfire.lightsource = True) {
+          play sound ("large_fire_burning.mp3", false, true)
+        }
+      }
+    </attr>
+    <object name="plant fiber">
+      <inherit name="editor_object" />
+      <volume type="int">2</volume>
+    </object>
+    <object name="stick">
+      <inherit name="editor_object" />
+      <take />
+      <feature_usegive />
+      <volume type="int">1</volume>
+      <combine type="scriptdictionary">
+        <item key="plant fiber">
+          MoveObject (plant fiber, stash)
+          MoveObject (stick, stash)
+          AddToInventory (man catcher)
+        </item>
+      </combine>
+    </object>
+    <object name="sharp stone">
+      <inherit name="editor_object" />
+      <volume type="int">1</volume>
+      <create type="script">
+      </create>
+      <look type="script">
+        msg ("You have " + sharp stone.volume + ".")
+      </look>
+      <combine type="scriptdictionary">
+        <item key="man catcher"><![CDATA[
+          if (GetInt(sharp stone, "volume") >= 1) {
+            DecreaseObjectCounter (sharp stone, "volume")
+            MoveObject (man catcher, stash)
+            AddToInventory (stone axe)
+            if (GetInt(sharp stone, "volume") <= 0) {
+              MoveObject (sharp stone, stash)
+            }
+          }
+        ]]></item>
+      </combine>
+    </object>
+    <object name="man catcher">
+      <inherit name="editor_object" />
+      <volume type="int">2</volume>
+    </object>
+    <object name="planks">
+      <inherit name="editor_object" />
+      <volume type="int">3</volume>
+      <attr name="max volume" type="boolean">false</attr>
+      <take />
+      <feature_usegive />
+      <look type="script">
+        msg ("You have " + planks.volume + ".")
+      </look>
+      <craft type="script">
+        plank crafting
+      </craft>
+    </object>
+    <object name="wood wall">
+      <inherit name="editor_object" />
+      <volume type="int">20</volume>
+      <feature_usegive />
+      <look type="script">
+        msg ("You have " + wood wall.volume + ".")
+      </look>
+    </object>
+    <object name="fortify wood">
+      <inherit name="editor_object" />
+      <inherit name="enviroment" />
+      <health type="int">25</health>
+      <attr name="max_health" type="int">25</attr>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <upgrade type="script">
+        wood_frame_upgrade_1
+      </upgrade>
+    </object>
+    <object name="fortified wood 1">
+      <inherit name="editor_object" />
+      <inherit name="enviroment" />
+      <health type="int">60</health>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <upgrade type="script"><![CDATA[
+        if (Got(planks)) {
+          if (GetInt(planks, "volume") >= 4) {
+            MoveObject (fortified wood 1, stash)
+            play sound ("hammer_hitting_nail_into_wood.mp3", true, false)
+            MoveObjectHere (crafting table)
+          }
+        }
+      ]]></upgrade>
+    </object>
+    <object name="flint">
+      <inherit name="editor_object" />
+      <volume type="int">1</volume>
+      <take />
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+    </object>
+    <object name="iron scrap">
+      <inherit name="editor_object" />
+      <volume type="int">1</volume>
+      <take />
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+    </object>
+    <object name="torch">
+      <inherit name="editor_object" />
+      <feature_lightdark />
+      <lightsource />
+      <take />
+      <volume type="int">1</volume>
+      <ignight type="string"></ignight>
+      <lightstrength>weak</lightstrength>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+    </object>
+    <object name="canteen">
+      <inherit name="editor_object" />
+      <inherit name="container_limited" />
+      <take />
+      <volume type="int">1</volume>
+      <feature_container />
+      <isopen type="boolean">false</isopen>
+      <maxvolume type="int">20</maxvolume>
+      <listchildren />
+      <feature_usegive />
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <drink type="script">
+        if (Contains (canteen,water)) {
+        }
+      </drink>
+    </object>
+    <object name="water">
+      <inherit name="editor_object" />
+      <volume type="int">10</volume>
+      <feature_usegive />
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+    </object>
+    <object name="small cabin">
+      <inherit name="container_limited" />
+      <dark />
+      <volume type="int">30</volume>
+      <feature_container />
+      <maxobjects type="int">3</maxobjects>
+      <maxvolume type="int">100</maxvolume>
+      <transparent type="boolean">false</transparent>
+      <isopen type="boolean">false</isopen>
+      <attr name="grid_parent_offset_auto" type="boolean">false</attr>
+      <attr name="grid_parent_offset_x" type="int">1</attr>
+      <attr name="grid_parent_offset_y" type="int">-1</attr>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <ondrop type="script">
+        play sound ("hammer_hitting_nail_into_wood.mp3", true, false)
+        msg ("You build a nice little cabin from the resources you gathered.")
+      </ondrop>
+      <onopen type="script">
+      </onopen>
+    </object>
+    <object name="cloth">
+      <inherit name="editor_object" />
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+    </object>
+    <object name="storage crate">
+      <inherit name="editor_object" />
+      <inherit name="container_limited" />
+      <feature_container />
+      <isopen type="boolean">false</isopen>
+      <maxobjects type="int">9</maxobjects>
+      <maxvolume type="int">50</maxvolume>
+      <listchildren />
+      <volume type="int">15</volume>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+    </object>
+    <object name="wood frame">
+      <inherit name="editor_object" />
+      <inventoryverbs type="stringlist">
+        <value>Drop</value>
+        <value>Look At</value>
+      </inventoryverbs>
+      <take />
+      <volume type="int">5</volume>
+      <feature_usegive />
+      <craft type="script">
+        frame crafting
+      </craft>
+      <look type="script">
+        msg ("You have " + wood frame.volume + ".")
+      </look>
+      <upgrade type="script">
+        wood_frame_upgrade
+      </upgrade>
+    </object>
+    <object name="coal">
+      <inherit name="editor_object" />
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <volume type="int">1</volume>
+    </object>
+    <object name="leaves">
+      <inherit name="editor_object" />
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <take />
+      <volume type="int">1</volume>
+    </object>
+    <object name="fallen tree">
+      <inherit name="editor_object" />
+      <inherit name="enviroment" />
+      <health type="int">5</health>
+      <attr name="max_health" type="int">5</attr>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <chop type="script"><![CDATA[
+        if (Got(stone axe)) {
+          if (GetInt(fallen tree, "health") >= 4) {
+            play sound ("tree_branch_fall_on_leaves_and_twigs.mp3", true, false)
+            DecreaseObjectCounter (fallen tree, "health")
+          }
+          else if (GetInt(fallen tree, "health") <= 3) {
+            play sound ("hammer_hitting_nail_into_wood.mp3", true, false)
+            DecreaseObjectCounter (fallen tree, "health")
+            DecreaseObjectCounter (stone axe, "weapon health")
+          }
+        }
+        else if (not Got(stone axe)) {
+          msg ("Ok so I chop this with my hands?")
+        }
+        if (GetInt(fallen tree, "health") <= 0) {
+          adding trunks
+        }
+      ]]></chop>
+    </object>
+    <object name="forge">
+      <inherit name="editor_object" />
+      <volume type="int">10</volume>
+      <forge type="script">
+        forgemenu = NewStringList()
+        list add (forgemenu, "shovel head")
+        list add (forgemenu, "garden hoe bit")
+        list add (forgemenu, "hammer head")
+        list add (forgemenu, "steel")
+        ShowMenu ("choose a item to forge.", forgemenu, true) {
+          if (result="shovel head") {
+          }
+          else if (result="hammer head") {
+          }
+          else if (result="garden hoe bit") {
+          }
+          else if (result="steel") {
+          }
+        }
+      </forge>
+    </object>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <alias>woods</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <descprefix>You are in the</descprefix>
+    <attr name="grid_width" type="int">2</attr>
+    <attr name="grid_length" type="int">2</attr>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <maxobjects type="int">9</maxobjects>
+      <volume type="int">0</volume>
+      <maxvolume type="int">81</maxvolume>
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>Health</key>
+          <value></value>
+        </item>
+        <item>
+          <key>Hunger</key>
+          <value></value>
+        </item>
+        <item>
+          <key>Thirst</key>
+          <value></value>
+        </item>
+        <item>
+          <key>Exposer</key>
+          <value></value>
+        </item>
+        <item>
+          <key>Wounded</key>
+          <value></value>
+        </item>
+        <item>
+          <key>Days Survived</key>
+          <value></value>
+        </item>
+      </statusattributes>
+      <Health type="int">20</Health>
+      <Hunger type="int">25</Hunger>
+      <Exposer type="int">10</Exposer>
+      <Wounded type="boolean">false</Wounded>
+      <Thirst type="int">20</Thirst>
+      <attr name="max health" type="int">100</attr>
+      <attr name="Days Survived" type="int">0</attr>
+      <object name="flint_steel">
+        <inherit name="editor_object" />
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Drop</value>
+        </inventoryverbs>
+        <take />
+      </object>
+      <object name="tree trunks">
+        <inherit name="editor_object" />
+        <volume type="int">0</volume>
+        <attr name="max volume" type="boolean">false</attr>
+        <feature_usegive />
+        <take />
+        <craft type="script">
+          if (Got(tree trunks)) {
+            trunk crafting
+          }
+          else if (not Got(tree trunks)) {
+            msg ("You must have in inventory to craft.")
+          }
+        </craft>
+        <look type="script">
+          msg ("You have " + tree trunks.volume + ".")
+        </look>
+        <ontake type="script">
+        </ontake>
+      </object>
+      <object name="stone axe">
+        <inherit name="editor_object" />
+        <inherit name="weapon" />
+        <attr name="weapon health" type="int">25</attr>
+        <damage type="int">10</damage>
+        <inventoryverbs type="stringlist">
+          <value>Drop</value>
+        </inventoryverbs>
+        <volume type="int">3</volume>
+        <take />
+      </object>
+      <object name="crafting table">
+        <inherit name="editor_object" />
+        <volume type="int">25</volume>
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Drop</value>
+        </inventoryverbs>
+        <craft type="script"><![CDATA[
+          craftmenu = NewStringList()
+          list add (craftmenu, "traps")
+          list add (craftmenu, "tools")
+          list add (craftmenu, "shelters")
+          list add (craftmenu, "weapons")
+          list add (craftmenu, "food & drinks")
+          ShowMenu ("choose a category", craftmenu, true) {
+            if (result="tools") {
+              tool crafting
+            }
+            if (result="shelters") {
+              shelter crafting
+            }
+            if (result="weapons") {
+              weapon crafting
+            }
+            if (result="food & drinks") {
+              food_drinks crafting
+            }
+            if (result="traps") {
+              trap crafting
+            }
+          }
+        ]]></craft>
+      </object>
+      <object name="drop trap">
+        <inherit name="editor_object" />
+        <inherit name="container_closed" />
+        <attr name="set trap" type="boolean">false</attr>
+        <take />
+        <volume type="int">10</volume>
+        <feature_container />
+        <ondrop type="script">
+        </ondrop>
+        <set type="script">
+          if (not Got(drop trap)) {
+            set (drop trap, "set trap", True)
+          }
+          else if (Got(drop trap)) {
+            msg ("Helps to sit the trap down first.")
+          }
+        </set>
+        <onopen type="script">
+          if (not GetBoolean(deer, "free")) {
+          }
+        </onopen>
+      </object>
+    </object>
+    <object name="rock">
+      <inherit name="editor_object" />
+      <take />
+      <feature_usegive />
+      <givesingle />
+      <volume type="int">1</volume>
+      <craft type="script">
+        if (not Got(rock)) {
+          msg ("You must take item first.")
+        }
+        else if (Got(rock)) {
+          rock crafting
+          MoveObject (rock, stash)
+        }
+      </craft>
+      <look type="script">
+        msg ("You have " + rock.volume + ".")
+      </look>
+    </object>
+    <object name="tree">
+      <inherit name="editor_object" />
+      <inherit name="enviroment" />
+      <health type="int">5</health>
+      <attr name="max_health" type="int">5</attr>
+      <chop type="script">
+        if (Got(stone axe)) {
+          play sound ("axe_chop_wood_007.mp3", true, false)
+          DecreaseObjectCounter (tree, "health")
+        }
+        if (not Got(stone axe)) {
+          msg ("With what my bare hands?")
+        }
+        if (GetInt(tree, "health") = 0) {
+          msg ("TIMBER!")
+          play sound ("tree_fall_down.mp3", true, false)
+          MoveObject (tree, stash)
+          MoveObjectHere (fallen tree)
+        }
+      </chop>
+    </object>
+    <object name="basic campfire">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <feature_lightdark />
+      <lightsource type="boolean">false</lightsource>
+      <lightstrength>strong</lightstrength>
+      <volume type="int">5</volume>
+      <feature_container />
+      <hidechildren />
+      <ignite type="script">
+        ignitemenu = NewStringList()
+        list add (ignitemenu, "flint and steel")
+        list add (ignitemenu, "sticks and leaves")
+        list add (ignitemenu, "sticks and coal")
+        ShowMenu ("Ignite with what?", ignitemenu, true) {
+          if (result="sticks and leaves") {
+            sticks_leaves fire
+          }
+          else if (result="sticks and coal") {
+            sticks_coal fire
+          }
+          else if (result="flint and steel") {
+            flint_steel fire
+          }
+        }
+        if (basic campfire.lightsource = True) {
+          msg ("Fire is lit add fuel to keep fire going.")
+        }
+      </ignite>
+      <addwood type="script"><![CDATA[
+        if (basic campfire.lightsource = True) {
+          if (Got(tree trunks)) {
+            SetTimerInterval (Fire Burning, 10)
+            DecreaseObjectCounter (tree trunks, "volume")
+            msg ("There that should last a little longer.")
+            if (GetInt(tree trunks, "volume") <= 0) {
+              MoveObject (tree trunks, stash)
+              msg ("Out of trunks.")
+            }
+          }
+          else if (not Got(tree trunks)) {
+            msg ("You need a fuel sorce.")
+          }
+        }
+        else if (basic campfire.lightsource = False) {
+          msg ("You need to light the fire before you add a fuel source.")
+        }
+      ]]></addwood>
+    </object>
+    <exit alias="east" to="woods1">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>craft</property>
+    <pattern>craft</pattern>
+    <defaultexpression>"You can't craft " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="stash">
+    <inherit name="editor_room" />
+  </object>
+  <verb>
+    <property>combine</property>
+    <pattern>combine</pattern>
+    <defaultexpression>"You can't combine " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>chop</property>
+    <pattern>chop</pattern>
+    <defaultexpression>"You can't chop " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="woods">
+    <inherit name="editor_room" />
+    <descprefix>You are in the</descprefix>
+    <alias>woods</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <attr name="grid_width" type="int">2</attr>
+    <attr name="grid_length" type="int">2</attr>
+    <object name="rock1">
+      <inherit name="editor_object" />
+      <take />
+      <feature_usegive />
+      <givesingle />
+      <volume type="int">1</volume>
+      <craft type="script">
+        if (not Got(rock1)) {
+          msg ("You must take item first.")
+        }
+        else if (Got(rock1)) {
+          rock crafting
+          MoveObject (rock1, stash)
+        }
+      </craft>
+    </object>
+    <object name="boulder1">
+      <inherit name="editor_object" />
+      <inherit name="enviroment" />
+      <health type="int">6</health>
+      <attr name="feature_usegive" type="boolean">false</attr>
+      <attr name="max_health" type="int">6</attr>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <alias>boulder</alias>
+      <mineboulder type="script"><![CDATA[
+        if (Got(stone axe)) {
+          play sound ("impact_rock_on_rubble_006.mp3", true, false)
+          DecreaseObjectCounter (stone axe, "weapon health")
+          DecreaseObjectCounter (boulder1, "health")
+        }
+        else if (not Got(stone axe)) {
+          msg ("You need a way to break boulder down.")
+        }
+        if (GetInt(boulder1, "health") <= 0) {
+          play sound ("impact_rock_on_rubble_004.mp3", true, false)
+          MoveObject (boulder1, stash)
+          msg ("The boulder breaks apart leaving resouces behind.")
+          adding iron
+          adding flint
+        }
+      ]]></mineboulder>
+    </object>
+    <exit alias="south" to="woods1">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>upgrade</property>
+    <pattern>upgrade</pattern>
+    <defaultexpression>"You can't upgrade " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>resource</property>
+    <pattern>resource</pattern>
+    <defaultexpression>"You can't resource " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>mineboulder</property>
+    <pattern>mine boulder</pattern>
+    <defaultexpression>"You can't mine boulder " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>ignite</property>
+    <pattern>ignite</pattern>
+    <defaultexpression>"You can't ignite " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>addwood</property>
+    <pattern>add wood</pattern>
+    <defaultexpression>"You can't add wood " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>forge</property>
+    <pattern>forge</pattern>
+    <defaultexpression>"You can't forge " + object.article + "."</defaultexpression>
+  </verb>
+  <turnscript name="raining">
+    <enabled type="boolean">false</enabled>
+    <script>
+      if (game.pov.parent = woods4) {
+        play sound ("distant_thunder_and_light_rain.mp3", false, true)
+        exposed rain
+      }
+      else if (game.pov.parent = woods3) {
+        play sound ("distant_thunder_and_light_rain.mp3", false, true)
+        exposed rain
+      }
+    </script>
+  </turnscript>
+  <object name="hunting grounds">
+    <inherit name="editor_room" />
+    <object name="woods1">
+      <inherit name="editor_room" />
+      <attr name="grid_width" type="int">2</attr>
+      <attr name="grid_length" type="int">2</attr>
+      <object name="tree2">
+        <inherit name="editor_object" />
+        <inherit name="enviroment" />
+        <health type="int">5</health>
+        <attr name="max_health" type="int">5</attr>
+        <alias>tree</alias>
+        <chop type="script">
+          if (Got(stone axe)) {
+            play sound ("axe_chop_wood_007.mp3", false, false)
+            DecreaseObjectCounter (tree2, "health")
+          }
+          if (not Got(stone axe)) {
+            msg ("With what my bare hands?")
+          }
+          if (GetInt(tree2, "health") = 0) {
+            msg ("TIMBER!")
+            play sound ("tree_fall_down.mp3", true, false)
+            MoveObject (tree2, stash)
+            MoveObjectHere (fallen tree)
+          }
+        </chop>
+      </object>
+      <exit alias="west" to="room">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="north" to="woods">
+        <inherit name="northdirection" />
+      </exit>
+      <exit alias="south" to="woods2">
+        <inherit name="southdirection" />
+      </exit>
+      <exit alias="east" to="woods3">
+        <inherit name="eastdirection" />
+      </exit>
+    </object>
+    <object name="woods2">
+      <inherit name="editor_room" />
+      <attr name="grid_width" type="int">2</attr>
+      <attr name="grid_length" type="int">2</attr>
+      <object name="rock2">
+        <inherit name="editor_object" />
+        <take />
+        <feature_usegive />
+        <givesingle />
+        <volume type="int">1</volume>
+        <craft type="script">
+          if (not Got(rock2)) {
+            msg ("You must take item first.")
+          }
+          if (Got(rock2)) {
+            MoveObject (rock2, stash)
+            AddToInventory (sharp stone)
+          }
+        </craft>
+      </object>
+      <exit alias="north" to="woods1">
+        <inherit name="northdirection" />
+      </exit>
+    </object>
+    <object name="woods3">
+      <inherit name="editor_room" />
+      <attr name="grid_width" type="int">2</attr>
+      <attr name="grid_length" type="int">2</attr>
+      <object name="rock3">
+        <inherit name="editor_object" />
+        <take />
+        <feature_usegive />
+        <givesingle />
+        <volume type="int">1</volume>
+        <craft type="script">
+          if (not Got(rock3)) {
+            msg ("You must take item first.")
+          }
+          if (Got(rock3)) {
+            MoveObject (rock3, stash)
+            AddToInventory (sharp stone)
+          }
+        </craft>
+      </object>
+      <object name="boulder">
+        <inherit name="editor_object" />
+        <inherit name="enviroment" />
+        <health type="int">6</health>
+        <attr name="feature_usegive" type="boolean">false</attr>
+        <attr name="max_health" type="int">6</attr>
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Drop</value>
+        </inventoryverbs>
+        <mineboulder type="script"><![CDATA[
+          if (Got(stone axe)) {
+            play sound ("impact_rock_on_rubble_006.mp3", true, false)
+            DecreaseObjectCounter (stone axe, "weapon health")
+            DecreaseObjectCounter (boulder, "health")
+          }
+          else if (not Got(stone axe)) {
+            msg ("You need a way to break boulder down.")
+          }
+          if (GetInt(boulder, "health") <= 0) {
+            play sound ("impact_rock_on_rubble_004.mp3", true, false)
+            MoveObject (boulder, stash)
+            msg ("The boulder breaks apart leaving resouces behind.")
+            adding iron
+            adding flint
+          }
+        ]]></mineboulder>
+      </object>
+      <object name="tree1">
+        <inherit name="editor_object" />
+        <inherit name="enviroment" />
+        <health type="int">5</health>
+        <attr name="max_health" type="int">5</attr>
+        <alias>tree</alias>
+        <chop type="script">
+          if (Got(stone axe)) {
+            play sound ("axe_chop_wood_007.mp3", false, false)
+            DecreaseObjectCounter (tree1, "health")
+          }
+          if (not Got(stone axe)) {
+            msg ("With what my bare hands?")
+          }
+          if (GetInt(tree1, "health") = 0) {
+            msg ("TIMBER!")
+            play sound ("tree_fall_down.mp3", true, false)
+            MoveObject (tree1, stash)
+            MoveObjectHere (fallen tree)
+          }
+        </chop>
+      </object>
+      <object name="deer">
+        <inherit name="switchable" />
+        <attr name="hunting ground">hunting grounds</attr>
+        <movechance type="int">60</movechance>
+        <feature_switchable />
+        <attr name="feature_container" type="boolean">false</attr>
+        <switchedon type="boolean">false</switchedon>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <onswitchon type="script">
+          if (drop trap.isopen) {
+          }
+        </onswitchon>
+      </object>
+      <exit alias="west" to="woods1">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="east" to="woods5">
+        <inherit name="eastdirection" />
+      </exit>
+    </object>
+    <object name="woods4">
+      <inherit name="editor_room" />
+      <attr name="grid_width" type="int">2</attr>
+      <attr name="grid_length" type="int">2</attr>
+      <beforeenter type="script">
+        play sound ("distant_thunder_and_light_rain.mp3", false, true)
+      </beforeenter>
+      <enter type="script">
+      </enter>
+      <beforefirstenter type="script">
+        play sound ("distant_thunder_rumble_effect.mp3", false, false)
+      </beforefirstenter>
+      <object name="bush">
+        <inherit name="editor_object" />
+        <inherit name="enviroment" />
+        <attr name="max_health" type="int">15</attr>
+        <health type="int">15</health>
+        <volume type="int">0</volume>
+        <feature_usegive />
+        <hit type="script"><![CDATA[
+          if (bush.destroied = false) {
+            DecreaseObjectCounter (bush, "health")
+            DecreaseObjectCounter (bush, "health")
+            DecreaseObjectCounter (bush, "health")
+            DecreaseObjectCounter (bush, "health")
+            DecreaseObjectCounter (bush, "health")
+            play sound ("punch_or_whack_-Vladimir-403040765.wav", true, false)
+          }
+          if (GetInt(bush, "health") <= 0) {
+            set (bush, "destroied", True)
+            MoveObject (bush, stash)
+            MoveObjectHere (stick)
+          }
+          if (bush.destroied = True) {
+            msg ("Bush is destroied!")
+          }
+        ]]></hit>
+      </object>
+      <exit alias="south" to="woods5">
+        <inherit name="southdirection" />
+      </exit>
+    </object>
+    <object name="hunting grounds 1">
+      <inherit name="editor_room" />
+      <object name="woods5">
+        <inherit name="editor_room" />
+        <attr name="grid_width" type="int">2</attr>
+        <attr name="grid_length" type="int">2</attr>
+        <object name="tree3">
+          <inherit name="editor_object" />
+          <inherit name="enviroment" />
+          <health type="int">5</health>
+          <attr name="max_health" type="int">5</attr>
+          <alias>tree</alias>
+          <chop type="script">
+            if (Got(stone axe)) {
+              play sound ("axe_chop_wood_007.mp3", false, false)
+              DecreaseObjectCounter (tree3, "health")
+            }
+            if (not Got(stone axe)) {
+              msg ("With what my bare hands?")
+            }
+            if (GetInt(tree3, "health") = 0) {
+              msg ("TIMBER!")
+              play sound ("tree_fall_down.mp3", true, false)
+              MoveObject (tree3, stash)
+              MoveObjectHere (fallen tree)
+            }
+          </chop>
+        </object>
+        <exit alias="west" to="woods3">
+          <inherit name="westdirection" />
+        </exit>
+        <exit alias="north" to="woods4">
+          <inherit name="northdirection" />
+        </exit>
+        <exit alias="south" to="woods6">
+          <inherit name="southdirection" />
+        </exit>
+        <exit alias="east" to="woods7">
+          <inherit name="eastdirection" />
+        </exit>
+      </object>
+      <object name="woods6">
+        <inherit name="editor_room" />
+        <attr name="grid_width" type="int">2</attr>
+        <attr name="grid_length" type="int">2</attr>
+        <object name="boulder2">
+          <inherit name="editor_object" />
+          <inherit name="enviroment" />
+          <health type="int">6</health>
+          <attr name="feature_usegive" type="boolean">false</attr>
+          <attr name="max_health" type="int">6</attr>
+          <inventoryverbs type="stringlist">
+            <value>Look at</value>
+            <value>Drop</value>
+          </inventoryverbs>
+          <mineboulder type="script"><![CDATA[
+            if (Got(stone axe)) {
+              play sound ("impact_rock_on_rubble_006.mp3", true, false)
+              DecreaseObjectCounter (stone axe, "weapon health")
+              DecreaseObjectCounter (boulder2, "health")
+            }
+            else if (not Got(stone axe)) {
+              msg ("You need a way to break boulder down.")
+            }
+            if (GetInt(boulder2, "health") <= 0) {
+              play sound ("impact_rock_on_rubble_004.mp3", true, false)
+              MoveObject (boulder2, stash)
+              msg ("The boulder breaks apart leaving resouces behind.")
+              adding iron
+              adding flint
+            }
+          ]]></mineboulder>
+        </object>
+        <exit alias="north" to="woods5">
+          <inherit name="northdirection" />
+        </exit>
+      </object>
+      <object name="woods7">
+        <inherit name="editor_room" />
+        <attr name="grid_width" type="int">2</attr>
+        <attr name="grid_length" type="int">2</attr>
+        <object name="grass">
+          <inherit name="editor_object" />
+          <inherit name="enviroment" />
+          <feature_usegive />
+          <attr name="max_health" type="int">10</attr>
+          <health type="int">10</health>
+          <destroied type="boolean">false</destroied>
+          <inventoryverbs type="stringlist">
+            <value>Drop</value>
+          </inventoryverbs>
+          <displayverbs type="stringlist">
+            <value>Look at</value>
+            <value>Take</value>
+          </displayverbs>
+          <dropmsg>Dropped grass.</dropmsg>
+          <volume type="int">2</volume>
+          <take type="script"><![CDATA[
+            if (GetInt(grass, "health") <= 0) {
+              AddToInventory (grass)
+              msg ("You picked up grass.")
+            }
+            if (grass.destroied = false) {
+              if (GetInt(grass, "health") >= 0) {
+                msg ("You must break it down before taking.")
+              }
+            }
+          ]]></take>
+          <hit type="script"><![CDATA[
+            if (grass.destroied = false) {
+              DecreaseObjectCounter (grass, "health")
+              DecreaseObjectCounter (grass, "health")
+              DecreaseObjectCounter (grass, "health")
+              DecreaseObjectCounter (grass, "health")
+              DecreaseObjectCounter (grass, "health")
+              play sound ("punch_or_whack_-Vladimir-403040765.wav", true, false)
+            }
+            if (GetInt(grass, "health") <= 0) {
+              set (grass, "destroied", True)
+            }
+            if (grass.destroied = True) {
+              msg ("Grass is destroied!")
+            }
+          ]]></hit>
+          <Craft type="script">
+            if (not Got(grass)) {
+              msg ("You must take item first.")
+            }
+            if (Got(grass)) {
+              RemoveObject (grass)
+              AddToInventory (plant fiber)
+            }
+          </Craft>
+          <craft type="script">
+            if (not Got(grass)) {
+              msg ("You must take first.")
+            }
+            if (Got(grass)) {
+              AddToInventory (plant fiber)
+              MoveObject (grass, stash)
+            }
+          </craft>
+        </object>
+        <exit alias="west" to="woods5">
+          <inherit name="westdirection" />
+        </exit>
+        <exit alias="east" to="woods9">
+          <inherit name="eastdirection" />
+        </exit>
+      </object>
+      <object name="woods9">
+        <inherit name="editor_room" />
+        <attr name="grid_width" type="int">2</attr>
+        <attr name="grid_length" type="int">2</attr>
+        <dark type="boolean">false</dark>
+        <object name="tree4">
+          <inherit name="editor_object" />
+          <inherit name="enviroment" />
+          <health type="int">5</health>
+          <attr name="max_health" type="int">5</attr>
+          <alias>tree</alias>
+          <chop type="script">
+            if (Got(stone axe)) {
+              play sound ("axe_chop_wood_007.mp3", false, false)
+              DecreaseObjectCounter (tree4, "health")
+            }
+            if (not Got(stone axe)) {
+              msg ("With what my bare hands?")
+            }
+            if (GetInt(tree4, "health") = 0) {
+              msg ("TIMBER!")
+              play sound ("tree_fall_down.mp3", true, false)
+              MoveObject (tree4, stash)
+              MoveObjectHere (fallen tree)
+            }
+          </chop>
+        </object>
+        <object name="rabbit">
+          <inherit name="editor_object" />
+        </object>
+        <exit alias="west" to="woods7">
+          <inherit name="westdirection" />
+        </exit>
+      </object>
+    </object>
+  </object>
+  <turnscript name="deer moves">
+    <enabled />
+    <script><![CDATA[
+      object1 = deer
+      numberofexits = 0
+      moveornot = GetRandomInt (1, 100)
+      if (not moveornot > object1.movechance) {
+        list1 = NewObjectList ()
+        foreach (exit, AllExits()) {
+          if (Contains (object1.parent,exit) and exit.visible and not exit.lookonly and not exit.locked) {
+            list add (list1, exit)
+          }
+        }
+        list2 = NewObjectList()
+        foreach (room, AllObjects()) {
+          foreach (exit, list1) {
+            if (Contains (room,exit.to) and object1.hunting ground = room.name) {
+              numberofexits = numberofexits + 1
+              list add (list2, exit)
+            }
+          }
+        }
+        if (not numberofexits = 0) {
+          randomexit = GetRandomInt (1, numberofexits)
+          chosenexit = ObjectListItem(list2, randomexit - 1)
+          if (not HasScript(chosenexit, "script")) {
+            object1.parent = chosenexit.to
+          }
+          msg ("deer had a " + object1.movechance + " % chance to move and goes through " + chosenexit.name + ". He is now in " + object1.parent.name + ".")
+        }
+        else {
+          msg ("NPC1 had a " + object1.movechance + " % chance to move and chooses to stay in " + object1.parent.name + ".")
+        }
+      }
+    ]]></script>
+  </turnscript>
+  <verb>
+    <property>set</property>
+    <pattern>set</pattern>
+    <defaultexpression>"You can't set " + object.article + "."</defaultexpression>
+  </verb>
+  <type name="enviroment">
+    <health type="int">0</health>
+    <attr name="max_health" type="int">0</attr>
+    <destroied type="boolean">false</destroied>
+  </type>
+  <type name="weapon">
+    <attr name="weapon health" type="int">0</attr>
+    <destroied type="boolean">false</destroied>
+    <damage type="int">0</damage>
+  </type>
+  <function name="trunk crafting" type="int"><![CDATA[
+    if (GetInt(tree trunks, "volume") >= 1) {
+      if (Got(planks)) {
+        IncreaseObjectCounter (planks, "volume")
+        IncreaseObjectCounter (planks, "volume")
+        IncreaseObjectCounter (planks, "volume")
+      }
+      else if (not Got(planks)) {
+        AddToInventory (planks)
+      }
+      DecreaseObjectCounter (tree trunks, "volume")
+    }
+    if (GetInt(tree trunks, "volume") <= 0) {
+      MoveObject (tree trunks, stash)
+    }
+  ]]></function>
+  <function name="plank crafting" type="int"><![CDATA[
+    menulist = NewStringList()
+    list add (menulist, "stick")
+    list add (menulist, "wood frame")
+    list add (menulist, "basic campfire")
+    ShowMenu ("select what to craft", menulist, true) {
+      if (result="wood frame") {
+        if (GetInt(planks, "volume") >= 4) {
+          if (Got(wood frame)) {
+            IncreaseObjectCounter (wood frame, "volume")
+            IncreaseObjectCounter (wood frame, "volume")
+            IncreaseObjectCounter (wood frame, "volume")
+            IncreaseObjectCounter (wood frame, "volume")
+            IncreaseObjectCounter (wood frame, "volume")
+          }
+          else if (not Got(wood frame)) {
+            AddToInventory (wood frame)
+          }
+          DecreaseObjectCounter (planks, "volume")
+          DecreaseObjectCounter (planks, "volume")
+          DecreaseObjectCounter (planks, "volume")
+          DecreaseObjectCounter (planks, "volume")
+          msg ("Wood Frame crafted!")
+        }
+        else if (GetInt(planks, "volume") <= 3) {
+          msg ("You need more planks before you can craft.")
+        }
+      }
+      else if (result="stick") {
+        if (GetInt(planks, "volume") >= 1) {
+          if (Got(stick)) {
+            IncreaseObjectCounter (stick, "volume")
+            IncreaseObjectCounter (stick, "volume")
+            IncreaseObjectCounter (stick, "volume")
+          }
+          else if (not Got(stick)) {
+            AddToInventory (stick)
+          }
+          DecreaseObjectCounter (planks, "volume")
+          msg ("Stick crafted!")
+        }
+      }
+      else if (result="basic campfire") {
+        if (GetInt(planks, "volume") >= 3) {
+          if (Got(sharp stone)) {
+            DecreaseObjectCounter (planks, "volume")
+            DecreaseObjectCounter (planks, "volume")
+            DecreaseObjectCounter (planks, "volume")
+            DecreaseObjectCounter (sharp stone, "volume")
+            MoveObjectHere (basic campfire)
+            if (GetInt(planks, "volume") <= 0) {
+              MoveObject (planks, stash)
+            }
+            if (GetInt(sharp stone, "volume") <= 0) {
+              MoveObject (sharp stone, stash)
+            }
+          }
+          else if (not Got(sharp stone)) {
+            msg ("You have no stones to incase the fire.")
+          }
+        }
+        if (GetInt(planks, "volume") > 2) {
+          msg ("You need more planks before crafting this.")
+        }
+      }
+    }
+    if (GetInt(planks, "volume") <= 0) {
+      MoveObject (planks, stash)
+      msg ("You have no more planks.")
+    }
+  ]]></function>
+  <function name="frame crafting" type="int"><![CDATA[
+    if (GetInt(wood frame, "volume") >= 20) {
+      if (not Got(wood wall)) {
+        AddToInventory (wood wall)
+      }
+      else if (Got(wood wall)) {
+        IncreaseObjectCounter (wood wall, "volume")
+      }
+      set (wood frame, "volume", -20)
+    }
+    else if (GetInt(wood frame, "volume") < 20) {
+      msg ("You need more frame before crafting that.")
+    }
+    if (GetInt(wood frame, "volume") <= 0) {
+      MoveObject (wood frame, stash)
+      msg ("All out of frames.")
+    }
+  ]]></function>
+  <function name="adding trunks" type="int"><![CDATA[
+    if (Got(tree trunks)) {
+      IncreaseObjectCounter (tree trunks, "volume")
+      IncreaseObjectCounter (tree trunks, "volume")
+      IncreaseObjectCounter (tree trunks, "volume")
+      IncreaseObjectCounter (tree trunks, "volume")
+      IncreaseObjectCounter (tree trunks, "volume")
+      msg ("Picked up tree trunks.")
+    }
+    else if (not Got(tree trunks)) {
+      if (GetInt(tree trunks, "volume") >= 0) {
+        IncreaseObjectCounter (tree trunks, "volume")
+        IncreaseObjectCounter (tree trunks, "volume")
+        IncreaseObjectCounter (tree trunks, "volume")
+        IncreaseObjectCounter (tree trunks, "volume")
+        IncreaseObjectCounter (tree trunks, "volume")
+        MoveObjectHere (tree trunks)
+      }
+    }
+    MoveObject (fallen tree, stash)
+  ]]></function>
+  <function name="tool crafting">
+    toolsmenu = NewStringList()
+    list add (toolsmenu, "shovel")
+    list add (toolsmenu, "hammer")
+    list add (toolsmenu, "forge")
+    list add (toolsmenu, "gardening hoe")
+    list add (toolsmenu, "flint and steel")
+    ShowMenu ("choose an item to craft.", toolsmenu, true) {
+      if (result="shovel") {
+      }
+      else if (result="hammer") {
+      }
+      else if (result="forge") {
+      }
+      else if (result="gardening hoe") {
+      }
+      else if (result="flint and steel") {
+        combine flint_steel
+      }
+    }
+  </function>
+  <function name="shelter crafting">
+    sheltermenu = NewStringList()
+    list add (sheltermenu, "teepee")
+    list add (sheltermenu, "tent")
+    list add (sheltermenu, "small cabin")
+    list add (sheltermenu, "cabin")
+    list add (sheltermenu, "large cabin")
+    ShowMenu ("choose a shelter to craft.", sheltermenu, true) {
+      if (result="teepee") {
+      }
+      else if (result="tent") {
+      }
+      else if (result="small cabin") {
+      }
+      else if (result="cabin") {
+      }
+      else if (result="large cabin") {
+      }
+    }
+  </function>
+  <function name="food_drinks crafting">
+    food_drinkmenu = NewStringList()
+    list add (food_drinkmenu, "tea")
+    list add (food_drinkmenu, "grilled rabbit")
+    list add (food_drinkmenu, "grilled venison")
+    list add (food_drinkmenu, "grilled fish")
+    list add (food_drinkmenu, "coffee")
+    list add (food_drinkmenu, "water")
+    ShowMenu ("choose a item to craft.", food_drinkmenu, true) {
+    }
+  </function>
+  <function name="weapon crafting">
+    weaponsmenu = NewStringList()
+    list add (weaponsmenu, "bow")
+    list add (weaponsmenu, "arrows")
+    list add (weaponsmenu, "knife")
+    list add (weaponsmenu, "machete")
+    list add (weaponsmenu, "spear")
+    list add (weaponsmenu, "arrow head")
+    ShowMenu ("choose a weapon to craft.", weaponsmenu, true) {
+    }
+  </function>
+  <function name="wood_frame_upgrade">
+    if (Got(planks)) {
+      if (not Got(wood frame)) {
+        MoveObject (wood frame, stash)
+        play sound ("hammer_hitting_nail_into_wood.mp3", true, false)
+        MoveObjectHere (fortify wood)
+        msg ("Frame upgraded.")
+        DecreaseObjectCounter (planks, "volume")
+        DecreaseObjectCounter (planks, "volume")
+      }
+      else if (Got(wood frame)) {
+        msg ("You must place frame frist.")
+      }
+    }
+    if (not Got(planks)) {
+      msg ("You need planks to upgrade this frame.")
+    }
+  </function>
+  <function name="wood_frame_upgrade_1"><![CDATA[
+    if (GetInt(planks, "volume") >= 3) {
+      MoveObject (fortify wood, stash)
+      play sound ("hammer_hitting_nail_into_wood.mp3", true, false)
+      MoveObjectHere (fortified wood 1)
+      DecreaseObjectCounter (planks, "volume")
+      DecreaseObjectCounter (planks, "volume")
+      DecreaseObjectCounter (planks, "volume")
+    }
+    else if (GetInt(planks, "volume") <= 3) {
+      msg ("You need more plamks to upgrade.")
+    }
+  ]]></function>
+  <function name="trap crafting">
+    trapmenu = NewStringList()
+    list add (trapmenu, "snare trap")
+    list add (trapmenu, "box trap")
+    list add (trapmenu, "net trap")
+    list add (trapmenu, "drop trap")
+    ShowMenu ("choose a trap to craft.", trapmenu, true) {
+    }
+  </function>
+  <function name="flint_steel fire"><![CDATA[
+    if (Got(flint_steel)) {
+      if (Got(tree trunks)) {
+        set (basic campfire, "lightsource", True)
+        if (basic campfire.lightsource = True) {
+          msg ("You lite the fire!<br/> Now that should keep you warm for awhile<br/> and be able to cook and clean water.")
+          EnableTimer (Fire Burning)
+          EnableTimer (Exposer Fire)
+          play sound ("large_fire_burning.mp3", false, true)
+        }
+      }
+      else if (not Got(tree trunks)) {
+        msg ("You need a fuel source to burn.")
+      }
+    }
+    else if (not Got(flint_steel)) {
+      msg ("It would help if you had fint & steel, you might want to craft some.")
+    }
+  ]]></function>
+  <function name="sticks_leaves fire"><![CDATA[
+    if (Got(stick)) {
+      if (Got(leaves)) {
+        if (RandomChance(50)) {
+          set (basic campfire, "lightsource", True)
+        }
+        if (basic campfire.lightsource = True) {
+          msg ("You lite the fire!<br/> Now that should keep you warm for awhile and be able to cook and clean water.")
+          EnableTimer (Fire Burning)
+          EnableTimer (Exposer Fire)
+        }
+        if (basic campfire.lightsource = False) {
+          msg ("No luck on lighting the fire keep trying!")
+        }
+      }
+      else if (not Got(leaves)) {
+        msg ("You need some leaves to help light the fire.")
+      }
+    }
+    else if (not Got(stick)) {
+      msg ("Try using a stick, that might help.")
+    }
+  ]]></function>
+  <function name="sticks_coal fire"><![CDATA[
+    if (Got(stick)) {
+      if (Got(coal)) {
+        if (RandomChance(75)) {
+          set (basic campfire, "lightsource", True)
+        }
+      }
+      else if (not Got(coal)) {
+        msg ("You need to add some coad before this fire has a chance to lite.")
+      }
+      if (basic campfire.lightsource = False) {
+        msg ("No luck on lighting the fire keep trying!")
+      }
+      if (basic campfire.lightsource = True) {
+        msg ("You lite the fire!<br/> Now that should keep you warm for awhile and be able to cook and clean water.")
+        EnableTimer (Fire Burning)
+        EnableTimer (Exposer Fire)
+      }
+    }
+    else if (not Got(stick)) {
+      msg ("Help to have some sticks before trying this.")
+    }
+  ]]></function>
+  <function name="rock crafting">
+    if (not Got(sharp stone)) {
+      AddToInventory (sharp stone)
+      msg ("You crafted a sharp stone.")
+    }
+    else if (Got(sharp stone)) {
+      IncreaseObjectCounter (sharp stone, "volume")
+      msg ("You crafted a sharp stone.")
+    }
+  </function>
+  <function name="combine flint_steel"><![CDATA[
+    if (Got(flint)) {
+      if (Got(iron scrap)) {
+        if (GetInt(flint, "volume") >= 1) {
+          if (GetInt(iron scrap, "volume") >= 1) {
+            DecreaseObjectCounter (iron scrap, "volume")
+            DecreaseObjectCounter (flint, "volume")
+            if (GetInt(flint, "volume") = 0) {
+              if (GetInt(iron scrap, "volume") = 0) {
+                MoveObject (flint, stash)
+                MoveObject (iron scrap, stash)
+              }
+            }
+            AddToInventory (flint_steel)
+          }
+        }
+      }
+      else if (not Got(iron scrap)) {
+        msg ("Well you have the flint but no metal.")
+      }
+    }
+    else if (not Got(flint)) {
+      msg ("It would help if you had some flint.")
+    }
+  ]]></function>
+  <function name="adding iron">
+    if (Got(iron scrap)) {
+      IncreaseObjectCounter (iron scrap, "volume")
+      msg ("You picked up more iron scraps.")
+    }
+    else if (not Got(iron scrap)) {
+      MoveObjectHere (iron scrap)
+    }
+  </function>
+  <function name="adding flint">
+    if (Got(flint)) {
+      IncreaseObjectCounter (iron scrap, "volume")
+    }
+    else if (not Got(flint)) {
+      MoveObjectHere (flint)
+    }
+  </function>
+  <function name="exposed rain">
+    if (not game.pov.parent = basic campfire) {
+      EnableTimer (rain Exposer)
+    }
+    else if (game.pov.parent = basic campfire) {
+      if (basic campfire.lightsource = True) {
+        msg ("Good thing im by the fire.")
+        DisableTimer (rain Exposer)
+      }
+      else if (basic campfire.lightsource = False) {
+        msg ("Better get a fire going if I wanna stay warm.")
+        EnableTimer (rain Exposer)
+      }
+    }
+  </function>
+  <walkthrough name="Crafting man catcher">
+    <steps type="simplestringlist">
+      Hit bush
+      hit bush
+      hit bush
+      Take stick
+      Hit grass
+      hit grass
+      Take grass
+      craft grass
+      combine stick with plant fiber
+    </steps>
+  </walkthrough>
+  <walkthrough name="crafting stone axe">
+    <steps type="simplestringlist">
+      Hit bush
+      hit bush
+      hit bush
+      hit grass
+      hit grass
+      take rock
+      take stick
+      take grass
+      craft rock
+      craft grass
+      combine stick with plant fiber
+      combine sharp stone with man catcher
+    </steps>
+  </walkthrough>
+  <timer name="Thirst">
+    <interval>45</interval>
+    <enabled />
+    <script><![CDATA[
+      DecreaseObjectCounter (player, "Thirst")
+      if (GetInt(player, "Thirst") <= 0) {
+        DisableTimer (Thirst)
+        EnableTimer (Health)
+      }
+    ]]></script>
+  </timer>
+  <timer name="Hunger">
+    <interval>60</interval>
+    <enabled />
+    <script><![CDATA[
+      DecreaseObjectCounter (player, "Hunger")
+      if (GetInt(player, "Hunger") <= 0) {
+        DisableTimer (Hunger)
+        EnableTimer (Health)
+      }
+    ]]></script>
+  </timer>
+  <timer name="Health">
+    <interval>10</interval>
+    <script><![CDATA[
+      if (GetInt(player, "Hunger") <= 0) {
+        DecreaseObjectCounter (player, "Health")
+      }
+      else if (GetInt(player, "Hunger") >= 1) {
+        EnableTimer (Hunger)
+      }
+      if (GetInt(player, "Thirst") <= 0) {
+        DecreaseObjectCounter (player, "Health")
+      }
+      else if (GetInt(player, "Thirst") >= 1) {
+        EnableTimer (Thirst)
+      }
+      if (GetInt(player, "Exposer") >= 20) {
+        DecreaseObjectCounter (player, "Health")
+      }
+      else if (GetInt(player, "Thirst") < 19) {
+        EnableTimer (Exposer meter)
+      }
+      if (GetInt(player, "Health") <= 0) {
+        msg ("YOUR DEAD!")
+        finish
+      }
+    ]]></script>
+  </timer>
+  <timer name="Days Survived">
+    <interval>300</interval>
+    <enabled />
+    <script>
+      IncreaseObjectCounter (player, "Days Survived")
+    </script>
+  </timer>
+  <timer name="Fire Burning">
+    <interval>60</interval>
+    <script>
+      set (basic campfire, "lightsource", False)
+      msg ("Fire died out.")
+      MoveObject (coal, basic campfire)
+      DisableTimer (Exposer Fire)
+    </script>
+  </timer>
+  <timer name="Exposer Fire">
+    <interval>3</interval>
+    <script><![CDATA[
+      if (ListContains(ScopeReachable(), basic campfire)) {
+        if (basic campfire.lightsource = True) {
+          if (GetInt(player, "Exposer") > 1) {
+            DecreaseObjectCounter (player, "Exposer")
+            DecreaseObjectCounter (player, "Exposer")
+            DecreaseObjectCounter (player, "Exposer")
+          }
+          else if (GetInt(player, "Exposer") <= 0) {
+            msg ("Much better being warm.")
+          }
+        }
+      }
+    ]]></script>
+  </timer>
+  <timer name="Exposer meter">
+    <interval>30</interval>
+    <enabled />
+    <script><![CDATA[
+      if (not game.pov.parent = basic campfire) {
+        IncreaseObjectCounter (player, "Exposer")
+        if (GetInt(player, "Exposer") >= 20) {
+          EnableTimer (Health)
+        }
+        firsttime {
+          msg ("Being exposed to the elements will kill you eventually.")
+        }
+        otherwise {
+          msg ("Getting a little cooler and unsettling need a fire or shelter.")
+        }
+      }
+      else if (game.pov.parent = basic campfire) {
+        if (basic campfire.lightsource = True) {
+          msg ("Good thing im by the fire.")
+          DisableTimer (Exposer meter)
+        }
+        else if (basic campfire.lightsource = False) {
+          msg ("Better get a fire going if I wanna stay warm.")
+          EnableTimer (Exposer meter)
+        }
+      }
+    ]]></script>
+  </timer>
+  <timer name="rain Exposer">
+    <interval>8</interval>
+    <script>
+      IncreaseObjectCounter (player, "Exposer")
+      IncreaseObjectCounter (player, "Exposer")
+      exposed rain
+    </script>
+  </timer>
+</asl>

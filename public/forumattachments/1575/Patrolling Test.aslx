@@ -1,0 +1,188 @@
+<!--Saved by Quest 5.6.5783.24153-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Patrolling Test">
+    <gameid>3400b74c-78f4-4ee5-ae49-46159b4b1d51</gameid>
+    <version>1.0</version>
+    <firstpublished>2016</firstpublished>
+    <start type="script">
+    </start>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <exit alias="east" to="room 2">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="south" to="room 4">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="room 2">
+    <inherit name="editor_room" />
+    <exit alias="west" to="room">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="south" to="room 3">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="room 3">
+    <inherit name="editor_room" />
+    <exit alias="north" to="room 2">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="west" to="room 4">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="room 4">
+    <inherit name="editor_room" />
+    <object name="Patroller">
+      <inherit name="editor_object" />
+      <PatrolCount type="int">0</PatrolCount>
+      <changedPatrolCount type="script">
+        if (Patroller.PatrolCount = 3) {
+          MoveObject (Patroller, room)
+          msg ("The Patroller has changed rooms!")
+        }
+        else if (Patroller.PatrolCount = 6) {
+          MoveObject (Patroller, room 2)
+          msg ("The Patroller has changed rooms!")
+        }
+        else if (Patroller.PatrolCount = 9) {
+          MoveObject (Patroller, room 3)
+          msg ("The Patroller has changed rooms!")
+        }
+        else if (Patroller.PatrolCount = 12) {
+          MoveObject (Patroller, room 4)
+          msg ("The Patroller has changed rooms!")
+        }
+        else if (Patroller.PatrolCount = 13) {
+          Patroller.PatrolCount = 1
+        }
+      </changedPatrolCount>
+    </object>
+    <exit alias="east" to="room 3">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="north" to="room">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="south" to="room A">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <turnscript name="Patroller TS">
+    <enabled />
+    <script>
+      Patroller.PatrolCount = Patroller.PatrolCount +1
+      Patroller Random.PatrolCount2 = Patroller Random.PatrolCount2 +1
+    </script>
+  </turnscript>
+  <turnscript name="Patroller Visible">
+    <enabled />
+    <script>
+      if (ListContains(ScopeVisible(), Patroller)) {
+        if (Patroller.PatrolCount = 4) {
+          msg ("The Patroller has wandered into your room!")
+        }
+        else if (Patroller.PatrolCount = 7) {
+          msg ("The Patroller has wandered into your room!")
+        }
+        else if (Patroller.PatrolCount = 10) {
+          msg ("The Patroller has wandered into your room!")
+        }
+        else if (Patroller.PatrolCount = 1) {
+          msg ("The Patroller has wandered into your room!")
+        }
+        else {
+          msg ("The Patroller is milling around the room, eyeing you with suspicion.")
+        }
+      }
+    </script>
+  </turnscript>
+  <object name="room A">
+    <inherit name="editor_room" />
+    <exit alias="east" to="room B">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="south" to="room D">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="Patroller Random">
+      <inherit name="editor_object" />
+      <PatrolCount2 type="int">0</PatrolCount2>
+      <RandomPatrol type="scriptdictionary">
+        <item key="1">
+          MoveObject (Patroller Random, room A)
+          if (game.pov.parent = room A) {
+            msg ("The Random Patroller has wandered into your room!")
+          }
+        </item>
+        <item key="2">
+          MoveObject (Patroller Random, room B)
+          if (game.pov.parent = room B) {
+            msg ("The Random Patroller has wandered into your room!")
+          }
+        </item>
+        <item key="3">
+          MoveObject (Patroller Random, room C)
+          if (game.pov.parent = room C) {
+            msg ("The Random Patroller has wandered into your room!")
+          }
+        </item>
+        <item key="4">
+          MoveObject (Patroller Random, room D)
+          if (game.pov.parent = room D) {
+            msg ("The Random Patroller has wandered into your room!")
+          }
+        </item>
+      </RandomPatrol>
+      <changedPatrolCount2 type="script">
+        if (Patroller Random.PatrolCount2 = 3) {
+          n = ToString (GetRandomInt (1, DictionaryCount (Patroller Random.RandomPatrol)))
+          m = ScriptDictionaryItem(Patroller Random.RandomPatrol, n)
+          invoke (m)
+        }
+        else if (Patroller Random.PatrolCount2 = 4) {
+          Patroller Random.PatrolCount2 = 1
+        }
+      </changedPatrolCount2>
+    </object>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <exit alias="north" to="room 4">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="room B">
+    <inherit name="editor_room" />
+    <exit alias="west" to="room A">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="south" to="room C">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="room C">
+    <inherit name="editor_room" />
+    <exit alias="north" to="room B">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="west" to="room D">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="room D">
+    <inherit name="editor_room" />
+    <exit alias="east" to="room C">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="north" to="room A">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+</asl>

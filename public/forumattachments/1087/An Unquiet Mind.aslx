@@ -1,0 +1,128 @@
+<!--Saved by Quest 5.5.5328.26617-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="An Unquiet Mind">
+    <gameid>37d2641a-9e88-4e41-8dfd-acd71179398e</gameid>
+    <version>0.1</version>
+    <firstpublished>2014</firstpublished>
+    <author>Michael Messner</author>
+    <cover>Game Cover.png</cover>
+    <description><![CDATA[“Ideas are more powerful than guns. We would not let our enemies have guns; Why should we let them have ideas?”<br/><br/>– Joseph Stalin]]></description>
+    <gridmap type="boolean">false</gridmap>
+    <attr name="feature_pictureframe" type="boolean">false</attr>
+    <appendobjectdescription />
+    <feature_asktell />
+    <defaultfontsize type="int">12</defaultfontsize>
+    <underlinehyperlinks type="boolean">false</underlinehyperlinks>
+    <category>Sci-Fi</category>
+    <difficulty>Medium</difficulty>
+    <cruelty>Tough</cruelty>
+    <defaultfont>'Trebuchet MS', Helvetica, sans-serif</defaultfont>
+    <defaultlinkforeground>DarkSlateBlue</defaultlinkforeground>
+    <object name="rat">
+      <inherit name="editor_object" />
+      <scenery />
+      <inroomdescription>The rat seems to disregard you as it cleans its paws.</inroomdescription>
+      <look>A large grey rat.  It looks like it has seen better days.</look>
+    </object>
+  </game>
+  <object name="an abandoned warehouse">
+    <inherit name="editor_room" />
+    <objectslistprefix>You see</objectslistprefix>
+    <description>Whatever purpose it once served has long since been forgotten.</description>
+    <attr name="grid_width" type="int">6</attr>
+    <attr name="grid_length" type="int">3</attr>
+    <attr name="grid_label">Warehouse</attr>
+    <attr name="grid_fill">Wheat</attr>
+    <beforefirstenter type="script">
+      msg ("Your stomach clenches in an almost unbearable hunger.")
+    </beforefirstenter>
+    <usedefaultprefix />
+    <object name="fetid rags">
+      <inherit name="editor_object" />
+      <inroomdescription>Low heaps of fetid rags lay all around.</inroomdescription>
+      <look>The rags have a pungent chemical odor that turns your stomach.</look>
+      <visible />
+      <scenery />
+      <move type="script">
+        msg ("A scrawny rat scurries into view from under the rags.")
+        MoveObjectHere (rat)
+      </move>
+    </object>
+    <object name="rebar">
+      <inherit name="editor_object" />
+      <alias>two-foot length of iron rebar</alias>
+      <scenery />
+      <inroomdescription>A two-foot length of iron rebar lays at your feet.</inroomdescription>
+      <look>It's a length of iron rebar, about a half inch in diameter and two feet in length, of the type used to reinforce concrete.</look>
+      <alt type="stringlist">
+        <value>iron rebar</value>
+        <value>iron bar</value>
+      </alt>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Drop</value>
+        <value>Swing</value>
+      </inventoryverbs>
+      <listalias>Iron Rebar</listalias>
+      <take />
+      <takemsg>You take the iron rebar and weigh it thoughtfully in your hand.</takemsg>
+      <dropmsg>The iron rebar drops to the ground with a loud clang.</dropmsg>
+      <feature_usegive />
+      <selfuseon type="scriptdictionary" />
+    </object>
+  </object>
+  <command name="Void">
+    <script>
+      MoveObject (player, the void)
+    </script>
+    <pattern>Void</pattern>
+  </command>
+  <object name="the Void">
+    <inherit name="editor_room" />
+    <enter type="script">
+    </enter>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <firstenter type="script"><![CDATA[
+      msg (" ")
+      SetTimeout (2) {
+        TextFX_Typewriter ("“Ideas are more powerful than guns.", 2)
+      }
+      SetTimeout (4) {
+        TextFX_Typewriter ("We would not let our enemies have guns; Why should we let them have ideas?”", 1)
+      }
+      SetTimeout (13) {
+        msg ("<br/><b>- Joseph Stalin</b><br/><br/>")
+      }
+      SetTimeout (16) {
+        msg ("<br/><i>How long has it been this time? An inkling of a thought passes before your mind's eye, and then escapes. Ghosts of memories dance before you, fading in and out like ephemeral wisps of smoke. Fear underlies everything, but deep down there is warmth. Warmth in the knowledge that Herzog Fuchs will protect you.<br/><br/>But there is another voice, deep down. Her voice. You struggle to remember her words. You know you are supposed to fight - to step away from the comforting warmth.  But the words escape you.</i><br/><br/>The mantra.  You must remember the mantra.")
+        SetFontName ("'Arial Black', Gadget, sans-serif")
+      }
+      SetTimeout (17) {
+        wait {
+          SetFontName ("'Arial Black', Gadget, sans-serif")
+          TextFX_Unscramble ("My mind is a fortress, but my heart is free.", 19, 1)
+          SetTimeout (7) {
+            SetFontName ("'Trebuchet MS', Helvetica, sans-serif")
+            msg ("<br/><i>Say it.</i>")
+          }
+        }
+      }
+    ]]></firstenter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <command name="My mind is a fortress">
+      <pattern>My mind is a fortress, but my heart is free.</pattern>
+      <script>
+        MoveObject (player, an abandoned warehouse)
+      </script>
+    </command>
+  </object>
+  <timer name="one second">
+    <interval>1</interval>
+  </timer>
+</asl>

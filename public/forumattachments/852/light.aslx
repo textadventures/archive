@@ -1,0 +1,98 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="light">
+    <gameid>14722bff-045c-4da0-b4b7-b5a464067d06</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <start type="script">
+      player.lastroom = firstroom
+      player.actualroom = firstroom
+    </start>
+  </game>
+  <object name="firstroom">
+    <inherit name="editor_room" />
+    <description>This room is  enlightened.</description>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <exit alias="south" to="secondroom">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="east" to="fouthroom">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="secondroom">
+    <inherit name="editor_room" />
+    <dark />
+    <description>This room is  enlightened.</description>
+    <darkroomdescription>This room is dark</darkroomdescription>
+    <exit alias="north" to="firstroom">
+      <inherit name="northdirection" />
+      <lightsource />
+      <lightstrength>weak</lightstrength>
+    </exit>
+    <exit alias="east" to="thirdroom">
+      <inherit name="eastdirection" />
+      <lightsource />
+      <lightstrength>weak</lightstrength>
+    </exit>
+  </object>
+  <object name="thirdroom">
+    <inherit name="editor_room" />
+    <dark />
+    <description>This room is  enlightened.</description>
+    <darkroomdescription>This room is dark.</darkroomdescription>
+    <exit alias="west" to="secondroom">
+      <inherit name="westdirection" />
+      <lightsource />
+      <lightstrength>weak</lightstrength>
+    </exit>
+    <exit alias="north" to="fouthroom">
+      <inherit name="northdirection" />
+      <lightsource />
+      <lightstrength>weak</lightstrength>
+    </exit>
+  </object>
+  <object name="fouthroom">
+    <inherit name="editor_room" />
+    <description>This room is  enlightened.</description>
+    <exit alias="south" to="thirdroom">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="west" to="firstroom">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <turnscript name="checknight">
+    <enabled />
+    <script><![CDATA[
+      if (game.pov.parent<>game.pov.actualroom) {
+        game.pov.lastroom = game.pov.actualroom
+        game.pov.actualroom = game.pov.parent
+        text = "Your last room was " +game.pov.lastroom.name + " and it was "
+        if (game.pov.lastroom.darklevel) {
+          text = text + "dark."
+        }
+        else {
+          text = text + "enlighted."
+        }
+        text = text+" This room is " +game.pov.actualroom.name + " and it is "
+        if (game.pov.actualroom.darklevel) {
+          text = text + "dark."
+        }
+        else {
+          text = text + "enlighted."
+        }
+        msg ("")
+        msg (text)
+        if (game.pov.actualroom.darklevel=true and game.pov.lastroom.darklevel=true) {
+        	msg("You died.")
+        }
+      }
+    ]]></script>
+  </turnscript>
+</asl>

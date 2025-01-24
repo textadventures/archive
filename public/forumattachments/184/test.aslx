@@ -1,0 +1,73 @@
+<!--Saved by Quest 5.1.4393.23459-->
+<asl version="510">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="test">
+    <gameid>6da78ccf-4dc6-47e5-97b9-f8de2ca383b8</gameid>
+    <description type="string"></description>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+    <exit alias="south" to="room">
+      <inherit name="southdirection" />
+      <lookonly />
+      <look type="string"></look>
+    </exit>
+    <object name="person1">
+      <inherit name="editor_object" />
+      <fate type="int">1</fate>
+      <fatetrigger type="boolean">false</fatetrigger>
+    </object>
+    <object name="person2">
+      <inherit name="editor_object" />
+      <fate type="int">1</fate>
+      <fatetrigger type="boolean">false</fatetrigger>
+    </object>
+    <object name="person3">
+      <inherit name="editor_object" />
+    </object>
+  </object>
+  <object name="room2">
+    <inherit name="editor_room" />
+  </object>
+  <command name="start">
+    <pattern>start</pattern>
+    <script>
+      checktrigger (2)
+    </script>
+  </command>
+  <function name="checktrigger" parameters="addfate"><![CDATA[
+    nrNPC = 2
+    counter = 0
+    maxfate = 0
+	maxobj = null
+    foreach (obj, AllObjects()) {
+      x = HasAttribute ( obj , "fatetrigger" )
+	  if ( x ) {
+        if (GetBoolean (obj , "fatetrigger" )) {
+          counter = counter+1
+        }
+        else {
+		  if (obj.fate>=maxfate) {
+			maxfate = obj.fate
+            maxobj = obj
+          }
+        }
+      }
+    }
+	if ( not null = maxobj ){
+//		maxobj.fate = maxobj.fate+addfate
+//or
+//      dosomething(maxobj)
+		if (maxobj.fate>=10) {
+		  maxobj.fatetrigger = true
+		}
+	}	
+    if (counter=nrNPC) {
+      finish
+    }
+  ]]></function>
+</asl>

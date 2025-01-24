@@ -1,0 +1,153 @@
+<!--Saved by Quest 5.4.4840.17608-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Window snap">
+    <gameid>86f7985d-ba76-4fb9-a142-3d7a34ca4b4a</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <newlist type="stringlist">
+      <value>Item1</value>
+      <value>Item2</value>
+      <value>Item3</value>
+    </newlist>
+    <otherlinkforeground>Blue</otherlinkforeground>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <description>This is your living room.  The furnishings are sparse, but hey, it's an example game, after all.</description>
+    <alias>Living Room</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <beforeenter type="script">
+      game.defaultlinkforeground = game.otherlinkforeground
+    </beforeenter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <health type="int">100</health>
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>health</key>
+          <value>Health: !%</value>
+        </item>
+      </statusattributes>
+      <def type="int">0</def>
+      <basedef type="int">0</basedef>
+      <maxhealth type="int">100</maxhealth>
+    </object>
+    <object name="armchair">
+      <inherit name="editor_object" />
+      <alias>armchair</alias>
+      <look>It's usually a chair with armrests.  This one is a chair with arms.  It's creepy.</look>
+      <sit>You sit in the chair and it hugs you tightly with its arms.  This makes you uncomfortable, so you get up.</sit>
+    </object>
+    <object name="coffee table">
+      <inherit name="editor_object" />
+      <alias>coffee table</alias>
+      <look>It's a wooden in which the wood was stained with coffee, rather than conventional wood staining solution.  As a result the table looks ugly, but it makes the room smell great.</look>
+    </object>
+    <object name="Cthulhu">
+      <inherit name="editor_object" />
+      <inherit name="namedmale" />
+      <alias>Cthulhu, Ancient God of Madness</alias>
+      <look>He's a pretty crappy roommate, but at least he pays the bills.</look>
+      <speak>He doesn't have much to say.  He doesn't like to talk much because he always gets his tentacles in his mouth.</speak>
+    </object>
+    <exit alias="south" to="other room">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="switch of mystery">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <alias>mysterious switch</alias>
+      <look><![CDATA[Who knows what happens when you switch this on and off!  Oh, wait, this is an example game.<br/>When the switch is off, nothing different happens.<br/>When the switch is on, a single link in the description will be of a different color.  Hopefully this example helps.  If not, we've all wasted each other's time.]]></look>
+      <switchonmsg>You switch it on.  The laws of your universe change, along with the color of links.</switchonmsg>
+      <switchoffmsg>You switch it off.  Cthulhu has gas now.</switchoffmsg>
+    </object>
+  </object>
+  <object name="other room">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>The Other Room</alias>
+    <description type="script">
+      if (switch of mystery.switchedon = true) {
+        temp = game.defaultlinkforeground
+        game.defaultlinkforeground = "Green"
+        msg ("This is the other room in your house.  Is it a kitchen?  A bedroom?  A bathroom?  Which of those could you go without the least?  You decide.  The placement of {object:appropriate object1} might be completely random if you pick wrong, though.")
+        game.defaultlinkforeground = temp
+      }
+      else {
+        SpecialExitList ("You can go", GetExitsList(), "and", ".")
+        msg ("This is the other room in your house.  Is it a kitchen?  A bedroom?  A bathroom?  Which of those could you go without the least?  You decide.  The placement of {object:appropriate object1} might be completely random if you pick wrong, though.")
+      }
+    </description>
+    <beforeenter type="script">
+      game.autodescription_youcango = 0
+    </beforeenter>
+    <onexit type="script">
+      game.autodescription_youcango = 3
+    </onexit>
+    <exit alias="north" to="room">
+      <inherit name="northdirection" />
+      <redexit />
+    </exit>
+    <object name="appropriate object1">
+      <inherit name="editor_object" />
+      <alias>object not at all out of place</alias>
+      <look>This object is appropriate for the room that it's in.  Completely.</look>
+      <use type="script">
+        msg ("You interact with this object in the appropriate way, acheiving your original goal.")
+      </use>
+    </object>
+    <object name="appropriate object2">
+      <inherit name="editor_object" />
+      <alias>object you would expect to find here</alias>
+      <look>Oh look.  One of those.  Of course there's one of those.  Where else would it be?</look>
+      <use type="script">
+        msg ("It acts just as it should.  How expected!")
+      </use>
+    </object>
+    <exit alias="east" to="room">
+      <inherit name="eastdirection" />
+      <blackexit />
+    </exit>
+    <exit alias="south" to="room">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <function name="SpecialExitList" parameters="preList, list, preFinal, postList"><![CDATA[
+    listLength = ListCount(list)
+    if (listLength > 0) {
+      count = 0
+      // All the "result = " parts of the function are turned into print statements with no linebreak
+      OutputTextNoBr (preList + " ")
+      foreach (item, list) {
+        // These "if" statements check for flags which denote that the exits should be different colors, and changes their colors if they match
+        if (GetBoolean(item, "redexit")) {
+          temp = game.defaultlinkforeground
+          game.defaultlinkforeground = "Red"
+          OutputTextNoBr (GetDisplayNameLink(item, "exit"))
+          game.defaultlinkforeground = temp
+        }
+        else if (GetBoolean(item, "blackexit")) {
+          temp = game.defaultlinkforeground
+          game.defaultlinkforeground = "Purple"
+          OutputTextNoBr (GetDisplayNameLink(item, "exit"))
+          game.defaultlinkforeground = temp
+        }
+        else {
+          OutputTextNoBr (GetDisplayNameLink(item, "exit"))
+        }
+        count = count + 1
+        if (count = listLength - 1) {
+          OutputTextNoBr (" " + preFinal + " ")
+        }
+        else if (count < listLength) {
+          OutputTextNoBr (", ")
+        }
+      }
+      msg (postList)
+    }
+  ]]></function>
+</asl>

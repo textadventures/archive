@@ -1,0 +1,205 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <include ref="InvPane2.aslx" />
+  <game name="AdditionalPane">
+    <gameid>04272098-2de5-4068-af3c-92bb738310e4</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <enter type="script">
+      SetInventory2Label ("Spells")
+      SetInventory2 (GetDirectChildren (spellbook))
+    </enter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="AnObject">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <alias>Object 1</alias>
+      <use type="boolean">false</use>
+      <take />
+    </object>
+    <object name="AnObject2">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <alias>Object 2</alias>
+      <use type="boolean">false</use>
+      <take />
+    </object>
+    <exit alias="south" to="room2">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="room2">
+    <inherit name="editor_room" />
+    <object name="AnObject3">
+      <inherit name="editor_object" />
+      <alias>Object 3</alias>
+    </object>
+    <object name="AnObject4">
+      <inherit name="editor_object" />
+      <alias>Object 4</alias>
+    </object>
+    <exit alias="north" to="room">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <command name="Cast">
+    <pattern>cast #text#</pattern>
+    <script><![CDATA[
+    value = LCase (text)
+    scope = GetDirectChildren (spellbook)
+    fullmatches = NewObjectList()
+    partialmatches = NewObjectList()
+    value = Trim(value)
+    foreach (obj, scope) {
+      name = LCase(GetDisplayAlias(obj))
+      CompareNames (name, value, obj, fullmatches, partialmatches)
+      if (obj.alt <> null) {
+        foreach (altname, obj.alt) {
+          CompareNames (LCase(altname), value, obj, fullmatches, partialmatches)
+        }
+      }
+    }
+    if (game.lastobjects <> null) {
+      foreach (obj, game.lastobjects) {
+        CompareNames (LCase(obj.article), value, obj, fullmatches, partialmatches)
+        CompareNames (LCase(obj.gender), value, obj, fullmatches, partialmatches)
+      }
+    }
+    if (ListCount(fullmatches) = 1) {
+      spellbook.spellpending = ListItem(fullmatches, 0)
+    }
+    else if (ListCount(fullmatches) = 0 and ListCount(partialmatches) = 1) {
+      spellbook.spellpending = ListItem(partialmatches, 0)
+    }
+    else if (ListCount(fullmatches) + ListCount(partialmatches) = 0) {
+      spellbook.spellpending = null
+    }
+    else {
+      menu = NewStringDictionary()
+      GenerateMenuChoices (menu, fullmatches)
+      GenerateMenuChoices (menu, partialmatches)
+      ShowMenu (DynamicTemplate("DisambiguateMenu", value), menu, true) {
+        if (result <> null) {
+         spellbook.spellpending = GetObject(result)
+        }
+        else {
+          spellbook.spellpending = null
+        }
+      }
+    }
+      on ready {
+        if (spellbook.spellpending = null) {
+          msg ("No such spell in your book")
+        }
+        else if (not HasScript (spellbook.spellpending, "castspell")) {
+          msg ("That's not a spell; it should not even be in your book")
+        }
+        else {
+          do (spellbook.spellpending, "castspell")
+        }
+      }
+    ]]></script>
+  </command>
+  <object name="spellbook">
+    <inherit name="editor_object" />
+    <alias>Spellbook</alias>
+    <object name="fireball_spell">
+      <inherit name="editor_object" />
+      <castspell type="script"><![CDATA[
+        msg ("You cast a <i>Fireball</i> spell.")
+      ]]></castspell>
+      <displayverbs type="stringlist" />
+      <inventoryverbs type="stringlist">
+        <value>Cast</value>
+      </inventoryverbs>
+      <useindividualverblist type="boolean">false</useindividualverblist>
+      <usestandardverblist />
+      <alias>Lesser Fireball</alias>
+    </object>
+    <object name="greater_fireball_spell">
+      <inherit name="editor_object" />
+      <castspell type="script"><![CDATA[
+        msg ("You cast a really big <i>Fireball</i> spell.")
+      ]]></castspell>
+      <displayverbs type="stringlist" />
+      <inventoryverbs type="stringlist">
+        <value>Cast</value>
+      </inventoryverbs>
+      <useindividualverblist type="boolean">false</useindividualverblist>
+      <usestandardverblist />
+      <alias>Greater Fireball</alias>
+    </object>
+    <object name="unlock_spell">
+      <inherit name="editor_object" />
+      <castspell type="script"><![CDATA[
+        msg ("You cast an <i>Unlock</i> spell.")
+      ]]></castspell>
+      <usestandardverblist />
+      <displayverbs type="stringlist" />
+      <inventoryverbs type="stringlist">
+        <value>Cast</value>
+      </inventoryverbs>
+      <alias>Unlock</alias>
+    </object>
+  </object>
+  <!--
+  Tries to match the string, value, to an object in the list, scope
+  -->
+
+  <function name="ResolveNameFromList" parameters="value, scope"><![CDATA[
+    fullmatches = NewObjectList()
+    partialmatches = NewObjectList()
+    value = Trim(value)
+    foreach (obj, scope) {
+      name = LCase(GetDisplayAlias(obj))
+      CompareNames (name, value, obj, fullmatches, partialmatches)
+      if (obj.alt <> null) {
+        foreach (altname, obj.alt) {
+          CompareNames (LCase(altname), value, obj, fullmatches, partialmatches)
+        }
+      }
+    }
+    if (game.lastobjects <> null) {
+      foreach (obj, game.lastobjects) {
+        CompareNames (LCase(obj.article), value, obj, fullmatches, partialmatches)
+        CompareNames (LCase(obj.gender), value, obj, fullmatches, partialmatches)
+      }
+    }
+    if (ListCount(fullmatches) = 1) {
+      spellbook.spellpending = ListItem(fullmatches, 0)
+    }
+    else if (ListCount(fullmatches) = 0 and ListCount(partialmatches) = 1) {
+      spellbook.spellpending = ListItem(partialmatches, 0)
+    }
+    else if (ListCount(fullmatches) + ListCount(partialmatches) = 0) {
+      spellbook.spellpending = null
+    }
+    else {
+      menu = NewStringDictionary()
+      GenerateMenuChoices (menu, fullmatches)
+      GenerateMenuChoices (menu, partialmatches)
+      ShowMenu (DynamicTemplate("DisambiguateMenu", value), menu, true) {
+        if (result <> null) {
+         spellbook.spellpending = GetObject(result)
+        }
+        else {
+          spellbook.spellpending = null
+        }
+      }
+    }
+  ]]></function>
+  <verb>
+    <property>castspell</property>
+    <pattern>castspell</pattern>
+    <defaultexpression>"You can't castspell " + object.article + "."</defaultexpression>
+  </verb>
+  <javascript src="InvPane2.js" />
+</asl>

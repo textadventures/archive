@@ -1,0 +1,1303 @@
+<library>
+  <delegate name="ResponseLib_getresponses" parameters="topics, list"/>
+  <delegate name="ResponseLib_Op" parameters="a, b" type="boolean"/>
+  <object name="ResponseLib_Context">
+    <version>0.6</version>
+    <responders type="objectlist"/>
+    <listeners type="objectlist"/>
+    <state type="dictionary"/>
+    <aliases type="list"/>
+    <classes type="simplestringlist">none;prompt</classes>
+    <noneclass>none</noneclass>
+    <promptclass>prompt</promptclass>
+    <idletopic>IDLE</idletopic>
+    <callertopic>CALL</callertopic>
+    <posttopic>POST</posttopic>
+    <autohide type="stringlist"></autohide>
+    <sections type="stringlist"></sections>
+    <gameturn type="int">0</gameturn>
+    <sectionturn type="int">-1</sectionturn>
+    <listenattribute>responsesuggest</listenattribute>
+    <weightdecay type="double">0.66</weightdecay>
+    <suggestweight type="double">0.95</suggestweight>
+    <minweight type="int">20</minweight>
+    <mincallerscore type="int">60</mincallerscore>
+    <oldscriptattribute>RL_OrigScript</oldscriptattribute>
+    <argsattribute>RL_Args</argsattribute>
+    <object2marker>OBJECT2</object2marker>
+    <removesections type="script">
+      <![CDATA[
+      //msg("sectionturn = " + this.sectionturn + ", gameturn = " + this.gameturn)
+      if (this.sectionturn <> this.gameturn) {
+      //msg("remove sections")
+        while (ListCount(this.sections) <> 0) {
+          section = this.sections[0]
+          list remove(this.sections, section)
+          HideOutputSection(section)
+        }
+      }
+      ]]>
+    </removesections>
+    <commandscript type="script">
+      <![CDATA[
+      //msg("commandscript...")
+      // Respond to this command.
+      // The command must have an args attribute.
+      ResponseLib_ExtractArgs(this)
+      params = NewDictionary()
+      args = GetAttribute(this, ResponseLib_Context.argsattribute)
+      topics = ResponseLib_AddCommandTopic(this)
+      // We have to do something ugly, as we can't eval a local variable to get its value.
+      // Fortunately, the verb/command arguments are fairly standard, but this won't work for all possible
+      // verbs/commands.
+      foreach (arg, args) {
+        //msg("arg = " + arg)
+        if (IsDefined(arg)) {
+          // Get the value.
+          switch (arg) {
+            case ("object") {
+              value = object
+              topics = topics + " " + ResponseLib_AddObjectParam(value)
+            }
+            case ("object1") {
+              value = object1
+              topics = topics + " " + ResponseLib_AddObjectParam(value)
+            }
+            case ("object2") {
+              value = object2
+              // Add in a marker that there was a second object.
+              // This allows objects to have "else" type responses for with/using situations,
+              // to differentiate from the case where no second object is sent at all.
+              topics = topics + " " + ResponseLib_AddObjectParam(value) + " " + ResponseLib_Context.object2marker
+            }
+            case ("text") {
+              value = text
+              topics = topics + " " + ResponseLib_AddTextParam(value)
+            }
+            case ("exit") {
+              value = exit
+              topics = topics + " " + ResponseLib_AddExitParam(value)
+            }
+          }
+          dictionary add(params, arg, value)
+        }
+      }
+      if (IsDefined("multiple")) {
+        // Pass the "multiple" flag on.
+        dictionary add(params, "multiple", multiple)
+      }
+      // Try to process a response.
+      if (IsDefined("object")) {
+        processed = ResponseLib_ObjectCall(object, topics)
+      } else if (IsDefined("object1")) {
+        processed = ResponseLib_ObjectCall(object1, topics)
+      } else {
+        processed = ResponseLib_Call(topics)
+      }
+      if (not processed) {
+        // Invoke the original script.
+        do (this, ResponseLib_Context.oldscriptattribute, params)
+      }
+      ]]>
+    </commandscript>
+  </object>
+  <object name="Ops">
+    <eq type="ResponseLib_Op">
+      <![CDATA[return (a=b)]]>
+    </eq>
+    <lt type="ResponseLib_Op">
+      <![CDATA[return (a<b)]]>
+    </lt>
+    <lte type="ResponseLib_Op">
+      <![CDATA[return (a<=b)]]>
+    </lte>
+    <ne type="ResponseLib_Op">
+      <![CDATA[return (a<>b)]]>
+    </ne>
+    <gt type="ResponseLib_Op">
+      <![CDATA[return (a>b)]]>
+    </gt>
+    <gte type="ResponseLib_Op">
+      <![CDATA[return (a>=b)]]>
+    </gte>
+  </object>
+  <function name="ResponseLib_CompareToString" parameters="op,a,s" type="boolean">
+    <![CDATA[
+    t = TypeOf(a)
+    if (t = "int") {
+      s = ToInt(s)
+    } else if (t = "double") {
+      s = ToDouble(s)
+    }
+    //msg("Op: " + op + ", " + a + ", " + s)
+    return (RunDelegateFunction(Ops, op, a, s))
+    ]]>
+  </function>
+  <function name="ResponseLib_AddCommandTopic" parameters="o" type="string">
+    if (HasAttribute(o, "property")) {
+      return (UCase(o.property))
+    } else {
+      return (UCase(o.name))
+    }
+  </function>
+  <function name="ResponseLib_AddObjectParam" parameters="o" type="string">
+    if (TypeOf(o) = "object") {
+      return (Replace(o.name, " ", "-"))
+    } else if (TypeOf(o) = "objectlist") {
+      // Add in the names of all the objects.
+      s = ""
+      foreach (obj, o) {
+        s = s + " " + ResponseLib_AddObjectParam(obj)
+      }
+      return (s)
+    } else {
+      return ("" + o)
+    }
+  </function>
+  <function name="ResponseLib_AddTextParam" parameters="text" type="string">
+    return (LCase(text))
+  </function>
+  <function name="ResponseLib_AddExitParam" parameters="exit" type="string">
+    return (Replace(exit.name, " ", "-"))
+  </function>
+
+  <object name="ResponseLib_Output">
+    <show type="script">
+      OutputTextNoBr(s)
+    </show>
+    <addbreak type="script">
+      if (GetBoolean(this, "needsbreak")) {
+        if (HasScript(this, "callbreak")) {
+          do (this, "callbreak")
+        }
+        this.needsbreak = false
+      }
+    </addbreak>
+  </object>
+
+  <function name="ResponseLib_AddGlobalResponder" parameters="responder">
+    if (not responder in ResponseLib_Context.responders) {
+      list add(ResponseLib_Context.responders, responder)
+    }
+  </function>
+
+  <function name="ResponseLib_RemoveGlobalResponder" parameters="responder">
+    if (responder in ResponseLib_Context.responders) {
+      list remove(ResponseLib_Context.responders, responder)
+    }
+  </function>
+
+  <function name="ResponseLib_AddGlobalListener" parameters="listener">
+    if (not listener in ResponseLib_Context.listeners) {
+      list add(ResponseLib_Context.listeners, listener)
+    }
+  </function>
+
+  <function name="ResponseLib_RemoveGlobalListener" parameters="listener">
+    if (listener in ResponseLib_Context.listeners) {
+      list remove(ResponseLib_Context.listeners, listener)
+    }
+  </function>
+
+  <function name="ResponseLib_Saw" parameters="response" type="boolean">
+    <![CDATA[
+    if (HasAttribute(response, "usecount")) {
+      return (response.usecount <> 0)
+    } else {
+      return (false)
+    }
+    ]]>
+  </function>
+
+  <function name="ResponseLib_SetState" parameters="key, value">
+    isnot = Left(key, 1) = "!"
+    if (isnot) {
+      key = Mid(key, 2)
+    }
+    if (DictionaryContains(ResponseLib_Context.state, key)) {
+      dictionary remove(ResponseLib_Context.state, key)
+    }
+    if (not isnot) {
+      dictionary add(ResponseLib_Context.state, key, value)
+    }
+  </function>
+
+  <function name="ResponseLib_HasState" parameters="key" type="boolean">
+    if (Left(key, 1) = "!") {
+      return (not DictionaryContains(ResponseLib_Context.state, Mid(key,2)))
+    } else {
+      return (DictionaryContains(ResponseLib_Context.state, key))
+    }
+  </function>
+  
+  <function name="ResponseLib_GetStateInt" parameters="key" type="int">
+    if (DictionaryContains(ResponseLib_Context.state, key)) {
+      value = ResponseLib_Context.state[key]
+      if (TypeOf(value) = "string") {
+        value = ToInt(value)
+      }
+      return(value)
+    } else {
+      return(0)
+    }
+  </function>
+
+  <function name="ResponseLib_AddAlias" parameters="alias">
+    if (TypeOf(alias) = "objectlist") {
+      foreach(a, alias) {
+        ResponseLib_AddAlias(a)
+      }
+    } else {
+      ResponseLib_RemoveAlias(alias)
+      list add(ResponseLib_Context.aliases, alias)
+    }
+  </function>
+
+  <function name="ResponseLib_RemoveAlias" parameters="alias">
+    if (ListContains(ResponseLib_Context.aliases, alias)) {
+      list remove(ResponseLib_Context.aliases, alias)
+    }
+  </function>
+
+  <function name="ResponseLib_ResetUseCount" parameters="response">
+    response.usecount = 0
+  </function>
+
+  <function name="ResponseLib_CallInternal" parameters="topics" type="boolean">
+    <![CDATA[
+    if (ResponseLib_HasState("showtopics")) {
+      OutputTextNoBr("<span style='color:#654321'>CallInternal: " + topics + " </span>")
+    }
+    candidates = ResponseLib_GetContextResponses(topics)
+    //msg("candidates = " + candidates)
+    if (ListCount(candidates) > 0) {
+      ResponseLib_ProcessResponses(candidates, topics)
+    }
+    return (ListCount(candidates) > 0)
+    ]]>
+  </function>
+
+  <function name="ResponseLib_Call" parameters="topics" type="boolean">
+    <![CDATA[
+    //msg("Call:" + topics)
+    // Clear any previous auto-hide sections
+    if (ResponseLib_HasState("noresponses")) {
+      return(false)
+    }
+    
+    do (ResponseLib_Context, "removesections")
+    
+    processed = ResponseLib_CallInternal(topics)
+
+    candidates = ResponseLib_GetContextResponses(ResponseLib_Context.posttopic)
+    processed = processed or ListCount(candidates) > 0
+    ResponseLib_ProcessResponses(candidates, topics)
+    return (processed)
+    ]]>
+  </function>
+
+  <function name="ResponseLib_ObjectCall" parameters="object, topics" type="boolean">
+    <![CDATA[
+    processed = false
+    if (TypeOf(object) = "objectlist") {
+      foreach (obj, object) {
+        if (ResponseLib_ObjectCall(obj, topics)) {
+          processed = true
+        }
+      }
+    } else {
+      if (ResponseLib_HasState("showtopics")) {
+        OutputTextNoBr("<span style='color:#654321'>ObjectCall: " + topics + " </span>")
+      }
+      candidates = NewList()
+      ResponseLib_GetObjectResponses(object, topics, candidates)
+      if (ListCount(candidates) > 0) {
+        ResponseLib_ProcessResponses(candidates, topics)
+        processed = true
+      }
+    }
+    return (processed)
+    ]]>
+  </function>
+
+  <function name="ResponseLib_GetContextListeners" type="objectlist">
+    listeners = NewObjectList()
+    // Send to the current room.
+    list add(listeners, game.pov.parent)
+    // Send to all objects in the POV's room (including the player).
+    listeners = ListCombine(listeners, GetDirectChildren(game.pov.parent))
+    // Send to all objects in the global listener list.
+    listeners = ListCombine(listeners, ResponseLib_Context.listeners)
+    return(listeners)
+  </function>
+
+  <function name="ResponseLib_GetContextResponders" type="objectlist">
+    responders = NewObjectList()
+    // Query the current room.
+    list add(responders, game.pov.parent)
+    // Query all objects in the POV's room (including the player).
+    responders = ListCombine(responders, GetDirectChildren(game.pov.parent))
+    // Query all objects in the global responder list.
+    responders = ListCombine(responders, ResponseLib_Context.responders)
+    //msg("Responders = " + responders)
+    return(responders)
+  </function>
+
+  <function name="ResponseLib_GetContextResponses" parameters="topics" type="list">
+    //msg("Topics = " + topics)
+    responses = NewList()
+    foreach (o, ResponseLib_GetContextResponders()) {
+      ResponseLib_GetObjectResponses(o, topics, responses)
+    }
+    return (responses)
+  </function>
+
+  <function name="ResponseLib_GetObjectResponses" parameters="o, topics, responses">
+    if (HasAttribute(o, "getresponses")) {
+	  //msg("getting responses for " + o)
+      rundelegate(o, "getresponses", topics, responses)
+    }
+  </function>
+  <function name="ResponseLib_FindResponses" parameters="topics,responder,responses,list">
+    <![CDATA[
+    //msg("topics=" + topics)
+    // Look through all the responses for eligible matches.
+    foreach (response, responses) {
+      //msg("check response " + response)
+      // See if this response is eligible for selection.
+      if (ResponseLib_IsEligible(response,topics)) {
+        if (HasAttribute(response, "includes")) {
+          includes = Split(response.includes, " ")
+          foreach (include, includes) {
+            object = GetObject(include)
+            ResponseLib_FindResponses(topics, responder, GetDirectChildren(object), list)
+          }
+        }
+        if (HasAttribute(response, "isgroup")) {
+          ResponseLib_FindResponses(topics, responder, GetDirectChildren(response), list)
+        } else {
+          score = ResponseLib_ComputeScore(topics,response)
+          //msg("score = " + score + " for response=" + response)
+          if (score <> 0) {
+            // We have a match (positive or negative). Add in the score for any subtopics
+            if (HasAttribute(response, "subtopics")) {
+              //msg("score is " + score)
+              if (TypeOf(response.subtopics) <> "dictionary") {
+                response.subtopics = ResponseLib_NormalizeWeights(response.subtopics)
+              }
+              score = score + ResponseLib_ComputeTopicsScore(response.subtopics, topics)
+              //msg("final score for " + response.name + " is " + score)
+            }
+            if (score > 0) {
+              // Add a new entry to the list.
+              //msg("response " + response.name + " has score " + score)
+              entry = NewDictionary()
+              dictionary add(entry, "response", response)
+              dictionary add(entry, "score", score)
+              dictionary add(entry, "responder", responder)
+              list add(list, entry)
+            }
+          }
+        }
+      }
+    }
+    ]]>
+  </function>
+
+  <function name="ResponseLib_IsEligible" parameters="response, topics" type="boolean">
+    <![CDATA[
+      eligible = true
+      // Check the use count.
+      if (HasAttribute(response, "maxusecount")) {
+        if (not HasAttribute(response, "usecount")) {
+          response.usecount = 0
+        }
+        eligible = response.usecount < response.maxusecount
+      }
+      // Check the condition.
+      if (eligible and HasAttribute(response, "cond")) {
+        eligible = eval(response.cond, ResponseLib_Context.state)
+      }
+      // Check any "needs".
+      if (eligible and HasAttribute(response, "needs")) {
+        if (TypeOf(response.needs) = "string") {
+          response.needs = Split(response.needs, " ")
+        }
+        foreach (need, response.needs) {
+          eligible = eligible and ResponseLib_NeedSatisfied(need)
+        }
+      }
+      // Check any required topics.
+      if (eligible and topics <> "" and HasAttribute(response, "topics")) {
+        skip = false
+        if (HasString(response, "topics")) {
+          skip = Instr(response.topics, "*") = 0
+        }
+        if (not skip) {
+          if (TypeOf(response.topics) <> "dictionary") {
+            response.topics = ResponseLib_NormalizeWeights(response.topics)
+          }
+          resptopics = response.topics
+          topics = ResponseLib_NormalizeWeights(topics)
+          hasrequired = false
+          requiredexists = false
+          foreach (topic, resptopics) {
+            if (StartsWith(topic, "*")) {
+              hasrequired = true
+              requiredexists = requiredexists or DictionaryContains(topics, Mid(topic, 2))
+            }
+          }
+          eligible = (not hasrequired) or requiredexists
+        }
+      }
+      return (eligible)
+    ]]>
+  </function>
+
+  <function name="ResponseLib_NeedSatisfied" parameters="need" type="boolean">
+    <![CDATA[
+    parts = Split(need, ":")
+    key = parts[0] 
+    if (ListCount(parts) = 1) {
+      return(ResponseLib_HasState(key))
+    } else {
+      //msg("parts = " + parts)
+      value = parts[1]
+      if (ResponseLib_HasState(key)) {
+        switch (Left(value, 1)) {
+          case ("=") {
+            op = "eq"
+            index = 2
+          }
+          case (">") {
+            if (Left(value, 2) = ">=") {
+              op = "gte"
+              index = 3
+            } else {
+              op = "gt"
+              index = 2
+            }
+          }
+          case ("<") {
+            left2 = Left(value, 2)
+            if (left2 = "<>") {
+              op = "ne"
+              index = 3
+            } else if (left2 = "<=") {
+              op = "lte"
+              index = 3
+            } else {
+              op = "lt"
+              index = 2
+            }
+          }
+        }
+        a = ResponseLib_Context.state[key]
+        b = Mid(value, index)
+        //msg("comparing: " + a + " to " + b + " using " + op)
+        return(ResponseLib_CompareToString(op, a, b))
+      }
+      return(false)
+    }
+    ]]>
+  </function>
+
+  <function name="ResponseLib_GetResponses" parameters="topics,responder,responses,list">
+    topics = ResponseLib_NormalizeWeights(topics)
+    topics = ResponseLib_TranslateTopics(topics)
+    //msg("topics = " + topics)
+    ResponseLib_FindResponses(topics,responder,responses,list)
+  </function>
+
+  <function name="ResponseLib_ComputeScore" parameters="topics, response" type="int">
+    <![CDATA[
+    score = 10000
+    if (HasAttribute(response, "topics")) {
+      //msg("Computing score for response: " + response + ", topics=" + topics)
+      if (TypeOf(response.topics) <> "dictionary") {
+        response.topics = ResponseLib_NormalizeWeights(response.topics)
+      }
+      score = ResponseLib_ComputeTopicsScore(response.topics, topics)
+    } else {
+      //msg("Using default score for response: " + response)
+    }
+    return (score)
+    ]]>
+  </function>
+  <function name="ResponseLib_ComputeTopicsScore" parameters="resptopics, topics" type="int">
+    score = 0
+    foreach (key, resptopics) {
+      key2 = if (StartsWith(key, "*"), Mid(key, 2), key)
+      if (DictionaryContains(topics, key2)) {
+        weight = DictionaryItem(topics, key2)
+        w = DictionaryItem(resptopics, key)
+        score = score + cast(weight*w, int)
+      }
+    }
+    return (score)
+  </function>
+
+  <function name="ResponseLib_NormalizeWeights" parameters="topics" type="dictionary">
+    <![CDATA[
+    dict = NewDictionary()
+    //msg("normalize topics=" + topics)
+    //msg("TypeOf(topics)=" + TypeOf(topics))
+    if (TypeOf(topics) = "string") {
+      topics = Split(topics, " ")
+    }
+    switch (TypeOf(topics)) {
+      case ("list", "stringlist") {
+        // Convert the list into a dictionary where all weights are 100.
+        foreach(entry, topics) {
+          entry = Trim(entry)
+          if (entry <> "" and not DictionaryContains(dict, entry)) {
+            dictionary add(dict, entry, 100)
+          }
+        }
+      }
+      case ("dictionary", "stringdictionary") {
+        // Make sure all the weights in the dictionary are numeric.
+        // Convert from strings as needed.
+        foreach(entry, topics) {
+          value = topics[entry]
+          if (TypeOf(value) = "string") {
+            value = ToInt(value)
+          }
+          dictionary add(dict, entry, value)
+        }
+      }
+    }
+    return (dict)
+    ]]>
+  </function>
+  <function name="ResponseLib_TranslateTopics" parameters="topics" type="dictionary">
+    <![CDATA[
+    // We will assume the incoming topics have been normalized into a dictionary.
+    //msg("Enter Translate topics: " + topics)
+    newtopics = NewDictionary()
+    loop = true
+    while (loop) {
+      matches = NewList()
+      ResponseLib_FindResponses(topics, null, ResponseLib_Context.aliases, matches)
+      response = null
+      score = 0
+      foreach (match, matches) {
+        thisScore = match["score"] 
+        if (thisScore > score) {
+          score = thisScore
+          response = match["response"]
+        }
+      }
+      if (response <> null) {
+        if (HasAttribute(response, "topics")) {
+          resptopics = response.topics
+          type = TypeOf(resptopics)
+          if (type = "dictionary" or type = "stringdictionary") {
+            resptopics = ""
+            foreach(topic, response.topics) {
+              resptopics = resptopics + " " + topic
+            }
+          }
+          ResponseLib_RemoveTopics(topics, Split(resptopics, " "))
+        }
+        if (HasAttribute(response, "subtopics")) {
+          respsubtopics = response.subtopics
+          type = TypeOf(respsubtopics)
+          if (type = "dictionary" or type = "stringdictionary") {
+            respsubtopics = ""
+            foreach(topic, response.subtopics) {
+              respsubtopics = respsubtopics + " " + topic
+            }
+          }
+          ResponseLib_RemoveTopics(topics, Split(respsubtopics, " "))
+        }
+        ResponseLib_InjectTopics(newtopics, Split(response.injects, " "))
+        loop = DictionaryCount(topics) <> 0
+      } else {
+        // Inject the remaining topics
+        ResponseLib_InjectTopicsDictionary(newtopics, topics)
+        loop = false
+      }
+    }
+    //msg("Exit Translate topics: " + newtopics)
+    return (newtopics)
+    ]]>
+  </function>
+  <function name="ResponseLib_RemoveTopics" parameters="topics,deltopics">
+    foreach (topic, deltopics) {
+      if (topic in topics) {
+        dictionary remove(topics, topic)
+      }
+    }
+  </function>
+  <function name="ResponseLib_InjectTopics" parameters="topics,injtopics">
+    ResponseLib_RemoveTopics(topics, injtopics)
+    //msg("ResponseLib_InjectTopics: " + TypeOf(injtopics))
+    foreach (topic, injtopics) {
+      dictionary add(topics, topic, 100)
+    }
+  </function>
+  <function name="ResponseLib_InjectTopicsDictionary" parameters="topics,injtopics">
+    ResponseLib_RemoveTopics(topics, injtopics)
+    //msg("ResponseLib_InjectTopicsDictionary: " + TypeOf(injtopics))
+    foreach (topic, injtopics) {
+      dictionary add(topics, topic, injtopics[topic])
+    }
+  </function>
+  <function name="ResponseLib_ProcessResponses" parameters="candidates,topics">
+    <![CDATA[
+    // Get the top priority responses from the candidate list.
+    responses = ResponseLib_GetPriorityResponses(candidates)
+  
+    if (ListCount(responses) > 0) {
+      // Group the responses.
+      // Groups = dictionary of lists of responses, keyed by class
+      // Prompts = list of lists of responses
+      groups = NewDictionary()
+      prompts = NewList()
+      ResponseLib_GroupResponses(responses, groups, prompts)
+        
+      // Order the responses within the groups.
+      groups = ResponseLib_OrderGroups(groups)
+
+      //msg("groups: " + groups)
+      // Output the groups in order based on the "classes" list.
+      foreach (class, ResponseLib_Context.classes) {
+        if (class = ResponseLib_Context.promptclass and ListCount(prompts) = 1) {
+          // Just process the single prompt as a non-prompt, unless forced.
+          p = prompts[0]
+          response = p[0]
+          resp = response["response"]
+          if (not HasAttribute(resp, "forceprompt")) {
+            class = resp.prompt
+          }
+        }
+        if (class = ResponseLib_Context.promptclass) {
+          // Process prompts
+          ResponseLib_ProcessPrompts(prompts)
+        } else if (DictionaryContains(groups, class)) {
+          // Process non-prompts.
+          ResponseLib_ProcessGroup(groups[class], class, topics)
+        }
+      }
+    }
+    ]]>
+  </function>
+  <function name="ResponseLib_GetPriorityResponses" parameters="candidates" type="list">
+    <![CDATA[
+    //msg("candidates=" + candidates)
+    responses = NewList()
+    score = 0
+    // Get the highest priority item(s).
+    foreach (entry, candidates) {
+      thisScore = entry["score"]
+      if (thisScore > score) {
+        responses = NewList()
+        score = thisScore
+      }
+      if (thisScore = score) {
+        list add(responses, entry)
+      } 
+    }
+    //msg("responses = " + responses)
+    return (responses)
+    ]]>
+  </function>
+  <function name="ResponseLib_GetResponseClass" parameters="response" type="string">
+    class = ResponseLib_Context.noneclass
+    if (HasString(response, "class")) {
+      class = response.class
+    }
+    return (class)
+  </function>
+  <function name="ResponseLib_GroupResponses" parameters="responses,groups,prompts">
+    foreach (entry, responses) {
+      response = entry["response"]
+      // get the type
+      class = ResponseLib_GetResponseClass(response)
+      if (HasAttribute(response, "prompt")) {
+        class = response.prompt
+      }
+      //msg("class=" + class)
+      if (not DictionaryContains(groups, class)) {
+        l = NewList()
+        dictionary add(groups, class, l)
+        if (HasAttribute(response, ResponseLib_Context.promptclass)) {
+          list add(prompts, l)
+        }
+      }
+      list add(groups[class], entry)
+      //msg("Groups = " + groups)
+    }
+  </function>
+  <function name="ResponseLib_OrderGroups" parameters="groupsin" type="dictionary">
+    if (false) {
+      // This will no longer work as groupsin is now a list of dictionaries.
+      groups = NewDictionary()
+      foreach (type, groupsin) {
+        list = ObjectListSort(groupsin[type], "order")
+        dictionary add(groups, type, list)
+      }
+    } else {
+      groups = groupsin
+    }
+    return (groups)
+  </function>
+  <function name="ResponseLib_ProcessGroup" parameters="group, class, topics">
+    <![CDATA[
+    outputsection = null
+    if (class in ResponseLib_Context.autohide) {
+    //msg("created section " + ResponseLib_Context.gameturn)
+      outputsection = StartNewOutputSection()
+    }
+    foreach (response, group) {
+      ResponseLib_ProcessResponse(response["response"], response["responder"], "", topics)
+    }
+    if (outputsection <> null) {
+      EndOutputSection(outputsection)
+      list add(ResponseLib_Context.sections, outputsection)
+      ResponseLib_Context.sectionturn = ResponseLib_Context.gameturn
+    }
+    ]]>
+  </function>
+  <function name="ResponseLib_ProcessPrompts" parameters="prompts">
+    <![CDATA[
+    if (ListCount(prompts) > 0) {
+      // Build the menu from the prompts.
+      choices = NewDictionary()
+      ResponseLib_Context.promptlist = prompts
+      ResponseLib_Context.promptignore = null
+      for (i, 0, ListCount(ResponseLib_Context.promptlist)-1) {
+        responselist = ResponseLib_Context.promptlist[i]
+        response = responselist[0]
+        resp = response["response"]
+        if (resp.prompt = "") {
+          ResponseLib_Context.promptignore = response
+        } else {
+          dictionary add(choices, ToString(i), resp.prompt)
+        }
+      }
+      ResponseLib_Output.needsbreak = true
+      //do (ResponseLib_Output, "addbreak")
+      ShowMenu ("", choices, true) {
+        ResponseLib_Context.gameturn = ResponseLib_Context.gameturn+1
+        if (result = "") {
+          if (HasAttribute(ResponseLib_Context, "promptignore")) {
+            response = ResponseLib_Context.promptignore
+            ResponseLib_ProcessResponse(response["response"], response["responder"], "", "")
+          }
+        } else {
+          responselist = ListItem(ResponseLib_Context.promptlist, ToInt(result))
+          response = responselist[0]
+          resp = response["response"]
+          foreach (response, responselist) {
+            ResponseLib_ProcessResponse(response["response"], response["responder"], "", "")
+          }
+        }
+      }
+    }
+    ]]>
+  </function>
+  <function name="ResponseLib_ProcessResponse" parameters="response,responder,class,topics">
+    <![CDATA[
+    if (class = "") {
+      class = ResponseLib_GetResponseClass(response)
+    }
+    // Update the count.
+    usecount = 0
+    if (HasInt(response, "usecount")) {
+      usecount = response.usecount
+    }
+    response.usecount = usecount+1
+    if (HasAttribute(response, "usechildren")) {
+      children = GetDirectChildren(response)
+      switch (response.usechildren) {
+        case ("random") {
+          ResponseLib_ProcessRandom(children, responder, "", topics)
+        }
+        case ("first") {
+          ResponseLib_ProcessFirst(children, responder, "", topics)
+        }
+        case ("all") {
+          ResponseLib_ProcessAll(children, responder, "", topics)
+        }
+      }
+    } else {
+      ResponseLib_ProcessSets(response)
+      ResponseLib_ProcessText(response, responder, class)
+      ResponseLib_ProcessActions(response,responder,topics)
+      ResponseLib_ProcessCalls(response)
+      ResponseLib_ProcessSuggests(response)
+    }
+    ]]>
+  </function>
+  <function name="ResponseLib_ProcessSets" parameters="response">
+    <![CDATA[
+    attr = ResponseLib_GetAttribute(response, "sets")
+    
+    if (HasAttribute(response, attr)) {
+      if (HasString(response, attr)) {
+        set (response, attr, Split(GetString(response, attr), " "))
+      }
+      foreach (set, GetAttribute(response, attr)) {
+        ResponseLib_ProcessSet(set)
+      }
+    }
+    ]]>
+  </function>
+  <function name="ResponseLib_CastToInt" parameters="value, defaultvalue" type="int">
+    if (value = "") {
+      return(defaultvalue)
+    } else {
+      return(ToInt(value))
+    }
+  </function>
+  <function name="ResponseLib_ProcessSet" parameters="set">
+    parts = Split(set, ":")
+    key = parts[0]
+    //msg("Set: " + set + ", parts=" + parts)
+    if (ListCount(parts) = 1) {
+      ResponseLib_SetState(key, "1")
+    } else {
+      value = parts[1]
+      prefix = Left(value, 1)
+      value = Mid(value, 2)
+      switch (prefix) {
+        case ("=") {
+          if (value = "") {
+            ivalue = 0
+          } else if (IsInt(value)) {
+            ivalue = ToInt(value)
+          } else {
+            ivalue = value
+          }
+          ResponseLib_SetState(key, ivalue)
+        }
+        case ("+") {
+          ivalue = ResponseLib_CastToInt(value, 1)
+          current = ResponseLib_GetStateInt(key)
+          ResponseLib_SetState(key, current + ivalue)
+          //msg("sets " + key + " to " + (current + ivalue))
+        }
+        case ("-") {
+          ivalue = ResponseLib_CastToInt(value, 1)
+          current = ResponseLib_GetStateInt(key)
+          ResponseLib_SetState(key,current - ivalue)
+          //msg("sets " + key + " to " + (current - ivalue))
+        }
+      }
+    }
+  </function>
+  <function name="ResponseLib_ProcessText" parameters="response, responder, class">
+    <![CDATA[
+    class = ResponseLib_GetResponseClass(response)
+    attr = ResponseLib_GetAttribute(response, "text")
+    if (HasAttribute(response, attr)) {
+      var = GetAttribute(response, attr)
+      switch (TypeOf(var)) {
+        case ("string") {
+          ResponseLib_OutputText(var, class)
+        }
+        case ("list", "stringlist") {
+          ResponseLib_ProcessRandom(var, responder, class, "")
+        }
+      }
+    }
+    ]]>
+  </function>
+  <function name="ResponseLib_ProcessActions" parameters="response,responder,topics">
+    <![CDATA[
+    attr = ResponseLib_GetAttribute(response, "action")
+    if (HasScript(response, attr)) {
+      params = NewDictionary()
+      dictionary add(params, "topics", topics)
+      if (responder <> null) {
+        dictionary add(params, "responder", responder)
+      }
+      do (response, attr, params)
+    }
+    ]]>
+  </function>
+  <function name="ResponseLib_ProcessCalls" parameters="response">
+    <![CDATA[
+    attr = ResponseLib_GetAttribute(response, "calls")
+    if (HasString(response, attr)) {
+      ResponseLib_Output.needsbreak = true
+      topics = GetString(response, attr)
+      ResponseLib_CallInternal(topics)
+    }
+    ]]>
+  </function>
+  <function name="ResponseLib_ProcessSuggests" parameters="response">
+    <![CDATA[
+    attr = ResponseLib_GetAttribute(response, "suggests")
+    
+    if (HasAttribute(response, attr)) {
+      ResponseLib_Suggest(GetAttribute(response, attr))
+    }
+    ]]>
+  </function>
+  <function name="ResponseLib_Suggest" parameters="topics">
+    topics = ResponseLib_NormalizeWeights(topics)
+    parameters = NewDictionary()
+    dictionary add(parameters, "topics", topics)
+    foreach(o, ResponseLib_GetContextListeners()) {
+      if (HasScript(o, ResponseLib_Context.listenattribute)) {
+        do (o, ResponseLib_Context.listenattribute, parameters)
+      }
+    }
+  </function>
+  <function name="ResponseLib_ProcessRandom" parameters="list,responder,class,topics">
+    <![CDATA[
+    // Build a list of boundaries, plus the total.
+    bounds = NewList()
+    total = 0
+    foreach (item, list) {
+      weight = 100    // default
+      switch (TypeOf(item)) {
+        case ("object") {
+          if (ResponseLib_IsEligible(item, topics)) {
+            if (HasInt(item, "weight")) {
+              weight = item.weight
+            } else if (HasString(item, "weight")) {
+              weight = ToInt(item.weight)
+            }
+          } else {
+            weight = 0
+          }
+        }
+      }
+      total = total + weight
+      //msg("total = " + total)
+      list add(bounds, total)
+    }
+    // Now select a random one.
+    which = GetRandomInt(1, total)
+    // Determine which item it is.
+    index = 0
+    while (cast(bounds[index], int) < which) {
+      index = index + 1
+    }
+    // Now see what the item is.
+    //msg("which = " + which + ", list = " + list)
+    item = list[index]
+    switch (TypeOf(item)) {
+      case ("string") {
+        ResponseLib_OutputText(item, class)
+      }
+      case ("object") {
+        ResponseLib_ProcessResponse(item, responder, class, "")
+      }
+    }
+    ]]>
+  </function>
+  <function name="ResponseLib_ProcessFirst" parameters="list,responder,class,topics">
+    found = false
+    foreach (item, list) {
+      if (not found) {
+        if (ResponseLib_IsEligible(item, topics)) {
+          ResponseLib_ProcessResponse(item, responder, class, "")
+          found = true
+        }
+      }
+    }
+  </function>
+  <function name="ResponseLib_ProcessAll" parameters="list,responder,class,topics">
+    foreach (item, list) {
+      if (ResponseLib_IsEligible(item, topics)) {
+        ResponseLib_ProcessResponse(item, responder, class, "")
+      }
+    }
+  </function>
+  <function name="ResponseLib_GetAttribute" parameters="response,attribute" type="string">
+    if (HasAttribute(response, attribute + response.usecount)) {
+      attribute = attribute + response.usecount
+    }
+    return (attribute)
+  </function>
+  <function name="ResponseLib_OutputText" parameters="s,class">
+    <![CDATA[
+    // Look for any response replacement fields.
+    pos = Instr(s, "{+")
+    while (pos <> 0) {
+      // Output text to the left if there is any.
+      if (pos > 1) {
+        left = Mid(s, 1, pos-1)
+        ResponseLib_OutputTextFragment(left, class)
+      }
+      // Find the end of the topics.
+      pos = pos + 2
+      endpos = Instr(pos, s, "+}")
+      if (endpos = 0) {
+        endpos = pos
+      } else {
+        // Extract the topic(s).
+        topics = Mid(s, pos, endpos-pos)
+        ResponseLib_CallInternal(topics)
+      }
+      if (endpos < LengthOf(s)) {
+        s = Mid(s, endpos+2)
+        pos = Instr(s, "{+")
+      } else {
+        pos = 0
+      }
+    }
+    // Output whatever is left.
+    if (LengthOf(s) > 0) {
+      ResponseLib_OutputTextFragment(s, class)
+    }
+    ]]>
+  </function>
+  <function name="ResponseLib_OutputTextFragment" parameters="s,class">
+    //do (ResponseLib_Output, "addbreak")
+    outattr = "show"
+    if (HasScript(ResponseLib_Output, "show" + class)) {
+      outattr = "show" + class
+    }
+    params = NewDictionary()
+    dictionary add(params, "s", s)
+    dictionary add(params, "class", class)
+    if (HasScript(ResponseLib_Output, outattr)) {
+      do (ResponseLib_Output, outattr, params)
+    } else {
+      msg("ResponseLib_Output does not have script for " + outattr)
+    }
+  </function>
+  <function name="ResponseLib_ResponderGetReponses" parameters="topics,list,object">
+    ResponseLib_GetReponsesFromAttribute(topics, list, object, "responses")
+  </function>
+
+  <function name="ResponseLib_CallerGetReponses" parameters="topics,list,object">
+    ResponseLib_GetReponsesFromAttribute(topics, list, object, "calls")
+  </function>
+
+  <function name="ResponseLib_GetReponsesFromAttribute" parameters="topics,list,object,attribute">
+    if (not HasAttribute(object, attribute)) {
+      // See if there is an appropriately named object.
+      set(object, attribute, GetObject(object.name + " " + attribute))
+    }
+    if (HasAttribute(object, attribute)) {
+      // See what type the attribute is.
+      responses = GetAttribute(object, attribute)
+      if (TypeOf(responses) = "string") {
+        responses = GetObject(responses)
+      }
+      if (TypeOf(responses) = "object") {
+        responses = GetDirectChildren(responses)
+      }
+      ResponseLib_GetResponses(topics, object, responses, list)
+      //msg("Get reponses for topics " + topics + ", object = " + object + ", attr = " + attribute + ", list = " + list)
+    }
+  </function>
+
+  <function name="ResponseLib_IdleProcessing" parameters="enabled">
+    ResponseLib_TurnScript.enabled = enabled
+  </function>
+
+
+  <function name="ResponseLib_AddTopics" parameters="topics,newtopics,minscore">
+    <![CDATA[
+    // "topics" and "newtopics" must be dictionaries.
+    foreach (topic, newtopics) {
+      value = newtopics[topic]
+      if (TypeOf(value) = "string") {
+        value = ToInt(value)
+      }
+      if (value >= minscore) {
+        if (topic in topics) {
+          // just replace the current one
+          dictionary remove(topics, topic)
+        }
+        dictionary add(topics, topic, value)
+      }
+    }
+    ]]>
+  </function>
+
+  <turnscript name="ResponseLib_TurnScript">
+    <enabled type="boolean">false</enabled>
+    <script>
+      //msg("begin turnscript")
+      ResponseLib_Call(ResponseLib_Context.idletopic)
+      ResponseLib_Call(ResponseLib_Context.callertopic)
+      ResponseLib_Context.gameturn = ResponseLib_Context.gameturn + 1
+      //msg("end turnscript")
+    </script>
+  </turnscript>
+
+  <type name="ResponseLib_Responder">
+    <getresponses type="ResponseLib_getresponses">
+      ResponseLib_ResponderGetReponses(topics,list,this)
+    </getresponses>
+    <look type="script">
+      ResponseLib_ObjectCall(this, this.selflook)
+    </look>
+    <selflook>LOOKAT</selflook>
+  </type>
+
+  <type name="ResponseLib_Object">
+    <inherit name="ResponseLib_Responder"/>
+  </type>
+
+  <type name="ResponseLib_Character">
+    <inherit name="ResponseLib_Responder"/>
+  </type>
+
+  <function name="ResponseLib_MergeTopics" parameters="current, new, scale">
+    <![CDATA[
+  // Merge the new topics into the short term topics.
+  foreach (key, new) {
+		weight = DictionaryItem(new, key)
+		if (DictionaryContains(current, key)) {
+			curweight = DictionaryItem(current, key)
+			dictionary remove(current, key)
+		} else {
+			curweight = 0
+		}
+    newweight = curweight + weight*scale
+    if (newweight > 100) {
+      newweight = 100
+    }
+    if (newweight >= ResponseLib_Context.minweight) {
+		  dictionary add (current, key, newweight)
+    }
+	}
+  ]]>
+  </function>
+
+  <function name="ResponseLib_UpdateTopics" parameters="current, new" type="dictionary">
+    dict = NewDictionary()
+    ResponseLib_MergeTopics(dict, current, ResponseLib_Context.weightdecay)
+    ResponseLib_MergeTopics(dict, new, ResponseLib_Context.suggestweight)
+    return (dict)
+  </function>
+
+  <type name="ResponseLib_Listener">
+    <inherit name="ResponseLib_Character"/>
+    <longtermtopics type="dictionary"/>
+    <responsesuggest type="script">
+      if (not HasAttribute(this, "shorttermtopics")) {
+        this.shorttermtopics = NewDictionary()
+      }
+      this.shorttermtopics = ResponseLib_UpdateTopics(this.shorttermtopics, topics)
+      if (ResponseLib_HasState("showshortterm")) {
+        msg("short term topics for " + this + " are " + this.shorttermtopics)
+      }
+    </responsesuggest>
+  </type>
+
+  <type name="ResponseLib_Player">
+    <inherit name="ResponseLib_Listener"/>
+  </type>
+
+  <type name="ResponseLib_Caller">
+    <inherit name="ResponseLib_Listener"/>
+    <getresponses type="ResponseLib_getresponses">
+      <![CDATA[
+      // Get the initial count.
+      count = ListCount(list)
+      // Get all of our responses.
+      mylist = NewList()
+      ResponseLib_ResponderGetReponses(topics,list,this)
+      if (TypeOf(topics) = "string") {
+        if (topics = ResponseLib_Context.callertopic) {
+        //msg("caller: short term = " + this.shorttermtopics + ", long term = " + this.longtermtopics)
+          topics = NewDictionary()
+          ResponseLib_AddTopics(topics, this.shorttermtopics, ResponseLib_Context.mincallerscore)
+          ResponseLib_AddTopics(topics, this.longtermtopics, ResponseLib_Context.mincallerscore)
+          if (DictionaryCount(topics) > 0) {
+            //msg("Before topics " + topics + " :" + list)
+            ResponseLib_CallerGetReponses(topics,list,this)
+            //msg("After:" + list)
+          }
+        }
+      }
+      ]]>
+    </getresponses>
+  </type>
+
+  <type name="ResponseLib_Room">
+    <inherit name="ResponseLib_Responder"/>
+    <beforeenter type="script">
+      ResponseLib_ObjectCall(this, "BEFOREENTER")
+    </beforeenter>
+    <enter type="script">
+      ResponseLib_ObjectCall(this, "ENTER")
+    </enter>
+    <onexit type="script">
+      ResponseLib_ObjectCall(this, "ONEXIT")
+    </onexit>
+    <beforefirstenter type="script">
+      ResponseLib_ObjectCall(this, "BEFOREFIRSTENTER")
+    </beforefirstenter>
+    <firstenter type="script">
+      ResponseLib_ObjectCall(this, "FIRSTENTER")
+    </firstenter>
+    <description type="script">
+      ResponseLib_Call(this.selflook)
+    </description>
+    <selflook>LOOK</selflook>
+  </type>
+
+  <type name="ResponseLib_Exit">
+    <inherit name="ResponseLib_Responder"/>
+    <getresponsesx type="ResponseLib_getresponses">
+      ResponseLib_ResponderGetReponses(topics,list,this)
+    </getresponsesx>
+  </type>
+  
+  <function name="ResponseLib_ExtractArgs" parameters="cmd">
+    <![CDATA[
+    if (not HasAttribute(cmd, ResponseLib_Context.argsattribute)) {
+      // We will look at the pattern for all possible incoming parameters.
+      s = cmd.pattern
+      length = LengthOf(s)
+      index = 1
+      set(cmd, ResponseLib_Context.argsattribute, NewList())
+      args = GetAttribute(cmd, ResponseLib_Context.argsattribute)
+      while (index <= length) {
+        // Look for '<'
+        start = instr(index, s, "<")
+        if (start = 0) {
+          // No more matches.
+          end = length
+        } else {
+          // Find the end
+          end = instr(start+1, s, ">")
+          if (end = 0) {
+            // Not formatted properly
+            end = length
+          } else {
+          // We have beginning and end.
+            arg = Mid(s, start+1, end-(start+1))
+            if (not ListContains(args, arg)) {
+              list add(args, arg)
+            }
+            end = end
+          }
+        }
+        index = end + 1
+      }
+    }
+    ]]>
+  </function>
+  <function name="ResponseLib_HookCommand" parameters="cmd">
+    // Hook if not already hooked.
+    if (not HasAttribute(cmd, ResponseLib_Context.oldscriptattribute)) {
+      //msg("Hooking " + cmd)
+      set(cmd, ResponseLib_Context.oldscriptattribute, cmd.script)
+      cmd.script = ResponseLib_Context.commandscript
+    }
+  </function>
+
+  <function name="ResponseLib_HookCommands">
+    foreach (cmd, AllCommands()) {
+      ResponseLib_HookCommand(cmd)
+    }
+  </function>
+
+  <function name="ResponseLib_StandardInit">
+    ResponseLib_HookCommands()
+    ResponseLib_IdleProcessing(true)
+  </function>
+</library>

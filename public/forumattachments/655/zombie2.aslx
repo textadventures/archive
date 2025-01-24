@@ -1,0 +1,218 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Shelter">
+    <gameid>f0cc23b4-03a6-4ba0-b607-36cb59bfea9a</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <cover>hand.png</cover>
+    <subtitle>Survive The Zombie Apocalypse</subtitle>
+    <author>The Storyteller</author>
+    <description>Zombies have taken over the world! You knew this would happen some day.</description>
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <category>Horror</category>
+    <difficulty>Hard</difficulty>
+    <cruelty>Cruel</cruelty>
+    <showhealth type="boolean">false</showhealth>
+    <povstatusattributes type="stringdictionary" />
+    <showcommandbar />
+    <backgroundimage type="string"></backgroundimage>
+    <autodescription type="boolean">false</autodescription>
+    <defaultlinkforeground>Red</defaultlinkforeground>
+    <appendobjectdescription type="boolean">false</appendobjectdescription>
+    <defaultbackground>Black</defaultbackground>
+    <defaultforeground>White</defaultforeground>
+    <pov type="object">player</pov>
+    <start type="script">
+    </start>
+  </game>
+  <object name="start">
+    <inherit name="editor_room" />
+    <descprefix>You are in</descprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix type="string"></prefix>
+    <dark />
+    <darkroomdescription><![CDATA[Your eyelids roll back, and you sit up. You can barely make out the room around you.<br/><br/>As your eyes adjust, you notice the silhouette of the light switch, next to the door across from your bed. The moonlight shining in through your window also illuminates your desk against the far wall.]]></darkroomdescription>
+    <description>You look around your bedroom... the clock on your wall is frozen at 2:13AM. It's not raining outside, and it isn't particularly windy either. What happened to the power? Maybe you should go find out?</description>
+    <alias>your bedroom</alias>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <Health type="int">100</Health>
+      <alias>me</alias>
+      <maxobjects type="int">0</maxobjects>
+      <take type="boolean">false</take>
+      <look type="script">
+      </look>
+      <attr name="pov_look" type="script"><![CDATA[
+        if (player.Health = 100) {
+          msg ("You give yourself a once-over, checking for cuts and bruises. Not a scratch on you.")
+        }
+        else if (player.Health < 100 and player.Health >= 90) {
+          msg ("You check yourself, noticing a few scratches. Nothing serious.")
+        }
+        else if (player.Health < 90 and player.Health >= 80) {
+          msg ("You look yourself over... nothing extremely serious, but you should probably apply some bandages.")
+        }
+        else if (player.Health < 80 and player.Health >= 70) {
+          msg ("You look down at yourself... you've got some bruising and cuts. You're definintely going to need some bandages.")
+        }
+        else if (player.Health < 70 and player.Health >= 60) {
+          msg ("Your condition isn't exactly satisfactory, and you're going to need something to stop bleeding from some open wounds on your body.")
+        }
+        else if (player.Health < 60 and player.Health >= 50) {
+          msg ("You've begun limping slightly... your body is extremely bruised, and you have several open cuts across your body.")
+        }
+        else if (player.Health < 50 and player.Health >= 40) {
+          msg ("You have a very obvious limp, and you are losing blood... you need to find medicine before your condition worsens.")
+        }
+        else if (player.Health < 40 and player.Health >= 30) {
+          msg ("You're not sure how you're still walking... you've got obvious wounds along your tattered frame, and you're losing blood quickly.")
+        }
+        else if (player.Health < 30 and player.Health >= 20) {
+          msg ("You're starting to feel very queasy, and you're struggling to keep moving.")
+        }
+        else if (player.Health < 20 and player.Health >= 10) {
+          msg ("As you lean over to check yourself, you become extremely dizzy, nearly toppling over. You take several seconds to recompose yourself. You need serious medical attention.")
+        }
+        else if (player.Health < 10 and player.Health >= 5) {
+          msg ("Death is near... you are in agony, and you're having serious trouble even keeping your eyes open.")
+        }
+        else if (player.Health < 5 and player.Health >= 1) {
+          msg ("You're basically crawling... you've lost most of your blood, and you are quite sure you will die very soon... you think of your family and friends, wishing you'd never gotten out of bed.")
+        }
+      ]]></attr>
+    </object>
+    <object name="lsr1">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <alias>Light Switch</alias>
+      <look>It's a lightswitch... it turns lights on and off.</look>
+      <drop type="boolean">false</drop>
+      <use type="boolean">false</use>
+      <switchedon type="boolean">false</switchedon>
+      <lightsource />
+      <lightstrength>weak</lightstrength>
+      <takemsg>You can't take that off the wall without some serious tools.</takemsg>
+      <switchonmsg>You flick the switch into the on position, but surprisingly, nothing happens.</switchonmsg>
+      <switchoffmsg>You switch it back into the off position, still no light.</switchoffmsg>
+      <askdefault type="script">
+        msg ("The light switch just stares at you.")
+      </askdefault>
+      <telldefault type="script">
+        msg ("The light switch doesn't respond. What were you expecting?")
+      </telldefault>
+      <useon type="scriptdictionary">
+        <item key="fl1">
+          msg ("You hit the light switch with the flashlight... it doesn't make the lights work.")
+        </item>
+      </useon>
+    </object>
+    <object name="dr1">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <alias>Desk</alias>
+      <lightsource />
+      <lightstrength>weak</lightstrength>
+      <takemsg>The desk is pretty heavy... You can't pick it up.</takemsg>
+      <look>It's a desk. It's got two drawers on either side, with papers and books sitting on top of it.</look>
+      <openscript type="script">
+        HelperOpenObject (dr1)
+        msg ("You sift through the drawers... you see something dark in the corner of one of them... a flashlight?")
+        MakeObjectVisible (fl1)
+        SetObjectLightstrength (fl1, "weak")
+      </openscript>
+      <closescript type="script">
+        msg ("You close the drawers.")
+        HelperCloseObject (dr1)
+      </closescript>
+      <askdefault type="script">
+        msg ("The desk sits silently... it ponders your question for a moment, before...... doing nothing. Shocker.")
+      </askdefault>
+      <telldefault type="script">
+        msg ("The desk doesn't isn't in the mood to talk.")
+      </telldefault>
+      <ask type="scriptdictionary" />
+      <useon type="scriptdictionary">
+        <item key="fl1">
+          msg ("You hit the desk with the flashlight...")
+        </item>
+      </useon>
+    </object>
+    <object name="fl1">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <alias>Flashlight</alias>
+      <listalias>Flashlight</listalias>
+      <take />
+      <visible type="boolean">false</visible>
+      <look>A flashlight! This'll help you get around in the dark.</look>
+      <takemsg>You pick up the flashlight. You can hear the quiet rattle of batteries; good.</takemsg>
+      <dropmsg>You should probably keep the flashlight.</dropmsg>
+      <drop type="boolean">false</drop>
+      <lightsource />
+      <switchonmsg>You click the button on the side of the flashlight, turning it on.</switchonmsg>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Drop</value>
+        <value>Switch on</value>
+        <value>Switch off</value>
+      </inventoryverbs>
+      <switchoffmsg>You click the button again, turning the flashlight off.</switchoffmsg>
+      <use type="script">
+        if (not IsSwitchedOn(fl1)) {
+          SwitchOn (fl1)
+        }
+        else if (IsSwitchedOn(fl1)) {
+          SwitchOff (fl1)
+        }
+      </use>
+      <onswitchon type="script">
+        SetObjectLightstrength (fl1, "strong")
+      </onswitchon>
+      <onswitchoff type="script">
+      </onswitchoff>
+      <askdefault type="script">
+        msg ("Your flashlight doesn't respond.")
+      </askdefault>
+      <telldefault type="script">
+        msg ("Your flashlight doesn't seem to care about what you're saying.")
+      </telldefault>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Switch on</value>
+        <value>Switch off</value>
+      </displayverbs>
+    </object>
+    <object name="clock1">
+      <inherit name="editor_object" />
+      <alias>Clock</alias>
+    </object>
+    <object name="sc1">
+      <inherit name="editor_object" />
+      <alias>Soda Can</alias>
+      <visible />
+      <take type="boolean">false</take>
+    </object>
+  </object>
+  <function name="ScopeVisibleLightsource" parameters="lightstrength" type="objectlist">
+    result = ScopeVisibleNotHeld()
+    result = ListCombine(result, ScopeReachableInventory())
+    lightobjects = NewObjectList()
+    foreach (obj, result) {
+      if (GetBoolean(obj, "lightsource") and GetString(obj, "lightstrength") = lightstrength) {
+        list add (lightobjects, obj)
+      }
+    }
+    exits = ScopeExits()
+    foreach (obj, exits) {
+      if (GetBoolean(obj, "lightsource") and GetString(obj, "lightstrength") = lightstrength) {
+        list add (lightobjects, obj)
+      }
+    }
+    return (lightobjects)
+  </function>
+</asl>

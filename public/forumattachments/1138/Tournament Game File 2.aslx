@@ -1,0 +1,768 @@
+<asl version="550">
+  <include ref="English.aslx"/>
+  <include ref="Core.aslx"/>
+  <game name="Tournament">
+    <gameid>d67ec73f-f879-4911-9d88-c02ea527c534</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+	<author>HegemonKhan</author>
+	<category>RPG</category>
+	<pov type="object">player_1</pov>
+	<start type="script">
+	  character_creation_function (game.pov)
+	</start>
+  </game>
+  <object name="global_data_object">
+    <inherit name="editor_object" />
+	<attr name="yes_or_no_stringlist" type="simplestringlist">yes;no</attr>
+	<attr name="gender_stringlist" type="simplestringlist">male;female</attr>
+	<attr name="age_stringlist" type="simplestringlist">baby;child;teen;adult</attr>
+	<attr name="species_stringlist" type="simplestringlist">human;dwarf;elf;gnome;halfling</attr>
+	<attr name="human_race_stringlist" type="simplestringlist">european;asian;arabian;african;american</attr>
+	<attr name="dwarf_race_stringlist" type="simplestringlist">dwarf1;dwarf2;dwarf3;dwarf4;dwarf5</attr>
+	<attr name="elf_race_stringlist" type="simplestringlist">elf1;elf2;elf3;elf4;elf5</attr>
+	<attr name="gnome_race_stringlist" type="simplestringlist">gnome1;gnome2;gnome3;gnome4;gnome5</attr>
+	<attr name="halfling_race_stringlist" type="simplestringlist">halfing1;halfing2;halfing3;halfing4;halfing5</attr>
+	<attr name="specialization_stringlist" type="simplestringlist">combat;magic;stealth;diplomacy;science</attr>
+	<attr name="male_combat_class_stringlist" type="simplestringlist">knight;berserker;barbarian;warrior;paladin;ranger;marksmen;hunter;pirate;nomad;ninja;samurai;crusader;monk;assassin;warlord</attr>
+	<attr name="male_magic_class_stringlist" type="simplestringlist">wizard;warlock;mage;sorcerer;summoner;conjurer;necromancer;druid;cleric;shaman;elementalist;magician;magi;magus;bishop;sage;pope;cardinal;paladin;assassin;enchanter;priest;exorcist</attr>
+	<attr name="male_stealth_class_stringlist" type="simplestringlist">thief;hunter;ranger;rogue;assassin;ninja</attr>
+	<attr name="male_diplomacy_class_stringlist" type="simplestringlist">bard;diplomat;politician;amabassador;merchant;peddler;trader;pilgrim;wanderer;orator;scribe;seducer</attr>
+	<attr name="male_science_class_stringlist" type="simplestringlist">alchemist;mathematician;physicist;physician;chemist;biologist;botanist;zoologist;sociologist;psychologist;engineer;scholar;inventor;tinkerer</attr>
+	<attr name="female_combat_class_stringlist" type="simplestringlist">amazon;valkyrie;huntress</attr>
+	<attr name="female_magic_class_stringlist" type="simplestringlist">witch;sorceress;nun;enchantress;priestess</attr>
+	<attr name="female_stealth_class_stringlist" type="simplestringlist">huntress</attr>
+	<attr name="female_diplomacy_class_stringlist" type="simplestringlist">muse;seductress</attr>
+	<attr name="female_science_class_stringlist" type="simplestringlist">nurse</attr>
+  </object>
+  <object name="room_1">
+    <inherit name="editor_room" />
+    <object name="player_1">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+  </object>
+  <function name="character_creation_function" parameters="player_parameter">
+    first_name_string_function (player_parameter)
+	on ready {
+	  has_last_name_string_function (player_parameter)
+	  on ready {
+	    gender_string_function (player_parameter)
+		on ready {
+		  species_string_function (player_parameter)
+		  on ready {
+		    race_string_function (player_parameter)
+			on ready {
+			  specialization_string_function (player_parameter)
+			  on ready {
+			    class_string_function (player_parameter)
+				on ready {
+	              age_integer_function (player_parameter)
+		          on ready {
+		            test_function (player_parameter)
+				  }
+				}
+			  }
+			}
+		  }
+		}
+	  }
+	}
+  </function>
+  <function name="first_name_string_function" parameters="player_parameter"><![CDATA[
+    if (player_parameter.name = "player_1") {
+      msg ("What is your first name?")
+	  get input {
+	    if (LengthOf (result) <= 16) {
+	      player_parameter.first_name_string = ToString (result)
+	      ClearScreen
+	    } else {
+	      ClearScreen
+	      first_name_string_function (player_parameter)
+		}
+	  }
+	}
+  ]]></function>
+  <function name="has_last_name_string_function" parameters="player_parameter">
+    if (player_parameter.name = "player_1") {
+      msg ("Do you have a last name?")
+	  DisplayList (global_data_object.yes_or_no_stringlist, true)
+	  get input {
+	    if (result = "1") {
+		  ClearScreen
+	      last_name_string_function (player_parameter)
+	    } else if (result = "2") {
+	      player_parameter.last_name_string = null
+		  ClearScreen
+	    } else {
+	      ClearScreen
+	      has_last_name_string_function (player_parameter)
+		}
+	  }
+	}
+  </function>
+  <function name="last_name_string_function" parameters="player_parameter"><![CDATA[
+    if (player_parameter.name = "player_1") {
+      msg ("What is your last name?")
+	  get input {
+	    if (LengthOf (result) <= 16) {
+	      player_parameter.last_name_string = ToString (result)
+	      ClearScreen
+	    } else {
+	      ClearScreen
+	      last_name_string_function (player_parameter)
+		}
+	  }
+	}
+  ]]></function>
+  <function name="gender_string_function" parameters="player_parameter"><![CDATA[
+    if (player_parameter.name = "player_1") {
+      msg ("What is your gender?")
+	  DisplayList (global_data_object.gender_stringlist, true)
+	  get input {
+	    if (IsNumeric (result)) {
+	      if (ToInt (result) >= 1 and ToInt (result) <= 2) {
+		    player_parameter.gender_string = ToString (StringListItem (global_data_object.gender_stringlist, ToInt (result) - 1))
+		    ClearScreen
+		  } else {
+		    ClearScreen
+		    gender_string_function (player_parameter)
+		  }
+	    } else {
+	      ClearScreen
+		  gender_string_function (player_parameter)
+		}
+	  }
+	}
+  ]]></function>
+  <function name="species_string_function" parameters="player_parameter"><![CDATA[
+    if (player_parameter.name = "player_1") {
+      msg ("What is your species?")
+	  DisplayList (global_data_object.species_stringlist, true)
+	  get input {
+	    if (IsNumeric (result)) {
+	      if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		    player_parameter.species_string = ToString (StringListItem (global_data_object.species_stringlist, ToInt (result) - 1))
+		    ClearScreen
+		  } else {
+		    ClearScreen
+		    species_string_function (player_parameter)
+		  }
+	    } else {
+	      ClearScreen
+		  species_string_function (player_parameter)
+		}
+	  }
+	}
+  ]]></function>
+  <function name="race_string_function" parameters="player_parameter"><![CDATA[
+    if (player_parameter.name = "player_1") {
+      msg ("What is your race?")
+	  if (player_parameter.species_string = "human") {
+	    DisplayList (global_data_object.human_race_stringlist, true)
+	    get input {
+	      if (IsNumeric (result)) {
+	        if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		      player_parameter.race_string = ToString (StringListItem (global_data_object.human_race_stringlist, ToInt (result) - 1))
+		      ClearScreen
+		    } else {
+		      ClearScreen
+		      race_string_function (player_parameter)
+		    }
+	      } else {
+	        ClearScreen
+		    race_string_function (player_parameter)
+		  }
+		}
+	  } else if (player_parameter.species_string = "dwarf") {
+	    DisplayList (global_data_object.dwarf_race_stringlist, true)
+	    get input {
+	      if (IsNumeric (result)) {
+	        if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		      player_parameter.race_string = ToString (StringListItem (global_data_object.dwarf_race_stringlist, ToInt (result) - 1))
+		      ClearScreen
+		    } else {
+		      ClearScreen
+		      race_string_function (player_parameter)
+		    }
+	      } else {
+	        ClearScreen
+		    race_string_function (player_parameter)
+		  }
+		}
+	  } else if (player_parameter.species_string = "elf") {
+	    DisplayList (global_data_object.elf_race_stringlist, true)
+	    get input {
+	      if (IsNumeric (result)) {
+	        if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		      player_parameter.race_string = ToString (StringListItem (global_data_object.elf_race_stringlist, ToInt (result) - 1))
+		      ClearScreen
+		    } else {
+		      ClearScreen
+		      race_string_function (player_parameter)
+		    }
+	      } else {
+	        ClearScreen
+		    race_string_function (player_parameter)
+		  }
+		}
+	  } else if (player_parameter.species_string = "gnome") {
+	    DisplayList (global_data_object.gnome_race_stringlist, true)
+	    get input {
+	      if (IsNumeric (result)) {
+	        if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		      player_parameter.race_string = ToString (StringListItem (global_data_object.gnome_race_stringlist, ToInt (result) - 1))
+		      ClearScreen
+		    } else {
+		      ClearScreen
+		      race_string_function (player_parameter)
+		    }
+	      } else {
+	        ClearScreen
+		    race_string_function (player_parameter)
+		  }
+		}
+	  } else if (player_parameter.species_string = "halfling") {
+	    DisplayList (global_data_object.halfling_race_stringlist, true)
+	    get input {
+	      if (IsNumeric (result)) {
+	        if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		      player_parameter.race_string = ToString (StringListItem (global_data_object.halfling_race_stringlist, ToInt (result) - 1))
+		      ClearScreen
+		    } else {
+		      ClearScreen
+		      race_string_function (player_parameter)
+		    }
+	      } else {
+	        ClearScreen
+		    race_string_function (player_parameter)
+		  }
+		}
+	  }
+	}
+  ]]></function>
+  <function name="age_integer_function" parameters="player_parameter"><![CDATA[
+    if (player_parameter.name = "player_1") {
+      msg ("What is your age?")
+	  get input {
+	    if (IsNumeric (result)) {
+	      if (ToInt (result) >= 0 and LengthOf (result) <= 4) {
+		    if (player_parameter.species_string = "human") {
+			  if (ToInt (result) >= 121) {
+			    ClearScreen
+				age_integer_function (player_parameter)
+			  } else {
+	            player_parameter.age_integer = ToInt (result)
+			    age_integer_to_age_string_function (player_parameter)
+		        ClearScreen
+			  }
+			} else if (player_parameter.species_string = "dwarf") {
+			  if (ToInt (result) >= 121) {
+			    ClearScreen
+				age_integer_function (player_parameter)
+			  } else {
+	            player_parameter.age_integer = ToInt (result)
+			    age_integer_to_age_string_function (player_parameter)
+		        ClearScreen
+			  }
+			} else if (player_parameter.species_string = "elf") {
+			  if (ToInt (result) >= 121) {
+			    ClearScreen
+				age_integer_function (player_parameter)
+			  } else {
+	            player_parameter.age_integer = ToInt (result)
+			    age_integer_to_age_string_function (player_parameter)
+		        ClearScreen
+			  }
+			} else if (player_parameter.species_string = "gnome") {
+			  if (ToInt (result) >= 121) {
+			    ClearScreen
+				age_integer_function (player_parameter)
+			  } else {
+	            player_parameter.age_integer = ToInt (result)
+			    age_integer_to_age_string_function (player_parameter)
+		        ClearScreen
+			  }
+			} else if (player_parameter.species_string = "halfling") {
+			  if (ToInt (result) >= 121) {
+			    ClearScreen
+				age_integer_function (player_parameter)
+			  } else {
+	            player_parameter.age_integer = ToInt (result)
+			    age_integer_to_age_string_function (player_parameter)
+		        ClearScreen
+			  }
+			}
+	      } else {
+	        ClearScreen
+	        age_integer_function (player_parameter)
+		  }
+		} else {
+		  ClearScreen
+	      age_integer_function (player_parameter)
+		}
+	  }
+	}
+  ]]></function>
+  <function name="age_integer_to_age_string_function" parameters="player_parameter"><![CDATA[
+    if (player_parameter.age_integer < 0) {
+	  player_parameter.age_integer = 0
+	}
+    if (player_parameter.species_string = "human") {
+	  if (player_parameter.age_integer >= 0 and player_parameter.age_integer <= 3) {
+	    player_parameter.age_string = "baby"
+	  } else if (player_parameter.age_integer >= 4 and player_parameter.age_integer <= 12) {
+	    player_parameter.age_string = "child"
+	  } else if (player_parameter.age_integer >= 13 and player_parameter.age_integer <= 19) {
+	    player_parameter.age_string = "teen"
+	  } else if (player_parameter.age_integer >= 20 and player_parameter.age_integer <= 120) {
+	    player_parameter.age_string = "adult"
+	  }
+	} else if (player_parameter.species_string = "dwarf") {
+	  if (player_parameter.age_integer >= 0 and player_parameter.age_integer <= 3) {
+	    player_parameter.age_string = "baby"
+	  } else if (player_parameter.age_integer >= 4 and player_parameter.age_integer <= 12) {
+	    player_parameter.age_string = "child"
+	  } else if (player_parameter.age_integer >= 13 and player_parameter.age_integer <= 19) {
+	    player_parameter.age_string = "teen"
+	  } else if (player_parameter.age_integer >= 20 and player_parameter.age_integer <= 9999) {
+	    player_parameter.age_string = "adult"
+	  }
+	} else if (player_parameter.species_string = "elf") {
+	  if (player_parameter.age_integer >= 0 and player_parameter.age_integer <= 3) {
+	    player_parameter.age_string = "baby"
+	  } else if (player_parameter.age_integer >= 4 and player_parameter.age_integer <= 12) {
+	    player_parameter.age_string = "child"
+	  } else if (player_parameter.age_integer >= 13 and player_parameter.age_integer <= 19) {
+	    player_parameter.age_string = "teen"
+	  } else if (player_parameter.age_integer >= 20 and player_parameter.age_integer <= 9999) {
+	    player_parameter.age_string = "adult"
+	  }
+	} else if (player_parameter.species_string = "gnome") {
+	  if (player_parameter.age_integer >= 0 and player_parameter.age_integer <= 3) {
+	    player_parameter.age_string = "baby"
+	  } else if (player_parameter.age_integer >= 4 and player_parameter.age_integer <= 12) {
+	    player_parameter.age_string = "child"
+	  } else if (player_parameter.age_integer >= 13 and player_parameter.age_integer <= 19) {
+	    player_parameter.age_string = "teen"
+	  } else if (player_parameter.age_integer >= 20 and player_parameter.age_integer <= 9999) {
+	    player_parameter.age_string = "adult"
+	  }
+	} else if (player_parameter.species_string = "halfling") {
+	  if (player_parameter.age_integer >= 0 and player_parameter.age_integer <= 3) {
+	    player_parameter.age_string = "baby"
+	  } else if (player_parameter.age_integer >= 4 and player_parameter.age_integer <= 12) {
+	    player_parameter.age_string = "child"
+	  } else if (player_parameter.age_integer >= 13 and player_parameter.age_integer <= 19) {
+	    player_parameter.age_string = "teen"
+	  } else if (player_parameter.age_integer >= 20 and player_parameter.age_integer <= 9999) {
+	    player_parameter.age_string = "adult"
+	  }
+	}
+  ]]></function>
+  <function name="specialization_string_function" parameters="player_parameter"><![CDATA[
+    if (player_parameter.name = "player_1") {
+      msg ("What is your specialization?")
+	  DisplayList (global_data_object.specialization_stringlist, true)
+	  get input {
+	    if (IsNumeric (result)) {
+	      if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		    player_parameter.specialization_string = ToString (StringListItem (global_data_object.specialization_stringlist, ToInt (result) - 1))
+		    ClearScreen
+		  } else {
+		    ClearScreen
+		    specialization_string_function (player_parameter)
+		  }
+	    } else {
+	      ClearScreen
+		  specialization_string_function (player_parameter)
+		}
+	  }
+	}
+  ]]></function>
+  <function name="class_string_function" parameters="player_parameter"><![CDATA[
+    if (player_parameter.name = "player_1") {
+	  msg ("What is your class?")
+	  if (player_parameter.specialization_string = "combat") {
+	    if (player_parameter.gender_string = "male") {
+		  DisplayList (global_data_object.male_combat_class_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.class_string = ToString (StringListItem (global_data_object.male_combat_class_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        class_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      class_string_function (player_parameter)
+		    }
+		  }
+		} else if (player_parameter.gender_string = "female") {
+		  DisplayList (global_data_object.female_combat_class_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.class_string = ToString (StringListItem (global_data_object.female_combat_class_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        class_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      class_string_function (player_parameter)
+		    }
+		  }
+		}
+	  } else if (player_parameter.specialization_string = "magic") {
+	    if (player_parameter.gender_string = "male") {
+		  DisplayList (global_data_object.male_magic_class_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.class_string = ToString (StringListItem (global_data_object.male_magic_class_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        class_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      class_string_function (player_parameter)
+		    }
+		  }
+		} else if (player_parameter.gender_string = "female") {
+		  DisplayList (global_data_object.female_magic_class_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.class_string = ToString (StringListItem (global_data_object.female_magic_class_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        class_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      class_string_function (player_parameter)
+		    }
+		  }
+		}
+	  } else if (player_parameter.specialization_string = "stealth") {
+	    if (player_parameter.gender_string = "male") {
+		  DisplayList (global_data_object.male_stealth_class_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.class_string = ToString (StringListItem (global_data_object.male_stealth_class_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        class_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      class_string_function (player_parameter)
+		    }
+		  }
+		} else if (player_parameter.gender_string = "female") {
+		  DisplayList (global_data_object.female_stealth_class_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.class_string = ToString (StringListItem (global_data_object.female_stealth_class_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        class_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      class_string_function (player_parameter)
+		    }
+		  }
+		}
+	  } else if (player_parameter.specialization_string = "diplomacy") {
+	    if (player_parameter.gender_string = "male") {
+		  DisplayList (global_data_object.male_diplomacy_class_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.class_string = ToString (StringListItem (global_data_object.male_diplomacy_class_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        class_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      class_string_function (player_parameter)
+		    }
+		  }
+		} else if (player_parameter.gender_string = "female") {
+		  DisplayList (global_data_object.female_diplomacy_class_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.class_string = ToString (StringListItem (global_data_object.female_diplomacy_class_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        class_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      class_string_function (player_parameter)
+		    }
+		  }
+		}
+	  } else if (player_parameter.specialization_string = "science") {
+	    if (player_parameter.gender_string = "male") {
+		  DisplayList (global_data_object.male_science_class_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.class_string = ToString (StringListItem (global_data_object.male_science_class_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        class_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      class_string_function (player_parameter)
+		    }
+		  }
+		} else if (player_parameter.gender_string = "female") {
+		  DisplayList (global_data_object.female_science_class_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.class_string = ToString (StringListItem (global_data_object.female_science_class_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        class_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      class_string_function (player_parameter)
+		    }
+		  }
+		}
+	  }
+	}
+  ]]></function>
+  <function name="skin_color_string_function" parameters="player_parameter"><![CDATA[
+    if (player_parameter.name = "player_1") {
+	  msg ("What is your skin color?")
+	  if (player_parameter.race_string = "european") {
+	    if (player_parameter.gender_string = "male") {
+		  DisplayList (global_data_object.male_european_skin_color_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.skin_color_string = ToString (StringListItem (global_data_object.male_european_skin_color_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        skin_color_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      skin_color_string_function (player_parameter)
+		    }
+		  }
+		} else if (player_parameter.gender_string = "female") {
+		  DisplayList (global_data_object.female_european_skin_color_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.skin_color_string = ToString (StringListItem (global_data_object.male_european_skin_color_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        skin_color_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      skin_color_string_function (player_parameter)
+		    }
+		  }
+		}
+	  } else if (player_parameter.race_string = "asian") {
+	    if (player_parameter.gender_string = "male") {
+		  DisplayList (global_data_object.male_european_skin_color_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.skin_color_string = ToString (StringListItem (global_data_object.male_european_skin_color_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        skin_color_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      skin_color_string_function (player_parameter)
+		    }
+		  }
+		} else if (player_parameter.gender_string = "female") {
+		  DisplayList (global_data_object.female_european_skin_color_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.skin_color_string = ToString (StringListItem (global_data_object.male_european_skin_color_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        skin_color_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      skin_color_string_function (player_parameter)
+		    }
+		  }
+		}
+	  } else if (player_parameter.race_string = "arabian") {
+	    if (player_parameter.gender_string = "male") {
+		  DisplayList (global_data_object.male_european_skin_color_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.skin_color_string = ToString (StringListItem (global_data_object.male_european_skin_color_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        skin_color_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      skin_color_string_function (player_parameter)
+		    }
+		  }
+		} else if (player_parameter.gender_string = "female") {
+		  DisplayList (global_data_object.female_european_skin_color_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.skin_color_string = ToString (StringListItem (global_data_object.male_european_skin_color_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        skin_color_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      skin_color_string_function (player_parameter)
+		    }
+		  }
+		}
+	  } else if (player_parameter.race_string = "african") {
+	    if (player_parameter.gender_string = "male") {
+		  DisplayList (global_data_object.male_european_skin_color_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.skin_color_string = ToString (StringListItem (global_data_object.male_european_skin_color_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        skin_color_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      skin_color_string_function (player_parameter)
+		    }
+		  }
+		} else if (player_parameter.gender_string = "female") {
+		  DisplayList (global_data_object.female_european_skin_color_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.skin_color_string = ToString (StringListItem (global_data_object.male_european_skin_color_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        skin_color_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      skin_color_string_function (player_parameter)
+		    }
+		  }
+		}
+	  } else if (player_parameter.race_string = "american") {
+	    if (player_parameter.gender_string = "male") {
+		  DisplayList (global_data_object.male_european_skin_color_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.skin_color_string = ToString (StringListItem (global_data_object.male_european_skin_color_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        skin_color_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      skin_color_string_function (player_parameter)
+		    }
+		  }
+		} else if (player_parameter.gender_string = "female") {
+		  DisplayList (global_data_object.female_european_skin_color_stringlist, true)
+		  get input {
+		    if (IsNumeric (result)) {
+	          if (ToInt (result) >= 1 and ToInt (result) <= 5) {
+		        player_parameter.skin_color_string = ToString (StringListItem (global_data_object.male_european_skin_color_stringlist, ToInt (result) - 1))
+		        ClearScreen
+		      } else {
+		        ClearScreen
+		        skin_color_string_function (player_parameter)
+		      }
+	        } else {
+	          ClearScreen
+		      skin_color_string_function (player_parameter)
+		    }
+		  }
+		}
+	  }
+	}
+  ]]></function>
+  <function name="test_function" parameters="player_parameter">
+    msg (player_parameter.first_name_string)
+	if (HasString (player_parameter, "last_name_string")) {
+	  msg (player_parameter.last_name_string)
+	}
+	msg (player_parameter.gender_string)
+	msg (player_parameter.species_string)
+	msg (player_parameter.race_string)
+	msg (player_parameter.specialization_string)
+	msg (player_parameter.class_string)
+	msg (player_parameter.age_integer)
+	msg (player_parameter.age_string)
+  </function>
+  <function name="age_string_function" parameters="player_parameter"><![CDATA[
+    if (player_parameter.name = "player_1") {
+      msg ("What is your age?")
+	  DisplayList (global_data_object.age_stringlist, true)
+	  get input {
+	    if (IsNumeric (result)) {
+	      if (ToInt (result) >= 1 and ToInt (result) <= 4) {
+		    player_parameter.age_string = ToString (StringListItem (global_data_object.age_stringlist, ToInt (result) - 1))
+		    ClearScreen
+		  } else {
+		    ClearScreen
+		    age_string_function (player_parameter)
+		  }
+	    } else {
+	      ClearScreen
+		  age_string_function (player_parameter)
+		}
+	  }
+	}
+  ]]></function>
+</asl>

@@ -1,0 +1,204 @@
+﻿<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="testbed">
+    <gameid>9a0c1268-ae93-4ccb-b506-e478c4068b20</gameid>
+    <version>1.0</version>
+    <BallSym>☺</BallSym>
+    <BrickSym>█</BrickSym>
+    <EmptySym><![CDATA[&nbsp;]]></EmptySym>
+    <PaddleSym>▀</PaddleSym>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <beforefirstenter type="script">
+      PlayAWhile
+    </beforefirstenter>
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+  </object>
+  <function name="PlayAWhile">
+  	request (Hide, "Command")
+    SetFontName ("Courier New")
+    game.scale = 10
+    game.BallColor = "#000000"
+    game.PaddleColor = "#000000"
+    game.PaddleWidth = 7
+    game.field = Array2D_Create(50, 15)
+    CreateBlankRow (1)
+    CenterString ("Take a break!", 1, "#cccc00")
+    CreateBlankRow (2)
+    CreateBrickRow (3, "#cc0000")
+    CreateBrickRow (4, "#cccc00")
+    CreateBrickRow (5, "#00cc00")
+    CreateBrickRow (6, "#00cccc")
+    CreateBrickRow (7, "#0000cc")
+    CreateBrickRow (8, "#cc00cc")
+    CreateBlankRow (9)
+    CreateBlankRow (10)
+    CreateBlankRow (11)
+    CreateBlankRow (12)
+    CreateBlankRow (13)
+    CreateBlankRow (14)
+    CreateBlankRow (15)
+    create ("o")
+    game.ball = o
+    game.ball.x = game.field.width/2 * game.scale
+    game.ball.y = 9 * game.scale
+    create ("o")
+    game.speed = o
+    game.speed.x = game.scale*3
+    game.speed.y = game.scale
+    create ("o")
+    game.paddle = o
+    game.paddle.x = game.field.width/2
+    game.paddle.y = game.field.height
+    
+    Step
+  </function>
+  <function name="Step">
+      HideBall
+      MoveBall
+      ShowBall
+      HidePaddle
+      MovePaddle
+      ShowPaddle
+      DisplayField
+      SetTimeout(1) {
+        Step
+      }
+  </function>
+  <function name="MoveBall"><![CDATA[
+    game.ball.x = game.ball.x + game.speed.x
+    game.ball.y = game.ball.y + game.speed.y
+    if (game.ball.x < 1*game.scale) {
+      game.ball.x = 1*game.scale
+      game.speed.x = -game.speed.x
+    }
+    if (game.ball.y < 2*game.scale) {
+      game.ball.y = 2*game.scale
+      game.speed.y = -game.speed.y
+    }
+    if (game.ball.x > game.field.width*game.scale) {
+      game.ball.x = game.field.width*game.scale
+      game.speed.x = -game.speed.x
+    }
+    if (game.ball.y > (game.field.height-1)*game.scale) {
+      game.ball.y = (game.field.height-1)*game.scale
+      game.speed.y = -game.speed.y
+      xspeed = GetRandomInt(1, 2)*game.scale
+      if (game.speed.x < 0) {
+        game.speed.x = -xspeed
+      }
+      else {
+        game.speed.x = xspeed
+      }
+    }
+    x = game.ball.x / game.scale
+    y = game.ball.y / game.scale
+    cell = Array2D_Get(game.field, x, y)
+    if (cell.ch <> game.EmptySym) {
+      cell.ch = game.EmptySym
+      game.speed.y = -game.speed.y
+    }
+  ]]></function>
+  <function name="MovePaddle"><![CDATA[
+    x = game.ball.x / game.scale
+    half = game.PaddleWidth/2
+    otherHalf = game.PaddleWidth - half
+    if (x < half) {
+      x = half
+    }
+    else if (x > game.field.width - otherHalf) {
+      x = game.field.width - otherHalf
+    }
+    game.paddle.x = x
+  ]]></function>
+  <function name="CreateBrickRow" parameters="y, color">
+    CreateRow (y, game.BrickSym, color)
+  </function>
+  <function name="CreateBlankRow" parameters="y">
+    CreateRow (y, game.EmptySym, "#000000")
+  </function>
+  <function name="CreateRow" parameters="y, ch, color">
+    for (x, 1, game.field.width, 1) {
+      SetCell (x, y, ch, color)
+    }
+  </function>
+  <function name="ShowBall">
+    DrawBall (game.BallSym)
+  </function>
+  <function name="HideBall">
+    DrawBall (game.EmptySym)
+  </function>
+  <function name="DrawBall" parameters="sym">
+    x = game.ball.x / game.scale
+    y = game.ball.y / game.scale
+    SetCell (x, y, sym, game.BallColor)
+  </function>
+  <function name="ShowPaddle">
+    DrawPaddle (game.PaddleSym)
+  </function>
+  <function name="HidePaddle">
+    DrawPaddle (game.EmptySym)
+  </function>
+  <function name="DrawPaddle" parameters="sym">
+    x = game.paddle.x - game.PaddleWidth/2
+    for (i, 1, game.PaddleWidth, 1) {
+      SetCell (x+i, game.paddle.y, sym, game.PaddleColor)
+    }
+  </function>
+  <function name="CenterString" parameters="s, y, color">
+    PrintString (s, (game.field.width-LengthOf(s))/2, y, color)
+  </function>
+  <function name="PrintString" parameters="s, x, y, color">
+    for (i, 1, LengthOf(s), 1) {
+      SetCell (x+i, y, Mid(s, i, 1), color)
+    }
+  </function>
+  <function name="SetCell" parameters="x, y, ch, color">
+    o = Array2D_Get(game.field, x, y)
+    o.ch = ch
+    o.c = color
+  </function>
+  <function name="DisplayField"><![CDATA[
+    s = "<br>"
+    for (y, 1, game.field.height, 1) {
+      for (x, 1, game.field.width, 1) {
+        cell = Array2D_Get(game.field, x, y)
+        s = s + "<font color=\"" + cell.c + "\">" + cell.ch + "</font>"
+      }
+      s = s + "<br>"
+    }
+    ClearScreen
+    OutputTextRawNoBr (s)
+  ]]></function>
+  <function name="Array2D_Create" parameters="width, height" type="object">
+    create ("o")
+    o.width = width
+    o.height = height
+    for (y, 1, o.height, 1) {
+      create ("row")
+      row.y = y
+      for (x, 1, o.width, 1) {
+        create ("cell")
+        set (row, "c"+x, cell)
+      }
+      set (o, "r"+y, row)
+    }
+    return (o)
+  </function>
+  <function name="Array2D_Get" parameters="array, x, y" type="object"><![CDATA[
+    o = null
+    if (x >= 1 and x <= array.width and y >= 1 and y <= array.height) {
+      row = GetAttribute (array, "r"+y)
+      o = GetAttribute (row, "c"+x)
+    }
+    else {
+      error ("Array2D_GetCell: invalid parameters (" + x + "," + y + "), width=" + array.width + ",height=" + array.height)
+    }
+    return (o)
+  ]]></function>
+</asl>

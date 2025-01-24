@@ -1,0 +1,81 @@
+<library>
+  <delegate name="ProcessTextFunction" type="string"/>
+  <function name="ProcessTextCommand" type="string" parameters="section, data">
+    if (StartsWith(section, "if ")) {
+      return (ProcessTextCommand_If(section, data))
+    }
+    else if (StartsWith(section, "object:")) {
+      return (ProcessTextCommand_Object(section, data))
+    }
+    else if (StartsWith(section, "command:")) {
+      return (ProcessTextCommand_Command(Mid(section, 9), data))
+    }
+    else if (StartsWith(section, "page:")) {
+      return (ProcessTextCommand_Command(Mid(section, 6), data))
+    }
+    else if (StartsWith(section, "exit:")) {
+      return (ProcessTextCommand_Exit(section, data))
+    }
+    else if (StartsWith(section, "once:")) {
+      return (ProcessTextCommand_Once(section, data))
+    }
+    else if (StartsWith(section, "random:")) {
+      return (ProcessTextCommand_Random(section, data))
+    }
+    else if (StartsWith(section, "rndalt:")) {
+      return (ProcessTextCommand_RandomAlias(section, data))
+    }
+    else if (StartsWith(section, "img:")) {
+      return (ProcessTextCommand_Img(section, data))
+    }
+    else if (StartsWith(section, "counter:")) {
+      return (ProcessTextCommand_Counter(Mid(section, 9), data))
+    }
+    else if (StartsWith(section, "select:")) {
+      return (ProcessTextCommand_Select(section, data))
+    }
+    else {
+      dot = Instr(section, ".")
+      if (dot = 0) {
+        return ("{" + ProcessTextSection(section, data) + "}")
+      }
+      else {
+        objectname = Left(section, dot - 1)
+        attributename = Mid(section, dot + 1)
+        object = GetObject(objectname)
+        if (object = null) {
+          return ("{" + ProcessTextSection(section, data) + "}")
+        }
+        else {
+          if (HasAttribute(object, attributename)) {
+            type = TypeOf(object, attributename)
+            switch (type) {
+              case ("string", "int", "double") {
+                return (ToString(GetAttribute(object, attributename)))
+              }
+              case ("boolean") {
+                result = GetAttribute(object, attributename)
+                if (result) {
+                  return ("true")
+                }
+                else {
+                  return ("false")
+                }
+              }
+              case ("ProcessTextFunction") {
+                return (RunDelegateFunction(object, attributename))
+              }
+              default {
+                return ("(" + type + ")")
+              }
+            }
+          }
+          else {
+            return ("")
+          }
+        }
+      }
+    }
+  </function>
+  
+</library>

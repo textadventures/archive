@@ -1,0 +1,33 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Testing">
+    <gameid>e352a6d8-c005-4b44-8021-1cf6a3f13fde</gameid>
+    <description type="string"></description>
+    <races type="list">HumanRace; CatRace; DogRace; ThreeleggedRace; SpaceRace</races>
+    <start type="script">
+      choices = NewStringDictionary()
+      foreach (racename, game.races) {
+        raceobject = GetObject(racename)
+        dictionary add (choices, raceobject.race, raceobject.name)
+        msg ("What is your race?")
+        show menu ("My race is...", choices, false) {
+      // Copy all the attributes, using the "attributes" string list as key.
+          race = result
+          foreach (attribute, race.attributes) {
+            set (player, attribute, GetAttribute(race, attribute))
+          }
+        }
+      }
+      msg ("I am a " + player.race)
+      msg ("My maxhp is " + player.maxhp)
+    </start>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+  </object>
+</asl>

@@ -1,0 +1,229 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Tutorial Game">
+    <gameid>b0233600-4e7e-42d8-95ed-b0c58c1e2591</gameid>
+    <version>1.0</version>
+  </game>
+  <object name="lounge">
+    <inherit name="editor_room" />
+    <description>This is quite a plain lounge with an old beige carpet and peeling wallpaper.</description>
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+    <exit alias="south" to="kitchen">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="TV">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <alt>television; telly</alt>
+      <switchedondesc>It is currently showing an old western.</switchedondesc>
+      <switchedoffdesc>It is currently switched off.</switchedoffdesc>
+      <look>The TV is an old model, possibly 20 years old.</look>
+      <watch type="script">
+        if (IsSwitchedOn(TV)) {
+          msg ("You watch for a few minutes. As your will to live slowly ebbs away, you remember that you’ve always hated watching westerns.")
+        }
+        else {
+          msg ("You watch for a few minutes, thinking that the latest episode of ‘Big Brother’ is even more boring than usual. You then realise that the TV is in fact switched off.")
+        }
+      </watch>
+    </object>
+    <object name="Bob">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look type="script">
+        if (GetBoolean(Bob, "alive")) {
+          msg ("Bob is sitting up, appearing to feel somewhat under the weather.")
+        }
+        else {
+          msg ("Bob is lying on the floor, a lot more still than usual.")
+        }
+      </look>
+      <useon type="scriptdictionary">
+        <item key="defibrillator">
+          revive bob
+        </item>
+      </useon>
+    </object>
+    <object name="sofa">
+      <inherit name="editor_object" />
+      <look>Old but comfortable.</look>
+      <sit>There’s no time for lounging about now.</sit>
+    </object>
+    <object name="defibrillator">
+      <inherit name="editor_object" />
+      <take />
+      <look>A heart defibrillator can magically revive a dead person, if all those hospital dramas are to be believed.</look>
+      <use type="script">
+        revive bob
+      </use>
+      <selfuseon type="scriptdictionary" />
+      <ask type="scriptdictionary">
+        <item key="heart attack cardiac arrest">
+          if (GetBoolean(Bob, "alive")) {
+            msg ("\"Well, one moment I was sitting there, feeling pretty happy with myself after eating my afternoon snack - a cheeseburger, pizza and ice cream pie, smothered in bacon, which I'd washed down with a bucket of coffee and six cans of Red Bull - when all of a sudden, I was in terrible pain, and then everything was peaceful. Then you came along.")
+          }
+          else {
+            msg ("\"He is dead, Jim!\"")
+          }
+        </item>
+      </ask>
+    </object>
+    <object name="table">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <object name="newspaper">
+        <inherit name="editor_object" />
+      </object>
+    </object>
+  </object>
+  <object name="kitchen">
+    <inherit name="editor_room" />
+    <exit alias="north" to="lounge">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="eggs">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <weight type="int">250</weight>
+      <take />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>several</prefix>
+      <look type="script">
+        msg ("A box of eggs, weighing " + eggs.weight + " grams.")
+      </look>
+    </object>
+    <object name="flour">
+      <inherit name="editor_object" />
+      <weight type="int">500</weight>
+      <take />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>some</prefix>
+      <look type="script">
+        msg ("A sack of flour, weighing " + flour.weight + " grams.")
+      </look>
+    </object>
+    <object name="sugar">
+      <inherit name="editor_object" />
+      <weight type="int">1000</weight>
+      <take />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>some</prefix>
+      <look type="script">
+        msg ("A sack of sugar, weighing " + sugar.weight + " grams.")
+      </look>
+    </object>
+    <object name="fridge">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <listchildren />
+      <listchildrenprefix>In the fridge you find</listchildrenprefix>
+      <look type="script">
+        if (fridge.isopen) {
+          msg ("The fridge is open, casting its light out into the gloomy kitchen.")
+        }
+        else {
+          msg ("A big old refrigerator sits in the corner, humming quietly.")
+        }
+      </look>
+      <object name="milk">
+        <inherit name="editor_object" />
+        <look>A bottle of milk.</look>
+        <take />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>some</prefix>
+      </object>
+      <object name="cheese">
+        <inherit name="editor_object" />
+        <take />
+        <look>A slice of cheese.</look>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>some</prefix>
+      </object>
+      <object name="beer">
+        <inherit name="editor_object" />
+        <look>A bottle of beer</look>
+        <take />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>some</prefix>
+      </object>
+    </object>
+    <object name="cupboard">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <listchildren />
+      <listchildrenprefix>The cupboard is bare except for </listchildrenprefix>
+      <look>A wooden cupboard is standing next to the fridge.</look>
+      <object name="tin of beans">
+        <inherit name="editor_object" />
+        <take />
+        <look>mmmm, baked beans.</look>
+      </object>
+    </object>
+    <object name="window">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <openscript type="script">
+        HelperOpenObject (window)
+        if (Contains (kitchen,bee)) {
+          msg ("You open the window. Not much happens.")
+        }
+        else {
+          msg ("You open the window and a bee flies into the kitchen.")
+          MoveObject (bee, kitchen)
+        }
+      </openscript>
+    </object>
+    <object name="apple">
+      <inherit name="editor_object" />
+      <take />
+      <eat type="script">
+        msg ("You eat the apple. Tasty.")
+        RemoveObject (apple)
+      </eat>
+    </object>
+  </object>
+  <verb>
+    <property>watch</property>
+    <pattern>watch</pattern>
+    <defaultexpression>"You can't watch " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="say">
+    <pattern>say #text#; shout #text#; yell #text#</pattern>
+    <script>
+      msg ("You say '" + text + "', but nobody replies.")
+    </script>
+  </command>
+  <command name="weigh">
+    <pattern>weigh #object#</pattern>
+    <script>
+      if (HasAttribute(object, "weight")) {
+        msg ("\"It weighs \" + object.weight + \" grams.\"")
+      }
+      else {
+        msg ("You can't weight that.")
+      }
+    </script>
+  </command>
+  <object name="bee">
+    <inherit name="editor_object" />
+  </object>
+  <function name="revive bob">
+    if (player.parent = lounge) {
+      if (GetBoolean(Bob, "alive")) {
+        msg ("Bob is alive so you don't need to use the defibrillator again.")
+      }
+      else {
+        msg ("Miraculously, the defibrillator lived up to its promise, and Bob is now alive again. He says his head feels kind of fuzzy.")
+        SetObjectFlagOn (Bob, "alive")
+      }
+    }
+    else {
+      msg ("Don't play with the defibrillator!")
+    }
+  </function>
+</asl>

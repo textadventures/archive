@@ -1,0 +1,115 @@
+<!--Saved by Quest 5.6.5510.29036-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="A Life In Text v1">
+    <gameid>dbc572bf-7a96-4d4e-8341-5d365d3fab84</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+    <classes type="stringlist">
+      <value>Archer</value>
+      <value>Farmer</value>
+      <value>Blacksmith</value>
+      <value>Mage</value>
+      <value>Miner</value>
+      <value>Warrior</value>
+      <value>Woodsman</value>
+    </classes>
+    <hour type="int">0</hour>
+    <minute type="int">0</minute>
+    <day type="int">0</day>
+    <month type="int">0</month>
+    <time>game.hour + ":" + game.minute + " " + game.suffix + " on " + game.month + "/" + game.day</time>
+    <statusattributes type="stringdictionary">
+      <item>
+        <key>time</key>
+        <value><![CDATA[<b>Time:</b> !]]></value>
+      </item>
+    </statusattributes>
+    <timesuffix> NA</timesuffix>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <beforefirstenter type="script">
+      class_choice
+    </beforefirstenter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <class type="stringlist" />
+    </object>
+  </object>
+  <object name="classes">
+    <inherit name="editor_room" />
+    <object name="miner">
+      <inherit name="editor_object" />
+    </object>
+    <object name="mage">
+      <inherit name="editor_object" />
+    </object>
+    <object name="blacksmith">
+      <inherit name="editor_object" />
+    </object>
+    <object name="woodsman">
+      <inherit name="editor_object" />
+    </object>
+    <object name="archer">
+      <inherit name="editor_object" />
+    </object>
+    <object name="warrior">
+      <inherit name="editor_object" />
+    </object>
+    <object name="farmer">
+      <inherit name="editor_object" />
+    </object>
+  </object>
+  <function name="class_choice">
+    ShowMenu ("What Class have you choosen?", game.classes, false) {
+      player.class = result
+      Ask ("Is " + player.class + " correct?") {
+        if (result = true) {
+          if (player.class = "Archer") {
+            msg ("So you have choosen the life of an " + player.class + "!")
+          }
+          else {
+            msg ("So you have choosen the life of a " + player.class + "!")
+          }
+        }
+        else {
+          class_choice
+        }
+      }
+    }
+  </function>
+  <function name="java_minute" parameters="minute">
+    game.minute = minute
+  </function>
+  <function name="java_hour" parameters="hour">
+    game.hour = hour
+  </function>
+  <function name="java_day" parameters="day">
+    game.day = day
+  </function>
+  <function name="java_month" parameters="month">
+    game.month = month
+  </function>
+  <function name="time_set">
+    game.time = game.hour + ":" + game.minute + " on " + game.month + "/" + game.day
+  </function>
+  <function name="timesuffix" parameters="suffix" type="string">
+    game.timesuffix = suffix
+  </function>
+  <javascript src="main.js" />
+  <timer name="time">
+    <interval>1</interval>
+    <enabled />
+    <script>
+      JS.month ()
+      JS.day ()
+      JS.hour ()
+      JS.minute ()
+      game.time = game.hour + ":" + game.minute + game.timesuffix + " on " + game.month + "/" + game.day
+      JS.suffix ()
+    </script>
+  </timer>
+</asl>

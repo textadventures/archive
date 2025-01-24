@@ -1,0 +1,362 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <include ref="EnviroLib.aslx" />
+  <template name="Fill"><![CDATA[^fill (?<object1>.*) with (?<object2>.*)$]]></template>
+  <template name="Empty"><![CDATA[^empty (?<object>.*)$]]></template>
+  <dynamictemplate name="NotFillable">"You cannot fill " + object.article + "."</dynamictemplate>
+  <dynamictemplate name="AlreadyFull">CapFirst(object.article) + " is already full."</dynamictemplate>
+  <dynamictemplate name="NotLiquid">"You cannot do that with " + object.article + "."</dynamictemplate>
+  <dynamictemplate name="FullOf">"full of " + object.filling_liquid</dynamictemplate>
+  <dynamictemplate name="AlreadyEmpty">CapFirst(object.article) + " is already empty."</dynamictemplate>
+  <dynamictemplate name="Empty">"You empty " + object.article + ", pouring the " + object.filled_with + " on the ground."</dynamictemplate>
+  <game name="EnvironmentDemo">
+    <gameid>a8347f1f-de39-4aba-a2be-44d20646ab54</gameid>
+    <version>1.0</version>
+    <turn type="int">0</turn>
+    <statusattributes type="stringdictionary">turn = </statusattributes>
+  </game>
+  <command name="fill">
+    <pattern type="string"><![CDATA[^fill (?<object1>.*) with (?<object2>.*)$]]></pattern>
+    <script>
+      // fill object1 with object 2
+      if (not object1.parent = player) {
+        msg (DynamicTemplate("NotCarrying", object1))
+      }
+      else if (not HasAttribute(object1, "fill_capacity")) {
+        msg (DynamicTemplate("NotFillable", object1))
+      }
+      else if (HasAttribute(object1, "filled_with") and not object1.parent = null) {
+        msg (DynamicTemplate("AlreadyFull", object1))
+      }
+      else if (not HasAttribute(object2, "filling_liquid")) {
+        msg (DynamicTemplate("NotLiquid", object2))
+      }
+      else {
+        object1.filled_with = object2.filling_liquid
+        // change object1 alias
+        object1.old_alias = object1.alias
+        object1.alias = object1.alias + " (" + DynamicTemplate("FullOf", object2) + ")"
+        msg (Template("Done"))
+      }
+    </script>
+  </command>
+  <command name="empty">
+    <pattern type="string"><![CDATA[^empty (?<object>.*)$]]></pattern>
+    <script>
+      // empty object
+      if (not object.parent = player) {
+        msg (DynamicTemplate("NotCarrying", object))
+      }
+      else if (not HasAttribute(object, "fill_capacity")) {
+        msg (DynamicTemplate("NotFillable", object))
+      }
+      else if (not HasAttribute(object, "filled_with") or object.parent = null) {
+        msg (DynamicTemplate("AlreadyEmpty", object))
+      }
+      else {
+        msg (DynamicTemplate("Empty", object))
+        object.filled_with = null
+        object.alias = object.old_alias
+      }
+    </script>
+  </command>
+  <object name="room">
+    <inherit name="editor_room" />
+    <alias>Room in a Building</alias>
+    <description>This is a hut, with all the things you expect in a hut.</description>
+    <listen>You can faintly hear the sounds of the forest outside.</listen>
+    <enviro type="object">e_building</enviro>
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+    <object name="cup">
+      <inherit name="editor_object" />
+      <look>A small cup.</look>
+      <take />
+      <fill_capacity type="int">10</fill_capacity>
+      <alias>Cup</alias>
+    </object>
+    <exit alias="west" to="forest_path">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="torch">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <inherit name="providing_light_type" />
+      <take />
+      <alias>Torch</alias>
+      <switchedondesc>(providing light)</switchedondesc>
+      <onswitchon type="script">
+        SetObjectFlagOn (torch, "turnedon")
+      </onswitchon>
+      <onswitchoff type="script">
+        SetObjectFlagOff (torch, "turnedon")
+      </onswitchoff>
+    </object>
+    <exit alias="south" to="cave">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="environment">
+    <inherit name="editor_room" />
+    <inherit name="light_type" />
+    <listen>You can't heard much at all.</listen>
+    <smell>You sniff the air, but cannot smell anything.</smell>
+    <object name="e_building">
+      <listen>You can faintly hear the hum of the ventilation system.</listen>
+      <smell>There is a faint smell of carpet cleaner.</smell>
+      <scenery />
+      <enviro type="object">e_inside</enviro>
+      <object name="wall">
+        <inherit name="editor_object" />
+        <look>The walls are not important.</look>
+        <scenery />
+      </object>
+    </object>
+    <object name="e_cave">
+      <inherit name="editor_object" />
+      <inherit name="dark_type" />
+      <listen>From far away, you can hear the burbling of an underground stream.</listen>
+      <smell>This place smells of damp...</smell>
+      <scenery />
+      <enviro type="object">e_inside</enviro>
+    </object>
+    <object name="e_forest">
+      <inherit name="editor_object" />
+      <smell>You can smell pine cones and bracken.</smell>
+      <listen>In the trees, birds are sing, as the wind gently rustles through the leaves.</listen>
+      <scenery />
+      <enviro type="object">e_outside</enviro>
+      <object name="tree">
+        <inherit name="editor_object" />
+        <look>A tall thing with leaves. One of many in the forest.</look>
+        <scenery />
+      </object>
+    </object>
+    <object name="e_inside">
+      <inherit name="editor_object" />
+      <listen>It's pretty quiet in here.</listen>
+      <look type="string"></look>
+      <scenery />
+      <enviro type="object">environment</enviro>
+      <object name="ceiling">
+        <inherit name="editor_object" />
+        <look>You stare at the ceiling for a while.</look>
+        <scenery />
+      </object>
+    </object>
+    <object name="e_outside">
+      <inherit name="editor_object" />
+      <listen>It's pretty quiet out here.</listen>
+      <scenery />
+      <enviro type="object">environment</enviro>
+      <object name="sky">
+        <inherit name="editor_object" />
+        <look>The sky is blue, with little fluffy clouds</look>
+        <scenery />
+      </object>
+    </object>
+    <object name="e_forest_river">
+      <inherit name="editor_object" />
+      <listen>You can hear a stream tumbling by.</listen>
+      <scenery />
+      <enviro type="object">e_forest</enviro>
+      <object name="water">
+        <inherit name="editor_object" />
+        <look>A clear, colourless liquid.</look>
+        <scenery />
+        <filling_liquid>water</filling_liquid>
+      </object>
+    </object>
+    <object name="this_location">
+      <inherit name="editor_object" />
+      <alias>This Location</alias>
+      <look type="script">
+        ShowRoomDescription
+      </look>
+      <defaultdisplayverbs>Look at; Wait at; Help for</defaultdisplayverbs>
+      <displayverbs>Look at; Wait at; Help for</displayverbs>
+      <waitat type="script">
+        msg (Template("DefaultWait"))
+      </waitat>
+      <helpfor type="script">
+        msg ("No help here...")
+      </helpfor>
+      <danceat type="script">
+        DoDance
+      </danceat>
+    </object>
+  </object>
+  <command name="Test Enviro">
+    <pattern>tst #text#</pattern>
+    <script>
+      flag = False
+      foreach (obj, AllObjects()) {
+        if (DoesInherit (obj, "editor_room")) {
+          if (not HasObject(obj, text) and not obj.name = "environment" and not obj.name = "nowhere") {
+            msg ("No " + text + " for: " + obj.name)
+            flag = True
+          }
+        }
+      }
+      if (not flag) {
+        msg ("All rooms have " + text + " set!")
+      }
+    </script>
+  </command>
+  <command name="Dance">
+    <pattern>dance</pattern>
+    <script>
+      DoDance
+    </script>
+  </command>
+  <object name="forest_path">
+    <inherit name="editor_room" />
+    <description>A path through the forest, heading to a hut to the east. One tree looks a little odd.</description>
+    <listen type="string"></listen>
+    <enviro type="object">e_forest</enviro>
+    <exit alias="east" to="room">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="west" to="more_forest_path">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="odd_tree">
+      <inherit name="editor_object" />
+      <alias>Odd Tree</alias>
+      <look>This tree is blue, with red leaves. Curious...</look>
+      <scenery />
+      <enviro_exclude type="object">tree</enviro_exclude>
+    </object>
+  </object>
+  <object name="more_forest_path">
+    <inherit name="editor_room" />
+    <description>The path through the forest continues, running past a stream at this point. </description>
+    <enviro type="object">e_forest_river</enviro>
+    <exit alias="east" to="forest_path">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="west" to="forest_clearing">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="forest_clearing">
+    <inherit name="editor_room" />
+    <description>A clearing in the forest. A path heads east. A sign says, "Best site for rain dance."</description>
+    <xdisplayverbs>Dance at</xdisplayverbs>
+    <enviro type="object">e_forest</enviro>
+    <exit alias="east" to="more_forest_path">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="cave">
+    <inherit name="editor_room" />
+    <enviro type="object">e_cave</enviro>
+    <exit alias="north" to="room">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <command name="Cast Nightvision">
+    <pattern>cast nightvision</pattern>
+    <script>
+      SetObjectFlagOn (player, "seeinthedark")
+    </script>
+  </command>
+  <function name="DoDance">
+      if (player.parent.name = "forest_clearing") {
+        msg ("You do a little dance, and, who would have guess, clouds appear in the sky. A few spots of rain, then it starts coming down hard.")
+        sky.look = "The sky is dark and forbidding."
+        e_outside.enviro_note = "It is raining hard."
+      }
+      else {
+        msg ("You do a dance. Happy now?")
+      }
+  </function>
+  <turnscript name="IncrementTurn">
+    <enabled />
+    <script>
+      this_location.displayverbs = Split (this_location.defaultdisplayverbs, "; ")
+      if (HasString (player.parent, "xdisplayverbs")) {
+        foreach (item, Split (player.parent.xdisplayverbs, "; ")) {
+          list add (this_location.displayverbs, item)
+        }
+      }
+
+      game.turn = game.turn + 1
+    </script>
+  </turnscript>
+  <verb>
+    <property>waitat</property>
+    <pattern>wait at</pattern>
+    <defaultexpression>"You can't wait at " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>danceat</property>
+    <pattern>dance at</pattern>
+    <defaultexpression>"You can't wait at " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>helpfor</property>
+    <pattern>help for</pattern>
+    <defaultexpression>"You can't help for " + object.article + "."</defaultexpression>
+  </verb>
+  <walkthrough name="test">
+    <steps type="list">
+      listen
+      smell
+      examine wall
+      w
+      listen
+      smell
+      examine wall
+      examine tree
+      examine sky
+      w
+      listen
+      smell
+      examine wall
+      examine tree
+      examine sky
+      w
+      listen
+      sniff
+      examine wall
+      examine tree
+      examine sky
+      dance
+      examine sky
+      e
+      examine sky
+      l
+    </steps>
+  </walkthrough>
+  <walkthrough name="fill_empty">
+    <steps type="list">
+      get cup
+      w
+      w
+      fill cup with water
+      i
+      e
+      empty cup
+      i
+    </steps>
+  </walkthrough>
+  <walkthrough name="light_and_dark">
+    <steps type="list">
+      s
+      n
+      get torch
+      s
+      turn on torch
+      l
+      turn off torch
+      l
+      n
+      cast nightvision
+      s
+    </steps>
+  </walkthrough>
+</asl>

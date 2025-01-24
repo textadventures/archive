@@ -1,0 +1,215 @@
+<asl version="540">
+  <include ref="English.aslx"/>
+  <include ref="Core.aslx"/>
+  <game name="Testing Game Stuff">
+    <gameid>d67ec73f-f879-4911-9d88-c02ea527c534</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+	  <attr name="rupees" type="int">0</attr>
+	  <attr name="hit_points" type="string">999/999</attr>
+	  <attr name="current_hit_points" type="int">999</attr>
+	  <attr name="maximum_hit_points" type="int">999</attr>
+	  <attr name="changedcurrent_hit_points" type="script"><![CDATA[
+	    if (player.current_hit_points <= 0) {
+		  msg ("You have died.")
+		  msg ("GAME OVER")
+		  finish
+		}
+	    if (player.current_hit_points > player.maximum_hit_points) {
+		  player.current_hit_points = player.maximum_hit_points
+		}
+	    player.hit_points = "HP: " + player.current_hit_points + "/" + player.maximum_hit_points
+	  ]]></attr>
+	  <attr name="changedmaximum_hit_points" type="script">
+	    player.hit_points = "HP: " + player.current_hit_points + "/" + player.maximum_hit_points
+	  </attr>
+	  <attr name="mana_points" type="string">99/99</attr>
+	  <attr name="current_mana_points" type="int">99</attr>
+	  <attr name="maximum_mana_points" type="int">99</attr>
+	  <attr name="changedcurrent_mana_points" type="script"><![CDATA[
+	    if (player.current_mana_points > player.maximum_mana_points) {
+		  player.current_mana_points = player.maximum_mana_points
+		}
+	    player.mana_points = "MP: " + player.current_mana_points + "/" + player.maximum_mana_points
+	  ]]></attr>
+	  <attr name="changedmaximum_hit_points" type="script">
+	    player.mana_points = "MP: " + player.current_mana_points + "/" + player.maximum_mana_points
+	  </attr>
+	  <attr name="statusattributes" type="simplestringdictionary">hit_points = !;mana_points = !</attr>
+    </object>
+  </object>
+  <object name="shop_room">
+    <inherit name="editor_room" />
+	<alias>shop</alias>
+	<object name="shop_owner">
+	  <inherit name="editor_object" />
+	  <alias>shop owner</alias>
+	  <attr name="rupees" type="int">0</attr>
+	  <attr name="inventory_object_list" type="simpleobjectlist">red_potion;blue_potion</attr>
+	  <attr name="shop" type="script"><![CDATA[
+	    msg ("(1) Peruse, (2) Buy, or (3) Sell")
+		msg ("")
+		get input {
+		  if (IsInt (result) = false) {
+		    msg ("Please type in the number of your choice next time.")
+		  } else if (IsInt (result) = true) {
+		    if (ToInt (result) < 1 and ToInt (result) > 3) {
+			  msg ("Please type in one of the correct numbers of your choice next time.")
+			} else if (ToInt (result) > 0 and ToInt (result) < 4) {
+		      msg ("Here's the items that I have in stock:")
+		      msg ("")
+			  x = 0
+			  foreach (item_x, shop_owner.inventory_object_list) {
+				x = x + 1
+				msg (x + ". " + item_x.alias)
+			  }
+			  switch (result) {
+			    case ("1") {
+				  msg ("")
+				  msg ("What item would you like to know about?")
+				  msg ("")
+				  get input {
+				    if (IsInt (result) = false) {
+				      msg ("Please type in the number of your choice next time.")
+				    } else if (IsInt (result) = true) {
+					  if (ToInt (result) < 1 and ToInt (result) > ListCount (shop_owner.inventory_object_list)) {
+					    msg ("Please type in one of the correct numbers of your choice next time.")
+					  } else if (ToInt (result) > 0 and ToInt (result) <= ListCount (shop_owner.inventory_object_list)) {
+				        invoke (ScriptDictionaryItem (global_data_object.item_script_dictionary, result)
+					  }
+				    }
+				  }
+			    }
+			    case ("2") {
+				  msg ("")
+				  msg ("What item would you like to buy?")
+				  msg ("")
+				  get input {
+				    result_x = result
+				    if (IsInt (result_x) = false) {
+				      msg ("Please type in the number of your choice next time.")
+				    } else if (IsInt (result_x) = true) {
+					  if (ToInt (result_x) < 1 and ToInt (result_x) > ListCount (shop_owner.inventory_object_list)) {
+					    msg ("Please type in one of the correct numbers of your choice next time.")
+					  } else if (ToInt (result_x) > 0 and ToInt (result_x) <= ListCount (shop_owner.inventory_object_list)) {
+					    msg ("How much of this item would you like to buy?")
+						item_xx = ObjectListItem (shop_owner.inventory_object_list, ToInt (result_x) - 1)
+						foreach (item_xxx, ScopeInventory()) {
+						  if (item_xxx.alias = item_xx.alias) {
+						    quantity_x = item_xxx.quantity
+						  } else {
+						    quantity_x = ToInt (1)
+						  }
+						}
+						msg ("You can buy 1 through " + ToString (99 - quantity_x) + item_xx.alias + "s.")
+						get input {
+						  result_xx = result
+						  if (IsInt (result_xx) = false) {
+						    msg ("Please type in the number of your choice next time.")
+						  } else if (IsInt (result_xx) = true) {
+						    if (ToInt (result_xx) < 1 and ToInt (result_xx) > 99 - quantity_x) {
+							  msg ("Please type in one of the correct numbers of your choice next time.")
+							} else if (ToInt (result_xx) > 0 and ToInt (result_xx) <= 99 - quantity_x) {
+							  if (player.rupees < ToInt (result_xx) * item_xx.rupees) {
+							    msg ("You don't have enough rupees")
+							  } else if (player.rupees >= ToInt (result_xx) * item_xx.rupees) {
+				                foreach (item_xxxx, ScopeInventory()) {
+						          if (item_xxxx.alias = item_xx.alias) {
+						            item_xxxx.quantity = item_xxxx.quantity + ToInt (result_xx)
+									player.rupees = player.rupees - (ToInt (result_xx) * item_xx.rupees)
+									shop_owner.rupees = shop_owner.rupees + (ToInt (result_xx) * item_xx.rupees)
+						          } else {
+						            CloneObjectAndMove (item_xx, player)
+									foreach (item_xxxxx, ScopeInventory()) {
+						              if (item_xxxxx.alias = item_xx.alias) {
+						                item_xxxxx.quantity = item_xxxxx.quantity + ToInt (result_xx)
+									    player.rupees = player.rupees - (ToInt (result_xx) * item_xx.rupees)
+									    shop_owner.rupees = shop_owner.rupees + (ToInt (result_xx) * item_xx.rupees)
+									  }
+						            }
+								  }
+								}
+							  }
+							}
+						  }
+						}
+					  }
+				    }
+				  }
+			    }
+			    case ("3") {
+			    }
+			  }
+			}
+		  }
+		}
+	  ]]></attr>
+	  <attr name="displayverbs" type="listextend">Shop</attr>
+	</object>
+  </object>
+  <object name="global_data_object">
+    <inherit name="editor_object" />
+	<object name="red_potion">
+	  <inherit name="editor_object" />
+	  <alias>red potion</alias>
+	  <attr name="quantity" type="int">1</attr>
+	  <attr name="rupees" type="int">10</attr>
+	  <attr name="changedquantity" type="script">
+	    if (this.quantity = 0) {
+		  destroy (this.name)
+		}
+	  </attr>
+	  <attr name="drink" type="script">
+	    player.current_hit_points = player.current_hit_points + 200
+		msg ("You drink the red potion, restoring 200 HP.")
+		this.quantity = this.quantity - 1
+	  </attr>
+	  <attr name="inventoryverbs" type="listextend">Drink</attr>
+	</object>
+	<object name="blue_potion">
+	  <inherit name="editor_object" />
+	  <alias>blue potion</alias>
+	  <attr name="quantity" type="int">1</attr>
+	  <attr name="rupees" type="int">50</attr>
+	  <attr name="changedquantity" type="script">
+	    if (this.quantity = 0) {
+		  destroy (this.name)
+		}
+	  </attr>
+	  <attr name="drink" type="script">
+	    player.current_mana_points = player.current_mana_points + 20
+		msg ("You drink the blue potion, restoring 20 MP.")
+		this.quantity = this.quantity - 1
+	  </attr>
+	  <attr name="inventoryverbs" type="listextend">Drink</attr>
+	</object>
+	<attr name="item_script_dictionary" type="scriptdictionary">
+	  <item key="1">
+	    msg ("Effect: restores 200 HP")
+		msg ("Buy Price: 10 rupees")
+		msg ("Sell Price: 5 rupees")
+	  </item>
+	  <item key="2">
+	    msg ("Effect: restores 20 MP")
+		msg ("Buy Price: 50 rupees")
+		msg ("Sell Price: 25 rupees")
+	  </item>
+	</attr>
+  </object>
+  <verb>
+    <property>shop</property>
+    <pattern>shop</pattern>
+    <defaultexpression>"You can't shop here."</defaultexpression>
+  </verb>
+  <verb>
+    <property>drink</property>
+    <pattern>drink</pattern>
+    <defaultexpression>"You can't drink this thing."</defaultexpression>
+  </verb>
+</asl>

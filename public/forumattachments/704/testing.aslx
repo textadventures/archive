@@ -1,0 +1,244 @@
+<!--Saved by Quest 5.4.4840.17608-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Testing Game Stuff">
+    <gameid>cd102f9d-370a-4bda-b6ea-ca42288f619c</gameid>
+    <version>1.0</version>
+    <turns type="int">0</turns>
+    <statusattributes type="stringdictionary">
+      <item>
+        <key>turns</key>
+        <value></value>
+      </item>
+    </statusattributes>
+    <start type="script">
+      msg ("What is your name?")
+      get input {
+        msg (" - " + result)
+        player.alias_x = result
+        show menu ("What is your gender?", split ("male;female" , ";"), false) {
+          player.gender_x = result
+          show menu ("What is your race?", split ("human;elf;dwarf" , ";"), false) {
+            player.race = result
+            show menu ("What is your class?", split ("warrior;cleric;mage;thief" , ";"), false) {
+              player.class = result
+              msg (player.alias_x + " is a " + " " + player.gender_x + " " + player.race + " " + player.class + ".")
+            }
+          }
+        }
+      }
+    </start>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_player" />
+      <inherit name="editor_object" />
+      <attr name="alias_x" type="string"></attr>
+      <attr name="gender_x" type="string"></attr>
+      <strength type="int">10</strength>
+      <endurance type="int">20</endurance>
+      <intelligence type="int">30</intelligence>
+      <spirituality type="int">40</spirituality>
+      <agility type="int">50</agility>
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>alias_x</key>
+          <value>Name: !</value>
+        </item>
+        <item>
+          <key>gender_x</key>
+          <value>Gender: !</value>
+        </item>
+        <item>
+          <key>strength</key>
+          <value></value>
+        </item>
+        <item>
+          <key>endurance</key>
+          <value></value>
+        </item>
+        <item>
+          <key>intelligence</key>
+          <value></value>
+        </item>
+        <item>
+          <key>spirituality</key>
+          <value></value>
+        </item>
+        <item>
+          <key>agility</key>
+          <value></value>
+        </item>
+        <item>
+          <key>level</key>
+          <value></value>
+        </item>
+        <item>
+          <key>experience</key>
+          <value></value>
+        </item>
+        <item>
+          <key>physical_damage</key>
+          <value>PD: !</value>
+        </item>
+        <item>
+          <key>magical_damage</key>
+          <value>MD: !</value>
+        </item>
+        <item>
+          <key>total</key>
+          <value>total: !</value>
+        </item>
+      </statusattributes>
+      <level type="int">0</level>
+      <experience type="int">0</experience>
+      <attr name="physical_damage" type="int">0</attr>
+      <attr name="magical_damage" type="int">0</attr>
+      <total type="int">0</total>
+      <changedstrength type="script">
+        player.total = player.strength + player.endurance
+      </changedstrength>
+	  <changedendurance type="script">
+        player.total = player.strength + player.endurance
+      </changedendurance>
+    </object>
+    <object name="potion100">
+      <inherit name="editor_object" />
+      <alias>potexp100</alias>
+      <take />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Drink</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Drop</value>
+        <value>Drink</value>
+      </inventoryverbs>
+      <drink type="script">
+        msg ("You drink the exp potion, receiving 100 experience.")
+        player.experience = player.experience + 100
+      </drink>
+    </object>
+    <object name="potion300">
+      <inherit name="editor_object" />
+      <alias>potexp300</alias>
+      <take />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Drink</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Drop</value>
+        <value>Drink</value>
+      </inventoryverbs>
+      <drink type="script">
+        msg ("You drink the exp potion, receiving 300 experience.")
+        player.experience = player.experience + 300
+      </drink>
+    </object>
+	<object name="bonus_strength">
+      <inherit name="editor_object" />
+      <alias>potstr</alias>
+      <take />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Drink</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Drop</value>
+        <value>Drink</value>
+      </inventoryverbs>
+      <drink type="script">
+        msg ("You drink the str potion, receiving +10 strength.")
+        player.strength = player.strength + 10
+      </drink>
+    </object>
+	<object name="bonus_endurance">
+      <inherit name="editor_object" />
+      <alias>potend</alias>
+      <take />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Drink</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Drop</value>
+        <value>Drink</value>
+      </inventoryverbs>
+      <drink type="script">
+        msg ("You drink the end potion, receiving +5 endurance.")
+        player.endurance = player.endurance + 5
+      </drink>
+    </object>
+  </object>
+  <turnscript name="global_events_turnscript">
+    <enabled />
+    <script>
+      leveling_function
+      player.physical_damage = player.strength + player.endurance
+      player.magical_damage = player.intelligence + player.spirituality
+      game.turns = game.turns + 1
+    </script>
+  </turnscript>
+  <function name="leveling_function"><![CDATA[
+    if (player.experience >= player.level * 100 + 100) {
+      player.experience = player.experience - (player.level * 100 + 100)
+      player.level = player.level + 1
+      switch (player.gender_x) {
+        case ("male") {
+          player.strength = player.strength + 1
+        }
+        case ("female") {
+          player.agility = player.agility + 1
+        }
+      }
+      switch (player.race) {
+        case ("dwarf") {
+          player.strength = player.strength + 2
+          player.endurance = player.endurance + 2
+        }
+        case ("elf") {
+          player.intelligence = player.intelligence + 2
+          player.spirituality = player.spirituality + 2
+        }
+        case ("human") {
+          player.strength = player.strength + 1
+          player.endurance = player.endurance + 1
+          player.agility = player.agility + 1
+          player.spirituality = player.spirituality + 1
+        }
+      }
+      switch (player.class) {
+        case ("warrior") {
+          player.strength = player.strength + 2
+        }
+        case ("cleric") {
+          player.intelligence = player.intelligence + 1
+          player.agility = player.agility + 1
+        }
+        case ("mage") {
+          player.intelligence = player.intelligence + 2
+        }
+        case ("thief") {
+          player.strength = player.strength + 1
+          player.agility = player.agility + 1
+        }
+      }
+      leveling_function
+    }
+  ]]></function>
+</asl>

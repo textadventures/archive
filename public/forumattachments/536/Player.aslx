@@ -1,0 +1,175 @@
+<!--Saved by Quest 5.4.4812.28144-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Player">
+    <gameid>54e1681a-03f4-48e4-90a0-74dce9bf8c9f</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <attr name="autodescription_youarein" type="int">1</attr>
+    <attr name="autodescription_description" type="int">2</attr>
+    <autodisplayverbs type="boolean">false</autodisplayverbs>
+    <echocommand type="boolean">false</echocommand>
+    <attr name="autodescription_youcansee" type="int">3</attr>
+    <attr name="autodescription_youcango" type="int">4</attr>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <alias>Jedi Academy</alias>
+    <object name="desk">
+      <inherit name="editor_object" />
+      <alias>Reception Desk</alias>
+      <displayverbs type="stringlist">
+        <value>Enroll</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist" />
+      <drop type="boolean">false</drop>
+      <enroll type="script">
+        if (player.can_enroll) {
+          show menu ("Select desired class", player.classes, true) {
+            if (result = null) {
+              player.class = -1
+              player.class_name = "Sith Lord"
+              player.class_skill = "Force Choke"
+              msg ("You have changed your mind about becoming a Jedi -- your path lies with the Sith, for they have good looking women as companions, not some stupid robots or animals.")
+            }
+            else {
+              player.class = result
+              player.class_name = StringDictionaryItem(player.classes, result)
+              player.class_skill = StringDictionaryItem(player.skills, result)
+              msg ("You have selected to become a " + player.class_name + ".")
+            }
+            player.can_enroll = false
+          }
+        }
+      </enroll>
+    </object>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <inherit name="player_classes" />
+      <inherit name="namedmale" />
+      <alias>Han Solo</alias>
+    </object>
+    <object name="enemy">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <dead type="boolean">false</dead>
+      <alias>Test Dummy</alias>
+      <displayverbs type="stringlist">
+        <value>Attack</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist" />
+      <drop type="boolean">false</drop>
+      <attack type="script">
+        if (player.can_enroll) {
+          msg ("You should first enroll at the {object:desk} of the {object:room} to learn some attacks.")
+        }
+        else {
+          if (enemy.dead) {
+            msg ("thanks to your superior " + player.class_skill + " {object:enemy} is already dead.")
+          }
+          else {
+            switch (player.class) {
+              case (0) {
+                invoke (player.knight_skill)
+              }
+              case (1) {
+                invoke (player.guardian_skill)
+              }
+              case (2) {
+                invoke (player.sentinel_skill)
+              }
+              case (3) {
+                invoke (player.consular_skill)
+              }
+            }
+            enemy.dead = true
+          }
+        }
+      </attack>
+    </object>
+  </object>
+  <verb>
+    <property>enroll</property>
+    <pattern>enroll</pattern>
+    <defaultexpression>"You can't enroll " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>attack</property>
+    <pattern>attack</pattern>
+    <defaultexpression>"You can't attack " + object.article + "."</defaultexpression>
+  </verb>
+  <type name="player_classes">
+    <inherit name="jedi_knight" />
+    <inherit name="jedi_guardian" />
+    <inherit name="jedi_sentinel" />
+    <inherit name="jedi_consular" />
+    <can_enroll />
+    <class type="int">0</class>
+    <attr name="class_name" type="string"></attr>
+    <attr name="class_skill" type="string"></attr>
+    <classes type="stringdictionary">
+      <item>
+        <key>0</key>
+        <value>Jedi Knight</value>
+      </item>
+      <item>
+        <key>1</key>
+        <value>Jedi Guardian</value>
+      </item>
+      <item>
+        <key>2</key>
+        <value>Jedi Sentinel</value>
+      </item>
+      <item>
+        <key>3</key>
+        <value>Jedi Consular</value>
+      </item>
+    </classes>
+    <skills type="stringdictionary">
+      <item>
+        <key>0</key>
+        <value>Force Lighting</value>
+      </item>
+      <item>
+        <key>1</key>
+        <value>Force Push</value>
+      </item>
+      <item>
+        <key>2</key>
+        <value>Force Drain</value>
+      </item>
+      <item>
+        <key>3</key>
+        <value>Force Insight</value>
+      </item>
+    </skills>
+    <attr name="pov_look" type="script">
+      msg ("You are a " + player.class_name + ". Your class skill is " + player.class_skill + ".")
+    </attr>
+    <look type="script">
+      msg ("{object:player} is a " + player.class_name + ". " + player.alias + "'s class skill is " + player.class_skill + ".")
+    </look>
+  </type>
+  <type name="jedi_knight">
+    <attr name="knight_skill" type="script">
+      msg ("You strike your oponent with " + player.class_skill + " and after a few seconds their charred corpse collapses to the ground.")
+    </attr>
+  </type>
+  <type name="jedi_guardian">
+    <attr name="guardian_skill" type="script">
+      msg ("You use " + player.class_skill + " on your enemy. They get smashed into a wall, and their crushed, lifeless, body slumps down to the ground.")
+    </attr>
+  </type>
+  <type name="jedi_sentinel">
+    <attr name="sentinel_skill" type="script">
+      msg ("You use " + player.class_skill + " on your enemy, healing yourself until you consume all of their life force and their drained, lifeless, body slumps down to the ground.")
+    </attr>
+  </type>
+  <type name="jedi_consular">
+    <attr name="consular_skill" type="script">
+      msg ("You use " + player.class_skill + " on your enemy and you learn that they are gay. You shout that fact to everyone around and as people start gathering and yelling \"Booo!\" at your enemy they simply die of shame.")
+    </attr>
+  </type>
+</asl>

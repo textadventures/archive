@@ -1,0 +1,442 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Different approach to combat">
+    <gameid>dbe3a30c-a4ef-4975-b224-628947f98729</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <gridmap />
+    <pov type="object">player</pov>
+  </game>
+  <object name="Room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <inherit name="male" />
+      <object name="Coin1">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <take />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <alias>17 Coins</alias>
+        <stackable type="string"></stackable>
+        <quantity type="int">17</quantity>
+        <alias2>Coin</alias2>
+        <prefix type="string"></prefix>
+      </object>
+      <object name="Potion1">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <stackable type="string"></stackable>
+        <quantity type="int">3</quantity>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <alias>3 Potions</alias>
+        <alias2>Potion</alias2>
+        <take />
+      </object>
+      <object name="Small bag">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <take />
+      </object>
+      <object name="Large bag">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <take />
+      </object>
+    </object>
+    <object name="Magic Table">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <search type="script">
+        CloneObjectAndMove (Coin, player.parent)
+        CloneObjectAndMove (Potion, player.parent)
+        msg ("You find 30 Coins and 1 Potion.")
+      </search>
+    </object>
+  </object>
+  <command name="Put">
+    <pattern type="string"><![CDATA[^put (?<object1>.*) (on|in) (?<object2>.*)$]]></pattern>
+    <unresolved>You can't do that.</unresolved>
+    <script>
+      if (object1.parent = object2) {
+        msg (DynamicTemplate("AlreadyThere", object1))
+      }
+      else if (not ListContains(ScopeInventory(), object1)) {
+        msg (DynamicTemplate("NotCarrying", object1))
+      }
+      else if (not ListContains(ScopeReachable(), object1)) {
+        msg (DynamicTemplate("ObjectNotOpen", GetBlockingObject(object1)))
+      }
+      else if (not ListContains(ScopeReachable(), object2)) {
+        msg (DynamicTemplate("ObjectNotOpen", GetBlockingObject(object2)))
+      }
+      else if (not object2.container) {
+        msg (Template("CannotDoThat"))
+      }
+      else if (not object2.isopen) {
+        msg (DynamicTemplate("ObjectNotOpen", object2))
+      }
+      else if (HasAttribute(object1, "stackable")) {
+        if (GetBoolean(object2, "hidechildren")) {
+          object2.hidechildren = false
+        }
+        if (HasDelegateImplementation(object2, "addscript")) {
+          rundelegate (object2, "addscript", object1)
+        }
+        else {
+          object1.parent = object2
+          msg (Template("Done"))
+        }
+        foreach (object3, ScopeReachable() - object1) {
+          if (object3.parent = object1.parent and object3.alias2 = object1.alias2) {
+            if (not GetBoolean(game.pov, "putstackableobject")) {
+              set (object3, "quantity", object3.quantity + object1.quantity)
+              set (object3, "alias", "" + object3.quantity + " " + object3.alias2 + "s")
+              set (object3, "gender", "they")
+              set (object3, "article", "them")
+              RemoveObject (object1)
+              SetObjectFlagOn (game.pov, "putstackableobject")
+            }
+          }
+        }
+        SetObjectFlagOff (game.pov, "putstackableobject")
+      }
+      else {
+        if (GetBoolean(object2, "hidechildren")) {
+          object2.hidechildren = false
+        }
+        if (HasDelegateImplementation(object2, "addscript")) {
+          rundelegate (object2, "addscript", object1)
+        }
+        else {
+          object1.parent = object2
+          msg (Template("Done"))
+        }
+      }
+    </script>
+  </command>
+  <command name="Take">
+    <pattern>take #object#; get #object#; pick up #object#</pattern>
+    <multiple>
+      return (ListExclude(ScopeVisibleNotHeldNotScenery(), game.pov))
+    </multiple>
+    <unresolved type="string"></unresolved>
+    <script>
+      foreach (obj, object) {
+        DoTakeEdited (obj, multiple)
+      }
+    </script>
+  </command>
+  <command name="Drop">
+    <multiple>
+      return (ScopeInventory())
+    </multiple>
+    <pattern>drop #object#</pattern>
+    <unresolved type="string"></unresolved>
+    <script>
+      foreach (obj, object) {
+        DoDropEdited (obj, multiple)
+      }
+    </script>
+  </command>
+  <command name="Split stackable objects">
+    <unresolved>You can't do that.</unresolved>
+    <pattern>split #object_one# in #text_one# and #text_two#; split #object_one# into #text_one# and #text_two#; divide #object_one# in #text_one# and #text_two#; divide #object_one# into #text_one# and #text_two#</pattern>
+    <script><![CDATA[
+      if (IsNumeric (text_one) and IsNumeric (text_two)) {
+        if (HasAttribute(object_one, "stackable")) {
+          if (object_one.quantity > 1) {
+            text_one = DiceRoll("" + text_one + "d1")
+            text_two = DiceRoll("" + text_two + "d1")
+            if (not text_one < 1 and not text_two < 1) {
+              if (text_one + text_two = object_one.quantity) {
+                msg ("You split the " + object_one.alias2 + "s in a stack of " + text_one + " and a stack of " + text_two + ".")
+                set (object_one, "quantity", text_one)
+                if (object_one.quantity = 1) {
+                  set (object_one, "alias", "1 " + object_one.alias2 + "")
+                  set (object_one, "gender", "it")
+                  set (object_one, "article", "it")
+                }
+                else {
+                  set (object_one, "alias", "" + object_one.quantity + " " + object_one.alias2 + "s")
+                  set (object_one, "gender", "they")
+                  set (object_one, "article", "them")
+                }
+                CloneObject (object_one)
+                object_two = object_one
+                set (object_two, "quantity", object_two.quantity - text_one + text_two)
+                if (object_two.quantity = 1) {
+                  set (object_one, "alias", "1 " + object_two.alias2 + "")
+                  set (object_two, "gender", "it")
+                  set (object_two, "article", "it")
+                }
+                else {
+                  set (object_two, "alias", "" + object_two.quantity + " " + object_two.alias2 + "s")
+                  set (object_two, "gender", "they")
+                  set (object_two, "article", "them")
+                }
+              }
+              else {
+                msg ("The two stacks have to add up to the total number of " + object_one.alias2 + "s you possess.")
+              }
+            }
+            else {
+              msg ("There is no such thing as a stack of zero or less objects.")
+            }
+          }
+          else {
+            msg ("You can only split a stack of objects, but not a single one.")
+          }
+        }
+        else {
+          msg ("That object can't be stacked and thus not be split.")
+        }
+      }
+      else {
+        msg ("It doesn't make sense to split something in a stack of " + text_one + " and a stack of  " + text_two + ".")
+      }
+    ]]></script>
+  </command>
+  <command name="Combine stackable objects">
+    <pattern>combine #object_one# and #object_two#; combine #object_one# with #object_two#</pattern>
+    <unresolved>You can't do that.</unresolved>
+    <script>
+      if (HasAttribute(object_one, "stackable") and HasAttribute(object_two, "stackable") and object_one.alias2 = object_two.alias2) {
+        set (object_one, "quantity", object_one.quantity + object_two.quantity)
+        set (object_one, "alias", "" + object_one.quantity + " " + object_one.alias2 + "s")
+        set (object_one, "gender", "they")
+        set (object_one, "article", "them")
+        RemoveObject (object_two)
+      }
+      else {
+        msg ("These objects can't be stacked.")
+      }
+    </script>
+  </command>
+  <command name="RemoveFrom">
+    <pattern type="string"><![CDATA[^remove (?<object1>.*) from (?<object2>.*)$]]></pattern>
+    <script>
+      if (not Contains(object2, object1)) {
+        msg (DynamicTemplate("ObjectDoesNotContain", object2, object1))
+      }
+      else {
+        DoTakeEdited (object1, false)
+      }
+    </script>
+  </command>
+  <object name="Storage">
+    <inherit name="editor_room" />
+    <object name="Potion">
+      <inherit name="editor_object" />
+      <visible />
+      <quantity type="int">1</quantity>
+      <alias>1 Potion</alias>
+      <take />
+      <stackable type="string"></stackable>
+      <alias2>Potion</alias2>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+    </object>
+    <object name="Coin">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <take />
+      <alias>30 Coins</alias>
+      <quantity type="int">30</quantity>
+      <stackable type="string"></stackable>
+      <alias2>Coin</alias2>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+    </object>
+  </object>
+  <command name="Help">
+    <pattern>help</pattern>
+    <script><![CDATA[
+      msg ("You need to give every object which is supposed to be stackable four attributes: \"stackable\", \"alias\", \"alias2\" and \"quantity\"<br/><br/>\"stackable\" just needs to be an attribute to show the object is stackable<br/>\"alias\" has to be set to the number of objects followed by its name (i.e. 1 Potion or 5 Coins)<br/>\"alias2\" has to be set to the name of the object (i.e. Coin, but not plural like Coins)<br/>\"quantity\" has to be set to an integer and the number needs to be the same you typed in as part of \"alias\" (if \"alias\" is 5 Coins then \"quantity\" has to be 5)<br/><br/>Also if you click on a stackable object:<br/>- go to the tab labeled \"Setup\": uncheck the box \"Use default prefix and suffix\" and change the type to \"Inanimate objects (plural)\"<br/>- go to the tab labeled \"Inventory\": check the box \"Object can be taken\"<br/><br/>The \"name\" of the object does not matter in the slightest. You can name one object \"Stone\" and a second one \"Banana\" and they will still stack if their \"alias2\" match. It is set up this way because if you create multiple objects in your game which are supposed to stack you can not all name them \"Coin\" for example. Instead you have to call them \"Coin\", \"Coin1\", \"Coin2\", etc. Since the name doesn't matter \"Coin3\" will still stack with \"Coin10\" even though they are not the same object per se.<br/>Alternatively you can also clone an object instead of creating \"Coin\", \"Coin1\", \"Coin2\", etc. I already demonstrated this with the \"Magic Table\". Whenever you search it the two objects \"Potion\" and \"Coin\" (which are located in a room called \"Storage\" where the player can never get access to in game) are cloned and moved to the room the player currently is in.<br/><br/><br/>The following is purposely set up this way since it seemed to be the most locigal to me:<br/><br/>Objects stack if the player:<br/>- picks up an object and already has one of its kind in his inventory<br/>- removes an object from a container and already has one of its kind in his inventory (technically the same as taking the object out of the container)<br/>- drops an object and one of its kind is already on the floor<br/>- puts an objects to a place where another one of its kind is already located<br/><br/>Objects do not stack if the player:<br/>- picks up an object and has one of its kind in the inventory, but in a container (i.e. a bag)<br/>- drops an object and one of its kind is in the room, but in a container (i.e. a chest)<br/>- picks up a container which contains another object (i.e. a small bag contains a potion, you pick up the small bag)<br/><br/>Complex cases:<br/>- putting an object inside a container which itself is inside a container and one of the containers contains an object of the same kind (i.e. a small bag contains a potion, the small bag is inside a large bag)<br/>     - if you put a potion inside the large bag, then it will not stack with the potion in the small bag<br/>     - if, one the other hand, you put the potion in the small bag, then it will stack")
+    ]]></script>
+  </command>
+  <function name="DoTakeEdited" parameters="object, ismultiple"><![CDATA[
+    prefix = ""
+    if (ismultiple) {
+      prefix = GetDisplayAlias(object) + ": "
+    }
+    if (object.parent = game.pov) {
+      msg (prefix + DynamicTemplate("AlreadyTaken", object))
+    }
+    else if (not ListContains(ScopeReachable(), object)) {
+      msg (prefix + DynamicTemplate("ObjectNotOpen", GetBlockingObject(object)))
+    }
+    else {
+      volume = 0
+      continue = true
+      foreach (obj, GetAllChildObjects(game.pov)) {
+        if (HasInt(obj, "volume")) {
+          volume = volume + obj.volume
+        }
+      }
+      if (not Contains(game.pov, object)) {
+        volume = volume + GetVolume(object,true)
+      }
+      if (HasInt(game.pov, "maxvolume")) {
+        if (volume > game.pov.maxvolume) {
+          continue = false
+          if (HasString(game.pov, "containerfullmessage")) {
+            message = prefix + game.pov.containerfullmessage
+          }
+          else {
+            message = prefix + DynamicTemplate("FullInventory", object)
+          }
+        }
+      }
+      children = GetDirectChildren(game.pov)
+      if (HasInt(game.pov, "maxobjects")) {
+        if (game.pov.maxobjects > 0) {
+          if (ListCount(children) >= game.pov.maxobjects) {
+            continue = false
+            if (HasString(game.pov, "containermaxobjects")) {
+              message = prefix + game.pov.containermaxobjects
+            }
+            else {
+              message = prefix + DynamicTemplate("MaxObjectsInInventory", object)
+            }
+          }
+        }
+      }
+      if (continue = false) {
+        msg (message)
+      }
+      else {
+        found = true
+        takemsg = object.takemsg
+        switch (TypeOf(object, "take")) {
+          case ("script") {
+            if (ismultiple) {
+              msg (prefix)
+            }
+            do (object, "take")
+            takemsg = ""
+          }
+          case ("boolean") {
+            if (object.take = true) {
+              if (HasAttribute(object, "stackable")) {
+                object.parent = game.pov
+                foreach (object2, ScopeReachableInventory() - object) {
+                  if (object2.alias2 = object.alias2 and object2.parent = object.parent) {
+                    if (not GetBoolean(game.pov, "tookstackableobject")) {
+                      set (object2, "quantity", object2.quantity + object.quantity)
+                      set (object2, "alias", "" + object2.quantity + " " + object2.alias2 + "s")
+                      set (object2, "gender", "they")
+                      set (object2, "article", "them")
+                      RemoveObject (object)
+                      SetObjectFlagOn (game.pov, "tookstackableobject")
+                    }
+                  }
+                }
+                SetObjectFlagOff (game.pov, "tookstackableobject")
+              }
+              else {
+                object.parent = game.pov
+              }
+              if (takemsg = null) {
+                takemsg = DynamicTemplate("TakeSuccessful", object)
+              }
+            }
+            else {
+              found = false
+            }
+          }
+          case ("string") {
+            object.parent = game.pov
+            takemsg = object.take
+          }
+          default {
+            found = false
+          }
+        }
+        if (not found and takemsg = null) {
+          takemsg = DynamicTemplate("TakeUnsuccessful", object)
+        }
+        if (LengthOf(takemsg) > 0) {
+          msg (prefix + takemsg)
+          if (GetBoolean ( object , "scenery" )) {
+            object.scenery = false
+          }
+        }
+        if (HasScript(object, "ontake")) {
+          do (object, "ontake")
+        }
+      }
+    }
+  ]]></function>
+  <function name="DoDropEdited" parameters="object, ismultiple"><![CDATA[
+    prefix = ""
+    if (ismultiple) {
+      prefix = GetDisplayAlias(object) + ": "
+    }
+    if (not ListContains(ScopeInventory(), object)) {
+      msg (prefix + DynamicTemplate("NotCarrying", object))
+    }
+    else if (not ListContains(ScopeReachable(), object)) {
+      msg (prefix + DynamicTemplate("ObjectNotOpen", GetBlockingObject(object)))
+    }
+    else {
+      found = true
+      dropmsg = object.dropmsg
+      switch (TypeOf(object, "drop")) {
+        case ("script") {
+          if (ismultiple) {
+            msg (prefix)
+          }
+          do (object, "drop")
+          dropmsg = ""
+        }
+        case ("boolean") {
+          if (object.drop = true) {
+            if (HasAttribute(object, "stackable")) {
+              object.parent = game.pov.parent
+              foreach (object2, ScopeReachableNotHeld() - object) {
+                if (object2.alias2 = object.alias2 and object2.parent = object.parent) {
+                  if (not GetBoolean(game.pov, "droppedstackableobject")) {
+                    set (object2, "quantity", object2.quantity + object.quantity)
+                    set (object2, "alias", "" + object2.quantity + " " + object.alias2 + "s")
+                    set (object2, "gender", "they")
+                    set (object2, "article", "them")
+                    RemoveObject (object)
+                    SetObjectFlagOn (game.pov, "droppedstackableobject")
+                  }
+                }
+              }
+              SetObjectFlagOff (game.pov, "droppedstackableobject")
+            }
+            else {
+              object.parent = game.pov.parent
+            }
+            if (dropmsg = null) {
+              dropmsg = DynamicTemplate("DropSuccessful", object)
+            }
+          }
+          else {
+            found = false
+          }
+        }
+        case ("string") {
+          object.parent = game.pov.parent
+          dropmsg = object.drop
+        }
+        default {
+          found = false
+        }
+      }
+      if (not found and dropmsg = null) {
+        dropmsg = DynamicTemplate("DropUnsuccessful", object)
+      }
+      if (LengthOf(dropmsg) > 0) {
+        msg (prefix + dropmsg)
+      }
+      if (HasScript(object, "ondrop")) {
+        do (object, "ondrop")
+      }
+    }
+  ]]></function>
+</asl>

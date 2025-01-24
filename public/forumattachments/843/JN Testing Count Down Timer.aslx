@@ -1,0 +1,58 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Testing Game Stuff">
+    <gameid>d67ec73f-f879-4911-9d88-c02ea527c534</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <statusattributes type="stringdictionary">
+      <item>
+        <key>count_down_clock_string</key>
+        <value>Countdown: !</value>
+      </item>
+    </statusattributes>
+    <attr name="count_down_clock_string" type="string"></attr>
+    <attr name="count_down_clock_seconds" type="int">0</attr>
+    <start type="script">
+      this.count_down_clock_seconds = 30*60*60+10
+    </start>
+    <attr name="changedcount_down_clock_string" type="script">
+      ClearScreen
+      msg ("Countdown: " + game.count_down_clock_string)
+    </attr>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+  </object>
+  <function name="Format2Digits" parameters="number" type="string">
+    return (Right("0" + number, 2))
+  </function>
+  <timer name="count_down_clock_timer">
+    <enabled />
+    <interval>1</interval>
+    <script>
+      SetTimeout (1) {
+        if (game.count_down_clock_seconds = 0) {
+          DisableTimer (count_down_clock_timer)
+        }
+        else {
+          game.count_down_clock_seconds = game.count_down_clock_seconds-1
+          n = game.count_down_clock_seconds
+          seconds = n % 60
+          n = n / 60
+          minutes = n % 60
+          n = n / 60
+          hours = n % 24
+          n = n / 24
+          days = n
+          game.count_down_clock_string = Format2Digits(days) + ":" + Format2Digits(hours) + ":" + Format2Digits(minutes) + ":" + Format2Digits(seconds)
+        }
+      }
+    </script>
+  </timer>
+</asl>

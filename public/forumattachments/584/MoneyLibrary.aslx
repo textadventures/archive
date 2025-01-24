@@ -1,0 +1,142 @@
+<library>
+
+<tab>
+  <caption>Money System</caption>
+  <parent>_GameEditor</parent>
+  
+  <control>
+    <controltype>label</controltype>
+	<caption>To enable the money system, use the script 'Enable money'.</caption>
+  </control>
+  
+  <control>
+    <controltype>textbox</controltype>
+	<caption>Money name (gold, dollars, pounds, etc.)</caption>
+	<attribute>moneyname</attribute>
+  </control>
+  
+  <control>
+    <controltype>multi</controltype>
+	<types>null=Do nothing; string=Print a message; script=Run a script</types>
+	<caption>What to do if money reaches zero</caption>
+	<attribute>onmoneyzero</attribute>
+  </control>
+</tab>
+
+<function name="IncreaseMoney" parameters="amount"><![CDATA[
+  if (game.showmoney) {
+    if (amount > 0) {
+      game.pov.money = game.pov.money + amount
+	}
+	else {
+	  msg ("<script type=\"text/javascript\">alert(\"'Increase money' value should be greater than 0.'\")</script>")
+	  msg ("'Increase money' value should be greater than 0.")
+	}
+  }
+  else {
+    msg ("<script type=\"text/javascript\">alert(\"Money is not enabled. To enable money, run the script 'Enable money', found under the section 'Money'.\")</script>")
+	msg ("Money is not enabled. To enable money, run the script 'Enable money', found under the section 'Money'.")
+  }
+]]></function>
+
+<function name="DecreaseMoney" parameters="amount"><![CDATA[
+  if (game.showmoney) {
+    if (game.pov.money >= amount) {
+	  if (amount > 0) {
+	    game.pov.money = game.pov.money - amount
+	  }
+	  else {
+	    msg ("<script type=\"text/javascript\">alert(\"'Decrease money' value should be greater than 0.'\")</script>")
+	    msg ("'Decrease money' value should be greater than 0.")
+	  }
+	  if (game.pov.money = 0) {
+	    if (not game.onmoneyzero = null) {
+		  if (HasScript(game.onmoneyzero)) {
+		    do (game, "onmoneyzero")
+		  }
+		  else {
+		    msg (game.onmoneyzero)
+		  }
+		}
+	  }
+	}
+	else {
+	  msg ("You don't have enough " + game.moneyname + " to do that.")
+	}
+  }
+  else {
+    msg ("<script type=\"text/javascript\">alert(\"Money is not enabled. To enable money, run the script 'Enable money', found under the section 'Money'.\")</script>")
+	msg ("Money is not enabled. To enable money, run the script 'Enable money', found under the section 'Money'.")
+  }
+]]></function>
+<function name="EnableMoney"><![CDATA[
+  game.showmoney = true
+  game.pov.money = 0
+  if (game.povstatusattributes = null) {
+    game.povstatusattributes = NewStringDictionary()
+  }
+  if (game.moneyname = null) {
+    game.moneyname = ""
+  }
+  if (game.moneyname = "") {
+    game.moneyname = "money"
+  }
+  dictionary add (game.povstatusattributes, "money", CapFirst(game.moneyname) + ": !")
+]]></function>
+
+<editor>
+  <appliesto>(function)IncreaseMoney</appliesto>
+  <display>Increase money by #0</display>
+  <category>Money</category>
+  <create>IncreaseMoney (0)</create>
+  <add>Increase money</add>
+
+  <control>
+    <controltype>label</controltype>
+    <caption>Increase money by</caption>
+  </control>
+
+  <control>
+    <controltype>expression</controltype>
+    <attribute>0</attribute>
+    <simple>number</simple>
+    <simpleeditor>number</simpleeditor>
+	<minimum>0</minimum>
+  </control>
+</editor>
+
+<editor>
+  <appliesto>(function)DecreaseMoney</appliesto>
+  <display>Decrease money by #0</display>
+  <category>Money</category>
+  <create>DecreaseMoney (0)</create>
+  <add>Decrease money</add>
+
+  <control>
+    <controltype>label</controltype>
+    <caption>Decrease money by</caption>
+  </control>
+
+  <control>
+    <controltype>expression</controltype>
+    <attribute>0</attribute>
+    <simple>number</simple>
+    <simpleeditor>number</simpleeditor>
+	<minimum>0</minimum>
+  </control>
+</editor>
+
+<editor>
+  <appliesto>(function)EnableMoney</appliesto>
+  <display>Enable money</display>
+  <category>Money</category>
+  <create>EnableMoney ()</create>
+  <add>Enable money</add>
+  
+  <control>
+    <controltype>label</controltype>
+	<caption>Enable money system</caption>
+  </control>
+</editor>
+
+</library>

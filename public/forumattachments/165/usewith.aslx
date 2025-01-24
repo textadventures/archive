@@ -1,0 +1,62 @@
+<!--Saved by Quest 5.1.4365.19329-->
+<asl version="510">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="usewith">
+    <gameid>e28424d3-1072-4c05-bf4e-232b6d4afd10</gameid>
+    <description type="string"></description>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <object name="knife">
+        <inherit name="editor_object" />
+        <take />
+        <inventoryverbs>Look at; Use; Drop; Use this</inventoryverbs>
+        <displayverbs>Look at; Take; Use this</displayverbs>
+        <useon type="scriptdictionary">
+          <item key="apple">
+            msg ("You cut the apple in small pieces.")
+          </item>
+        </useon>
+      </object>
+    </object>
+    <object name="apple">
+      <inherit name="editor_object" />
+      <take />
+      <displayverbs>Look at; Take; Use this</displayverbs>
+      <inventoryverbs>Look at; Use; Drop; Use this</inventoryverbs>
+	    <useon type="scriptdictionary">
+          <item key="knife">
+            msg ("You cut the apple in small pieces.")
+          </item>
+        </useon>
+    </object>
+  </object>
+  <command name="use this">
+    <pattern>Use this #text#</pattern>
+    <script>
+      usethis (text)
+    </script>
+  </command>
+  <function name="usethis" parameters="text"><![CDATA[
+    myList = NewStringList()
+    foreach (element, ScopeReachable ()) {
+      if (element <> player and element.name <> text) {
+        list add (myList, element.name)
+      }
+    }
+    label = "use "+text+ " with"
+    x = ShowMenu ( label , myList , true )
+    if ( x = null) {
+      object2 = GetObject(text)
+      msg (DynamicTemplate("DefaultUseOn", object2, object2))
+    }
+    else {
+      msg ("> with " + x)
+      label = label + " " + x
+      HandleCommand (label)
+    }
+  ]]></function>
+</asl>

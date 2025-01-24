@@ -1,0 +1,344 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Merlons Mountain">
+    <gameid>7b350e7e-cad3-42ba-97d0-21c50380550c</gameid>
+    <version>1.0</version>
+    <author>Mick Green</author>
+    <description>An ancient myth tells of a powerful dwarf-king. Merlon dwelt within his mansions in an unknown, ancient time, the mountain that contained them now forgotten, and no doubt named anew. The songs are all that remain of the generations he ruled, and the echo of the life they lived and the death they died resounds from such fanciful poetry. Although his ancient kingdom can be sought no more, there are many who would, if able, seek an imagined great horde of wealth that was also swallowed up by the unyielding forces of darkness, death and time. This describes well, one who paid heed to the darkness that caused the death, as told in song, and then aquired a chart that led to a mountain where, close-by, rural folk who had settled there, told of fearful creatures in its range. You take on this roll. They also told of entranceways leading to tunnels, where many had gone in but none had ever been seen again, and these were sometimes strangers, who, they said, resembled you in appearance and equipment, and held a similar light in their eyes.</description>
+    <category>Fantasy</category>
+    <autodescription_description type="int">2</autodescription_description>
+    <autodescription_youcansee type="int">3</autodescription_youcansee>
+    <autodescription_youcango type="int">4</autodescription_youcango>
+    <enablehyperlinks />
+    <defaultfontsize type="int">9</defaultfontsize>
+    <menufontsize type="int">9</menufontsize>
+    <autodescription_youarein_useprefix />
+    <underlinehyperlinks />
+    <showpanes />
+    <appendobjectdescription type="boolean">false</appendobjectdescription>
+    <showdescriptiononenter />
+    <autodescription />
+    <autodescription_youarein type="int">1</autodescription_youarein>
+    <clearframe type="boolean">false</clearframe>
+  </game>
+  <object name="tunnel 1">
+    <inherit name="editor_room" />
+    <alias>damp dingy tunnels.</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description>The cobblestone floor has green moss on it here and there.</description>
+    <enter type="script">
+      if (player.parent = tunnel 1) {
+        EnableTimer (memory return)
+      }
+    </enter>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <turns type="int">0</turns>
+      <statusattributes type="stringdictionary">turns = ;beastch = ;runningfrombeast = </statusattributes>
+      <beastch type="int">0</beastch>
+      <runningfrombeast type="int">2</runningfrombeast>
+    </object>
+    <object name="green moss">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>some</prefix>
+      <suffix type="string"></suffix>
+      <alt>bryophyte</alt>
+      <displayverbs>Look at; Take</displayverbs>
+      <take />
+      <takemsg>alright - acquired the moss.</takemsg>
+      <dropmsg>away with the moss.</dropmsg>
+      <smell>Nothing significant - a refreshing link to the outside world</smell>
+      <stroke>Very soft and slightly damp</stroke>
+      <eat>That can't possibly help in any way.</eat>
+      <scenery />
+      <switchedondesc>The moss is now compressed.</switchedondesc>
+      <feel>Very soft and slightly damp.</feel>
+      <look type="script"><![CDATA[
+        if (IsSwitchedOn(green moss)) {
+          msg ("The moss has been compressed.")
+        }
+        else {
+          msg ("It is slimy and doughy<br/>")
+        }
+      ]]></look>
+      <squeeze type="script">
+        SwitchOn (green moss)
+      </squeeze>
+      <ontake type="script">
+        AddToInventory (green moss)
+      </ontake>
+    </object>
+    <exit name="northeast" alias="northeast" to="BURROWS">
+      <inherit name="northeastdirection" />
+      <prefix type="string"></prefix>
+      <script type="script">
+        player.runningfrombeast = player.runningfrombeast + 1
+        MoveObject (player, BURROWS)
+      </script>
+    </exit>
+    <object name="heavy door of iron">
+      <inherit name="editor_object" />
+      <drop type="boolean">false</drop>
+    </object>
+    <exit name="darkdungeon" alias="in" to="dark dungeon">
+      <inherit name="indirection" />
+      <locked />
+      <lockmessage>Aside from the bolts, a hefty padlock prevents this.</lockmessage>
+      <alt type="list">; in</alt>
+      <prefix type="string"></prefix>
+    </exit>
+    <object name="bolts">
+      <inherit name="editor_object" />
+      <visible />
+      <scenery />
+      <drop type="boolean">false</drop>
+      <inventoryverbs>Look at; Use; Drop; free; open; release; unlock; pull aside</inventoryverbs>
+      <boltstate type="int">1</boltstate>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <free type="script"><![CDATA[
+        if (bolts.boltstate=1) {
+          bolts.boltstate = 0
+          msg ("You wriggle the somewhat twisted bolts out of the sockets one by one..")
+          if (padlock.kicknumber > 2) {
+            UnlockExit (darkdungeon)
+            EnableTurnScript (beast persuit)
+            EnableTurnScript (caught)
+            msg ("There is an unearthly roar from behind the iron door! Time to flee?")
+          }
+        }
+        else {
+          msg ("The bolts are already unfastened")
+        }
+      ]]></free>
+    </object>
+    <object name="padlock">
+      <inherit name="editor_object" />
+      <scenery />
+      <alias>hefty padlock</alias>
+      <kicknumber type="int">0</kicknumber>
+      <kick type="script">
+        if (not Got(padlock)) {
+          msg ("The padlock clatters loudly!")
+          padlock.kicknumber = padlock.kicknumber + 1
+        }
+        if (padlock.kicknumber = 3) {
+          msg ("The padlock has opened! ")
+          if (bolts.boltstate=0) {
+            UnlockExit (darkdungeon)
+            EnableTurnScript (beast persuit)
+            EnableTurnScript (caught)
+            msg ("There is an unearthly roar from behind the iron door! Time to flee?")
+          }
+        }
+      </kick>
+      <take type="script"><![CDATA[
+        if (padlock.kicknumber > 2) {
+          AddToInventory (padlock)
+        }
+      ]]></take>
+    </object>
+  </object>
+  <command>
+    <pattern type="simplepattern"></pattern>
+  </command>
+  <verb>
+    <property>stroke</property>
+    <pattern>stroke</pattern>
+    <defaultexpression>"You can't stroke " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>squeeze</property>
+    <pattern>squeeze</pattern>
+    <defaultexpression>"You can't squeeze " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="BURROWS">
+    <inherit name="editor_room" />
+    <description>You are in a chamber carved out of the earth. </description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>dreary damp burrows.</alias>
+    <exit name="southwest" alias="southwest" to="tunnel 1">
+      <inherit name="southwestdirection" />
+    </exit>
+    <object name="a large wooden pillar">
+      <inherit name="editor_object" />
+      <switchedon />
+      <displayverbs>Look at; Take</displayverbs>
+      <push>afer doing that the pillar remains.</push>
+      <pushhard>Your feet slip away from beneath you and you struggle to regain your balance! The pillar remains.</pushhard>
+      <look type="script"><![CDATA[
+        if (IsSwitchedOn(a large wooden pillar)) {
+          msg ("The huge oak pillar is in the centre of the room. From the stone floor, it stretches vertically up to the wooden ceiling, and is girded with two thick iron rings.")
+        }
+        else if (not IsSwitchedOn(a large wooden pillar)) {
+          msg ("The huge pile of rocks makes it hard to find footing")
+        }
+        msg ("<br/>  ")
+      ]]></look>
+      <object name="a huge pile of rocks">
+        <inherit name="editor_object" />
+        <visible type="boolean">false</visible>
+        <look type="script">
+          if (ListContains(ScopeVisible(), a huge pile of rocks)) {
+            msg ("This is debri from above the room. The huge pillar was supporting the ceiling.")
+          }
+        </look>
+      </object>
+    </object>
+    <exit alias="east" to="terracotta">
+      <inherit name="eastdirection" />
+      <script type="script">
+        player.runningfrombeast = player.runningfrombeast + 1
+        MoveObject (player, terracotta)
+      </script>
+    </exit>
+    <exit alias="northeast" to="a wide hallway of chalk">
+      <inherit name="northeastdirection" />
+      <script type="script">
+        player.runningfrombeast = player.runningfrombeast + 1
+        MoveObject (player, a wide hallway of chalk)
+      </script>
+    </exit>
+  </object>
+  <verb>
+    <property>pushhard</property>
+    <pattern>push #object# hard</pattern>
+    <defaultexpression>"You can't push #object# hard " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>feel</property>
+    <pattern>feel; touch</pattern>
+    <defaultexpression>"You can't feel " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="terracotta">
+    <inherit name="editor_room" />
+    <alias>damp dreary burrows.</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <exit alias="west" to="BURROWS">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="south" to="basket">
+      <inherit name="southdirection" />
+      <script type="script">
+        player.runningfrombeast = player.runningfrombeast + 1
+        MoveObject (player, basket)
+      </script>
+    </exit>
+  </object>
+  <object name="basket">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <exit alias="north" to="terracotta">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="west" to="clay tunnels">
+      <inherit name="westdirection" />
+      <script type="script">
+        player.runningfrombeast = player.runningfrombeast + 1
+        MoveObject (player, clay tunnels)
+      </script>
+    </exit>
+  </object>
+  <object name="clay tunnels">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <exit alias="east" to="basket">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit name="confusing wall" alias="north" to="BURROWS">
+      <inherit name="northdirection" />
+      <look>It is a confusing array of walls</look>
+      <script type="script">
+        player.runningfrombeast = player.runningfrombeast + 1
+        MoveObject (player, BURROWS)
+      </script>
+    </exit>
+  </object>
+  <object name="a wide hallway of chalk">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <exit alias="southwest" to="BURROWS">
+      <inherit name="southwestdirection" />
+    </exit>
+    <exit alias="northeast" to="circular cavern of great height">
+      <inherit name="northeastdirection" />
+      <script type="script">
+        player.runningfrombeast = player.runningfrombeast + 1
+        MoveObject (player, circular cavern of great height)
+      </script>
+    </exit>
+  </object>
+  <object name="circular cavern of great height">
+    <inherit name="editor_room" />
+    <alias>circular cavern of great height and depth</alias>
+  </object>
+  <object name="copper maze">
+    <inherit name="editor_room" />
+    <description>Directly above you is an opening that ascends out of sight. The rocky sides are unclimbable</description>
+    <object name="the huge dead beast">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <look type="script">
+        if (ListContains(ScopeVisible(), the huge dead beast)) {
+          msg ("The beast is crushed by the fall, an unpleasent heap of black fur and blood.")
+        }
+      </look>
+    </object>
+    <exit alias="southwest" to="a wide hallway of chalk">
+      <inherit name="southwestdirection" />
+    </exit>
+    <object name="chain with pillar">
+      <inherit name="editor_object" />
+      <alias>chain attached to a huge wooden pillar</alias>
+      <visible type="boolean">false</visible>
+    </object>
+  </object>
+  <turnscript>
+    <enabled />
+    <script>
+      player.turns = player.turns + 1
+    </script>
+  </turnscript>
+  <turnscript name="beast persuit">
+    <enabled type="boolean">false</enabled>
+    <script>
+      player.beastch = player.beastch + 1
+      msg ("Behind you is the horrible sound of a persuing monster!")
+    </script>
+  </turnscript>
+  <turnscript name="caught">
+    <enabled type="boolean">false</enabled>
+    <script><![CDATA[
+      if (player.beastch =player.runningfrombeast) {
+        msg ("the beast has you!<br/>")
+      }
+    ]]></script>
+  </turnscript>
+  <object name="dark dungeon">
+    <inherit name="editor_room" />
+    <exit alias="out" to="tunnel 1">
+      <inherit name="outdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>free</property>
+    <pattern>free; open; release; unlock; unfasten; loosen</pattern>
+    <defaultexpression>"You can't free " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>kick</property>
+    <pattern>kick; boot; #object#</pattern>
+    <defaultexpression>"You can't kick; boot; #object# " + object.article + "."</defaultexpression>
+  </verb>
+  <timer name="memory return">
+    <interval>65</interval>
+    <script>
+      if (player.parent = tunnel 1) {
+        msg ("Clear now is the memory of how things turned so sour.. a hole in the ground.. falling.. then waking up here, bewildered and confused. Looking up - sure enough - there is the opening high above, and a carefully prepared pack full of essential items is missing!")
+      }
+    </script>
+  </timer>
+</asl>

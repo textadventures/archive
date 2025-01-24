@@ -1,0 +1,60 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="test2">
+    <gameid>42673141-fdd6-44e9-907d-3adbc3e7162d</gameid>
+    <version>1.0</version>
+    <description type="string"></description>
+    <countdown type="int">30</countdown>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <description>
+      this is a room
+                    </description>
+    <ViewRoom type="objectlist">room2</ViewRoom>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <statusattributes type="stringdictionary">countdown = </statusattributes>
+      <countdown type="int">30</countdown>
+    </object>
+    <object name="box">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <openscript type="script">
+        msg ("open")
+        box.isopen = true
+      </openscript>
+    </object>
+    <exit alias="south" to="room2">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="room2">
+    <inherit name="editor_room" />
+    <onexit type="script">
+      DisableTimer (timer1)
+      player.countdown = 30
+    </onexit>
+    <exit alias="north" to="room">
+      <inherit name="northdirection" />
+    </exit>
+    <turnscript name="test">
+      <enabled />
+      <script>
+        EnableTimer (timer1)
+      </script>
+    </turnscript>
+  </object>
+  <timer name="timer1">
+    <interval>1</interval>
+    <script>
+      player.countdown = player.countdown-1
+      if (player.countdown=0) {
+        msg ("30seconds")
+        DisableTimer (timer1)
+      }
+    </script>
+  </timer>
+</asl>

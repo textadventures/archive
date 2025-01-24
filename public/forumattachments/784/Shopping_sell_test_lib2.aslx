@@ -1,0 +1,105 @@
+<library>
+
+<!--
+
+A very simple module that lets you easily put a shop into the game.
+To use:
+1. Have a Boolean attribute on your shop called "shop" set to true.
+2. Have an integer attrubute on the player called "money", set to the
+   amount of cash the player starts with. It would be good to set this
+   as a status attribute too.
+3. Any goods for sale should be placed in the shop. Set to scenery and
+   not takeable (these will be changed when the item is purchased).
+   They also need an integer attribute "price"; this will be deducted
+   from the player's money.
+
+Feel free to modify this code as you wish.
+
+The Pixie
+the_pix@hotmail.com
+
+-->
+	<template name="SellItemNotKnown">You can't sell this item</template>
+	<dynamictemplate name="SellSuccess">"You sell a " + object.name</dynamictemplate>
+  <template name="BuyItemNotKnown">You can't buy that here</template>
+  <template name="CanNotAfford">You can't afford that</template>
+  <template name="NotForSale">That's not for sale</template>
+  <template name="NotAShop">What do you think this is, a shop?</template>
+  <dynamictemplate name="BuySuccess">"You buy a " + object.name + " for " + object.price + " coins."</dynamictemplate>
+  <command name="buy_stuff">
+    <pattern>buy #text#; purchase #text#</pattern>
+    
+    <script><![CDATA[
+object_x = GetObject (text)
+foreach (i, AllObjects()) {
+	if (i.alias=text){
+	text = i.name
+	object_x=GetObject (text)
+	}
+}
+if (object_x = null) {
+  foreach (obj, AllObjects()) {
+    if (obj.alias=text or obj.name=text) {
+      object_x = obj
+    }
+  }
+}
+if (object_x=null){
+msg ("There is no such item!")
+}
+else {
+    if (GetBoolean(player.parent, "shop")) {
+	if (HasInt(object_x, "price")) {
+	
+	
+
+		if (player.money < object_x.price) {
+		msg ("You can not afford it.")
+		}
+		else if (not GetAttribute (object_x,"parent")=SoldItems and not object_x.parent = player.parent){
+		msg ("There is no such item here!")
+		}
+		else if (GetAttribute (object_x,"parent")=SoldItems){
+			msg ("You buy a " + object_x.name + " for " + object_x.price + " coins.")
+			object_x.parent = game.pov
+			player.money = player.money - object_x.price
+			msg ("Sold items triggered")
+		}
+		else {
+			msg ("You buy a " + object_x.name + " for " + object_x.price + " coins.")
+	        b = Clone(object_x)
+		    MoveObject (b, player)
+	        player.money = player.money - object_x.price
+		    b.take = True
+	        b.scenery = False
+			msg ("Cloned items triggered.")
+		}
+	}
+		else {
+	msg ("That item is not for sale.")
+	}
+}
+else{
+msg ("You are not in a shop.")
+}
+}
+	
+
+    ]]></script>
+  </command>
+     <command name="sell_stuff">
+    <pattern>sell #text#</pattern>
+    <unresolved>[SellItemNotKnown]</unresolved>
+    <script><![CDATA[
+      if (GetBoolean(player.parent, "shop")) {
+	ProcessScopeCommand ("sell_object", ScopeInventory(), text, "You do not have this item in your inventory.", "You can not sell this item.")
+	
+}
+else {
+	msg ("[NotAShop]")
+}
+
+
+    ]]></script>
+  </command>
+</library>

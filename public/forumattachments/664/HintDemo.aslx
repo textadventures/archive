@@ -1,0 +1,112 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <include ref="HintLib.aslx" />
+  <game name="HintDemo">
+    <gameid>a96a91be-3e6d-4b24-9c5e-17c938b0888f</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <exit alias="south" to="room2">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="room2">
+    <inherit name="editor_room" />
+    <beforefirstenter type="script">
+      hint010.passed = true
+    </beforefirstenter>
+    <exit alias="north" to="room">
+      <inherit name="northdirection" />
+    </exit>
+    <exit name="exit_to_room3" alias="south" to="room3">
+      <inherit name="southdirection" />
+      <locked />
+    </exit>
+    <object name="key">
+      <inherit name="editor_object" />
+      <take type="script">
+        if (this.parent = player) {
+          msg ("You already have it!")
+        }
+        else if (not this.parent = player.parent) {
+          msg ("You cannot see that here")
+        }
+        else {        
+          msg ("You take the key!")
+          hint020.passed = true
+          key.parent = player
+        }
+      </take>
+    </object>
+  </object>
+  <object name="room3">
+    <inherit name="editor_room" />
+    <beforefirstenter type="script">
+      hint040.passed = true
+    </beforefirstenter>
+    <exit alias="north" to="room2">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="hints">
+    <inherit name="editor_object" />
+    <object name="hint010">
+      <inherit name="editor_object" />
+      <look>Try going south.</look>
+    </object>
+    <object name="hint020">
+      <inherit name="editor_object" />
+      <look>Pick up the key.</look>
+    </object>
+    <object name="hint030">
+      <inherit name="editor_object" />
+      <look type="script">
+        msg ("Now you have the key, what can you do with it?")
+        this.passed = true
+      </look>
+    </object>
+    <object name="hint035">
+      <inherit name="editor_object" />
+      <look>Type UNLOCK to unlock the door.</look>
+    </object>
+    <object name="hint040">
+      <inherit name="editor_object" />
+      <look>Just go south again.</look>
+    </object>
+  </object>
+  <command name="Hint Count">
+    <pattern>hintcount</pattern>
+    <script>
+      msg ("This command is just to show how the HintCount function works")
+      HintCount
+    </script>
+  </command>
+  <command name="Unlock">
+    <pattern>unlock</pattern>
+    <script>
+      if (not key.parent = player) {
+        msg ("You do not have the key")
+      }
+      else if (not exit_to_room3.locked) {
+        msg ("The door is already unlocked")
+      }
+      else if (not player.parent = room2) {
+        msg ("No locked doors here")
+      }
+      else {
+        msg ("You unlock the door")
+        hint030.passed = true
+        hint035.passed = true
+        exit_to_room3.locked = false
+      }
+    </script>
+  </command>
+</asl>

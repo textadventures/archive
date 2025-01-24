@@ -1,0 +1,1157 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <template name="UnresolvedObject">I can't find that, Amy.</template>
+  <template name="UnrecognisedCommand">I don't understand, Amy. For help with my functions, type "option list".</template>
+  <game name="AEON">
+    <gameid>83a07aa1-c508-49e3-a9ef-d05662939d31</gameid>
+    <version>1.1</version>
+    <firstpublished>2014</firstpublished>
+    <author>Rosie Claverton</author>
+    <subtitle>The Amy Lane Mysteries Online Game</subtitle>
+    <category>Mystery</category>
+    <difficulty>Medium</difficulty>
+    <cruelty>Polite</cruelty>
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <menufontsize type="int">12</menufontsize>
+    <defaultfont>'Lucida Console', Monaco, monospace</defaultfont>
+    <defaultwebfont>Press Start 2P</defaultwebfont>
+    <defaultbackground>Black</defaultbackground>
+    <defaultforeground>White</defaultforeground>
+    <menufont>'Lucida Console', Monaco, monospace</menufont>
+    <menubackground>Black</menubackground>
+    <menuforeground>White</menuforeground>
+    <showpanes type="boolean">false</showpanes>
+    <showcommandbar />
+    <pov type="object">player</pov>
+    <start type="script">
+    </start>
+  </game>
+  <verb name="read">
+    <pattern>read #object#</pattern>
+    <property>read</property>
+    <defaulttemplate>ERROR - try "look at"</defaulttemplate>
+  </verb>
+  <object name="AEON">
+    <inherit name="editor_room" />
+    <description><![CDATA[Hello Amy. How can I help you today?<br/>For help with my functions, type "option list"]]></description>
+    <objectslistprefix type="string"></objectslistprefix>
+    <exitslistprefix>Folders:</exitslistprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>desktop</alias>
+    <enter type="script">
+      if (GetBoolean(MISSING GIRL, "unread")) {
+        msg ("You have 1 new email")
+      }
+      else if (not GetBoolean(MISSING GIRL, "unread")) {
+        msg ("You have no new email")
+      }
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit to="Profiles" />
+    <exit to="Email" />
+    <exit to="Evidence" />
+    <exit to="Extras" />
+  </object>
+  <object name="Profiles">
+    <inherit name="editor_room" />
+    <objectslistprefix>Files:</objectslistprefix>
+    <description>Persons of Interest</description>
+    <exitslistprefix>Go to folder:</exitslistprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <exit to="AEON">
+      <prefix type="string"></prefix>
+    </exit>
+    <object name="Jason Carr">
+      <inherit name="editor_object" />
+      <inherit name="namedmale" />
+      <look><![CDATA[<b>JASON CARR</b><br/>23, male, assistant to Amy Lane.<br/>Trouble magnet.<br/>Makes a good spaghetti bolognaise.]]></look>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <drop type="boolean">false</drop>
+      <accuse>HILARIOUS, AMY.</accuse>
+    </object>
+    <object name="Elodie Parsons">
+      <inherit name="editor_object" />
+      <inherit name="namedfemale" />
+      <gender>she</gender>
+      <visible type="boolean">false</visible>
+      <article>her</article>
+      <look><![CDATA[<b>ELODIE PARSONS</b><br/>18, female, student.<br/>Studying English Literature at Cardiff University.<br/>Missing since 28th April 2014.]]></look>
+      <usestandardverblist type="boolean">false</usestandardverblist>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+      <accuse type="script"><![CDATA[
+        if (GetBoolean(Profiles, "accuseactive")) {
+          SetObjectFlagOn (Elodie Parsons, "accused")
+          MoveObject (player, The Elodie Parsons Case)
+          msg ("<br/>SUPPORTING EVIDENCE?")
+          msg ("Type \"evidence [file]\" to include evidence - e.g. \"evidence Computer\". You may submit multiple pieces of evidence to make a stronger case. ")
+        }
+        else if (not GetBoolean(Profiles, "accuseactive")) {
+          msg ("To start, type \"make accusation\".")
+        }
+      ]]></accuse>
+    </object>
+    <object name="Angel Mitchell">
+      <inherit name="editor_object" />
+      <inherit name="namedfemale" />
+      <visible type="boolean">false</visible>
+      <look><![CDATA[<b>ANGEL MITCHELL</b><br/>19, female, student.<br/>Friend of Elodie Parsons.]]></look>
+      <accuse type="script"><![CDATA[
+        if (GetBoolean(Profiles, "accuseactive")) {
+          SetObjectFlagOn (Angel Mitchell, "accused")
+          MoveObject (player, The Elodie Parsons Case)
+          msg ("<br/>SUPPORTING EVIDENCE?")
+          msg ("Type \"evidence [file]\" to include evidence - e.g. \"evidence Computer\". You may submit multiple pieces of evidence to make a stronger case. ")
+        }
+        else if (not GetBoolean(Profiles, "accuseactive")) {
+          msg ("To start, type \"make accusation\".")
+        }
+      ]]></accuse>
+    </object>
+    <object name="Bobbie Lawson">
+      <inherit name="editor_object" />
+      <inherit name="namedfemale" />
+      <visible type="boolean">false</visible>
+      <look><![CDATA[<b>BOBBIE LAWSON</b><br/>21, female, student.<br/>Friend of Elodie Parsons.]]></look>
+      <accuse type="script"><![CDATA[
+        if (GetBoolean(Profiles, "accuseactive")) {
+          SetObjectFlagOn (Bobbie Lawson, "accused")
+          MoveObject (player, The Elodie Parsons Case)
+          msg ("<br/>SUPPORTING EVIDENCE?")
+          msg ("Type \"evidence [file]\" to include evidence - e.g. \"evidence Computer\". You may submit multiple pieces of evidence to make a stronger case. ")
+        }
+        else if (not GetBoolean(Profiles, "accuseactive")) {
+          msg ("To start, type \"make accusation\".")
+        }
+      ]]></accuse>
+    </object>
+    <object name="Ralph">
+      <inherit name="editor_object" />
+      <inherit name="namedmale" />
+      <visible type="boolean">false</visible>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <look type="script"><![CDATA[
+        msg ("<b>RALPH</b><br/>unknown age, male, unknown occupation.<br/>Relationship to Elodie Parsons - partner?<br/>INSUFFICIENT DATA")
+        SetTimeout (3) {
+          msg ("ESTABLISHING REMOTE CONNECTION TO POLICE FILES...")
+          SetTimeout (3) {
+            msg ("CONNECTED")
+          }
+          SetTimeout (4) {
+            msg ("DOWNLOADING...")
+          }
+          SetTimeout (6) {
+            msg ("DOWNLOAD COMPLETE")
+            MakeObjectVisible (Interview Transcript)
+          }
+          SetTimeout (7) {
+            msg ("VIEW NEW EVIDENCE - Y/N?")
+            get input {
+              if (result="Y") {
+                MoveObject (player, The Elodie Parsons Case)
+              }
+              else if (result<>"Y") {
+                msg ("File available in \"The Elodie Parsons Case\".")
+              }
+            }
+          }
+        }
+      ]]></look>
+    </object>
+    <object name="Ralph Stackhouse Willis">
+      <inherit name="editor_object" />
+      <inherit name="namedmale" />
+      <visible type="boolean">false</visible>
+      <look type="script"><![CDATA[
+        msg ("<b>RALPH STACKHOUSE WILLIS</b><br/>25, male, board member of Fortune 500 company<br/>Boyfriend of Elodie Parsons.")
+        firsttime {
+          SetTimeout (3) {
+            msg ("NEW MESSAGE FROM JASON")
+            msg ("Where is the ransom dropoff?")
+            SetTimeout (2) {
+              MoveObject (player, Map)
+            }
+          }
+        }
+      ]]></look>
+      <accuse type="script"><![CDATA[
+        if (GetBoolean(Profiles, "accuseactive")) {
+          SetObjectFlagOn (Ralph Stackhouse Willis, "accused")
+          MoveObject (player, The Elodie Parsons Case)
+          msg ("<br/>SUPPORTING EVIDENCE?")
+          msg ("Type \"evidence [file]\" to include evidence - e.g. \"evidence Computer\". You may submit multiple pieces of evidence to make a stronger case. ")
+        }
+        else if (not GetBoolean(Profiles, "accuseactive")) {
+          msg ("To start, type \"make accusation\".")
+        }
+      ]]></accuse>
+    </object>
+    <exit to="The Elodie Parsons Case" />
+  </object>
+  <object name="Email">
+    <inherit name="editor_room" />
+    <exitslistprefix>Go to folder:</exitslistprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <objectslistprefix>Messages:</objectslistprefix>
+    <description>Synced</description>
+    <enter type="script">
+      if (GetBoolean(MISSING GIRL, "unread")) {
+        msg ("You have 1 new email")
+      }
+      else if (not GetBoolean(MISSING GIRL, "unread")) {
+        msg ("You have no new email")
+      }
+    </enter>
+    <exit to="AEON">
+      <prefix type="string"></prefix>
+    </exit>
+    <object name="MISSING GIRL">
+      <inherit name="editor_object" />
+      <displayverbs type="stringlist">
+        <value>Open</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist" />
+      <drop type="boolean">false</drop>
+      <close type="boolean">false</close>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <unread />
+      <open type="boolean">false</open>
+      <look type="script"><![CDATA[
+        msg ("Amy theres another missing girl name of Elodie Parsons. Boyfriend reported it this afternoon with a ransom note (see attached). I think shes been kidnapped and I need your help to find her - Bryn")
+        if (GetBoolean(MISSING GIRL, "unread")) {
+          SetObjectFlagOff (MISSING GIRL, "unread")
+        }
+        MakeObjectVisible (Elodie Parsons)
+        msg ("GO TO CASE FILES - Y/N?")
+        get input {
+          if (result="Y") {
+            MoveObject (player, The Elodie Parsons Case)
+          }
+          else if ( result<>"Y") {
+            MoveObject (player, AEON)
+          }
+        }
+      ]]></look>
+      <openscript type="script">
+      </openscript>
+    </object>
+  </object>
+  <object name="Evidence">
+    <inherit name="editor_room" />
+    <exitslistprefix>Go to folder:</exitslistprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <objectslistprefix>Folders:</objectslistprefix>
+    <exit to="AEON">
+      <prefix type="string"></prefix>
+    </exit>
+    <exit name="ripper access" to="Cardiff Ripper">
+      <prefix type="string"></prefix>
+      <locked type="boolean">false</locked>
+      <lockmessage type="string"></lockmessage>
+      <runscript />
+      <script type="script">
+        msg ("SPOILERS FOR BINARY WITNESS. Continue: Y/N?")
+        get input {
+          if (result="Y") {
+            msg ("Access Granted. Proceed.")
+            MoveObject (game.pov, Cardiff Ripper)
+          }
+          else if (result="N") {
+            msg ("Come back when you've read the book!")
+            MoveObject (game.pov, AEON)
+          }
+        }
+      </script>
+    </exit>
+    <exit name="elodie exit" to="The Elodie Parsons Case">
+      <visible type="boolean">false</visible>
+    </exit>
+  </object>
+  <object name="Cardiff Ripper">
+    <inherit name="editor_room" />
+    <objectslistprefix>Files:</objectslistprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description>Evidence files for The Cardiff Ripper case [Amy Lane #1: Binary Witness]</description>
+    <beforeenter type="script">
+    </beforeenter>
+    <object name="Killer journal">
+      <inherit name="editor_object" />
+      <inventoryverbs type="stringlist" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <usestandardverblist />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <read type="script">
+        DisplayHttpLink ("click me", "yearntolove.livejournal.com", false)
+      </read>
+      <look type="script">
+        DisplayHttpLink ("Killer journal", "yearntolove.livejournal.com", false)
+      </look>
+    </object>
+    <object name="Central Station chase map">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look type="script">
+        DisplayHttpLink ("Central Station Chase Map", "http://goo.gl/maps/ydT3t", false)
+      </look>
+      <read type="script">
+        DisplayHttpLink ("click me", "http://goo.gl/maps/ydT3t", false)
+      </read>
+    </object>
+    <exit to="Evidence" />
+  </object>
+  <object name="The Elodie Parsons Case">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <objectslistprefix>Files:</objectslistprefix>
+    <description><![CDATA[Evidence files for the Elodie Parsons case.<br/>For digital forensic analysis of any evidence file, type "analyse [file]".]]></description>
+    <exitslistprefix>Go to folder:</exitslistprefix>
+    <enter type="script">
+      firsttime {
+        SetTimeout (2) {
+          msg ("COMPOSING NEW TEXT MESSAGE:")
+          TextFX_Typewriter ("jason find bryn and get all intel on elodie parsons case. @", 100)
+        }
+      }
+    </enter>
+    <exit to="Evidence" />
+    <object name="Ransom Demand">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look type="script">
+        DisplayHttpLink ("Ransom Demand", "http://amylanemysteries.com/AEON/IMG_0994.JPG", false)
+      </look>
+      <analyse type="script">
+        msg ("WRITING ON MIRROR. LIKELY RED LIPSTICK. BED - UNMADE, DARK RED SHEET, PINK PILLOW, BARRED WOODEN HEADBOARD.")
+        msg ("ADDING GRID FOR SUB-ANALYSIS...")
+        DisplayHttpLink ("View modified file", "http://amylanemysteries.com/AEON/IMG_0994_grid.JPG", false)
+        msg ("PLEASE SPECIFY GRID REFERENCE FOR ANALYSIS")
+        msg ("Type \"grid [reference]\" to analyse - e.g. \"grid A1\"")
+      </analyse>
+      <evidence type="script">
+        MoveObject (Ransom Demand, accusationbox)
+        msg ("ADDITIONAL EVIDENCE?")
+        msg ("If no further evidence to submit, type \"complete accusation\".")
+      </evidence>
+    </object>
+    <exit name="profiles exit" to="Profiles">
+      <visible type="boolean">false</visible>
+    </exit>
+    <object name="Facebook">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+      <analyse type="script">
+        msg ("RECENTLY CREATED PAGE. TWO FRIENDS. ONE PHOTO ALBUM.")
+        firsttime {
+          SetTimeout (4) {
+            msg ("CREATING NEW PROFILES...")
+            SetTimeout (4) {
+              MakeExitVisible (profiles exit)
+              MakeObjectVisible (Angel Mitchell)
+              MakeObjectVisible (Bobbie Lawson)
+              MakeObjectVisible (Ralph)
+              MoveObject (game.pov, Profiles)
+            }
+          }
+        }
+      </analyse>
+      <look type="script">
+        DisplayHttpLink ("Elodie's Facebook profile", "www.facebook.com/pages/Elodie-Parsons/499817690122332", true)
+      </look>
+      <evidence type="script">
+        MoveObject (Facebook, accusationbox)
+        msg ("ADDITIONAL EVIDENCE?")
+        msg ("If no further evidence to submit, type \"complete accusation\".")
+      </evidence>
+    </object>
+    <object name="Interview Transcript">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <analyse type="script"><![CDATA[
+        msg ("RALPH SEEMS SINCERE. BRYN AND OWAIN WOULD KNOW IF HE WERE LYING")
+        firsttime {
+          SetTimeout (4) {
+            msg ("NEW MESSAGE FROM JASON")
+            msg ("Bryn just finished up with ralph want me to follow him?")
+            SetTimeout (4) {
+              msg ("COMPOSING NEW TEXT MESSAGE")
+              TextFX_Typewriter ("keep a close tail. dont let him pay ransom. something strange going on. @", 100)
+            }
+            SetTimeout (30) {
+              msg ("PROFILE UPDATED: RALPH STACKHOUSE WILLIS")
+              MakeObjectVisible (Ralph Stackhouse Willis)
+              MakeObjectInvisible (Ralph)
+              msg ("VIEW UPDATED PROFILE - Y/N?")
+            }
+            get input {
+              if (result="Y") {
+                MoveObject (player, Profiles)
+              }
+              else if (result<>"Y") {
+                msg ("File available in \"Profiles\"")
+                SetTimeout (5) {
+                  msg ("NEW MESSAGE FROM JASON")
+                  msg ("Where is the ransom dropoff?")
+                  SetTimeout (4) {
+                    MoveObject (player, Map)
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]]></analyse>
+      <look type="script">
+        DisplayHttpLink ("Interview Transcript: Ralph Stackhouse Willis", "http://amylanemysteries/AEON/INTERVIEW-TRANSCRIPT.pdf", false)
+      </look>
+      <evidence type="script">
+        MoveObject (Interview Transcript, accusationbox)
+        msg ("ADDITIONAL EVIDENCE?")
+        msg ("If no further evidence to submit, type \"complete accusation\".")
+      </evidence>
+    </object>
+    <command name="grid ransom command">
+      <pattern>grid #text#</pattern>
+      <unresolved>INVALID GRID REFERENCE</unresolved>
+      <script>
+        switch (text) {
+          case ("D2") {
+            msg ("METAL PENDANT. HEART SHAPE. PRECIOUS STONES LIKELY.")
+          }
+          case ("B6") {
+            msg ("CAMERA FLASH. UNABLE TO LOCATE SOURCE.")
+          }
+          case ("D1") {
+            msg ("GOLD NECKLACE CHAIN")
+          }
+          case ("G4") {
+            msg ("REFLECTION: LIGHT FITTING?")
+          }
+          default {
+            msg ("ANALYSIS UNREMARKABLE")
+          }
+        }
+      </script>
+    </command>
+    <object name="Financials">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look><![CDATA[ACCOUNT: MISS EJ PARSONS<br/>BALANCE: £532.84<br/>LAST TRANSACTION: CASH WITHDRAWAL -£20.00<br/><br/>ACCOUNT: MS A MITCHELL<br/>BALANCE: -£1,896.40<br/>LAST TRANSACTION: STRADA -£23.60<br/><br/>ACCOUNT: MISS R LAWSON<br/>BALANCE: -£1,762.29<br/>LAST TRANSACTION: DIY DISCOUNTS -£3.99<br/><br/>ACCOUNT: MR RA STACKHOUSE WILLIS<br/>BALANCE: £17,840.96<br/>LAST TRANSACTION: CASH WITHDRAWAL -£30,000]]></look>
+      <analyse type="script"><![CDATA[
+        msg ("ELODIE'S LAST TRANSACTION WAS ON SUNDAY 27TH APRIL AT 16:42.<br/>ANGEL AND BOBBIE ARE IN SIGNIFICANT DEBT.<br/>RALPH STACKHOUSE WILLIS HAS WITHDRAWN £30,000 TODAY.")
+        SetTimeout (5) {
+          msg ("NEW MESSAGE FROM JASON<br/>Hes just left the house with a holdall reckon hes planning on doing something stupid following now")
+        }
+        SetTimeout (9) {
+          msg ("COMPOSING NEW TEXT MESSAGE...")
+          TextFX_Typewriter ("be careful. @", 100)
+        }
+        SetTimeout (15) {
+          MoveObject (player, Blackweir)
+        }
+      ]]></analyse>
+      <evidence type="script">
+        MoveObject (Financials, accusationbox)
+        msg ("ADDITIONAL EVIDENCE?")
+        msg ("If no further evidence to submit, type \"complete accusation\".")
+      </evidence>
+    </object>
+    <object name="Hammer">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look>Hammer smeared with blood. No other distinguishing features.</look>
+      <evidence type="script">
+        MoveObject (Hammer, accusationbox)
+        msg ("ADDITIONAL EVIDENCE?")
+        msg ("If no further evidence to submit, type \"complete accusation\".")
+      </evidence>
+    </object>
+    <object name="Blonde hair">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look>Very long blonde hair. Unsuitable for DNA analysis.</look>
+      <evidence type="script">
+        MoveObject (Blonde hair, accusationbox)
+        msg ("ADDITIONAL EVIDENCE?")
+        msg ("If no further evidence to submit, type \"complete accusation\".")
+      </evidence>
+    </object>
+  </object>
+  <object name="Login">
+    <inherit name="editor_room" />
+    <objectslistprefix type="string"></objectslistprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      msg ("[SSH] Protocol Verson 2 (OpenSSH_6.5)<br/>[SSH] Cipher: blowfish<br/><br/>user: ")
+      SetTimeout (2) {
+        TextFX_Typewriter ("@d@l", 100)
+      }
+      SetTimeout (4) {
+        msg ("password:")
+      }
+      SetTimeout (5) {
+        TextFX_Typewriter ("***********", 100)
+      }
+      SetTimeout (8) {
+        msg ("Remote connection established.<br/>Last login: 15.04.2014 @ 03:19")
+      }
+      SetTimeout (10) {
+        MoveObject (player, AEON)
+      }
+    ]]></description>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <inherit name="namedfemale" />
+      <alt type="stringlist">
+        <value>Amy</value>
+      </alt>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+      <visible type="boolean">false</visible>
+      <statusattributes type="stringdictionary" />
+      <notes type="string"></notes>
+      <object name="accusationbox">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <open type="boolean">false</open>
+        <close type="boolean">false</close>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <visible type="boolean">false</visible>
+      </object>
+    </object>
+  </object>
+  <command name="option list">
+    <pattern>option list</pattern>
+    <script><![CDATA[
+      msg ("\"go to [folder]\" - opens named folder<br/>\"look at [file]\" - reads named file<br/>\"analyse [file]\" - digital forensic analysis on named file<br/>\"home\" - return to desktop")
+    ]]></script>
+  </command>
+  <verb name="analyse">
+    <pattern>analyse #object#</pattern>
+    <separator type="string"></separator>
+    <multiobjectmenu type="string"></multiobjectmenu>
+    <multiobjectdefault>UNABLE TO ANALYSE</multiobjectdefault>
+    <multiobjectmenuempty>ERROR: NO FILES AVAILABLE FOR ANALYSIS</multiobjectmenuempty>
+    <property>analyse</property>
+    <defaulttext>UNABLE TO ANALYSE</defaulttext>
+  </verb>
+  <command name="home">
+    <pattern>home</pattern>
+    <script>
+      MoveObject (player, AEON)
+    </script>
+  </command>
+  <object name="Map">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <exitslistprefix type="string"></exitslistprefix>
+    <enter type="script"><![CDATA[
+      DisplayHttpLink ("Ransom Demand", "amylanemysteries.com/AEON/IMG_0994.JPG", false)
+      MakeObjectVisible (Blackweir Map)
+      msg ("ENTER LOCATION IN ALL-CAPS:")
+      get input {
+        if (result="BLACKWEIR") {
+          msg ("SEARCHING...")
+          DisplayHttpLink ("Blackweir Map", "amylanemysteries.com/AEON/Blackweir-Map.png", false)
+          msg ("")
+        }
+        else if (result<>"BLACKWEIR") {
+          msg ("UNABLE TO VERIFY LOCATION. PLEASE TRY AGAIN.")
+          get input {
+            if (result="BLACKWEIR") {
+              msg ("SEARCHING...")
+              DisplayHttpLink ("Blackweir Map", "amylanemysteries.com/AEON/Blackweir-Map.png", false)
+            }
+            else if (result<>"BLACKWEIR") {
+              msg ("DID YOU MEAN \"BLACKWEIR\"?")
+              msg ("SEARCHING...")
+              DisplayHttpLink ("Blackweir Map", "amylanemysteries.com/AEON/Blackweir-Map.png", false)
+            }
+          }
+        }
+      }
+    ]]></enter>
+    <object name="Blackweir Map">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <visible type="boolean">false</visible>
+      <analyse type="script">
+        msg ("SIX POSSIBLE LOCATIONS.")
+        msg ("LOCATION SUB-ANALYSIS IN PROGRESS...")
+        DisplayHttpLink ("View modified map", "http://amylanemysteries.com/AEON/Blackweir-Map-analysis.png", false)
+        msg ("Type \"location [reference]\" to analyse - e.g. \"location A\"")
+        msg ("After analysis, communicate location by typing \"accept location [reference]\" - e.g. \"accept location A\"")
+        MakeObjectVisible (location A)
+        MakeObjectVisible (location B)
+        MakeObjectVisible (location C)
+        MakeObjectVisible (location D)
+        MakeObjectVisible (location E)
+        MakeObjectVisible (location F)
+      </analyse>
+    </object>
+    <object name="location A">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <accept type="script"><![CDATA[
+        msg ("COMPOSING NEW TEXT MESSAGE...")
+        TextFX_Typewriter ("blackweir @ midnight. @", 100)
+        SetTimeout (8) {
+          msg ("NEW MESSAGE FROM JASON<br/>The weir in the park? will keep him clear of it.")
+          SetTimeout (5) {
+            msg ("NEW DATA FILE: FINANCIALS")
+            MakeObjectVisible (Financials)
+            msg ("VIEW NEW EVIDENCE - Y/N?")
+            get input {
+              if (result="Y") {
+                MoveObject (player, The Elodie Parsons Case)
+              }
+              else if (result<>"Y") {
+                msg ("File available in \"The Elodie Parsons Case\"")
+                MakeExitVisible (map elodie exit)
+              }
+            }
+          }
+        }
+      ]]></accept>
+    </object>
+    <object name="location B">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <visible type="boolean">false</visible>
+      <accept type="script"><![CDATA[
+        msg ("COMPOSING NEW TEXT MESSAGE...")
+        TextFX_Typewriter ("blackweir woodland trail @ midnight. @", 100)
+        SetTimeout (8) {
+          msg ("NEW MESSAGE FROM JASON<br/>Are you nuts that makes no sense what about somewhere else?")
+        }
+      ]]></accept>
+    </object>
+    <object name="location C">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <accept type="script"><![CDATA[
+        msg ("COMPOSING NEW TEXT MESSAGE...")
+        TextFX_Typewriter ("blackweir woods @ midnight. @", 100)
+        SetTimeout (8) {
+          msg ("NEW MESSAGE FROM JASON<br/>More likely to get mugged in those woods what about somewhere else?")
+        }
+      ]]></accept>
+    </object>
+    <object name="location D">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <accept type="script"><![CDATA[
+        msg ("COMPOSING NEW TEXT MESSAGE...")
+        TextFX_Typewriter ("blackweir fields @ midnight. @", 100)
+        SetTimeout (8) {
+          msg ("NEW MESSAGE FROM JASON<br/>Thats bloody huge cant be what about somewhere else?")
+        }
+      ]]></accept>
+    </object>
+    <object name="location E">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <visible type="boolean">false</visible>
+      <accept type="script"><![CDATA[
+        msg ("COMPOSING NEW TEXT MESSAGE...")
+        TextFX_Typewriter ("blackweir tavern @ midnight. @", 100)
+        SetTimeout (8) {
+          msg ("NEW MESSAGE FROM JASON<br/>Closes at 1130 what about somewhere else?")
+        }
+      ]]></accept>
+    </object>
+    <object name="location F">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <visible type="boolean">false</visible>
+      <accept type="script"><![CDATA[
+        msg ("COMPOSING NEW TEXT MESSAGE...")
+        TextFX_Typewriter ("blackweir terrace @ midnight. @", 100)
+        SetTimeout (8) {
+          msg ("NEW MESSAGE FROM JASON<br/>What the whole street what about somewhere else?")
+        }
+      ]]></accept>
+    </object>
+    <exit name="map elodie exit" to="The Elodie Parsons Case">
+      <visible type="boolean">false</visible>
+    </exit>
+  </object>
+  <command name="location">
+    <pattern>location #text#</pattern>
+    <unresolved>INVALID LOCATION</unresolved>
+    <script>
+      switch (text) {
+        case ("A") {
+          msg ("RIVER TAFF WEIR CROSSED BY BRIDGE. MOST LIKELY LOCATION (90%).")
+        }
+        case ("B") {
+          msg ("PATH THROUGH WOODLAND BESIDE RIVER TAFF. LARGE IMPRECISE LOCATION - UNLIKELY.")
+        }
+        case ("C") {
+          msg ("AREA OF WOODLAND IN BUTE PARK. LARGE IMPRECISE LOCATION - UNLIKELY.")
+        }
+        case ("D") {
+          msg ("LARGE OPEN AREA OF BUTE PARK POPULAR FOR SPORT. LARGE IMPRECISE AND EXPOSED LOCATION - VERY UNLIKELY.")
+        }
+        case ("E") {
+          msg ("PUBLIC HOUSE POPULAR WITH STUDENTS. BUSY PUBLIC LOCATION, SECOND MOST LIKELY (40%).")
+        }
+        case ("F") {
+          msg ("RESIDENTIAL STREET IN STUDENT AREA. LARGE EXPOSED PUBLIC AREA - UNLIKELY.")
+        }
+        default {
+          msg ("INVALID LOCATION")
+        }
+      }
+    </script>
+  </command>
+  <verb name="accept">
+    <pattern>accept #object#</pattern>
+    <property>accept</property>
+    <defaulttext>INVALID COMMAND</defaulttext>
+    <separator type="string"></separator>
+    <multiobjectmenu type="string"></multiobjectmenu>
+    <multiobjectdefault>INVALID COMMAND</multiobjectdefault>
+    <multiobjectmenuempty>INVALID COMMAND</multiobjectmenuempty>
+  </verb>
+  <object name="Blackweir">
+    <inherit name="editor_room" />
+    <objectslistprefix type="string"></objectslistprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <active999 type="boolean">false</active999>
+    <enter type="script"><![CDATA[
+      msg ("GPS TRACKER ACTIVATED")
+      SetTimeout (4) {
+        msg ("CONNECTED TO JASON")
+        msg ("NEW CONNECTION: RALPH (PHONE)")
+      }
+      SetTimeout (9) {
+        SetObjectFlagOn (Blackweir, "active999")
+        msg ("NEW MESSAGE FROM JASON<br/>If it all goes tits up call 999")
+        SetTimeout (4) {
+          msg ("NEW MESSAGE FROM JASON<br/>Headset on and in position")
+          SetTimeout (4) {
+            msg ("VOICE2TEXT TRANSCRIPTION ACTIVE")
+            SetTimeout (5) {
+              msg ("J: I can see him on the bridge")
+              SetTimeout (4) {
+                msg ("J: Looks nervous. Coming up to midnight now.")
+                SetTimeout (6) {
+                  msg ("J: Shit! What was that?")
+                  SetTimeout (4) {
+                    msg ("ERROR - CONNECTION TO RALPH LOST")
+                    SetTimeout (5) {
+                      msg ("J: He's in the fucking river!")
+                      SetTimeout (6) {
+                        msg ("ERROR - CONNECTION TO JASON LOST")
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]]></enter>
+  </object>
+  <command name="call 911">
+    <pattern>call 911</pattern>
+    <script>
+      msg ("We're not in America now, Amy.")
+    </script>
+  </command>
+  <object name="Crime Scene">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <enter type="script">
+      msg ("APPLYING SEARCH GRID...")
+      SetTimeout (2) {
+        DisplayHttpLink ("Blackweir Search Grid", "amylanemysteries.com/AEON/Blackweir-Search-Grid.png", false)
+        msg ("Type \"grid [reference]\" to direct Jason's search - e.g. \"grid A1\". When complete, type \"finish search\".")
+      }
+    </enter>
+    <command name="crime scene grid command">
+      <pattern>grid #text#</pattern>
+      <unresolved>INVALID GRID REFERENCE</unresolved>
+      <script><![CDATA[
+        switch (text) {
+          case ("B2") {
+            SetObjectFlagOn (The Elodie Parsons Case, "hammerfound")
+            MakeObjectVisible (Hammer)
+            msg ("NEW MESSAGE FROM JASON<br/>One bloody hammer nothing special about it bagged and for the lab")
+          }
+          case ("D4") {
+            SetObjectFlagOn (The Elodie Parsons Case, "hairfound")
+            MakeObjectVisible (Blonde hair)
+            msg ("NEW MESSAGE FROM JASON<br/>Very long blonde hair caught on a branch no good for dna owain says")
+          }
+          case ("C2", "C3", "C4") {
+            msg ("NEW MESSAGE FROM JASON<br/>Ive had enough swimming for one day.")
+          }
+          default {
+            msg ("NEW MESSAGE FROM JASON<br/>Nothing here where next?")
+          }
+        }
+      ]]></script>
+    </command>
+  </object>
+  <command name="call 999">
+    <pattern>call 999</pattern>
+    <unresolved>IS THIS REALLY AN EMERGENCY?</unresolved>
+    <script><![CDATA[
+      if (GetBoolean(Blackweir, "active999")) {
+        msg ("CALL CONNECTED.")
+        msg ("SENDING EMERGENCY DETAILS...")
+        SetTimeout (5) {
+          msg ("COMPLETE.")
+        }
+        SetTimeout (14) {
+          msg ("NEW MESSAGE FROM JASON<br/>Both wet but alive ralph has head injury I can hear sirens")
+          SetTimeout (7) {
+            msg ("NEW MESSAGE FROM JASON<br/>Bryn and owain here to search scene")
+            SetObjectFlagOff (Blackweir, "active999")
+            SetTimeout (4) {
+              MoveObject (player, Crime Scene)
+            }
+          }
+        }
+      }
+      else if (not GetBoolean(Blackweir, "active999")) {
+        msg ("IS THIS REALLY AN EMERGENCY?")
+      }
+    ]]></script>
+  </command>
+  <command name="finish search">
+    <pattern>finish search</pattern>
+    <script><![CDATA[
+      msg ("COMPOSING NEW TEXT MESSAGE...")
+      TextFX_Typewriter ("i know who did it. @", 100)
+      SetTimeout (5) {
+        msg ("To start, type \"make accusation\".")
+        msg ("REVIEW EVIDENCE PRIOR TO ACCUSATION - Y/N?")
+        get input {
+          if (result="Y") {
+            MoveObject (player, The Elodie Parsons Case)
+          }
+          else if (result<>"Y") {
+            msg ("All evidence can be found in folder \"The Elodie Parsons Case\".")
+          }
+        }
+      }
+    ]]></script>
+  </command>
+  <verb name="accuse">
+    <pattern>accuse #object#</pattern>
+    <property>accuse</property>
+    <defaulttext>INVALID ACCUSATION</defaulttext>
+    <separator type="string"></separator>
+    <multiobjectmenu type="string"></multiobjectmenu>
+    <multiobjectdefault type="string"></multiobjectdefault>
+  </verb>
+  <verb name="evidence">
+    <pattern>evidence #object#</pattern>
+    <property>evidence</property>
+    <defaulttext>THAT IS NOT EVIDENCE.</defaulttext>
+    <separator type="string"></separator>
+    <multiobjectmenu type="string"></multiobjectmenu>
+    <multiobjectdefault type="string"></multiobjectdefault>
+    <multiobjectmenuempty>THAT IS NOT EVIDENCE.</multiobjectmenuempty>
+  </verb>
+  <command name="make accusation">
+    <pattern>make accusation</pattern>
+    <unresolved>INVALID ACCUSATION</unresolved>
+    <script>
+      SetObjectFlagOn (Profiles, "accuseactive")
+      MakeObjectVisible (accusationbox)
+      msg ("To accuse, type \"accuse [suspect]\" - e.g. \"accuse Jason Carr\".")
+      MoveObject (player, Profiles)
+    </script>
+  </command>
+  <object name="Solved Cases">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <exitslistprefix type="string"></exitslistprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <enter type="script">
+      msg ("RANSOM DEMAND: Written in lipstick, likely by a woman.")
+      msg ("FACEBOOK: Bobbie is blonde, as evidenced by the Rapunzel costume and bikini picture")
+      msg ("INTERVIEW TRANSCRIPT: Ralph does not get on with Angel and Bobbie")
+      msg ("FINANCIALS: Bobbie is in significant debt and her last purchase was at DIY Discounts")
+      msg ("HAMMER: Perhaps purchased at DIY Discounts?")
+      msg ("BLONDE HAIR: Sufficient circumstantial evidence for a search warrant.")
+      SetTimeout (10) {
+        msg ("CASE CONCLUSION")
+        msg ("When Bobbie's house was searched, Elodie was found along with Angel, completely oblivious to the concern of Ralph and the police.")
+        msg ("When confronted by the evidence, Bobbie immediately identified Angel as the mastermind.")
+        msg ("The aim was to split up Ralph and Elodie or merely gain a little holiday spending money.")
+        msg ("Bobbie and Angel were charged with conspiracy to commit fraud and Bobbie was also charged with assault with a deadly weapon.")
+      }
+      SetTimeout (20) {
+        TextFX_Typewriter ("CASE CLOSED", 100)
+        SetTimeout (4) {
+          msg ("Press any key to return to AEON.")
+          wait {
+            MoveObject (player, AEON)
+          }
+        }
+      }
+    </enter>
+  </object>
+  <command name="complete accusation">
+    <pattern>complete accusation</pattern>
+    <unresolved>INVALID ACCUSATION</unresolved>
+    <script><![CDATA[
+      MoveObject (player, Accusation)
+      SetObjectFlagOff (Profiles, "accuseactive")
+      if (GetBoolean(Elodie Parsons, "accused")) {
+        msg ("I accuse Elodie Parsons because...")
+        list = FormatObjectList("of the evidence in ", accusationbox, "and", ".", false)
+        if (list <> "") {
+          msg (list)
+          SetTimeout (6) {
+            msg ("AMY, THAT DOESN'T MAKE SENSE.")
+            msg ("ELODIE WAS VERY HAPPY WITH RALPH. SHE HAS NOTHING TO GAIN FROM HER OWN DISAPPEARANCE.")
+            if (GetBoolean(The Elodie Parsons Case, "hairfound")) {
+              msg ("ELODIE HAS BROWN HAIR. THIS IS NOT A MATCH.")
+            }
+            msg ("To make another accusation, type \"make accusation\". Type \"accuse [suspect]\" and \"evidence [object]\" before \"complete accusation\".")
+          }
+          SetObjectFlagOff (Elodie Parsons, "accused")
+        }
+      }
+      else if (GetBoolean(Angel Mitchell, "accused")) {
+        msg ("I accuse Angel Mitchell because...")
+        list = FormatObjectList("of the evidence in ", accusationbox, "and", ".", false)
+        if (list <> "") {
+          msg (list)
+        }
+        SetTimeout (6) {
+          msg ("ARE YOU SURE, AMY?")
+          msg ("ANGEL HAS SIGNIFICANT DEBT AND DISLIKES RALPH. THAT IS NOT STRONG EVIDENCE.")
+          if (GetBoolean(The Elodie Parsons Case, "hairfound")) {
+            msg ("ANGEL HAS BLACK HAIR. THIS IS NOT A MATCH.")
+          }
+          msg ("To make another accusation, type \"make accusation\". Type \"accuse [suspect]\" and \"evidence [object]\" before \"complete accusation\".")
+        }
+        SetObjectFlagOff (Angel Mitchell, "accused")
+      }
+      else if (GetBoolean(Ralph Stackhouse Willis, "accused")) {
+        msg ("I accuse Ralph Stackhouse Willis because...")
+        list = FormatObjectList("of the evidence in ", accusationbox, "and", ".", false)
+        if (list <> "") {
+          msg (list)
+        }
+        SetTimeout (6) {
+          msg ("THAT DOESN'T MAKE SENSE, AMY.")
+          msg ("RALPH HAS NOTHING TO GAIN FROM ELODIE'S KIDNAPPING AND HAS SUSTAINED A SEVERE HEAD INJURY.")
+          msg ("To make another accusation, type \"make accusation\". Type \"accuse [suspect]\" and \"evidence [object]\" before \"complete accusation\".")
+        }
+        SetObjectFlagOff (Ralph Stackhouse Willis, "accused")
+      }
+      else if (GetBoolean(Bobbie Lawson, "accused")) {
+        msg ("I accuse Bobbie Lawson because...")
+        list = FormatObjectList("of the evidence in ", accusationbox, "and", ".", false)
+        if (list <> "") {
+          msg (list)
+        }
+        SetTimeout (6) {
+          if (not Contains (accusationbox,Blonde hair)) {
+            msg ("EVIDENCE INSUFFICIENT. TRY AGAIN?")
+            msg ("To make another accusation, type \"make accusation\". Type \"accuse [suspect]\" and \"evidence [object]\" before \"complete accusation\".")
+          }
+          else if (Contains (accusationbox,Blonde hair)) {
+            MoveObject (player, Solved Cases)
+          }
+        }
+      }
+      firsttime {
+        SetTimeout (12) {
+          if (not GetBoolean(The Elodie Parsons Case, "hammerfound")) {
+            msg ("POLICE SEARCH EVIDENCE")
+            MakeObjectVisible (Hammer)
+            SetObjectFlagOn (The Elodie Parsons Case, "hammerfound")
+            if (not GetBoolean(Blonde hair, "hairfound")) {
+              SetObjectFlagOn (Blonde hair, "hairfound")
+              MakeObjectVisible (Blonde hair)
+            }
+            msg ("VIEW NEW EVIDENCE - Y/N?")
+            get input {
+              if (result="Y") {
+                MoveObject (player, The Elodie Parsons Case)
+              }
+              else if (result<>"Y") {
+                msg ("File available in \"The Elodie Parsons Case\"")
+              }
+            }
+          }
+          else if (not GetBoolean(The Elodie Parsons Case, "hairfound")) {
+            msg ("POLICE SEARCH EVIDENCE")
+            MakeObjectVisible (Blonde hair)
+            SetObjectFlagOn (The Elodie Parsons Case, "hairfound")
+            msg ("VIEW NEW EVIDENCE - Y/N?")
+            get input {
+              if (result="Y") {
+                MoveObject (player, The Elodie Parsons Case)
+              }
+              else if (result<>"Y") {
+                msg ("File available in \"The Elodie Parsons Case\"")
+              }
+            }
+          }
+        }
+      }
+      SetTimeout (20) {
+        if (Contains (accusationbox,Blonde hair)) {
+          MoveObject (Blonde hair, The Elodie Parsons Case)
+        }
+        if (Contains (accusationbox,Ransom Demand)) {
+          MoveObject (Ransom Demand, The Elodie Parsons Case)
+        }
+        if (Contains (accusationbox,Facebook)) {
+          MoveObject (Facebook, The Elodie Parsons Case)
+        }
+        if (Contains (accusationbox,Interview Transcript)) {
+          MoveObject (Interview Transcript, The Elodie Parsons Case)
+        }
+        if (Contains (accusationbox,Financials)) {
+          MoveObject (Financials, The Elodie Parsons Case)
+        }
+        if (Contains (accusationbox,Hammer)) {
+          MoveObject (Hammer, The Elodie Parsons Case)
+        }
+      }
+    ]]></script>
+  </command>
+  <object name="Extras">
+    <inherit name="editor_room" />
+    <exitslistprefix>Go to folder:</exitslistprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <objectslistprefix>Files:</objectslistprefix>
+    <exit to="AEON" />
+    <object name="Jason Garage">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look type="script">
+        DisplayHttpLink ("Playlist: Jason's Garage", "http://open.spotify.com/user/1157601376/playlist/539ikJPQXmV7cIfxHRak5M", false)
+      </look>
+    </object>
+    <object name="Amy Angst">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look type="script">
+        DisplayHttpLink ("Playlist: Amy's Angst", "http://open.spotify.com/user/1157601376/playlist/00lQO1JJXRFbDvvXjdQDcz", false)
+      </look>
+    </object>
+    <object name="Chapter One">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look type="script">
+        DisplayHttpLink ("Binary Witness: Chapter One reading", "http://youtu.be/V2Zv2bV-S4I", false)
+      </look>
+    </object>
+    <object name="Buy the Book">
+      <inherit name="editor_object" />
+      <look type="script"><![CDATA[
+        msg ("You can order Binary Witness from the following retailers:")
+        DisplayHttpLink ("Carina Press", "http://ebooks.carinapress.com/1D3C7784-D4EB-4236-99D1-49B30F7B7B3D/10/134/en/ContentDetails.htm?ID=56A8976A-6D11-4D4A-9091-5842C3F50A92", false)
+        DisplayHttpLink ("Amazon", "http://amzn.com/B00I66AA3W", false)
+        DisplayHttpLink ("Barnes & Noble", "http://www.barnesandnoble.com/w/binary-witness-rosie-claverton/1118476689", false)
+        DisplayHttpLink ("iBooks", "https://itunes.apple.com/us/book/binary-witness/id827450508?mt=11&ign-mpt=uo%3D4", false)
+        DisplayHttpLink ("https://play.google.com/store/books/details/Rosie_Claverton_Binary_Witness?id=uAjGAgAAQBAJ", "Google Books", false)
+      ]]></look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+    </object>
+  </object>
+  <object name="Accusation">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <exitslistprefix type="string"></exitslistprefix>
+  </object>
+  <function name="UnresolvedCommand" parameters="objectname, varname"><![CDATA[
+    // TO DO: Update names below, we don't need these two variables
+    unresolvedobject = objectname
+    unresolvedkey = varname
+    if (HasString(game.pov.currentcommandpattern, "unresolved")) {
+      if (ListCount(game.pov.currentcommandvarlist) > 1) {
+        msg (game.pov.currentcommandpattern.unresolved + " (" + unresolvedobject + ")")
+      }
+      else {
+        msg (game.pov.currentcommandpattern.unresolved)
+      }
+    }
+    else {
+      if (ListCount(game.pov.currentcommandvarlist) > 1) {
+        msg (Template("UnresolvedObject") + " (" + unresolvedobject + ")")
+      }
+      else {
+        msg (Template("UnresolvedObject"))
+      }
+    }
+    game.unresolvedcommand = game.pov.currentcommandpattern
+    game.unresolvedcommandvarlist = game.pov.currentcommandvarlist
+    game.unresolvedcommandkey = unresolvedkey
+  ]]></function>
+  <walkthrough name="test">
+    <steps type="simplestringlist">
+      option list
+      go to email
+      look at missing girl
+      Y
+      look at ransom demand
+      analyse ransom demand
+      grid D2
+      grid B6
+      look at facebook
+      analyse facebook
+      look at angel mitchell
+      look at bobbie lawson
+      look at ralph
+      Y
+      look at interview transcript
+      analyse interview transcript
+      Y
+      look at ralph stackhouse willis
+      BLACKWEIR
+      analyse blackweir map
+      location E
+      location A
+      accept location A
+    </steps>
+  </walkthrough>
+</asl>

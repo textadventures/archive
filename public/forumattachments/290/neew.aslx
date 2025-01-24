@@ -1,0 +1,1065 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <template name="NoObjectsAvailable">.....Do what with what?</template>
+  <template name="DefaultListen">.....Can't hear anything!</template>
+  <template name="DefaultSitDown">.....Please..Don't tempt me!</template>
+  <template name="DefaultLieDown">.....Huh! I'd never get up again.</template>
+  <template name="UnresolvedObject">.....Sorry say again</template>
+  <template name="DefaultObjectDescription">.....Nothing special.</template>
+  <template name="SeeListHeader">.....I see </template>
+  <template name="CarryingListHeader">.....You have :-</template>
+  <template name="UnrecognisedCommand">.....Would you like to think about that?</template>
+  <template name="EditorVerbDefaultExpression">.....Huh!</template>
+  <dynamictemplate name="TakeSuccessful">".....OK."</dynamictemplate>
+  <dynamictemplate name="TakeUnsuccessful">".....Sorry no can do!"</dynamictemplate>
+  <dynamictemplate name="DropSuccessful">".....Ok!"</dynamictemplate>
+  <dynamictemplate name="DropUnsuccessful">".....Can't do that!"</dynamictemplate>
+  <dynamictemplate name="AlreadyTaken">".....What again!"</dynamictemplate>
+  <dynamictemplate name="AlreadyOpen">".....It's already open!"</dynamictemplate>
+  <dynamictemplate name="AlreadyClosed">".....It's already closed!"</dynamictemplate>
+  <dynamictemplate name="CantOpen">".....It won't open, it must be stuck"</dynamictemplate>
+  <dynamictemplate name="CantClose">".....It won't close!"</dynamictemplate>
+  <dynamictemplate name="DefaultClimb">".....Climb what? "</dynamictemplate>
+  <dynamictemplate name="DefaultHit">"Is that your answer to everything?"</dynamictemplate>
+  <dynamictemplate name="DefaultWear">".....You can't wear that"</dynamictemplate>
+  <game name="new">
+    <gameid>44529987-35b5-4836-a2bc-914ca51e5f5b</gameid>
+    <version>1.0</version>
+    <author>Terence Meredith</author>
+    <autodescription_description type="int">1</autodescription_description>
+    <autodescription_youarein type="int">0</autodescription_youarein>
+    <defaultfontsize type="int">9</defaultfontsize>
+    <showpanes type="boolean">false</showpanes>
+    <category>Fantasy</category>
+    <autodescription_youarein_useprefix type="boolean">false</autodescription_youarein_useprefix>
+    <defaultlinkforeground>WhiteSmoke</defaultlinkforeground>
+    <autodescription />
+    <showdescriptiononenter />
+    <start type="script">
+      SetObjectFlagOn (player, "once")
+    </start>
+  </game>
+  <command name="go">
+    <pattern type="string"><![CDATA[^go to (?<exit>.*)$|^go (?<exit>.*)$|^(?<exit>north|east|south|west|northeast|northwest|southeast|southwest|in|out|up|down|n|e|s|w|ne|nw|se|sw|o|u|d)$]]></pattern>
+    <unresolved>.....Can't go there!</unresolved>
+    <script>
+      if (exit.locked) {
+        msg (exit.lockmessage)
+      }
+      else if (HasScript(exit, "script")) {
+        do (exit, "script")
+      }
+      else {
+        if (exit.lookonly) {
+          msg ("You can't go there.")
+        }
+        else {
+          player.parent = exit.to
+        }
+      }
+    </script>
+  </command>
+  <command name="lookat">
+    <pattern>look at #object#; x #object#; examine #object#; exam #object#; ex #object#; look #object#</pattern>
+    <script>
+      if (GetBoolean(object, "hidechildren")) {
+        object.hidechildren = false
+      }
+      if (TypeOf(object, "look") = "script") {
+        do (object, "look")
+      }
+      else {
+        lookdesc = ""
+        if (HasString(object, "look")) {
+          lookdesc = object.look
+        }
+        if (LengthOf(lookdesc) = 0) {
+          lookdesc = Template("DefaultObjectDescription")
+        }
+        if (GetBoolean(object, "switchedon")) {
+          if (HasString(object, "switchedondesc")) {
+            lookdesc = lookdesc + " " + object.switchedondesc
+          }
+        }
+        else {
+          if (HasString(object, "switchedoffdesc")) {
+            lookdesc = lookdesc + " " + object.switchedoffdesc
+          }
+        }
+        msg (lookdesc)
+      }
+      ListObjectContents (object)
+    </script>
+  </command>
+  <command name="look">
+    <pattern type="string">^look$|^l$</pattern>
+    <script>
+      ClearScreen
+      ShowRoomDescription
+    </script>
+  </command>
+  <object name="Mirrors">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <picture>Dark mirror.jpg</picture>
+    <descprefix type="string"></descprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <description type="script"><![CDATA[
+      PrintCentered ("What would you do? If you found yourself confronted with life altering choices, after being woken up<br/>voilently from a nightmare, that you could not recall, having to unravel a mystery about a strange <br/>mirror that has appeared in your bedroom. And a sinister humanoid spectre at the foot of your bed<br/>Take the journey of all journeys, and resolve enigma's of each strange location!<br/>( May your intuition and courage never fail, for everything, may never be as it seems. )<br/>( Hit a Key )")
+      wait {
+        ClearScreen
+        PrintCentered ("Trying to recall the dream was a losing battle, and the memory of it, rapidly faded. Sitting up<br/>afterwards for a few moments helped to shake off the night terrors. And after casting off the<br/>quilt, you head for the switch on the wall next to the door. Turning on the light you see that<br/>the ambience has altered little, the room is still very gloomy. You find that the bedroom door <br/>is stuck fast, and try as you might, it will not budge. The furniture in your room looks the same,<br/>but everything appears to be rather surreal.<br/>( Hit a Key )")
+        wait {
+          ClearScreen
+          PrintCentered ("Suddenly you see a dark shape, a humanoid figure hovering at the bottom of your bed.<br/>The spectre seeing you darts for the mirror, and dissappears through it. A light streams<br/>in through the window from outside, an eerie glow blankets  the bedroom walls, and<br/>casts shadows over the furniture. Staring at the mirror. You say to yourself<br/>\"Where on earth did that mirror come from? I've never seen that before.\"<br/>\"And what was that horrible thing that was here?\"<br/>( Hit a Key )")
+          wait {
+            ClearScreen
+            SetForegroundColour ("WhiteSmoke")
+            SetBackgroundColour ("Black")
+            MoveObject (player, Bedroom)
+          }
+        }
+      }
+    ]]></description>
+  </object>
+  <object name="Bedroom">
+    <inherit name="editor_room" />
+    <objectslistprefix type="string"></objectslistprefix>
+    <descprefix type="string"></descprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (GetBoolean(player, "tree")) {
+        ClearScreen
+        msg ("..... Re-entering the room, you suddenly see a<br/>dark shape, a humanoid figure hovering at the<br/>bottom of your bed. The spectre, seeing you <br/>darts for the mirror and disappears through it.<br/>A light streams in through the window from outside<br/>Casting an eerie glow all around the bedroom walls <br/>and casting shadows over the furniture.")
+        picture ("linebarblue2.jpg")
+        SetObjectFlagOn (player, "1tree")
+      }
+      else {
+        ClearScreen
+        msg ("...A light streams in through the window from outside! <br/>Casting an eerie glow all around the bedroom walls <br/>and casting shadows over the furniture.")
+        picture ("linebarblue2.jpg")
+      }
+    ]]></description>
+    <object name="Chair">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <usedefaultprefix />
+      <prefix>.....</prefix>
+      <take type="boolean">false</take>
+      <drop type="boolean">false</drop>
+      <scenery />
+      <listchildren />
+      <listchildrenprefix>..........</listchildrenprefix>
+      <takemsg>.....Really?</takemsg>
+      <sit>.....Don't need a rest just got up!</sit>
+      <look type="script">
+        if (GetBoolean(Clothes, "worn")) {
+          msg (".....I've folded my pyjamas, and placed them here.")
+        }
+        else if (GetBoolean(Clothes, "got")) {
+          msg (".....The chair is empty.")
+        }
+        else {
+          msg (".....Found something.")
+          SetTimeout (1) {
+            msg (FormatObjectList(player.parent.objectslistprefix, GetNonTransparentParent(player.parent), Template("And"), ".", false))
+          }
+        }
+      </look>
+      <object name="Clothes">
+        <inherit name="editor_object" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <take />
+        <drop type="boolean">false</drop>
+        <dropmsg>.....Not on your nellie,Gladys.</dropmsg>
+        <takemsg>.....Ok!</takemsg>
+        <inventoryverbs>Look at; Drop</inventoryverbs>
+        <displayverbs>Look at; Take; Wear</displayverbs>
+        <ontake type="script"><![CDATA[
+          msg (".....It's a good thing I'm neat and<br/>tidy and keep everything together!<br/>Now all I need are some pumps.")
+          SetObjectFlagOn (Clothes, "got")
+        ]]></ontake>
+        <look type="script"><![CDATA[
+          if (HasAttribute(Clothes, "worn")) {
+            msg (".....They fit me great.")
+          }
+          else if (GetBoolean(Clothes, "got")) {
+            msg (".....Just ordinary everyday jeans, Tshirt and <br/>socks. But they'll keep me warm, won't they?")
+          }
+          else {
+            msg ("....Huh!")
+          }
+        ]]></look>
+      </object>
+    </object>
+    <command>
+      <pattern>get dressed;put on clothes;put on the clothes;put the clothes on;wear clothes;wear the clothes;put clothes on</pattern>
+      <script>
+        if (GetBoolean(Clothes, "worn")) {
+          msg (".....I'm already wearing them.")
+        }
+        else if (not Got(Clothes)) {
+          msg (".....Do you think you should get them first")
+        }
+        else {
+          msg (".....That's better, thanks")
+          SetObjectFlagOn (Clothes, "worn")
+          Clothes.alias = "Clothes (Worn)"
+        }
+      </script>
+    </command>
+    <command>
+      <pattern>look below chair;look below the chair;look under chair;look underneath chair;look underneath the chair;look under the chair;look beneath chair;look beneath the chair;</pattern>
+      <script>
+        if (not GetBoolean(Pumps, "got")) {
+          msg (".....Well look what I've found?")
+          SetTimeout (2) {
+            MoveObject (Pumps, Bedroom)
+            msg (".........." + FormatObjectList(player.parent.objectslistprefix, GetNonTransparentParent(player.parent), Template("And"), ".", false))
+          }
+        }
+        else {
+          msg (".....Nothing else here Gladys.")
+        }
+      </script>
+    </command>
+    <command>
+      <pattern>put on pumps;put on the pumps;put the pumps on;wear pumps;wear the pumps;put on trainers;put on the trainers;put the trainers on;put on shoes;put on the shoes;put the shoes on;wear trainers;wear the trainers;wear shoes;wear the shoes;put them on</pattern>
+      <script>
+        if (not GetBoolean(Clothes, "worn")) {
+          msg (".....Do you think I should put on my clothes first!")
+        }
+        else if (not Got(Pumps)) {
+          msg (".....Haven't got any?")
+        }
+        else {
+          msg (".....OK!")
+          SetObjectFlagOn (Pumps, "worn")
+          MoveObject (Clothes, Store)
+          MoveObject (Pumps, Store)
+        }
+      </script>
+    </command>
+    <object name="Window">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <hit>.....Ouch!</hit>
+      <break>.....No I might cut myself</break>
+      <scenery />
+      <takemsg>.....Don't be daft.</takemsg>
+      <drop type="boolean">false</drop>
+      <dropmsg>.....Ha Ha!</dropmsg>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <openmsg>.....It just will not open.</openmsg>
+      <closemsg>.....It's already closed!</closemsg>
+      <clean type="script">
+        msg (".....OK! Hang on.")
+        SetTimeout (2) {
+          msg (".....It's no good! Still can't see much.")
+        }
+      </clean>
+      <look type="script">
+        msg (".....It looks a bit murky.")
+      </look>
+    </object>
+    <command>
+      <pattern>look out of window;look out of the window;peer out of window;peer out of the window;peek out of window;peek out of the window;look through window;look through the window;peer through window;peer through the window;peek through window;peek through the window;look outside;look out</pattern>
+      <script><![CDATA[
+        msg ("....As I look through I can't see much, only a dull misty evening. Can only<br/>just make out the houses opposite. Strange you would think because it's<br/>dark they would have their lights on? <br/>Bloody Hell! Where did that mist come from it's covered the entire street?")
+        SetObjectFlagOn (Window, "fog")
+      ]]></script>
+    </command>
+    <object name="Mist">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>Fog</alt>
+      <displayverbs>Look at</displayverbs>
+      <inventoryverbs>Look at</inventoryverbs>
+      <look type="script"><![CDATA[
+        if (GetBoolean(Window, "looked")) {
+          msg (".....It's still foggy, Nothing different.")
+        }
+        else if (GetBoolean(Window, "fog")) {
+          msg (".....The entire neighbourhood is enshrouded in thick<br/>mist, can't even see the houses opposite now!")
+          SetObjectFlagOn (Window, "looked")
+        }
+        else {
+          msg (".....Mist!, What mist?")
+        }
+      ]]></look>
+    </object>
+    <object name="Walls">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>Wall; Bulkhead</alt>
+      <displayverbs>Look at</displayverbs>
+      <inventoryverbs>Look at</inventoryverbs>
+      <takemsg>.....Hey Margaret use your noodle.</takemsg>
+      <look type="script"><![CDATA[
+        msg (".....The walls are all emulsioned in a pastel shade.<br/>An eerie yellow glow from outside casts shadows,<br/>all around.")
+      ]]></look>
+    </object>
+    <object name="Shadows">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>Silhouettes</alt>
+      <displayverbs>Look at</displayverbs>
+      <inventoryverbs>Look at</inventoryverbs>
+      <look type="script">
+        msg (".....They're just silhouettes of the furniture.")
+      </look>
+    </object>
+    <command>
+      <pattern>look round room;look round bedroom;look around room;look around bedroom;look around the bedroom;look round the room;look around the bedroom;look round;look around</pattern>
+      <script><![CDATA[
+        msg (".....I see my bed next to the window, a table<br/>with a lamp on it. And some other furniture.")
+      ]]></script>
+    </command>
+    <object name="Switch">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>light; lightswitch; light switch</alt>
+      <displayverbs>Look at</displayverbs>
+      <inventoryverbs>Look at</inventoryverbs>
+      <switchonmsg>.....Well that's weird, nothing's happened?</switchonmsg>
+      <switchoffmsg>.....No, strange, nothing's happened.</switchoffmsg>
+      <switchedon />
+      <hit type="string"></hit>
+      <break type="string"></break>
+      <turnon>.....Click.....No difference</turnon>
+      <turnoff>.....Click...Nope, it's the same?</turnoff>
+    </object>
+    <command>
+      <pattern>close window;close the window; shut window;shut the window</pattern>
+      <script>
+        msg (".....It's already closed.")
+      </script>
+    </command>
+    <object name="Mirror">
+      <inherit name="editor_object" />
+      <scenery />
+      <inventoryverbs>Look at</inventoryverbs>
+      <displayverbs>Look at</displayverbs>
+      <alt>looking glass</alt>
+      <takemsg>.....Something this big. Never!</takemsg>
+      <drop type="boolean">false</drop>
+      <dropmsg>.....Haven't got it. Not likely too neither!</dropmsg>
+      <hit>.....Ouch!</hit>
+      <break>.....Oh! yeah, what with?</break>
+      <kick>.....I think maybe Sigmund Freud would do wonders with you!</kick>
+      <look type="script"><![CDATA[
+        msg (".......It's magnificent, it measures at least 4' by 6' sitting in its gilt frame. It is firmly <br/>fixed to my wall, I didnt have this earlier. Where on earth would this have come<br/>from? And who placed it here. It's reflection properties are superb, everything is<br/>so clear in the mirror. Also It feels as though the mirror is beckoning, It seems <br/>very tactile.")
+      ]]></look>
+      <touch type="script"><![CDATA[
+        msg ("...Touching the mirror makes it oscillate, and creates<br/> fluidic concentric circles rippling ever outwards from<br/>it's centre.")
+      ]]></touch>
+    </object>
+    <command>
+      <pattern>look in mirror;look in the mirror;look reflection;look at reflection;look at the reflection;look me;look at me;look at my reflection;look at my reflection in the mirror;look in reflection;look at reflection in mirror;look at reflection in the mirror</pattern>
+      <script><![CDATA[
+        if (GetBoolean(Mushrooms, "sprayed")) {
+          msg (".....You have been sprayed")
+        }
+        else if (GetBoolean(Pumps, "worn")) {
+          msg (".....I look fully dressed, apart from being a little<br/>drawn around the eyes. Still can't stay here all<br/>day, I got to find out what's going on.")
+        }
+        else if (GetBoolean(Clothes, "worn")) {
+          msg (".......I'm Looking a lot better, although I'll need<br/>some trainers to finish off the whole ensemble.")
+        }
+        else {
+          msg (".....Cripes, I'm still wearing my pyjamas! No wonder<br/>I'm still chilly. I hate getting out of a warm bed.")
+        }
+      ]]></script>
+    </command>
+    <object name="Pyjamas">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>nightie; house clothes</alt>
+      <inventoryverbs>Look at</inventoryverbs>
+      <sniff>.....Kinky git!</sniff>
+      <takemsg>.....No I don't need them any more!</takemsg>
+      <drop type="boolean">false</drop>
+      <look type="script">
+        msg (".....Only clean on yesterday, I think?")
+      </look>
+    </object>
+    <object name="Picture">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>photo; portrait</alt>
+      <inventoryverbs>Look at</inventoryverbs>
+      <displayverbs>Look at</displayverbs>
+      <takemsg>.....I do not want to touch it, never mind - take it!</takemsg>
+      <look type="script"><![CDATA[
+        msg (".....This is almost frightening for some reason, it depicts a scene of a person<br/>lying in an alley on their back with arms outstretched. And blood flowing out<br/>from a bullet hole in their side. It also shows another person running from the<br/>area. There is very little light cascading down from the yellow lamp lights that<br/>are positioned high on the walls. Who-ever would paint such a terrible scene,<br/>I do not know, besides where did it come from? I certainly would not purchase<br/>anything like this myself. It's absolutely hideous.")
+      ]]></look>
+    </object>
+    <object name="Room">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>bedroom</alt>
+      <look type="script"><![CDATA[
+        msg (".....I see my bed next to the window, a table<br/>with a lamp on it. And some other furniture.")
+      ]]></look>
+    </object>
+    <object name="Furniture">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>furnishings</alt>
+      <displayverbs>Look at</displayverbs>
+      <inventoryverbs type="list"></inventoryverbs>
+      <takemsg>.....Yeah! sure,Dorah.</takemsg>
+      <look type="script"><![CDATA[
+        msg (".....Looking round I see my oak wardrobe in the corner, and a<br/>matching oak chest of drawers next to it, There is a chair here,<br/>and a matching bedside table with a broken lamp, on it. \"Never<br/>did get it fixed\".")
+        SetTimeout (2) {
+          msg ("<br/>.....Oh and of course,  this mirror! Oh hang on.....")
+          SetTimeout (2) {
+            msg (".....Where on earth did this picture come from?")
+          }
+        }
+      ]]></look>
+    </object>
+    <object name="Door">
+      <inherit name="editor_object" />
+      <scenery />
+      <displayverbs>Look at</displayverbs>
+      <inventoryverbs type="list"></inventoryverbs>
+      <takemsg>.....That's gotta be the best command yet. But I suppose there's more to come?</takemsg>
+      <look type="script">
+        msg (".....It's an oak door, with four inlaid panels.")
+      </look>
+      <pry type="script">
+        msg (".....Not with my delicate fingers! I'll break a nail.")
+      </pry>
+      <break type="script">
+        msg (".....I'll just ignore that remark, shall I?")
+      </break>
+      <push type="script">
+        msg (".....It's just no good")
+      </push>
+      <unlock type="script">
+        msg (".....It is unlocked, it just won't open!")
+      </unlock>
+      <hit type="script">
+        msg (".....What with?")
+      </hit>
+      <kick type="script">
+        msg (".....Temper, temper")
+      </kick>
+      <lean type="script">
+        msg (".....It's just no good!")
+      </lean>
+      <lock type="script">
+        msg (".....You're having a laugh!")
+      </lock>
+    </object>
+    <command>
+      <pattern>open door;open bedroom door;open the door;open the bedroom door</pattern>
+      <script>
+        msg (".....I'm trying, I really am, but it's stuck, damn it!")
+      </script>
+    </command>
+    <object name="Carpet">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>covering; lino; linoleum; floor</alt>
+      <displayverbs>Look at</displayverbs>
+      <inventoryverbs type="list"></inventoryverbs>
+      <takemsg>.....HaHaHa!</takemsg>
+      <look type="script">
+        msg (".....The pink carpet is luxurious and comfortable.")
+      </look>
+      <feel type="script"><![CDATA[
+        msg (".....Like I've got time for this, I don't think.<br/>But just for you. Mmmmm!")
+      ]]></feel>
+    </object>
+    <object name="Bed">
+      <inherit name="editor_object" />
+      <displayverbs>Look at</displayverbs>
+      <inventoryverbs type="list"></inventoryverbs>
+      <scenery />
+      <look type="script">
+        msg (".....It looks a mess, I've slept in it all night, I think.")
+      </look>
+      <make type="script">
+        msg (".....Sorry no time for this. Must move on!")
+      </make>
+      <tidy type="script">
+        msg (".....Haven't got time for this nonsense. Sorry!")
+      </tidy>
+      <jump type="script">
+        msg (".....Sorry! no time for mess about!")
+      </jump>
+    </object>
+    <object name="Table">
+      <inherit name="editor_object" />
+      <scenery />
+      <takemsg>.....No!</takemsg>
+      <drop type="boolean">false</drop>
+      <move type="script">
+        msg (".....What for?")
+      </move>
+      <look type="script">
+        msg (".....A solitary lamp adorns the table.")
+      </look>
+    </object>
+    <object name="Lamp">
+      <inherit name="editor_object" />
+      <alt type="list"></alt>
+      <displayverbs>Look at</displayverbs>
+      <inventoryverbs type="list"></inventoryverbs>
+      <takemsg>.....No way!</takemsg>
+      <drop type="boolean">false</drop>
+      <scenery />
+      <look type="script">
+        msg ("..........An old lamp, seen better days, but it doesn't work.")
+      </look>
+      <turnon type="script">
+        msg ("..... Click, Nope! no good, doesn't work.")
+      </turnon>
+      <turnoff type="script">
+        msg (".....Already off! Because it's broke")
+      </turnoff>
+      <light type="script">
+        msg ("..........No good, don't work.")
+      </light>
+    </object>
+    <command>
+      <pattern>fix leg;fix the leg;mend leg;mend the leg;fix table leg;mend table leg;fix the leg on the table;fix the leg on table;mend the leg on table;mend the leg on the table</pattern>
+      <script>
+        msg (".....I can't do that! I'm not a carpenter!")
+      </script>
+    </command>
+    <object name="Wardrobe">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <scenery />
+      <openmsg>.....The wardrobe is open now.</openmsg>
+      <closemsg>.....Ok, the wardobe is now closed.</closemsg>
+      <alt>Robe; Closet; oak wardrobe</alt>
+      <inventoryverbs type="list"></inventoryverbs>
+      <displayverbs>Look at; Open; Close</displayverbs>
+      <onclose type="script"><![CDATA[
+        if (GetBoolean(Wardrobe, "2close")) {
+          msg ("....That's really strange, the bedroom seems to be shaking a little.")
+        }
+        else if (GetBoolean(Wardrobe, "1close")) {
+          msg (".....There! I'm sure I just heard two clicks just then.")
+          SetObjectFlagOn (Wardrobe, "2close")
+          SetObjectFlagOff (Wardrobe, "1close")
+        }
+        else {
+          msg (".....That's very strange, I think.. no!  In fact I<br/>know I've just heard a weird echoing sort of<br/>click.")
+          SetObjectFlagOn (Wardrobe, "1close")
+        }
+      ]]></onclose>
+      <look type="script">
+        if (Wardrobe.isopen) {
+          msg (".....The oak wardrobe is open.")
+        }
+        else {
+          msg (".....The oak wardrobe is closed.")
+        }
+      </look>
+      <onopen type="script"><![CDATA[
+        if (not GetBoolean(player, "fear")) {
+          msg ("..........You know I've always had a fear of open wardrobes.<br/>Ever since I was a child, I could imagine some horrible thing<br/>making it's way out towards me when I was asleep. So, .....<br/>and I know it's daft but I have always closed the wardrobe <br/>afterwards!")
+          SetObjectFlagOn (player, "fear")
+        }
+      ]]></onopen>
+    </object>
+    <command>
+      <pattern>look in wardrobe;look at back of wardrobe;look inside wardrobe;look at the back of wardrobe;look at the back of the wardrobe;look inside the wardrobe;look in the wardrobe;look in robe;look in the robe;look inside robe;look inside the robe</pattern>
+      <script><![CDATA[
+        if (Wardrobe.isopen) {
+          if (GetBoolean(Wardrobe, "2close")) {
+            msg (".....Oh my God, the back of the wardrobe has<br/>swivelled fully open and there is an opening<br/>big enough to go through.")
+            SetObjectFlagOn (Wardrobe, "backopen")
+          }
+          else if (GetBoolean(Wardrobe, "1close")) {
+            msg ("...That's new! There seems to be a small gap<br/>in the back of the wardrobe.")
+          }
+          else {
+            msg (".....I see nothing in here?")
+          }
+        }
+        else {
+          msg (".....The wardrobe's closed.")
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>look gap;look at gap;look hole;look at hole;look at the gap</pattern>
+      <script>
+        if (GetBoolean(Wardrobe, "1close")) {
+          msg (".....There is a blue light emanating through the gap.")
+        }
+        else {
+          msg (".....What gap?")
+        }
+      </script>
+    </command>
+    <command>
+      <pattern>look leg;look at leg;look at the leg;look table leg;look at table leg;lookat the table leg</pattern>
+      <script>
+        msg (".....It's cracked.")
+      </script>
+    </command>
+    <object name="Chest of Drawers">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>tallboy</alt>
+      <look type="script"><![CDATA[
+        msg (".....Nothing special just a chest of drawers<br/>made of cheap oak laminate. Junk just like<br/>the rest of the furniture.")
+      ]]></look>
+      <opendrawers type="script">
+        msg (".....Damn, these drawers are jammed tight.")
+      </opendrawers>
+    </object>
+    <object name="Houses">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>house</alt>
+      <look type="script">
+        if (GetBoolean(Window, "looked")) {
+          msg (".....Too much fog to see anything!")
+        }
+        else if () {
+        }
+      </look>
+    </object>
+    <command>
+      <pattern>go opening;go to opening;go to the opening;go hole;go to hole;go to the hole;go back;go back of wardrobe;go to back of wardrobe;go to the back of wardrobe;go wardrobe;go to wardrobe;go to the wardrobe; go in;go in wardrobe;go in the wardrobe;go inside;go inside wardobe;go inside the wardrobe;go in robe;go into robe</pattern>
+      <script>
+        if (GetBoolean(Wardrobe, "backopen")) {
+          if (GetBoolean(Pumps, "worn")) {
+            msg (".....OK!")
+            SetTimeout (2) {
+              ClearScreen
+              SetBackgroundColour ("White")
+              SetForegroundColour ("Black")
+              MoveObject (player, Clearing)
+            }
+          }
+          else {
+            msg (".....Sheesh there's a cold wind blowing through.")
+          }
+        }
+        else {
+          msg (".....I'm sorry, what are you on about?")
+        }
+      </script>
+    </command>
+  </object>
+  <object name="Store">
+    <inherit name="editor_room" />
+    <object name="Pumps">
+      <inherit name="editor_object" />
+      <take />
+      <takemsg>.....Ta, these will keep my feet warm.</takemsg>
+      <drop type="boolean">false</drop>
+      <dropmsg>.....I've got them now, and I'm keeping them!</dropmsg>
+      <alt>Shoes; Trainers</alt>
+      <displayverbs>Look at; Take; Wear</displayverbs>
+      <inventoryverbs>Look at; Drop</inventoryverbs>
+      <scenery type="boolean">false</scenery>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look type="script">
+        msg (".....They're lovely pink trainers.")
+      </look>
+      <ontake type="script">
+        SetObjectFlagOn (Pumps, "got")
+      </ontake>
+    </object>
+  </object>
+  <verb>
+    <property>break</property>
+    <pattern>break;smash</pattern>
+    <defaultexpression>".....Best not damage it, hey!"</defaultexpression>
+    <multiobjectmenuempty>.....Do what with what?</multiobjectmenuempty>
+  </verb>
+  <verb>
+    <property>clean</property>
+    <pattern>clean</pattern>
+    <defaultexpression>".....I'm not a scivvy"</defaultexpression>
+    <multiobjectmenuempty>.....Do what with what?</multiobjectmenuempty>
+  </verb>
+  <verb>
+    <property>kick</property>
+    <pattern>kick</pattern>
+    <defaultexpression>".....When all else fails, hey!"</defaultexpression>
+    <multiobjectmenuempty>.....Do what with what?</multiobjectmenuempty>
+  </verb>
+  <verb>
+    <property>sniff</property>
+    <pattern>sniff;smell</pattern>
+    <defaultexpression>".....There's something wrong with you, I swear there is"</defaultexpression>
+    <multiobjectmenuempty>.....Do what with what?</multiobjectmenuempty>
+  </verb>
+  <verb>
+    <property>pry</property>
+    <pattern>pry;pry open;lever open;lever</pattern>
+    <defaultexpression>".....You can't do that"</defaultexpression>
+    <multiobjectmenuempty>.....Do what with what?</multiobjectmenuempty>
+  </verb>
+  <verb>
+    <property>lean</property>
+    <pattern>lean</pattern>
+    <defaultexpression>".....You don't wanna do that, I'm sure"</defaultexpression>
+    <multiobjectmenuempty>.....Do what with what?</multiobjectmenuempty>
+  </verb>
+  <verb>
+    <property>feel</property>
+    <pattern>feel;touch</pattern>
+    <defaultexpression>".....You are very tactile?"</defaultexpression>
+    <multiobjectmenuempty>The.....Do what with what?</multiobjectmenuempty>
+  </verb>
+  <verb>
+    <property>make</property>
+    <pattern>make;make the</pattern>
+    <defaultexpression>".....Sorry!"</defaultexpression>
+    <multiobjectmenuempty>.....Do what with what?</multiobjectmenuempty>
+  </verb>
+  <verb>
+    <property>tidy</property>
+    <pattern>tidy;tidy the</pattern>
+    <defaultexpression>".....Tidy up, hey"</defaultexpression>
+    <multiobjectmenuempty>.....Do what with what?</multiobjectmenuempty>
+  </verb>
+  <verb>
+    <property>jump</property>
+    <pattern>jump;jump on</pattern>
+    <defaultexpression>".....You're very fit aren't you!"</defaultexpression>
+    <multiobjectmenuempty>.....Do what with what?</multiobjectmenuempty>
+  </verb>
+  <verb>
+    <property>fix</property>
+    <pattern>fix;mend</pattern>
+    <defaultexpression>".....You can't fix that"</defaultexpression>
+    <multiobjectmenuempty>.....Do what with what?</multiobjectmenuempty>
+  </verb>
+  <verb>
+    <property>light</property>
+    <pattern>light;light the</pattern>
+    <defaultexpression>".....Sorry?"</defaultexpression>
+    <multiobjectmenuempty>.....Do what with what?</multiobjectmenuempty>
+  </verb>
+  <object name="Clearing">
+    <inherit name="editor_room" />
+    <picture>tree.jpg</picture>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <enter type="script">
+      if (GetBoolean(player, "once")) {
+        SetObjectFlagOn (player, "tree")
+        SetObjectFlagOff (player, "once")
+      }
+      else if (GetBoolean(player, "tree")) {
+        SetObjectFlagOn (player, "1tree")
+        SetObjectFlagOff (player, "tree")
+      }
+      else {
+      }
+    </enter>
+    <description type="script"><![CDATA[
+      PrintCentered ("I've entered into a clearing that hosts a huge tree in the centre. It's towering structure,<br/>is reminiscent of a large broad oak. It's absolutely massive with seven thick trunk like<br/>limbs stretching outwards on an horizontal plain. From each trunk hangs barbed tendrils<br/>flowing down to the ground. They look poisonous to me, I'll be carefull not to touch them.<br/>( Hit a Key)")
+      wait {
+        ClearScreen
+        SetBackgroundColour ("Black")
+        SetForegroundColour ("WhiteSmoke")
+        MoveObject (player, Tree of Life)
+      }
+    ]]></description>
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+  </object>
+  <verb>
+    <property>opendrawers</property>
+    <pattern>open drawers;open the drawers;open drawer;open the drawer</pattern>
+    <defaultexpression>".....You can't open these drawers"</defaultexpression>
+    <multiobjectmenuempty>.....Do what with what?</multiobjectmenuempty>
+  </verb>
+  <object name="Tree of Life">
+    <inherit name="editor_room" />
+    <picture type="string"></picture>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <exitslistprefix>Exits:-</exitslistprefix>
+    <description type="script"><![CDATA[
+      firsttime {
+        msg (".....I'm standing here looking up at this monstrosity, as it towers<br/>above me like a gargantuan mechanoid in motion. It's huge limbs<br/>spread horizontally across the dull blue skies. It lacks foliage and<br/>bares it's branches to the elemental forces that ravaged it. There<br/>are barbed tendrils that droop from each branch directly  to the<br/>forest floor. In the breeze the tree groans under it's own ominous<br/>weight as it's souless moans reverberate throughout my essence.")
+        picture ("linebarblue2.jpg")
+        msg ("<br/><br/>You know somewhere in the depths of my memory this reminds me<br/>of the symbolic tree of the Kabbalah, where the roots are in heaven<br/>and the branches which symbolizes mankind are on this earth plain<br/>of existence. <br/>But where does that leave me, standing here in between the two? <br/>")
+      }
+      otherwise {
+        msg (".....I'm standing here looking up at this monstrosity, as it towers<br/>above me like a gargantuan mechanoid in motion. It's huge limbs<br/>spread horizontally across the dull blue skies. It lacks foliage and<br/>bares it's branches to the elemental forces that ravaged it. There<br/>are barbed tendrils that droop from each branch directly  to the<br/>forest floor. In the breeze the tree groans under it's own ominous<br/>weight as it's souless moans reverberate throughout my essence.")
+        picture ("linebarblue2.jpg")
+        msg ("")
+      }
+    ]]></description>
+    <beforeenter type="script">
+      SetBackgroundColour ("Black")
+      SetForegroundColour ("WhiteSmoke")
+    </beforeenter>
+    <exit alias="Bedroom" to="Bedroom">
+      <inherit name="westdirection" />
+    </exit>
+    <command>
+      <pattern>look tree;look at tree;look at the tree</pattern>
+      <script><![CDATA[
+        msg (".....Looking closely I can see an doorway shaped opening<br/>in the main trunk of the tree. Surreal as it seems it's there!")
+      ]]></script>
+    </command>
+    <command>
+      <pattern>go opening;go to opening;go to the opening;go doorway;go to doorway;go to the doorway;go tree; go to tree;go to the tree</pattern>
+      <script>
+        msg (".....OK! just a mo!")
+        SetTimeout (1) {
+          ClearScreen
+          MoveObject (player, Doorway)
+        }
+      </script>
+    </command>
+    <command>
+      <pattern>look round;look around</pattern>
+      <script>
+        msg (".....I see a huge tree with an opening in the base of the trunk.")
+      </script>
+    </command>
+    <command>
+      <pattern>look opening;look at opening;look at the opening;look doorway;look at doorway;look at the doorway</pattern>
+      <script>
+        msg (".....Could do with a closer look! Need to go there.")
+      </script>
+    </command>
+    <command>
+      <pattern>look limbs;look at limbs;look at the limbs;look branches;look at branches;look at the branches;look branch;look at branch;look at the branch</pattern>
+      <script><![CDATA[
+        msg (".....There are barbed tendrils hanging from<br/>each branch. They look highly dangerous,<br/>and visciously sharp!")
+      ]]></script>
+    </command>
+    <object name="Tendrils">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>barbed tendrils</alt>
+      <touch>.....You're having a laugh, aren't you?</touch>
+      <drop type="boolean">false</drop>
+      <take type="boolean">false</take>
+      <takemsg>.....You're having a laugh, aren't you?</takemsg>
+      <swing>..... Not on your nellie Gladyss.</swing>
+      <displayverbs>Look at</displayverbs>
+      <swingon>..... Not on your nellie Gladyss.</swingon>
+      <climb>.....No way am I doing that.</climb>
+      <look type="script">
+        msg (".....They really do  look nasty!")
+      </look>
+    </object>
+    <command>
+      <pattern>look forest;look at forest;look at the forest;look round forest;look round the forest;look around forest;look around the forest</pattern>
+      <script><![CDATA[
+        msg (".....A dense forest, seems to be stretching into infinity.<br/>The further away the more mists there seems to be,<br/>making everything fade into oblivion.")
+      ]]></script>
+    </command>
+    <command>
+      <pattern>go forest;go to forest;go to the forest;go mist;go to mist;go to the mist;go clearing;go to clearing;go to the clearing</pattern>
+      <script><![CDATA[
+        msg (".....I will not go there, for only a lack of my imagination<br/>saves me from immobizing myself with imaginary fears!")
+      ]]></script>
+    </command>
+    <command>
+      <pattern>climb tree;climb the tree;climb up;climb up tree;climb up the tree</pattern>
+      <script>
+        msg (".....Sorry that's not going to happen!")
+      </script>
+    </command>
+    <command>
+      <pattern>look mist;look mists;look at mist;look at mists;look at the mist;look at the mists</pattern>
+      <script>
+        msg (".....Just a mist covering the forest.")
+      </script>
+    </command>
+    <command>
+      <pattern>look clearing;look at clearing;look at the clearing</pattern>
+      <script>
+        msg (".....Nothing special, just a clearing surrounded by a forest.")
+      </script>
+    </command>
+  </object>
+  <object name="Doorway">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <exitslistprefix>Exits:-</exitslistprefix>
+    <description type="script"><![CDATA[
+      ClearScreen
+      msg (".....Ok! I'm at the opening to the tree. Looking round<br/>I can see the clearing the tree stands in. There is a <br/>staircase here leading up into the huge tree itself!")
+      picture ("linebarblue2.jpg")
+      msg ("")
+    ]]></description>
+    <command>
+      <pattern>look opening;look at opening;look at the opening;look doorway;look at doorway;look at the doorway</pattern>
+      <script>
+        msg (".....I see some stairs leading up inside.")
+      </script>
+    </command>
+    <exit alias="east" to="Tree of Life">
+      <inherit name="eastdirection" />
+      <script type="script">
+        ClearScreen
+        MoveObject (player, Tree of Life)
+      </script>
+    </exit>
+    <exit alias="up" to="Top of stairs">
+      <inherit name="northdirection" />
+    </exit>
+    <command>
+      <pattern>look clearing;look at clearing;look at the clearing</pattern>
+      <script>
+        msg (".....It's just a clearing surrounded by a forest at it's edge.")
+      </script>
+    </command>
+    <command>
+      <pattern>look round;look around</pattern>
+      <script>
+        msg (".....Apart from the clearing I see some steps leading up!")
+      </script>
+    </command>
+    <object name="Stairway">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>step; steps; stair; stairs; staircase</alt>
+      <look type="script"><![CDATA[
+        msg (".....The stairs wind their way up inside the huge interior<br/>of this colossal tree.<br/>..............................<br/>Strange though I seem to be taking all this in my stride, <br/>considering this exists just outside of my bedroom. Alice<br/>eat your heart out.")
+      ]]></look>
+    </object>
+    <command>
+      <pattern>look forest;look at forest;look at the forest;look round forest;look round the forest;look around forest;look around the forest</pattern>
+      <script><![CDATA[
+        msg (".....A dense forest, seems to be stretching into infinity.<br/>The further away the more mists there seems to be,<br/>making everything fade into oblivion.")
+      ]]></script>
+    </command>
+    <command>
+      <pattern>climb tree;climb the tree;climb up;climb up tree;climb up the tree</pattern>
+      <script>
+        msg (".....Like that will never happen!")
+      </script>
+    </command>
+    <command>
+      <pattern>look mist;look mists;look at mist;look at mists;look at the mist;look at the mists</pattern>
+      <script>
+        msg (".....Just a mist covering the forest.")
+      </script>
+    </command>
+    <command>
+      <pattern>look tree;look at tree;look at the tree</pattern>
+      <script>
+        msg (".....It's massive!")
+      </script>
+    </command>
+    <command>
+      <pattern>go stairs;go up stairs;go up the stairs;go steps;go up steps;go up the steps;go staircase;go up staircase;go up the staircase</pattern>
+      <script>
+        msg (".....Ok!")
+        SetTimeout (1) {
+          ClearScreen
+          MoveObject (player, Top of stairs)
+        }
+      </script>
+    </command>
+  </object>
+  <verb>
+    <property>swing</property>
+    <pattern>swing;hang</pattern>
+    <defaultexpression>".....You can't do that"</defaultexpression>
+    <multiobjectmenuempty>.....Do what with what?</multiobjectmenuempty>
+  </verb>
+  <verb>
+    <property>swingon</property>
+    <pattern>swing on;hang on;hang off</pattern>
+    <defaultexpression>".....Can't do that"</defaultexpression>
+    <multiobjectmenuempty>.....Do what with what?</multiobjectmenuempty>
+  </verb>
+  <object name="test">
+    <inherit name="editor_room" />
+    <description>test</description>
+    <enter type="script">
+      rand = GetRandomInt(1,5)
+      if (rand = 1) {
+        msg ("this is one")
+      }
+      else if (rand = 2) {
+        msg ("this is two")
+      }
+      else if (rand = 3) {
+        msg ("this is three")
+      }
+      else if (rand = 4) {
+        msg ("this is four")
+      }
+      else {
+        msg ("this is five")
+      }
+    </enter>
+  </object>
+  <object name="Top of stairs">
+    <inherit name="editor_room" />
+    <exitslistprefix>Exits:-</exitslistprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      ClearScreen
+      msg (".....I'm at the top of the tree, and boy, what a sight.<br/>I seem to be standing in a shallow hollow of a sort,<br/>with all the branches spreading outwards. I see all<br/>of the forest from up here.")
+      picture ("linebarblue2bb.jpg")
+      msg ("")
+    ]]></description>
+    <exit alias="down" to="Doorway">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <function name="ShowRoomDescription"><![CDATA[
+    if (game.autodescription) {
+      desc = ""
+      request (Hide, "Location")
+      for (i, 1, 4) {
+        if (i = game.autodescription_youarein) {
+          if (game.autodescription_youarein_useprefix) {
+            youarein = player.parent.descprefix
+            desc = AddDescriptionLine (desc, youarein + " " + GetDisplayName(player.parent) + ".")
+          }
+          else {
+            desc = AddDescriptionLine (desc, "<b>" + CapFirst(GetDisplayName(player.parent)) + "</b>")
+          }
+        }
+        if (i = game.autodescription_youcansee) {
+          objects = FormatObjectList(player.parent.objectslistprefix, GetNonTransparentParent(player.parent), Template("And"), ".", false)
+          desc = AddDescriptionLine(desc, objects)
+        }
+        if (i = game.autodescription_youcango) {
+          exits = FormatExitList(player.parent.exitslistprefix, ScopeExits(), Template("Or"), ".")
+          desc = AddDescriptionLine(desc, exits)
+        }
+        if (i = game.autodescription_description) {
+          if (HasScript(player.parent, "description")) {
+            if (LengthOf(desc) > 0) {
+              msg (desc)
+              desc = ""
+            }
+            do (player.parent, "description")
+          }
+          else {
+            desc = AddDescriptionLine(desc, GetRoomDescription())
+          }
+        }
+      }
+      if (LengthOf(desc) > 0) {
+        msg (desc)
+      }
+    }
+    else {
+      fulldesc = GetRoomDescription()
+      if (LengthOf(fulldesc) > 0) {
+        msg (fulldesc)
+      }
+    }
+  ]]></function>
+</asl>

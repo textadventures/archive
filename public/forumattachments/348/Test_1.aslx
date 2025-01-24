@@ -1,0 +1,240 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <template name="SeeListHeader">There's</template>
+  <template name="GoListHeader"> Go to </template>
+  <template name="UnrecognisedCommand">Unknown command.</template>
+  <template name="YouAreIn"></template>
+  <template name="PlacesObjectsLabel">Places / Objects</template>
+  <game name="Test_1">
+    <gameid>77ef2400-fd60-4e81-80ad-25427a936c98</gameid>
+    <version>0.1</version>
+    <author>Kieron</author>
+    <showscore type="boolean">false</showscore>
+    <category>Simulation</category>
+    <showhealth />
+    <autodescription_youarein type="int">1</autodescription_youarein>
+    <autodescription_description type="int">2</autodescription_description>
+    <autodescription_youcansee type="int">3</autodescription_youcansee>
+    <autodescription_youcango type="int">4</autodescription_youcango>
+    <defaultfont>Lucida Sans Unicode</defaultfont>
+    <defaultbackground>SlateGrey</defaultbackground>
+    <defaultlinkforeground>Azure</defaultlinkforeground>
+    <clearframe />
+    <menufont>Georgia</menufont>
+    <autodescription_youarein_useprefix type="boolean">false</autodescription_youarein_useprefix>
+    <menufontsize type="int">12</menufontsize>
+    <defaultforeground>Linen</defaultforeground>
+  </game>
+  <object name="lounge">
+    <inherit name="editor_room" />
+    <description>A dimly lit lounge. There are white metal tables with leather benches along the walls, and a black stage in the back. People of various races fill the room while belly-dancing cheetahs perform on the stage.</description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>Lounge</alias>
+    <picture type="string"></picture>
+    <exit alias="Kitchen" to="kitchen">
+      <inherit name="southdirection" />
+      <prefix>the</prefix>
+    </exit>
+    <object name="stage1">
+      <inherit name="switchable" />
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <alias>stage</alias>
+      <look>A large black stage where dancers perform at night.</look>
+      <displayverbs>Watch; Turn on; Turn off</displayverbs>
+      <inventoryverbs type="list"></inventoryverbs>
+      <gender>they</gender>
+      <article>them</article>
+      <switchedon />
+      <switchonmsg>And they're back!</switchonmsg>
+      <switchoffmsg>You wish for the dancers to disappear, and unexpectedly, they do!</switchoffmsg>
+      <switchedondesc>Extra on.</switchedondesc>
+      <watch type="script">
+        if (IsSwitchedOn(stage1)) {
+          msg ("You watch the dancers for awhile.")
+        }
+        else {
+          msg ("You made the poor dancers disappear.")
+        }
+      </watch>
+    </object>
+    <object name="roberto1">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <gender>he</gender>
+      <article>him</article>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alias>Roberto</alias>
+      <look type="script">
+        if (GetBoolean(roberto1, "aware")) {
+          msg (".......")
+        }
+        else {
+          msg ("There's Roberto, probably thinking \"how suave\" he is.")
+        }
+      </look>
+      <speak type="script">
+        if (GetBoolean(roberto1, "aware")) {
+          msg ("\"That wasn't very nice.\"")
+        }
+        else {
+          msg ("He to distracted by the dancers to talk.")
+        }
+      </speak>
+      <useon type="scriptdictionary">
+        <item key="newspaper1">
+          if (not GetBoolean(roberto1, "aware")) {
+            msg ("You whack him in the back of the head with the newspaper. \"Hey, why'd you do that?\" Roberto says.")
+            SetObjectFlagOn (roberto1, "aware")
+          }
+        </item>
+      </useon>
+    </object>
+    <object name="table">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <alias>table</alias>
+      <scenery type="boolean">false</scenery>
+      <object name="newspaper1">
+        <inherit name="editor_object" />
+        <alias>newspaper</alias>
+        <look>The date says that it's yesterday's news.</look>
+        <take />
+        <takemsg>You pick up the paper despite it being outdated. Perhaps it has other uses.</takemsg>
+      </object>
+    </object>
+  </object>
+  <object name="kitchen">
+    <inherit name="editor_room" />
+    <description>The kitchen.</description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>Kitchen</alias>
+    <object name="flour">
+      <inherit name="editor_object" />
+      <weight type="int">5</weight>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>some</prefix>
+    </object>
+    <object name="eggs">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <weight type="int">2</weight>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix type="string"></prefix>
+      <look type="script">
+        msg ("A box of eggs weighing " + eggs.weight + " pounds.")
+      </look>
+    </object>
+    <object name="sugar">
+      <inherit name="editor_object" />
+      <weight type="int">3</weight>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix type="string"></prefix>
+      <look type="script">
+        msg ("")
+      </look>
+    </object>
+    <object name="fridge1">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <alias>Fridge</alias>
+      <look>An ordinary white fridge.</look>
+      <isopen type="boolean">false</isopen>
+      <hidechildren />
+      <listchildren />
+      <object name="milk">
+        <inherit name="editor_object" />
+        <alias>milk</alias>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>some</prefix>
+        <take />
+      </object>
+    </object>
+    <object name="window">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <displayverbs>Look at; Open; Close</displayverbs>
+      <openscript type="script">
+        if (not Contains (kitchen,bee)) {
+          msg ("You open the window and a bee flies in.")
+          MoveObject (bee, kitchen)
+          EnableTimer (bee timer)
+        }
+        else {
+          msg ("You open the window and hope that the bee flies away.")
+        }
+      </openscript>
+      <closescript type="script">
+        msg ("You close the window.")
+      </closescript>
+    </object>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <look type="string"></look>
+      <Turns type="int">0</Turns>
+      <statusattributes type="stringdictionary">Turns = </statusattributes>
+    </object>
+    <object name="back door">
+      <inherit name="editor_object" />
+      <alias>back door</alias>
+      <displayverbs>Look at</displayverbs>
+    </object>
+    <exit alias="Lounge" to="lounge">
+      <inherit name="northdirection" />
+      <prefix>the</prefix>
+    </exit>
+    <exit alias="Garden" to="garden">
+      <inherit name="southdirection" />
+      <prefix>the</prefix>
+    </exit>
+  </object>
+  <verb>
+    <property>watch</property>
+    <pattern>watch</pattern>
+    <defaultexpression>"You can't watch " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="say text">
+    <pattern>say #text#</pattern>
+    <script>
+      msg ("You say \"" + text + "\", but no-one replies.")
+    </script>
+  </command>
+  <command name="weigh objects">
+    <pattern>weigh #object#</pattern>
+    <script>
+      if (HasAttribute(object, "weight")) {
+        msg ("It weighs " + object.weight + " pounds.")
+      }
+      else {
+        msg ("You can't weigh this.")
+      }
+    </script>
+  </command>
+  <object name="bee">
+    <inherit name="editor_object" />
+  </object>
+  <turnscript name="turn counter">
+    <enabled />
+    <script>
+      player.Turns = player.Turns + 1
+    </script>
+  </turnscript>
+  <object name="garden">
+    <inherit name="editor_room" />
+    <alias>Garden</alias>
+    <exit alias="kitchen" to="kitchen">
+      <inherit name="northdirection" />
+      <prefix>the</prefix>
+    </exit>
+  </object>
+  <timer name="bee timer">
+    <interval>20</interval>
+    <script>
+      if (player.parent = kitchen) {
+        msg ("the bee flies just past your ear.")
+      }
+    </script>
+  </timer>
+</asl>

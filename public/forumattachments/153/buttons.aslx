@@ -1,0 +1,67 @@
+<!--Saved by Quest 5.0.4303.33698-->
+<asl version="500">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="buttons" />
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+    <object name="button1">
+      <inherit name="button" />
+      <inherit name="editor_object" />
+    </object>
+    <object name="button2">
+      <inherit name="button" />
+      <inherit name="editor_object" />
+    </object>
+    <object name="button3">
+      <inherit name="button" />
+      <inherit name="editor_object" />
+    </object>
+  </object>
+  <command>
+    <pattern>press #text#</pattern>
+    <script>
+      target = getObject(text)
+      if (target=null) {
+        msg ("You can't press this")
+      }
+      else {
+        if (DoesInherit ( target , "button" ) ) {
+          if (target.pressed=true) {
+            target.pressed = false
+            msg ("You switched the button off")
+          }
+          else {
+            target.pressed = true
+            msg ("You switched the button on")
+          }
+          check_buttons
+        }
+      }
+    </script>
+  </command>
+  <object name="room2">
+    <inherit name="editor_room" />
+  </object>
+  <type name="button">
+    <pressed type="boolean">false</pressed>
+  </type>
+  <function name="isReachable" parameters="object" type="boolean">
+    value = false
+    foreach (x, ScopeReachableNotHeld ()) {
+      if (x=object) {
+        value = true
+      }
+    }
+    return (value)
+  </function>
+  <function name="check_buttons">
+    if (button1.pressed and button2.pressed and not button3.pressed) {
+      msg ("A secret exit opens...")
+      create exit ("south", room, room2, "")
+    }
+  </function>
+</asl>

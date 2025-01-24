@@ -1,0 +1,52 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Testing">
+    <gameid>e352a6d8-c005-4b44-8021-1cf6a3f13fde</gameid>
+    <description type="string"></description>
+    <races type="list">HumanRace; CatRace; DogRace</races>
+    <start type="script">
+      choices = NewStringDictionary()
+      foreach (racename, game.races) {
+        raceobject = GetObject(racename)
+        dictionary add (choices, raceobject.name, raceobject.race)
+	  }
+	  msg ("What is your race?")
+	  show menu ("My race is...", choices, false) {
+	  // Copy all the attributes, using the "attributes" string list as key.
+	    race = GetObject(result)
+	    foreach (attribute, race.attributes) {
+	      set (player, attribute, GetAttribute(race, attribute))
+	    }
+	    msg ("I am a " + player.race)
+	    msg ("My maxhp is " + player.maxhp)
+	  }
+    </start>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+  </object>
+  <type name="BaseRace">
+  	<attributes type="list">race; maxhp</attributes>
+  </type>
+  <object name="HumanRace">
+  	<inherit name="BaseRace"/>
+  	<race>human</race>
+  	<maxhp type="int">50</maxhp>
+  </object>
+  <object name="CatRace">
+  	<inherit name="BaseRace"/>
+  	<race>cat</race>
+  	<maxhp type="int">8</maxhp>
+  </object>
+  <object name="DogRace">
+  	<inherit name="BaseRace"/>
+  	<race>dog</race>
+  	<maxhp type="int">15</maxhp>
+  </object>
+  
+</asl>

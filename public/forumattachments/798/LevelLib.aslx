@@ -1,0 +1,84 @@
+<library>
+  <!--
+  LevelLib is a basic character creation and levelling library for Quest. See the Wiki How to guide for details.
+  
+  Version 1.0
+  Quest version: 5.4
+  Written by: The Pixie
+  -->
+
+  <command name="IncCommand">
+    <pattern>Inc #text#</pattern>
+    <script><![CDATA[
+      if (TotalAttributes() < game.pov.maxpoints) {
+        value = GetAttribute(game.pov, text)
+        set (game.pov, text, value+1)
+      }
+      ChooseAttributes
+    ]]></script>
+  </command>
+  
+  <command name="DecCommand">
+    <pattern>Dec #text#</pattern>
+    <script><![CDATA[
+      value = GetAttribute(game.pov, text)
+      oldvalue = GetAttribute(game.pov, text+"_old")
+      if (value > oldvalue) {
+        set (game.pov, text, value-1)
+      }
+      ChooseAttributes
+    ]]></script>
+  </command>
+  
+  <command name="LevellingDoneCommand">
+    <pattern>Levelling Done</pattern>
+    <script>
+      ClearScreen
+      request (Show, "Command")
+      game.showdescriptiononenter = game.remembershowdescriptiononenter
+      ShowRoomDescription
+      game.notarealturn = true
+    </script>
+  </command>
+  
+  <command name="LevellingCommand">
+    <pattern>level</pattern>
+    <script>
+      LevelUp
+    </script>
+  </command>
+  
+  
+  <function name="LevelUp"><![CDATA[
+      game.remembershowdescriptiononenter = game.showdescriptiononenter
+      game.showdescriptiononenter = false
+      request (Hide, "Command")
+      foreach (att, game.pov.attlist) {
+         if (not HasInt (game.pov, att)) set (game.pov, att, 0)
+         set (game.pov, att + "_old", GetInt (game.pov, att))
+       }
+      ChooseAttributes
+  ]]></function>
+  
+  <function name="ChooseAttributes"><![CDATA[
+      ClearScreen
+      msg ("Assign points to attributes (" + (game.pov.maxpoints - TotalAttributes()) + ")")
+      foreach (att, game.pov.attlist) {
+        msg (att + ": {command:Dec " + att + ":<} {" + game.pov.name + "." + att + "} {command:Inc " + att + ":>}")
+      }
+      msg ("{command:Levelling Done:Done}")
+      game.notarealturn = true
+  ]]></function>
+  
+  <function name="TotalAttributes" type="int">
+      total = 0
+      foreach (att, game.pov.attlist) {
+        total = total + GetInt (game.pov, att)
+      }
+      return (total)
+  </function>
+  
+  <function name="PointsLeft" type="int">
+      return (game.pov.maxpoints - TotalAttributes())
+  </function>
+</library>

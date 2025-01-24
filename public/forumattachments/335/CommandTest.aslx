@@ -1,0 +1,113 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Test">
+    <gameid>be35ac8b-d9e4-453b-b431-ef79d2fa12fe</gameid>
+    <version>1.0</version>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <strength type="int">10</strength>
+      <health type="int">10</health>
+      <armor type="int">0</armor>
+      <statusattributes type="stringdictionary">health = ;strength = ;armor = ;turns = </statusattributes>
+      <turns type="int">0</turns>
+      <object name="sword">
+        <inherit name="editor_object" />
+        <inherit name="weapon" />
+        <take />
+        <power type="int">10</power>
+        <equipped type="boolean">false</equipped>
+        <useon type="scriptdictionary">
+          <item key="taco">
+            msg ("Bal")
+          </item>
+        </useon>
+      </object>
+      <object name="helmet">
+        <inherit name="editor_object" />
+        <armor type="int">10</armor>
+        <take />
+        <equipped type="boolean">false</equipped>
+      </object>
+    </object>
+    <object name="monster">
+      <inherit name="editor_object" />
+      <health type="int">10</health>
+    </object>
+  </object>
+  <verb>
+    <property>equip</property>
+    <pattern>equip</pattern>
+    <defaultexpression>"You can't equip " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="equip">
+    <pattern>equip #object#</pattern>
+    <script>
+      if (Got(object)) {
+        msg ("You have equiped the " + object.name)
+        if (HasAttribute(object, "power")) {
+          player.strength = player.strength + object.power
+        }
+        if (HasAttribute(object, "armor")) {
+          player.armor = player.armor + object.armor
+        }
+        object.equipped = true
+      }
+    </script>
+  </command>
+  <command name="unequip">
+    <pattern>unequip #object#</pattern>
+    <script>
+      if (Got(object)) {
+        msg ("You have unequipped the " + object.name)
+        if (HasAttribute(object, "power")) {
+          player.strength = player.strength - object.power
+        }
+        if (HasAttribute(object, "armor")) {
+          player.armor = player.armor - object.armor
+        }
+        object.equipped = false
+      }
+    </script>
+  </command>
+  <turnscript name="Turn Counter">
+    <enabled />
+    <script>
+      player.turns = player.turns + 1
+    </script>
+  </turnscript>
+  <command name="say">
+    <pattern>say #text#; shout #text#; yell #text#</pattern>
+    <script>
+      msg ("You say '" + text + "', but nobody replies.")
+    </script>
+  </command>
+  <command name="attack">
+    <pattern>attack #object#</pattern>
+    <script>
+      object.health = object.health - player.strength
+      if (object.health = 0) {
+        msg ("Blarg, I am dead!")
+      }
+    </script>
+  </command>
+  <command name="combine">
+    <pattern>combine #object# and #object#</pattern>
+    <script>
+      if (Got(object) and Got(object)) {
+        msg ("You have created a new object!")
+        create ("strangematter")
+      }
+      else {
+        msg ("You are missing one of the components...")
+      }
+    </script>
+  </command>
+  <type name="weapon" />
+  <type name="armor" />
+  <type name="enemy" />
+</asl>

@@ -1,0 +1,176 @@
+<!--Saved by Quest 5.4.4812.28144-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Demon Slaying">
+    <gameid>4deac0fd-a54a-4e98-b278-26c3eb4853bf</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <object name="strange bird">
+      <inherit name="editor_object" />
+      <look><![CDATA[The bird like creature has no legs, merely bouncing around when not in flight. Its wings are leathery like a bat, however it also has a very sharp looking beak.<br/>It hops about watching you, as if it is preparing to pounce ...]]></look>
+      <attack type="script">
+        msg ("The bizarre creatures springs into the air and charges at you, but you are ready for it! Stepping to the side at just the last moment, you grab it by the neck from behind and swing it around, slamming it on the ground! Its neck breaks instantly, leaving it in a pathetic lump on the floor. After a moment, its body begins to slowly fade away into dust that scatters as if blown away by wind. Only its sharp pointed beak remains...")
+        MoveObject (sharp beak, M Big room)
+        RemoveObject (strange bird)
+        OnEnterRoom (null)
+      </attack>
+    </object>
+    <object name="sharp beak">
+      <inherit name="editor_object" />
+      <take />
+      <look><![CDATA[The beak seems to have clenched shut like a clam after the odd bird left it behind. The front end is long, pointed, and sharp. The back is smooth and round.<br/>It vaguely resembles a dagger.]]></look>
+      <use />
+    </object>
+  </game>
+  <object name="Bright room">
+    <inherit name="editor_room" />
+    <description>The room is filled with a bright light, but it doesn't seem to hurt your eyes.</description>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="knife">
+      <inherit name="editor_object" />
+      <look>It's a very sharp knife.</look>
+      <take />
+    </object>
+    <exit alias="east" to="Big room">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="Angel">
+      <inherit name="editor_object" />
+      <look>It's beautifully bathed in soft white light. It looks at you.</look>
+      <speak>You must go to the 'other side' of yourself, and slay your inner demon. You may have this knife, but you cannot take it where you must go now...</speak>
+      <askdefault type="script">
+        msg ("The being seems to respond with its own intent, rather than to your own words, \"You must go to the 'other side' of yourself, and slay your inner demon. You may have this knife, but you cannot take it where you must go now...\"")
+      </askdefault>
+      <telldefault type="script">
+        msg ("The being seems to respond with its own intent, rather than to your own words, \"You must go to the 'other side' of yourself, and slay your inner demon. You may have this knife, but you cannot take it where you must go now...\"")
+      </telldefault>
+    </object>
+  </object>
+  <object name="Big room">
+    <inherit name="editor_room" />
+    <description>It's a big room with a double door on the left, window on the right, and a large mirror.</description>
+    <exit alias="west" to="Bright room">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="mirror">
+      <inherit name="editor_object" />
+      <look type="script">
+        msg ("You quickly become transfixed by your own relfection. You begin to feel dizzy, as the world seems to swirl around you . . .")
+        wait {
+          ClearScreen
+          Pause (1)
+          SetFontSize (60)
+          PrintCentered ("?")
+          SetFontSize (12)
+          Pause (1)
+          ClearScreen
+          ChangePOV (playerb)
+        }
+      </look>
+    </object>
+    <object name="window">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <look>There is a lovely garden outside filled with wonderous topiaries.</look>
+      <openscript type="script">
+        msg ("You open the window. There is a nice breeze.")
+        HelperOpenObject (window)
+      </openscript>
+      <closescript type="script">
+        msg ("You close the window.")
+        HelperCloseObject (window)
+      </closescript>
+    </object>
+  </object>
+  <object name="M Big room">
+    <inherit name="editor_room" />
+    <description>It's a big room with a window on the left, double door on the right, and a large mirror.</description>
+    <alias>Big room</alias>
+    <object name="Mirror1">
+      <inherit name="editor_object" />
+      <alias>mirror</alias>
+      <look>You look deep into the mirror, but you have no reflection!</look>
+    </object>
+    <object name="window1">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <alias>window</alias>
+      <look>There is a hedge maze outside. Actually, it lloks more like diabolical labyrinth . . . made of living plants!</look>
+      <closescript type="script">
+        msg ("You close the window.")
+        HelperCloseObject (window)
+      </closescript>
+      <openscript type="script">
+        msg ("You open the window.")
+        HelperOpenObject (window)
+        firsttime {
+          msg ("Something flies in the window and nearly knocks you over!")
+          MoveObject (strange bird, M Big room)
+          OnEnterRoom (null)
+        }
+      </openscript>
+    </object>
+    <object name="playerb">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <exit alias="west" to="Dim room">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="Dim room">
+    <inherit name="editor_room" />
+    <description>The room is very dark, but for some reason you can still see clearly.</description>
+    <object name="demon">
+      <inherit name="editor_object" />
+      <look>The grim figure seems to emanate shadow. It has two small horns on its forehead and deep haunting eyes that seem to stare right into you.</look>
+      <speak>It says, "I'll let you make the first move, foolish mortal." Then it just laughs maniacly like a b-movie villain, only more obnoxious.</speak>
+      <askdefault type="script">
+        msg ("All it will say is, \"I'll let you make the first move, foolish mortal.\" Then it just laughs maniacly like a b-movie villain, only more obnoxious.")
+      </askdefault>
+      <telldefault type="script">
+        msg ("All it will say is, \"I'll let you make the first move, foolish mortal.\" Then it just laughs maniacly like a b-movie villain, only more obnoxious.")
+      </telldefault>
+      <useon type="scriptdictionary">
+        <item key="sharp beak"><![CDATA[
+          msg ("As soon as the demon sees you're weilding the beak, it flies into panic, \"WHAT?! Why do you have a weapon of this world? Where did you—\"<br/>Without even giving the beast time to finish its question, you plunge the beak/dagger deep into its heart. It screams out in agony as it falls to the ground and bursts into flame. Cracks begin to form on its skin which dazzle with light. A few moments later, it explodes into pure white brightness, causing you to instinctively shield your eyes ...")
+          wait {
+            ClearScreen
+            msg ("When you open your eyes, you are standing before the angel once again.<br/>It speaks to you, \"Congratulations, you're spirit is now free from evil. That you are pure, you will be able to undertake your quest...\"")
+            finish
+          }
+        ]]></item>
+      </useon>
+    </object>
+    <exit alias="east" to="M Big room">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>attack</property>
+    <pattern>attack; kill; hit</pattern>
+    <defaultexpression>"You can't attack; kill; hit " + object.article + "."</defaultexpression>
+  </verb>
+  <walkthrough name="DemonSlaying Walkthrough">
+    <steps type="simplestringlist">
+      take knife
+      go east
+      look at mirror
+      look at mirror
+      open window
+      look at strange bird
+      attack strange bird
+      look at sharp beak
+      take sharp beak
+      go west
+      speak to demon
+      ask demon about death
+      use sharp beak
+      event:ShowMenuResponse;demon
+    </steps>
+  </walkthrough>
+</asl>

@@ -1,0 +1,159 @@
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Testing Game Stuff">
+    <gameid>eef801a1-4e6b-4b0a-bdbf-8f3ecfa8389c</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <turns type="int">0</turns>
+    <statusattributes type="simplestringdictionary">turns=</statusattributes>
+  </game>
+  <object name="homeland">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+  </object>
+  <object name="grassland">
+    <inherit name="editor_room" />
+  </object>
+  <object name="plains">
+    <inherit name="editor_room" />
+  </object>
+  <object name="desert">
+    <inherit name="editor_room" />
+  </object>
+  <object name="tundra">
+    <inherit name="editor_room" />
+  </object>
+  <object name="swampland">
+    <inherit name="editor_room" />
+  </object>
+  <object name="mountains">
+    <inherit name="editor_room" />
+  </object>
+  <object name="forest">
+    <inherit name="editor_room" />
+  </object>
+  <object name="wasteland">
+    <inherit name="editor_room" />
+  </object>
+  <object name="coastland">
+    <inherit name="editor_room" />
+  </object>
+  <object name="hills">
+    <inherit name="editor_room" />
+  </object>
+  <command name="help_command">
+    <pattern>help</pattern>
+	<script>
+	  help_function
+	</script>
+  </command>
+  <command name="explore_command">
+    <pattern>explore</pattern>
+    <script>
+      explore_function
+    </script>
+  </command>
+  <command name="travel_command">
+    <pattern>travel</pattern>
+	<script>
+	  travel_function
+	</script>
+  </command>
+  <object name="data_object">
+    <inherit name="editor_object" />
+	<travel_string_list type="simplestringlist">homeland</travel_string_list>
+    <homeland_events_string_list type="simplestringlist">grassland_discovery;plains_discovery;desert_discovery;tundra_discovery;swampland_discovery;forest_discovery;mountains_discovery;hills_discovery;wasteland_discovery;coastland_discovery</homeland_events_string_list>
+    <homeland_events_script_dictionary type="scriptdictionary">
+	  <item key="grassland_discovery">
+	    list add (data_object.travel_string_list, "grassland")
+		msg ("You've discovered the grassland! Now, you can travel to the grassland and explore it!")
+	  </item>
+	  <item key="plains_discovery">
+	    list add (data_object.travel_string_list, "plains")
+		msg ("You've discovered the plains! Now, you can travel to the plains and explore it!")
+	  </item>
+	  <item key="desert_discovery">
+	    list add (data_object.travel_string_list, "desert")
+		msg ("You've discovered the desert! Now, you can travel to the desert and explore it!")
+	  </item>
+	  <item key="tundra_discovery">
+	    list add (data_object.travel_string_list, "tundra")
+		msg ("You've discovered the tundra! Now, you can travel to the tundra and explore it!")
+	  </item>
+	  <item key="swampland_discovery">
+	    list add (data_object.travel_string_list, "swampland")
+		msg ("You've discovered the swampland! Now, you can travel to the swampland and explore it!")
+	  </item>
+	  <item key="forest_discovery">
+	    list add (data_object.travel_string_list, "forest")
+		msg ("You've discovered the forest! Now, you can travel to the forest and explore it!")
+	  </item>
+	  <item key="mountains_discovery">
+	    list add (data_object.travel_string_list, "mountains")
+		msg ("You've discovered the mountains! Now, you can travel to the mountains and explore it!")
+	  </item>
+	  <item key="hills_discovery">
+	    list add (data_object.travel_string_list, "hills")
+		msg ("You've discovered the hills! Now, you can travel to the hills and explore it!")
+	  </item>
+	  <item key="wasteland_discovery">
+	    list add (data_object.travel_string_list, "wasteland")
+		msg ("You've discovered the wasteland! Now, you can travel to the wasteland and explore it!")
+	  </item>
+	  <item key="coastland_discovery">
+	    list add (data_object.travel_string_list, "coastland")
+		msg ("You've discovered the coastland! Now, you can travel to the coastland and explore it!")
+	  </item>
+	</homeland_events_script_dictionary>
+  </object>
+  <turnscript name="global_turnscript">
+    <enabled />
+    <script>
+      game.turns = game.turns + 1
+    </script>
+  </turnscript>
+  <function name="help_function">
+    msg ("Type 'explore' to explore your area.")
+	msg ("Type 'travel' to travel to different areas.")
+  </function>
+  <function name="explore_function"><![CDATA[
+    switch (game.pov.parent) {
+	  case (homeland) {
+		result_1 = ListCount (data_object.homeland_events_string_list) - 1
+		if (result_1 >= 0) {
+          result_2 = StringListItem (data_object.homeland_events_string_list,GetRandomInt(0,result_1))
+          invoke (ScriptDictionaryItem (data_object.homeland_events_script_dictionary,result_2))
+		  on ready {
+		    foreach (item_x, split ("grassland_discovery;plains_discovery;desert_discovery;tundra_discovery;swampland_discovery;forest_discovery;mountains_discovery;hills_discovery;wasteland_discovery;coastland_discovery",";")) {
+		      if (result_2 = item_x) {
+			    list remove (data_object.homeland_events_string_list, result_2)
+			  }
+			}
+		  }
+		} else {
+		  msg ("There seemingly is nothing left to explore in this area.")
+		}
+	  }
+    }
+  ]]></function>
+  <function name="travel_function">
+    show menu ("Where do you wish to travel?",data_object.travel_string_list,false) {
+	  if (not game.pov.parent = GetObject (result)) {
+	    game.pov.parent = GetObject (result)
+	  } else {
+	    msg ("You are already at this area.")
+		ask ("Try again?") {
+		  if (result=true) {
+		    travel_function
+		  } else {
+		    msg ("You realize that you need to discover a new area to travel to first, before you can travel to that place.")
+		  }
+		}
+	  }
+	}
+  </function>
+</asl>

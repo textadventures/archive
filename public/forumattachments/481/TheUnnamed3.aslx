@@ -1,0 +1,407 @@
+<!--Saved by Quest 5.3.4762.29157-->
+<asl version="530">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <include ref="ConvLib.aslx" />
+  <game name="The Unnamed">
+    <gameid>70f41df5-c0a4-47ff-9536-7a5329f203df</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <gridmap />
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <description><![CDATA[Room desc.
+<br/><br/>             ]]></description>
+  </object>
+  <object name="DerelictTown_Region">
+    <inherit name="editor_room" />
+    <object name="Railroad Station">
+      <inherit name="editor_room" />
+      <object name="player">
+        <inherit name="editor_object" />
+        <inherit name="editor_player" />
+        <look type="string"></look>
+      </object>
+      <exit alias="southeast" to="Main Street">
+        <inherit name="southeastdirection" />
+      </exit>
+    </object>
+    <object name="Main Street">
+      <inherit name="editor_room" />
+      <exit alias="northwest" to="Railroad Station">
+        <inherit name="northwestdirection" />
+      </exit>
+      <exit alias="east" to="General Store">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="north" to="Courthouse">
+        <inherit name="northdirection" />
+      </exit>
+      <exit alias="south" to="Edge of Town">
+        <inherit name="southdirection" />
+      </exit>
+    </object>
+    <object name="General Store">
+      <inherit name="editor_room" />
+      <exit alias="west" to="Main Street">
+        <inherit name="westdirection" />
+      </exit>
+    </object>
+    <object name="Courthouse">
+      <inherit name="editor_room" />
+      <exit alias="south" to="Main Street">
+        <inherit name="southdirection" />
+      </exit>
+      <exit alias="north" to="Library">
+        <inherit name="northdirection" />
+      </exit>
+    </object>
+    <object name="Library">
+      <inherit name="editor_room" />
+      <description type="script">
+        SetObjectFlagOn (player, "library_visited")
+      </description>
+      <exit alias="south" to="Courthouse">
+        <inherit name="southdirection" />
+      </exit>
+    </object>
+    <object name="Edge of Town">
+      <inherit name="editor_room" />
+      <exit alias="north" to="Main Street">
+        <inherit name="northdirection" />
+      </exit>
+      <object name="horse buggy">
+        <scenery type="boolean">false</scenery>
+        <look>There's a horse buggy here tethered to a sickly-looking mule.</look>
+        <alt>bell</alt>
+        <exit alias="out" to="Edge of Town">
+          <inherit name="outdirection" />
+        </exit>
+        <object name="bell">
+          <inherit name="editor_object" />
+          <ring type="script">
+            MoveObject (player, Old Town Road)
+            msg ("Transport and drop off at road in front of old house.")
+          </ring>
+        </object>
+      </object>
+      <exit alias="in" to="horse buggy">
+        <inherit name="indirection" />
+      </exit>
+      <object name="driver1">
+        <inherit name="editor_object" />
+        <inherit name="male" />
+        <inherit name="talkingchar" />
+        <alt type="list"></alt>
+        <listalias>driver</listalias>
+        <greet type="script">
+          msg ("")
+        </greet>
+        <alias>driver</alias>
+        <nowshow type="list">; mule</nowshow>
+        <talk type="script">
+          msg ("'He's old.'")
+        </talk>
+        <ask type="scriptdictionary">
+          <item key="mule horse ass donkey">
+            msg ("'He's a good old boy.'")
+          </item>
+          <item key="librarian">
+            if (GetBoolean(player, "library_visited")) {
+              msg ("'She's an old bitch, ain't she?'")
+            }
+            else if (not GetBoolean(player, "")) {
+              msg ("The drive shrugs, not knowing what you mean.")
+            }
+          </item>
+        </ask>
+        <askdefault type="script">
+          msg ("The driver shrugs.")
+        </askdefault>
+        <object name="driver_mule">
+          <inherit name="editor_object" />
+          <inherit name="startingtopic" />
+          <listalias type="string"></listalias>
+          <nowshow type="list">; driver_mule</nowshow>
+          <talk type="script">
+            msg ("He's a good ole' boy.")
+          </talk>
+          <alias>mule</alias>
+          <hideafter type="boolean">false</hideafter>
+        </object>
+        <object name="driver_buggy">
+          <inherit name="editor_object" />
+          <inherit name="startingtopic" />
+          <nowshow type="list">; driver_buggy</nowshow>
+          <alias>buggy</alias>
+          <talk type="script">
+            msg ("'Get in, let's go for a ride!'")
+          </talk>
+          <hideafter type="boolean">false</hideafter>
+        </object>
+        <object name="driver_library">
+          <inherit name="editor_object" />
+          <inherit name="startingtopic" />
+          <alias>library</alias>
+          <hideafter type="boolean">false</hideafter>
+          <nowshow type="list">driver_library</nowshow>
+          <talk type="script">
+            msg ("Nice place.")
+            if (GetBoolean(player, "library_visited")) {
+              msg ("'By the way, what do you think of the librarian?', you ask.")
+              msg ("'She's a bitch,' he replies.")
+            }
+          </talk>
+        </object>
+      </object>
+    </object>
+  </object>
+  <object name="DecayingHouse_Region">
+    <inherit name="editor_room" />
+    <object name="Old Town Road">
+      <inherit name="editor_room" />
+      <exit alias="up" to="Front of Old House">
+        <inherit name="updirection" />
+      </exit>
+      <exit alias="west" to="Edge of Town">
+        <inherit name="westdirection" />
+        <locked />
+        <lockmessage>It is too far to walk all the way back to town.</lockmessage>
+      </exit>
+    </object>
+    <object name="Front of Old House">
+      <inherit name="editor_room" />
+      <exit alias="down" to="Old Town Road">
+        <inherit name="downdirection" />
+      </exit>
+      <exit alias="east" to="Family Plot">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="northeast" to="Garden">
+        <inherit name="northeastdirection" />
+      </exit>
+      <exit alias="up" to="Front Porch">
+        <inherit name="updirection" />
+      </exit>
+      <exit alias="northwest" to="Gnarled Old Tree">
+        <inherit name="northwestdirection" />
+      </exit>
+    </object>
+    <object name="Family Plot">
+      <inherit name="editor_room" />
+      <exit alias="west" to="Front of Old House">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="north" to="Garden">
+        <inherit name="northdirection" />
+      </exit>
+    </object>
+    <object name="Front Porch">
+      <inherit name="editor_room" />
+      <exit alias="down" to="Front of Old House">
+        <inherit name="downdirection" />
+      </exit>
+      <exit alias="north" to="Entry Hall">
+        <inherit name="northdirection" />
+      </exit>
+    </object>
+    <object name="Garden">
+      <inherit name="editor_room" />
+      <exit alias="southwest" to="Front of Old House">
+        <inherit name="southwestdirection" />
+      </exit>
+      <exit alias="north" to="Back of Old House">
+        <inherit name="northdirection" />
+      </exit>
+      <exit alias="northwest" to="Back of Old House">
+        <inherit name="northwestdirection" />
+      </exit>
+      <exit alias="south" to="Family Plot">
+        <inherit name="southdirection" />
+      </exit>
+    </object>
+    <object name="Back of Old House">
+      <inherit name="editor_room" />
+      <exit alias="east" to="Garden">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="west" to="Gnarled Old Tree">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="southeast" to="Garden">
+        <inherit name="southeastdirection" />
+      </exit>
+      <exit alias="southwest" to="Gnarled Old Tree">
+        <inherit name="southwestdirection" />
+      </exit>
+    </object>
+    <object name="Gnarled Old Tree">
+      <inherit name="editor_room" />
+      <exit alias="east" to="Back of Old House">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="south" to="Front of Old House">
+        <inherit name="southdirection" />
+      </exit>
+      <exit alias="west" to="Garage">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="northeast" to="Back of Old House">
+        <inherit name="northeastdirection" />
+      </exit>
+      <exit alias="southeast" to="Front of Old House">
+        <inherit name="southeastdirection" />
+      </exit>
+    </object>
+    <object name="Garage">
+      <inherit name="editor_room" />
+      <exit alias="east" to="Gnarled Old Tree">
+        <inherit name="eastdirection" />
+      </exit>
+    </object>
+  </object>
+  <object name="WoodedHills_Region">
+    <inherit name="editor_room" />
+  </object>
+  <object name="Underground_Region">
+    <inherit name="editor_room" />
+  </object>
+  <object name="InhospitablePlain_Region">
+    <inherit name="editor_room" />
+  </object>
+  <object name="Dreamlands_Region">
+    <inherit name="editor_room" />
+  </object>
+  <object name="Interior_DecayingHouse_Region">
+    <inherit name="editor_room" />
+    <object name="Shunned Room">
+      <inherit name="editor_room" />
+      <exit alias="north" to="Attic">
+        <inherit name="northdirection" />
+      </exit>
+    </object>
+    <object name="Alcove">
+      <inherit name="editor_room" />
+      <exit alias="south" to="Attic">
+        <inherit name="southdirection" />
+      </exit>
+    </object>
+    <object name="Attic">
+      <inherit name="editor_room" />
+      <exit alias="down" to="Upper Hallway">
+        <inherit name="downdirection" />
+      </exit>
+      <exit alias="north" to="Alcove">
+        <inherit name="northdirection" />
+      </exit>
+      <exit alias="south" to="Shunned Room">
+        <inherit name="southdirection" />
+      </exit>
+    </object>
+    <object name="Bedroom">
+      <inherit name="editor_room" />
+      <exit alias="north" to="Upper Hallway">
+        <inherit name="northdirection" />
+      </exit>
+      <exit alias="out" to="Window Ledge">
+        <inherit name="outdirection" />
+      </exit>
+    </object>
+    <object name="Window Ledge">
+      <inherit name="editor_room" />
+      <exit alias="in" to="Bedroom">
+        <inherit name="indirection" />
+      </exit>
+    </object>
+    <object name="Master Bedroom">
+      <inherit name="editor_room" />
+      <exit alias="south" to="Upper Hallway">
+        <inherit name="southdirection" />
+      </exit>
+    </object>
+    <object name="Bathroom">
+      <inherit name="editor_room" />
+      <exit alias="west" to="Upper Hallway">
+        <inherit name="westdirection" />
+      </exit>
+    </object>
+    <object name="Upper Hallway">
+      <inherit name="editor_room" />
+      <exit alias="down" to="Entry Hall">
+        <inherit name="downdirection" />
+      </exit>
+      <exit alias="east" to="Bathroom">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="north" to="Master Bedroom">
+        <inherit name="northdirection" />
+      </exit>
+      <exit alias="south" to="Bedroom">
+        <inherit name="southdirection" />
+      </exit>
+      <exit alias="up" to="Attic">
+        <inherit name="updirection" />
+      </exit>
+    </object>
+    <object name="Cellar">
+      <inherit name="editor_room" />
+      <exit alias="up" to="Kitchen">
+        <inherit name="updirection" />
+      </exit>
+    </object>
+    <object name="Pantry">
+      <inherit name="editor_room" />
+      <exit alias="east" to="Kitchen">
+        <inherit name="eastdirection" />
+      </exit>
+    </object>
+    <object name="Kitchen">
+      <inherit name="editor_room" />
+      <exit alias="south" to="Entry Hall">
+        <inherit name="southdirection" />
+      </exit>
+      <exit alias="west" to="Pantry">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="down" to="Cellar">
+        <inherit name="downdirection" />
+      </exit>
+    </object>
+    <object name="Sitting Room">
+      <inherit name="editor_room" />
+      <exit alias="west" to="Entry Hall">
+        <inherit name="westdirection" />
+      </exit>
+    </object>
+    <object name="Study">
+      <inherit name="editor_room" />
+      <exit alias="east" to="Entry Hall">
+        <inherit name="eastdirection" />
+      </exit>
+    </object>
+    <object name="Entry Hall">
+      <inherit name="editor_room" />
+      <exit alias="south" to="Front Porch">
+        <inherit name="southdirection" />
+      </exit>
+      <exit alias="north" to="Kitchen">
+        <inherit name="northdirection" />
+      </exit>
+      <exit alias="east" to="Sitting Room">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="west" to="Study">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="up" to="Upper Hallway">
+        <inherit name="updirection" />
+      </exit>
+    </object>
+  </object>
+  <verb>
+    <property>ring</property>
+    <pattern>ring</pattern>
+    <defaultexpression>"You can't ring " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

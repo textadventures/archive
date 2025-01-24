@@ -1,0 +1,141 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Dragon Ball - Quest for the Dragon Balls">
+    <gameid>7955c9fa-c5d1-4650-bb7a-575ff9d5bdc0</gameid>
+    <version>0.1</version>
+    <firstpublished>2013</firstpublished>
+    <subtitle>Search for All of the Dragon Balls!</subtitle>
+    <author>Akira Toriyama's Apprentice</author>
+    <description><![CDATA[Hint: Look in buildings, you will, sometimes, find useful things in there.<br/><br/>VERSION: 0.1<br/>Not Done Yet!]]></description>
+    <category>Fantasy</category>
+    <difficulty>Easy</difficulty>
+    <cruelty>Tough</cruelty>
+    <showhealth />
+    <showscore type="boolean">false</showscore>
+    <defaultfontsize type="int">12</defaultfontsize>
+    <backgroundimage>DragonBalls.jpg</backgroundimage>
+    <setbackgroundopacity type="boolean">false</setbackgroundopacity>
+    <gridmap />
+    <autodescription_youarein_newline />
+    <autodescription_youcansee_newline />
+    <autodescription_youcango_newline />
+    <autodescription_description_newline />
+    <attr name="autodescription_youcansee" type="int">2</attr>
+    <appendobjectdescription type="boolean">false</appendobjectdescription>
+    <defaultfont>'Times New Roman', Times, serif</defaultfont>
+    <defaultwebfont>'Comic Sans MS', cursive, sans-serif</defaultwebfont>
+    <pov type="object">player</pov>
+    <start type="script">
+      if (IsSwitchedOn(room)) {
+      }
+    </start>
+  </game>
+  <object name="Jungle">
+    <inherit name="editor_room" />
+    <usedefaultprefix />
+    <description>The Jungle, next to your Grandpa Gohan's house.</description>
+    <dark />
+    <darkroomdescription>This place is dark. Hope you have a flashlight!</darkroomdescription>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <inherit name="namedmale" />
+      <prefix>Goku</prefix>
+      <suffix>Son</suffix>
+      <look><![CDATA[No time to admire! Find the <b>Dragon Balls</b>!]]></look>
+      <alt type="stringlist">
+        <value>Goku</value>
+      </alt>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <attr name="pov_look"><![CDATA[No time to admire! Find the <b>Dragon Balls</b>!]]></attr>
+      <alias>Goku</alias>
+    </object>
+    <object name="Car of Bulma">
+      <inherit name="editor_object" />
+      <alt type="stringlist">
+        <value>Car</value>
+      </alt>
+      <usedefaultprefix />
+      <lightsource type="boolean">false</lightsource>
+      <lightstrength>strong</lightstrength>
+      <visible />
+      <unlock type="script">
+        msg ("You unlock Bulma's Car and see a capsule; you take it. You also notice that it has the word \"HOUSE\" inscribed on it.")
+        AddToInventory (House Capsule)
+      </unlock>
+      <object name="House Capsule">
+        <inherit name="editor_object" />
+        <alt type="stringlist">
+          <value>House</value>
+        </alt>
+        <take />
+        <takemsg>You got a House Capsule! You can now use it [once] to generate a house, wherever, and whenever you want!</takemsg>
+        <drop type="boolean">false</drop>
+        <volume type="int">10</volume>
+        <lightsource type="boolean">false</lightsource>
+        <use type="script">
+          create exit ("House", Jungle, House)
+        </use>
+        <object name="House">
+          <inherit name="editor_room" />
+          <grid_parent_offset_auto />
+          <exit alias="west" to="Jungle">
+            <inherit name="westdirection" />
+          </exit>
+          <object name="Refrigerator">
+            <inherit name="editor_object" />
+            <inherit name="openable" />
+            <isopen type="boolean">false</isopen>
+            <openscript type="script">
+              AddToInventory (Plate of Hamburgers)
+            </openscript>
+            <object name="Plate of Hamburgers">
+              <inherit name="editor_object" />
+              <inherit name="plural" />
+              <alias>Hamburgers</alias>
+              <usedefaultprefix />
+              <look>You look at the Hamburgers, drool, and think, "Wow, those look goo-ood!"</look>
+              <scenery type="boolean">false</scenery>
+              <use type="script">
+                IncreaseHealth (15)
+              </use>
+            </object>
+          </object>
+        </object>
+      </object>
+    </object>
+    <exit alias="north" to="House of Grandpa Gohan">
+      <inherit name="northdirection" />
+      <lightsource />
+      <lightstrength>strong</lightstrength>
+    </exit>
+    <exit alias="east" to="House">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="House of Grandpa Gohan">
+    <inherit name="editor_room" />
+    <exit alias="south" to="Jungle">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="Four Star Dragon Ball">
+      <inherit name="editor_object" />
+      <take type="script">
+        msg ("You found a Dragon Ball!")
+      </take>
+      <drop type="boolean">false</drop>
+      <use type="boolean">false</use>
+    </object>
+  </object>
+  <walkthrough name="Problem">
+    <steps type="simplestringlist">
+      event:JS_GridSquareClick;-3;-1
+      event:JS_GridSquareClick;-3;3
+      event:JS_GridSquareClick;-2;3
+    </steps>
+  </walkthrough>
+</asl>

@@ -1,0 +1,71 @@
+<!--Saved by Quest 5.4.4812.28144-->
+<asl version="540">
+  <include ref="GamebookCore.aslx" />
+  <game name="Pages Demo">
+    <gameid>bdf849f7-92a1-4309-8ba2-40aed47cda4a</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+  </game>
+  <object name="Page1">
+    <inherit name="script" />
+    <description>This is page 1. Type a description here, and then create links to other pages below.</description>
+    <options type="stringdictionary" />
+    <script type="script">
+      dictionary add (this.options, "Page2", "My link to page 2")
+      dictionary add (this.options, "Page3", "My Link to page 3")
+      MyDoPage (this)
+    </script>
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+  </object>
+  <object name="Page2">
+    <description>This is page 2. Type a description here, and then create links to other pages below.</description>
+  </object>
+  <object name="Page3">
+    <description>This is page 3. Type a description here, and then create links to other pages below.</description>
+  </object>
+  <function name="MyDoPage" parameters="page"><![CDATA[
+    request (ClearScreen, "")
+    stop sound
+    if (HasString(player.parent, "sound")) {
+      if (LengthOf(player.parent.sound) > 0) {
+        play sound (player.parent.sound, false, false)
+      }
+    }
+    if (HasString(player.parent, "picture")) {
+      if (LengthOf(player.parent.picture) > 0) {
+        picture (player.parent.picture)
+        msg ("")
+      }
+    }
+    if (HasString(player.parent, "youtube")) {
+      if (LengthOf(player.parent.youtube) > 0) {
+        JS.AddYouTube (player.parent.youtube)
+        msg ("")
+        msg ("")
+      }
+    }
+    msg (player.parent.description)
+    msg ("")
+    msg ("")
+    if (TypeOf(player.parent, "options") = "stringdictionary") {
+      foreach (key, player.parent.options) {
+        destination = GetObject(key)
+        if (destination = null) {
+          msg (StringDictionaryItem(player.parent.options, key) + " (broken link)")
+        }
+        else {
+          if (DoesInherit(destination, "link")) {
+            msg ("<a href=\"" + destination.address + "\">" + StringDictionaryItem(player.parent.options, key) + "</a>")
+          }
+          else {
+            msg (CommandLink(key, StringDictionaryItem(player.parent.options, key)))
+          }
+        }
+        msg ("")
+      }
+    }
+    set (player.parent, "visited", true)
+  ]]></function>
+</asl>

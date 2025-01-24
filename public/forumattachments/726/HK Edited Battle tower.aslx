@@ -1,0 +1,642 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Battle Tower">
+    <gameid>0a0c347a-0547-48cb-9a4f-a276da88abe7</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <appendobjectdescription type="boolean">false</appendobjectdescription>
+    <attr name="autodescription_youcansee" type="int">3</attr>
+    <attr name="autodescription_youcango" type="int">4</attr>
+    <attr name="autodescription_description" type="int">2</attr>
+    <attr name="autodescription_youarein" type="int">1</attr>
+    <showhealth type="boolean">false</showhealth>
+    <showscore type="boolean">false</showscore>
+    <description><![CDATA[You're a radioactive gladiator. fight your way to fame, glory, and fortune. learn your abilities and use them wisely as you battle fierce enemies.<br/>(There are a lot of things I haven't been able to add to the game yet, so it's kinda bare bones for now. Keep an eye out for updates. Will be working on adding more enemies to the arena next)]]></description>
+    <category>RPG</category>
+    <start type="script">
+    </start>
+  </game>
+  <object name="Arena">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <descprefix type="string"></descprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <description type="script"><![CDATA[
+      if (GetBoolean(player, "ready to battle")) {
+        msg ("You enter the arena. You hear the crowds chearing. Your enemy stands at the other side of the battle floor.<br/><br/>The Battle Begins!!")
+      }
+      else {
+        msg ("The arena is empty right now. you should try regestering for a battle.")
+      }
+    ]]></description>
+    <turnscript name="enemy attack">
+      <enabled />
+      <script>
+        if (GetBoolean(player, "ready to battle")) {
+          if (game.pov.parent = Arena) {
+            if (RandomChance (70)) {
+              player.hp = player.hp - game.currentenemy.strangth * 5 / (player.toughness / 2)
+              msg ("The enemy attacked you for avarage damage.")
+            }
+            else {
+              if (RandomChance (30)) {
+                player.hp = player.hp - game.currentenemy.strangth * 3 / (player.toughness /2)
+                msg ("The enemy attacked you for low damage.")
+              }
+              else {
+                if (RandomChance (20)) {
+                  player.hp = player.hp - game.currentenemy.strangth * 8 / (player.toughness / 2)
+                  msg ("The enamy attacked you for high damage!")
+                }
+                else {
+                  msg ("The enemies attack missed!!!")
+                }
+              }
+            }
+          }
+        }
+      </script>
+    </turnscript>
+  </object>
+  <object name="room">
+    <inherit name="editor_room" />
+    <description type="script"><![CDATA[
+      firsttime {
+        msg ("You awake in a blank gray room. you have no idea how you got here,")
+        msg ("as you look around the room you see: a <b>Foggy window</b>, a <b>Bead</b>, a <b>Night stand</b>, and a <b>Computer monintor</b> that seems to be mounted into the wall, and a <b>Chair</b>. you think you see something else on the bead, but can't tell what it is from where you are.")
+      }
+      otherwise {
+        msg ("You are in your gray room. it's pretty bleak in here, you sure wish there was a way to change the color.")
+        msg ("looking around your room you see: your<b> Bead<b>, your <b>Night stand<b>, your<b> Foggy window<b>, your <b>Chair</b>, and your wall <b>Computer<b>.")
+      }
+    ]]></description>
+    <beforeenter type="script">
+      firsttime {
+      }
+      otherwise {
+        msg ("The door slides open to let you through, then closes once you pass through.")
+      }
+    </beforeenter>
+    <enter type="script">
+    </enter>
+    <onexit type="script">
+      msg ("The door slides open to let you through, then closes once you pass through.")
+    </onexit>
+    <object name="Bead">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <alt type="stringlist">
+        <value>gray bead</value>
+      </alt>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <hidechildren />
+      <contentsprefix>is</contentsprefix>
+      <scenery />
+      <listchildren />
+      <listchildrenprefix>There are</listchildrenprefix>
+      <look type="script">
+        firsttime {
+          msg ("It's a dreary gray bead that seems to be part of the floor. you can see a set of gray clothes on the bead, it was very hard to see them with how they match the color of the bead sheets.")
+        }
+        otherwise {
+          msg ("It's a dreary gray bead.")
+        }
+      </look>
+      <object name="Ugly gray clothes">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <drop type="boolean">false</drop>
+        <alt type="stringlist">
+          <value>clothes</value>
+          <value>gray clothes</value>
+          <value>ugly clothes</value>
+        </alt>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>Some</prefix>
+        <scenery type="boolean">false</scenery>
+        <take type="script">
+          SetObjectFlagOn (player, "clothed")
+          RemoveObject (Ugly gray clothes)
+        </take>
+        <ontake type="script">
+          msg ("you put on the ugly gray cloths. (you were nude before, so it's a relief to have clothes to wear, even if they are ugly)")
+        </ontake>
+      </object>
+    </object>
+    <object name="Foggy window">
+      <inherit name="editor_object" />
+      <look>The window is to foggy to see through. but it does help light up the room.</look>
+      <lightsource />
+      <alt type="stringlist">
+        <value>window</value>
+        <value>dirty window</value>
+      </alt>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <lightstrength>weak</lightstrength>
+      <scenery />
+      <window />
+    </object>
+    <object name="Night stand">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <scenery />
+      <look type="script">
+        if (IsSwitchedOn(Lamp)) {
+          msg ("It's a night stand located next to the bead. There's a lamp on it, the lamp is turned on right now.")
+        }
+        else {
+          msg ("It's a night stand located next to the bead. There's a lamp on it, the lamp is turned off right now.")
+        }
+      </look>
+      <object name="Lamp">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <look>It's a lamp. it lights up the room pretty well. doesn't have the most appealing looks as far as lamps go though....</look>
+        <lightsource />
+        <switchonmsg>You turn the lamp on. it fills the room with light.</switchonmsg>
+        <switchoffmsg>You turn the lamp off. The only light in the room now is from the computer monitor, and whatever light manages to pierce through the fog on the window.</switchoffmsg>
+        <switchedon />
+        <alt type="stringlist">
+          <value>Light</value>
+          <value>Bead light</value>
+          <value>Night stand light</value>
+          <value>night stand lamp</value>
+        </alt>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>Switch on</value>
+          <value>Switch off</value>
+        </displayverbs>
+        <scenery />
+        <visible />
+      </object>
+    </object>
+    <object name="Wall computer">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <switchonmsg>The screen flickers to life, you can use the computer now that it's on.</switchonmsg>
+      <switchoffmsg>The screen dims, but is still glowing slightly. you can't use the computer untill you turn it back on.</switchoffmsg>
+      <lightsource />
+      <scenery />
+      <lightstrength>weak</lightstrength>
+      <alt type="stringlist">
+        <value>computer</value>
+        <value>personal computer</value>
+        <value>PC</value>
+        <value>puter</value>
+        <value>wall puter</value>
+      </alt>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Switch on</value>
+        <value>Switch off</value>
+        <value>use</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <ready type="boolean">false</ready>
+      <look type="script">
+        if (not IsSwitchedOn(Wall computer)) {
+          msg ("It's a computer mounted into the wall. the screen glows dimly. You will have to turn the computer on to use it.")
+        }
+        else {
+          msg ("The screen glows brightly, and is ready for you to use it.")
+        }
+      </look>
+      <use type="script"><![CDATA[
+        if (GetBoolean(Wall computer, "ready")) {
+          if (IsSwitchedOn(Wall computer)) {
+            msg ("You log on to the computer. You can go to the arena <b>store</b>. or you can go to arena <b>regestration</b> to pick who you'll fight in the arena next. ( type 'check regestration' , or 'go to store'")
+          }
+          else {
+            msg ("The computer is switched off right now.")
+          }
+        }
+        else {
+          msg ("You try to use the computer but nothing happens.")
+        }
+      ]]></use>
+    </object>
+    <object name="Chair">
+      <inherit name="editor_object" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>sit</value>
+      </displayverbs>
+      <scenery />
+      <look>it's a pretty borring looking gray chair.</look>
+      <alt type="stringlist">
+        <value>seat</value>
+        <value>stool</value>
+        <value>butt holder</value>
+        <value>four leged device</value>
+      </alt>
+    </object>
+  </object>
+  <command>
+    <pattern>help</pattern>
+    <script><![CDATA[
+      msg ("To use an item type:<br/>use (object name here) <br/>or type:<br/>use (object name here) on (name of the person/thing you want to use it on here)<br/><br/>To be able to examin an object/person. Some items can only be taken directly after looking at serten objects.Type:<br/>look at (person/object name here)<br/><br/>To pick up an object/item type:<br/>take (object/person name here)<br/><br/>To ask someone a question(it's pretty much the same to tell someone about something) type:<br/>ask (persons name here) about (subject you want to ask about here)")
+    ]]></script>
+  </command>
+  <command>
+    <pattern>tips</pattern>
+    <script><![CDATA[
+      msg ("(if you type \"tips\" you'll get a list of all the tips. if you type \"tip1\" or \"tip2\" (ect) you'll get that tip, and only that tip.) *not yet implemented*<br/><br/>Tip 1.<br/>Make sure to check everything. and try asking people about things that they might know about(you woun't always know what they know about so just ask randomly sometimes).<br/><br/>Tip 2.<br/>This is the code to juge exp needed to level up: level X 100 + 100<br/>so at level 0 you need 100 exp. and at level 1 you need 200 exp (ect). your exp resets at every level up. but if you got over the exp you needed to level up, that extra exp will carry over to the next level.<br/><br/>Tip 3.<br/>You're exp saying something like 300/300 ?<br/>don't worry about it. you might have to beat another enamy to tip the scale, but you won't lose anything. since extra exp carries over to the next level.<br/><br/>Tip 4.<br/>There are secret things hidden places. try typing \" ask narrator who are you \" to see what I mean. there are tons of those scattered throughout the game.")
+    ]]></script>
+  </command>
+  <verb>
+    <property>attack</property>
+    <pattern>attack</pattern>
+    <defaultexpression>"You can't attack " + object.article + "."</defaultexpression>
+  </verb>
+  <turnscript name="Special status bar script">
+    <enabled />
+    <script>
+      game.pov.hp = "Hp:" + player.health + " / " + player.max hp
+      game.pov.energy1 = "Energy:" + player.energy + " / " + player.max energy
+      game.pov.exp1 = "Exp:" + player.exp + " / " + player.total exp
+    </script>
+  </turnscript>
+  <object name="Bonus states">
+    <inherit name="editor_object" />
+    <eatmsg>You use your bonus state point.</eatmsg>
+    <displayverbs type="stringlist">
+      <value>Look at</value>
+      <value>Take</value>
+    </displayverbs>
+    <use type="script">
+      ShowMenu ("Pick which state you want to increase.", Split ("Strangth +5;Toughness +5;Speed +5;Intelligence +5;Hp +25;Energy +10",";"), false) {
+        if (result = "Hp +25") {
+          player.max hp = player.max hp + 25
+          player.health = player.health + 25
+        }
+        if (result = "Energy +10") {
+          player.energy = player.energy + 10
+          player.max energy = player.max energy + 10
+        }
+        if (result = "Intelligence +5") {
+          player.iq = player.iq + 5
+        }
+        if (result = "Strangth +5") {
+          player.strangth = player.strangth +5
+        }
+        if (result = "Speed +5") {
+          player.speed = player.speed + 5
+        }
+        if (result = "Toughness +5") {
+          player.toughness = player.toughness + 5
+        }
+      }
+      RemoveObject (Bonus states)
+    </use>
+  </object>
+  <command>
+    <pattern>tip1</pattern>
+    <script><![CDATA[
+      msg ("Tip 1.<br/>Make sure to check everything. and try asking people about things that they might know about(you woun't always know what they know about so just ask randomly sometimes).<br/>")
+    ]]></script>
+  </command>
+  <command>
+    <pattern>tip2</pattern>
+    <script><![CDATA[
+      msg ("Tip 2.<br/>This is the code to juge exp needed to level up: level X 100 + 100<br/>so at level 0 you need 100 exp. and at level 1 you need 200 exp (ect). your exp resets at every level up. but if you got over the exp you needed to level up, that extra exp will carry over to the next level.")
+    ]]></script>
+  </command>
+  <command>
+    <pattern>tip4</pattern>
+    <script><![CDATA[
+      msg ("Tip 4.<br/>There are secret things hidden places. try typing \" ask narrator who are you \" to see what I mean. there are tons of those scattered throughout the game.")
+    ]]></script>
+  </command>
+  <command>
+    <pattern>tip3</pattern>
+    <script><![CDATA[
+      msg ("Tip 3.<br/>You're exp saying something like 300/300 ?<br/>don't worry about it. you might have to beat another enamy to tip the scale, but you won't lose anything. since extra exp carries over to the next level.")
+    ]]></script>
+  </command>
+  <command name="Normal attack">
+    <pattern>attack #object#</pattern>
+    <unresolved>wait... what was that?</unresolved>
+    <script><![CDATA[
+      if (GetBoolean(object, "enemy")) {
+        msg ("you attack" + object)
+        if (RandomChance(70)) {
+          object.hp = object.hp - player.strangth * 5 / object.thoughness
+          msg ("You hit the enamy for average damage.")
+        }
+        else {
+          if (RandomChance(40)) {
+            object.hp = object.hp - player.strangth * 3 / object.toughness
+            msg ("You hit the enamy or low damage.")
+          }
+          else {
+            if (RandomChance(20)) {
+              object.hp = object.hp - player.strangth * 8 / object.toughness
+              msg ("You hit the enamy for high damage!")
+            }
+            else {
+              msg ("You miss! the enamy took no damage.")
+            }
+          }
+        }
+      }
+      if (object.hp  > 0) {
+        msg (object + "has " + object.hp + " hp left.")
+      }
+      else {
+        msg ("The enemy has been defeated! (yaay)")
+        msg ("Remember, if you leveled up you got a bonus state point. You canly only have one of those at a time, so use it right away.")
+      }
+    ]]></script>
+  </command>
+  <object name="start area">
+    <inherit name="editor_room" />
+    <descprefix type="string"></descprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      msg ("Hello! and welcom to the battle tower character creation screen. (this game is still in it's construction stage. If you have suggestions or want to repot a bug please send an email to BTbugs@hotmail.com )")
+      msg ("to start off, please tell me your name.")
+      get input {
+        player.alias = result
+        msg ("so your name is " + player.alias + ", nice to meet you.")
+        ShowMenu ("so are you Male or Femal?", Split ("Male;Female",";"), false) {
+          player.gender = result
+          msg ("<br/>One last thing. what's your age? (please only type the answer in numbers)")
+          get input {
+            player.age = result
+            msg ("<br/>Alright, your set for now. whenever you feel like moving on just type \"start game\"")
+            msg ("<br/>Here's some tips for you.<br/><br/>(if you type \"tips\" you'll get a list of all the tips. if you type \"tip1\" or \"tip2\" (ect) you'll get that tip, and only that tip.)<br/><br/>Tip 1.<br/>Make sure to check everything. and try asking people about things that they might know about(you woun't always know what they know about so just ask randomly sometimes).<br/><br/>Tip 2.<br/>This is the code to juge exp needed to level up: level X 100 + 100<br/>so at level 0 you need 100 exp. and at level 1 you need 200 exp (ect). your exp resets at every level up. but if you got over the exp you needed to level up, that extra exp will carry over to the next level.<br/><br/>Tip 3.<br/>You're exp saying something like 300/300 ?<br/>don't worry about it. you might have to beat another enamy to tip the scale, but you won't lose anything. since extra exp carries over to the next level.<br/><br/>Tip 4.<br/>There are secret things hidden places. try typing \" ask narrator who are you \" to see what I mean. there are tons of those scattered throughout the game.<br/><br/>Try typing \"help")
+          }
+        }
+      }
+    ]]></description>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <health type="int">50</health>
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>iq</key>
+          <value>Intelligence = !</value>
+        </item>
+        <item>
+          <key>strangth</key>
+          <value>Strangth = !</value>
+        </item>
+        <item>
+          <key>level</key>
+          <value>Level = !</value>
+        </item>
+        <item>
+          <key>exp1</key>
+          <value>!</value>
+        </item>
+        <item>
+          <key>energy1</key>
+          <value>!</value>
+        </item>
+        <item>
+          <key>hp</key>
+          <value>!</value>
+        </item>
+        <item>
+          <key>toughness</key>
+          <value>Toughness = !</value>
+        </item>
+        <item>
+          <key>speed</key>
+          <value>Speed = !</value>
+        </item>
+      </statusattributes>
+      <speed type="int">10</speed>
+      <strangth type="int">10</strangth>
+      <energy type="int">20</energy>
+      <iq type="int">10</iq>
+      <toughness type="int">10</toughness>
+      <level type="int">0</level>
+      <attr name="pov_look">Looking good. (* whispers* you need to workout some more though)</attr>
+      <exp type="int">0</exp>
+      <attr name="max hp" type="int">50</attr>
+      <attr name="max energy" type="int">30</attr>
+      <attr name="total exp" type="int">100</attr>
+      <hp type="int">0</hp>
+      <scenery type="boolean">false</scenery>
+      <turns type="int">0</turns>
+      <age type="string"></age>
+      <changedexp type="script">
+        Level up
+      </changedexp>
+      <changedturns type="script"><![CDATA[
+        if (player.turns = 6) {
+          msg ("(type \"next\" to see the next page of text)<br/><br/>The door to the room suddenly opens, and an older women walks into the room.<br/><br/>She is wearing a gray lab coat (boy these people like the color gray), matching gray shoes and pants. her hair is tied into a tight onion shape. She seems to be in her late sixties.<br/>")
+          if (GetBoolean(player, "clothed")) {
+            msg ("The women walks to the chair and sits down. jesturing for you to sit on the bead.<br/>")
+            Welcome
+          }
+          else {
+            msg ("Upon seeing that you are nacked, she jestures to the clothes on the bead untill you put them on. (yes, she just stood there the whole time you put the clothes on. You should have put them on earlier).<br/><br/>She then walks over to the chair and sits down. jesturing for you to sit on the bead.<br/>")
+            SetObjectFlagOn (player, "clothed")
+            RemoveObject (Ugly gray clothes)
+            Welcome
+          }
+        }
+      ]]></changedturns>
+      <object name="The voice">
+        <inherit name="male" />
+        <alt type="stringlist">
+          <value>voice in my head</value>
+          <value>mental voice</value>
+          <value>Mr K</value>
+          <value>voice</value>
+          <value>narrator</value>
+        </alt>
+        <visible />
+        <scenery />
+        <look>You can't see me you doofus. I'm in your head :P</look>
+        <alias>Narrator</alias>
+        <drop type="boolean">false</drop>
+        <speak>You can do better then randomly typing "speak/talk to narrator(me)". I'm just going to keep on saying this EXACT same thing every time you do this again.</speak>
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+        </inventoryverbs>
+        <ask type="scriptdictionary">
+          <item key="Who are you"><![CDATA[
+            msg ("I'm me, that's all you need to know. >:I")
+          ]]></item>
+          <item key="Are you god">
+            msg ("No, I;'m not god. jeeze that's a stuped question. I mean COME ON! do I sound like I could possably be god (rambles on for the next fifteen minutes about how I'm not god)")
+          </item>
+          <item key="I love you">
+            msg ("I love you too! just like a policeman loves his donut.")
+          </item>
+        </ask>
+      </object>
+    </object>
+  </object>
+  <command>
+    <pattern>start game</pattern>
+    <script>
+      firsttime {
+        MoveObject (player, room)
+      }
+    </script>
+  </command>
+  <turnscript name="player turns">
+    <enabled />
+    <script>
+      player.turns = player.turns + 1
+    </script>
+  </turnscript>
+  <object name="Wilds">
+    <inherit name="editor_room" />
+  </object>
+  <object name="Enemies">
+    <inherit name="editor_room" />
+    <object name="Mark">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <look><![CDATA[Mark is a level 2 Exposed. He is generally considered weak as far as the Exposed go. but is still potentially deadly.<br/><br/>He has low attack and no energy based moves. Should be easy to beat.]]></look>
+      <hp type="int">30</hp>
+      <strangth type="int">5</strangth>
+      <toughness>3</toughness>
+      <enemy />
+      <changedhp type="script"><![CDATA[
+        if (mark.hp < 1) {
+          RemoveObject (game.currentenemy)
+          player.exp = player.exp + 20
+          msg ("you K.O'd " + game.currentenemy.name + " in battle. you have been awarded 20 exp")
+        }
+      ]]></changedhp>
+      <alt type="stringlist">
+        <value>mark</value>
+        <value>Mark lvl2</value>
+      </alt>
+      <scenery />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+    </object>
+  </object>
+  <command>
+    <pattern>go to arena</pattern>
+    <script>
+      if (GetBoolean(player, "ready to battle")) {
+        MoveObject (player, Arena)
+      }
+      else {
+        msg ("You can't go to the arena till you regester for a fight.")
+      }
+    </script>
+  </command>
+  <command>
+    <pattern>check regestration</pattern>
+    <script><![CDATA[
+      if (player.level < 5) {
+        get input {
+          if (result = "mark") {
+            if (not GetBoolean(player, "ready to battle")) {
+              msg ("You regester a battle with Mark. head over to the arena whenever your ready.")
+              CloneObjectAndMove (Mark, Arena)
+              SetObjectFlagOn (player, "ready to battle")
+              game.currentenemy = Mark
+            }
+            else {
+              msg ("You already have a battle scheduled. you can only have one battle scheduled at a time.")
+            }
+          }
+          else {
+          }
+        }
+        msg ("<b>Available Battles:</b> (type the name of the combatent to regester for that battle)<br/>Mark lvl2<br/>Sindy lvl1 (not yet implemented)<br/>John lvl4 (not yet implemented)<br/>")
+      }
+    ]]></script>
+  </command>
+  <function name="ShowMenu" parameters="caption, options, allowCancel, callback"><![CDATA[
+    outputsection = StartNewOutputSection()
+    msg (caption)
+    count = 0
+    game.menuoptionskeys = NewStringList()
+    foreach (option, options) {
+      list add (game.menuoptionskeys, option)
+      count = count + 1
+      if (TypeOf(options) = "stringlist") {
+        optionText = option
+      }
+      else {
+        optionText = StringDictionaryItem(options, option)
+      }
+      msg (count + ": <a class=\"cmdlink\" style=\"" + GetCurrentLinkTextFormat() + "\" onclick=\"ASLEvent('ShowMenuResponse','" + option + "')\">" + optionText + "</a>")
+    }
+    EndOutputSection (outputsection)
+    game.menuoptions = options
+    game.menuallowcancel = allowCancel
+    game.menucallback = callback
+    game.menuoutputsection = outputsection
+  ]]></function>
+  <function name="EndOutputSection" parameters="name">
+    JS.EndOutputSection (name)
+  </function>
+  <function name="Level up"><![CDATA[
+    if (player.exp > player.level * 100 + 100) {
+      player.max hp = player.max hp + 25
+      player.max energy = player.max energy + 10
+      player.strangth = player.strangth + 5
+      player.iq = player.iq + 5
+      player.speed = player.speed + 5
+      player.toughness = player.toughness + 5
+    }
+    if (player.exp > player.level * 100 + 100) {
+      player.health = player.max hp
+      player.energy = player.max energy
+      player.level = player.level + 1
+      player.exp = player.exp - player.level * 100
+      player.total exp = player.level * 100 + 100
+    }
+    AddToInventory (Bonus states)
+  ]]></function>
+  <function name="Welcome"><![CDATA[
+    msg ("She then says \" my name is Ruth.... do you now why you're here?\" <br/>You tell her \" no I don't, where is here?\" <br/> she sighs, then says \"that's to be expected. your people often lose there memories after they reach maturity. I'll try to make this as easy to understand as possible. You are " + player.age + " years old. at this age those of my people who where exposed to the First Cloud turn into one of your people. and like I said earlier, they tend to forget almost everything in the process. Those like you are called The Exposed. Obviously there are no more people alive that have been directly exposed to the First cloud, but those like you still pop up every now and then because some of our ancestors where of the Exposed.\" <br/> <br/> (type next to see the next page)")
+    get input {
+      msg ("\"Those who are of the Exposed are mutants who emit a radiation that is lethal to normal people like myself. Not only that but they tend to have extremely dangerous abilities. which is why they are often viewed as a sort of monsters, but a few decades ago with the help of one of the Exposed the council created a program that would remedy the situation. They instituted an arena where the Exposed would fight each other for the entertainment of the populace. And by doing so your people can live a relatively normal life without fear of mobs chasing you down in the streets. You can become famous and live in luxury even compared to the most wealthy Lords.\" <br/> <br/> (type next to see the next page)")
+      get input {
+        msg ("\"You would be able to make quick trips into the main city area, but they would be very quick. People tend to get a bet restless when they're around someone that could kill them by standing to close. Now I should mention that the radiation you emit is doesn't do much of anything in small doses, which is the reason you can make trips into the city at all. It's only prolonged exposure to it that is deadly, which is also why I'm here talking to you in person rather then through an intercom.\"<br/><br/>\"Most arena combatants like to train and hone there abilities. If you're wanting to do the same you can use the <b>Training Room</b> in this building, or you could take a trip out into to the <b>Wilds</b>. If you chose to go into the wilds to train I suggest you be very careful. Most of the creatures in this world have been exposed to the First Cloud, and so can be more then powerful enough to kill you. You should stick to the area's around the city until you get used to your abilities.\"<br/><br/>(Type next to see the next page)")
+        get input {
+          msg ("\"Now, we don't go forcing anyone to fight in the arena. whether you do that or not is completely up to you. But the only alternative is to be exiled from the city. There's no work you can do in the city, and we won't pay for you to live here. You ether have to earn your keep or leave.\"<br/><br/>Ruth goes silent for a few second before saying.<br/>\"Well? do you want to be a combatant in the arena or not?\"<br/><br/>You take a few minutes to take all this in. You think to your self, boy this is a lot to take in all at once. Then you start to think about what she said about the creatures being able to kill you, so you decide that you'll go ahead and become a combatant. But before you say that you think another thought. that thought is, why is a random voice in my head dictating what I'm thinking. Then you think, wait this is to serious of a situation to be thinking about such silly and irrelevant things as voices in your head telling you what to say and think.<br/><br/>You tell her that you agree to be an arena combatant.<br/><br/>(Type next to see next page)")
+          get input {
+            msg ("(Ruth) \"That's good. You can use the computer here to pick out of all the combatants that you can fight for your next match. There's also a store that you can access through the computer. Anything you buy will be brought to this room. The training room is downstairs, and there's a car black parked in front of this building that can take you wherever you need to go. Oh, and you can order food from the computer too. I think that's everything.\"<br/><br/>she stands up and shakes your hand and says \"It will be a please to see you compete\" before leaving.<br/><br/>I's up to you to do stuff now.")
+            Wall computer.ready = true
+          }
+        }
+      }
+    }
+  ]]></function>
+  <walkthrough name="a">
+    <steps type="simplestringlist">
+      a
+      1
+      2000
+      start game
+      l
+      l
+      l
+      l
+      l
+      l
+      l
+      l
+      check regestration
+      mark
+      go to arena
+    </steps>
+  </walkthrough>
+</asl>

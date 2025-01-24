@@ -1,0 +1,347 @@
+<library>
+
+<!-- New Game -->
+
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Colloseum">
+    <gameid>bbc85c01-6e80-4a71-8abf-c1e870fb5b42</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+  </object>
+</asl>
+
+<!-- Object Types -->
+
+<type name="character_object_type">
+
+  <strength type="int">0</strength>
+  <endurance type="int">0</endurance>
+  <dexterity type="int">0</dexterity>
+  <agility type="int">0</agility>
+  <speed type="int">0</speed>
+  <intelligence type="int">0</intelligence>
+  <spirituality type="int">0</spirituality>
+  <mentality type="int">0</mentality>
+  <piety type="int">0</piety>
+  <luck type="int">0</luck>
+  
+  <dead type="boolean">false</dead>
+  
+  <undead type="boolean">false</undead>
+  
+  <defending type="boolean">false</defending>
+  <casting type="boolean">false</casting>
+  
+  <experience_points type="int">0</experience_points>
+  <cash type="int">0</cash>
+  <level type="int">0</level>
+  <level_up_points type="int">0</level_up_points>
+  <attribute_points type="int">0</attribute_points>
+  
+  <health_points type="string">0/0</health_points>
+  <mana_points type="string">0/0</mana_points>
+  
+  <current_health_points type="int">0</current_health_points>
+  <maximum_health_points type="int">0</maximum_health_points>
+  <current_mana_points type="int">0</current_mana_points>
+  <maximum_mana_points type="int">0</maximum_mana_points>
+  
+</type>
+
+<!-- Turnscripts -->
+
+<turnscript name="global_events_turnscript">
+  status_attributes_function
+  level_up_function
+  game.turns = game.turns + 1
+</turnscript>
+
+<!-- Commands -->
+
+<command name="fight_command">
+  <pattern>fight #text#</pattern>
+  <script>
+    fight_function (game.pov,text)
+  </script>
+</command>
+
+<command name="level_up_system_command">
+  <pattern>lvlup</pattern>
+  <script>
+    level_up_system_function
+  </script>
+</command>
+
+<!-- Functions -->
+
+<function name="fight_function" parameters="self,text">
+  enemy=GetObject(text)
+  if (enemy=null) {
+    foreach (obj,AllObjects()) {
+	  if (obj.alias=text) {
+	    enemy=obj
+	  } else {
+	    msg ("There seemingly is no " + text + " here.")
+	  }
+	}
+  } else if (not check_reachable_function (enemy) = true) {
+    msg ("There seemingly is no " + enemy.alias + " here.")
+  } else if (not DoesInherit (enemy,"character_object_type")) {
+    msg (enemy.alias + "is seemingly not something that you can battle.")
+  } else if (GetBoolean (enemy,"hostile") = false) {
+    msg (enemy.alias + " is seemingly not something that you can battle.")
+  } else if (GetBoolean (enemy,"dead") = true) {
+    msg (enemy.alias + " is already dead.")
+  } else {
+    battle_sequence_function (self,enemy)
+  }
+</function>
+
+<function name="battle_sequence_function" parameters="self,enemy"><![CDATA[
+  if (enemy.dead=false or self.escaped=false) {
+    you_go_first=false
+    if (GetInt (self,"speed") > GetInt (enemy,"speed") {
+	  you_go_first=true
+	} else if (GetInt (self,"speed") = GetInt (enemy,"speed") and RandomChance (50)=true) {
+	    you_go_first=true
+	}
+    if (you_go_first=true) {
+	  msg ("You get to go first for this round")
+	  self_battle_turn_function (self,enemy)
+	  on ready {
+	    if (not enemy.dead=true or not self.escaped=true){
+	      enemy_battle_turn_function (self,enemy)
+		}
+	  }
+	} else {
+	  msg (enemy.alias + " gets to go first for this round.")
+	  enemy_battle_turn_function (self,enemy)
+      on ready {
+        if (not enemy.dead=true or not self.escaped=true){	  
+	      msg ("It is now your turn.")
+	      self_battle_turn_function (self,enemy)
+		}
+	  }
+	}
+	on ready {
+	  msg ("The round has ended.") 
+	  battle_sequence_function (self,enemy)
+	}
+  } else { 
+    msg ("The battle is over.")
+  }
+]]></function>
+
+<function name="self_battle_turn_function" parameters="self,enemy"><![CDATA[
+  msg (self.alias + " has " + self.current_health_points + " HP left.")
+  msg (enemy.alias + " has " + enemy.current_health_points + " HP left.")
+  wait {
+    show menu ("What is your battle choice?", split ("Attack;Defend;Cast;Item;Run", ";"), false) {
+      switch (result) {
+        case ("Attack") {
+          self_attack_failed = false
+          if (RandomChance (GetInt (enemy,"agility") - GetInt (self,"speed")) = true) {
+            msg (enemy.alias + "evaded your attack!")
+            self_attack_failed = true
+			self.defending = false
+          } else if (RandomChance (GetInt (enemy,"dexterity") - GetInt (self,"agility")) = true) {
+            msg (enemy.alias + "parried your attack!")
+            self_attack_failed = true
+			self.defending = false
+          } else if (RandomChance (GetInt (enemy,"agility") - GetInt (self,"dexterity")) = true) {
+            msg (enemy.alias + "blocked your attack!")
+            self_attack_failed = true
+			self.defending = false
+          } else if (RandomChance (GetInt (self,"dexterity") - GetInt (enemy,"speed")) = false) {
+            msg ("Your attack missed " + enemy.alias +"!")
+            self_attack_failed = true
+			self.defending = false
+          } else if (RandomChance (GetInt (enemy,"armor_class") - GetInt (self,"attack_rating")) = true) {
+            msg ("Your attack failed to penetrate " + enemy.alias +"!")
+            self_attack_failed = true
+			self.defending = false
+          } else if (self_attack_failed = false) {
+            if (self.defending = true and enemy.defending = true) {
+              enemy.current_health_points = enemy.current_health_points - (critical_hit_function (self) * 2 * GetInt (self,"physical_damage") / 2 + GetInt (self,"physical_damage") * (GetInt (self,"strength") - GetInt (enemy,"endurance")) / 100)
+              msg (enemy.alias + " has " + enemy.current_health_points + " HP left.")
+              self.defending = false
+            } else if (self.defending = true and enemy.defending = false) {
+              enemy.current_health_points = enemy.current_health_points - (critical_hit_function (self) * 2 * GetInt (self,"physical_damage") + GetInt (self,"physical_damage") * (GetInt (self,"strength") - GetInt (enemy,"endurance")) / 100)
+              msg (enemy.alias + " has " + enemy.current_health_points + " HP left.")
+              self.defending = false
+            } else if (self.defending = false and enemy.defending = true) {
+              enemy.current_health_points = enemy.current_health_points - (critical_hit_function (self) * GetInt (self,"physical_damage") / 2 + GetInt (self,"physical_damage") * (GetInt (self,"strength") - GetInt (enemy,"endurance")) / 100)
+              msg (enemy.alias + " has " + enemy.current_health_points + " HP left.")
+            } else if (self.defending = false and enemy.defending = false) {
+              enemy.current_health_points = enemy.current_health_points - (critical_hit_function (self) * GetInt (self,"physical_damage") + GetInt (self,"physical_damage") * (GetInt (self,"strength") - GetInt (enemy,"endurance")) / 100)
+              msg (enemy.alias + " has " + enemy.current_health_points + " HP left.")
+            }
+          }
+        }
+        case ("Defend") {
+		  msg ("You defend yourself against " + enemy.alias)
+          self.defending = true
+        }
+        case ("Cast") {
+          self.defending = false
+        }
+        case ("Item") {
+          self.defending = false
+        }
+        case ("Run") {
+          self.defending = false
+		  self.escaping = true
+        }
+      }
+      if (GetInt (enemy,"current_health_points") > 0) {
+	    if ( RandomChance (GetInt (self,"speed") - GetInt (enemy,"speed"))= true) {
+          msg ("You get an extra battle turn!")
+          self_battle_turn (self,enemy)
+        } else {
+          msg ("Your battle turn is over.")
+        }
+      } else if (GetInt (enemy,"current_health_points") <= 0) {
+        msg (enemy.alias + " is dead.")
+        msg ("You have won the battle!")
+		self.defending = false
+		self.escaping = false
+        enemy.defending = false
+        enemy.dead = true
+      }
+    }
+  }
+]]></function>
+
+<function name="enemy_battle_turn_function" parameters="self,enemy"><![CDATA[
+  msg (self.alias + " has " + self.current_health_points + " HP left.")
+  msg (enemy.alias + " has " + enemy.current_health_points + " HP left.")
+  result = GetRandomInt (1,3)
+  switch (result) {
+    case (1) {
+      enemy_attack_failed = false
+      if (RandomChance (GetInt (self,"agility") - GetInt (enemy,"speed")) = true) {
+        msg ("You have evaded the attack!")
+        enemy_attack_failed = true
+		enemy.defending = false
+      } else if (RandomChance (GetInt (self,"dexterity") - GetInt (enemy,"agility")) = true) {
+        msg ("You have parried the attack!")
+        enemy_attack_failed = true
+		enemy.defending = false
+      } else if (RandomChance (GetInt (self,"agility") - GetInt (enemy,"dexterity")) = true) {
+        msg ("You have blocked the attack!")
+        enemy_attack_failed = true
+	    enemy.defending = false
+      } else if (RandomChance (GetInt (enemy,"dexterity") - GetInt (self,"speed")) = false) {
+        msg (enemy.alias +"'s attack missed!")
+        enemy_attack_failed = true
+		enemy.defending = false
+      } else if (RandomChance (GetInt (self,"armor_class") - GetInt (enemy,"attack_rating")) = true) {
+        msg ("You weren't penetrated by the attack!")
+        enemy_attack_failed = true
+	    enemy.defending = false
+      } else if (enemy_attack_failed = false) {
+        if (enemy.defending = true and self.defending = true) {
+          self.current_health_points = self.current_health_points - (critical_hit_function (enemy) * 2 * GetInt (enemy,"physical_damage") / 2 + GetInt (enemy,"physical_damage") * (GetInt (enemy,"strength") - GetInt (self,"endurance")) / 100)
+          msg (self.alias + " has " + self.cur_hp + " HP left.")
+          enemy.defending = false
+        } else if (enemy.defending = true and self.defending = false) {
+          self.current_health_points = self.current_health_points - (critical_hit_function (enemy) * 2 * GetInt (enemy,"physical_damage") + GetInt (enemy,"physical_damage") * (GetInt (enemy,"strength") - GetInt (self,"endurance")) / 100)
+          msg (self.alias + " has " + self.current_health_points + " HP left.")
+          enemy.defending = false
+        } else if (enemy.defending = false and self.defending = true) {
+          self.current_health_points = self.current_health_points - (critical_hit_function (enemy) * GetInt (enemy,"physical_damage") / 2 + GetInt (enemy,"physical_damage") * (GetInt (enemy,"strength") - GetInt (self,"endurance")) / 100)
+          msg (self.alias + " has " + self.current_health_points + " HP left.")
+        } else if (enemy.defending = false and self.defending = false) {
+          self.current_health_points = self.current_health_points - (critical_hit_function (enemy) * GetInt (enemy,"physical_damage") + GetInt (enemy,"physical_damage") * (GetInt (enemy,"strength") - GetInt (self,"endurance")) / 100)
+          msg (self.alias + " has " + self.current_health_points + " HP left.")
+        }
+      }
+    }
+    case (2) {
+      msg (enemy.alias + " has choosen to defend itself.")
+      enemy.defending = true
+    }
+    case (3) {
+      enemy.defending = false
+      msg ("Cast")
+    }
+  }
+  if (GetInt (self,"current_health_points") > 0) {
+    if (RandomChance (GetInt (enemy,"speed") - GetInt (self,"speed")) = true) {
+      msg (enemy.alias + " gets an extra battle turn!")
+      wait {
+        enemy_battle_turn (self,enemy)
+      }
+    } else {
+      msg (enemy.alias + " 's battle turn is over.")
+    }
+  } else if (GetInt (self,"current_health_points") <= 0) {
+    msg (self.alias + " has died.")
+    msg ("GAME OVER")
+    finish
+  }
+]]></function>
+
+<function name="check_reachable_function" parameters="enemy" type="boolean">
+  foreach (obj,ScopeReachableNotHeld ()) {
+    if (obj=enemy) {
+      value = true
+	} else {
+	  value = false
+	}
+  }
+  return (value)
+</function>
+
+<function name="critical_hit_function" parameters="target" type="int">
+  if (RandomChance (GetInt (target,"luck")) = true) {
+    value = 2
+  } else {
+    value = 1
+  }
+  return (value)
+</function>
+
+<function name="level_up_function"><![CDATA[
+  if (game.pov.experience_points >= game.pov.level * 100 + 100) {
+    game.pov.experience_points = game.pov.experience_points - (game.pov.level * 100 + 100)
+	game.pov.attribute_points = game.pov.attribute_points + 5
+	game.pov.level_up_points = game.pov.level_up_points + 1
+	game.pov.level = game.pov.level + 1
+	level_up_function
+  }
+]]></function>
+
+<function name="level_up_system_function"><![CDATA[
+  if (game.pov.level_up_points > 0) {
+    if (game.pov.attribute_points > 0) {
+	  show menu ("What attribute would you like to raise?",split("strength;endurance;dexterity;agility;speed;intelligence;spirituality;mentality;piety;luck",";"),false) {
+	    switch (result) {
+		  case ("strength") {
+		    msg ("How many points?")
+			get input {
+			  game.pov.points=result
+		  }
+	  }
+    }
+  }
+]]></function>
+
+<function name="status_attributes_function">
+  game.pov.health_points = game.pov.current_health_points + "/" + game.pov.maximum_health_points
+  game.pov.mana_points = game.pov.current_mana_points + "/" + game.pov.maximum_mana_points
+</function>
+
+<function name="shop_function">
+</function>
+
+</library>

@@ -1,0 +1,80 @@
+<!--Saved by Quest 5.5.5328.26617-->
+<asl version="550">
+  <include ref="GamebookCore.aslx" />
+  <game name="gbtest">
+    <gameid>1cbef79e-ceee-41de-a6fb-f268af68a718</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <roomenter type="script">
+      //JS.eval ("$('div[id^=\"divOutputAlign\"]').css('opacity', '0.5');")
+      //JS.eval ("getCurrentDiv().css('opacity', '1.0');")
+    </roomenter>
+  </game>
+  <object name="Page1">
+    <inherit name="scripttext" />
+    <description><![CDATA[Last choice: {player.lastchoice}<br/><br/>Click a link below<br/><br/><a class="cmdlink"  onclick="ASLEvent('SomeFunction','swords')">This is for swords</a><br><br/><a class="cmdlink"  onclick="ASLEvent('SomeFunction','shields')">This is for shields</a><br><br/>]]></description>
+    <options type="stringdictionary">
+      <item>
+        <key>Page2</key>
+        <value>This link goes to page 2</value>
+      </item>
+      <item>
+        <key>Page3</key>
+        <value>And this link goes to page 3</value>
+      </item>
+    </options>
+    <script type="script">
+      ClearScreen
+    </script>
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+  </object>
+  <object name="Page2">
+    <inherit name="script" />
+    <description>This is page 2. Type a description here, and then create links to other pages below.</description>
+    <script type="script">
+      get input {
+      }
+      player.title = "Chancellor"
+      MovePlayer (GameStart)
+    </script>
+  </object>
+  <object name="Page3">
+    <description>This is page 3. Type a description here, and then create links to other pages below.</description>
+    <options type="stringdictionary">
+      <item>
+        <key>Page4</key>
+        <value>End game</value>
+      </item>
+      <item>
+        <key>Page1</key>
+        <value>Enter shop</value>
+      </item>
+    </options>
+  </object>
+  <object name="GameStart">
+    <description>Good morning, {player.title}.</description>
+  </object>
+  <object name="Page4">
+    <inherit name="scripttext" />
+    <description>This is the end</description>
+    <script type="script">
+      finish
+    </script>
+  </object>
+  <turnscript name="dimmer">
+    <enabled />
+    <script><![CDATA[
+      if (game.lastoutputsection > 1) {
+      mssg("dimming " + game.lastoutputsection)
+        JS.eval ("$('.section"+(game.lastoutputsection-1)+"').css('opacity', '0.5');")
+      }
+                    ]]></script>
+  </turnscript>
+  <function name="SomeFunction" parameters="args">
+    msg ("SomeFunction called with " + args)
+    player.lastchoice = args
+    DoPage (Page1)
+  </function>
+</asl>

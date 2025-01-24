@@ -1,0 +1,146 @@
+<!--Saved by Quest 5.6.5783.24153-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="dropping a cup">
+    <gameid>cdeec73f-0d84-4cf1-a205-f6ed1e42b716</gameid>
+    <version>1.0</version>
+    <firstpublished>2016</firstpublished>
+    <appendobjectdescription />
+    <showlocation type="boolean">false</showlocation>
+    <autodescription_youarein_useprefix />
+    <attr name="autodescription_description" type="int">2</attr>
+    <attr name="autodescription_youcansee" type="int">3</attr>
+    <attr name="autodescription_youcango" type="int">4</attr>
+  </game>
+  <object name="modern kitchen">
+    <inherit name="editor_room" />
+    <descprefix><![CDATA[<b>You walk into <b/>]]></descprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <description><![CDATA[This is where you cook. There is a stove, refridgerator, table, counter and beautiful tiled floor.<br/>It is a true fashion statement in interior design.<br/><br/><br/>]]></description>
+    <alias><![CDATA[<b> modern kitchen<b/>]]></alias>
+    <enter type="script">
+    </enter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <exit alias="south" to="living room">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="counter">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <scenery />
+      <feature_container />
+      <hidechildren type="boolean">false</hidechildren>
+      <look><![CDATA[A beautiful simulated marble laminate covers the counter top. <br/>{if cup.parent=counter:<i> A small white cup is sitting on the counter.<i/>}]]></look>
+      <listchildren type="boolean">false</listchildren>
+      <listchildrenprefix>You notice a small white </listchildrenprefix>
+      <inroomdescription><![CDATA[{if cup.parent=counter:<i> There is a small white cup on the counter.}]]></inroomdescription>
+      <ondrop type="script">
+      </ondrop>
+      <object name="cup">
+        <inherit name="editor_object" />
+        <inroomdescription type="string"></inroomdescription>
+        <scenery />
+        <take />
+        <takemsg>You take that bad-ass coffee cup.</takemsg>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix type="string"></prefix>
+        <suffix type="string"></suffix>
+        <look>A white cup with the words, "Who's the boss" written on it. </look>
+        <attr name="feature_usegive" type="boolean">false</attr>
+        <dropmsg>You drop the cup on the floor.</dropmsg>
+        <attr name="feature_container" type="boolean">false</attr>
+        <drop type="script">
+          if (Got(cup)) {
+            MoveObject (cup, player.parent)
+            msg ("You drop the cup on the floor. Luckily it didn't break.")
+          }
+          else {
+            msg ("You don't have the cup.")
+          }
+        </drop>
+      </object>
+    </object>
+    <object name="floor">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <scenery />
+      <feature_container />
+      <listchildren />
+      <listchildrenprefix>There is something on the floor...it looks like </listchildrenprefix>
+      <look type="script"><![CDATA[
+        msg ("Nice imported marble tile is installed on the on the floor. Your wife thought it was worth the extra money. ")
+        if (Contains (modern kitchen,cup)) {
+          msg ("<i>There is a white cup on the floor.<i/>")
+        }
+      ]]></look>
+    </object>
+  </object>
+  <object name="living room">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <descprefix>You walk iinto</descprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <description>This living room should be on the TV show "Cribs". A coffee table is in front of a couch facing the television.</description>
+    <exit alias="north" to="modern kitchen">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="coffee table">
+      <inherit name="editor_object" />
+      <look type="script"><![CDATA[
+        msg ("Oak...I think. Brown stain and oblong in shape.")
+        if (Contains (coffee table,cup)) {
+          msg ("<i> There is a white cup on the coffee table.<i/>")
+        }
+      ]]></look>
+      <scenery />
+    </object>
+    <object name="floor1">
+      <inherit name="editor_object" />
+      <alias>floor</alias>
+      <scenery />
+      <look type="script"><![CDATA[
+        msg ("White plush carpet covers the foor. ")
+        if (Contains (living room,cup)) {
+          msg ("<i> There is a white cup on the floor.<i/>")
+        }
+      ]]></look>
+    </object>
+  </object>
+  <command name="place cup">
+    <pattern>put cup on #object#; place cup on #object#; set cup on #object#; sit cup on #object#; drop cup on #object#</pattern>
+    <script>
+      switch (object) {
+        case (counter) {
+          MoveObject (cup, counter)
+          msg ("You put the coffee cup on the counter.")
+        }
+        case (floor) {
+          MoveObject (cup, floor)
+          msg ("You put the cup on the floor.")
+        }
+        case (coffee table) {
+          if (cup.parent = player) {
+            MoveObject (cup, coffee table)
+            msg ("You set the cup on the coffee table.")
+          }
+          else {
+            msg ("You don't have a white cup.")
+          }
+        }
+        case (television) {
+          if (Got(cup)) {
+            msg ("Your wife is always bitching at you about putting you coffe cup on the television...You decide against it.")
+            MoveObject (cup, coffee table)
+          }
+          else {
+            msg ("You don't have a white cup.")
+          }
+        }
+      }
+    </script>
+  </command>
+</asl>

@@ -1,0 +1,52 @@
+<!--Saved by Quest 5.0.4303.33698-->
+<asl version="500">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="combine">
+    <start type="script">
+      msg ("type 'combine apple,banana,orange, basket'")
+    </start>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+    <object name="banana">
+      <inherit name="editor_object" />
+      <take />
+    </object>
+    <object name="apple">
+      <inherit name="editor_object" />
+      <take />
+    </object>
+    <object name="orange">
+      <inherit name="editor_object" />
+      <take />
+    </object>
+    <object name="basket">
+      <inherit name="editor_object" />
+      <take />
+    </object>
+  </object>
+  <command name="combine">
+    <pattern>combine #text#</pattern>
+    <script>
+      text = removeChar (text," ")
+      combineList = NewStringList()
+      combineList = Split ( text , "," )
+      if (ListContains(combineList, "banana") and ListContains(combineList, "apple") and ListContains(combineList, "orange") and ListContains(combineList, "basket")) {
+        create ("fruitbasket")
+        MoveObject (fruitbasket, player)
+        destroy ("banana")
+        destroy ("basket")
+        destroy ("apple")
+        destroy ("orange")
+      }
+    </script>
+  </command>
+  <function name="removeChar" parameters="text, zeichen" type="string">
+    liste = split(text,zeichen)
+    return (join(liste,""))
+  </function>
+</asl>

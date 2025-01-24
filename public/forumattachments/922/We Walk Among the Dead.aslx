@@ -1,0 +1,443 @@
+<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="We Walk Among the Dead">
+    <gameid>4490a34b-a4f9-49c3-b64f-c28a4aec1b3c</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <category>Horror</category>
+    <difficulty>Medium</difficulty>
+    <cruelty>Nasty</cruelty>
+    <cover>cover art.jpg</cover>
+    <start type="script">
+      PrintCentered ("Shots echo though the halls as scream fll your ears. The blasting of the sirens make it hard to image this being a dream. You stir in your bunk only thinking its another riot. Rolling over to your side a loud BANG hits the cell door you open your eyes to look at what is going on. Astonished and in disbelief as the horror unfolds in front of you.")
+      wait {
+        EnableTimer (siren)
+      }
+    </start>
+    <object name="pen">
+      <inherit name="editor_object" />
+      <take />
+      <ontake type="script">
+      </ontake>
+    </object>
+    <object name="tumbler_cup">
+      <inherit name="editor_object" />
+      <inherit name="container_limited" />
+      <take />
+      <feature_container />
+      <isopen type="boolean">false</isopen>
+      <volume type="int">0</volume>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Drop</value>
+        <value>Open</value>
+        <value>Close</value>
+      </inventoryverbs>
+      <feature_usegive />
+      <transparent />
+      <listchildren type="boolean">false</listchildren>
+      <onopen type="script">
+      </onopen>
+      <drink type="script">
+        if (Contains (tumbler_cup,water)) {
+          MoveObject (water, stash_room)
+          IncreaseObjectCounter (player, "Thurst")
+          IncreaseObjectCounter (player, "Thurst")
+          IncreaseObjectCounter (player, "Thurst")
+          IncreaseObjectCounter (player, "Thurst")
+          IncreaseObjectCounter (player, "Thurst")
+          IncreaseObjectCounter (player, "Thurst")
+          IncreaseObjectCounter (player, "Thurst")
+          IncreaseObjectCounter (player, "Thurst")
+          IncreaseObjectCounter (player, "Thurst")
+          IncreaseObjectCounter (player, "Thurst")
+        }
+        else if (not Contains (tumbler_cup,water)) {
+          msg ("You might want to think about filling it up first.")
+        }
+      </drink>
+    </object>
+    <object name="chips">
+      <inherit name="editor_object" />
+      <take />
+      <takemsg>Small bag of Lays</takemsg>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+      </displayverbs>
+      <eat type="script">
+        IncreaseObjectCounter (player, "Hunger")
+        IncreaseObjectCounter (player, "Hunger")
+        IncreaseObjectCounter (player, "Hunger")
+        IncreaseObjectCounter (player, "Health")
+        IncreaseObjectCounter (player, "Health")
+        EnableTimer (health)
+        DecreaseObjectCounter (player, "Thurst")
+        DecreaseObjectCounter (player, "Thurst")
+        msg ("MMM not much but it will have to do.")
+      </eat>
+    </object>
+    <object name="mtches">
+      <inherit name="editor_object" />
+      <take />
+    </object>
+  </game>
+  <object name="your_cell">
+    <inherit name="editor_room" />
+    <description type="string"></description>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <feature_player />
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>Health</key>
+          <value></value>
+        </item>
+        <item>
+          <key>Hunger</key>
+          <value></value>
+        </item>
+        <item>
+          <key>Thurst</key>
+          <value></value>
+        </item>
+      </statusattributes>
+      <Health type="int">75</Health>
+      <Hunger type="int">50</Hunger>
+      <Thurst type="int">45</Thurst>
+    </object>
+    <object name="cell_door">
+      <inherit name="openable" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+      <feature_container />
+      <look type="script">
+        firsttime {
+          msg ("Looking out you see a an  Correctonal Officer ripping apart the flesh of an Inmate!")
+          DisableTimer (siren)
+          EnableTimer (ripping_flesh)
+          if (not Got(cell_key)) {
+            picture ("feeding pic.jpg")
+            MakeObjectVisible (corpse_1)
+            MakeObjectVisible (zombie_1)
+          }
+        }
+        otherwise {
+          msg ("Its just the hallway")
+        }
+      </look>
+      <description type="script">
+      </description>
+      <openscript type="script">
+        if (Got(cell_key)) {
+          create exit ("hallway", your_cell, hallway_1)
+        }
+        else if (not Got(cell_key)) {
+          msg ("The cell door is locked you need to find a key.")
+        }
+      </openscript>
+    </object>
+    <object name="Toliet">
+      <inherit name="editor_object" />
+      <flush>The toliet roars to life as the jet powered water sucks down in an instance.</flush>
+    </object>
+    <object name="bunk">
+      <inherit name="editor_object" />
+      <laydown type="script">
+      </laydown>
+    </object>
+    <object name="corispondence_box">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <feature_container />
+      <openmsg>Hopefully you findd some thing to help you escape less cell.</openmsg>
+      <hidechildren type="boolean">false</hidechildren>
+      <onopen type="script">
+        firsttime {
+          EnableTimer (ripping_flesh)
+        }
+        otherwise {
+          msg ("You open the box.")
+        }
+        MoveObject (pen, corispondence_box)
+        MoveObject (tumbler_cup, corispondence_box)
+        MoveObject (chips, corispondence_box)
+      </onopen>
+      <onclose type="script">
+        if (not Got(pen)) {
+          MoveObject (pen, stash_room)
+        }
+        if (not Got(tumbler_cup)) {
+          MoveObject (tumbler_cup, stash_room)
+        }
+        if (not Got(chips)) {
+          MoveObject (chips, stash_room)
+        }
+      </onclose>
+    </object>
+    <exit alias="north" to="your_cell">
+      <inherit name="northdirection" />
+      <lookonly />
+      <look type="script">
+        firsttime {
+          if (not Got(cell_key)) {
+            MakeObjectVisible (corpse)
+            MakeObjectVisible (zombie)
+          }
+        }
+      </look>
+    </exit>
+    <object name="corpse_1">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <scenery type="boolean">false</scenery>
+      <feature_container />
+      <hidechildren type="boolean">false</hidechildren>
+      <listchildren type="boolean">false</listchildren>
+      <listchildrenprefix>cell_key</listchildrenprefix>
+      <alias>corpse</alias>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look>The body of a mangled guard lies motionless, blood seeps from under the corpse ozzing into your cell.</look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Search</value>
+      </displayverbs>
+      <search type="script">
+        if (not ListContains(ScopeVisible(), zombie_1)) {
+          MakeObjectVisible (cell_key)
+        }
+        else if (ListContains(ScopeVisible(), zombie_1)) {
+          msg ("Are you kinding that thing will tear me apart, need to find a way to kill it.")
+        }
+      </search>
+    </object>
+    <object name="sink">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <feature_switchable />
+      <onswitchon type="script">
+        MakeObjectVisible (water)
+      </onswitchon>
+      <onswitchoff type="script">
+        MakeObjectInvisible (water)
+      </onswitchoff>
+    </object>
+    <object name="water">
+      <inherit name="editor_object" />
+      <take type="boolean">false</take>
+      <visible type="boolean">false</visible>
+      <look>Thank the Lord water.</look>
+      <attr name="fill_jug" type="script">
+        if (Got(tumbler_cup)) {
+          MoveObject (water, tumbler_cup)
+          msg ("That should help.")
+        }
+      </attr>
+    </object>
+    <object name="cell_key">
+      <inherit name="editor_object" />
+      <take />
+      <takemsg>You take the key.</takemsg>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+      </displayverbs>
+      <visible type="boolean">false</visible>
+      <ontake type="script">
+        RemoveObject (corpse_1)
+      </ontake>
+    </object>
+    <object name="zombie_1">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <alias>zombie</alias>
+      <attack type="scriptdictionary">
+        <item key="pen"><![CDATA[
+          msg ("Shoving the pen deep intoo the rotting corspe's head, it falls to the ground with a final moan!")
+          MoveObject (pen, hallway_1)
+          MakeObjectInvisible (pen)
+          MakeObjectInvisible (zombie_1)
+          DisableTimer (ripping_flesh)
+          msg ("<br/><br/><br/>")
+          msg ("It's probably safe to search a little better now.")
+        ]]></item>
+      </attack>
+    </object>
+  </object>
+  <object name="hallway_1">
+    <inherit name="editor_room" />
+    <description>In the hallway mangled bodies line the floor. There are cells all around.</description>
+    <exit alias="in" to="your_cell">
+      <inherit name="indirection" />
+    </exit>
+    <object name="zombie">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <visible />
+      <take type="boolean">false</take>
+      <look type="script">
+        firsttime {
+          MakeObjectVisible (pen)
+          msg ("You see the pen portuding from the zombie's now oozing eye socket. (As if they weren't gross enough already...)")
+        }
+        otherwise {
+          msg ("Mangled rotting corpse! I wonder how this happened?")
+        }
+      </look>
+    </object>
+    <object name="corpse">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <inherit name="surface" />
+      <look>Pour bastard his loss my gain.</look>
+      <feature_container />
+      <hidechildren />
+      <listchildren />
+      <listchildrenprefix>cell_key</listchildrenprefix>
+      <visible />
+    </object>
+    <exit alias="west" to="hallway_2">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="east" to="hallway_3">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="stash_room">
+    <inherit name="editor_room" />
+  </object>
+  <verb>
+    <property>fill_jug</property>
+    <pattern>fill_jug</pattern>
+    <defaultexpression>"You can't fill_jug " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>attack</property>
+    <pattern>attack</pattern>
+    <defaultexpression>"You can't attack " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>flush</property>
+    <pattern>flush</pattern>
+    <defaultexpression>"You can't flush " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>laydown</property>
+    <pattern>lay down</pattern>
+    <defaultexpression>"You can't lay down " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="hallway_2">
+    <inherit name="editor_room" />
+    <exit alias="east" to="hallway_1">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="in" to="open_cell_2">
+      <inherit name="indirection" />
+    </exit>
+    <object name="dead_zombie">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <inherit name="openable" />
+      <feature_container />
+      <search type="script"><![CDATA[
+        HelperOpenObject (dead_zombie)
+        msg ("Nothing but what he's wearing.<br/>")
+      ]]></search>
+    </object>
+  </object>
+  <object name="hallway_3">
+    <inherit name="editor_room" />
+    <exit alias="west" to="hallway_1">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="in" to="open_cell_1">
+      <inherit name="indirection" />
+    </exit>
+  </object>
+  <object name="hallway_4">
+    <inherit name="editor_room" />
+  </object>
+  <object name="hallway_5">
+    <inherit name="editor_room" />
+  </object>
+  <object name="open_cell_1">
+    <inherit name="editor_room" />
+    <exit alias="out" to="hallway_3">
+      <inherit name="outdirection" />
+    </exit>
+  </object>
+  <object name="open_cell_2">
+    <inherit name="editor_room" />
+    <exit alias="out" to="hallway_2">
+      <inherit name="outdirection" />
+    </exit>
+    <object name="toliet">
+      <inherit name="editor_object" />
+    </object>
+    <object name="bunk_1">
+      <inherit name="editor_object" />
+    </object>
+    <object name="sink_1">
+      <inherit name="editor_object" />
+    </object>
+    <object name="debris">
+      <inherit name="editor_object" />
+      <take type="boolean">false</take>
+      <search type="script">
+        firsttime {
+          msg ("Rumaging through the papers you find some matches.")
+        }
+      </search>
+    </object>
+  </object>
+  <timer name="ripping_flesh">
+    <interval>10</interval>
+    <enabled type="boolean">false</enabled>
+    <script>
+      play sound ("Stab And Tear Flesh-SoundBible.com-455812566.wav", false, true)
+    </script>
+  </timer>
+  <timer name="hunger">
+    <interval>65</interval>
+    <enabled />
+    <script>
+      DecreaseObjectCounter (player, "Hunger")
+      DecreaseObjectCounter (player, "Hunger")
+      DecreaseObjectCounter (player, "Hunger")
+    </script>
+  </timer>
+  <timer name="thurst">
+    <interval>60</interval>
+    <enabled />
+    <script>
+      DecreaseObjectCounter (player, "Thurst")
+      DecreaseObjectCounter (player, "Thurst")
+      DecreaseObjectCounter (player, "Thurst")
+      DecreaseObjectCounter (player, "Thurst")
+    </script>
+  </timer>
+  <timer name="health">
+    <interval>5</interval>
+    <script><![CDATA[
+      if (GetInt(player, "Health") > 100) {
+        DecreaseObjectCounter (player, "Health")
+      }
+    ]]></script>
+  </timer>
+  <timer name="siren">
+    <interval>10</interval>
+    <script>
+      play sound ("Tornado_Siren_II-Delilah-747233690.wav", false, true)
+    </script>
+    <enabled />
+  </timer>
+</asl>

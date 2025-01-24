@@ -1,0 +1,197 @@
+<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <template name="UnrecognisedCommand">Oh, now you're just being silly.</template>
+  <template name="YouAreIn">You are in</template>
+  <game name="A Test Concerning Your Intelligence">
+    <inherit name="theme_novella" />
+    <gameid>b325fb7a-ee06-4d8a-9086-73550d863e8a</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <autodescription />
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <echocommand type="boolean">false</echocommand>
+    <attr name="autodescription_youarein" type="int">0</attr>
+  </game>
+  <object name="look around room">
+    <inherit name="editor_room" />
+    <descprefix type="string"></descprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <usedefaultprefix />
+    <alias>room</alias>
+    <description type="string"></description>
+    <enter type="script">
+      EnableTimer (lookaroundroomtimer)
+      get input {
+        if (result = "look around") {
+          DisableTimer (lookaroundroomtimer)
+          lookaround
+        }
+      }
+    </enter>
+    <firstenter type="script">
+      play sound ("text game guide voice intro.mp3", false, false)
+      msg ("You are in a room. Please take your time to look around as often as you want. You will notice a door which will lead you to the next room. Please go through it.")
+    </firstenter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="piece of paper">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>"If they find a parrot who could answer to everything, I would claim it to be an intelligent being without hesitation."</look>
+      <visible type="boolean">false</visible>
+      <alt type="stringlist">
+        <value>paper</value>
+        <value>piece</value>
+        <value>it</value>
+      </alt>
+    </object>
+    <exit name="lookaroundroomdoor" alias="door" to="test look around room">
+      <scenery />
+      <runscript type="boolean">false</runscript>
+      <visible type="boolean">false</visible>
+      <script type="script">
+        get input {
+          if (result = "go through door") {
+            MoveObject (player, pull room)
+          }
+        }
+      </script>
+    </exit>
+    <object name="lookaroundroomdoorobject">
+      <inherit name="editor_object" />
+      <alias>door</alias>
+      <scenery />
+      <visible type="boolean">false</visible>
+      <look type="string"></look>
+    </object>
+  </object>
+  <command name="look around">
+    <pattern>look around</pattern>
+    <script>
+      lookaround
+    </script>
+  </command>
+  <object name="pull room">
+    <inherit name="editor_room" />
+    <usedefaultprefix />
+    <alias>room</alias>
+    <objectslistprefix type="string"></objectslistprefix>
+    <descprefix>You are in</descprefix>
+    <enter type="script">
+    </enter>
+    <firstenter type="script">
+      msg ("There is a lever. Please look around first and then pull it. ")
+    </firstenter>
+  </object>
+  <command name="go through door">
+    <pattern>go through door</pattern>
+    <script>
+      if (game.pov.parent = look around room) {
+        if (ListContains(ScopeVisible(), lookaroundroomdoorobject)) {
+          MoveObject (player, test look around room)
+        }
+        else {
+          if (RandomChance(1)) {
+            MoveObject (player, test look around room)
+          }
+          else {
+            msg ("You bumped into something.")
+          }
+        }
+      }
+      else if (game.pov.parent = test look around room) {
+        if (ListContains(ScopeVisible(), testlookaroundroomdoorobject)) {
+          MoveObject (player, pull room)
+        }
+        else {
+          if (RandomChance(1)) {
+            MoveObject (player, pull room)
+          }
+          else {
+            msg ("You bumped into something.")
+          }
+        }
+      }
+    </script>
+  </command>
+  <object name="test look around room">
+    <inherit name="editor_room" />
+    <alias>room</alias>
+    <enter type="script">
+    </enter>
+    <firstenter type="script">
+      msg ("You are in a room.")
+    </firstenter>
+    <exit name="testlookaroundroomdoor" alias="door" to="pull room">
+      <scenery />
+      <visible type="boolean">false</visible>
+      <lockmessage>That way is locked.doorobject</lockmessage>
+    </exit>
+    <object name="testlookaroundroomdoorobject">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <scenery />
+    </object>
+  </object>
+  <command>
+    <pattern>sound</pattern>
+    <script>
+      play sound ("text game guide voice intro.mp3", false, false)
+    </script>
+  </command>
+  <function name="lookaround">
+    if (game.pov.parent = look around room) {
+      firsttime {
+        MakeExitVisible (lookaroundroomdoor)
+        MakeObjectVisible (lookaroundroomdoorobject)
+        msg ("You see a door.")
+      }
+      otherwise {
+        firsttime {
+          MakeObjectVisible (piece of paper)
+          msg ("You notice a piece of paper.")
+        }
+        otherwise {
+          if (RandomChance(16)) {
+            msg ("You look at the floor.")
+          }
+          else if (RandomChance(16)) {
+            msg ("You look at the ceiling.")
+          }
+          else if (RandomChance(66)) {
+            msg ("You look at the walls.")
+          }
+          else {
+            msg ("You gaze into space.")
+          }
+        }
+      }
+    }
+    else if (game.pov.parent = pull room) {
+      firsttime {
+        msg ("You see the lever.")
+      }
+    }
+    else if (game.pov.parent = test look around room) {
+      MakeExitVisible (testlookaroundroomdoor)
+      MakeObjectVisible (testlookaroundroomdoorobject)
+      msg ("You see a door.")
+    }
+    else {
+      msg ("")
+    }
+  </function>
+  <timer name="lookaroundroomtimer">
+    <interval>10</interval>
+    <script>
+      msg ("A trap door opens.")
+      SetTimeout (1) {
+        DisableTimer (lookaroundroomtimer)
+      }
+    </script>
+  </timer>
+</asl>

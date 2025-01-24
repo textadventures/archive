@@ -1,0 +1,250 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Jackson's day">
+    <gameid>da81a74b-8ed4-44ff-8990-b5721096ae8a</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <author>Dad (Peter Vogel)</author>
+    <difficulty>Easy</difficulty>
+    <cruelty>Merciful</cruelty>
+    <attr name="autodescription_youcansee" type="int">4</attr>
+    <attr name="autodescription_description" type="int">2</attr>
+    <attr name="autodescription_youarein" type="int">0</attr>
+    <autodescription_youarein_useprefix />
+  </game>
+  <command name="put">
+    <pattern type="string"><![CDATA[^put (?<object1>.*) (on|in) (?<object2>.*)$]]></pattern>
+    <script>
+      // put object1 in/on object 2
+      if (object1.parent = object2) {
+        msg (DynamicTemplate("AlreadyThere", object1))
+      }
+      else if (not ListContains(ScopeInventory(), object1)) {
+        msg (DynamicTemplate("NotCarrying", object1))
+      }
+      else if (not ListContains(ScopeReachable(), object1)) {
+        msg (DynamicTemplate("ObjectNotOpen", GetBlockingObject(object1)))
+      }
+      else if (not ListContains(ScopeReachable(), object2)) {
+        msg (DynamicTemplate("ObjectNotOpen", GetBlockingObject(object2)))
+      }
+      else if (not object2.container) {
+        msg (Template("CannotDoThat"))
+      }
+      else if (not object2.isopen) {
+        msg (DynamicTemplate("ObjectNotOpen", object2))
+      }
+      else if (object2=Rubbish Bin) {
+        if (object1=Rubbish) {
+          MoveObject (Rubbish, Rubbish Bin)
+          msg ("You put the rubbish in the bin where it belongs.")
+        }
+        else {
+          msg ("That doesn't go in there! Only rubbish belongs in the rubbish bin!")
+        }
+      }
+      else {
+        if (GetBoolean(object2, "hidechildren")) {
+          object2.hidechildren = false
+        }
+        if (HasDelegateImplementation(object2, "addscript")) {
+          rundelegate (object2, "addscript", object1)
+        }
+        else {
+          object1.parent = object2
+          msg (Template("Done"))
+        }
+      }
+      // must be carrying object1
+      // object1 must not be inside a closed container
+      // object2 must not be inside a closed container
+      // object2 must be an open container or surface
+    </script>
+  </command>
+  <object name="Lounge Room">
+    <inherit name="editor_room" />
+    <objectslistprefix>You can see</objectslistprefix>
+    <descprefix>You are in</descprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <description type="script"><![CDATA[
+      if ((Toys.parent=Lounge Room) and (Rubbish.parent=Lounge Room)) {
+        msg ("There is a TV, Two white Leather lounge chairs, your computer, Dad's computer (where he is currently) and scattered bean bags and cushions.<br/><br/>It is also a mess, what with the toys and rubbish on the ground.")
+      }
+      else if ((Toys.parent=Lounge Room)) {
+        msg ("The lounge room. There is a TV, Two white Leather lounge chairs, your computer, Dad's computer (where he is currently) and scattered bean bags and cushions.<br/><br/>The rubbish is gone, the room looks better, but the Toys are still not where they should be, thats for sure")
+      }
+      else if ((Rubbish.parent=Lounge Room)) {
+        msg ("The lounge room. There is a TV, Two white Leather lounge chairs, your computer, Dad's computer (where he is currently) and scattered bean bags and cushions.<br/><br/>The Toys aren't on the floor, but the rubbish is still here, and could stand to go where all rubbish goes eventually!")
+      }
+      else {
+        msg ("The lounge room. There is a TV, Two white Leather lounge chairs, your computer, Dad's computer (where he is currently) and scattered bean bags and cushions.<br/><br/>Perfectly tidy! So tidy in fact, that Dad has noticed....<br/><br/>\"You can watch some TV if you want mate. Thanks for tidying up the Lounge Room.\"")
+      }
+    ]]></description>
+    <object name="Jackson">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <inherit name="namedmale" />
+      <look><![CDATA[You are a 6 year old boy. You are fast for your age, and are commonly referred to as 'the flash' by poppy Pete!<br/><br/>You always have random bruises on you from your rough housing, both with your little brother and your friends at school.<br/><br/>You are awesome, wonderful and great!]]></look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+      <scenery />
+    </object>
+    <object name="Toys">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <look>Lots of little toys. There's play dough, octonaughts, playsets and a nerf gun.</look>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+        <value>Put toys in</value>
+      </inventoryverbs>
+      <take />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>some</prefix>
+    </object>
+    <object name="Rubbish">
+      <inherit name="editor_object" />
+      <look>Ice block wrappers, lolly wrappers and pieces of bread from a discarded sandwich.</look>
+      <take />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>some</prefix>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <giveto type="scriptdictionary">
+        <item key="Rubbish Bin">
+        </item>
+      </giveto>
+    </object>
+    <object name="Shelves">
+      <inherit name="editor_object" />
+      <inherit name="container_limited" />
+      <scenery type="boolean">false</scenery>
+      <drop type="boolean">false</drop>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <isopen />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+      <listchildren />
+      <listchildrenprefix>It contains</listchildrenprefix>
+      <containermaxobjects>No room to put anything else in the shelves, its pretty packed!</containermaxobjects>
+      <transparent type="boolean">false</transparent>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>a set of</prefix>
+      <look type="script">
+        if (Contains (Shelves,Toys)) {
+          msg ("These shelves are packed! There are DVD's, Books, Photo Frames, and the Toy shaped hole is now replaced with Toys!")
+        }
+        if (not Contains (Shelves,Toys)) {
+          msg ("These shelves are packed! There are DVD's, Books, Photo Frames, and a suspicously Toy shaped hole.....")
+        }
+      </look>
+      <onopen type="script">
+      </onopen>
+    </object>
+    <exit alias="east" to="Boys Bedroom">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="south" to="Kitchen">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="north" to="The veranda">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="Boys Bedroom">
+    <inherit name="editor_room" />
+    <description><![CDATA[This is yours and Eli's room.<br/><br/>You see the Bunk beds, Eli's cot, a change table, as well as Eli's walker.]]></description>
+    <exit alias="west" to="Lounge Room">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="Kitchen">
+    <inherit name="editor_room" />
+    <description>A small kitchen. The Bar fridge is here, along with the stove, the sink and the cupboards where all our food is kept.</description>
+    <exit alias="north" to="Lounge Room">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="east" to="Parents Bedroom">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="west" to="Bathroom">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="Recycling bin">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+      </inventoryverbs>
+      <drop type="boolean">false</drop>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <transparent />
+    </object>
+    <object name="Rubbish Bin">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <transparent />
+      <hidechildren />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+      <drop type="boolean">false</drop>
+      <gender>the</gender>
+      <article>the</article>
+      <use type="boolean">false</use>
+      <look type="script"><![CDATA[
+        if (not Contains (Rubbish Bin,Rubbish)) {
+          msg ("The rubbish bin is a plastic bag hanging off the door handle to the Bathroom.<br/><br/>Is there any Rubbish you might want to put in it?")
+        }
+        if (Contains (Rubbish Bin,Rubbish)) {
+          msg ("The rubbish bin is a plastic bag hanging off the door handle to the Bathroom.<br/><br/>There is now Rubbish in the Rubbish Bin, just the way it should be. Dad will probably throw this out soon.")
+        }
+      ]]></look>
+    </object>
+  </object>
+  <object name="Parents Bedroom">
+    <inherit name="editor_room" />
+    <description>Mum and Dads room. Generally untidy, but not a mess. More a mess of clothes that shouldn't be where they are</description>
+    <exit alias="west" to="Kitchen">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="Bathroom">
+    <inherit name="editor_room" />
+    <description><![CDATA[A small Bathroom. The washing machine is behind the door, the sink in front of you, as well as the mirror.<br/><br/>There is also the shower and the toilet.]]></description>
+    <exit alias="east" to="Kitchen">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="The veranda">
+    <inherit name="editor_room" />
+    <description>Outside the front door is the veranda, where your outside toys are located.</description>
+    <exit alias="south" to="Lounge Room">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+</asl>

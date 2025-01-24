@@ -1,0 +1,248 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="Espanol.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Una corta aventura">
+    <gameid>bda08cfd-5b96-4061-8487-58bd1583b034</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <echocommand type="boolean">false</echocommand>
+    <showhealth type="boolean">false</showhealth>
+    <showscore type="boolean">false</showscore>
+    <defaultfontsize type="int">14</defaultfontsize>
+    <menufontsize type="int">12</menufontsize>
+    <gridmap />
+    <defaultfont>'Times New Roman', Times, serif</defaultfont>
+    <defaultwebfont>Griffy</defaultwebfont>
+    <defaultbackground>Black</defaultbackground>
+    <defaultforeground>White</defaultforeground>
+    <defaultlinkforeground>LightBlue</defaultlinkforeground>
+    <menufont>'Palatino Linotype', 'Book Antiqua', Palatino, serif</menufont>
+    <menubackground>Black</menubackground>
+    <menuforeground>White</menuforeground>
+    <menuhoverbackground>LightBlue</menuhoverbackground>
+    <menuhoverforeground>Red</menuhoverforeground>
+    <showcommandbar />
+    <pov type="object">player</pov>
+    <start type="script">
+      Posadero.sexo = GetRandomInt(1,2)
+      Posadero.raza = GetRandomInt(1,3)
+      Posadero.edadd = GetRandomInt(1,3)
+      Posadero.piell = GetRandomInt(1,2)
+      Posadero.peloo = GetRandomInt(1,2)
+      Posadero.pelocolorr = GetRandomInt(1,5)
+      if (Posadero.sexo = 2) {
+        Posadero.prefix = "a la"
+        Posadero.alias = "Posadera"
+        Posadero.gender = "la"
+        Posadero.article = "la"
+        Posadero.ao = "a"
+        Posadero.numero = "una"
+      }
+      if (Posadero.piell = 2) {
+        Posadero.piel = "oscura"
+      }
+      if (Posadero.peloo = 2) {
+        Posadero.pelo = "largo"
+      }
+      if (Posadero.raza = 2) {
+        Posadero.raz = "elf"
+      }
+      else if (Posadero.raza = 3) {
+        Posadero.raz = "enan"
+      }
+      if (Posadero.edadd = 2) {
+        Posadero.edad = "de mediana edad"
+      }
+      else if (Posadero.edadd = 3) {
+        Posadero.edad = "de avanzada edad"
+      }
+      if (Posadero.pelocolorr = 2) {
+        Posadero.pelocolor = "rubio"
+      }
+      else if (Posadero.pelocolorr = 3) {
+        Posadero.pelocolor = "castaño"
+      }
+      else if (Posadero.pelocolorr = 4) {
+        Posadero.pelocolor = "rojo"
+      }
+      else if (Posadero.pelocolorr = 5) {
+        Posadero.pelocolor = "grisaceo"
+      }
+      msg ("Bienvenido a una corta aventura, tus andanzas por este pequeño mundo de fantasia estan a punto de comenzar, en primer lugar vamos a crear tu personaje.")
+      ShowMenu ("¿Eres hombre o mujer?", Split ("hombre;mujer", ";"), false) {
+        player.sexo = result
+        if (player.sexo = "mujer") {
+          player.ao = "a"
+          player.numero = "una"
+        }
+        msg ("")
+        ShowMenu ("¿Cual es tu raza?", Split ("humano;elfo;enano", ";"), false) {
+          player.raz = result
+          if (player.raz = "humano") {
+            player.raz = "human"
+          }
+          else if (player.raz = "elfo") {
+            player.raz = "elf"
+            player.maxsalud = 80
+            player.salud = 80
+            player.maxmagia = 120
+            player.magia = 120
+          }
+          else if (player.raz = "enano") {
+            player.raz = "enan"
+            player.maxsalud = 120
+            player.salud = 120
+            player.maxmagia = 60
+            player.magia = 60
+          }
+          msg ("")
+          msg ("Eres "+player.numero+" "+player.raz+player.ao+".")
+          msg ("")
+          MoveObject (player, tu habitación)
+        }
+        msg ("Elige tu raza sabiamente ya que influira parcialmente en tu estilo de juego, los humanos son la raza mas equilibrada, los elfos tienen mas magia pero menos salud, los enanos tienen mas salud ademas de poder usar hachas y ver en la oscuridad pero tienen mucha menos magia.")
+      }
+      msg ("La eleccion del genero no tiene un gran impacto en el juego, pero se utiliza para aquellas palabras dependientes del genero como tu raza (humano/humana) o tu clase (guerrero/guerrera).")
+    </start>
+  </game>
+  <object name="tu habitación">
+    <inherit name="editor_room" />
+    <dark type="boolean">false</dark>
+    <alias>Tu habitación</alias>
+    <description>Esta es tu habitación, es pequeña y acogedora.</description>
+    <exitslistprefix>Puedes</exitslistprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <attr name="grid_label">Tu habitración</attr>
+    <attr name="grid_fill">YellowGreen</attr>
+    <attr name="grid_width" type="int">3</attr>
+    <attr name="grid_length" type="int">2</attr>
+    <beforefirstenter type="script">
+    </beforefirstenter>
+    <exit alias="bajar a la posada" to="la posada">
+      <inherit name="downdirection" />
+    </exit>
+    <exit alias="arriba" to="creación de personaje">
+      <inherit name="updirection" />
+      <visible type="boolean">false</visible>
+    </exit>
+  </object>
+  <object name="la posada">
+    <inherit name="editor_room" />
+    <alias>La posada</alias>
+    <description>No hay ningun visitante en la posada ahora mismo, las mesas estan vacias.</description>
+    <exitslistprefix>Puedes</exitslistprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <attr name="grid_label">La posada</attr>
+    <attr name="grid_width" type="int">5</attr>
+    <attr name="grid_length" type="int">4</attr>
+    <attr name="grid_fill">Yellow</attr>
+    <attr name="grid_borderwidth" type="int">1</attr>
+    <exit alias="subir a tu habitación" to="tu habitación">
+      <inherit name="updirection" />
+    </exit>
+    <object name="Posadero">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <alias>Posadero</alias>
+      <take type="boolean">false</take>
+      <drop type="boolean">false</drop>
+      <use type="boolean">false</use>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>al</prefix>
+      <displayverbs type="stringlist">
+        <value>Examinar</value>
+        <value>Hablarle de tu raza</value>
+        <value>Hablarle de tu clase</value>
+      </displayverbs>
+      <sexo type="int">0</sexo>
+      <numero>un</numero>
+      <raz>human</raz>
+      <ao>o</ao>
+      <edad>joven</edad>
+      <raza type="int">1</raza>
+      <edadd type="int">1</edadd>
+      <piell type="int">1</piell>
+      <piel>clara</piel>
+      <peloo type="int">1</peloo>
+      <pelo>corto</pelo>
+      <pelocolorr type="int">1</pelocolorr>
+      <pelocolor>negro</pelocolor>
+      <ayuda type="boolean">false</ayuda>
+      <gender>el</gender>
+      <look type="script">
+        msg ("Examinas "+Posadero.prefix+" "+Posadero.alias+". Se trata de "+Posadero.numero+" "+Posadero.raz+Posadero.ao+" "+Posadero.edad+", tiene la piel "+Posadero.piel+" y el cabello "+Posadero.pelo+" y "+Posadero.pelocolor+".")
+      </look>
+      <hablarledeturaza type="script">
+        if (player.raz = Posadero.raz) {
+          if (Posadero.ayuda = False) {
+            msg (Posadero.alias+": Corren tiempos dificiles para los de nuestra estirpe, los "+player.raz+"os debemos apoyarnos mutuamente, toma y llevate estas cinco monedas, puede que te ayuden.")
+            player.dinero = player.dinero + 5
+            Posadero.ayuda = True
+            msg ("")
+            msg ("Tras lo dicho "+Posadero.gender+" "+Posadero.alias+" saca cinco monedas de un pequeño bolsillo y te las entrega.")
+          }
+          else if (Posadero.ayuda = True) {
+            msg (Posadero.alias+": Te ayudaria si pudiera "+player.raz+player.ao+", pero no tengo nada que ofrecerte.")
+          }
+        }
+        else {
+          msg (Posadero.alias+": Buen dia "+player.raz+player.ao+", espero que mi posada sea del agrado de los de tu raza.")
+        }
+      </hablarledeturaza>
+      <ask type="scriptdictionary" />
+    </object>
+  </object>
+  <object name="creación de personaje">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <objectslistprefix>Puedes ver</objectslistprefix>
+    <descprefix>Estás en</descprefix>
+    <description type="string"></description>
+    <dark type="boolean">false</dark>
+    <alias>creación de personaje</alias>
+    <exitslistprefix>Puedes</exitslistprefix>
+    <attr name="grid_borderwidth" type="int">0</attr>
+    <attr name="grid_fill">YellowGreen</attr>
+    <attr name="grid_width" type="int">3</attr>
+    <attr name="grid_length" type="int">2</attr>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <take type="boolean">false</take>
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>dinero</key>
+          <value>Tienes ! monedas.</value>
+        </item>
+        <item>
+          <key>salud</key>
+          <value>Tienes ! puntos de salud.</value>
+        </item>
+        <item>
+          <key>magia</key>
+          <value>Tienes ! puntos de magia.</value>
+        </item>
+      </statusattributes>
+      <dinero type="int">10</dinero>
+      <salud type="int">100</salud>
+      <magia type="int">100</magia>
+      <raz>human</raz>
+      <clase>guerrer</clase>
+      <sexo>hombre</sexo>
+      <ao>o</ao>
+      <numero>un</numero>
+      <maxsalud type="int">100</maxsalud>
+      <maxmagia type="int">100</maxmagia>
+    </object>
+    <exit alias="abajo" to="tu habitación">
+      <inherit name="downdirection" />
+      <visible type="boolean">false</visible>
+    </exit>
+  </object>
+  <verb>
+    <property>hablarledeturaza</property>
+    <pattern>hablarle de tu raza</pattern>
+    <defaultexpression>"You can't hablarle de tu raza " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

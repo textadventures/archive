@@ -1,0 +1,88 @@
+<!--Saved by Quest 5.5.5328.26617-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="bottombar">
+    <gameid>409d3e69-58e1-4c2e-bada-5dd26dd8e600</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <css><![CDATA[
+    
+        <style type="text/css">
+	      div#bar {
+	        width:100%;
+	        height:auto;
+	        background-color:#e0e0e0;
+	        padding: 2px;
+	        font-size:10pt;
+	      }
+          div#barLeftHolder {
+	        width:80%;
+	        text-align:left;
+	        height:auto;
+	        display:inline-block;
+	      }
+	      div#barRightHolder {
+	        width:20%;
+	        text-align:right;
+	        height:auto;
+	        display:inline-block;
+	      }
+          span.keyword {color:#000080; cursor:pointer;}
+		</style>
+    
+        ]]></css>
+    <bottompanel><![CDATA[
+      
+      <div><div id="bar"><div id="barLeftHolder"><span id="commandPane"></span></div><div id="barRightHolder"><span id="helpPane"></span></div></div><div style="font-size:12pt;"><br></div></div>
+	  
+        ]]></bottompanel>
+    <separator><![CDATA[<span>&nbsp;&nbsp;&nbsp;</span>]]></separator>
+    <start type="script">
+      request (Hide, "Command")
+      // Output the css. This needs to be done whenever the screen is cleared.
+	  OutputTextNoBr (game.css)
+	  // Create the bottom bar. This only needs to be done once.
+      createBottomBar
+      // Set the pane contents. This can be done dynamically if things change.
+	  setCommandPane
+	  setHelpPane
+    </start>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+  </object>
+  <command>
+    <pattern>about</pattern>
+    <script>
+      msg ("Not much to say. A simple demo...")
+    </script>
+  </command>
+  <function name="createBottomBar">
+    JS.eval ("$('#txtCommandDiv').after('" + game.bottompanel + "')")
+  </function>
+  <function name="setCommandPane"><![CDATA[
+    s = "<span>&nbsp;</span>"
+    s = s + getClickableCommandLink("look", "l")
+    s = s + game.separator
+    s = s + getClickableCommandLink("inventory", "inv")
+    setHTML ("commandPane", s)
+  ]]></function>
+  <function name="setHelpPane"><![CDATA[
+    s = getClickableCommandLink("Help", "help")
+    s = s + game.separator
+    s = s + getClickableCommandLink("About", "about")
+    s = s + "<span>&nbsp;</span>"
+    setHTML ("helpPane", s)
+  ]]></function>
+  <function name="setHTML" parameters="id, html">
+    JS.eval ("$('#" + id + "').html('" + html + "')")
+  </function>
+  <function name="getClickableCommandLink" parameters="text, command" type="string"><![CDATA[
+    return ("<span class=\"keyword\" onclick=\"sendCommand(\\'" + command + "\\')\">" + text + "</span>")
+  ]]></function>
+</asl>

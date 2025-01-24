@@ -1,0 +1,304 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <object name="" />
+  <game name="Staircase">
+    <gameid>1621c141-4b70-47a6-a35e-b8175dcaa216</gameid>
+    <version>1.0</version>
+    <defaultbackground>Black</defaultbackground>
+    <defaultforeground>Red</defaultforeground>
+    <defaultlinkforeground>Red</defaultlinkforeground>
+    <menubackground>Red</menubackground>
+    <menuhoverbackground>DarkSlateGray</menuhoverbackground>
+    <menuhoverforeground>Red</menuhoverforeground>
+    <author>Sharpturn</author>
+    <category>Horror</category>
+    <start type="script"><![CDATA[
+      msg ("You wake up in a hallway, not knowing where you are.<br/><br/>Press a key...")
+      wait {
+        msg ("Unhh...")
+        SetTimeout (1) {
+          msg ("Oof...")
+          SetTimeout (3) {
+            msg ("Whaa...")
+            SetTimeout (3) {
+              msg ("...")
+              SetTimeout (7) {
+                msg ("Where am I?...")
+                SetTimeout (10) {
+                  ClearScreen
+                  MoveObject (player, start hall)
+                }
+              }
+            }
+          }
+        }
+      }
+    ]]></start>
+    <enablehyperlinks />
+  </game>
+  <object name="start hall">
+    <inherit name="editor_room" />
+    <description>This is the hall you woke up in. It is a large hall with doorways to the east and west. There is a large staircase in the front leading up, and large double doors to the south. The west doorway leads to a huge dining room. The east doorway leads to a large, dimly lit library. The staircase is to big to tell where it leads.</description>
+    <alias>hall</alias>
+    <object name="doors">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <scenery />
+      <look>Gigantic, opulent double doors. They seem to be locked.</look>
+    </object>
+    <object name="staircase">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt>stairs</alt>
+      <look type="script">
+        if (GetBoolean(staircase, "broken")) {
+          msg ("This is a grand staircase with a dusty red carpet and golden railings on each side. Part of the right railing where you almost fell has broken off and fallen to the floor below.")
+        }
+        else {
+          msg ("This is a grand staircase with a dusty red carpet and golden railings on each side. It appears to have not been used for many years.")
+        }
+      </look>
+    </object>
+    <object name="doorways">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <look>The doorways are made of what seems to be dark, hand-carved wood.</look>
+      <scenery />
+    </object>
+    <exit alias="west" to="dining room">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="east" to="library">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="up" to="ballroom">
+      <inherit name="updirection" />
+    </exit>
+    <object name="hall chandelier">
+      <inherit name="editor_object" />
+      <alias>chandelier</alias>
+      <look>A huge, crystal chandelier. It looks somewhat threatening when standing under it.</look>
+      <displayverbs>Look at</displayverbs>
+    </object>
+    <object name="hall lightswitch">
+      <inherit name="editor_object" />
+      <alias>lightswitch</alias>
+      <alt>switch</alt>
+      <look>A lightswitch. It probably controls the hall lights.</look>
+      <turnoff>You don't want to do that.</turnoff>
+      <turnon>It's already on.</turnon>
+      <displayverbs>Look at; Switch on; Switch off</displayverbs>
+    </object>
+    <object name="starthall_paintings">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <alias>paintings</alias>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>some</prefix>
+      <displayverbs>Look at</displayverbs>
+      <look>Some large, ominous-looking  paintings. They freak you out.</look>
+    </object>
+  </object>
+  <object name="start">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <descprefix type="string"></descprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <exitslistprefix type="string"></exitslistprefix>
+    <alias>..</alias>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <look>You can't look at yourself without a mirror.</look>
+      <gender>male</gender>
+      <scenery />
+      <amount_matches type="int">0</amount_matches>
+      <statusattributes type="stringdictionary">amount_candles = You have ! candles;amount_matches = You have ! matches</statusattributes>
+      <amount_candles type="int">0</amount_candles>
+    </object>
+  </object>
+  <object name="dining room">
+    <inherit name="editor_room" />
+    <description>A large dining room with a huge painting. The painting is staring right at you and makes you feel uneasy.</description>
+    <exit alias="east" to="start hall">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="painting">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>A creepy painting which seems like it's peering into your very soul.</look>
+      <displayverbs>Look at</displayverbs>
+    </object>
+    <object name="table">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <look>A huge dining table that's already set. It is dark wood with a white tablecloth.</look>
+      <contentsprefix>on which there are</contentsprefix>
+      <listchildren />
+      <listchildrenprefix>On it are</listchildrenprefix>
+      <hidechildren type="boolean">false</hidechildren>
+      <displayverbs>Look at</displayverbs>
+      <object name="tablecloth">
+        <inherit name="editor_object" />
+        <scenery />
+        <displayverbs>Look at</displayverbs>
+      </object>
+      <object name="plates">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <look>Many white plates set out on a table.</look>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix type="string"></prefix>
+        <displayverbs>Look at</displayverbs>
+      </object>
+      <object name="trays">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <inherit name="container_closed" />
+        <look>Food trays set along the table. The food inside (if there is any) is probably rotten, so I wouldn't open them.</look>
+        <openmsg>You open one of the trays. The sight, let alone the smell, of the rotten food inside makes you want to hurl. You close the tray.</openmsg>
+        <onopen type="script">
+          HelperCloseObject (trays)
+        </onopen>
+        <displayverbs>Look at; Open; Close</displayverbs>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+      </object>
+      <object name="silverware">
+        <inherit name="editor_object" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix type="string"></prefix>
+        <look>Silverware set out on a table. It appears to be matching and extremely extravagant.</look>
+        <displayverbs>Look at</displayverbs>
+      </object>
+    </object>
+    <object name="diningroom_candles">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <take />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>some</prefix>
+      <look>Some old candles. The wick looks useable.</look>
+      <alias>candles</alias>
+    </object>
+  </object>
+  <object name="library">
+    <inherit name="editor_room" />
+    <description>A beatiful candle-lit library.</description>
+    <exit alias="west" to="start hall">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="bookshelf">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <look>This bookshelf is full of books.</look>
+      <contentsprefix>which is stuffed with</contentsprefix>
+      <displayverbs>Look at</displayverbs>
+      <object name="books">
+        <inherit name="editor_object" />
+        <take />
+        <takemsg> </takemsg>
+        <ontake type="script">
+          MoveObject (books, bookshelf)
+          if (GetBoolean(bookshelf, "turned")) {
+            msg ("You already turned the bookshelf.")
+          }
+          else {
+            create exit ("Bookshelf Secret Passageway", "east", library, secret passageway1, "eastdirection")
+            msg ("You try to pull out a book, but it only slides out partway. You hear a shudder and the bookshelf turns to reveal a secret passageway.")
+            SetObjectFlagOn (bookshelf, "turned")
+          }
+        </ontake>
+        <alt>book</alt>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+      </object>
+    </object>
+    <object name="library_candles">
+      <inherit name="editor_object" />
+      <alias>candles</alias>
+      <scenery />
+      <look>Burning candles lighting the room. They are stuck in candle holders and cannot be removed.</look>
+    </object>
+    <object name="library candle holders">
+      <inherit name="editor_object" />
+      <look>Golden candle holders holding the candles in place.</look>
+      <alias>candle holders</alias>
+    </object>
+  </object>
+  <object name="ballroom">
+    <inherit name="editor_room" />
+    <beforefirstenter type="script"><![CDATA[
+      msg ("You slowly climb up the dusty staircase, using the handrail for suspension, when...<br/><br/>Press a key...")
+      pressed = 0
+      wait {
+        msg ("QUICK, PRESS A KEY!")
+        wait {
+          pressed = 1
+        }
+        SetTimeout (2) {
+          if (pressed = 1) {
+            msg ("The handrail breaks off and falls to the floor twenty feet below. You almost go with it, but catch yourself on the stairs and barely save yourself. That was a close one.<br/><br/>Press a key to continue...<br/>(Don't worry, no more surprises. For now, HAHAHAHAHAHAHAHAAAAA!!!!!)")
+            wait {
+            }
+          }
+          else {
+            msg ("The handrail breaks off and falls to the floor twenty feet below. You follow shortly after, and are impaled on the railing supports as you near the ground below. The last thing you see is a painting of a very wealthy-looking man, grinning down on you evilly.<br/><br/>You are dead.<br/><br/>Game Over.")
+            finish
+          }
+        }
+      }
+      SetObjectFlagOn (staircase, "broken")
+    ]]></beforefirstenter>
+    <description>A large wood-floor ballroom with a chandelier in the center.</description>
+    <exit alias="down" to="start hall">
+      <inherit name="downdirection" />
+    </exit>
+    <object name="ballroom_woodfloor">
+      <inherit name="editor_object" />
+      <look>Light, wood-grain planks make up the ballroom floor. You wish you had a floor this nice.</look>
+      <alias>wood floor</alias>
+      <scenery />
+    </object>
+    <object name="balroom_chandelier">
+      <inherit name="editor_object" />
+      <alias>chandelier</alias>
+      <scenery />
+      <look>A large, beatiful chandelier. It reminds you of the one in the hall.</look>
+    </object>
+  </object>
+  <command name="say">
+    <pattern>say #text#</pattern>
+    <script>
+      msg (text)
+    </script>
+  </command>
+  <verb>
+    <property>switchofflightswitch</property>
+    <pattern>switch off lightswitch</pattern>
+    <defaultexpression>"You can't switch off lightswitch " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>switchonlightswitch</property>
+    <pattern>switch on lightswitch</pattern>
+    <defaultexpression>"You can't switch on lightswitch " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="secret passageway1">
+    <inherit name="editor_room" />
+    <alias>secret passageway</alias>
+    <description type="script">
+      if (Got(lit candle)) {
+        msg ("This is a stone passageway. The only thing lighting it is the candle you are carrying.")
+      }
+      else {
+        msg ("A stone passageway. Its too dark to see in here. You decide to go back to the library.")
+        MoveObject (player, library)
+      }
+    </description>
+    <exit alias="west" to="library">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="lit candle">
+    <inherit name="editor_object" />
+  </object>
+</asl>

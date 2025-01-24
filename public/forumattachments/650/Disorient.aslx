@@ -1,0 +1,133 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Disorient">
+    <gameid>62af9301-c856-4b76-922c-3df642484692</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+  </game>
+  <object name="room1">
+    <inherit name="editor_room" />
+    <inherit name="BaseRoom" />
+    <!-- south exit (dir 2) landing in eastern direction (dir 1) in room 2-->
+    <exit2 type="object">room2</exit2>
+    <exitdir2 type="int">1</exitdir2>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <dir type="int">2</dir>
+    </object>
+  </object>
+
+  <object name="room2">
+    <inherit name="editor_room" />
+    <inherit name="BaseRoom" />
+    <!-- north exit (dir 0) landing in eastern direction (dir 1) in room 3-->
+    <exit0 type="object">room3</exit0>
+    <exitdir0 type="int">1</exitdir0>
+    <!-- east exit (dir 1) landing in northern direction (dir 0) in room 2-->
+    <exit1 type="object">room2</exit1>
+    <exitdir1 type="int">0</exitdir1>
+    <!-- south exit (dir 2) landing in western direction (dir 3) in room 2-->
+    <exit2 type="object">room2</exit2>
+    <exitdir2 type="int">3</exitdir2>
+    <!-- west exit (dir 3) landing in northern direction (dir 0) in room 1-->
+    <exit3 type="object">room1</exit3>
+    <exitdir3 type="int">0</exitdir3>
+  </object> 
+
+  <object name="room3">
+    <inherit name="editor_room" />
+    <inherit name="BaseRoom" />
+    <!-- west exit (dir 3) landing in southern direction (dir 2) in room 2-->
+    <exit3 type="object">room2</exit3>
+    <exitdir3 type="int">2</exitdir3>
+  </object>
+
+  <command name="forward">
+    <pattern>forward</pattern>
+    <script>
+      ChangeRoom(game.pov.dir)
+    </script>
+  </command>
+  <command name="back">
+    <pattern>back</pattern>
+    <script>
+      ChangeRoom((game.pov.dir+2)%4)
+    </script>
+  </command>
+  <command name="left">
+    <pattern>left</pattern>
+    <script>
+      ChangeRoom((game.pov.dir+3)%4)
+    </script>
+  </command>
+  <command name="right">
+    <pattern>right</pattern>
+    <script>
+      ChangeRoom((game.pov.dir+1)%4)
+    </script>
+  </command>
+  
+  <function name="ChangeRoom" parameters="dir">
+	room = game.pov.parent
+	if (HasAttribute(room, "exit" +  dir)) {
+	  newroom = GetAttribute(room, "exit" + dir)
+	  // Set new player direction.
+	  game.pov.dir = GetInt(room, "exitdir" + dir)
+	  msg("Debug: move to room " + newroom.name + ", facing dir " + game.pov.dir)
+	  if (newroom = room) {
+	    // Same room. Force room description dump, etc
+	    OnEnterRoom(room)
+	  } else {
+	    // New room. Just move.
+	    game.pov.parent = newroom
+	  }
+	} else {
+	  msg("You can't go that way.")
+	}
+  </function>
+  
+<function name="HasExit" parameters="dir" type="boolean">
+  dir = (game.pov.dir + dir) % 4
+  return (HasAttribute(game.pov.parent, "exit"+dir))
+</function>
+
+  <type name="BaseRoom">
+  	<description type="script">
+  	<![CDATA[
+		// Then in your description code.
+		exitlist = NewList()
+		if (HasExit(0)) {
+		  list add(exitlist, "forward")
+		}
+		if (HasExit(1)) {
+		  list add(exitlist, "right")
+		}
+		if (HasExit(2)) {
+		  list add(exitlist, "back")
+		}
+		if (HasExit(3)) {
+		  list add(exitlist, "left")
+		}
+		// Then generate the string from it
+		// Stolen from the Quest core's FormatExitList function
+		s = "You can go "
+		count = 0
+		length = ListCount(exitlist)
+		foreach (exit, exitlist) {
+		  s = s + exit
+		  count = count + 1
+		  if (count = length-1) {
+		    s = s + " or "
+		  } else if (count < length) {
+		     s = s + ", "
+		 }
+		}
+		s = s + "."
+		msg(s)
+		]]>
+  	</description>
+  </type>
+</asl>

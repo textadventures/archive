@@ -1,0 +1,153 @@
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Stack Test">
+    <gameid>a9bfdc45-5714-4f08-a962-4de554d5123c</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <showhealth />
+    <object name="potion_container">
+      <inherit name="editor_object" />
+      <visible />
+      <scenery />
+      <take type="boolean">false</take>
+      <usedefaultprefix />
+      <alias>potion</alias>
+      <originalalias>potion</originalalias>
+      <drink1 type="string"></drink1>
+      <drop type="script">
+        unstack (this)
+        msg ("You drop it.")
+      </drop>
+      <use type="boolean">false</use>
+      <drink type="string"></drink>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Drink</value>
+        <value>Drop</value>
+      </inventoryverbs>
+    </object>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="potion1">
+      <inherit name="editor_object" />
+      <take />
+      <alias>potion1</alias>
+      <drop type="boolean">false</drop>
+      <ontake type="script">
+        stack (potion_container, this)
+      </ontake>
+      <displayverbs type="stringlist">
+        <value>Take</value>
+      </displayverbs>
+    </object>
+    <object name="potion2">
+      <inherit name="editor_object" />
+      <take />
+      <alias>potion2</alias>
+      <drop type="boolean">false</drop>
+      <ontake type="script">
+        stack (potion_container, this)
+      </ontake>
+      <displayverbs type="stringlist">
+        <value>Take</value>
+      </displayverbs>
+    </object>
+    <object name="potion3">
+      <inherit name="editor_object" />
+      <take />
+      <alias>potion3</alias>
+      <drop type="boolean">false</drop>
+      <ontake type="script">
+        stack (potion_container, this)
+      </ontake>
+      <displayverbs type="stringlist">
+        <value>Take</value>
+      </displayverbs>
+    </object>
+    <object name="banana peel">
+      <inherit name="editor_object" />
+      <drop type="boolean">false</drop>
+      <use type="script">
+        msg ("You trip over the banana peel and lose 25% health.")
+        player.health = player.health - 25
+      </use>
+      <displayverbs type="stringlist">
+        <value>Use</value>
+      </displayverbs>
+    </object>
+  </object>
+  <command name="Drink">
+    <pattern>drink #object#</pattern>
+    <unresolved>You can't drink that.</unresolved>
+    <script><![CDATA[
+      if (object = potion_container) {
+        if (player.health < 100) {
+          use_container (object)
+          player.health = player.health + 20
+          msg ("You drink a potion, adding 20% to your health.")
+        }
+        else {
+          msg ("You already have 100% health. Try using the banana peel.")
+        }
+      }
+    ]]></script>
+  </command>
+  <function name="stack" parameters="container, this"><![CDATA[
+    if (container.alias = null) {
+      container.alias = container.name)
+    }
+    if (container.originalalias = null) {
+      container.originalalias = container.alias
+    }
+    if (container.stacked = null) {
+      container.stacked = NewObjectDictionary()
+    }
+    MoveObject (this, container)
+    dictionary add (container.stacked, DictionaryCount(container.stacked) + 1 + "", this)
+    container.stacked_count = DictionaryCount(container.stacked)
+    if (DictionaryCount(container.stacked) = 1) {
+      MoveObject (container, player)
+    }
+    else if (DictionaryCount(container.stacked) > 1) {
+      container.alias = container.originalalias + "s: " + DictionaryCount(container.stacked)
+    }
+  ]]></function>
+  <function name="unstack" parameters="container"><![CDATA[
+    if (container.stacked_count > 0) {
+      MoveObject (DictionaryItem(container.stacked, container.stacked_count + ""), player.parent)
+      dictionary remove (container.stacked, container.stacked_count + "")
+      container.stacked_count = container.stacked_count - 1
+    }
+    if (DictionaryCount(container.stacked) < 2) {
+      container.alias = container.originalalias
+      if (DictionaryCount(container.stacked) = 0) {
+        MoveObject (container, game)
+      }
+    }
+    else if (DictionaryCount(container.stacked) > 1) {
+      container.alias = container.originalalias + "s: " + DictionaryCount(container.stacked)
+    }
+  ]]></function>
+  <function name="use_container" parameters="container"><![CDATA[
+    dictionary remove (container.stacked, container.stacked_count + "")
+    container.stacked_count = container.stacked_count - 1
+    if (DictionaryCount(container.stacked) < 2) {
+      container.alias = container.originalalias
+      if (DictionaryCount(container.stacked) = 0) {
+        MoveObject (container, game)
+      }
+    }
+    else if (DictionaryCount(container.stacked) > 1) {
+      container.alias = container.originalalias + "s: " + DictionaryCount(container.stacked)
+    }
+  ]]></function>
+</asl>

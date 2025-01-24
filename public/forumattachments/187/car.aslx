@@ -1,0 +1,96 @@
+<!--Saved by Quest 5.1.4393.23459-->
+<asl version="510">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="car">
+    <gameid>bb202f0f-5e4f-4a67-9493-6f6d6822f278</gameid>
+    <version>1.0</version>
+    <description type="string"></description>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <alias>house</alias>
+    <description>use 'enter car' and 'exit car'</description>
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+    <exit alias="south" to="room2">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="room2">
+    <inherit name="editor_room" />
+    <alias>street</alias>
+    <object name="o_car">
+      <inherit name="editor_object" />
+      <alias>car</alias>
+      <enter type="script">
+        MoveObject (player, car1)
+      </enter>
+    </object>
+    <exit alias="north" to="room">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>enter</property>
+    <pattern>enter</pattern>
+    <defaultexpression>"You can't enter " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="car1">
+    <inherit name="editor_room" />
+    <description>You are sitting in your car. This is the Elm street.</description>
+    <alias>car</alias>
+    <exit alias="west" to="car2">
+      <inherit name="westdirection" />
+    </exit>
+    <command>
+      <pattern>exit car</pattern>
+      <script>
+        MoveObject (player, room2)
+      </script>
+    </command>
+  </object>
+  <object name="car2">
+    <inherit name="editor_room" />
+    <description>Watching out of your car you noticed that you are now passing the Hoverstreet.</description>
+    <alias>car</alias>
+    <exit alias="east" to="car1">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="west" to="car3">
+      <inherit name="westdirection" />
+    </exit>
+    <command>
+      <pattern>exit car</pattern>
+      <script>
+        msg ("You dont want to get out here.")
+      </script>
+    </command>
+  </object>
+  <object name="car3">
+    <inherit name="editor_room" />
+    <description>Your car is driving down the Mainstreet.</description>
+    <alias>car</alias>
+    <exit alias="east" to="car2">
+      <inherit name="eastdirection" />
+    </exit>
+    <command>
+      <pattern>exit car</pattern>
+      <script>
+        MoveObject (player, room3)
+      </script>
+    </command>
+  </object>
+  <object name="room3">
+    <inherit name="editor_room" />
+    <description>You are standing in front of a wonderful house</description>
+    <object name="o_car2">
+      <inherit name="editor_object" />
+      <alias>car</alias>
+      <enter type="script">
+        MoveObject (player, car3)
+      </enter>
+    </object>
+  </object>
+</asl>

@@ -1,0 +1,224 @@
+﻿<library>
+  <function name="ShowRoomDescription">
+    <![CDATA[
+    if (HasScript(player.parent, "description")) {
+      do (player.parent, "description")
+    }
+    else {
+		SetFontSize (10)
+		msg("<b>"+ GetDisplayAlias(player.parent) +"</b>")
+		SetFontSize (9)
+
+      if (game.autodescription) {
+
+        desc = FormatObjectList(player.parent.objectslistprefix, GetNonTransparentParent(player.parent), Template("And"), ".", false)
+        exits = FormatExitList(player.parent.exitslistprefix, ScopeExits(), Template("Or"), ".")
+        fulldesc = ""
+        if (LengthOf(desc) > 0) {
+          fulldesc = desc
+          if (LengthOf(exits) > 0) {
+            fulldesc = fulldesc + "<br />"
+          }
+        }
+        if (LengthOf(exits) > 0) {
+          fulldesc = fulldesc + exits
+        }
+        if (LengthOf(fulldesc) > 0) {
+          msg (fulldesc)
+        }
+      }
+      
+	    fulldesc = ""
+      if (HasString(player.parent, "description")) {
+        if (LengthOf(player.parent.description) > 0) {
+           fulldesc = player.parent.description
+        }
+      }
+      
+  	  if (game.appendobjectdescription) {
+	  	  foreach (val, ScopeVisibleNotHeld()) {
+		    	if (HasString(val, "description")) {
+				    if (LengthOf(val.description) > 0 and val <> player) {
+					    fulldesc = fulldesc + " " + val.description
+				    }
+			    }
+		    }
+	    }
+	   
+	    if (LengthOf(fulldesc) > 0) {
+        msg (fulldesc)
+      }	  
+    }
+    ]]>
+  </function>
+
+  <function name="OnEnterRoom">
+    game.displayroomdescriptiononstart = false
+    if ((not GetBoolean(player.parent, "visited")) and HasScript(player.parent, "beforefirstenter")) {
+      do (player.parent, "beforefirstenter")
+    }
+    request (UpdateLocation, CapFirst(GetDisplayName(player.parent)))
+    if (game.useframe) {
+      roomFrameExists = false
+      if (HasString(player.parent, "picture")) {
+        if (LengthOf(player.parent.picture) > 0) {
+          roomFrameExists = true
+          SetFramePicture(player.parent.picture)
+        }
+      }
+      if (game.clearframe and not roomFrameExists) {
+        ClearFramePicture
+      }
+    }
+    if (game.showdescriptiononenter) {
+      ShowRoomDescription
+    }
+    if ((not GetBoolean(player.parent, "visited")) and HasScript(player.parent, "firstenter")) {
+      do (player.parent, "firstenter")
+    }
+    set (player.parent, "visited", true)
+    if (HasScript(player.parent, "enter")) {
+      do (player.parent, "enter")
+    }
+  </function>
+
+  <function name="FormatObjectList" type="string" parameters="preList, parent, preFinal, postList, useinventoryverbs">
+    <![CDATA[
+    result = ""
+    count = 0
+    list = RemoveSceneryObjects(GetDirectChildren(parent))
+    listLength = ListCount(list)
+    foreach (item, list) {
+      if (LengthOf(result) = 0) result = preList + " "
+      if (useinventoryverbs) {
+        verbs = item.inventoryverbs
+      }
+      else {
+        verbs = item.displayverbs
+      }
+      result = result + GetDisplayNameLink(item, "object", verbs)
+      if (CanSeeThrough(item)) {
+        result = result + FormatObjectList(" (" + item.contentsprefix, item, preFinal, ")", useinventoryverbs)
+      }
+      count = count + 1
+      if (count = listLength - 1) {
+        result = result + " " + preFinal + " "
+      }
+      else if (count < listLength) {
+        result = result + ", "
+      }
+      else {
+        result = result + postList
+      }
+    }
+    return (result)
+  ]]>
+  </function>
+
+  <function name="GetDirectChildren" type="objectlist" parameters="parent">
+    <![CDATA[
+    result = NewObjectList()
+    foreach (obj, AllObjects()) {
+      if (obj.parent = parent and obj <> player) {
+        list add (result, obj)
+      }
+    }
+    return (result)
+    ]]>
+  </function>
+
+  <function name="RemoveSceneryObjects" type="objectlist" parameters="list">
+    result = NewObjectList()
+    foreach (obj, list) {
+      if (not obj.scenery) {
+        list add (result, obj)
+      }
+    }
+    return (result)
+  </function>
+  
+  <function name="FormatExitList" type="string" parameters="preList, list, preFinal, postList">
+    <![CDATA[
+    result = ""
+    count = 0
+    listLength = ListCount(list)
+    foreach (item, list) {
+      if (LengthOf(result) = 0) result = preList + " "
+      result = result + GetDisplayNameLink(item, "exit", item.displayverbs)
+      count = count + 1
+      if (count = listLength - 1) {
+        result = result + " " + preFinal + " "
+      }
+      else if (count < listLength) {
+        result = result + ", "
+      }
+      else {
+        result = result + postList
+      }
+    }
+    return (result)
+  ]]>
+  </function>
+
+  <function name="GetDisplayAlias" type="string" parameters="obj">
+    <![CDATA[
+    if (HasString(obj, "alias")) {
+      result = obj.alias
+    }
+    else {
+      result = obj.name
+    }
+    return (result)
+  ]]>
+  </function>
+
+  <function name="GetDisplayName" type="string" parameters="obj">
+    return (GetDisplayNameLink(obj, "", null))
+  </function>
+
+  <function name="GetDisplayNameLink" type="string" parameters="obj, type, verbs">
+  <![CDATA[
+    result = GetTaggedName(obj, type, verbs)
+    if (not GetBoolean(obj, "usedefaultprefix")) {
+      if (obj.prefix = null) {
+        prefix = ""
+      }
+      else {
+        prefix = obj.prefix
+      }
+    }
+    else if (type = "exit") {
+      prefix = ""
+    }
+    else {
+      prefix = GetDefaultPrefix(obj)
+    }
+    if (LengthOf(prefix)>0) prefix = prefix + " "
+    result = prefix + result
+    if (not GetBoolean(obj, "usedefaultprefix") and HasString(obj, "suffix")) {
+      result = result + " " + obj.suffix
+    }
+    return (result)
+  ]]>
+  </function>
+
+  <function name="GetTaggedName" type="string" parameters="obj, type, verbs">
+    <![CDATA[
+    alias = GetDisplayAlias(obj)
+    if (not game.enablehyperlinks) {
+      tag = ""
+    }
+    if (not type = "") {
+      result = "<object"
+      if (verbs <> null) {
+        result = result + " verbs='" + Join(verbs, "/") + "'"
+      }
+      result = result + ">" + alias + "</object>"
+    }
+    else {
+      result = alias
+    }
+    return (result)
+  ]]>
+  </function>
+</library>

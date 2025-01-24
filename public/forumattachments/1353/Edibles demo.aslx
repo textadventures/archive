@@ -1,0 +1,86 @@
+<!--Saved by Quest 5.6.5621.18142-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Edibles">
+    <gameid>47cb11c8-99e8-4996-808b-3fec377b023e</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+  </game>
+  <object name="edibles room">
+    <inherit name="editor_room" />
+    <description type="script">
+    </description>
+    <object name="Watermelon">
+      <inherit name="editor_object" />
+      <look>It's a big, green, seedless watermelon!  Eat up!</look>
+      <take />
+      <takemsg>It's heavy, but you take it.  Now eat it!</takemsg>
+      <eat type="script">
+        msg ("You annihilate that watermelon like Gallagher at a comedy show.  Watermelon eaten!")
+        RemoveObject (Watermelon)
+      </eat>
+    </object>
+    <object name="Magoo">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <inherit name="namedmale" />
+      <attr name="pov_look">You're Magoo.  A simple being trapped in a test game.</attr>
+      <look type="script">
+        if (game.pov = Xanadu) {
+          msg ("Holy moly!  That looks exactly like you!  To take control of Magoo, just type 'switch to Magoo'.")
+        }
+        else {
+          msg ("You are a simple being trapped in a test game.")
+        }
+      </look>
+    </object>
+    <object name="apple tree">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <takemsg>You can't take the entire tree!</takemsg>
+      <feature_container />
+      <hidechildren />
+      <listchildren />
+      <look type="script">
+        if (Contains (apple tree,apple1)) {
+          msg ("It's a very healthy looking apple tree, but oddly enough it only contains one apple!  It is within reach so you could pick it if you wish.")
+          MakeObjectVisible (apple1)
+        }
+        else {
+          msg ("It's a very healthy looking apple tree, but oddly enough it does not contain any apples!")
+        }
+      </look>
+      <object name="apple1">
+        <inherit name="editor_object" />
+        <alias>apple</alias>
+        <visible type="boolean">false</visible>
+        <scenery type="boolean">false</scenery>
+        <look type="script">
+          if (GetBoolean(apple1, "picked")) {
+            msg ("It's a lovely looking apple.  You should eat it!")
+          }
+          else {
+            msg ("It's a lovely looking apple.  You should pick it from the tree if you want it!")
+          }
+        </look>
+        <pick type="script">
+          msg ("You stand on your tippy toes and snatch the apple from the tree.")
+          AddToInventory (apple1)
+        </pick>
+        <eat type="script"><![CDATA[
+          if (Got(apple1)) {
+            msg ("You scarf the apple down in one giant bite.  Tasty!<br/><br/>You hear an odd sound like one you have never heard before - something on the apple tree catches your eye.")
+            MoveObject (apple1, apple tree)
+            MakeObjectInvisible (apple1)
+          }
+        ]]></eat>
+      </object>
+    </object>
+  </object>
+  <verb>
+    <property>pick</property>
+    <pattern>pick</pattern>
+    <defaultexpression>"You can't pick " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

@@ -1,0 +1,232 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Testing Game Stuff">
+    <gameid>d83ba5bb-2e3c-4f31-80c9-3e88a2dc082c</gameid>
+    <version>1.0</version>
+    <gridmap />
+    <mapscale type="int">5</mapscale>
+    <mapsize type="int">250</mapsize>
+    <start type="script">
+    </start>
+  </game>
+  <command name="fight_command">
+    <pattern>attack #object#</pattern>
+    <script>
+      fight_function (game.pov, object)
+    </script>
+  </command>
+  <object name="West Gates">
+    <inherit name="editor_room" />
+    <attr name="grid_width" type="int">3</attr>
+    <attr name="grid_fill">SlateGray</attr>
+    <enter type="script">
+      play sound ("The Legend Of Zelda Link's Awakening Music_ Mt. Tamaranch.mp3", false, true)
+    </enter>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <inherit name="character" />
+      <damage type="double">2.0</damage>
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>current_hearts</key>
+          <value>Hearts: !</value>
+        </item>
+        <item>
+          <key>damage</key>
+          <value>Attack: !</value>
+        </item>
+      </statusattributes>
+      <attr name="current_hearts" type="double">4.0</attr>
+      <money type="double">5.0</money>
+      <dodge type="double">5.0</dodge>
+    </object>
+    <exit alias="west" to="west pass1">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="West Overworld">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>Location:(</prefix>
+    <suffix>)</suffix>
+    <attr name="grid_width" type="int">1</attr>
+    <attr name="grid_length" type="int">1</attr>
+    <attr name="grid_fill">MediumSpringGreen</attr>
+    <object name="west pass1">
+      <inherit name="editor_room" />
+      <attr name="grid_width" type="int">5</attr>
+      <attr name="grid_length" type="int">5</attr>
+      <attr name="grid_fill">MediumSpringGreen</attr>
+      <exit alias="east" to="West Gates">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="west" to="west pass2">
+        <inherit name="westdirection" />
+      </exit>
+    </object>
+    <object name="west pass2">
+      <inherit name="editor_room" />
+      <attr name="grid_width" type="int">10</attr>
+      <attr name="grid_length" type="int">5</attr>
+      <attr name="grid_fill">MediumSpringGreen</attr>
+      <exit alias="east" to="west pass1">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="west" to="west pass3">
+        <inherit name="westdirection" />
+      </exit>
+    </object>
+    <object name="west pass3">
+      <inherit name="editor_room" />
+      <attr name="grid_width" type="int">5</attr>
+      <attr name="grid_length" type="int">5</attr>
+      <attr name="grid_fill">MediumSpringGreen</attr>
+      <exit alias="east" to="west pass2">
+        <inherit name="eastdirection" />
+      </exit>
+      <object name="Goblin">
+        <inherit name="editor_object" />
+        <inherit name="character" />
+        <alias>Goblin</alias>
+        <damage type="double">0.5</damage>
+        <attr name="current_hearts" type="double">2.0</attr>
+        <alt type="stringlist">
+          <value>monster</value>
+        </alt>
+        <open type="boolean">false</open>
+        <close type="boolean">false</close>
+        <isopen type="boolean">false</isopen>
+        <listchildren type="boolean">false</listchildren>
+        <hidechildren />
+        <dodge type="double">1.0</dodge>
+		<attr name="displayverbs" type="listextend">Attack</attr>
+      </object>
+      <object name="Rupee">
+        <inherit name="editor_object" />
+        <drop type="boolean">false</drop>
+        <take />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <visible />
+        <scenery />
+        <use type="boolean">false</use>
+        <listchildren type="boolean">false</listchildren>
+        <money type="double">1.0</money>
+      </object>
+    </object>
+  </object>
+  <type name="character">
+    <dead type="boolean">false</dead>
+    <damage type="double">0.0</damage>
+    <money type="double">0.0</money>
+    <attr name="current_hearts" type="double">0.0</attr>
+    <dodge type="double">0.0</dodge>
+  </type>
+  <type name="deathdrop">
+    <killed type="script">
+      if (monster.dead = false) {
+        MakeObjectInvisible (Rupee)
+      }
+      else if (monster.dead = true) {
+        MakeObjectVisible (Rupee)
+      }
+    </killed>
+  </type>
+  <function name="fight_function" parameters="self, monster"><![CDATA[
+    if (monster = null) {
+      foreach (obj, AllObjects()) {
+        if (obj.alias=monster) {
+          monster = obj
+        }
+        else {
+          msg ("There's no " + monster + "in the vicinity.")
+        }
+      }
+    }
+	if (monster = null) {
+	  msg ("There's no " + monster + "in the vicinity.")
+	}
+	else if (not Doesinherit (monster,"character")) {
+      msg ("You can not battle that!")
+    }
+    else if (monster.dead = true) {
+      msg (monster.alias + " is already dead.")
+    }
+    else {
+      show menu ("You enter combat with the nasty " + monster.alias +", what do you do?", split("Swing_Up;Swing_Down;Swing_Left;Swing_Right;Block",";"), false) {
+        switch (result) {
+          case ("Swing_Up") {
+            result = 1
+          }
+          case ("Swing_Down") {
+            result = 2
+          }
+          case ("Swing_Left") {
+            result = 3
+          }
+          case ("Swing_Right") {
+            result = 4
+          }
+          case ("Block") {
+            result = 5
+          }
+        }
+        value = GetRandomInt (1,5)
+        if (value = result) {
+          if (result=1) {
+            msg ("You Swing_Up and kill the " + monster.alias +"!")
+            monster.dead = true
+          }
+          else if (result=2) {
+            msg ("You Swing_Down and kill the " + monster.alias +"!")
+            monster.dead = true
+          }
+          else if (result=3) {
+            msg ("You Swing_Left and kill the " + monster.alias +"!")
+            monster.dead = true
+          }
+          else if (result=4) {
+            msg ("You Swing_Right and kill the " + monster.alias +"!")
+            monster.dead = true
+          }
+          else if (result=5) {
+            msg ("You Block the " + monster.alias + "'s attack!")
+            fight_function (self, monster)
+          }
+        }
+		else if (not value = result) {
+          if (result=5) {
+            msg ("You fail to block the " + monster.alias +"'s attack!")
+            self.current_hearts = self.current_hearts - monster.damage
+            msg ("The " + monster.alias + " hit you for " + monster.damage + " damage!")
+            if (self.current_hearts <= 0) {
+              msg (monster.alias + " has killed you.")
+              finish
+            }
+            else {
+              fight_function (self, monster)
+            }
+          }
+          else {
+            msg ("You miss with your attack!")
+            if (self.dodge > monster.dodge) {
+              msg ("You dodged the " + monster.alias + "'s attack.")
+            }
+            else if (self.dodge < monster.dodge) {
+              self.current_hearts = self.current_hearts - monster.damage
+              msg ("The " + monster.alias + " hit you for " + monster.damage + " damage!")
+            }
+            if (self.current_hearts <= 0) {
+              msg (monster.alias + " has killed you.")
+              finish
+            }
+            else {
+              fight_function (self, monster)
+			}
+          }
+        }
+      }
+    }
+  ]]></function>
+</asl>

@@ -1,0 +1,66 @@
+<!--Saved by Quest 5.4.4807.34548-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="FadeTest">
+    <gameid>b014cf8b-c644-4853-88ec-2fe5d8c4f251</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+  </game>
+  <object name="room">
+  	<cssstyle>
+  	<![CDATA[
+  		<style type='text/css'>
+  			span.TitleText { color:FONTCOLOR; font-size:36pt; font-weight:bold;}
+  		</style>
+  	]]>
+  	</cssstyle>
+  	<text>
+  	<![CDATA[<span class='TitleText'>My Game</span>]]>
+  	</text>
+    <inherit name="editor_room" />
+    <enter type="script">
+    <![CDATA[
+      ClearScreen
+      request (Hide, "Command")
+      msg (Replace(this.cssstyle, "FONTCOLOR", "#FFFFFF"))
+      msg(this.text)
+      // source
+      s_red = 255
+      s_green = 255
+      s_blue = 255
+      // end
+      e_red = 96
+      e_green = 32
+      e_blue = 32
+      // delta
+      d_red = e_red - s_red
+      d_green = e_green - s_green
+      d_blue = e_blue - s_blue
+      steps = 10
+      create("c")
+      for (i, 1, steps) {
+	    c.red = s_red + (d_red*i)/steps
+	    c.green = s_green + (d_green*i)/steps
+	    c.blue = s_blue + (d_blue*i)/steps
+	    msg (Replace(this.cssstyle, "FONTCOLOR", MakeColor(c)))
+        request (Pause, "100")
+      }
+      request (Show, "Command")
+    ]]>
+    </enter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+  </object>
+  <function name="MakeColor" parameters="c" type="string">
+    return ("#" + MakeHex2(c.red) + MakeHex2(c.green) + MakeHex2(c.blue))
+  </function>
+  <function name="MakeHex2" parameters="num" type="string">
+    return (MakeHexDigit(num/16) + MakeHexDigit(num%16))
+  </function>
+  <function name="MakeHexDigit" parameters="num" type="string">
+    return (Mid("0123456789ABCDEF", num+1, 1))
+  </function>
+</asl>

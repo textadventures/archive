@@ -1,0 +1,561 @@
+<!--Saved by Quest 5.6.5510.29036-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="WorldTemplate">
+    <gameid>c7bfa18f-86bf-4c59-808b-4ec8625fa8d9</gameid>
+    <version>1.0.29</version>
+    <firstpublished>2015</firstpublished>
+    <description>Game Engine Template</description>
+    <feature_limitinventory />
+    <feature_lightdark />
+    <feature_asktell />
+    <appendobjectdescription />
+    <author>Mark Taylor</author>
+    <attr name="autodescription_description" type="int">2</attr>
+    <attr name="autodescription_youcansee" type="int">3</attr>
+    <attr name="autodescription_youcango" type="int">4</attr>
+    <autodescription_description_newline />
+    <statusattributes type="stringdictionary">
+      <item>
+        <key>wt_clock_visibletime</key>
+        <value>Time (hours:minutes):   !</value>
+      </item>
+      <item>
+        <key>wt_clock_ticks</key>
+        <value>Elapsed Time (Total Minutes): !</value>
+      </item>
+    </statusattributes>
+    <attr name="wt_clock_ticks" type="double">0</attr>
+    <attr name="wt_clock_hour" type="int">0</attr>
+    <attr name="wt_clock_minute" type="int">0</attr>
+    <attr name="wt_clock_visibletime" type="string"></attr>
+    <pov type="object">player</pov>
+    <start type="script">
+      game.wt_clock_hour = 15
+      game.wt_clock_minute = 30
+      game.wt_clock_visibletime = game.wt_clock_hour + ":" + game.wt_clock_minute
+    </start>
+  </game>
+  <command name="put">
+    <pattern type="string"><![CDATA[^put (?<object1>.*) (on|in) (?<object2>.*)$]]></pattern>
+    <script>
+      // put object1 in/on object 2
+      if (object1.parent = object2) {
+        msg (DynamicTemplate("AlreadyThere", object1))
+      }
+      else if (not ListContains(ScopeInventory(), object1)) {
+        msg (DynamicTemplate("NotCarrying", object1))
+      }
+      else if (not ListContains(ScopeReachable(), object1)) {
+        msg (DynamicTemplate("ObjectNotOpen", GetBlockingObject(object1)))
+      }
+      else if (not ListContains(ScopeReachable(), object2)) {
+        msg (DynamicTemplate("ObjectNotOpen", GetBlockingObject(object2)))
+      }
+      else if (not object2.container) {
+        msg (Template("CannotDoThat"))
+      }
+      else if (not object2.isopen) {
+        msg (DynamicTemplate("ObjectNotOpen", object2))
+      }
+      else {
+        if (GetBoolean(object2, "hidechildren")) {
+          object2.hidechildren = false
+        }
+        if (HasDelegateImplementation(object2, "addscript")) {
+          rundelegate (object2, "addscript", object1)
+        }
+        else {
+          // Customization for handling world template (wt_) object types
+          if (object2.surface = "surface") {
+            preposition = "on"
+          }
+          else {
+            preposition = "in"
+          }
+          if ((HasAttribute(object1, "wt_")) and (HasAttribute(object2, "wt_"))) {
+            if ((object1.wt_fire_IsBurningYN=true) and (object2.wt_fire_IsBrazierYN=false)) {
+              DisableTimer (wt_timer_world)
+              Ask ("The " + object1.alias + " may flame out if you place it " + preposition + " the " + object2.alias + ".  Place the " + object1.alias + " there anyway?") {
+                if (result=true) {
+                  object1.lightsource = false
+                  object1.wt_fire_IsBurningYN = false
+                  object1.wt_fire_StartingTickCurrentBurn = 0
+                  object1.parent = object2
+                  msg (Template("Done"))
+                }
+                EnableTimer (wt_timer_world)
+              }
+            }
+            if ((object1.wt_fire_IsBurningYN=false) and (object2.wt_fire_IsBrazierYN=false)) {
+              object1.parent = object2
+              msg (Template("Done"))
+            }
+            if ((object1.wt_fire_IsBurningYN=true) and (object2.wt_fire_IsBrazierYN=true)) {
+              msg ("You put the burning " + object1.alias + " " + preposition + " the " + object2.alias + ".")
+              object1.parent = object2
+              msg (Template("Done"))
+            }
+          }
+          else {
+            object1.parent = object2
+            msg (Template("Done"))
+          }
+        }
+      }
+      // must be carrying object1
+      // object1 must not be inside a closed container
+      // object2 must not be inside a closed container
+      // object2 must be an open container or surface
+    </script>
+  </command>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+  </object>
+  <object name="testingCenter">
+    <inherit name="editor_room" />
+    <dark />
+    <alias>Testing Center</alias>
+    <darkroomdescription>The room is gloomy.</darkroomdescription>
+    <beforefirstenter type="script">
+      msg ("You have been moved to the testing center.")
+    </beforefirstenter>
+    <object name="test_nonwt">
+      <inherit name="editor_object" />
+      <alias>nonwt</alias>
+      <volume type="int">2</volume>
+      <take />
+    </object>
+    <exit alias="south" to="testingCenter2">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="test_rock">
+      <inherit name="editor_object" />
+      <inherit name="wt_object" />
+      <inherit name="surface" />
+      <alias>rock</alias>
+      <take />
+      <volume type="int">2</volume>
+      <feature_container />
+    </object>
+    <object name="test_table">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <inherit name="wt_object" />
+      <alias>table</alias>
+      <feature_container />
+      <listchildren />
+      <object name="test_candleholder">
+        <inherit name="editor_object" />
+        <inherit name="wt_object" />
+        <inherit name="container_open" />
+        <alias>candlestick</alias>
+        <take />
+        <wt_fire_IsBrazierYN />
+        <feature_container />
+      </object>
+    </object>
+    <object name="test_torch">
+      <inherit name="editor_object" />
+      <inherit name="wt_object" />
+      <wt_fire_IsBurnableYN />
+      <wt_fire_IsDousableYN />
+      <wt_fire_IsConsumableYN />
+      <attr name="wt_fire_DefaultMaxBurnTicks" type="int">100</attr>
+      <attr name="wt_fire_ExtinguishesOnDropYN" type="boolean">false</attr>
+      <alias>torch</alias>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>a wooden</prefix>
+      <take />
+      <feature_lightdark />
+      <lightsource type="boolean">false</lightsource>
+      <lightstrength>strong</lightstrength>
+    </object>
+  </object>
+  <command name="test">
+    <pattern>test</pattern>
+    <script>
+      MoveObject (player, testingCenter)
+      MoveObject (test_match, player)
+      MoveObject (test_candle, player)
+      MoveObject (test_backpack, player)
+    </script>
+  </command>
+  <command>
+    <pattern>light #object#; ignite #object#; burn #object#</pattern>
+    <unresolved>You see no such thing here.</unresolved>
+    <script><![CDATA[
+      if (HasAttribute(object, "wt_")) {
+        if (object.wt_fire_IsBurnableYN=true) {
+          if (object.wt_fire_IsSelfIgnitableYN=true) {
+            if (object.wt_fire_IsBurningYN=false) {
+              if (object.wt_fire_LimitedUsesYN=false or (object.wt_fire_LimitedUsesYN=true and object.wt_fire_UsesRemaining>0)) {
+                if (object.wt_fire_CurrentBurnTicks < object.wt_fire_DefaultMaxBurnTicks) {
+                  object.wt_fire_IsBurningYN = true
+                  object.feature_lightdark = true
+                  object.lightsource = true
+                  object.wt_fire_UsesRemaining = object.wt_fire_UsesRemaining - 1
+                  object.wt_fire_StartingTickCurrentBurn = game.wt_clock_ticks
+                  do (object, "wt_fire_EventOnIgnite")
+                }
+                else {
+                  msg ("The " + object.alias " has burned all it's going to.")
+                }
+              }
+              else {
+                msg ("It appears that the " + object.alias + " has exhausted its ability to ignite.")
+              }
+            }
+            else {
+              msg ("The " + object.alias + " is already burning.")
+            }
+          }
+          else {
+            msg ("The " + object.alias + " won't catch fire by itself. Trying lighting it with something else.")
+          }
+        }
+        else {
+          msg ("The " + object.alias + " doesn't seem capable of burning.")
+        }
+      }
+      else {
+        msg ("Against suspicions, you get the idea that the " + object.alias + " isn't going to burn.")
+      }
+    ]]></script>
+  </command>
+  <command>
+    <pattern>about</pattern>
+    <script>
+      msg (game.description)
+    </script>
+  </command>
+  <command>
+    <pattern>light #object# with #object1#</pattern>
+    <unresolved>You see no such thing here.</unresolved>
+    <script><![CDATA[
+      if (HasAttribute(object, "wt_")) {
+        if (object.wt_fire_IsBurnableYN = false) {
+          msg ("The " + object.alias + " doesn't burn when you put the " + object1.alias + " to it.")
+        }
+        if (object.wt_fire_IsBurnableYN = true) {
+          if (object.wt_fire_IsBurningYN= false) {
+            if (object.wt_fire_CurrentBurnTicks < object.wt_fire_DefaultMaxBurnTicks) {
+              if (HasAttribute(object1, "wt_")) {
+                if (object1.wt_fire_IsBurnableYN=true) {
+                  if (object1.wt_fire_IsBurningYN=true) {
+                    do (object, "wt_fire_EventOnIgnite")
+                    object.wt_fire_IsBurningYN = true
+                    object.feature_lightdark = true
+                    object.lightsource = true
+                    object.wt_fire_UsesRemaining = object.wt_fire_UsesRemaining - 1
+                    object.wt_fire_StartingTickCurrentBurn = game.wt_clock_ticks
+                  }
+                  else {
+                    msg ("The " + object1.alias + " isn't on fire.")
+                  }
+                }
+                else {
+                  msg ("Attempting to set anything on fire with the " + object1.alias + " probably isn't going to work.")
+                }
+              }
+              else {
+                msg ("The " + object1.alias + " doesn't seem to be capable of producing fire.")
+              }
+            }
+            else {
+              msg ("The " + object.alias + " has burned all it's going to.")
+            }
+          }
+          else {
+            msg ("The " + object.alias + " is already burning.")
+          }
+        }
+      }
+      else {
+        msg ("Nothing can set the " + object.alias + " on fire.")
+      }
+    ]]></script>
+  </command>
+  <object name="testingCenter2">
+    <inherit name="editor_room" />
+    <alias>Testing Center, South Room</alias>
+    <exit alias="north" to="testingCenter">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="warehouse">
+    <inherit name="editor_room" />
+    <object name="test_match">
+      <inherit name="editor_object" />
+      <inherit name="wt_object" />
+      <alias>match</alias>
+      <attr name="wt_fire_DefaultMaxBurnTicks" type="int">2</attr>
+      <wt_fire_LimitedUsesYN />
+      <attr name="wt_fire_UsesRemaining" type="int">1</attr>
+      <wt_fire_IsBurnableYN />
+      <wt_fire_IsConsumableYN />
+      <wt_fire_IsSelfIgnitableYN />
+      <wt_fire_IsDousableYN />
+      <feature_lightdark />
+      <lightsource type="boolean">false</lightsource>
+      <lightstrength>weak</lightstrength>
+      <take />
+      <volume type="int">1</volume>
+      <ondrop type="script">
+        do (this, "wt_fire_EventOnDrop")
+      </ondrop>
+    </object>
+    <object name="test_candle">
+      <inherit name="editor_object" />
+      <inherit name="wt_object" />
+      <alias>candle</alias>
+      <attr name="wt_fire_DefaultMaxBurnTicks" type="int">50</attr>
+      <wt_fire_IsBurnableYN />
+      <wt_fire_IsConsumableYN />
+      <wt_fire_IsDousableYN />
+      <feature_lightdark />
+      <lightstrength>strong</lightstrength>
+      <take />
+      <volume type="int">3</volume>
+      <attr name="feature_usegive" type="boolean">false</attr>
+    </object>
+    <object name="test_backpack">
+      <inherit name="editor_object" />
+      <inherit name="wt_object" />
+      <inherit name="container_open" />
+      <take />
+      <feature_container />
+      <volume type="int">10</volume>
+      <alias>backpack</alias>
+    </object>
+  </object>
+  <command>
+    <pattern>feel; feel around</pattern>
+    <script><![CDATA[
+      if (player.parent.dark=false) {
+        msg ("There's no reason to feel around, you are in a lit area and can see everything.")
+      }
+      if (player.parent.dark=true) {
+        if (ListCount(wt_VisibleExitsForRoom(player.parent))>0) {
+          msg ("You feel your way around in the dark and find a way out leading:")
+          foreach (item, wt_VisibleExitsForRoom(player.parent)) {
+            msg (item.alias)
+          }
+        }
+        else {
+          msg ("You're apparently trapped, as you find no way out.")
+        }
+      }
+    ]]></script>
+  </command>
+  <command>
+    <pattern>feel #text#</pattern>
+    <unresolved type="string"></unresolved>
+    <script>
+      foreach (item, wt_VisibleExitsForRoom(player.parent)) {
+        if (item.alias=text) {
+          if (player.parent.dark=false) {
+            msg ("The room isn't dark; you don't need to feel for things.")
+          }
+          else {
+            msg ("You make your way " + item.alias + ", feeling your way.")
+            MoveObject (player, item.to)
+            wt_addtoclock (0, 5)
+          }
+        }
+      }
+      if (text = player.alias) {
+        msg ("You feel just fine.")
+      }
+      foreach (item, ScopeInventory()) {
+        if (text = item.alias) {
+          do (item, "wt_misc_EventOnFeel")
+        }
+      }
+    </script>
+  </command>
+  <command>
+    <pattern>douse #object#; extinguish #object#</pattern>
+    <script>
+      if (HasAttribute(object, "wt_")) {
+        if (object.wt_fire_IsBurningYN = true) {
+          if (object.wt_fire_IsDousableYN = true) {
+            // We call the default wt_fire_EventOnDouse attribute script. What happens when an object gets doused can vary by object.
+            do (object, "wt_fire_EventOnDouse")
+          }
+          else {
+            msg ("The " + object.alias + " does not appear to be something you can douse.")
+          }
+        }
+        else {
+          msg ("The " + object.alias + " is not burning.")
+        }
+      }
+      else {
+        msg ("The " + object.alias + " does not appear to be something you can douse.")
+      }
+    </script>
+  </command>
+  <command>
+    <pattern>feel for #object#</pattern>
+    <unresolved>You don't seem to find it.</unresolved>
+    <script><![CDATA[
+      if (object.parent = player) {
+        do (object, "wt_misc_EventOnFeel")
+      }
+      if ((object.parent = player.parent) and (player.parent.dark=false) and (object <> player)) {
+        msg ("The " + object.alias + " is right in front of you.")
+      }
+      if ((object.parent = player.parent) and (player.parent.dark=true) ) {
+        msg ("You find " + object.prefix + " " + object.alias + ".")
+        Ask ("Pick up the "   + object.alias + "?") {
+          if (result=true) {
+            MoveObject (object, player)
+          }
+        }
+      }
+      msg (object.alias + " " + object.parent.alias)
+    ]]></script>
+  </command>
+  <type name="wt_object">
+    <attr name="wt_">This is a world template object.</attr>
+    <attr name="wt_fire_IsBurnableYN" type="boolean">false</attr>
+    <attr name="wt_fire_IsBurningYN" type="boolean">false</attr>
+    <attr name="wt_fire_IsConsumableYN" type="boolean">false</attr>
+    <attr name="wt_fire_IsSelfIgnitableYN" type="boolean">false</attr>
+    <attr name="wt_fire_IsDousableYN" type="boolean">false</attr>
+    <attr name="wt_fire_IsBrazierYN" type="boolean">false</attr>
+    <attr name="wt_fire_DefaultMaxBurnTicks" type="int">5</attr>
+    <attr name="wt_fire_CurrentBurnTicks" type="int">0</attr>
+    <attr name="wt_fire_LimitedUsesYN" type="boolean">false</attr>
+    <attr name="wt_fire_UsesRemaining" type="int">0</attr>
+    <attr name="wt_fire_StartingTickCurrentBurn" type="double">0</attr>
+    <attr name="wt_decal_burnmarks" type="string"></attr>
+    <wt_fire_ExtinguishesOnDropYN />
+    <attr name="wt_fire_EventOnIgnite" type="script">
+      msg ("The " + this.alias + " ignites, giving off a " + this.lightstrength + " light.")
+    </attr>
+    <attr name="wt_fire_EventOnDouse" type="script"><![CDATA[
+      msg ("You douse the " + this.alias + ".")
+      this.lightsource = false
+      this.wt_fire_IsBurningYN = false
+      // wt_fire_StartingTickCurrentBurn supports time compression, such as when a player instantly adds10 minutes to the clock by FEEL AROUND.
+      // In the function wt_maintenance_fire, we use the wt_fire_StartingTickCurrentBurn variable thusly:
+      // IF (item.wt_fire_CurrentBurnTicks > item.wt_fire_DefaultMaxBurnTicks) or (game.wt_clock_ticks - item.wt_fire_StartingTickCurrentBurn >  item.wt_fire_DefaultMaxBurnTicks) THEN
+      // Below, we reset the point at which we're tracking when the most recent burn for the object started.  Igniting it again using LIGHT or LIGHT [object] WITH [object1] sets it again.
+      this.wt_fire_StartingTickCurrentBurn = 0
+    ]]></attr>
+    <attr name="wt_fire_EventOnBurnout" type="script">
+      if (this.wt_fire_IsConsumableYN=true) {
+        msg ("The " + this.alias + " burns out completely, leaving nothing behind.")
+        RemoveObject (this)
+        this.lightsource = false
+      }
+      else {
+        msg ("The " + this.alias + " burns out.")
+        this.lightsource = false
+      }
+    </attr>
+    <attr name="wt_fire_EventOnDrop" type="script">
+      if (this.wt_fire_IsBurningYN=true) {
+        if (this.wt_fire_ExtinguishesOnDropYN=true) {
+          this.wt_fire_IsBurningYN = false
+          this.lightsource = false
+          msg ("The " + this.alias + " extinguishes.")
+        }
+        else {
+          msg ("You drop the " + this.alias + ", but it's still on fire.")
+        }
+      }
+    </attr>
+    <attr name="wt_fire_EventOnAcceptBurningObject" type="script">
+    </attr>
+    <attr name="wt_fire_EventOnBurningAnObject" type="script">
+    </attr>
+    <attr name="wt_misc_EventOnFeel" type="script">
+      msg ("The " + this.alias + " feels ordinary.")
+    </attr>
+    <ondrop type="script">
+      do (this, "wt_fire_EventOnDrop")
+    </ondrop>
+  </type>
+  <function name="wt_maintenance_fire"><![CDATA[
+    foreach (item, AllObjects()) {
+      if (HasAttribute(item, "wt_")) {
+        if (item.wt_fire_IsBurningYN = true) {
+          item.wt_fire_CurrentBurnTicks = item.wt_fire_CurrentBurnTicks + 1
+        }
+        if (item.wt_fire_IsBurningYN = true) {
+          // We test to see if the object has burned itself out for the maximum about of time it can burn.  If so, we call the object's wt_Fire_EventOnBurnout script.
+          // An object can burn out two ways: in normal time or compressed time.  In normal time, the user has done nothing while the object has been burning that would add extra time to the clock.
+          // For normal time, we perform the first calculation:    (item.wt_fire_CurrentBurnTicks > item.wt_fire_DefaultMaxBurnTicks)
+          // For compressed time, where the player has done something to add time to the clock, such as FEEL AROUND or FEEL [dir], we run the second calculation:  (game.wt_clock_ticks - item.wt_fire_StartingTickCurrentBurn >  item.wt_fire_DefaultMaxBurnTicks)
+          // If either test results in true, the object burns out.
+          if ((item.wt_fire_CurrentBurnTicks > item.wt_fire_DefaultMaxBurnTicks) or (game.wt_clock_ticks - item.wt_fire_StartingTickCurrentBurn >  item.wt_fire_DefaultMaxBurnTicks)) {
+            item.wt_fire_IsBurningYN = false
+            if (ListContains(ScopeVisible(), item)) {
+              do (item, "wt_fire_EventOnBurnout")
+            }
+          }
+        }
+      }
+    }
+  ]]></function>
+  <function name="wt_addtoclock" parameters="hours, minutes"><![CDATA[
+    if (minutes > 60) {
+      minutes = 59
+    }
+    if (hours > 23) {
+      hours = 23
+    }
+    game.wt_clock_minute = game.wt_clock_minute + minutes
+    game.wt_clock_hour = game.wt_clock_hour + hours
+    game.wt_clock_ticks = game.wt_clock_ticks + (hours * 6)
+    game.wt_clock_ticks = game.wt_clock_ticks + minutes
+    wt_updateclock
+  ]]></function>
+  <function name="wt_updateclock"><![CDATA[
+    game.wt_clock_ticks = game.wt_clock_ticks+1
+    game.wt_clock_minute = game.wt_clock_minute +1
+    if (game.wt_clock_minute > 59) {
+      game.wt_clock_minute = 0
+      game.wt_clock_hour = game.wt_clock_hour+1
+    }
+    if (game.wt_clock_hour > 24) {
+      game.wt_clock_hour = 0
+    }
+    game.wt_clock_visibletime = game.wt_clock_hour + ":" + game.wt_clock_minute
+  ]]></function>
+  <function name="wt_VisibleExitsForRoom" parameters="room" type="objectlist">
+    result = NewObjectList()
+    foreach (exit, AllExits()) {
+      if (exit.parent = room) {
+        if (exit.visible) {
+          list add (result, exit)
+        }
+      }
+    }
+    return (result)
+  </function>
+  <walkthrough name="test_light">
+    <steps type="simplestringlist">
+      test
+      light match
+      light candle with match
+      put candle in backpack
+    </steps>
+  </walkthrough>
+  <timer name="wt_timer_world">
+    <interval>10</interval>
+    <enabled />
+    <script>
+      wt_updateclock
+      wt_maintenance_fire
+    </script>
+  </timer>
+</asl>

@@ -1,0 +1,94 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Trial &amp; Error">
+    <gameid>2ab09222-862b-4931-93bb-60bd2e31992a</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <author type="string"></author>
+    <defaultfont>Georgia, serif</defaultfont>
+    <defaultlinkforeground>Teal</defaultlinkforeground>
+    <showscore type="boolean">false</showscore>
+    <start type="script"><![CDATA[
+      msg ("This isn't a game, it's just where I try things out.<br/>")
+    ]]></start>
+  </game>
+  <object name="bedroom">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="bed">
+      <inherit name="editor_object" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Look under</value>
+      </displayverbs>
+      <alias>bed</alias>
+      <look>Your bed.</look>
+      <listchildren />
+      <isopen type="boolean">false</isopen>
+      <hidechildren type="boolean">false</hidechildren>
+      <usedefaultprefix />
+      <listchildrenprefix>Under the bed is</listchildrenprefix>
+      <under type="script"><![CDATA[
+        HelperOpenObject (this)
+        if (ListCount(GetDirectChildren(this)) > 0) {
+          ListObjectContents (this)
+        }
+        else {
+          msg ("There's nothing else under there.")
+        }
+      ]]></under>
+      <object name="magazine">
+        <inherit name="editor_object" />
+        <look>The september issue of GamesMaster.</look>
+        <take />
+        <alias>magazine</alias>
+      </object>
+    </object>
+    <object name="dresser">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <alias>dresser</alias>
+      <isopen type="boolean">false</isopen>
+      <listchildren />
+      <look>Your dresser.</look>
+      <object name="book">
+        <inherit name="editor_object" />
+        <look>Green fingers by H. Ulkman</look>
+        <alias>book</alias>
+        <take />
+      </object>
+    </object>
+  </object>
+  <verb name="look under">
+    <pattern>look under #object#;l under #object#; look underneath #object#; l underneath #object#</pattern>
+    <defaulttext>There's nothing under that.</defaulttext>
+    <property>under</property>
+    <attr name="look under" type="script">
+      if (HasAttribute(object, "under")) {
+        do (object, "under")
+      }
+      else {
+        msg ("You look under the " + object.alias + " and find nothing.")
+      }
+    </attr>
+  </verb>
+  <command name="put under">
+    <pattern>put #object1# under #object2#</pattern>
+    <unresolved>You can't put that under there.</unresolved>
+    <script>
+      if (HasAttribute(object2, "under")) {
+        MoveObject (object1, object2)
+        msg ("You put " + object1.article + " under the " + object2.alias + ".")
+      }
+      else {
+        msg ("You can't put " + object1.article + " under there.")
+      }
+    </script>
+  </command>
+</asl>

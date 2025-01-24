@@ -1,0 +1,204 @@
+<!--Saved by Quest 5.1.4426.19610-->
+<asl version="510">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="">
+    <gameid>78d79d3a-734f-4d3e-ac2e-5060dbbcd302</gameid>
+    <version>1.0</version>
+    <description type="string"></description>
+    <author>Liam Graham</author>
+  </game>
+  <object name="bedroom">
+    <inherit name="editor_room" />
+    <description><![CDATA[You are lying on a <b>bed</b> in a dark, sparsely furnished room, wearing <b>dirty clothing</b>. The floor is covered with dirty clothes. There is table to your left and a <b>dresser</b> to your right<br/>On the table is a <b>wallet</b>, some <b>keys, </b>an <b>alarm clock</b> reading 9:40,<b> </b>a <b>note</b> and a <b>gun</b> <br/>There is a bathroom to the <b>south</b> and a living room to the <b>west</b>]]></description>
+    <usedefaultprefix />
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <look type="string"></look>
+      <object name="dirty clothing">
+        <inherit name="editor_object" />
+        <take type="boolean">false</take>
+        <alt>dirty clothes</alt>
+        <dropmsg>You are not wearing any clothes. Quickly some on before anybody sees you </dropmsg>
+      </object>
+    </object>
+    <object name="bed">
+      <inherit name="editor_object" />
+      <look>The bed is small and covered with soiled sheets</look>
+      <scenery />
+    </object>
+    <exit alias="south" to="bathroom">
+      <inherit name="southdirection" />
+      <locked type="boolean">false</locked>
+    </exit>
+    <exit alias="west" to="living room">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="dresser">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <openmsg>With great effort you open the dresser</openmsg>
+      <closemsg>You close the dresser</closemsg>
+      <onopen type="script">
+        if (not Contains (dresser,clean clothing)) {
+          msg ("The dresser is empty")
+        }
+        if (Contains (dresser,clean clothing)) {
+          msg ("You see some clean clothing on the shelf")
+        }
+      </onopen>
+      <contentsprefix>containing</contentsprefix>
+      <scenery />
+      <object name="clean clothing">
+        <inherit name="editor_object" />
+        <take type="script">
+          if (Got(dirty clothing)) {
+            msg ("You should take off your dirty clothes first")
+          }
+          if (not Got(dirty clothing)) {
+            msg ("You put on the clean clothing")
+            MoveObject (clean clothing, player)
+          }
+        </take>
+        <alt>clean clothes</alt>
+        <dropmsg>You are not wearing any clothes. Quickly put them back on before anybody sees you </dropmsg>
+      </object>
+    </object>
+    <object name="table">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <look type="string"></look>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <isopen type="boolean">false</isopen>
+      <usedefaultprefix />
+      <scenery />
+    </object>
+    <object name="wallet">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <isopen type="boolean">false</isopen>
+      <onopen type="script">
+        msg ("You see a credit card, license and medicare card")
+      </onopen>
+      <take />
+      <scenery />
+      <object name="credit card">
+        <inherit name="editor_object" />
+        <take />
+      </object>
+      <object name="license">
+        <inherit name="editor_object" />
+        <take />
+      </object>
+    </object>
+    <object name="keys">
+      <inherit name="editor_object" />
+      <take />
+      <scenery />
+    </object>
+    <object name="gun">
+      <inherit name="editor_object" />
+      <take />
+      <scenery />
+      <shoot type="script">
+        destroy ("guard")
+        destroy ("Bryce")
+      </shoot>
+    </object>
+    <object name="note">
+      <inherit name="editor_object" />
+      <take />
+      <scenery />
+      <read>Remember our deal. 10:00 out the back of the grocer</read>
+    </object>
+    <object name="alarm clock">
+      <inherit name="editor_object" />
+      <look>The alarm clock display reads 9:40. </look>
+      <scenery />
+    </object>
+  </object>
+  <object name="bathroom">
+    <inherit name="editor_room" />
+    <description><![CDATA[You are in a white, tiled bathroom, containing a <b>sink</b> and a <b>shower</b>. <br/>There is a <b>watch</b> on the sink. <br/>The bedroom is to the <b>north</b>]]></description>
+    <exit alias="north" to="bedroom">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="watch">
+      <inherit name="editor_object" />
+      <take />
+      <scenery />
+      <look>The watch is gold with a white face</look>
+    </object>
+    <object name="sink">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <switchonmsg>Brown water flows out of the tap. You try to turn it off but the tap breaks</switchonmsg>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <scenery />
+    </object>
+    <object name="shower">
+      <inherit name="editor_object" />
+      <take type="boolean">false</take>
+      <onswitchon type="script">
+        if (Got(clean clothing)) {
+          msg ("You should drop everything before you have a shower")
+        }
+        if (not Got(clean clothing)) {
+          msg ("You have a shower, washing away the dirt and grime")
+          create exit ("", "Front door", living room, parking lot, "")
+        }
+        if (not Got(clean clothing)) {
+          msg ("You have a shower, washing away the dirt and grime")
+          create exit ("", "Front door", living room, parking lot, "")
+        }
+        if (not Got(dirty clothing)) {
+          msg ("You have a shower, washing away the dirt and grime")
+          create exit ("", "Front door", living room, parking lot, "")
+        }
+      </onswitchon>
+      <switchedon type="boolean">false</switchedon>
+    </object>
+  </object>
+  <object name="living room">
+    <inherit name="editor_room" />
+    <description><![CDATA[The living room is also sparsely furnished, containing only a <b>couch</b> and table. <br/>You can go <b>east </b>to the bedroom or <b>south </b>to the parking lot]]></description>
+    <exit alias="east" to="bedroom">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="couch">
+      <inherit name="editor_object" />
+      <sit>You don't have any time to sit down</sit>
+      <scenery />
+    </object>
+    <exit alias="south" to="parking lot">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>shoot</property>
+    <pattern>shoot</pattern>
+    <defaultexpression>"You can't shoot " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="parking lot">
+    <inherit name="editor_room" />
+    <description><![CDATA[The parking lot is deserted. <br/>There is a parked car to the <b>west</b>]]></description>
+    <enter type="script">
+      if (not Got(clean clothing)) {
+        msg ("You should put on some clean clothing and collect your belongings before you go")
+      }
+    </enter>
+    <exit alias="north" to="living room">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="west" to="parked car">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="parked car">
+    <inherit name="editor_room" />
+    <exit alias="east" to="parking lot">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+</asl>

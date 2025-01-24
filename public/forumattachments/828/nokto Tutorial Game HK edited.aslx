@@ -1,0 +1,458 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Tutorial Game">
+    <gameid>0e0c7546-ba40-4c31-af53-1ae906e680b8</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <gridmap />
+    <subtitle>A Game About Bob and Beans</subtitle>
+	<attr name="start" type="script">
+	  msg ("To switch players...")
+	  msg ("")
+	  msg ("To switch to dave...")
+	  msg ("")
+	  msg ("Type in: ask dave about switching switch")
+	  msg ("Also, type in: tell dave about ready")
+	  msg ("")
+	  msg ("To switch to pam...")
+	  msg ("")
+	  msg ("Type in: ask pam about switching switch")
+	  msg ("Also, type in: tell pam about ready")
+	  msg ("")
+	  wait {
+	    ClearScreen
+	  }
+	</attr>
+  </game>
+  <object name="lounge">
+    <inherit name="editor_room" />
+    <description>This is a cozy lounge area. Red carpet is sprawled across the room and yellow wallpaper crawls up the walls. A television set and a sofa sit opposite of each other. A table with a lamp sits behind the couch.</description>
+    <attr name="grid_width" type="int">3</attr>
+    <attr name="grid_length" type="int">5</attr>
+    <attr name="grid_label">Lounge</attr>
+    <attr name="grid_fill">Red</attr>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <inherit name="container_open" />
+      <attr name="pov_look">Looking good, Dave!</attr>
+      <alias>Dave</alias>
+      <gender>he</gender>
+      <article>him</article>
+      <look>Dave looks down at his feet, kicks one of them up and waits for his turn.</look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <ask type="scriptdictionary">
+        <item key="switching switch">
+          msg ("\"Oh, uh... did you want to switch back?\" Dave asks, breaking away from your eye contact. \"Just TELL me ABOUT being READY. And, put whatever you want me to have on the floor too, I guess...\"")
+        </item>
+      </ask>
+      <tell type="scriptdictionary">
+        <item key="ready">
+          msg ("Dave takes the hat that reads \"I'M PLAYER ONE\" from your head and sits it on top of his own.")
+          ChangePOV (player)
+        </item>
+      </tell>
+      <hidechildren />
+      <close type="boolean">false</close>
+      <open type="boolean">false</open>
+      <isopen />
+      <transparent type="boolean">false</transparent>
+      <listchildren />
+      <listchildrenprefix>Dave has on him</listchildrenprefix>
+      <object name="bowl">
+        <inherit name="editor_object" />
+        <look>An ordinary bowl, for mixing and cooking things.</look>
+      </object>
+      <object name="screwdriver">
+        <inherit name="editor_object" />
+        <look>An ordinary screwdriver for fixing things.</look>
+        <take />
+      </object>
+    </object>
+    <exit alias="south" to="kitchen">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="TV">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <alt type="stringlist">
+        <value>television</value>
+        <value>telly</value>
+      </alt>
+      <look>This television is rather old, but functional. Your parents can only afford the oldest and rather okay-est.</look>
+      <switchonmsg>A small pop erupts from the TV. A large, imposing, and pixelated "1" fades in. A low buzzing noise follows the image.</switchonmsg>
+      <switchoffmsg>The image disappears with a loud pop.</switchoffmsg>
+      <switchedondesc>A red "1" omniously hangs on the television.</switchedondesc>
+      <switchedoffdesc>It is currently off.</switchedoffdesc>
+      <watch type="script">
+        if (IsSwitchedOn(TV)) {
+          msg ("Its strange, but mesmerizing. Who knows how long has passed since you started?")
+        }
+        else {
+          msg ("The screen is a dull gray. Is it not on?")
+        }
+      </watch>
+    </object>
+    <object name="couch">
+      <inherit name="editor_object" />
+      <alt type="stringlist">
+        <value>sofa</value>
+      </alt>
+      <look>A nice looking couch with a flowery design sits across from the television. You can see the bulges of springs in the cushions.</look>
+      <sit>You take a seat on the sofa, bouncing for a few moments on the ever durable springs. Soon, you realize that its not terribly comfortable...</sit>
+    </object>
+    <object name="table">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <look>A functional table sits behind the couch.</look>
+      <listchildren />
+      <listchildrenprefix>On top sits</listchildrenprefix>
+      <object name="newspaper">
+        <inherit name="editor_object" />
+        <alt type="stringlist">
+          <value>paper</value>
+        </alt>
+        <look>A newspaper, titled the Arcade Times, is on top of the table. Its been folded very neatly by its previous reader. The date reads 15/35/87.</look>
+        <read>"Century Forest now open! Free to all ages! No parents required."</read>
+        <take />
+        <takemsg>You pick the newspaper up, note the strange date, and slip it into your bag.</takemsg>
+        <dropmsg>The newspaper falls to the ground, splaying open. The edges of the paper waver in the wind.</dropmsg>
+      </object>
+      <object name="apple">
+        <inherit name="editor_object" />
+        <look>A delicious red apple.</look>
+        <take />
+        <eat type="script">
+          if (Got(apple)) {
+            msg ("Not as tasty as you hoped...")
+            RemoveObject (apple)
+          }
+          else {
+            msg ("You don't have an apple.")
+          }
+        </eat>
+      </object>
+      <object name="radio">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+		<take />
+		<attr name="fixed" type="boolean">false</attr>
+        <look type="script">
+          if (GetBoolean(radio, "fixed")) {
+            msg ("This is a retro looking radio. Pam has fixed it for great benefit of family.")
+          }
+          else {
+            msg ("This is a retro looking radio. You see the dial has popped off a little, balancing precariously on the end of a spring. Someone could FIX it, but it'd take some know how.")
+          }
+        </look>
+        <fix type="script">
+          if (this.parent = game.pov) {
+            if (screwdriver.parent = game.pov) {
+              msg ("You fiddle with the radio, using your screwdriver to fasten the dial back onto the front part of the machine. Voila!")
+              SetObjectFlagOn (radio, "fixed")
+            }
+            else {
+              msg ("Wait, where's your screwdriver?")
+            }
+          }
+          else {
+            msg ("You need to be carrying the radio on your person (taken ~ in your inventory).")
+			msg ("")
+			msg ("(HK: I couldn't figure out how to get it to work if you're merely in the same room as the radio, I should be able to do this, but for some reason I can't get it to work, grr!)")
+          }
+        </fix>
+        <close type="boolean">false</close>
+        <hidechildren />
+        <listchildren />
+        <listchildrenprefix>You can play</listchildrenprefix>
+        <turnon type="script">
+          if (GetBoolean(radio, "fixed")) {
+            msg ("Music starts playing.")
+            play sound ("Castlevania.mp3", false, false)
+          }
+          else {
+            msg ("It's still broken, it seems.")
+          }
+        </turnon>
+        <turnoff type="script">
+          if (GetBoolean(radio, "fixed")) {
+            stop sound
+            msg ("The radio turns off.")
+          }
+          else {
+            msg ("You can't even turn it on!")
+          }
+        </turnoff>
+      </object>
+    </object>
+    <object name="wallpaper">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>Looking at it for too long might give you a headache.</look>
+    </object>
+    <object name="carpet">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>Its that wiry sort of carpet. The sort where you'd wear socks in the house just avoid having to pressing naked skin against it.</look>
+    </object>
+    <object name="Bob">
+      <inherit name="editor_object" />
+      <inherit name="namedmale" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alias>Bob</alias>
+      <look type="script">
+        if (GetBoolean(Bob, "alive")) {
+          msg ("Bob is sitting up, giving quick glances at the television.")
+        }
+        else {
+          msg ("Bob is lying motionless on the floor.")
+        }
+      </look>
+      <use type="script">
+      </use>
+      <useon type="scriptdictionary">
+        <item key="defibrillator">
+          revive bob
+        </item>
+      </useon>
+      <ask type="scriptdictionary">
+        <item key="heart attack cardiac arrest">
+          if (GetBoolean(Bob, "alive")) {
+            msg ("Bob sighs. \"I was just sitting here watching the television when I had my seventh cheeseburger (which is where, by the way?) when I felt a great stinging sensation in my chest. Next thing I remember is getting shocked by your little defibrillator...\"")
+          }
+        </item>
+      </ask>
+    </object>
+    <object name="lamp">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <look>This is a simple silver lamp. The shade is missing though.</look>
+      <switchonmsg>The lamp turns on.</switchonmsg>
+      <switchoffmsg>Hey, who turned off the lights?</switchoffmsg>
+      <switchedondesc>Its currently bathing the room in light.</switchedondesc>
+      <switchedon />
+    </object>
+    <object name="defibrillator">
+      <inherit name="editor_object" />
+      <look>These can jumpstart a person's heart. I think? I don't know, I'm not a doctor.</look>
+      <take />
+      <use type="script">
+        revive bob
+      </use>
+      <usedefaultprefix />
+    </object>
+    <object name="player2">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <inherit name="container_open" />
+      <alias>Pam</alias>
+      <gender>she</gender>
+      <article>her</article>
+      <look>Pam has her hands together behind her back as she rocks back on forth, from heel to toe. Maybe you should ask her about switching?</look>
+      <attr name="pov_look">Looking good, Pam!</attr>
+      <ask type="scriptdictionary">
+        <item key="switching switch">
+          msg ("Pam brushes off her dress, fixes the ribbon in her head and gives an exasperated sigh. \"Finally!\" she says. \"Make sure you drop what you want me to have before we switch out. When you're ready, just TELL me ABOUT you being READY.\"")
+        </item>
+      </ask>
+      <askdefault type="script">
+        msg ("She cocks her head to the side, confused.")
+      </askdefault>
+      <tell type="scriptdictionary">
+        <item key="ready">
+          msg ("She jumps up and down as she takes control of the story. \"Let's go!\"")
+          ChangePOV (player2)
+        </item>
+      </tell>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <hidechildren />
+      <listchildren />
+      <listchildrenprefix>Pam has in her bag</listchildrenprefix>
+    </object>
+  </object>
+  <object name="kitchen">
+    <inherit name="editor_room" />
+    <description>The kitchen is sparsely decorated and is likewise not very well stocked. A simple refrigerator and stove sits in the corner with a serving bar in front of the two appliances.</description>
+    <attr name="grid_width" type="int">2</attr>
+    <attr name="grid_fill">WhiteSmoke</attr>
+    <attr name="grid_label">Kitchen</attr>
+    <exit alias="north" to="lounge">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="bin">
+      <inherit name="editor_object" />
+      <alt type="stringlist">
+        <value>trash can</value>
+        <value>can</value>
+      </alt>
+      <look>A small and unassuming trash can.</look>
+    </object>
+    <object name="flour">
+      <inherit name="editor_object" />
+      <weight type="int">500</weight>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+    </object>
+    <object name="eggs">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <weight type="int">250</weight>
+      <look type="script">
+        msg ("A box of eggs, weighing " + eggs.weight + " grams.")
+      </look>
+    </object>
+    <object name="sugar">
+      <inherit name="editor_object" />
+      <weight type="int">1000</weight>
+    </object>
+    <object name="fridge">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <alias>refrigerator</alias>
+      <listchildren />
+      <alt type="stringlist">
+        <value>fridge</value>
+      </alt>
+      <look type="script">
+        if (fridge.isopen) {
+          msg ("The fridge is open, casting a light casts a glow about the kitchen. You see some food inside.")
+        }
+        else {
+          msg ("A older fridge sits in the corner, humming quietly.")
+        }
+      </look>
+      <object name="cheese">
+        <inherit name="editor_object" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>some</prefix>
+        <look>Its a nice slab of cheese. Smells funky, but I think that means its good.</look>
+        <take />
+      </object>
+      <object name="milk">
+        <inherit name="editor_object" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>some</prefix>
+        <look>A jug of milk, half empty. Or half full. Its really open to interpretation.</look>
+        <take />
+      </object>
+      <object name="beer">
+        <inherit name="editor_object" />
+        <scenery type="boolean">false</scenery>
+        <look>A single bottle of beer. The label has been ripped off though.</look>
+        <take />
+      </object>
+    </object>
+    <object name="cabinet">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <listchildren />
+      <listchildrenprefix>The cabinet is completely bare. Oh, except for...</listchildrenprefix>
+      <look type="script">
+        if (not cabinet.isopen) {
+          msg ("The wooden cabinet hangs from the wall, above the stove.")
+        }
+        else {
+          msg ("The cabinet's door is opening, revealing its contents.")
+        }
+      </look>
+      <object name="can of beans">
+        <inherit name="editor_object" />
+        <look>A store brand can of beans. It's probably still good.</look>
+        <take />
+      </object>
+      <object name="box of rice">
+        <inherit name="editor_object" />
+        <take />
+        <look>A plain box of rice. No, really, it's simply a squat white box with "RICE" printed in large and imposing blue letters.</look>
+      </object>
+    </object>
+    <object name="window">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <look>A single paned window sits on the eastern wall. The glass is so dirty though, you can't see anything past it.</look>
+      <openscript type="script">
+        HelperOpenObject (window)
+        if (Contains (kitchen,bee)) {
+          msg ("An overwhelming darkness sits outside. You can't see anything. The bee looks over towards the open window, but shys away from it.")
+        }
+        else {
+          msg ("As you force the window open, a large bee comes in. When I say come in, I mean it pokes its head through and gets its body stuck in the frame. With a little oomph and gumption, it forces itself inside.")
+          MoveObjectHere (bee)
+        }
+      </openscript>
+      <closescript type="script">
+        HelperCloseObject (window)
+        msg ("You close the window.")
+      </closescript>
+    </object>
+  </object>
+  <verb>
+    <property>verb</property>
+    <pattern>verb</pattern>
+    <defaultexpression>"You can't verb " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>watch</property>
+    <pattern>watch</pattern>
+    <defaultexpression>"You can't watch " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="saying">
+    <pattern>say #text_talk# to #object_one#</pattern>
+    <unresolved>Say what to who?</unresolved>
+    <script>
+      switch (object_one) {
+        case (Bob) {
+          if (GetBoolean(Bob, "alive")) {
+            msg ("You say: " + text_talk)
+            msg ("Bob nods thoughtfully, though you feel as if he's not really listening.")
+          }
+          else {
+            msg ("Bob is out of comission and is not taking any messages.")
+          }
+        }
+      }
+    </script>
+  </command>
+  <command>
+    <pattern>weigh #object#</pattern>
+    <script>
+      if (HasAttribute(object, "weight")) {
+        msg ("It weighs " + object.weight + " grams.")
+      }
+      else {
+        msg ("I don't think its terribly appropriate to weigh that, do you?")
+      }
+    </script>
+  </command>
+  <object name="bee">
+    <inherit name="editor_object" />
+    <look>An extremely large bee hovers about in the room. It has yellow and black fur covering its entire body except of course, its shiny little armored head. Two antennae bob up and down in time with its hovering. That stinger seems like it could be a problem though.</look>
+  </object>
+  <verb>
+    <property>fix</property>
+    <pattern>fix</pattern>
+    <defaultexpression>"You can't fix " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>play</property>
+    <pattern>play</pattern>
+    <defaultexpression>"You can't play " + object.article + "."</defaultexpression>
+  </verb>
+  <function name="revive bob">
+    if (game.pov.parent = lounge) {
+      if (GetBoolean(Bob, "alive")) {
+        msg ("Bob winces away and asks that you don't do that.")
+      }
+      else {
+        msg ("Brr-zap! Bob lurches up into the upright position, eyes open. Wisps of smoke lazily rise from his shoulders.")
+        SetObjectFlagOn (Bob, "alive")
+      }
+    }
+    else {
+      msg ("Don't be silly.")
+    }
+  </function>
+</asl>

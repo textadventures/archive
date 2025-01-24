@@ -1,0 +1,169 @@
+<asl version="500">
+  <include ref="English.aslx"/>
+  <include ref="Core.aslx"/>
+  <game name="Test Game">
+	<mantalk1 type="int">0</mantalk1>
+  </game>
+
+ <function name="beforetalking" parameters="talktext,name,level" type="boolean">
+	if (name="talkman1") {	
+		switch (level) {
+			case ("1") {
+			  bool=true
+		      foreach (val, ScopeInventory ()) {
+				if (val.name="watch") { bool=false }
+			  }
+			  if (game.mantalk1>0) {bool=false}
+			}  
+			case ("2") {
+		      bool=false
+			  foreach (val, ScopeInventory ()) {
+				if (val.name="watch") { bool=true }
+			  }			  
+			}
+			default {bool=true}
+		}
+	}
+	return (bool)
+  </function> 
+  
+  <function name="aftertalking" parameters="talktext,name,level">
+	if (name="talkman1") {
+		switch (level) {
+			case ("1-1") {
+				if (LengthOf (GetExitByName (lounge , "east")) = 0 ){
+					create exit("east", lounge, kitchen)
+					create exit("west", kitchen, lounge)
+				}
+			}
+			case ("1") {
+				foreach (val, ScopeInventory ()) {
+					if (val.name="watch") { 
+						destroy ("watch")
+						dictionary remove (talktext, "0")
+						dictionary add (talktext, "0", "The man looks happy now with his watch")	
+						game.mantalk1=game.mantalk1+1
+					}
+				  }	
+
+			}
+		}	
+	}	
+ </function>
+	
+   <function name="dialog" parameters="talktext,level,caption">
+		if (DictionaryContains(talktext, level+"1")) {
+			if (level="" ) {
+				caption=StringDictionaryItem(talktext, "0")
+			}
+			test = NewStringList()
+			test=split(StringDictionaryItem(talktext, level+"1" ), "||")
+			count= ToInt(StringListItem(test,0))
+			choices = NewStringList()
+			answer = NewStringList()
+			levels = NewStringList()
+			target = NewStringList()
+			for (i,1,count) {
+				items = NewStringList()
+				if (LengthOf(level)=1) {
+					items=split(StringDictionaryItem(talktext, ToString(i)), "||")
+					newlevel=ToString(i)+ "-" 
+				} else {
+					items=split(StringDictionaryItem(talktext,  level + ToString(i)), "||")
+					newlevel=level+ToString(i)+"-" 
+				}
+
+				nrchoices=0
+				if (beforetalking(talktext,StringDictionaryItem(talktext, "name"),level + ToString(i))) {
+					list add (choices, ListItem(items,1))
+					list add (answer, ListItem(items,2))
+					list add (levels, newlevel)
+					if (ListCount(items)>3) {
+						list add (target,ListItem(items,3))
+					}else {
+						list add (target,"")
+					}					
+					nrchoices=nrchoices+1
+				}
+			}
+			
+			if (nrchoices > 0 ) {
+				msg(caption)
+				back = ShowMenu(caption, choices, false)
+				msg (back)
+				j=-1
+				for (k,0,ListCount(choices)-1) {
+					if (back=ListItem(choices,k)) {
+						j=k
+					}
+				}
+
+				aftertalking (talktext,StringDictionaryItem(talktext, "name"),level+ ToString(j+1))
+							
+				if (j>=0) {
+					if (StringListItem(target,j) = "") {
+						dialog(talktext,StringListItem(levels,j),StringListItem(answer,j) )
+					} else {
+						if (StringListItem(target,j)="-") {
+							dialog(talktext,"",StringListItem(answer,j) )
+						}else {
+							dialog(talktext,StringListItem(target,j),StringListItem(answer,j) )
+						}	
+					}	
+				}	
+			} else {
+				msg("Nothing happens")
+			}	
+		} else {
+			if (DictionaryContains(talktext, "x")) {
+				msg(StringDictionaryItem(talktext, "x" ))
+			}
+		}	
+  </function> 
+  
+ 
+  <command>
+    <pattern>dict</pattern>
+    <script>
+      foreach (key, man.talkman1) {
+        msg (key + ": " + DictionaryItem(man.talkman1, key))
+      }
+    </script>
+  </command>
+ 
+ 
+  <object name="lounge">
+    <start/>
+    <prefix>the</prefix>
+	<description>This is a lounge. Please talk to the man</description>
+
+     <object name="man">
+	  <gender>[MaleGender]</gender>
+	  <article>[MaleArticle]</article>
+	  <talkman1 type="stringdictionary">
+			name=talkman1;
+			0=The man seems to be worried. "No time to talk, no time";
+			x=You stop talking with the man;
+			1=3||"Can I help you?"||Man: "Oh yes, I lost my watch. Could you search it please?";
+			2=3||"Is this your watch?"||Old man: "Oh yes, it is. Thank you."||1-;
+			3=3||"I must go now"||x;
+			1-1=1||"I am on my way."||x
+	  </talkman1>
+	  <speak type="script">
+			dialog(man.talkman1,"")
+	  </speak>
+    </object>	 
+   </object>
+
+	<object name="kitchen">
+    <description>This is the kitchen</description>
+		<object name="watch">
+			<description>an old watch</description>
+			<take/>
+		</object>	
+	</object>
+	
+    <walkthrough>
+   </walkthrough>
+    
+</asl>

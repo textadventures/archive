@@ -1,0 +1,53 @@
+<!--Saved by Quest 5.6.5621.18142-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="damage health">
+    <gameid>4d8dd62c-108b-4f73-8e7a-6984dcc2eb4e</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <damage type="int">25</damage>
+      <health type="int">100</health>
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>health</key>
+          <value></value>
+        </item>
+        <item>
+          <key>damage</key>
+          <value></value>
+        </item>
+      </statusattributes>
+    </object>
+    <object name="monster">
+      <inherit name="editor_object" />
+      <health type="int">100</health>
+      <attack type="script"><![CDATA[
+        if (monster.health < 1) {
+          msg ("it's dead now")
+        }
+        else {
+          msg ("you swing your sword at the monster")
+          monster.health = monster.health - player.damage
+          player.health = player.health - monster.damage
+          msg ("{player.name} deals {player.damage} damage")
+          msg ("{monster.name} has {monster.health} health remaining")
+          msg ("{monster.name} deals {monster.damage} damage")
+          msg ("{player.name} has {player.health} health remaining")
+        }
+      ]]></attack>
+      <damage type="int">10</damage>
+    </object>
+  </object>
+  <verb>
+    <property>attack</property>
+    <pattern>attack</pattern>
+    <defaultexpression>"You can't attack " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

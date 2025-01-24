@@ -1,0 +1,1132 @@
+<!--Saved by Quest 5.6.5508.36414-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="The Search for Mim">
+    <inherit name="theme_novella" />
+    <gameid>95ed336f-0579-45a3-ae50-1021b390b9f7</gameid>
+    <version>0.5</version>
+    <firstpublished>2015</firstpublished>
+    <defaultwebfont>Merriweather</defaultwebfont>
+    <menufont>'Palatino Linotype', 'Book Antiqua', Palatino, serif</menufont>
+    <defaultfont>'Times New Roman', Times, serif</defaultfont>
+    <showpanes type="boolean">false</showpanes>
+    <showlocation type="boolean">false</showlocation>
+    <showborder />
+    <setcustomwidth />
+    <customwidth type="int">600</customwidth>
+    <setcustompadding type="boolean">false</setcustompadding>
+    <custompaddingtop type="int">0</custompaddingtop>
+    <custompaddingleft type="int">0</custompaddingleft>
+    <custompaddingright type="int">0</custompaddingright>
+    <showcommandbar />
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <category>Fantasy</category>
+    <difficulty>Easy</difficulty>
+    <cruelty>Polite</cruelty>
+    <feature_lightdark />
+    <appendobjectdescription />
+    <gridmap type="boolean">false</gridmap>
+    <author>Lix</author>
+    <attr name="autodescription_youarein" type="int">1</attr>
+    <attr name="autodescription_youcansee" type="int">0</attr>
+    <attr name="autodescription_youcango" type="int">0</attr>
+    <defaultlinkforeground>Black</defaultlinkforeground>
+    <attr name="changeroom_newline" type="boolean">false</attr>
+    <autodisplayverbs />
+    <attr name="autodescription_youcango_newline" type="boolean">false</attr>
+    <attr name="autodescription_description" type="int">2</attr>
+    <attr name="autodescription_youcansee_newline" type="boolean">false</attr>
+    <attr name="autodescription_description_newline" type="boolean">false</attr>
+    <attr name="command_newline" type="boolean">false</attr>
+    <deactivatecommandlinks type="boolean">false</deactivatecommandlinks>
+    <underlinehyperlinks type="boolean">false</underlinehyperlinks>
+    <povstatusattributes type="stringdictionary" />
+    <autodescription />
+    <multiplecommands />
+    <subtitle>(yes, I know it sounds cliche but...)</subtitle>
+    <feature_limitinventory />
+    <attr name="feature_asktell" type="boolean">false</attr>
+    <mapsize type="int">200</mapsize>
+    <showdescriptiononenter />
+    <pov type="object">player</pov>
+    <start type="script"><![CDATA[
+      game.boomT = 0
+      game.randBoom = GetRandomInt(7,15)
+      play sound ("Ominous-Goings-On.mp3", false, true)
+      msg ("As you make your way down the tunnel, you can't help but regret coming here in the first place.")
+      wait {
+        msg ("<br/>With all that's happened so far, all you feel like doing is curling up and sleeping in your cozy, and not at all damp, bed.")
+        wait {
+          msg ("<br/>But first you have to find Mim.")
+          wait {
+            ClearScreen
+          }
+        }
+      }
+    ]]></start>
+  </game>
+  <object name="cavern">
+    <inherit name="editor_room" />
+    <description><![CDATA[With only a {object:lantern:small lantern} it's difficult to be certain, but there seems to be nothing here besides the stone {object:cavewall} lined with algae and slick wet {object:cavefloor} beneath your paws.<br/><br/>To the {command:north} is an {object:offdoor1:off-putting door} from which you can faintly hear someone singing and cackling. You shudder at the sound.]]></description>
+    <alias>cavern</alias>
+    <descprefix>Insigne is in</descprefix>
+    <objectslistprefix>You can see</objectslistprefix>
+    <exitslistprefix>You can go</exitslistprefix>
+    <dark />
+    <attr name="grid_label">Cavern</attr>
+    <onexit type="script">
+      EnableTurnScript (crash)
+    </onexit>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+      DisableTurnScript (crash)
+    </beforeenter>
+    <darkroomdescription type="script">
+      darkroom
+    </darkroomdescription>
+    <exit name="southfromcave" alias="south" to="cavern">
+      <inherit name="southdirection" />
+      <lookonly type="boolean">false</lookonly>
+      <look>Behind you is the exit of the cavern, not that you can leave yet. You have to find Mim first.</look>
+      <scenery />
+      <runscript />
+      <script type="script">
+        msg ("You can't leave now. Not until you've found Mim.")
+      </script>
+    </exit>
+    <exit name="northfromcave" alias="north" to="antique1">
+      <inherit name="northdirection" />
+      <locked />
+      <lockmessage>First things first. {command:open door:Open the door}.</lockmessage>
+      <scenery />
+      <runscript type="boolean">false</runscript>
+      <script type="script">
+        HelperOpenObject (door1)
+        UnlockExit (antiqueroomexit)
+      </script>
+      <look type="script">
+        if (offdoor1.isopen) {
+          msg ("Ahead of you, an {object:offdoor2:off-putting door} looms.")
+        }
+        else {
+          msg ("Ahead of you, a doorway looms.")
+        }
+      </look>
+    </exit>
+    <object name="cavewall">
+      <inherit name="editor_object" />
+      <alias>walls</alias>
+      <displayverbs type="stringlist">
+        <value>Examine</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist" />
+      <scenery />
+      <drop type="boolean">false</drop>
+      <look type="string"></look>
+      <takemsg>... what?</takemsg>
+    </object>
+    <object name="offdoor1">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <feature_container />
+      <scenery />
+      <alias>door</alias>
+      <inroomdescription type="string"></inroomdescription>
+      <inventoryverbs type="stringlist" />
+      <displayverbs type="stringlist">
+        <value>Examine</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+      <look>It appears to be a fairly normal {object:offdoor1}... if you can ignore the fact that it's in the middle of a cavern no one knew existed. You feel unnerved just being near it.</look>
+      <drop type="boolean">false</drop>
+      <open />
+      <takemsg>... what?</takemsg>
+      <openscript type="script">
+        UnlockExit (northfromcave)
+        UnlockExit (southfroma1)
+        msg ("It creaks open. You can't help but hesitate for a moment.")
+        HelperOpenObject (offdoor1)
+        HelperOpenObject (offdoor2)
+      </openscript>
+      <closescript type="script">
+        LockExit (northfromcave)
+        LockExit (southfroma1)
+        msg ("It creaks closed.")
+        HelperCloseObject (offdoor1)
+        HelperCloseObject (offdoor2)
+      </closescript>
+    </object>
+    <object name="cavefloor">
+      <inherit name="editor_object" />
+      <alias>stone</alias>
+      <look type="string"></look>
+      <drop type="boolean">false</drop>
+      <displayverbs type="stringlist">
+        <value>Examine</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <scenery />
+      <takemsg>... what?</takemsg>
+    </object>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <inherit name="female" />
+      <attr name="pov_look">You're a little worse for wear.</attr>
+      <takemsg type="string"></takemsg>
+      <attr name="feature_lightdark" type="boolean">false</attr>
+      <lightstrength>weak</lightstrength>
+      <drop type="boolean">false</drop>
+      <attr name="pov_alias">me</attr>
+      <attr name="pov_gender">you</attr>
+      <attr name="pov_article">yourself</attr>
+      <pov_alt type="stringlist">
+        <value>self</value>
+        <value>myself</value>
+      </pov_alt>
+      <alt type="stringlist" />
+      <alias>me</alias>
+      <usedefaultprefix />
+      <displayverbs type="stringlist">
+        <value>Examine</value>
+        <value>Speak to</value>
+      </displayverbs>
+      <object name="lantern">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <drop type="boolean">false</drop>
+        <dropmsg>You'd... rather not.</dropmsg>
+        <feature_lightdark />
+        <feature_switchable />
+        <lightstrength>strong</lightstrength>
+        <lightsource />
+        <switchonmsg>You switch it on and a blue light casts a weak glow to your surroundings.</switchonmsg>
+        <switchoffmsg>You are plunged into darkness.</switchoffmsg>
+        <switchedon />
+        <alias>lantern</alias>
+        <displayverbs type="stringlist">
+          <value>Examine</value>
+          <value>Switch on</value>
+          <value>Switch off</value>
+        </displayverbs>
+        <inventoryverbs type="stringlist">
+          <value>Examine</value>
+          <value>Switch on</value>
+          <value>Switch off</value>
+          <value>Drop</value>
+        </inventoryverbs>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>your</prefix>
+        <look type="string"></look>
+        <volume type="int">2</volume>
+        <onswitchoff type="script">
+          SetObjectLightstrength (lantern, "weak")
+        </onswitchoff>
+        <onswitchon type="script">
+          SetObjectLightstrength (lantern, "strong")
+        </onswitchon>
+      </object>
+    </object>
+  </object>
+  <turnscript name="crash">
+    <enabled />
+    <script><![CDATA[
+      game.boomT = game.boomT + 1
+      if (game.boomT = game.randBoom) {
+        game.boomT = 0
+        game.randBoom = GetRandomInt(7,15)
+        randPrint = GetRandomInt(1,6)
+        msg ("")
+        switch (randPrint) {
+          case (1) {
+            msg ("You hear a crash nearby.<br/><br/>\"Mim?\" you call. No response.")
+          }
+          case (2) {
+            msg ("Something clatters to the ground behind you, making you jump. You move to investigate when a rat scuttles away. You let out a sigh of relief before returning to the task at hand.")
+          }
+          case (3) {
+            msg ("You see a flash of movement from the corner of your eye. When you turn to look, there is nothing but another pile of rubble.")
+          }
+          case (4) {
+            msg ("<i>CLANG.</i><br/><br/>You spin around and spot a rusted tray lying on the ground. Must have been a rat.")
+          }
+          case (5) {
+            msg ("A roach crawls past. You can't help but shudder.")
+          }
+          case (6) {
+            msg ("You think you feel something breathing down your neck. With a start, you turn around... but there's nothing there.")
+          }
+        }
+      }
+    ]]></script>
+  </turnscript>
+  <object name="antique1">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>Surrounded by old memories</alias>
+    <dark />
+    <objectslistprefix type="string"></objectslistprefix>
+    <description type="script"><![CDATA[
+      firsttime {
+        msg ("Expecting the worst, you step into the room and find...<br/><br/><i>Woah.</i><br/><br/>Towering over you are mountains of {object:wreckage} and once everyday things but, amidst them, you can make out the remains of technology, things you never thought you'd see again. <br/><br/>As you look closer at the objects piled on top of one another, you try pulling a broken {object:plane} out of the debris but give up when the the entire thing threatens to topple.<br/><br/>There is no one else here, but the singing seems to be closer now. Hopefully, you won't encounter the source of it.<br/><br/>To the {command:south} is an {object:offdoor2:off-putting door} and, to the {command:north} and {command:east}, there are gaps between the {object:wreckage} wide enough for you to pass.")
+      }
+      otherwise {
+        msg ("You are in the midst of ruin and {object:wreckage}. There's an {object:plane} here but you can't take it without everything collapsing. To the {command:south} is an {object:offdoor2} and, to the {command:north} and {command:east}, there are gaps between the {object:wreckage} wide enough for you to pass.")
+      }
+    ]]></description>
+    <darkroomdescription type="script">
+      darkroom
+    </darkroomdescription>
+    <exit name="southfroma1" alias="south" to="cavern">
+      <inherit name="southdirection" />
+      <locked />
+      <attr name="grid_length" type="int">1</attr>
+      <lockmessage>First things first. {command:open door:Open the door}.</lockmessage>
+      <look type="script">
+        if (offdoor2.isopen) {
+          msg ("Behind you, an {object:offdoor2:off-putting door} looms.")
+        }
+        else {
+          msg ("Behind you, a {object:offdoor2:doorway} looms.")
+        }
+      </look>
+    </exit>
+    <object name="offdoor2">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <feature_container />
+      <scenery />
+      <alias>door</alias>
+      <inroomdescription type="string"></inroomdescription>
+      <inventoryverbs type="stringlist" />
+      <displayverbs type="stringlist">
+        <value>Examine</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+      <look>It appears to be a fairly normal {object:offdoor2}... if you can ignore the fact that it's in the middle of a cavern no one knew existed. You feel unnerved just being near it.</look>
+      <drop type="boolean">false</drop>
+      <open />
+      <takemsg>... what?</takemsg>
+      <openscript type="script">
+        UnlockExit (southfroma1)
+        UnlockExit (northfromcave)
+        msg ("It creaks open.")
+        HelperOpenObject (offdoor1)
+        HelperOpenObject (offdoor2)
+      </openscript>
+      <closescript type="script">
+        LockExit (southfroma1)
+        LockExit (northfromcave)
+        msg ("It creaks closed.")
+        HelperCloseObject (offdoor1)
+        HelperCloseObject (offdoor2)
+      </closescript>
+    </object>
+    <exit alias="north" to="antique5">
+      <inherit name="northdirection" />
+      <look>To the {command:north}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+    <exit alias="east" to="antique2">
+      <inherit name="eastdirection" />
+      <look>To the {command:east}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+    <object name="plane">
+      <inherit name="editor_object" />
+      <alias>toy plane</alias>
+      <usedefaultprefix />
+      <displayverbs type="stringlist">
+        <value>Examine</value>
+        <value>Take</value>
+      </displayverbs>
+      <take />
+      <drop type="boolean">false</drop>
+      <inventoryverbs type="stringlist">
+        <value>Examine</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <ontake type="script"><![CDATA[
+        msg ("Ultimately, you decide to take the toy plane in spite of the danger. As it pops out from within the wreckage and into your paws, you grin in satisfaction... only to realize that something seems to be looming just over you - and rapidly closing in.<br/><br/>You look up and the last thing you see is the wreckage coming down on you.")
+        finish
+      ]]></ontake>
+    </object>
+  </object>
+  <object name="antique2">
+    <inherit name="editor_room" />
+    <alias>Surrounded by old memories</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <dark />
+    <darkroomdescription type="script">
+      darkroom
+    </darkroomdescription>
+    <description type="script">
+      if (GetBoolean(key, "shinyfalse")) {
+        msg ("You are in the midst of ruin and {object:wreckage}. {if key.parent = antique2:Underneath the rubble is a {object:key}.} To the {command:north}, {command:west} and {command:east}, there are gaps between the {object:wreckage} wide enough for you to pass.")
+      }
+      else {
+        msg ("You are in the midst of ruin and {object:wreckage}.{if key.parent = antique2:You notice something {object:key:shiny} underneath the rubble, but you can't be entirely certain what it is until you {command:examine shiny:examine it}.} To the {command:north}, {command:west} and {command:east}, there are gaps between the {object:wreckage} wide enough for you to pass.")
+      }
+    </description>
+    <object name="key">
+      <inherit name="editor_object" />
+      <displayverbs type="stringlist">
+        <value>Examine</value>
+        <value>Take</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Examine</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <take />
+      <attr name="feature_usegive" type="boolean">false</attr>
+      <use type="boolean">false</use>
+      <alias>car key</alias>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <takemsg>You pick up the {object:key}.</takemsg>
+      <dropmsg>The {object:key} drops with a honk. After a moment, you decide not to question it.</dropmsg>
+      <volume type="int">2</volume>
+      <alt type="stringlist">
+        <value>shiny</value>
+      </alt>
+      <look type="script">
+        firsttime {
+          SetObjectFlagOn (key, "shinyfalse")
+          msg ("You squint and see a... {object:key}!")
+        }
+        otherwise {
+          msg ("A small, metal key connected to a fob. You wonder if it might be useful?")
+        }
+      </look>
+      <selfuseon type="scriptdictionary">
+        <item key="car">
+          if (incar.locked) {
+            UnlockExit (incar)
+            UnlockExit (outcar)
+            msg ("You unlock the car.")
+          }
+          else {
+            LockExit (incar)
+            LockExit (outcar)
+            msg ("You lock the car.")
+          }
+        </item>
+      </selfuseon>
+    </object>
+    <exit alias="west" to="antique1">
+      <inherit name="westdirection" />
+      <look>To the {command:west}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+    <exit alias="east" to="antique3">
+      <inherit name="eastdirection" />
+      <look>To the {command:east}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+    <exit alias="north" to="antique6">
+      <inherit name="northdirection" />
+      <look>To the {command:north}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+  </object>
+  <object name="antique3">
+    <inherit name="editor_room" />
+    <alias>Surrounded by old memories</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <dark />
+    <description>You are in the midst of ruin and {object:wreckage}. Lying on the ground nearby is a {object:kite} and, to the {command:north} and {command:west}, there are gaps between the {object:wreckage} wide enough for you to pass.</description>
+    <darkroomdescription type="script">
+      darkroom
+    </darkroomdescription>
+    <object name="kite">
+      <inherit name="editor_object" />
+      <displayverbs type="stringlist">
+        <value>Examine</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Examine</value>
+      </inventoryverbs>
+      <useindividualverblist type="boolean">false</useindividualverblist>
+    </object>
+    <exit alias="west" to="antique2">
+      <inherit name="westdirection" />
+      <look>To the {command:west}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+    <exit alias="north" to="antique7">
+      <inherit name="northdirection" />
+      <look>To the {command:north}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+  </object>
+  <object name="antique4">
+    <inherit name="editor_room" />
+    <alias>Surrounded by old memories</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <dark />
+    <darkroomdescription type="script">
+      darkroom
+    </darkroomdescription>
+    <description type="script">
+      firsttime {
+        msg ("You squeeze through the gap, ready to flee at the first sign of danger... but there's no one here. You look for the source of the singing and shortly realize that it's coming from a {object:phonograph}. Now that you're closer, you can hear the hint of static that accompanies the voice. To the {command:east} is a gap between the {object:wreckage} wide enough for you to pass.")
+      }
+      otherwise {
+        if (IsSwitchedOn(phonograph)) {
+          msg ("You are in the midst of ruin and {object:wreckage}. Resting on the ground is a {object:phonograph}. It emits the sound of someone singing and cackling, which makes you feel a bit nervous. To the {command:east} is a gap between the {object:wreckage} wide enough for you to pass.")
+        }
+        else {
+          msg ("You are in the midst of ruin and {object:wreckage}. Resting on the ground is a {object:phonograph}. To the {command:east} is a gap between the {object:wreckage} wide enough for you to pass.")
+        }
+      }
+    </description>
+    <object name="phonograph">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <displayverbs type="stringlist">
+        <value>Examine</value>
+        <value>Switch on</value>
+        <value>Switch off</value>
+      </displayverbs>
+      <feature_switchable />
+      <switchedon />
+      <onswitchoff type="script">
+        stop sound
+        SetTimeout (4) {
+          play sound ("577794_Castle.mp3", false, true)
+        }
+      </onswitchoff>
+      <onswitchon type="script">
+        stop sound
+        play sound ("Ominous-Goings-On.mp3", false, true)
+      </onswitchon>
+    </object>
+    <exit alias="east" to="antique5">
+      <inherit name="eastdirection" />
+      <look>To the {command:east}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+  </object>
+  <object name="antique5">
+    <inherit name="editor_room" />
+    <alias>Surrounded by old memories</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <dark />
+    <description>You are in the midst of ruin and {object:wreckage}. Sticking out of a particularly tall heap of {object:wreckage} is half of a cracked {object:tv}. {if phonograph.switchedon=true: The singing seems to be much closer and you can't help but feel a bit nervous.} To the {command:south}, {command:west} and {command:east}, there are gaps between the wreckage wide enough for you to pass.</description>
+    <darkroomdescription type="script">
+      darkroom
+    </darkroomdescription>
+    <object name="tv">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <displayverbs type="stringlist">
+        <value>Examine</value>
+        <value>Switch on</value>
+        <value>Switch off</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+      <feature_switchable />
+      <switchedon type="boolean">false</switchedon>
+      <switchonmsg>You push the power button and wait... but nothing happens.</switchonmsg>
+      <switchoffmsg type="string"></switchoffmsg>
+      <alias>television set</alias>
+      <onswitchon type="script">
+        SwitchOff (tv)
+      </onswitchon>
+    </object>
+    <exit alias="south" to="antique1">
+      <inherit name="southdirection" />
+      <look>To the {command:south}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+    <exit alias="west" to="antique4">
+      <inherit name="westdirection" />
+      <look>To the {command:west}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+    <exit alias="east" to="antique6">
+      <inherit name="eastdirection" />
+      <look>To the {command:east}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+  </object>
+  <object name="antique6">
+    <inherit name="editor_room" />
+    <alias>Surrounded by old memories</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <dark />
+    <description>You are in the midst of ruin and {object:wreckage}. Honestly, it's starting to get a bit tiresome. Sitting on an uneven heap of wreckage is a {object:typewriter} missing a few keys. To the {command:south}, {command:west} and {command:east}, there are gaps between the {object:wreckage} wide enough for you to pass.</description>
+    <darkroomdescription type="script">
+      darkroom
+    </darkroomdescription>
+    <object name="typewriter">
+      <inherit name="editor_object" />
+      <attr name="feature_switchable" type="boolean">false</attr>
+      <feature_usegive />
+      <displayverbs type="stringlist">
+        <value>Examine</value>
+      </displayverbs>
+      <use type="script">
+        msg ("You randomly press some keys.")
+      </use>
+    </object>
+    <exit alias="south" to="antique2">
+      <inherit name="southdirection" />
+      <look>To the {command:south}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+    <exit alias="west" to="antique5">
+      <inherit name="westdirection" />
+      <look>To the {command:west}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+    <exit alias="east" to="antique7">
+      <inherit name="eastdirection" />
+      <look>To the {command:east}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+  </object>
+  <object name="antique7">
+    <inherit name="editor_room" />
+    <alias>Surrounded by old memories</alias>
+    <dark />
+    <description>You are in the midst of ruin and {object:wreckage}. Unlike the other parts of this wasteland, you can't find anything that looks remotely recognizable as something you're familiar with. To the {command:south}, {command:west} and {command:east}, there are gaps between the {object:wreckage} wide enough for you to pass.</description>
+    <darkroomdescription type="script">
+      darkroom
+    </darkroomdescription>
+    <exit alias="south" to="antique3">
+      <inherit name="southdirection" />
+      <look>To the {command:south}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+    <exit alias="west" to="antique6">
+      <inherit name="westdirection" />
+      <look>To the {command:west}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+    <exit alias="east" to="antique8">
+      <inherit name="eastdirection" />
+      <look>To the {command:east}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+  </object>
+  <object name="antique8">
+    <inherit name="editor_room" />
+    <alias>Surrounded by old memories</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <dark />
+    <darkroomdescription type="script">
+      darkroom
+    </darkroomdescription>
+    <description type="script">
+      firsttime {
+        msg ("As you squeeze past a particularly large heap of {object:wreckage}, you startle at the sight of a dark figure... only to realize that it's a {object:statue:statue of a feline ineki}. You wonder if... no. No one there. To the {command:north} and {command:west}, there are gaps between the {object:wreckage} wide enough for you to pass.")
+      }
+      otherwise {
+        msg ("You are in the midst of ruin and {object:wreckage}. Standing nearby is a {object:statue:statue of a feline ineki}. You can't help but find its expression a bit disconcerting. To the {command:north} and {command:west}, there are gaps between the {object:wreckage} wide enough for you to pass.")
+      }
+    </description>
+    <object name="statue">
+      <inherit name="editor_object" />
+      <takemsg>It's way too heavy.</takemsg>
+    </object>
+    <exit alias="west" to="antique7">
+      <inherit name="westdirection" />
+      <look>To the {command:west}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+    <exit alias="north" to="antique10">
+      <inherit name="northdirection" />
+      <look>To the {command:north}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+  </object>
+  <object name="antique9">
+    <inherit name="editor_room" />
+    <alias>Surrounded by old memories</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <dark />
+    <description>You are in the midst of ruin and {object:wreckage}. On the ground lies a {object:bike} missing most of its parts. To the {command:north} is a gap between the {object:wreckage} wide enough for you to pass.</description>
+    <darkroomdescription type="script">
+      darkroom
+    </darkroomdescription>
+    <object name="bike">
+      <inherit name="editor_object" />
+      <takemsg>You'd rather not lug a {object:bike} around with you.</takemsg>
+    </object>
+    <exit alias="north" to="antique12">
+      <inherit name="northdirection" />
+      <look>To the {command:north}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+  </object>
+  <object name="antique10">
+    <inherit name="editor_room" />
+    <alias>Surrounded by old memories</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <dark />
+    <description>You are in the midst of ruin and {object:wreckage}. Holding up a pile of {object:wreckage} is what looks to be a {object:car}. To the {command:south} and {command:east}, there are gaps between the {object:wreckage} wide enough for you to pass. You can also try {command:go in:going in} the {object:car}.</description>
+    <darkroomdescription type="script">
+      darkroom
+    </darkroomdescription>
+    <exit name="incar" alias="in">
+      <inherit name="indirection" />
+      <locked />
+      <lockmessage>You try the handle but it's locked.</lockmessage>
+      <scenery type="boolean">false</scenery>
+      <runscript type="boolean">false</runscript>
+      <look type="string"></look>
+      <script type="script">
+        if (car.isopen) {
+          msg ("You step into the car.")
+          MoveObject (player, car)
+        }
+        else {
+          HelperOpenObject (car)
+          if (not car.isopen) {
+            msg ("You can't open the car door, it's locked.")
+          }
+          else {
+            msg ("You open the car and step into it.")
+            MoveObject (player, car)
+          }
+        }
+      </script>
+    </exit>
+    <object name="car">
+      <inherit name="openable" />
+      <displayverbs type="stringlist">
+        <value>Examine</value>
+        <value>Unlock</value>
+        <value>Lock</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+      <feature_container />
+      <isopen type="boolean">false</isopen>
+      <dark />
+      <openmsg>You open the car door.</openmsg>
+      <closemsg>You close the car door.</closemsg>
+      <keycount type="int">1</keycount>
+      <nokeymessage>You try the door but it's locked.</nokeymessage>
+      <unlockmessage>The car unlocks with a satisfying beep.</unlockmessage>
+      <lockmessage>You lock the car.</lockmessage>
+      <listchildren type="boolean">false</listchildren>
+      <autoopen type="boolean">false</autoopen>
+      <autounlock type="boolean">false</autounlock>
+      <locked />
+      <alt type="stringlist">
+        <value>car door</value>
+        <value>door</value>
+      </alt>
+      <look type="string"></look>
+      <takemsg>... what?</takemsg>
+      <description>It's rather stuffy in here. {if memorycard.parent = car: On the seat beside you is a {object:memorycard}}. The door beside you leads {command:out}.</description>
+      <darkroomdescription type="script">
+        darkroom
+      </darkroomdescription>
+      <onlock type="script">
+        LockExit (incar)
+      </onlock>
+      <onunlock type="script">
+        UnlockExit (incar)
+      </onunlock>
+      <openscript type="script">
+        HelperOpenObject (car)
+        msg ("You open the car door.")
+      </openscript>
+      <closescript type="script">
+        HelperCloseObject (car)
+        msg ("You close the car door.")
+      </closescript>
+      <beforeenter type="script">
+        msg ("As you enter the car, it groans underneath the combined weight of the {object:wreckage} and yourself.")
+      </beforeenter>
+      <lock type="scriptdictionary">
+        <item key="key"><![CDATA[
+          LockExit (incar)
+          LockExit (outcar)
+          if (Got(key)) {
+            if (game.pov.parent = car) {
+              msg ("Congratulations. You just locked yourself in.")
+            }
+            else {
+              msg ("You lock the car.")
+            }
+          }
+          else {
+            msg ("You pick the {object:key} up first.<br/><br/>Congratulations. You just locked yourself in.")
+            AddToInventory (key)
+          }
+        ]]></item>
+      </lock>
+      <unlock type="scriptdictionary">
+        <item key="key"><![CDATA[
+          UnlockExit (incar)
+          UnlockExit (outcar)
+          if (Got(key)) {
+            msg ("The car unlocks with a satisfying beep. Strange for something that's been here a while.")
+          }
+          else {
+            msg ("You pick the {object:key} up first.<br/><br/>The car unlocks with a satisfying beep. Strange for something that's been here a while.")
+            AddToInventory (key)
+          }
+        ]]></item>
+      </unlock>
+      <exit name="outcar" alias="out" to="antique10">
+        <inherit name="outdirection" />
+        <locked type="boolean">false</locked>
+        <runscript type="boolean">false</runscript>
+        <lockmessage>You try the handle but it's locked.</lockmessage>
+      </exit>
+      <object name="memorycard">
+        <inherit name="editor_object" />
+        <displayverbs type="stringlist">
+          <value>Examine</value>
+          <value>Take</value>
+        </displayverbs>
+        <inventoryverbs type="stringlist">
+          <value>Examine</value>
+          <value>Drop</value>
+        </inventoryverbs>
+        <volume type="int">1</volume>
+        <alias>memory card</alias>
+        <alt type="stringlist">
+          <value>sd card</value>
+        </alt>
+        <takemsg type="string"></takemsg>
+        <attr name="feature_usegive" type="boolean">false</attr>
+        <take type="script">
+          if (Contains (camera,memorycard)) {
+            msg ("You pop the {object:memorycard} out of the {object:camera}.")
+          }
+          else {
+            msg ("You pick it up.")
+          }
+          AddToInventory (memorycard)
+        </take>
+        <look type="script">
+        </look>
+        <ontake type="script">
+        </ontake>
+        <use type="script">
+        </use>
+      </object>
+    </object>
+    <exit alias="south" to="antique8">
+      <inherit name="southdirection" />
+      <look>To the {command:south}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+    <exit alias="east" to="antique14">
+      <inherit name="eastdirection" />
+      <look>To the {command:east}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+  </object>
+  <object name="antique11">
+    <inherit name="editor_room" />
+    <alias>Surrounded by old memories</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <dark />
+    <displayverbs type="stringlist">
+      <value>Examine</value>
+      <value>Take</value>
+    </displayverbs>
+    <description>You are in the midst of ruin and {object:wreckage}. Nothing here is particularly interesting, except for a {object:robot} that lies dejectedly on the ground. To the {command:east} is a gap between the wreckage wide enough for you to pass.</description>
+    <darkroomdescription type="script">
+      darkroom
+    </darkroomdescription>
+    <object name="robot">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <displayverbs type="stringlist">
+        <value>Examine</value>
+      </displayverbs>
+      <attr name="feature_switchable" type="boolean">false</attr>
+      <attr name="feature_usegive" type="boolean">false</attr>
+      <switchonmsg>You push the power button and wait... but nothing happens.</switchonmsg>
+      <switchoffmsg type="string"></switchoffmsg>
+      <switchedoffdesc type="string"></switchedoffdesc>
+      <takemsg>You don't think you can carry anything else.</takemsg>
+      <onswitchon type="script">
+        SwitchOff (computer)
+      </onswitchon>
+      <onswitchoff type="script">
+      </onswitchoff>
+    </object>
+    <exit alias="east" to="antique12">
+      <inherit name="eastdirection" />
+      <look>To the {command:east}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+  </object>
+  <object name="antique12">
+    <inherit name="editor_room" />
+    <alias>Surrounded by old memories</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <dark />
+    <description>You are in the midst of ruin and {object:wreckage}. The most noticeable thing here is what looks like a {object:boardgame}. To the {command:north}, {command:south} and {command:west}, there are gaps between the {object:wreckage} wide enough for you to pass. You think there might be a gap to the {command:east}, too, but you're not sure.</description>
+    <darkroomdescription type="script">
+      darkroom
+    </darkroomdescription>
+    <object name="boardgame">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <feature_usegive />
+      <takemsg>You don't think you can carry anything else.</takemsg>
+      <feature_container />
+      <close />
+      <open />
+      <alias>board game</alias>
+      <use type="script">
+        msg ("Shouldn't you be doing other things?")
+      </use>
+      <openscript type="script">
+        msg ("You open the box only to find that the contents and game pieces are missing. A bit disappointed, you place the cover back over it.")
+        HelperCloseObject (boardgame)
+      </openscript>
+    </object>
+    <exit alias="south" to="antique9">
+      <inherit name="southdirection" />
+      <look>To the {command:south}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+    <exit alias="west" to="antique11">
+      <inherit name="westdirection" />
+      <look>To the {command:west}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+    <exit alias="north" to="antique13">
+      <inherit name="northdirection" />
+      <look>To the {command:north}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+    <exit name="deadend" alias="east" to="antique12">
+      <inherit name="eastdirection" />
+      <lookonly type="boolean">false</lookonly>
+      <look><![CDATA[To the {command:east}, you <i>think</i> you see a small gap between the wreckage.]]></look>
+      <scenery />
+      <locked />
+      <lockmessage>You try to navigate through the small gap but give up when the {object:wreckage} threatens to collapse.</lockmessage>
+    </exit>
+  </object>
+  <object name="antique13">
+    <inherit name="editor_room" />
+    <alias>Surrounded by old memories</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <dark />
+    <description>You are in the midst of ruin and {object:wreckage}. There is an {object:mp3} with a few missing buttons on the ground by you. To the {command:south} is a gap between the wreckage wide enough for you to pass.</description>
+    <darkroomdescription type="script">
+      darkroom
+    </darkroomdescription>
+    <object name="mp3">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <feature_switchable />
+      <switchedon type="boolean">false</switchedon>
+      <switchonmsg>You push the power button and wait... but nothing happens.</switchonmsg>
+      <takemsg>You don't think you can carry anything else.</takemsg>
+      <onswitchoff type="script">
+      </onswitchoff>
+      <onswitchon type="script">
+        SwitchOff (mp3)
+      </onswitchon>
+    </object>
+    <exit alias="south" to="antique12">
+      <inherit name="southdirection" />
+      <look>To the {command:south}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+  </object>
+  <object name="antique14">
+    <inherit name="editor_room" />
+    <alias>Surrounded by old memories</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <dark />
+    <description><![CDATA[You are in the midst of ruin and {object:wreckage} but, to the {command:north}, it parts to reveal a {object:keydoor} and a {object:keypad}. <br/><br/>A {object:camera} with a small crack across the screen sits on the ground near you and to the {command:west} is a gap between the wreckage wide enough for you to pass.]]></description>
+    <darkroomdescription type="script">
+      darkroom
+    </darkroomdescription>
+    <object name="camera">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <inherit name="container_limited" />
+      <feature_switchable />
+      <feature_container />
+      <isopen />
+      <take />
+      <takemsg>You gingerly pick up the {object:camera}. You can never be too careful.</takemsg>
+      <dropmsg>You gingerly place the {object:camera} down. You can never be too careful.</dropmsg>
+      <displayverbs type="stringlist">
+        <value>Examine</value>
+        <value>Take</value>
+      </displayverbs>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <inventoryverbs type="stringlist">
+        <value>Examine</value>
+        <value>Drop</value>
+        <value>Switch on</value>
+        <value>Switch off</value>
+      </inventoryverbs>
+      <maxvolume type="int">1</maxvolume>
+      <containermaxobjects>You... can't do that.</containermaxobjects>
+      <containerfullmessage>You... can't do that.</containerfullmessage>
+      <switchonmsg>You push the power button and...</switchonmsg>
+      <autounlock type="boolean">false</autounlock>
+      <autoopen type="boolean">false</autoopen>
+      <canlockopen />
+      <hidechildren type="boolean">false</hidechildren>
+      <locked type="boolean">false</locked>
+      <transparent />
+      <look type="string"></look>
+      <onswitchon type="script"><![CDATA[
+        if (GetBoolean(camera, "offForever")) {
+          msg ("<br/>The screen remains dark. It seems to have finally broken down.")
+          SwitchOff (camera)
+        }
+        else {
+          if (Contains (camera,memorycard)) {
+            msg ("<br/>It powers on, much to your surprise. Pictures. 4321. Camera breaks down.")
+            SetObjectFlagOn (camera, "offForever")
+            SwitchOff (camera)
+          }
+          else {
+            msg ("<br/>It powers on, much to your surprise, but there doesn't seem to be any memory.")
+          }
+        }
+      ]]></onswitchon>
+    </object>
+    <exit alias="west" to="antique10">
+      <inherit name="westdirection" />
+      <look>To the {command:south}, there is a gap between the wreckage wide enough for you to pass.</look>
+    </exit>
+    <exit name="theaterExit" alias="north" to="theater">
+      <inherit name="northdirection" />
+      <locked />
+      <lockmessage>The keypad prevents access.</lockmessage>
+    </exit>
+    <object name="keypad">
+      <inherit name="editor_object" />
+      <displayverbs type="stringlist">
+        <value>Examine</value>
+        <value>Use</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Examine</value>
+        <value>Use</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <feature_usegive />
+      <look type="script"><![CDATA[
+        if (theaterExit.locked = true) {
+          msg ("A {object:keypad} beside the closed door denies further access. It looks like you need to enter a four-digit code.<br/><br/>You can {command:use keypad:use the keypad}.")
+        }
+        else {
+          msg ("A {object:keypad} beside the open {object:keydoor:door}. It looks like you need to enter a four-digit code. ")
+        }
+      ]]></look>
+      <use type="script">
+        if (theaterExit.locked = true) {
+          msg ("Enter a four-digit code:")
+          get input {
+            theaterAns = result
+            if (LengthOf (theaterAns) = 4) {
+              if (IsInt (theaterAns) = true) {
+                if (ToInt (theaterAns) = 4321) {
+                  msg ("The door grinds open.")
+                  UnlockExit (theaterExit)
+                  HelperOpenObject (keydoor)
+                }
+                else {
+                  msg ("Access denied.")
+                }
+              }
+              else {
+                msg ("You can only enter digits.")
+              }
+            }
+            else {
+              msg ("You can only enter four digits.")
+            }
+          }
+        }
+        else {
+          msg ("The door is already open.")
+        }
+      </use>
+    </object>
+    <object name="keydoor">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <feature_container />
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <alias>door</alias>
+      <openscript type="script">
+        msg ("You need to {command:use keypad:use the keypad} to open the {object:keydoor:door}.")
+      </openscript>
+    </object>
+  </object>
+  <object name="theater">
+    <inherit name="editor_room" />
+    <description type="string"></description>
+    <beforeenter type="script">
+      DisableTurnScript (crash)
+    </beforeenter>
+    <onexit type="script">
+      EnableTurnScript (crash)
+    </onexit>
+    <exit alias="south" to="antique14">
+      <inherit name="southdirection" />
+      <look>To the {command:south}, there is a doorway leading outside.</look>
+    </exit>
+    <object name="Mim">
+      <inherit name="editor_object" />
+      <inherit name="namedfemale" />
+      <scenery type="boolean">false</scenery>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look type="string"></look>
+    </object>
+  </object>
+  <command name="help1">
+    <pattern>help</pattern>
+    <script><![CDATA[
+      msg ("<b>N/E/S/W</b><br/>&nbsp; &nbsp;<i>to go to the indicated compass direction.</i><br/><b>UP/DOWN/IN/OUT</b><br/>&nbsp; &nbsp;<i>more direction commandsies.</i><br/><b>L: LOOK</b><br/>&nbsp; &nbsp;<i>around.</i><br/><b>X: EXAMINE</b><br/>&nbsp; &nbsp;<i>an object/person.</i><br/><b>I:</b> <i>take</i> <b>INVENTORY</b><br/>&nbsp; &nbsp;<i>of what you posses.</i><br/><b>Z: WAIT</b><br/>&nbsp; &nbsp;<i>a round.</i><br/><br/><b>USE</b><br/>&nbsp; &nbsp;<i>something.</i><br/><b>INSERT</b> <i>it</i> <b>INTO</b><br/>&nbsp; &nbsp;<i>something.</i><br/><b>SWITCH ON/OFF</b><br/>&nbsp; &nbsp;<i>something.</i><br/><br/>If you're too lazy to enter commands, you can always click on an object or direction to interact with it.<br/><br/>If you need more help, check out <a href=\"http://pr-if.org/doc/play-if-card/play-if-card.html\">this link</a>.<br/><br/><i>For credits and more information about this game, type <b>ABOUT.</b></i> ")
+    ]]></script>
+  </command>
+  <verb>
+    <property>insigne</property>
+    <pattern>insigne</pattern>
+    <defaultexpression>"You can't insigne " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>insert</property>
+    <pattern>insert</pattern>
+    <defaultexpression>"You can't insert " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>insert#objectmemorycard#into</property>
+    <pattern>insert #objectmemorycard# into #object#; insert #objectmemorycard# in #object#; insert #object# into #object#; insert #object# in #object#</pattern>
+    <defaultexpression>"You can't insert #objectmemorycard# into #object#; insert #objectmemorycard# in #object#; insert #object# into #object#; insert #object# in #object# " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>ssfd</property>
+    <pattern>ssfd </pattern>
+    <defaultexpression>"You can't ssfd  " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="insert">
+    <pattern>insert #object_one# into #object_two#; insert #object_one# in #object_two#; pop #object_one# into #object_two#; pop #object_one# in #object_two#</pattern>
+    <unresolved>You can't do that.</unresolved>
+    <script>
+      if ( memorycard = object_one) {
+        if (camera = object_two) {
+          if (IsSwitchedOn(camera)) {
+            MoveObject (memorycard, camera)
+            msg ("Pictures. 4321. Camera breaks down.")
+          }
+          else {
+            MoveObject (memorycard, camera)
+            msg ("You insert the {object:memorycard} into the {object:camera}.")
+          }
+        }
+        else {
+          msg ("You can't do that.")
+        }
+      }
+      else {
+        msg ("You can't do that.")
+      }
+    </script>
+  </command>
+  <command name="about">
+    <pattern>about</pattern>
+    <script><![CDATA[
+      msg ("<i>Stuff about game here... (ysa, please put some stuff here)</i><br/><br/><center><b><u>Credits</u></b></center><b>Music</b><br/><i>The Darkness Below</i> by <a href=\"http://soundimage.org\">Eric Matyas</a>")
+    ]]></script>
+  </command>
+  <function name="darkroom">
+    msg ("It's too dark to see anything. You should probably {command:switch on lantern:switch your lantern on}.")
+  </function>
+</asl>

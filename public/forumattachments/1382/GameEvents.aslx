@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<library>
+
+  <type name="event_type">
+    <turn type="int">-1</turn>
+    <done type="boolean">false</done>
+    <auto />
+    <next type="object">null_event</next>
+    <action type="script">
+      msg ("TODO")
+    </action>
+  </type>
+
+  <turnscript name="eventhandler">
+    <enabled />
+    <script><![CDATA[
+      game.turn = game.turn + 1
+        foreach (evt, GetDirectChildren(active_events)) {
+          if (evt.turn <= game.turn) {
+            invoke (evt.action)
+            evt.done = true
+            if (evt.auto) {
+               evt.parent = dead_events
+               if (HasAttribute(evt, "next")) {
+                 nextEvent = evt.next
+                 if (nextEvent <> null_event) {
+                   nextEvent.turn = nextEvent.turn + game.turn
+                   nextEvent.parent = active_events
+                }
+              }
+            }
+          }
+        }
+      ]]></script>
+    </turnscript>
+
+    <tab>
+      <parent>_ObjectEditor</parent>
+      <caption>Game Event</caption>
+      <mustnotinherit>editor_room; defaultplayer</mustnotinherit>
+      <control>
+        <controltype>dropdowntypes</controltype>
+        <caption>Type</caption>
+        <types>*=None; event_type=Game Event</types>
+        <width>100</width>
+      </control>
+
+      <control>
+        <controltype>number</controltype>
+        <caption>Begins on turn</caption>
+        <attribute>turn</attribute>
+        <width>100</width>
+        <mustinherit>event_type</mustinherit>
+        <minimum>0</minimum>
+        <maximum>1000</maximum>
+      </control>
+
+      <control>
+        <controltype>checkbox</controltype>
+        <caption>Auto-destroy on occurrence</caption>
+        <attribute>auto</attribute>
+        <mustinherit>event_type</mustinherit>
+      </control>
+
+      <control>
+        <controltype>objects</controltype>
+        <caption>Next event</caption>
+        <attribute>next</attribute>
+      </control>
+
+      <control>
+        <caption>Run this script</caption>
+        <controltype>script</controltype>
+        <attribute>action</attribute>
+        <mustinherit>event_type</mustinherit>
+      </control>
+
+    </tab>
+</library>

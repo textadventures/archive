@@ -1,0 +1,92 @@
+<!--Saved by Quest 5.5.5328.26617-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="typewriter">
+    <gameid>867080bc-6a23-476a-8d6c-74b38b28e6c7</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <js><![CDATA[
+      
+	    (function ($) {
+	      	var typewriter_interrupted = false;
+		    window.onkeydown = function(e) {
+		    	typewriter_interrupted = true;
+			};
+		    window.onmousedown = function(e) {
+		    	typewriter_interrupted = true;
+			};
+		    $.fn.typewriter = function (speed) {
+		    	typewriter_interrupted = false;
+		        this.each(function () {
+		            var $ele = $(this), str = $ele.text(), progress = 0;
+		            $ele.text('');
+		            var timer = setInterval(function () {
+		                $ele.text(str.substring(0, progress++) + '_');
+		                if (typewriter_interrupted) {
+		                	$ele.text(str);
+		                	progress = str.length;
+		                }
+		                if (progress >= str.length) {
+			                clearInterval(timer);
+			                var completion = "TypewriterDone";
+							var args = completion.split(" ");
+					        ASLEvent(args[0], args[1]);
+				        }
+          			}, speed);
+		        });
+		        return this;
+		    };
+		})(jQuery);
+	  
+	          ]]></js>
+    <start type="script">
+      JS.eval (game.js)
+      msg("(Enter 'test' to see text)")
+    </start>
+    <dummytext1>
+    	He drove along the highway, following a raised black scar that sliced through the heart of the dusty wasteland.
+    	His shirt clung to him in wet patches despite the window open to the cooling evening air. Up ahead, the setting
+    	sun, having tormented the day with sticky heat, hung low on its downward slide, conjuring notions of an open
+    	portal to Hell, and he found himself wondering how to reach it. In his current state of mind, it would be a welcome change.
+    	An upbeat song came on the radio. With sudden need, he cranked it up, his foot sitting a little heavier on the accelerator
+    	as he bounced on the leather seat, trying to turn his mind from his thoughts...
+    </dummytext1>
+    <dummytext2>
+		She sat in the hotel lobby and tried to relax. Her stomach felt tight, as if she had swallowed
+		an over-wound watch, and she flitted from sitting to pacing to mindless study of the handful of paintings on the walls.
+		As hotels went, this was a nice one, with a plush stairway leading to upper suites, looking down from behind polished wood railings.
+		The only amenity lacking, it seemed, was air-conditioning. Ceiling fans twisted overhead with surprising nonchalance
+		despite the prickly air drifting in through half-open windows. She drew in a breath and heard it flow out of her.
+		The purity of the silence surprised her - it hinted at an absence of life, but the surprise was more that she
+		found it comforting. It hadn't taken long for the desk staff to disappear into cooler back offices, 
+		leaving her alone to idle with her thoughts. Even the shimmery highway passing outside was empty. She sighed, and she waited...
+	</dummytext2>
+	<dummytext3>
+		He fell still as the song ended. Chatter filled the car, and he flipped through the presets looking for more music.
+		The highway slid past, wide and empty. He didn't know where it led. There was no place for him to go, but he was going nonetheless.
+		The sun hung lower, blinding him. It clawed at the sky, but there was no stopping its descent now...
+	</dummytext3>
+	<index type="int">1</index>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+  </object>
+  <function name="TypewriterDone" parameters="param">
+      request (Show, "Command")
+  </function>
+  <command>
+    <pattern>test</pattern>
+    <script>
+      request (Hide, "Command")
+      TextFX_Typewriter (GetString(game, "dummytext" + game.index), 10)
+      if (HasAttribute(game, "dummytext" + (game.index+1))) {
+      	game.index = game.index + 1
+      }
+    </script>
+  </command>
+</asl>

@@ -1,0 +1,272 @@
+<!--Saved by Quest 5.5.5328.26617-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="tut">
+    <gameid>e6d436f8-2cfd-4165-9626-4cb40a99f8a4</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+    <gridmap />
+    <feature_asktell />
+  </game>
+  <object name="Lounge">
+    <inherit name="editor_room" />
+    <description><![CDATA[This is a simple room.  Curled wallpaper lines the walls.  A lightless lamp is on the table.<br/>]]></description>
+    <attr name="grid_borderwidth" type="int">3</attr>
+    <attr name="grid_width" type="int">3</attr>
+    <attr name="grid_length" type="int">2</attr>
+    <attr name="grid_label">lounge</attr>
+    <attr name="grid_fill">Sienna</attr>
+    <attr name="grid_border">Blue</attr>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>turns</key>
+          <value></value>
+        </item>
+      </statusattributes>
+    </object>
+    <exit alias="south" to="Kitchen">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="TV1">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <alt type="stringlist">
+        <value>television</value>
+        <value>telly</value>
+      </alt>
+      <feature_switchable />
+      <switchedon />
+      <look>The TV is an old model, possibly 20 years old.</look>
+      <alias>Television</alias>
+      <switchedondesc>Noise blasts throught the speakers.  It might wake the nieghbors if not turned down.</switchedondesc>
+      <switchedoffdesc>A line decreases to a dot.  No more noise.</switchedoffdesc>
+      <watch type="script">
+        if (IsSwitchedOn(TV1)) {
+          msg ("You watch for a few minutes. As your will to live slowly ebbs away, you remember that you’ve always hated watching westerns.")
+        }
+        else {
+          msg ("You watch for a few minutes, thinking that the latest episode of ‘Big Brother’ is even more boring than usual. You then realise that the TV is in fact switched off.")
+        }
+      </watch>
+    </object>
+    <object name="wallpaper">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>The horrible beige wallpaper hangs loosely on the walls.</look>
+    </object>
+    <object name="carpet">
+      <inherit name="editor_object" />
+      <usedefaultprefix />
+      <scenery />
+      <look>Disgusting carpet stretches over the wood floor boards.  It appears an army of cats had been shitting for years.</look>
+    </object>
+    <object name="Bob">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <feature_usegive />
+      <look type="script">
+        if (GetBoolean(Bob, "alive")) {
+          msg ("Bob is sitting up, appearing to feel somewhat under the weather.")
+        }
+        else {
+          msg ("Bob is lying on the floor, a lot more still than usual.")
+        }
+      </look>
+      <useanything type="script">
+        SetObjectFlagOn (Bob, "alive")
+      </useanything>
+      <useon type="scriptdictionary">
+        <item key="defibrillator">
+          revive bob
+        </item>
+      </useon>
+      <ask type="scriptdictionary">
+        <item key="&quot;heart attack cardiac arrest&quot;.">
+          if (GetBoolean(Bob, "alive")) {
+            msg ("\"Well, one moment I was sitting there, feeling pretty happy with myself after eating my afternoon snack - a cheeseburger, pizza and ice cream pie, smothered in bacon, which I'd washed down with a bucket of coffee and six cans of Red Bull - when all of a sudden, I was in terrible pain, and then everything was peaceful. Then you came along.\"")
+          }
+        </item>
+      </ask>
+    </object>
+    <object name="Lamp">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <look>An old lamp.</look>
+      <scenery />
+      <feature_switchable />
+      <switchedondesc>Light illuminates the wall.</switchedondesc>
+    </object>
+    <object name="defibrillator">
+      <inherit name="editor_object" />
+      <look>A heart defibrillator can magically revive a dead person, if all those hospital dramas are to be believed.</look>
+      <feature_usegive />
+      <take />
+      <use type="script">
+        revive bob
+      </use>
+    </object>
+    <object name="table">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <feature_container />
+      <object name="newspaper">
+        <inherit name="editor_object" />
+        <take />
+        <takemsg>You fold the newspaper and place it neatly under your arm.</takemsg>
+      </object>
+      <object name="apple">
+        <inherit name="editor_object" />
+        <eat type="script">
+          msg ("You ate the apple.")
+          RemoveObject (apple)
+        </eat>
+      </object>
+    </object>
+  </object>
+  <object name="Kitchen">
+    <inherit name="editor_room" />
+    <description>The kitchen is cold and the stench of the overflowing bin makes you feel somewhat faint.</description>
+    <attr name="grid_width" type="int">2</attr>
+    <attr name="grid_length" type="int">2</attr>
+    <attr name="grid_borderwidth" type="int">2</attr>
+    <attr name="grid_label">Kitchen</attr>
+    <attr name="grid_fill">SlateBlue</attr>
+    <exit alias="north" to="Lounge">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="bin">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>Rotten food spills over the top to the floor.</look>
+    </object>
+    <object name="eggs">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <weight type="int">250</weight>
+      <look type="script">
+        msg ("A box of eggs, weighing " + eggs.weight + " grams. ")
+      </look>
+    </object>
+    <object name="flour">
+      <inherit name="editor_object" />
+      <weight type="int">500</weight>
+    </object>
+    <object name="sugar">
+      <inherit name="editor_object" />
+      <weight type="int">1000</weight>
+    </object>
+    <object name="fridge">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <feature_container />
+      <drop type="boolean">false</drop>
+      <look type="script">
+        if (fridge.isopen) {
+          msg ("\"The fridge is open, casting its light out into the gloomy kitchen\".")
+        }
+        else {
+          msg ("\"A big old refrigerator sits in the corner, humming quietly\".")
+        }
+      </look>
+      <onopen type="script">
+      </onopen>
+      <object name="milk">
+        <inherit name="editor_object" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>some</prefix>
+        <look>Some rotten milk.</look>
+        <take />
+      </object>
+      <object name="cheese">
+        <inherit name="editor_object" />
+        <look>A yellow blob of something that smells like rotten toes.</look>
+        <take />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>some</prefix>
+      </object>
+      <object name="beer">
+        <inherit name="editor_object" />
+        <take />
+        <look>Ah yes, the necture of ye gods.</look>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>some</prefix>
+      </object>
+    </object>
+    <object name="window">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <look>Regular window you've seen countless times, but this glass bastard is about to split up the middle.</look>
+      <feature_container />
+      <openscript type="script">
+        if (Contains (Kitchen,bee)) {
+          msg ("You open the window.  Not much happens.")
+        }
+        else {
+          msg ("You open the window and a bee flies into the Kitchen.")
+          MoveObjectHere (bee)
+          EnableTimer (bee timer)
+        }
+        HelperOpenObject (window)
+      </openscript>
+      <closescript type="script">
+        HelperCloseObject (window)
+        msg ("You close the window.")
+      </closescript>
+    </object>
+  </object>
+  <verb>
+    <property>watch</property>
+    <pattern>watch</pattern>
+    <defaultexpression>"You can't watch " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="saying">
+    <pattern>say #text_talk# to #object_one#</pattern>
+    <unresolved>Say that to who?</unresolved>
+    <script>
+      switch (object_one) {
+        case (Bob) {
+          msg ("You say: " + text_talk)
+          msg ("Bob smiles back at you.")
+        }
+      }
+    </script>
+  </command>
+  <command>
+    <pattern>weigh #object#</pattern>
+    <script>
+      if (HasAttribute(object, "weight")) {
+        msg ("It weighs " + object.weight + " grams.")
+      }
+      else {
+        msg ("You can't weigh that.")
+      }
+    </script>
+  </command>
+  <object name="bee">
+    <inherit name="editor_object" />
+    <look>A menacing bumble bee.  If you're allergic, run for your life!</look>
+  </object>
+  <turnscript>
+    <enabled />
+    <script>
+      player.turns = player.turns + 1
+    </script>
+  </turnscript>
+  <function name="revive bob">
+    msg ("Miraculously, the defibrillator lived up to its promise, and Bob is now alive again. He says his head feels kind of fuzzy.")
+    SetObjectFlagOn (Bob, "alive")
+  </function>
+  <timer name="bee timer">
+    <interval>20</interval>
+    <script>
+      if (game.pov.parent = Kitchen) {
+        msg ("The bee buzzes past you. Pesky bee.")
+      }
+    </script>
+  </timer>
+</asl>

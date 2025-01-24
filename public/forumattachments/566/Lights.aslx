@@ -1,0 +1,163 @@
+<!--
+
+  Library: Lights.aslx
+  Purpose: Light sources and light switches for Quest 5.4+
+   Author: Igor Levicki
+  Version: 1.1
+     Date: 2013-03-24
+Copyright: (C) 2013 by Igor Levicki. All rights reserved.
+Licensing: You can use this code for free in non-commercial products.
+
+-->
+<library>
+  <template name="LightsLookAtOuch">Ouch! Your eyes!</template>
+  <template name="LightsSwitchGlow">It gives off a subtle blue glow in the dark.</template>
+  <dynamictemplate name="LightsSwitchLookAt">"A " + GetDisplayAlias(object1) + " which controls the " + GetDisplayAlias(object2) + " in the " + GetDisplayAlias(object3) + "."</dynamictemplate>
+  <dynamictemplate name="LightsNoSource">"No light source is assigned to " + GetDisplayAlias(object) + "."</dynamictemplate>
+  <dynamictemplate name="LightsNoRoom">"No room is assigned to " + GetDisplayAlias(object) + " light source."</dynamictemplate>
+  <dynamictemplate name="LightsNoScript">"Switch " + GetDisplayAlias(object) + " is disabled, but there is no disabled_message script assigned to it."</dynamictemplate>
+  <dynamictemplate name="LightsNotDark">"There is no need to turn on the " + object1.alias + " in the " + object2.alias + " right now."</dynamictemplate>
+  <dynamictemplate name="LightsOnOff">"Touching the " + GetDisplayAlias(object1) + " turns " + GetLightNewState(object2) + " the " + GetDisplayAlias(object2) + " in the " + GetDisplayAlias(object3) + "."</dynamictemplate>
+  <type name="light_source">
+    <displayverbs type="stringlist">
+      <value>Look at</value>
+    </displayverbs>
+    <inventoryverbs type="stringlist" />
+    <on type="boolean">false</on>
+    <drop type="boolean">false</drop>
+    <look type="script">
+      if (this.on) {
+        msg (Template("LightsLookAtOuch"))
+      }
+      else {
+        dark = CheckDarkness()
+        if (dark) {
+          msg (DynamicTemplate("LookAtDarkness"))
+        }
+        else {
+          msg (Template("DefaultObjectDescription"))
+        }
+      }
+    </look>
+  </type>
+  <type name="light_switch">
+    <displayverbs type="stringlist">
+      <value>Look at</value>
+      <value>Touch</value>
+    </displayverbs>
+    <inventoryverbs type="stringlist" />
+    <drop type="boolean">false</drop>
+    <lightsource />
+    <lightstrength>weak</lightstrength>
+    <look type="script">
+      light_source = GetSwitchLightSource(this)
+      light_room = GetLightRoom(light_source)
+      dark = CheckDarkness()
+      msg (DynamicTemplate("LightsSwitchLookAt", this, light_source, light_room))
+      if (dark) {
+        msg (Template("LightsSwitchGlow"))
+      }
+    </look>
+    <touch type="script">
+      if (GetBoolean(this, "disabled")) {
+        if (HasScript(this, "disabled_message")) {
+          do (this, "disabled_message")
+        }
+        else {
+          error (DynamicTemplate("LightsNoScript", this))
+        }
+      }
+      else {
+        light_source = GetSwitchLightSource(this)
+        light_room = GetLightRoom(light_source)
+        dark = CheckRoomDarkness(light_room)
+        if (not dark) {
+          if (light_source.on) {
+            LightSwitchToggle(false, this, light_source, light_room)
+          }
+          else {
+            msg (DynamicTemplate("LightsNotDark", light_source, light_room))
+          }
+        }
+        else {
+          if (light_source.on) {
+            LightSwitchToggle(false, this, light_source, light_room)
+          }
+          else {
+            LightSwitchToggle(true, this, light_source, light_room)
+          }
+        }
+      }
+    </touch>
+  </type>
+  <function name="GetSwitchLightSource" parameters="light_switch" type="object">
+    if (not HasObject(light_switch, "source")) {
+      error (DynamicTemplate("LightsNoSource", light_switch))
+      return (null)
+    }
+    else {
+      return (light_switch.source)
+    }
+  </function>
+  <function name="GetLightNewState" parameters="light_source" type="string">
+    if (light_source.on) {
+      return ("off")
+    }
+    else {
+      return ("on")
+    }
+  </function>
+  <function name="LightSwitchToggle" parameters="state, light_switch, light_source, light_room" type="">
+    msg (DynamicTemplate("LightsOnOff", light_switch, light_source, light_room))
+    if (state) {
+      strength = "strong"
+    }
+    else {
+      strength = ""
+    }
+    SetObjectLightstrength (light_source, strength)
+    light_source.on = state
+  </function>
+  <function name="GetLightRoom" parameters="light_source" type="object">
+    if (not HasObject(light_source, "room")) {
+      error (DynamicTemplate("LightsNoRoom", light_source))
+      return (null)
+    }
+    else {
+      return (light_source.room)
+    }
+  </function>
+  <function name="CheckDarkness" type="boolean">
+    return (CheckRoomDarkness(game.pov.parent))
+  </function>
+  <function name="CheckRoomDarkness" parameters="room" type="boolean">
+    roomCheckDarkness = true
+    if (GetBoolean(room, "dark")) {
+      lights = ScopeRoomLightSources(room, "strong")
+      if (ListCount(lights) > 0) {
+        roomCheckDarkness = false
+      }
+    } 
+    else {
+      roomCheckDarkness = false
+    }
+    room.darklevel = roomCheckDarkness
+    return (roomCheckDarkness)
+  </function>
+  <function name="ScopeRoomLightSources" type="objectlist" parameters="room, lightstrength">    
+    result = GetAllChildObjects(room)
+    lightobjects = NewObjectList()
+    foreach (obj, result) {
+      if (GetBoolean(obj, "lightsource") and GetString(obj, "lightstrength") = lightstrength) {
+        list add(lightobjects, obj)
+      }
+    }
+    exits = ScopeExitsForRoom(room)
+    foreach (obj, exits) {
+      if (GetBoolean(obj, "lightsource") and GetString(obj, "lightstrength") = lightstrength) {
+        list add(lightobjects, obj)
+      }
+    }
+    return (lightobjects)
+  </function>
+</library>

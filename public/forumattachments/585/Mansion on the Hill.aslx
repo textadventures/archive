@@ -1,0 +1,214 @@
+<!--Saved by Quest 5.4.4840.17608-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <template name="Drawer">Drawer</template>
+  <game name="Mansion on the Hill">
+    <gameid>bfacf616-59f2-42c4-b3ac-0bb75ec77485</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <author>Paul Mayo</author>
+    <attr name="autodescription_youarein" type="int">1</attr>
+    <category>RPG</category>
+    <difficulty>Medium</difficulty>
+    <cruelty>Nasty</cruelty>
+    <showdescriptiononenter />
+    <attr name="autodescription_youcansee" type="int">4</attr>
+    <attr name="autodescription_youcango" type="int">3</attr>
+    <attr name="autodescription_description" type="int">2</attr>
+  </game>
+  <object name="Dimly lit room">
+    <inherit name="editor_room" />
+    <descprefix type="string"></descprefix>
+    <objectslistprefix>You can see </objectslistprefix>
+    <description>The room is dimly lit by a candle set on the bureau. You can make out the beautiful, fabric wall-dressings with the colors, Red, Green, and blue strewn across them like a Picasso painting, and you faintly catch a short waft of lavender in the air.  You also notice a part of some of the wall-dressing is loose.</description>
+    <exit alias="north">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="Softly glowing candle">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <look>You see a Dimly lit candle, there is nothing special about the candle other than that it is lit.</look>
+      <alt type="stringlist">
+        <value>Candle</value>
+      </alt>
+      <listalias>Candle</listalias>
+      <displayverbs type="stringlist">
+        <value>Examine</value>
+        <value>Take</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Examine</value>
+        <value>Use</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <take />
+      <takemsg>You have taken the candle.</takemsg>
+      <dropmsg>You have dropped the candle with a slight splash of wax on the floor.</dropmsg>
+      <switchedon />
+      <switchonmsg>You have lit the candle, it begins to emit a softly glowing light.</switchonmsg>
+      <switchoffmsg>You have extinguished the candle, its soft light has been lost.</switchoffmsg>
+      <lightsource />
+      <lightstrength>strong</lightstrength>
+    </object>
+    <object name="Bureau">
+      <inherit name="editor_object" />
+      <look>You see light brown Bureau, with a single drawer.</look>
+      <drop type="boolean">false</drop>
+      <openmsg>You jiggle the drawer, its a little stiff to open, It finally opens in a quick snap.</openmsg>
+      <closemsg>You close the drawer with a snap.</closemsg>
+      <usestandardverblist type="boolean">false</usestandardverblist>
+      <useindividualverblist type="boolean">false</useindividualverblist>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <linkcolour>Brown</linkcolour>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <listalias>Bureau</listalias>
+    </object>
+    <object name="Drawer">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <useindividualverblist type="boolean">false</useindividualverblist>
+      <usestandardverblist type="boolean">false</usestandardverblist>
+      <inventoryverbs type="stringlist" />
+      <drop type="boolean">false</drop>
+      <isopen type="boolean">false</isopen>
+      <maxobjects type="int">4</maxobjects>
+      <listchildren type="boolean">false</listchildren>
+      <listchildrenprefix>You see inside</listchildrenprefix>
+      <containermaxobjects>The drawer cannot hold anymore with breaking!</containermaxobjects>
+      <maxvolume type="int">30</maxvolume>
+      <openmsg>You jiggle the drawer, it's a little stiff to open, it finally opens with a snap!</openmsg>
+      <closemsg>You close the drawer,  it shuts with a snap!</closemsg>
+      <close />
+      <visible />
+      <listalias>Drawer</listalias>
+      <linkcolour>BurlyWood</linkcolour>
+      <transparent type="boolean">false</transparent>
+      <scenery type="boolean">false</scenery>
+      <hidechildren type="boolean">false</hidechildren>
+      <look type="script"><![CDATA[
+        OutputTextNoBr ("In the drawer you see")
+        if (ListCount(GetDirectChildren(this)) = 0) {
+          msg ("nothing.")
+        }
+        d = NewStringDictionary()
+        dcount = 0
+        d2 = NewStringDictionary()
+        d2count = 0
+        foreach (object, GetDirectChildren(this)) {
+          if (object.alias = null) {
+            object.alias = object.name
+          }
+          obj = object.alias
+          if (not DictionaryContains(d, obj)) {
+            dictionary add (d, obj, ToString(1))
+            dcount = dcount + 1
+          }
+          else {
+            original = ToInt(StringDictionaryItem(d, obj))
+            dictionary remove (d, obj)
+            dictionary add (d, obj, ToString(original + 1))
+          }
+        }
+        if (dcount = 1) {
+          if (ToInt(StringDictionaryItem(d, obj)) = 1) {
+            amount = "a"
+          }
+          else {
+            amount = StringDictionaryItem(d, obj)
+          }
+          OutputTextNoBr (amount + " " + obj)
+          if (amount = "a") {
+            msg (".")
+          }
+          else {
+            msg ("s.")
+          }
+        }
+        foreach (obj, d) {
+          d2count = d2count + 1
+          dictionary add (d2, obj, ToString(d2count))
+          if (ToInt(StringDictionaryItem(d, obj)) = 1) {
+            amount = "a"
+          }
+          else {
+            amount = StringDictionaryItem(d, obj)
+          }
+          if (dcount > 1) {
+            if (not StringDictionaryItem(d2, obj) = ToString(dcount)) {
+              OutputTextNoBr (amount + " " + obj)
+              if (amount = "a") {
+                OutputTextNoBr (", ")
+              }
+              else {
+                OutputTextNoBr ("s, ")
+              }
+            }
+            else {
+              OutputTextNoBr ("and " + amount + " " + obj)
+              if (amount = "a") {
+                msg (".")
+              }
+              else {
+                msg ("s.")
+              }
+            }
+          }
+        }
+      ]]></look>
+      <object name="matchbook">
+        <inherit name="editor_object" />
+        <alias>matchbook</alias>
+        <take />
+        <takemsg>You get the matchbook.</takemsg>
+        <dropmsg>The matchbook falls to the floor.</dropmsg>
+        <linkcolour>Black</linkcolour>
+        <look>Its a matchbook with matches inside, you also notice some writing inside that reads "Room 15 north" Jessica.</look>
+        <listalias>Matchbook</listalias>
+        <switchonmsg>You light a match.</switchonmsg>
+        <switchoffmsg>You extinguish the match.</switchoffmsg>
+        <switchedondesc>You feel the warmth, and glow of the lit match.</switchedondesc>
+        <switchedoffdesc>It goes out with a puff of smoke.</switchedoffdesc>
+        <switchedon type="boolean">false</switchedon>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>Take</value>
+        </displayverbs>
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Use</value>
+          <value>Drop</value>
+          <value>Light match</value>
+          <value>unlight match</value>
+        </inventoryverbs>
+        <use type="boolean">false</use>
+        <object name="Match">
+          <inherit name="editor_object" />
+          <alias>mat</alias>
+        </object>
+      </object>
+      <object name="key">
+        <inherit name="editor_object" />
+        <take />
+        <takemsg>Take get the key.</takemsg>
+      </object>
+      <object name="Note">
+        <inherit name="editor_object" />
+        <take />
+        <takemsg>You recieve the note.</takemsg>
+        <dropmsg>The note floats to the floor.</dropmsg>
+      </object>
+    </object>
+  </object>
+  <verb>
+    <property>light</property>
+    <pattern>light</pattern>
+    <defaultexpression>"You can't light " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

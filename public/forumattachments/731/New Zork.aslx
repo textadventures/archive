@@ -1,0 +1,564 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="New Zork">
+    <gameid>568a7b8c-9e93-4620-bb3a-04465a5f005a</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <attr name="autodescription_description" type="int">2</attr>
+    <attr name="autodescription_youcansee" type="int">3</attr>
+    <attr name="autodescription_youcango" type="int">4</attr>
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <showscore />
+    <turnscript name="player_turns">
+      <enabled />
+      <script>
+        player.turns = player.turns +1
+      </script>
+    </turnscript>
+  </game>
+  <object name="West of House">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script">
+      msg ("You are standing in an open field west of a white house, with a boarded front door.")
+      firsttime {
+        msg ("Your head feels kind of groggy and you're not sure where you are...  or why you're here... or where here is.  You have a vague memory of arriving home after Professor Filbert's class in Anthropological Underground Empire Studies.  After that all you can remember is sitting in your room (AKA - your mom's basement) in your underwear playing a text adventure game that was written in 1980.")
+      }
+    </description>
+    <object name="mailbox">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <listchildren />
+      <listchildrenprefix>It contains</listchildrenprefix>
+      <openmsg>The mailbox is now open.</openmsg>
+      <closemsg>The mailbox is now closed</closemsg>
+      <takemsg>While carrying around a magic mailbox might seem like a good idea, the postal service would consider that a capital offense.</takemsg>
+      <look type="script">
+        msg ("On the side of the mailbox is printed Acme Magic Mailbox.  On top is one of those cheap mailbox name tags you buy at WalMart where you slide in the letters.  In this case someone has spelled out, \"rof. Filbert.\"  A one inch tall letter P has fallen out and is laying on the ground.")
+        MakeObjectVisible (P)
+      </look>
+      <object name="envelope">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <look>The letter is addressed to Professor Filbert.</look>
+        <close type="boolean">false</close>
+        <isopen type="boolean">false</isopen>
+        <listchildren />
+        <listchildrenprefix>It contains</listchildrenprefix>
+        <openmsg>You open the envelope and remove a letter addressed to Professor Filbert.</openmsg>
+        <closemsg>You can't close the envelope.</closemsg>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>Take</value>
+        </displayverbs>
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Use</value>
+          <value>Drop</value>
+          <value>Open</value>
+          <value>Close</value>
+        </inventoryverbs>
+        <take type="script">
+          msg ("As you take the envelope the mailbox magically closes.  Not very impressive if that's all the Acme Magic Mailbox does.")
+          HelperCloseObject (mailbox)
+          AddToInventory (envelope)
+        </take>
+        <onopen type="script">
+          AddToInventory (letter)
+        </onopen>
+        <object name="letter">
+          <inherit name="editor_object" />
+          <look>Looks like a letter.  You might want to read it.</look>
+          <take />
+          <displayverbs type="stringlist">
+            <value>Look at</value>
+            <value>Take</value>
+            <value>Read</value>
+          </displayverbs>
+          <inventoryverbs type="stringlist">
+            <value>Look at</value>
+            <value>Use</value>
+            <value>Drop</value>
+            <value>Read</value>
+          </inventoryverbs>
+          <read>As you open the letter you notice the signature at the bottom is yours.  That's odd.  Although your head is a little fuzzy at the moment, you don't remember sending any letters recently.  The letter reads, "Dear Professor Filbert, I look forward to our meeting next week and hearing more about your theory on the second underground empire.  Do you think there's some correlation between this new empire and the fall of the Great Underground Empire?"</read>
+        </object>
+      </object>
+    </object>
+    <object name="soggy paper">
+      <inherit name="editor_object" />
+      <look>It looks like part of a page torn from a textbook</look>
+      <take />
+      <usedefaultprefix />
+      <prefix>piece of</prefix>
+      <read type="script">
+        if (Got(soggy paper)) {
+          msg ("The piece of paper is wet and beginning to disintegrate.  The only part that is still readable says something about typing help for assistance.")
+        }
+        else {
+          msg ("You don't have the soggy paper.")
+        }
+      </read>
+    </object>
+    <object name="house">
+      <inherit name="editor_object" />
+      <look>The house looks vaguely familiar, although older than you remember and in need of some paint.</look>
+      <takemsg>You're kidding right?</takemsg>
+      <scenery />
+    </object>
+    <object name="P">
+      <inherit name="editor_object" />
+      <look>Looks like any other letter P.</look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <takemsg>If you need to take a pee, go into the forest.</takemsg>
+      <prefix>the letter</prefix>
+      <visible type="boolean">false</visible>
+      <scenery type="boolean">false</scenery>
+    </object>
+    <exit alias="southeast" to="South of House">
+      <inherit name="southeastdirection" />
+    </exit>
+    <exit alias="northeast" to="North of House">
+      <inherit name="northeastdirection" />
+    </exit>
+  </object>
+  <object name="North of House">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <exit alias="southeast" to="East of House">
+      <inherit name="southeastdirection" />
+    </exit>
+    <exit alias="southwest" to="West of House">
+      <inherit name="southwestdirection" />
+    </exit>
+    <object name="house1">
+      <inherit name="editor_object" />
+      <alias>house</alias>
+      <look>There are no obvious points of entry on this side of the house.</look>
+    </object>
+    <exit alias="north" to="Forest">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="East of House">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <exit alias="southwest" to="South of House">
+      <inherit name="southwestdirection" />
+    </exit>
+    <exit alias="northwest" to="North of House">
+      <inherit name="northwestdirection" />
+    </exit>
+    <object name="crank">
+      <inherit name="editor_object" />
+      <turn type="script"><![CDATA[
+        if (GetBoolean(clock, "on")) {
+          msg ("If you turn the crank while the clock is running you'll probably break it.")
+        }
+        else if (GetBoolean(ID card, "on")) {
+          msg ("The neighbors will complain if you keep doing that.")
+        }
+        else if (Contains (clock,four ounce weights)) {
+          msg ("The cuckoo clock starts up and after a few seconds the miniature door opens and a wooden owl pops out and  begins squawking \"Who, Who.\"  The owl repeats the phrase every few minutes.<br/>You can hear the owl from the forest circling the area.")
+          SetObjectFlagOn (clock, "on")
+          MoveObject (owl, East of House)
+          SetTurnTimeout (5) {
+            msg ("You can no longer hear the cuckoo clock.  You either need to get to the nest faster or get the cuckoo clock to run slower.")
+            MoveObject (owl, nest)
+            SetObjectFlagOff (clock, "on")
+          }
+        }
+        else if (Contains (clock,three ounce weights)) {
+          msg ("The cuckoo clock starts up and after a few seconds the miniature door opens and a wooden owl pops out and  begins squawking \"Whooo, Whooo,\" as if its in slow motion.  The owl repeats the phrase every few minutes.<br/>You can hear the owl from the forest circling the area.")
+          SetObjectFlagOn (clock, "on")
+          MoveObject (owl, East of House)
+          SetTurnTimeout (6) {
+            msg ("You can no longer hear the cuckoo clock.")
+          }
+          SetTurnTimeout (7) {
+            SetObjectFlagOff (clock, "on")
+            MoveObject (owl, nest)
+          }
+        }
+        else {
+          msg ("The clock won't start without some weights installed.")
+        }
+      ]]></turn>
+    </object>
+    <object name="worms">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Drop</value>
+        <value>Put</value>
+        <value>Give</value>
+      </inventoryverbs>
+      <useindividualverblist type="boolean">false</useindividualverblist>
+      <alt type="stringlist">
+        <value>worm</value>
+      </alt>
+      <usestandardverblist />
+      <givesingle />
+      <use />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>some</prefix>
+      <take type="script">
+        if (Contains (nest,worms)) {
+          msg ("That would really piss off the owl and since you are precariously perched on a limb doesn't sound like a good idea.")
+        }
+        else {
+          msg ("You take the worms.")
+          AddToInventory (worms)
+        }
+      </take>
+      <look type="script">
+        if (Got(worms)) {
+          msg ("There are about a dozen worms squirming in your hand.")
+        }
+        else if (game.pov.parent = East of House) {
+          msg ("You can see a couple of dozen worms who have burrowed out of the ground, trying to avoid the damp earth.")
+        }
+        else if (Contains (nest,worms)) {
+          msg ("The worms are wriggling around inside the nest.")
+        }
+        else {
+          msg ("They look like your standard variety earthworms.")
+        }
+      </look>
+      <put type="scriptdictionary">
+        <item key="nest">
+          if (ListContains(ScopeVisible(), nest)) {
+            if (not ListContains(ScopeVisible(), owl)) {
+              msg ("You put the worms in the nest.")
+              MoveObject (worms, nest)
+              msg ("The owl returns to the forest and circles overhead.  Spotting the worms in its nest it swoops down, settles into the nest and scoops up the worms with its beak.")
+              SetObjectFlagOn (owl, "on")
+              MoveObject (owl, nest)
+            }
+            else if (ListContains(ScopeVisible(), owl)) {
+              msg ("Although the owl seems interested in the worms, its instinct to protect its nest is greater.  You pull your hand back quickly as it snaps at your fingers.")
+            }
+          }
+        </item>
+      </put>
+      <selfuseon type="scriptdictionary">
+        <item key="owl">
+          msg ("Do you know the difference between wild animals and pets?")
+        </item>
+        <item key="nest">
+          if (not ListContains(ScopeVisible(), owl)) {
+            msg ("You put the worms in the nest.")
+            MoveObject (worms, nest)
+          }
+          else if (ListContains(ScopeVisible(), owl)) {
+            msg ("Although the owl seems interested in the worms, its instinct to protect its nest is greater.  You pull your hand back quickly as it snaps at your fingers.")
+          }
+        </item>
+        <item key="mailbox">
+          msg ("I don't think the Postal Service would appreciate that.")
+        </item>
+      </selfuseon>
+      <giveto type="scriptdictionary">
+        <item key="owl">
+          msg ("Do you know the difference between wild animals and pets?")
+        </item>
+      </giveto>
+    </object>
+    <object name="clock">
+      <inherit name="editor_object" />
+      <inherit name="container_limited" />
+      <alias>cuckoo clock</alias>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <maxobjects type="int">1</maxobjects>
+      <look type="script"><![CDATA[
+        if (GetBoolean(clock, "on")) {
+          if (Contains (clock,four ounce weights)) {
+            msg ("There is an old fashioned cuckoo clock hanging on the north wall.  It is intricately carved out of wood with an owl, wings spread wide, on top and a miniature door on the front.  Every few minutes the door swings open and an owl pops out and  squawks in slow motion \"Who, Who.\" There is a crank on the right hand side.<br/>Hanging down from center of the clock is a pendulum, which is currently swinging side to side.  There are two chains with hooks at the bottom, on each side of the pendulum.  Currently each hook contains a four ounce weight.")
+          }
+          else if (Contains (clock,three ounce weights)) {
+            msg ("There is an old fashioned cuckoo clock hanging on the north wall.  It is intricately carved out of wood with an owl, wings spread wide, on top and a miniature door on the front.  Every few minutes the door swings open and an owl pops out and  squawks in slow motion \"Whooo, Whooo,\" as if in slow motion.   There is a crank on the right hand side.<br/>Hanging down from center of the clock is a pendulum, which is currently swinging side to side.  There are two chains with hooks at the bottom, on each side of the pendulum.  Currently each hook contains a three ounce weight.")
+          }
+        }
+        if (not GetBoolean(clock, "on")) {
+          if (Contains (clock,four ounce weights)) {
+            msg ("There is an old fashioned cuckoo clock hanging on the north wall.  It is intricately carved out of wood with an owl, wings spread wide, on top and a miniature door on the front.  The door is currently closed.  There is a crank on the right hand side.<br/>Hanging down from center of the clock is a pendulum, which is currently not moving.  There are two chains with hooks at the bottom, on each side of the pendulum.  Currently each hook contains a four ounce weight.")
+          }
+          else if (Contains (clock,three ounce weights)) {
+            msg ("There is an old fashioned cuckoo clock hanging on the north wall.  It is intricately carved out of wood with an owl, wings spread wide, on top and a miniature door on the front.  The door is currently closed.  There is a crank on the right hand side.<br/>Hanging down from center of the clock is a pendulum, which is currently not moving.  There are two chains with hooks at the bottom, on each side of the pendulum.  Currently each hook contains a three ounce weight.")
+          }
+          else {
+            msg ("There is an old fashioned cuckoo clock hanging on the north wall.  It is intricately carved out of wood with an owl, wings spread wide, on top and a miniature door on the front.  The door is currently closed.  There is a crank on the right hand side.<br/>Hanging down from center of the clock is a pendulum, which is currently not moving.  There are two chains with hooks at the bottom, on each side of the pendulum.  Currently the two hooks are empty.")
+          }
+        }
+      ]]></look>
+      <object name="four ounce weights">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>two</prefix>
+        <takemsg>You remove the two four ounce weights from the cuckoo clock.</takemsg>
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Use</value>
+          <value>Drop</value>
+          <value>Put</value>
+        </inventoryverbs>
+        <use />
+        <usestandardverblist type="boolean">false</usestandardverblist>
+        <take type="script">
+          if (GetBoolean(clock, "on")) {
+            if (Contains (clock,four ounce weights)) {
+              msg ("If you remove the weights while the clock is running you will probably break it.")
+            }
+            else {
+              msg ("You take the weights.")
+              AddToInventory (four ounce weights)
+            }
+          }
+          else {
+            msg ("You remove the weights.")
+            AddToInventory (four ounce weights)
+          }
+        </take>
+        <selfuseanything type="script">
+          msg ("Did you sleep through Physics class.")
+        </selfuseanything>
+        <selfuseon type="scriptdictionary">
+          <item key="clock">
+            msg ("You put the weights on the hooks.")
+            MoveObject (four ounce weights, clock)
+          </item>
+        </selfuseon>
+      </object>
+    </object>
+    <object name="three ounce weights">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>two</prefix>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Drop</value>
+        <value>Put</value>
+      </inventoryverbs>
+      <use />
+      <take type="script">
+        if (GetBoolean(clock, "on")) {
+          if (Contains (clock,three ounce weights)) {
+            msg ("If you remove the weights while the clock is running you will probably break it.")
+          }
+          else {
+            msg ("You take the weights.")
+            AddToInventory (three ounce weights)
+          }
+        }
+        else {
+          msg ("You take the weights.")
+          AddToInventory (three ounce weights)
+        }
+      </take>
+      <selfuseanything type="script">
+        msg ("DId you sleep through Physics class?")
+      </selfuseanything>
+      <selfuseon type="scriptdictionary">
+        <item key="clock">
+          msg ("You put the weights on the hooks.")
+          MoveObject (three ounce weights, clock)
+        </item>
+      </selfuseon>
+    </object>
+  </object>
+  <object name="South of House">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <exit alias="northeast" to="East of House">
+      <inherit name="northeastdirection" />
+    </exit>
+    <exit alias="northwest" to="West of House">
+      <inherit name="northwestdirection" />
+    </exit>
+    <object name="house2">
+      <inherit name="editor_object" />
+      <alias>house</alias>
+      <look>There are no obvious points of entry on this side of the house.</look>
+    </object>
+  </object>
+  <object name="Forest">
+    <inherit name="editor_room" />
+    <description>You are surrounded by large pine trees that block the majority of sunlight and cast odd shadows on the needle covered floor.  While most of the ancient tree's limbs are more than 10 foot above the ground, there is one younger tree that you might be able to climb.</description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <enter type="script">
+      if (Contains (nest,worms)) {
+        SetObjectFlagOn (ID card, "on")
+        msg ("As you climb down out of the tree the owl dives down from its nest, shakes its head a couple of times and the ID card slips off its neck and floats to the ground.")
+        MakeObjectInvisible (worms)
+        MakeObjectInvisible (owl)
+        MoveObject (ID card, Forest)
+      }
+    </enter>
+    <exit alias="south" to="North of House">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="up" to="Up a Tree">
+      <inherit name="updirection" />
+    </exit>
+  </object>
+  <object name="Up a Tree">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script">
+      msg ("You are in a tree about twenty feet above the forest floor.  You can hear the branch you are standing on making small cracking sounds.  It might not be a good idea to stay here very long.")
+      if (ListContains(ScopeVisible(), owl)) {
+        msg ("On the limb above you there is a large nest, with a large owl glaring at you.  It doesn't look very happy that you are in its tree.  Around the owl's neck is strung an ID card.  If you stretched way out on your tippie-toes you might be able to reach it.")
+        if (Got(worms)) {
+          msg ("The owl gazes longingly at the worms you are carrying.")
+        }
+      }
+      else {
+        msg ("On the limb above you there is a large nest.")
+      }
+    </description>
+    <enter type="script">
+    </enter>
+    <exit alias="down" to="Forest">
+      <inherit name="downdirection" />
+    </exit>
+    <object name="nest">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <takemsg>I think that would upset the mother owl.  Probably better just to leave it alone.</takemsg>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+      </displayverbs>
+      <look type="script">
+        if (ListContains(ScopeVisible(), owl)) {
+          msg ("The nest is made up of the typical forest debris (twigs, leaves, etc.) and some human debris like cigarette butts, Q-Tips and pop-tops from those old-style beer cans.  There is an owl in the nest.")
+        }
+        else {
+          msg ("The nest is made up of the typical forest debris (twigs, leaves, etc.) and some human debris like cigarette butts, Q-Tips and pop-tops from those old-style beer cans.")
+        }
+      </look>
+      <object name="owl">
+        <inherit name="editor_object" />
+        <inherit name="surface" />
+        <scenery type="boolean">false</scenery>
+        <takemsg>I don't think owls make very good pets.</takemsg>
+        <open type="boolean">false</open>
+        <close type="boolean">false</close>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>Take</value>
+        </displayverbs>
+        <contentsprefix>with an</contentsprefix>
+        <look type="script">
+          if (GetBoolean(owl, "on")) {
+            msg ("The owl is eating the worms.  There is an ID card hanging around the its neck.")
+          }
+          else {
+            msg ("The owl is glaring at you.  There is an ID card hanging around the its neck.  The owl looks hungry.")
+          }
+        </look>
+        <object name="ID card">
+          <inherit name="editor_object" />
+          <visible />
+          <look>It looks like one of those ID cards the employees at the college use to get into restricted areas.</look>
+          <takemsg>The owl snaps at your fingers as you reach for the ID card.  You pull your hand back quickly.</takemsg>
+          <take type="script">
+            if (Contains (nest,worms)) {
+              if (game.pov.parent = Up a Tree) {
+                msg ("The owl mistakenly thinks you are trying to take the worms and moves to the far side of the nest.")
+              }
+            }
+            else if (not Contains (nest,worms)) {
+              msg ("The owl snaps at your fingers as you reach for the ID card.  You pull your hand back quickly.")
+            }
+            else {
+              msg ("You take the card.")
+              AddToInventory (ID card)
+            }
+          </take>
+        </object>
+      </object>
+    </object>
+  </object>
+  <verb>
+    <property>put</property>
+    <pattern>put</pattern>
+    <defaultexpression>"You can't put " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Test">
+    <inherit name="editor_room" />
+    <description>Room for testing functions.</description>
+    <object name="barrel">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+    </object>
+    <object name="apple">
+      <inherit name="editor_object" />
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Drop</value>
+        <value>Put</value>
+      </inventoryverbs>
+      <take />
+    </object>
+    <object name="orange">
+      <inherit name="editor_object" />
+      <take />
+      <usestandardverblist />
+      <put type="scriptdictionary">
+        <item key="barrel">
+          if (ListContains(ScopeVisible(), barrel)) {
+            msg ("You put the orange in the barrel.")
+            MoveObject (orange, barrel)
+            IncreaseScore (10)
+            msg ("Your score has increased by 10.")
+          }
+          else {
+            msg ("It won't fit in the bowl.")
+          }
+        </item>
+      </put>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Drop</value>
+        <value>Put</value>
+      </inventoryverbs>
+      <useindividualverblist type="boolean">false</useindividualverblist>
+    </object>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <turns type="int">0</turns>
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>turns</key>
+          <value></value>
+        </item>
+        <item>
+          <key>nest_turns</key>
+          <value></value>
+        </item>
+      </statusattributes>
+    </object>
+    <object name="bowl">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+    </object>
+  </object>
+</asl>

@@ -1,0 +1,785 @@
+<!--Saved by Quest 5.5.5159.23472-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="The life of Blank (WIP)">
+    <gameid>66029c88-72e0-4b16-a0ef-368c79aa37f4</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <author>Toby van Kempen</author>
+    <category>Comedy</category>
+    <difficulty>Easy</difficulty>
+    <menufont>'Lucida Console', Monaco, monospace</menufont>
+    <gridmap />
+    <defaultbackground>Wheat</defaultbackground>
+    <defaultfont>'Lucida Console', Monaco, monospace</defaultfont>
+    <defaultwebfont>Press Start 2P</defaultwebfont>
+    <setcustompadding type="boolean">false</setcustompadding>
+    <setcustomwidth />
+    <attr name="command_newline" type="boolean">false</attr>
+    <defaultforeground>Black</defaultforeground>
+    <defaultlinkforeground>DarkBlue</defaultlinkforeground>
+    <menufontsize type="int">7</menufontsize>
+    <menubackground>Black</menubackground>
+    <menuforeground>White</menuforeground>
+    <menuhoverbackground>DarkGrey</menuhoverbackground>
+    <showpanes />
+    <showlocation />
+    <showborder type="boolean">false</showborder>
+    <menuhoverforeground>White</menuhoverforeground>
+    <defaultfontsize type="int">8</defaultfontsize>
+    <setbackgroundopacity type="boolean">false</setbackgroundopacity>
+    <backgroundopacity type="double">0</backgroundopacity>
+    <custompaddingbottom type="int">1</custompaddingbottom>
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <showscore type="boolean">false</showscore>
+    <showhealth />
+    <autodescription_youcango_newline />
+    <autodescription_description_newline />
+    <feature_lightdark />
+    <feature_limitinventory />
+    <custompaddingtop type="int">30</custompaddingtop>
+    <custompaddingleft type="int">20</custompaddingleft>
+    <customwidth type="int">1024</customwidth>
+    <custompaddingright type="int">20</custompaddingright>
+    <subtitle>A day in a life of Blank!</subtitle>
+    <start type="script">
+    </start>
+    <onhealthzero type="script"><![CDATA[
+      PrintCentered ("OH NOES!<br/><br/>It appears as if you have died!")
+    ]]></onhealthzero>
+  </game>
+  <object name="Bathroom">
+    <inherit name="editor_room" />
+    <description><![CDATA[<br/><br/>{once:"Ugh, not this again." you murmur to yourself. "Why is it that <b>every time</b> I wake up, I have no idea where I am?" you think. "I've got to get out of here."}<br/><br/>The bathroom is a dirty, small bathroom. The corners seem to show signs of leakage and the mirror on the medicine cabinet is broken, but you can still see yourself. There is broken glass in the sink and on the floor. There is some blood on the floor. There's a door to the North. You can see some blood under the door.<br/><br/>{command:help:New to these kind of games?}]]></description>
+    <attr name="grid_length" type="int">2</attr>
+    <attr name="grid_label">Bathroom</attr>
+    <beforefirstenter type="script"><![CDATA[
+      msg ("{once:Welcome to The life of! In this series we'll go through different lives of different people, and YOU shall be the one who decides what happens to them!<br/><br/>I highly encourage you to use pen and paper to draw a map. I could't add one because if I did it would mess certain puzzle elements up.<br/><br/><b>----------------------------------------------------------<b><br/><br/>You wake up in a bathroom. Unknowing of what happened or how you got here, you slowly stand up with a headache.}<br/>")
+      DecreaseHealth (40)
+    ]]></beforefirstenter>
+    <beforeenter type="script">
+    </beforeenter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+      </displayverbs>
+    </object>
+    <object name="Broken glass">
+      <inherit name="editor_object" />
+      <inherit name="edible" />
+      <inherit name="plural" />
+      <look>The broken glass has some blood on it. It looks pretty sharp.</look>
+      <volume type="int">1</volume>
+      <eatmsg>What were you even thinking? Do you WANT to die?</eatmsg>
+      <take type="boolean">false</take>
+      <attr name="feature_player" type="boolean">false</attr>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+      </displayverbs>
+      <takemsg>What would you even need it for?</takemsg>
+      <ask type="scriptdictionary">
+        <item key="life">
+          msg ("What is life? Is the universe just a hologram? Do we even exist?")
+        </item>
+      </ask>
+    </object>
+    <exit name="bathroomdoor" alias="north" to="Hall">
+      <inherit name="northdirection" />
+      <attr name="grid_length" type="int">0</attr>
+      <locked />
+      <lockmessage>You should find some painkillers first.</lockmessage>
+    </exit>
+    <object name="Medicine cabinet">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <feature_container />
+      <object name="Painkiller">
+        <inherit name="editor_object" />
+        <feature_usegive />
+        <feature_edible />
+        <take />
+        <use type="script">
+          msg ("You put the painkiller in your mouth and swallow it. You instantly feel better. (health +20)")
+          UnlockExit (bathroomdoor)
+          RemoveObject (Painkiller)
+          IncreaseHealth (20)
+        </use>
+      </object>
+      <object name="Toothbrush">
+        <inherit name="editor_object" />
+        <take />
+        <feature_usegive />
+        <look>A toothbrush so hard you could use it as a shiv.</look>
+      </object>
+      <object name="Toothpaste">
+        <inherit name="editor_object" />
+        <take />
+        <feature_usegive />
+        <look>Maxdent crystal white - approved by 11 out of 10 dentists.</look>
+        <selfuseon type="scriptdictionary">
+          <item key="Toothbrush">
+            MakeObjectInvisible (Toothbrush)
+            AddToInventory (Toothbrush with toothpaste)
+            msg ("You put some toothpaste on the toothbrush.")
+            MakeObjectVisible (Toothbrush with toothpaste)
+          </item>
+        </selfuseon>
+      </object>
+      <object name="Bandage">
+        <inherit name="editor_object" />
+        <look>A fun kiddie bandage. It is shaped as a happy dolphin.</look>
+        <take />
+      </object>
+      <object name="Toothbrush with toothpaste">
+        <inherit name="editor_object" />
+        <visible type="boolean">false</visible>
+        <feature_usegive />
+        <use type="script">
+          msg ("You brush your teeth until they are pearly white.")
+          MakeObjectInvisible (Toothbrush with toothpaste)
+          MakeObjectVisible (Toothbrush)
+        </use>
+      </object>
+    </object>
+  </object>
+  <command name="plugh">
+    <pattern>PLUGH</pattern>
+    <script>
+      msg ("A hollow voice says \"Plugh\".")
+    </script>
+  </command>
+  <object name="Hall">
+    <inherit name="editor_room" />
+    <description>The hall has a flickering TL light on the ceiling. The green wallpaper on the walls is peeling off, and has some cracks in it. Behind you is the door to the bathroom. There is a trail of blood from the bathroom door to the door at the far left. There are exits to the West, North, North-East and South.</description>
+    <attr name="grid_width" type="int">3</attr>
+    <attr name="grid_border">Green</attr>
+    <descprefix>You are in </descprefix>
+    <dark type="boolean">false</dark>
+    <darkroomdescription type="script">
+    </darkroomdescription>
+    <exit alias="south" to="Bathroom">
+      <inherit name="southdirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+    <exit alias="north" to="Lounge">
+      <inherit name="northdirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+    <object name="kitchen door">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <attr name="feature_container" type="boolean">false</attr>
+      <unlock type="script">
+        msg ("You unlocked the kitchen door.kakalla")
+        UnlockExit (Kitchen door)
+      </unlock>
+    </object>
+    <exit name="Kitchen door" alias="west" to="Kitchen">
+      <inherit name="westdirection" />
+      <locked />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+    <exit alias="northeast" to="Locked door hall">
+      <inherit name="northeastdirection" />
+      <locked />
+      <lockmessage>This door doesn't seem to have any keyholes, but it's locked. </lockmessage>
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+  </object>
+  <object name="Kitchen">
+    <inherit name="editor_room" />
+    <description>{once:It reeks of a putrid smell here.} There's blood everywhere. A decomposing body lies on the floor. There is a microwave on the counter.. There is a big hole through the West wall. </description>
+    <attr name="grid_width" type="int">2</attr>
+    <attr name="grid_length" type="int">2</attr>
+    <exit alias="east" to="Hall">
+      <inherit name="eastdirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+    <object name="Big knife">
+      <inherit name="editor_object" />
+      <take />
+      <feature_usegive />
+      <ontake type="script">
+      </ontake>
+      <selfuseon type="scriptdictionary">
+        <item key="Dead man">
+          msg ("You cut the dead body open, revealing a credit card, which you take.")
+          AddToInventory (Credit card)
+        </item>
+      </selfuseon>
+    </object>
+    <object name="Dead man">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <look>After careful consideration, weighing the possibilities and reconsidering the facts, you ultimately conclude that this man, is in fact, dead.</look>
+      <take />
+      <feature_usegive />
+      <use type="script">
+        msg ("You are absolutely disgusting. Shame on you!")
+      </use>
+      <useon type="scriptdictionary">
+        <item key="Big knife">
+          AddToInventory (Credit card)
+          msg ("You use the big knife to cut the dead body open. You found a credit card.")
+        </item>
+      </useon>
+      <object name="Credit card">
+        <inherit name="editor_object" />
+      </object>
+    </object>
+    <exit name="kitchenhole" alias="down" to="East Riverbed">
+      <inherit name="downdirection" />
+      <locked type="boolean">false</locked>
+      <lockmessage>You feel as if you haven't completely investigated the apartment yet.</lockmessage>
+      <runscript />
+      <scenery type="boolean">false</scenery>
+      <lookonly type="boolean">false</lookonly>
+      <look type="script">
+      </look>
+      <script type="script">
+        if (Contains(game.pov,Credit card) and Contains(game.pov,Lighter) and Contains(game.pov,Bandage) and Contains(game.pov,Battery)) {
+          MoveObject (game.pov, East riverbed)
+        }
+        else {
+          msg ("You feel as if you haven't completely investigated the apartment yet.")
+        }
+      </script>
+    </exit>
+    <object name="Hole through the wall">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <look>A big hole. Going through this means no going-backsies.</look>
+      <scenery type="boolean">false</scenery>
+      <visible />
+    </object>
+    <object name="Cupboard">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <feature_container />
+      <take type="boolean">false</take>
+      <object name="Plate">
+        <inherit name="editor_object" />
+        <take />
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Use</value>
+          <value>Drop</value>
+          <value>throw</value>
+        </inventoryverbs>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>Take</value>
+          <value>throw</value>
+        </displayverbs>
+        <throw type="script">
+          msg ("You fling the plate at the wall, after it shatters into a thousand pieces.")
+          RemoveObject (Plate)
+        </throw>
+      </object>
+      <object name="Cup">
+        <inherit name="editor_object" />
+        <take />
+        <throw type="script">
+          msg ("You hurl the cup at the wall, after it shatters into a thousand pieces.")
+          RemoveObject (Cup)
+        </throw>
+      </object>
+    </object>
+    <object name="Counter">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <feature_container />
+      <object name="Cold rich meal">
+        <inherit name="editor_object" />
+        <inherit name="edible" />
+        <feature_usegive />
+        <feature_edible />
+        <eatmsg>You eat the cold meal. It tastes fine, but it would've tasted better if it were hot. (health +20)</eatmsg>
+        <eathealth type="int">20</eathealth>
+        <look>A delicious looking meal, albeit cold.</look>
+        <selfuseon type="scriptdictionary">
+          <item key="Microwave">
+            msg ("You put the meal in the microwave and press quick-cook 2 times. A very delicious smell emerges as you open the microwave. In all your enthusiasm, you forget the plate is hot. You managed to put the plate safely on the counter, but your fingers are burnt.")
+            MakeObjectInvisible (Cold rich meal)
+            MakeObjectVisible (Hot rich meal)
+            DecreaseHealth (5)
+          </item>
+        </selfuseon>
+      </object>
+      <object name="Hot rich meal">
+        <inherit name="editor_object" />
+        <inherit name="edible" />
+        <visible type="boolean">false</visible>
+        <feature_edible />
+        <eatmsg>You eat the meal. It tastes delicious. It would surely be a waste of this delicious food if one were to eat it cold. (health replenished)</eatmsg>
+        <eathealth type="int">100</eathealth>
+        <look>A delicious looking meal. It has golden-brown potatoes, a great big steak, scrumptious looking gravy and some spinach with crispy garlic-croutons.</look>
+      </object>
+      <object name="Smicker bar nougat">
+        <inherit name="editor_object" />
+        <inherit name="edible" />
+        <alias>Smicker bar - Nougat</alias>
+        <take />
+        <feature_edible />
+        <eatmsg>You eat the Smicker bar. Delicious! (health +15)</eatmsg>
+        <eathealth type="int">15</eathealth>
+        <look>A Smicker bar. It has peanuts and nougat.</look>
+      </object>
+      <object name="Smicker bar crisp">
+        <inherit name="editor_object" />
+        <inherit name="edible" />
+        <alias>Smicker bar - Crisp</alias>
+        <take />
+        <feature_edible />
+        <eatmsg>You eat the Smicker bar. Crispy! (health +15)</eatmsg>
+        <eathealth type="int">15</eathealth>
+        <look>A smicker bar. It has peanuts and a crispy filling.</look>
+      </object>
+    </object>
+    <object name="Microwave">
+      <inherit name="editor_object" />
+    </object>
+    <object name="Tap">
+      <inherit name="editor_object" />
+      <take />
+      <ontake type="script">
+        msg ("You yank the tap off and water starts to spew everywhere. In an effort to try not to look suspicious, you drop the tap.")
+        RemoveObject (Tap)
+      </ontake>
+    </object>
+  </object>
+  <object name="East Riverbed">
+    <inherit name="editor_room" />
+    <inherit name="gridborder_path_w" />
+    <description><![CDATA[<br/><br/>The river is flowing at a slow pace. Although swimming across it won't be hard, there's no way you're going to be able to swim up river. From here, a dense forest is blocking the path up river. There's also no way going back up through the hole, it's way too high.<br/><br/>A small folding chair sits close to the shore, along with a cooler and a fishing rod.]]></description>
+    <attr name="grid_width" type="int">1</attr>
+    <attr name="grid_length" type="int">10</attr>
+    <attr name="grid_fill">SandyBrown</attr>
+    <attr name="grid_border">SandyBrown</attr>
+    <descprefix>You are on</descprefix>
+    <beforefirstenter type="script">
+      msg ("Even though it wasn't a very long way down, you hurt yourself because you still felt a little dizzy from the headache. (health -10)")
+      DecreaseHealth (10)
+    </beforefirstenter>
+    <exit alias="west" to="River">
+      <inherit name="westdirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+    <object name="Cooler">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <feature_container />
+      <object name="Bait">
+        <inherit name="editor_object" />
+        <take />
+        <feature_usegive />
+      </object>
+      <object name="Hooks">
+        <inherit name="editor_object" />
+        <take />
+        <feature_usegive />
+      </object>
+      <object name="Lure">
+        <inherit name="editor_object" />
+        <feature_usegive />
+        <take />
+        <use type="script">
+          msg ("You hang the lure on your nose. You look much prettier now.")
+          RemoveObject (Lure)
+        </use>
+      </object>
+      <object name="Wire">
+        <inherit name="editor_object" />
+        <take />
+        <feature_usegive />
+        <selfuseon type="scriptdictionary">
+          <item key="Hooks">
+            msg ("You expertly put the wire and hooks together to craft a grappling hook. {random:Score!:Sweet!:Awesome!}")
+            RemoveObject (Hooks)
+            RemoveObject (Wire)
+            MakeObjectVisible (Grappling hook)
+            AddToInventory (Grappling hook)
+          </item>
+        </selfuseon>
+        <useon type="scriptdictionary">
+          <item key="Hooks">
+            msg ("You expertly put the wire and hooks together to craft a grappling hook. {random:Score!:Sweet!:Awesome!}")
+            RemoveObject (Hooks)
+            RemoveObject (Wire)
+            MakeObjectVisible (Grappling hook)
+            AddToInventory (Grappling hook)
+          </item>
+        </useon>
+      </object>
+      <object name="Grappling hook">
+        <inherit name="editor_object" />
+        <take />
+        <visible type="boolean">false</visible>
+        <feature_usegive />
+        <look>A wicked awesome hand-crafted grappling hook.</look>
+        <selfuseon type="scriptdictionary" />
+      </object>
+    </object>
+    <object name="Fishing rod">
+      <inherit name="editor_object" />
+      <take />
+      <feature_usegive />
+      <useon type="scriptdictionary">
+        <item key="Bait">
+          msg ("You carefully put the bait on the hook of the fishing rod. ")
+          MakeObjectVisible (Fishing rod with bait)
+          AddToInventory (Fishing rod with bait)
+          MakeObjectInvisible (Fishing rod)
+          RemoveObject (Bait)
+        </item>
+      </useon>
+    </object>
+    <object name="Fishing rod with bait">
+      <inherit name="editor_object" />
+      <feature_usegive />
+      <visible type="boolean">false</visible>
+      <use type="script"><![CDATA[
+        msg ("You cast the line in the river and wait. After a minute or 5, you see your lure bobbing up and down. You pull hard and find…<br/><br/>A red herring. Well. That's something.")
+        MakeObjectVisible (Red herring)
+        AddToInventory (Red herring)
+        RemoveObject (Fishing rod with bait)
+        MakeObjectVisible (Fishing rod)
+      ]]></use>
+    </object>
+    <object name="Red herring">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <feature_usegive />
+    </object>
+  </object>
+  <object name="Lounge">
+    <inherit name="editor_room" />
+    <description><![CDATA[The lounge has a cheap, small television resting on a mahogany television cabinet. An old and dirty, stain-ridden sofa sits at the other end of the room. In front of the sofa sits an old and wobbly coffee table. <br/><br/>The blue-purpleish wallpaper has a circular motive and was clearly chosen by someone who was still living in the sixties. <br/><br/>     ]]></description>
+    <attr name="grid_width" type="int">2</attr>
+    <attr name="grid_length" type="int">3</attr>
+    <attr name="grid_border">BlueViolet</attr>
+    <exit alias="south" to="Hall">
+      <inherit name="southdirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+    <object name="Coffeetable">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <feature_container />
+      <hidechildren type="boolean">false</hidechildren>
+      <alt type="stringlist">
+        <value>Table</value>
+      </alt>
+      <look>A somewhat wobbly coffee table. There are suspicious stains on the glass.</look>
+      <object name="Pack of cigarettes">
+        <inherit name="editor_object" />
+        <inherit name="container_closed" />
+        <take />
+        <feature_container />
+        <hidechildren type="boolean">false</hidechildren>
+        <transparent type="boolean">false</transparent>
+        <isopen type="boolean">false</isopen>
+        <attr name="feature_switchable" type="boolean">false</attr>
+        <look>The pack contains one cigarette.</look>
+        <onopen type="script">
+          msg ("There is one cigarette in the carton. You take it.")
+          AddToInventory (Cigarette)
+          AddToInventory (Empty cigarette pack)
+          RemoveObject (Pack of cigarettes)
+        </onopen>
+        <object name="Cigarette">
+          <inherit name="editor_object" />
+          <look>Nothing out of the ordinary.</look>
+        </object>
+        <object name="Empty cigarette pack">
+          <inherit name="editor_object" />
+          <visible />
+          <scenery type="boolean">false</scenery>
+        </object>
+      </object>
+      <object name="Remote">
+        <inherit name="editor_object" />
+        <inherit name="container_closed" />
+        <feature_container />
+        <openmsg>You take the lid off.</openmsg>
+        <hidechildren />
+        <take />
+        <feature_usegive />
+        <onopen type="script">
+          AddToInventory (Battery)
+          msg ("You take the battery out of the remote, after which you drop the remote. You won't need it anymore.")
+          RemoveObject (Remote)
+        </onopen>
+        <use type="script">
+          msg ("You press a random button on the remote. A porn channel appears on the television. It is clear that whoever lived here was a dirty person.")
+        </use>
+        <object name="Battery">
+          <inherit name="editor_object" />
+          <take />
+          <drop />
+        </object>
+      </object>
+      <object name="Porn magazine">
+        <inherit name="editor_object" />
+        <look> Busty bimbos - issue 15. Definitely looks used.</look>
+        <take type="script">
+          msg ("There's no time to get fancy with yourself!")
+        </take>
+      </object>
+      <object name="Lighter">
+        <inherit name="editor_object" />
+        <feature_usegive />
+        <look>A very pretty lighter. It bears a skull-emblem.</look>
+        <take type="script">
+          AddToInventory (Lighter)
+          msg ("You take the lighter.")
+        </take>
+        <selfuseon type="scriptdictionary">
+          <item key="Cigarette">
+            msg ("You light the cigarette up and smoke it. (health -5)")
+            RemoveObject (Cigarette)
+            DecreaseHealth (5)
+          </item>
+          <item key="Torch">
+            msg ("You use the lighter to lit the torch.")
+            SetLight (Cave chamber)
+          </item>
+        </selfuseon>
+      </object>
+    </object>
+    <object name="Dirty sofa">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <look>An old, beat up and stain-ridden sofa. You definitely don't want to sit on it.</look>
+      <sit>Despite the hazardous state of the sofa, you still sit on it. As you stand back up, all sorts of weird and suspicious stains stick to your behind.</sit>
+      <feature_container />
+      <onopen type="script">
+        msg ("You stick your hand between the dirty cushions and pull out a small heart-shaped key.")
+      </onopen>
+      <object name="Heart shaped key">
+        <inherit name="editor_object" />
+        <look>A magnificent golden key with a heart-shaped ruby encased in gold as bow.</look>
+        <alias>Heart-shaped key</alias>
+        <take />
+      </object>
+    </object>
+  </object>
+  <object name="Locked door hall">
+    <inherit name="editor_room" />
+    <exit alias="southwest" to="Hall">
+      <inherit name="southwestdirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+  </object>
+  <object name="River">
+    <inherit name="editor_room" />
+    <inherit name="gridborder_path_ew" />
+    <attr name="grid_width" type="int">4</attr>
+    <attr name="grid_length" type="int">10</attr>
+    <attr name="grid_fill">SkyBlue</attr>
+    <attr name="grid_border">SkyBlue</attr>
+    <description>You swim in the river at a slow pace. There are large rocks preventing you from going down the river, but you can still swim West and East.</description>
+    <descprefix>You are swimming in</descprefix>
+    <exit alias="west" to="West riverbed">
+      <inherit name="westdirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+    <exit alias="east" to="East Riverbed">
+      <inherit name="eastdirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+  </object>
+  <object name="West riverbed">
+    <inherit name="editor_room" />
+    <inherit name="gridborder_path_e" />
+    <attr name="grid_length" type="int">10</attr>
+    <attr name="grid_fill">SandyBrown</attr>
+    <attr name="grid_border">SandyBrown</attr>
+    <descprefix>You are on</descprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <exit alias="east" to="River">
+      <inherit name="eastdirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+    <exit alias="west" to="Forest clearing">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <command name="grue">
+    <pattern>What is a grue</pattern>
+    <script>
+      msg ("The grue is a sinister, lurking presence in the dark places of the earth. Its favorite diet is adventurers, but its insatiable appetite is tempered by its fear of light. No grue has ever been seen by the light of day, and few have survived its fearsome jaws to tell the tale.")
+    </script>
+  </command>
+  <command name="zorkmid">
+    <pattern>What is a zorkmid</pattern>
+    <script>
+      msg ("A Zorkmid saved is a Zorkmid earned.")
+    </script>
+  </command>
+  <command name="dance">
+    <pattern>dance</pattern>
+    <script>
+      msg ("You do a little dance. You feel like a pretty princess.")
+    </script>
+  </command>
+  <object name="Forest clearing">
+    <inherit name="editor_room" />
+    <description><![CDATA[A bright and vibrant place. There are pretty flowers everywhere, and bunnies are happily hopping through the somewhat tall grass. Birds of all kinds and species can be heard in an almost harmonious spectacle.<br/>A tree stump rests in the middle of the forest. The clearing branches off into three paths, {command:South-West}, {command:West} and {command:North-West}.]]></description>
+    <attr name="grid_width" type="int">4</attr>
+    <attr name="grid_length" type="int">4</attr>
+    <attr name="grid_fill">LightGreen</attr>
+    <attr name="grid_border">DarkGreen</attr>
+    <exit alias="east" to="West riverbed">
+      <inherit name="eastdirection" />
+      <attr name="grid_length" type="int">2</attr>
+    </exit>
+    <exit alias="northwest" to="Forest path">
+      <inherit name="northwestdirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+    <object name="Tree stump">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <feature_container />
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <contentsprefix>, wedged in it an </contentsprefix>
+      <isopen />
+      <look>A tree stump with a large diameter. This must have been a large tree.</look>
+      <object name="Axe">
+        <inherit name="editor_object" />
+        <look>A large axe with a red handle.</look>
+        <take />
+      </object>
+    </object>
+    <exit alias="west" to="West riverbed">
+      <inherit name="westdirection" />
+      <runscript />
+      <script type="script">
+        MoveObject (player, West riverbed)
+      </script>
+    </exit>
+    <exit alias="southwest" to="West riverbed">
+      <inherit name="southwestdirection" />
+      <runscript />
+      <script type="script">
+        MoveObject (player, West_riverbed)
+      </script>
+    </exit>
+  </object>
+  <object name="Forest path">
+    <inherit name="editor_room" />
+    <alias>Forest path</alias>
+    <attr name="grid_width" type="int">3</attr>
+    <attr name="grid_fill">LightGreen</attr>
+    <attr name="grid_border">DarkGreen</attr>
+    <description><![CDATA[You appear to be in some sort of maze-like part of the forest.<br/>The path branches off into three paths, South-West, West and North-West]]></description>
+    <exit alias="southeast" to="Forest clearing">
+      <inherit name="southeastdirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+    <exit alias="southwest" to="Forest path 2">
+      <inherit name="southwestdirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+  </object>
+  <object name="Forest path 2">
+    <inherit name="editor_room" />
+    <alias>Forest path</alias>
+    <attr name="grid_width" type="int">3</attr>
+    <attr name="grid_fill">LightGreen</attr>
+    <attr name="grid_border">DarkGreen</attr>
+    <description><![CDATA[You appear to be in some sort of maze-like part of the forest.<br/>The path branches off into three paths, South-West, West and North-West]]></description>
+    <exit alias="northeast" to="Forest path">
+      <inherit name="northeastdirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+    <exit alias="west" to="Forest path 3">
+      <inherit name="westdirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+  </object>
+  <object name="Forest path 3">
+    <inherit name="editor_room" />
+    <alias>Forest path</alias>
+    <attr name="grid_width" type="int">3</attr>
+    <attr name="grid_fill">LightGreen</attr>
+    <attr name="grid_border">DarkGreen</attr>
+    <description><![CDATA[You appear to be in some sort of maze-like part of the forest.<br/>The clearing branches off into three paths, South-West, West and North-West]]></description>
+    <exit alias="east" to="Forest path 2">
+      <inherit name="eastdirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+    <exit alias="southwest" to="Cave">
+      <inherit name="southwestdirection" />
+    </exit>
+    <exit alias="west" to="Backyard">
+      <inherit name="westdirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+  </object>
+  <object name="Cave">
+    <inherit name="editor_room" />
+    <description>A small clearing shows a medium sized cave going slightly downwards. The cave seems to be unlit.</description>
+    <exit alias="northeast" to="Forest path 3">
+      <inherit name="northeastdirection" />
+    </exit>
+    <exit alias="down" to="Cave chamber">
+      <inherit name="downdirection" />
+    </exit>
+  </object>
+  <object name="Cave chamber">
+    <inherit name="editor_room" />
+    <dark />
+    <darkroomdescription>It's pitch-black. You can't see a thing.</darkroomdescription>
+    <description><![CDATA[<br/><br/>]]></description>
+    <attr name="grid_width" type="int">2</attr>
+    <attr name="grid_length" type="int">3</attr>
+    <attr name="grid_fill">Khaki</attr>
+    <attr name="grid_border">Chocolate</attr>
+    <exit alias="up" to="Cave">
+      <inherit name="updirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+    <object name="Torch">
+      <inherit name="editor_object" />
+      <feature_lightdark />
+      <lightsource />
+      <lightstrength>weak</lightstrength>
+      <feature_usegive />
+    </object>
+    <object name="Chest with heart symbol">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <feature_container />
+      <autounlock type="boolean">false</autounlock>
+      <canlockopen type="boolean">false</canlockopen>
+      <look>A golden ornamented chest with a heart-shaped ruby right under the keyhole.</look>
+      <key type="object">Heart shaped key</key>
+      <object name="Golden sword">
+        <inherit name="editor_object" />
+        <look>A beautiful sword with a blade made out of black diamond and a heart-shaped ruby encrusted in its golden hilt.</look>
+        <take />
+      </object>
+    </object>
+  </object>
+  <object name="Backyard">
+    <inherit name="editor_room" />
+    <exit alias="east" to="Forest path 3">
+      <inherit name="eastdirection" />
+      <attr name="grid_length" type="int">0</attr>
+    </exit>
+  </object>
+  <verb>
+    <property>checkbetween</property>
+    <pattern>check between</pattern>
+    <defaultexpression>"You can't check between " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

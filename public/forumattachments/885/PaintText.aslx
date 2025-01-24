@@ -1,0 +1,55 @@
+<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="PaintText">
+    <gameid>6d831c84-915e-4cd2-a33b-914f4204c6bb</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="book">
+      <inherit name="editor_object" />
+      <inherit name="Paintable"/>
+      <description>It looks like an old textbook.</description>
+    </object>
+    <object name="desk">
+      <inherit name="editor_object" />
+      <description>It's an old-fashioned hardwood desk.</description>
+      <inherit name="Paintable"/>
+    </object>
+    <object name="wall">
+      <inherit name="editor_object" />
+      <scenery />
+      <inherit name="Paintable"/>
+      <description>The wall is covered in gaudy wallpaper.</description>
+    </object>
+  </object>
+  <command name="PaintText">
+    <pattern>paint #text# on #object#</pattern>
+    <script>
+      msg("You spray the words '" + text + "' onto the " + GetDisplayAlias(object))
+      object.paintedtext = text
+    </script>
+  </command>
+  <type name="Paintable">
+      <look type="script">
+      <![CDATA[
+        s = ""
+        if (HasString(this, "description")) {
+        	s = s + this.description + " "
+        }
+        if (this.paintedtext <> "") {
+        	s = s + "It has been painted with the words '" + this.paintedtext + "'."
+        }
+        msg(s)
+        ]]>
+      </look>
+      <paintedtext type="string"/>
+  </type>
+</asl>

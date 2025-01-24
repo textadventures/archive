@@ -1,0 +1,328 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <template name="Fill"><![CDATA[^fill (?<object1>.*) with (?<object2>.*)$]]></template>
+  <template name="Empty"><![CDATA[^empty (?<object>.*)$]]></template>
+  <template name="listen">^listen$</template>
+  <template name="smell">^smell$|^sniff$</template>
+  <dynamictemplate name="NotFillable">"You cannot fill " + object.article + "."</dynamictemplate>
+  <dynamictemplate name="AlreadyFull">CapFirst(object.article) + " is already full."</dynamictemplate>
+  <dynamictemplate name="NotLiquid">"You cannot do that with " + object.article + "."</dynamictemplate>
+  <dynamictemplate name="FullOf">"full of " + object.filling_liquid</dynamictemplate>
+  <dynamictemplate name="AlreadyEmpty">CapFirst(object.article) + " is already empty."</dynamictemplate>
+  <dynamictemplate name="Empty">"You empty " + object.article + ", pouring the " + object.filled_with + " on the ground."</dynamictemplate>
+  <game name="EnvironmentDemo">
+    <gameid>a8347f1f-de39-4aba-a2be-44d20646ab54</gameid>
+    <version>1.0</version>
+  </game>
+  <command name="fill">
+    <pattern type="string">[Fill]</pattern>
+    <script>
+      // fill object1 with object 2
+      if (not object1.parent = player) {
+        msg (DynamicTemplate("NotCarrying", object1))
+      }
+      else if (not HasAttribute(object1, "fill_capacity")) {
+        msg (DynamicTemplate("NotFillable", object1))
+      }
+      else if (HasAttribute(object1, "filled_with") and not object1.parent = null) {
+        msg (DynamicTemplate("AlreadyFull", object1))
+      }
+      else if (not HasAttribute(object2, "filling_liquid")) {
+        msg (DynamicTemplate("NotLiquid", object2))
+      }
+      else {
+        object1.filled_with = object2.filling_liquid
+        // change object1 alias
+        object1.old_alias = object1.alias
+        object1.alias = object1.alias + " (" + DynamicTemplate("FullOf", object2) + ")"
+        msg (Template("Done"))
+      }
+    </script>
+  </command>
+  <command name="empty">
+    <pattern type="string">[Empty]</pattern>
+    <script>
+      // empty object
+      if (not object.parent = player) {
+        msg (DynamicTemplate("NotCarrying", object))
+      }
+      else if (not HasAttribute(object, "fill_capacity")) {
+        msg (DynamicTemplate("NotFillable", object))
+      }
+      else if (not HasAttribute(object, "filled_with") or object.parent = null) {
+        msg (DynamicTemplate("AlreadyEmpty", object))
+      }
+      else {
+        msg (DynamicTemplate("Empty", object))
+        object.filled_with = null
+        object.alias = object.old_alias
+      }
+    </script>
+  </command>
+  <object name="room">
+    <inherit name="editor_room" />
+    <alias>Room in a Building</alias>
+    <description>This is a hut, with all the things you expect in a hut.</description>
+    <listen>You can faintly hear the sounds of the forest outside.</listen>
+    <enviro type="object">e_building</enviro>
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+    <object name="cup">
+      <inherit name="editor_object" />
+      <look>A small cup.</look>
+      <take />
+      <fill_capacity type="int">10</fill_capacity>
+      <alias>cup</alias>
+    </object>
+    <exit alias="west" to="forest_path">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="environment">
+    <inherit name="editor_room" />
+    <listen>You can't heard much at all.</listen>
+    <smell>You sniff the air, but cannot smell anything.</smell>
+    <object name="e_building">
+      <inherit name="editor_object" />
+      <listen>You can faintly hear the hum of the ventilation system.</listen>
+      <smell>There is a faint smell of carpet cleaner.</smell>
+      <enviro type="object">e_inside</enviro>
+      <object name="wall">
+        <inherit name="editor_object" />
+        <look>The walls are not important.</look>
+        <scenery />
+      </object>
+    </object>
+    <object name="e_cave">
+      <inherit name="editor_object" />
+      <listen>From far away, you can hear the burbling of an underground stream.</listen>
+      <smell>This place smells of damp...</smell>
+      <enviro type="object">e_inside</enviro>
+    </object>
+    <object name="e_forest">
+      <inherit name="editor_object" />
+      <smell>You can smell pine cones and bracken.</smell>
+      <listen>In the trees, birds are sing, as the wind gently rustles through the leaves.</listen>
+      <enviro type="object">e_outside</enviro>
+      <object name="tree">
+        <inherit name="editor_object" />
+        <look>A tall thing with leaves. One of many in the forest.</look>
+        <scenery />
+      </object>
+    </object>
+    <object name="e_inside">
+      <inherit name="editor_object" />
+      <listen>It's pretty quiet in here.</listen>
+      <look type="string"></look>
+      <enviro type="object">environment</enviro>
+      <object name="ceiling">
+        <inherit name="editor_object" />
+        <look>You stare at the ceiling for a while.</look>
+        <scenery />
+      </object>
+    </object>
+    <object name="e_outside">
+      <inherit name="editor_object" />
+      <listen>It's pretty quiet out here.</listen>
+      <enviro type="object">environment</enviro>
+      <object name="sky">
+        <inherit name="editor_object" />
+        <look>The sky is blue, with little fluffy clouds</look>
+        <scenery />
+      </object>
+    </object>
+    <object name="e_forest_river">
+      <inherit name="editor_object" />
+      <listen>You can hear a stream tumbling by.</listen>
+      <enviro type="object">e_forest</enviro>
+      <object name="water">
+        <inherit name="editor_object" />
+        <look>A clear, colourless liquid.</look>
+        <scenery />
+        <filling_liquid>water</filling_liquid>
+      </object>
+    </object>
+  </object>
+  <command name="Test Enviro">
+    <pattern>tst #text#</pattern>
+    <script>
+      flag = False
+      foreach (obj, AllObjects()) {
+        if (DoesInherit (obj, "editor_room")) {
+          if (not HasObject(obj, text) and not obj.name = "environment" and not obj.name = "nowhere") {
+            msg ("No " + text + " for: " + obj.name)
+            flag = True
+          }
+        }
+      }
+      if (not flag) {
+        msg ("All rooms have " + text + " set!")
+      }
+    </script>
+  </command>
+  <command name="Listen">
+    <pattern>^listen$</pattern>
+    <script>
+      msg (Trawl (player.parent, "listen", "enviro", "Nothing to hear here."))
+    </script>
+  </command>
+  <command name="Smell">
+    <pattern>^smell$|^sniff$</pattern>
+    <script>
+      msg (Trawl (player.parent, "smell", "enviro", "Nothing to smell here."))
+    </script>
+  </command>
+  <command name="Dance">
+    <pattern>dance</pattern>
+    <script>
+      msg ("You do a little dance, and, who would have guess, clouds appear in the sky.")
+      sky.look = "The sky is dark and threatening raining."
+    </script>
+  </command>
+  <object name="forest_path">
+    <inherit name="editor_room" />
+    <description>A path through the forest, heading to a hut to the east.</description>
+    <enviro type="object">e_forest</enviro>
+    <exit alias="east" to="room">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="west" to="more_forest_path">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="more_forest_path">
+    <inherit name="editor_room" />
+    <description>The path through the forest continues, running past a stream at this point. One tree looks a little odd.</description>
+    <enviro type="object">e_forest_river</enviro>
+    <exit alias="east" to="forest_path">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="west" to="forest_clearing">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="odd_tree">
+      <inherit name="editor_object" />
+      <alias>Odd Tree</alias>
+      <look>This tree is blue, with red leaves. Curious...</look>
+      <scenery />
+      <enviro_exclude type="object">tree</enviro_exclude>
+    </object>
+  </object>
+  <object name="forest_clearing">
+    <inherit name="editor_room" />
+    <description>A clearing in the forest. A path heads east. A sign says, "Best site for rain dance."</description>
+    <enviro type="object">e_forest</enviro>
+    <exit alias="east" to="more_forest_path">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <function name="ScopeVisibleNotReachableForRoom" parameters="room" type="objectlist">
+    //msg ("room = " + room.name)
+    result = NewObjectList()
+    // This is a list of objects to be ignored from the trawl through the environmental objects
+    // It allows an object to override one higher up the environmental hierarchy, if it
+    // has that object set in enviro_exclude.
+    ignore_list = NewObjectList()
+    exclude = ScopeReachableForRoom(room)
+    list add (exclude, player)
+    newParent = GetNonTransparentParent(room)
+    //msg ("newParent = " + newParent.name)
+    foreach (obj, GetAllChildObjects(newParent)) {
+      if (ContainsVisible(newParent, obj) and not ListContains(exclude, obj)) {
+        //msg ("Adding " + obj.name)
+        // For each item found, check if it demands that we exclude something from the environmental hierarchy
+        if (HasAttribute(obj, "enviro_exclude")) {
+          list add (ignore_list, obj.enviro_exclude)
+        }
+        list add (result, obj)
+      }
+    }
+    // For each item found, check if it demands that we exclude something from the environmental hierarchy
+    foreach (obj, exclude) {
+      if (HasAttribute(obj, "enviro_exclude")) {
+        list add (ignore_list, obj.enviro_exclude)
+      }
+    }
+    // If the environment is set, trawl for more objects
+    if (HasObject (newParent, "enviro")) {
+      result = ObjectTrawl (GetAttribute (newParent, "enviro"), "enviro", result, ignore_list)
+    }
+    //msg ("Count = " + ListCount(result))
+    return (result)
+  </function>
+  <function name="Trawl" parameters="obj, attr, link, default" type="string">
+    if (HasString (obj, attr)) {
+      return (GetString (obj, attr))
+    }
+    else if (HasObject (obj, link)) {
+      return (Trawl (GetAttribute (obj, link), attr, link, default))
+    }
+    else {
+      return (default)
+    }
+  </function>
+  <function name="ObjectTrawl" parameters="obj, link, list, ignore_list" type="objectlist">
+    //msg ("obj = " + obj.name)
+    foreach (obj2, GetDirectChildren (obj)) {
+      if (DoesInherit(obj2, "editor_object") and not HasObject (obj2, link)) {
+        if (not ListContains(ignore_list, obj2)) {
+          //msg ("adding " + obj2.name)
+          list add (list, obj2)
+          if (HasAttribute(obj, "enviro_exclude")) {
+            list add (ignore_list, obj.enviro_exclude)
+          }
+        }
+      }
+    }
+    if (HasObject (obj, link)) {
+      return (ObjectTrawl (GetAttribute (obj, link), link, list, ignore_list))
+    }
+    else {
+      return (list)
+    }
+  </function>
+  <walkthrough name="test">
+    <steps type="list">
+      listen
+      smell
+      examine wall
+      w
+      listen
+      smell
+      examine wall
+      examine tree
+      examine sky
+      w
+      listen
+      smell
+      examine wall
+      examine tree
+      examine sky
+      w
+      listen
+      sniff
+      examine wall
+      examine tree
+      examine sky
+      dance
+      examine sky
+      e
+      examine sky
+    </steps>
+  </walkthrough>
+  <walkthrough name="fill_empty">
+    <steps type="list">
+      get cup
+      w
+      w
+      fill cup with water
+      i
+      e
+      empty cup
+      i
+    </steps>
+  </walkthrough>
+</asl>

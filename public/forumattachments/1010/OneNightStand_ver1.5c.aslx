@@ -1,0 +1,1682 @@
+<!--Saved by Quest 5.5.5328.26617-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <template name="DefaultHelp"><![CDATA[<u>Quick Help</u><br/><br/>
+<b>- Objects & Characters:</b>  Try LOOK AT..., TAKE..., (maybe DROP...), OPEN..., USE... ON/WITH... <br/>
+<b>- Inventory:</b>  See which items you are carrying by typing I, INV or INVENTORY.<br/>
+<b>- Moving around:</b>  Type GO NORTH, SOUTH, E, GO TO...<br/>
+<b>- Shortcuts:</b>  Press the up arrow and down arrow to scroll through commands you have already typed in. Try X... as a shortcut for LOOK AT...                  ]]></template>
+  <dynamictemplate name="TakeUnsuccessful">"Right. As if you want to carry " +GetDefaultPrefix(object)+ " " + GetDisplayAlias(object) + " " + "around."</dynamictemplate>
+  <game name="One Night Stand">
+    <inherit name="theme_novella" />
+    <gameid>57b6bed9-c662-453d-b446-843eb9cb7502</gameid>
+    <version>1.5</version>
+    <firstpublished>2014</firstpublished>
+    <menufont>Georgia, serif</menufont>
+    <category>Comedy</category>
+    <difficulty>Easy</difficulty>
+    <enablehyperlinks type="boolean">false</enablehyperlinks>
+    <defaultfont>'Courier New', Courier, monospace</defaultfont>
+    <defaultbackground>#260000</defaultbackground>
+    <defaultforeground>#CC9999</defaultforeground>
+    <customwidth type="int">600</customwidth>
+    <attr name="feature_pictureframe" type="boolean">false</attr>
+    <backgroundimage>pattern_3.png</backgroundimage>
+    <setbackgroundopacity type="boolean">false</setbackgroundopacity>
+    <subtitle>The Quest of the Day After</subtitle>
+    <author>Giannis G. Georgiou</author>
+    <backgroundopacity type="double">1</backgroundopacity>
+    <cruelty>Merciful</cruelty>
+    <showborder type="boolean">false</showborder>
+    <setcustomwidth type="boolean">false</setcustomwidth>
+    <showcommandbar />
+    <appendobjectdescription />
+    <showlocation type="boolean">false</showlocation>
+    <showpanes type="boolean">false</showpanes>
+    <autodescription />
+    <showdescriptiononenter />
+    <attr name="autodescription_youcansee" type="int">3</attr>
+    <attr name="autodescription_youcango" type="int">4</attr>
+    <attr name="autodescription_description" type="int">2</attr>
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <changeroom_newline />
+    <attr name="autodescription_youarein_newline" type="boolean">false</attr>
+    <showtitle type="boolean">false</showtitle>
+    <underlinehyperlinks type="boolean">false</underlinehyperlinks>
+    <deactivatecommandlinks type="boolean">false</deactivatecommandlinks>
+    <defaultlinkforeground>White</defaultlinkforeground>
+    <echohyperlinks type="boolean">false</echohyperlinks>
+    <command_newline />
+    <cover>OneNightStand cover art FINAL (orange).png</cover>
+    <description><![CDATA[After a night of vodka and vague acquaintances, Sandy wakes up in a young stranger's room. When the stranger, despite his half-asleep state, calls Sandy with her actual name, she feels awful that she doesn't remember his. How can she be so insensitive?!? <br/><br/>Filled with gratitude and guilt, Sandy decides that she has to remember the guy's name, so that she can wake him up, properly. <br/><br/>Help her collect all the evidence she needs from this guy's flat, in order to give herself the satisfaction that she is indeed a sensitive person.]]></description>
+    <pov type="object">Sandy</pov>
+    <start type="script"><![CDATA[
+      JS.eval ("getCSSRule('a.cmdlink').style.color='#ffffff'")
+      JS.eval ("getCSSRule('a.cmdlink').style['font-family']='Courier New'")
+      msg ("ONE NIGHT STAND<br/>by Giannis G. Georgiou<br/><br/>The first adventure of Sandy Owens.<br/><br/>Type 'help' for user interface tips and 'about' for credits. Enjoy!<br/>")
+      wait {
+      }
+    ]]></start>
+  </game>
+  <object name="Carlos bedroom">
+    <inherit name="editor_room" />
+    <alias>student's bedroom</alias>
+    <description><![CDATA[<br/>This must be a university student's room: small, cheap, messy, and stuffy. Pheww! {once:You don't like students, much. Yet, here you are, waking up next to one. What is the matter with you, girl!}]]></description>
+    <picture type="string"></picture>
+    <objectslistprefix><![CDATA[<br/>In this chaotic mess, you can see]]></objectslistprefix>
+    <usedefaultprefix />
+    <enter type="script">
+    </enter>
+    <firstenter type="script">
+    </firstenter>
+    <beforefirstenter type="script"><![CDATA[
+      msg ("You wake up in a half lit room, early in the morning, with a horrible hangover. \"I'll never drink vodka again,\" you think. Yet, you know you are probably lying. Wait a minute. Where are you? What happened last night? And why are you completely naked? You look around looking for clues.<br/><br/>And here is a big one: on the room's single and only bed, you can see an equally naked dude, sleeping face down.<br/><br/>Okay. So, you've probably slept with this dude. Not that you recall anything from last night. You assess the situation, while looking around for your clothes. You first find your heels. \"That's a start,\" you think, putting them on.<br/>")
+      wait {
+        EnableTimer (naked)
+      }
+    ]]></beforefirstenter>
+    <exit alias="west" to="balcony">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="south" to="corridor">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="Sandy">
+      <inherit name="editor_object" />
+      <inherit name="namedfemale" />
+      <inherit name="editor_player" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alias>Sandy</alias>
+      <feature_player />
+      <pov_alt type="stringlist">
+        <value>myself</value>
+        <value>self</value>
+        <value>you</value>
+        <value>yourself</value>
+      </pov_alt>
+      <drop type="boolean">false</drop>
+      <attr name="pov_look" type="script">
+        if (GetBoolean(Sandy, "dressed")) {
+          msg ("You look hot, even in a male's shirt. You look at your body and get stimulated by the way {random:the garment leaves your thighs exposed.:your freshly shaven legs gleam.:your braless breasts dance merrily under the fabric.:the red fabric is in a silent dialogue with your dark blue 5-inch heels.:the soft cotton fabric caresses your creamy skin.}")
+        }
+        else {
+          msg ("You sure look hot, wearing nothing but your heels.")
+        }
+      </attr>
+      <object name="heels">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <alias>high heels</alias>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>your</prefix>
+        <scenery type="boolean">false</scenery>
+        <alt type="stringlist">
+          <value>shoes</value>
+        </alt>
+        <look>Your trusty dark blue high heels. You have seduced many a man wearing them. They are 5 inches high and they match your blue dress perfectly.</look>
+        <takemsg>You are already wearing them. And feeling very elevated by it.</takemsg>
+        <drop type="boolean">false</drop>
+        <dropmsg>Would a mother drop her children? Would a samurai throw away his katana? Would a man get rid of his playstation? Some things are just priceless.</dropmsg>
+        <takeoff>Not a chance. They are your only reason to feel elevated.</takeoff>
+        <pickup>You are already wearing them. And feeling very elevated by it.</pickup>
+        <puton>You are already wearing them. And feeling very elevated by it.</puton>
+      </object>
+    </object>
+    <object name="dude">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <inherit name="edible" />
+      <alias>sleeping dude</alias>
+      <scenery />
+      <look>Hmm... Apparently you have slept with this guy, but you recall very little of it. {once:He is cute, alright. But he is a student! What were you thinking!?! Plus, his breath stinks of vodka. And so does yours. }He is now sleeping on your poor dress.</look>
+      <usedefaultprefix />
+      <prefix type="string"></prefix>
+      <alt type="stringlist">
+        <value>guy</value>
+        <value>man</value>
+        <value>student</value>
+        <value>date</value>
+        <value>boy</value>
+        <value>fellow</value>
+        <value>lad</value>
+        <value>body</value>
+      </alt>
+      <takemsg>Oh, you have taken him, alright. Now it's not a time for a second round, though.</takemsg>
+      <drop type="boolean">false</drop>
+      <speak>He is asleep. He won't talk to you, unless you wake him up.</speak>
+      <nameprogress type="int">0</nameprogress>
+      <feature_edible />
+      <eatmsg>You have, dear. You have.</eatmsg>
+      <wake type="script">
+        if (not GetBoolean(dude, "first wake")) {
+          OutputTextNoBr ("You give him a gentle push. ")
+          first wake dude
+        }
+        else {
+          msg ("You are not going to wake this dude up, unless you can address him with his name. You have promised to yourself and you have made this your quest!")
+        }
+      </wake>
+      <push type="script">
+        if (not GetBoolean(dude, "first wake")) {
+          OutputTextNoBr ("You give him a gentle push. ")
+          first wake dude
+        }
+        else {
+          msg ("You are not going to wake this dude up, unless you can address him with his name. You have promised to yourself and you have made this your quest!")
+        }
+      </push>
+    </object>
+    <object name="dress">
+      <inherit name="editor_object" />
+      <look><![CDATA[Your elegant blue dress. Short, but not slutty. Classy, but not snotty. You silently congratulate yourself for your taste.<br/><br/>Then, one look at the guy sleeping on it is enough to make you change your mind.]]></look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <scenery />
+      <prefix>your</prefix>
+      <suffix type="string"></suffix>
+      <visible />
+      <alias>dress</alias>
+      <drop type="boolean">false</drop>
+      <inroomdescription><![CDATA[<br/><br/>Your dress is partially visible, squashed under your date's bulky body. {once:Poor thing...}]]></inroomdescription>
+      <alt type="stringlist">
+        <value>clothes</value>
+        <value>garments</value>
+      </alt>
+      <puton>You first have to take it from under this dude's body.</puton>
+      <feature_usegive />
+      <take type="script"><![CDATA[
+        if (ListContains(ScopeReachable(), dude)) {
+          if (not GetBoolean(dude, "first wake")) {
+            OutputTextNoBr ("You gently pull one end of your dress. Then, you yank it harder. ")
+            first wake dude
+          }
+          else {
+            msg ("Your dress lies under this dude's body; there is no way you can pull it, unless you wake him up. And there is no way you wake him up, unless you can address him with his name.<br/><br/>You have promised to yourself and you have made this your quest!")
+          }
+        }
+        else {
+          OutputTextNoBr ("You yank hard one end of your dress. ")
+          wake Carlos
+        }
+      ]]></take>
+      <pull type="script"><![CDATA[
+        if (ListContains(ScopeReachable(), dude)) {
+          if (not GetBoolean(dude, "first wake")) {
+            msg ("You gently pull one end of your dress. Then, you yank it harder.<br/>")
+            first wake dude
+          }
+          else {
+            msg ("Your dress lies under this dude's body; there is no way you can pull it, unless you wake him up. And there is no way you wake him up, unless you can address him with his name.<br/><br/>You have promised to yourself and you have made this your quest!")
+          }
+        }
+        else {
+          OutputTextNoBr ("You yank hard one end of your dress. ")
+          wake Carlos
+        }
+      ]]></pull>
+      <use type="script">
+        msg ("It is already being used as a bedsheet.")
+      </use>
+    </object>
+    <object name="bedside lamp">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <feature_switchable />
+      <switchedon />
+      <scenery />
+      <switchonmsg>You turn the lamp on, although you could simply draw the blinds. What a waste of energy.</switchonmsg>
+      <switchoffmsg>You turn the lamp off. You've done the good deed of the day.</switchoffmsg>
+      <switchedondesc>The lamp is now on.</switchedondesc>
+      <switchedoffdesc>The lamp is now off.</switchedoffdesc>
+      <inroomdescription>Near the bed, you see a cheap bedside lamp.</inroomdescription>
+      <alias>bedside lamp</alias>
+      <look type="script"><![CDATA[
+        if (Got(red shirt)) {
+          msg ("A cheap lamp, bought from a local retail store. (You are not sure about the locality, though, because you have no idea about which area of the town you are in.)")
+          if (IsSwitchedOn(bedside lamp)) {
+            msg ("<br/>The lamp is turned on.")
+          }
+        }
+        else {
+          msg ("A cheap lamp, bought from a local retail store. (You are not sure about the locality, though, because you have no idea about which area of the town you are in.)<br/><br/>Someone has made an effort and placed a red shirt over the shade, to make some atmosphere. With the blinds closed, the red light gives the room an eerie feel.")
+          if (IsSwitchedOn(bedside lamp)) {
+            msg ("<br/>The lamp is turned on.")
+          }
+        }
+      ]]></look>
+    </object>
+    <object name="red shirt">
+      <inherit name="editor_object" />
+      <take />
+      <takemsg><![CDATA[The red shirt is hot. Literally. You pick it up and put it in your inventory. You are naked, though, so you can't exactly define the term 'inventory.'<br/><br/>Anyway.]]></takemsg>
+      <drop type="boolean">false</drop>
+      <scenery />
+      <inroomdescription>The lamp's shade is covered with a red shirt.</inroomdescription>
+      <alias>red shirt</alias>
+      <dropmsg>You drop the shirt. Then, you step on it. Then, you dance on it. Then, you pick it up again.</dropmsg>
+      <usedefaultprefix />
+      <feature_usegive />
+      <look type="script"><![CDATA[
+        if (Got(red shirt)) {
+          msg ("You faintly remember someone wearing this red shirt... Oh, wait. Yes. It was this guy that you have, apparently, slept with. The shirt has served its function as a sexy shade to the bedside lamp. Now, you carry it around, in your scantily clad inventory.")
+        }
+        else {
+          msg ("Someone has covered the lamp's shade with a red shirt; to add to the room's atmosphere, perhaps? You thank the universe for not having caught fire! That would have been some night!<br/><br/>(Considering, also, the vodka that runs in your blood, you would not have stood a chance!)")
+        }
+      ]]></look>
+      <puton type="script"><![CDATA[
+        if (not Got(red shirt)) {
+          msg ("<br/>Take it first.")
+        }
+        else {
+          if (GetBoolean(Sandy, "dressed")) {
+            msg ("You are already wearing it. Are you so hangover that you can't feel the warmth of the cotton fabric on your smooth skin?")
+          }
+          else {
+            msg ("You put the red shirt on. The dude's physique is large enough for it to cover your nakedness, although some would still call you provocative.")
+            SetObjectFlagOn (Sandy, "dressed")
+            DisableTimer (naked)
+          }
+        }
+      ]]></puton>
+      <takeoff type="script">
+        if (not GetBoolean(Sandy, "dressed")) {
+          msg ("You are not wearing anything.")
+        }
+        else {
+          msg ("You take the shirt off. You are, now, again, naked.")
+          SetObjectFlagOff (Sandy, "dressed")
+          EnableTimer (naked)
+        }
+      </takeoff>
+      <use type="script">
+        msg ("Do you mean 'wear?' Or 'use' it as e.g. a duster? Which you don't want to do.")
+      </use>
+      <selfuseon type="scriptdictionary">
+        <item key="bedside lamp">
+          if (Got(red shirt)) {
+            msg ("You just saved it from possible fire damage. You don't want to risk it again.")
+          }
+          else {
+            msg ("What? Even if you are drunk, this doesn't make any sense.")
+          }
+        </item>
+      </selfuseon>
+      <alt type="stringlist">
+        <value>clothes</value>
+        <value>garments</value>
+      </alt>
+    </object>
+    <object name="closet">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <alias>closet</alias>
+      <visible />
+      <scenery />
+      <look>Considering the chaotic state of the room, you don't dare open the closet. Something may fall on your head.</look>
+      <inroomdescription><![CDATA[<br/><br/>Pushed against one wall, you see a narrow closet.]]></inroomdescription>
+      <drop type="boolean">false</drop>
+      <feature_container />
+      <open />
+      <close />
+      <usedefaultprefix />
+      <takemsg>Tooooo big.</takemsg>
+      <cheat type="script">
+        SetObjectFlagOn (Carlos, "name known")
+      </cheat>
+      <openscript type="script">
+        msg ("Better not. Something may fall onto your head.")
+      </openscript>
+      <closescript type="script">
+      </closescript>
+    </object>
+    <object name="desk drawer">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <look>A drawer, slightly stuck, but not locked at all.</look>
+      <feature_container />
+      <listchildren />
+      <scenery />
+      <inroomdescription>Next to it, there is a desk with only one drawer.</inroomdescription>
+      <listchildrenprefix><![CDATA[<br/>It contains]]></listchildrenprefix>
+      <openmsg>Being as silent as you can, you open the drawer.</openmsg>
+      <hidechildren />
+      <alias>desk drawer</alias>
+      <isopen type="boolean">false</isopen>
+      <takemsg>No, but maybe you can take something from inside it.</takemsg>
+      <drop type="boolean">false</drop>
+      <object name="memorabilia">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <visible />
+        <alias>one-night stand memorabilia</alias>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>some</prefix>
+        <alt type="stringlist">
+          <value>souvenirs</value>
+        </alt>
+        <takemsg>No, I don't want to deprive this boy from the evidence of his adventures. It may be the only thing he has.</takemsg>
+        <look type="script"><![CDATA[
+          msg ("The drawer is stuffed with one-night stand souvenirs. Mostly lots of women's underwear. Plus one vibrator, one unused prophylactic, one soiled... Just to name a few.")
+          if (not Got(your panties)) {
+            msg ("<br/>Hey! Wait a minute! Your panties are in here, too! That sly bastard has snatched your underwear, to have a story to tell his grandchildren...")
+            MakeObjectVisible (your panties)
+          }
+          if (Got(Maras thing)) {
+            msg ("<br/>Hmm... You wonder if this is where Mara's lost item is. Hmm...")
+            if (Got(Maras underwear image)) {
+              msg ("<br/>Aha! Mara was frantically going through her brassieres. Maybe it's this bra that she's missing!<br/><br/>You take the bra. It is a brown, old fashioned bra. Yep, it's Mara's size.")
+              AddToInventory (brownbra)
+              MoveObject (temp bra, GreenRoom)
+              MoveObject (Maras thing, GreenRoom)
+            }
+            else {
+              msg ("<br/>Since you have no clue what she is missing, though, you should just leave things as they are.")
+            }
+          }
+        ]]></look>
+      </object>
+      <object name="your panties">
+        <inherit name="editor_object" />
+        <take />
+        <takemsg>You take the tiny thing.</takemsg>
+        <puton>Nah, you're not going to wear dirty underwear.</puton>
+        <drop type="boolean">false</drop>
+        <visible type="boolean">false</visible>
+        <scenery />
+        <alt type="stringlist">
+          <value>your knickers</value>
+          <value>your underwear</value>
+          <value>my panties</value>
+          <value>my knickers</value>
+          <value>my underwear</value>
+        </alt>
+        <look>Your poor little piece of underwear. It is a cute black laced pair of panties. Too bad that it has been in that drawer with all the other stuff. It needs washing.</look>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <dropmsg>It was so much trouble finding it. You're keeping it! It's yours!</dropmsg>
+      </object>
+      <object name="vibrator">
+        <inherit name="editor_object" />
+        <alt type="stringlist">
+          <value>dildo</value>
+        </alt>
+        <scenery />
+        <look>Remember when you used to have one of these toys? You threw it away when your mum came to visit. Then, you replaced it with anonymous men. What a life...</look>
+        <feature_usegive />
+        <takemsg>Come on, now. You are not planning to use someone else's cyborg-penis!</takemsg>
+        <drop type="boolean">false</drop>
+        <use type="script">
+          msg ("You're not in the mood for love.")
+        </use>
+      </object>
+      <object name="womens underwear">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <alt type="stringlist">
+          <value>g-strings</value>
+          <value>g strings</value>
+          <value>thongs</value>
+        </alt>
+        <scenery />
+        <takemsg>No, I don't want to deprive this boy from the evidence of his adventures. It may be the only thing he has.</takemsg>
+        <alias>women's underwear</alias>
+        <drop type="boolean">false</drop>
+        <look type="script">
+          OutputTextNoBr ("Several pairs of panties and a few thongs. ")
+          if (ListContains(ScopeReachable(), temp bra)) {
+            msg ("And one bra, too.")
+          }
+        </look>
+      </object>
+      <object name="unused condom">
+        <inherit name="editor_object" />
+        <takemsg><![CDATA[You don't want to leave this guy unprotected. You know the agony of being half-undressed and frantically going through your drawer for condoms, only to find the box empty.<br/><br/>"Mind you, I never gave in without a condom!" you tell the audience. "Neither should you, folks!"<br/><br/> And after this awareness message, you continue your quest.]]></takemsg>
+        <drop type="boolean">false</drop>
+        <look>A new prophylactic, sealed in its little envelope. Expiry date, still valid.</look>
+        <scenery />
+        <alias>unused prophylactic</alias>
+        <alt type="stringlist">
+          <value>unused rubber</value>
+          <value>new condom</value>
+          <value>packaged condom</value>
+          <value>new rubber</value>
+          <value>new prophylactic</value>
+          <value>packaged rubber</value>
+          <value>packaged prophylactic</value>
+        </alt>
+      </object>
+      <object name="soiled condom">
+        <inherit name="editor_object" />
+        <alias>soiled prophylactic</alias>
+        <scenery />
+        <look>Could it be the one he used with you? Probably not. This one looks ancient.</look>
+        <takemsg>Of course. Then, I can lick the streets clean, all the way from here to home.</takemsg>
+        <drop type="boolean">false</drop>
+        <alt type="stringlist">
+          <value>used prophylactic</value>
+          <value>used rubber</value>
+          <value>used condom</value>
+          <value>soiled rubber</value>
+        </alt>
+      </object>
+      <object name="temp bra">
+        <inherit name="editor_object" />
+        <alias>bra</alias>
+        <usedefaultprefix />
+        <scenery />
+        <look>It is a brown, old fashioned piece of lingerie from the '50s. No, you're joking. But it does look ancient.</look>
+        <takemsg>No, I don't want to deprive this boy from the evidence of his adventures. It may be the only thing he has.</takemsg>
+      </object>
+    </object>
+    <object name="bed">
+      <inherit name="editor_object" />
+      <inroomdescription type="string"></inroomdescription>
+      <scenery />
+      <look>The single -and only- bed looks as if it has seen many days of glorious battles.</look>
+      <alias>bed</alias>
+      <takemsg>Toooooooooo big. Plus, that would wake him up.</takemsg>
+      <drop type="boolean">false</drop>
+    </object>
+    <object name="cat">
+      <inherit name="editor_object" />
+      <scenery />
+      <inroomdescription><![CDATA[<br/><br/>A cat wanders around the room.<br/>]]></inroomdescription>
+      <look><![CDATA[The cat {random:jumps up:stretches lazily:licks his private parts:shakes his ears:yawns:licks his fur:spits out a hairball:throws up:does a number two by the room door} and then goes to sit {random:near the bed.:on the desk.:by the window.:on a dirty rug.:next to the bedside table.:under the desk.:under the bed.:inside his basket.}<br/><br/>Nice little rascal.]]></look>
+      <drop type="boolean">false</drop>
+      <takemsg><![CDATA[You lift the cat and give him a hug. He purrs, at first, but then he starts squirming {random: and attacks you with all four legs and his fangs. Roll 5d8+2 to discover the damage that you receive in this round.:and you feel his needle thin claws piercing your left breast. Deduct 1d8+2 from your hit points.:and scratches you under the chin. Subtract 1 point of Stamina.:and bites the back of your hand. Roll one die. If the result is lower than or equal to 2, you get infected and have to go to the hospital.} <br/><br/>You decide it is about time you leave the little devil alone.]]></takemsg>
+      <alias>cat</alias>
+      <alt type="stringlist">
+        <value>kitty</value>
+        <value>kitten</value>
+      </alt>
+      <attr name="feature_usegive" type="boolean">false</attr>
+    </object>
+    <object name="look_bedroom">
+      <inherit name="editor_object" />
+      <visible />
+      <usedefaultprefix />
+      <scenery />
+      <alias>student's bedroom</alias>
+      <alt type="stringlist">
+        <value>room</value>
+        <value>dorm</value>
+        <value>place</value>
+      </alt>
+      <drop type="boolean">false</drop>
+      <look type="script">
+        ShowRoomDescription
+      </look>
+    </object>
+  </object>
+  <command name="fuck">
+    <pattern>fuck #object#; screw #object#; make love to #object#; hug #object#; kiss #object#; lick #object#; suck #object#; have sex with #object#;</pattern>
+    <script>
+      if (object = dude) {
+        msg ("You had enough of that, last night.")
+      }
+      else if (object = Carlos) {
+        msg ("Yes, you found out Carlos's name, but don't get that excited.")
+      }
+      else {
+        msg ("{random:What a perv!:You never liked showing affection to inanimate objects.:No, thanks.:You prefer people.:No, thanks, you're not in the mood.:Naah, just leave the poor thing be.}")
+      }
+    </script>
+  </command>
+  <object name="corridor">
+    <inherit name="editor_room" />
+    <description><![CDATA[<br/>The flat's short and narrow corridor connects the two bedrooms with the living space, to the east. A doorless opening to the south leads to a small bathroom. {once:(Doorless! Wow!)} ]]></description>
+    <alias>corridor</alias>
+    <onexit type="script">
+      SetObjectFlagOff (Maras door, "badmood")
+    </onexit>
+    <enter type="script">
+    </enter>
+    <beforefirstenter type="script"><![CDATA[
+      msg ("Phew! The corridor smells even stuffier than that dude's bedroom! What's wrong with them students?<br/>")
+    ]]></beforefirstenter>
+    <exit alias="north" to="Carlos bedroom">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="east" to="living kitchen">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="south" to="bathroom">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="Maras door">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <alias>Mara's bedroom door</alias>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <feature_container />
+      <close type="boolean">false</close>
+      <scenery />
+      <inroomdescription><![CDATA[<br/><br/>To the west, there is the door to Mara's room. {once:Although you don't recall much from last night, you have a vague knowledge of Mara being the other tenant in the flat.}<br/>]]></inroomdescription>
+      <takemsg>Naah, I'm good. I'll probably get into trouble just by trying to open it, let alone pull it off its hinges.</takemsg>
+      <drop type="boolean">false</drop>
+      <alt type="stringlist">
+        <value>door</value>
+        <value>Mara's door</value>
+      </alt>
+      <look type="script">
+        OutputTextNoBr ("This is Mara's room. ")
+        if (GetBoolean(dude, "first wake")) {
+          msg ("Then, you ask yourself how come you remember HER name and not HIS! ")
+        }
+        msg ("The door is painted pink. You never liked pink.")
+      </look>
+      <knock type="script"><![CDATA[
+        if (Got(nickname)) {
+          SetObjectFlagOn (Maras door, "badmood")
+        }
+        if (GetBoolean(Maras door, "badmood")) {
+          OutputTextNoBr ("Cautiously, you knock the door. Mara's voice echoes from the other side: \"I said, stay away from my door, ")
+          Mara cursing
+          msg ("<br/><br/>Hmm. Maybe later.")
+        }
+        else {
+          if (not GetBoolean(dude, "first wake")) {
+            OutputTextNoBr ("Cautiously, you knock on Mara's door. Mara's voice echoes from the other side: \"{random:I'm still asleep,:Not now,:Don't you ever rest,:Be quiet,:Don't bother me,:I'm still in bed,:Leave me alone,} ")
+            Mara cursing
+            msg ("<br/><br/>Hmm. Maybe you can bother her later.")
+          }
+          else {
+            OutputTextNoBr ("Mara opens the door with a sour face. ")
+            if (not GetBoolean(Sandy, "dressed")) {
+              if (not GetBoolean(Maras door, "seennaked")) {
+                OutputTextNoBr ("She seems not too keen to talk with you, although you don't really know why. ")
+                OutputTextNoBr ("Then, her eyes pop open, scanning your naked body from head to toe.<br/><br/>\"Couldn't you bother throw something on you, before you talk to me, ")
+                Mara cursing
+                msg ("<br/><br/>She shuts the door in your face. \"And stay out!\"")
+              }
+              else {
+                OutputTextNoBr ("She can't believe her eyes: \"You insist on knocking on my door naked, ")
+                Mara cursing
+                msg ("<br/><br/>She shuts the door in your face. \"And don't come back!\"")
+              }
+              SetObjectFlagOn (Maras door, "badmood")
+              SetObjectFlagOn (Maras door, "seennaked")
+            }
+            else {
+              firsttime {
+                msg ("She seems not too keen to talk with you, although you don't really know why. \"What do you want?\" she asks.<br/>\"Hi Mara. You must be... the flatmate. Err... Your flatmate told me so much about you.\"<br/>\"So?\" she asks, unimpressed.<br/><br/>An awkward pause.<br/>")
+                wait {
+                  msg ("\"Listen. Something really funny happened to me... I was pretty drunk last night and I can't seem to... remember his name,\" you smile.<br/>\"And?\"<br/>\"Can you tell me his name, please?\"<br/>\"No.\"<br/>\"Why?\" you ask.<br/>\"Because I don't like you.\"<br/><br/>At least, you can appreciate her straightforwardness.<br/>")
+                  wait {
+                    msg ("\"That was fast,\" you protest. \"You've only been listening to me for 30 seconds.\"<br/>\"30 seconds and 3 hours of moaning. Last night.\"<br/><br/>Oh.<br/><br/>\"So, I know you quite well, enough to say that you and I are not going to be excellent friends,\" she scowls. \"Now, get out of here.\"<br/><br/>She shuts the door in your face.")
+                  }
+                }
+                SetObjectFlagOn (Maras door, "badmood")
+              }
+              otherwise {
+                OutputTextNoBr ("\"What is it, now?\" she asks. ")
+                if (not Got(Mara n dude)) {
+                  msg ("<br/>\"{random:Do you know why the toilet flush doesn't work?:I'm making some eggs. Do you need some breakfast?:Where did you get these amazing pyjamas?:So, what are you studying?:Do you like dogs?:Do you like cats?:Do you like Guinea pigs?:Do you like ice skating?:Do you eat gluten?:What's your favourite colour?}\"<br/>\"I'm not telling you his name,\" says Mara, bluntly, shutting the door into your face.")
+                  SetObjectFlagOn (Maras door, "badmood")
+                }
+                else {
+                  firsttime {
+                    msg ("<br/>\"About you and your flatmate... Did you two date or something?\" you ask her.<br/>\"What? Where did you get that idea?\"<br/>\"I don't know,\" you say, \"I think from the way you protect his private data.\"<br/><br/>Mara takes a good look at you. \"And what if we did?\"<br/>\"Oh, nothing. I mean... What happened between him and me last night was very casual. I really wouldn't want to stand between you two guys...\"<br/><br/>Mara seems to be trying to act cool, although the subject is obviously touchy.<br/>")
+                    wait {
+                      msg ("\"This is all ancient history for me. In fact...\" She ponders for a second. \"You know what? I'll make a deal with you. I have reasons to believe that my flatmate has taken something from me; something personal. And he won't give it back. You go find that for me and I'll give you some information on the subject that is bothering you.\"<br/>\"You'll tell me his name?\" you ask enthusiastically.<br/>\"Well. Maybe.\"<br/>")
+                      wait {
+                        msg ("\"So, what's the item I'm looking for?\"<br/>\"Oh, you figure it out yourself! I don't like you THAT much! Now, scram!\"<br/><br/>She closes the door in your face.")
+                        AddToInventory (Maras thing)
+                        SetObjectFlagOn (Maras door, "badmood")
+                        SetObjectFlagOn (photograph, "upsidedown")
+                      }
+                    }
+                  }
+                  otherwise {
+                    msg ("\"Did you bring me what I asked for?\"")
+                    if (Got(white bra)) {
+                      msg ("\"I believe I did,\" you say, showing her the bra of the purest white.<br/>\"Impressive,\" says Mara. She takes her bra and throws it onto her bed. \"Well, a deal is a deal. And now I'll tell you my flatmate's nickname.\"<br/><br/>\"Nickname? What about the real name?\" you protest.<br/>\"The nickname is all you get, take it or leave it.\"<br/>\"Okay...\"<br/>")
+                      wait {
+                        msg ("\"So. His nickname is 'The Knob,\" says Mara.<br/>\"Knob?\" you ask. \"Does it, by any chance, have anything to do with the shape of his penis?\"<br/>\"Get out.\" Mara shuts the door on your face.")
+                        AddToInventory (nickname)
+                        MoveObject (knob, Carlos bedroom)
+                        IncreaseObjectCounter (dude, "nameprogress")
+                        name realisation
+                      }
+                    }
+                    else if (Got(brownbra)) {
+                      msg ("\"I believe I did,\" you say, showing her the brown bra that you have found in the dude's drawer.<br/>\"Oh, no. No, this is not it,\" says Mara. \"You see, mine was white. This one has the horrible colour of runny excrement.\"<br/>\"Oh?\"<br/>\"Get out of here and don't bother to return, until you have my real bra. My bra of the purest white.\" She closes the door in your face.")
+                      SetObjectFlagOn (Maras door, "badmood")
+                    }
+                    else {
+                      msg ("\"Errr... Not really.\"<br/>\"Then get out!\"<br/><br/>She closes the door in your face.")
+                      SetObjectFlagOn (Maras door, "badmood")
+                    }
+                  }
+                }
+              }
+            }
+            SetObjectFlagOff (Maras door, "doorlock")
+          }
+        }
+      ]]></knock>
+      <openscript type="script"><![CDATA[
+        if (GetBoolean(Maras door, "doorlock")) {
+          OutputTextNoBr ("You turn the handle, but the door is locked. \"Go away, ")
+          Mara cursing
+          OutputTextNoBr ("shouts Mara, from inside.<br/><br/>You leave her alone. What language!")
+          SetObjectFlagOn (Maras door, "badmood")
+        }
+        else {
+          OutputTextNoBr ("You turn the handle and bash into a room that is not yours. Mara gets furious: \"How dare you enter my room without knocking, ")
+          Mara cursing
+          if (not GetBoolean(Sandy, "dressed")) {
+            OutputTextNoBr ("Then, she adds: \"And, on top of that, naked!!!\" ")
+            SetObjectFlagOn (Maras door, "seennaked")
+          }
+          OutputTextNoBr ("She closes the door on your face. \"Get out!\"<br/><br/>You hear the door lock from the inside.")
+          SetObjectFlagOn (Maras door, "doorlock")
+          SetObjectFlagOn (Maras door, "badmood")
+        }
+      ]]></openscript>
+    </object>
+    <object name="look_corridor">
+      <inherit name="editor_object" />
+      <alias>corridor</alias>
+      <scenery />
+      <takemsg>Take the whole corridor? That's some thought.</takemsg>
+      <look type="script">
+        ShowRoomDescription
+      </look>
+    </object>
+  </object>
+  <object name="living kitchen">
+    <inherit name="editor_room" />
+    <alias><![CDATA[kitchen & living room]]></alias>
+    <description><![CDATA[<br/>A tiny living space serving as living room, front door hall and kitchen. {once:The aesthetics? Unacceptable. The architecture? Non existent. }<br/><br/>{once:The living space's furniture is quite poor and basic. }A second (or thirtieth) hand couch slouches between a plywood bookcase and an IKEA coffee table.<br/><br/>The kitchen is equipped with most of the essentials, but the grease on the floor tells you that you wouldn't want to approach that part of the house.]]></description>
+    <enter type="script">
+    </enter>
+    <exit alias="west" to="corridor">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="telescope">
+      <inherit name="editor_object" />
+      <take />
+      <feature_usegive />
+      <scenery />
+      <inroomdescription><![CDATA[<br/><br/>A telescope sits on its tripod, pointing outside the window.]]></inroomdescription>
+      <drop type="boolean">false</drop>
+      <takemsg>You leave the tripod and take just the telescope.</takemsg>
+      <alias>telescope</alias>
+      <dropmsg>No, it may break!</dropmsg>
+      <alt type="stringlist">
+        <value>spyglass</value>
+        <value>spy glass</value>
+      </alt>
+      <look type="script">
+        OutputTextNoBr ("You wonder about the purpose of this powerful telescope. Astronomy or voyeurism? ")
+        if (not Got(telescope)) {
+          msg ("Let's see... It's pointing out of the window, but not towards the sky. Hmm...")
+        }
+      </look>
+      <use type="script">
+        telescopeuse
+      </use>
+      <selfuseanything type="script"><![CDATA[
+        msg ("You point the telescope at the " + GetDisplayAlias(object) + ", but everything looks out of focus. Maybe you can't use it for something so close. <br/><br/>You turn the telescope backside front. Ah. That's better.")
+      ]]></selfuseanything>
+      <lookthrough type="script">
+        telescopeuse
+      </lookthrough>
+      <selfuseon type="scriptdictionary">
+        <item key="photograph"><![CDATA[
+          if (Got(namelist)) {
+            msg ("You don't need to. You have memorised the list of the people pictured in their photograph. {once:Just check your inventory.}")
+          }
+          else {
+            if (GetBoolean(photograph, "upsidedown")) {
+              msg ("Using the telescope, you are actually able to read what is written on the back of the photograph! It is a list of names:<br/><br/>• Marcel \"Julien\" Didier<br/>• Kenny \"Pistolgrip\" Tracy<br/>• Carlos \"Knob\" Rodriguez<br/>• Mara \"Bricky\" Stuart<br/>• Bob \"Ronnie\" Dickens<br/><br/>One of them is Mara, obviously. One of the others, though, is our guy.")
+              AddToInventory (namelist)
+              IncreaseObjectCounter (dude, "nameprogress")
+              name realisation
+            }
+            else {
+              msg ("Using the telescope, you are actually able to see some faces on the photograph! You see several dudes and... Aha. You recognise the dude next door, as well as Mara. They are hugging very lovingly.<br/><br/>It seems that Mara and the dude next door have something going -or at least had something going, some time ago.")
+              AddToInventory (Mara n dude)
+            }
+          }
+        ]]></item>
+        <item key="window">
+          msg ("Good idea. But be more specific.")
+        </item>
+        <item key="tripod">
+          if (Got(telescope)) {
+            msg ("You reattach the telescope back onto the tripod.")
+            MoveObject (telescope, living kitchen)
+          }
+          else {
+            msg ("The telescope is already resting on the tripod.")
+          }
+        </item>
+        <item key="poster">
+          msg ("You turn the telescope towards the boy band poster. Look at those guys' hair! You see a signed autograph on one corner. \"To Mara, for a night of unbearable pleasure. -The Shrimps\"")
+        </item>
+        <item key="award">
+          msg ("You point the telescope at the figurine lying on Mara's shelf. It is the statuette of a man slouching in front of a computer. An inscription says \"2014 - Best Text Adventure: The Sore Foot, by Mara Stuart.\"")
+        </item>
+      </selfuseon>
+    </object>
+    <object name="tripod">
+      <inherit name="editor_object" />
+      <scenery />
+      <alias>tripod</alias>
+      <look>You remember that guy whose nickname was 'the tripod' -and not because he was a stable character. You lost touch with him after he got into porn.</look>
+      <takemsg>You decide not to carry the tripod around.</takemsg>
+      <drop type="boolean">false</drop>
+    </object>
+    <object name="front door">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <scenery />
+      <inroomdescription><![CDATA[The front door is unlocked, waiting for you, when you're ready.<br/>]]></inroomdescription>
+      <look>The door is closed, but under it there is enough space for any rodent to crawl in. Yes, even capybaras.</look>
+      <drop type="boolean">false</drop>
+      <knock><![CDATA[You knock the door. Then, you open it, yourself. "Hello, Invisible Man," you smile.<br/><br/>Hmm. Vodka still around...]]></knock>
+      <feature_container />
+      <alias>front door</alias>
+      <takemsg>Remember the time when you used to pick up all kinds of junk from random places and you used them to creat art? Well, it's a bygone!</takemsg>
+      <alt type="stringlist">
+        <value>exit</value>
+        <value>main door</value>
+        <value>entrance</value>
+        <value>main entrance</value>
+      </alt>
+      <openscript type="script"><![CDATA[
+        msg ("You open the front door. Yeah, as if you're going anywhere without your clothes.<br/><br/>You close it again.")
+        HelperCloseObject (front door)
+      ]]></openscript>
+    </object>
+    <object name="bookcase">
+      <inherit name="editor_object" />
+      <scenery />
+      <alias>bookcase</alias>
+      <look><![CDATA[Lots of interesting books, mostly about... roleplaying games? Wow, kinky! You remember your ex-ex-ex-boyfriend, who was very much into roleplaying. Where is that nurse costume, by the way...?<br/><br/>Oh, wait. You only see dragons and wizards, here. And these costumes look expensive.<br/><br/>No. You don't get it. Anyway. You leave the books where they are.]]></look>
+      <inroomdescription type="string"></inroomdescription>
+      <take type="boolean">false</take>
+      <takemsg><![CDATA[You try to choose which books to steal, but decide to leave them all there.<br/><br/>Then, you try to lift the whole bookcase and put it in your minimal inventory. You utterly fail.]]></takemsg>
+      <drop type="boolean">false</drop>
+      <alt type="stringlist">
+        <value>books</value>
+        <value>role playing games</value>
+      </alt>
+    </object>
+    <object name="couch">
+      <inherit name="editor_object" />
+      <alt type="stringlist">
+        <value>sofa</value>
+        <value>settee</value>
+        <value>divan</value>
+      </alt>
+      <scenery />
+      <drop type="boolean">false</drop>
+      <alias>couch</alias>
+      <inroomdescription type="string"></inroomdescription>
+      <look>It looks comfortable, but you really have no time for couch surfing.</look>
+      <lie>It looks comfortable, but you really have no time for couch surfing.</lie>
+      <takemsg>You try to lift the couch. Ouch!</takemsg>
+      <feature_usegive />
+      <use type="script">
+        msg ("A couch has many uses, but right now you are not feeling like indulging in any of them.")
+      </use>
+    </object>
+    <object name="coffee table">
+      <inherit name="editor_object" />
+      <scenery />
+      <alias>coffee table</alias>
+      <look>You look under the coffee table. No. The dude's name is not written here.</look>
+      <drop type="boolean">false</drop>
+    </object>
+    <object name="kitchen">
+      <inherit name="editor_object" />
+      <scenery />
+      <alias>kitchen</alias>
+      <look>You see the kitchen space from far away, but you don't want to go closer. There is a horrible layer of grease on the floor.</look>
+    </object>
+    <object name="look_livingkitchen">
+      <inherit name="editor_object" />
+      <alias><![CDATA[living space & kitchen]]></alias>
+      <scenery />
+      <look type="script">
+        ShowRoomDescription
+      </look>
+    </object>
+    <object name="grease">
+      <inherit name="editor_object" />
+      <scenery />
+      <alias>layer of grease</alias>
+      <visible />
+      <look>A slimey substance that covers the whole kitchen floor, looking almost as if it's breathing. You are not sure that your heels are high enough to walk on this kitchen swamp.</look>
+      <alt type="stringlist">
+        <value>swamp</value>
+        <value>mucus</value>
+        <value>slime</value>
+      </alt>
+      <taste>No way!</taste>
+      <take type="script">
+        msg ("You touch the grease. You instantly get chills and they're multiplying.")
+      </take>
+    </object>
+  </object>
+  <object name="balcony">
+    <inherit name="editor_room" />
+    <description><![CDATA[<br/>The neighbourhood is quiet, being a Sunday morning. ]]></description>
+    <alias>balcony</alias>
+    <enter type="script"><![CDATA[
+      if (not GetBoolean(Sandy, "dressed")) {
+        msg ("<br/>It is quite a dare, standing outside stark naked for everyone to see. But, then again, you remember doing worse. (And you bet you've done even worse that you don't even remember.)")
+      }
+    ]]></enter>
+    <beforefirstenter type="script"><![CDATA[
+      msg ("You walk outside, on a balcony overlooking a cosy neighbourhood. You try to guess how many university students hooked up with each other last night. Naah. University students bore you. Boy, you must have been really drunk to hook up with one of them, yourself.<br/>")
+    ]]></beforefirstenter>
+    <firstenter type="script">
+    </firstenter>
+    <exit alias="east" to="Carlos bedroom">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="window">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <alias>window</alias>
+      <feature_container />
+      <hidechildren type="boolean">false</hidechildren>
+      <contentsprefix>behind which you can see</contentsprefix>
+      <listchildren type="boolean">false</listchildren>
+      <listchildrenprefix>In the room, you can see</listchildrenprefix>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <scenery />
+      <inroomdescription><![CDATA[There is a window with the curtains open. If you are a little careful, you can see inside the room, without being noticed.<br/>]]></inroomdescription>
+      <alt type="stringlist">
+        <value>room</value>
+        <value>window</value>
+        <value>door</value>
+      </alt>
+      <knock>You have the advantage of being able to spy on someone, which you will lose if you make any such noises.</knock>
+      <look type="script">
+        lookmaraswindow
+      </look>
+      <lookthrough type="script">
+        lookmaraswindow
+      </lookthrough>
+      <watch type="script">
+        lookmaraswindow
+      </watch>
+      <object name="photograph">
+        <inherit name="editor_object" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <suffix>taped onto the wall</suffix>
+        <scenery />
+        <alt type="stringlist">
+          <value>photo</value>
+          <value>picture</value>
+        </alt>
+        <alias>photograph</alias>
+        <look type="script">
+          if (not GetBoolean(photograph, "upsidedown")) {
+            msg ("The photograph is stuck onto the wall, across the room, opposite you. It is too far to tell who is in it. Not that you would necessarily know them.")
+          }
+          else {
+            msg ("Mara has taken the photograph off the wall and left it lying upside down, on her desk. Something seems to be written on the back of it.")
+          }
+        </look>
+        <take type="script">
+          telekinesis
+        </take>
+      </object>
+      <object name="poster">
+        <inherit name="editor_object" />
+        <alias>boy band poster</alias>
+        <scenery />
+        <look>Some boy band you don't want to know about.</look>
+        <alt type="stringlist">
+          <value>autograph</value>
+          <value>signature</value>
+          <value>pop band</value>
+        </alt>
+        <take type="script">
+          telekinesis
+        </take>
+      </object>
+      <object name="award">
+        <inherit name="editor_object" />
+        <alias>figurine</alias>
+        <scenery />
+        <alt type="stringlist">
+          <value>trophy</value>
+          <value>metallic figurine</value>
+          <value>shelf</value>
+        </alt>
+        <look>A small figurine made of silver-coloured metal. Is it a trophy of some sort? Who knows.</look>
+        <take type="script">
+          telekinesis
+        </take>
+      </object>
+      <object name="Mara">
+        <inherit name="editor_object" />
+        <inherit name="namedfemale" />
+        <scenery />
+        <alt type="stringlist">
+          <value>girl</value>
+          <value>woman</value>
+          <value>flatmate</value>
+        </alt>
+        <speak>You don't dare make a sound, while spying on her.</speak>
+        <look type="script">
+          OutputTextNoBr ("Mara is a medium built brunette in her early twenties. ")
+          if (Got(Maras thing)) {
+            msg ("She is currently going through one of her underwear drawers. Brassieres fly all over the place. \"Where is the damn thing?\" she screams. \"Please tell me that I've got it somewhere here!\"")
+            AddToInventory (Maras underwear image)
+          }
+          else {
+            msg ("She is currently sitting at her desk, with her back turned to you.")
+          }
+        </look>
+        <watch type="script">
+          lookmaraswindow
+        </watch>
+      </object>
+    </object>
+    <object name="look_balcony">
+      <inherit name="editor_object" />
+      <alias>balcony</alias>
+      <scenery />
+      <drop type="boolean">false</drop>
+      <takemsg>Take the whole balcony? Why not? Hmm, wait. Because it's huge and attached to the rest of the building, maybe?</takemsg>
+      <look type="script">
+        ShowRoomDescription
+      </look>
+    </object>
+    <object name="view">
+      <inherit name="editor_object" />
+      <alias>view</alias>
+      <scenery />
+      <look>A peacefull Sunday morning.  The balcony overlooks a cosy neighbourhood.</look>
+      <takemsg>Metaphorically?</takemsg>
+    </object>
+  </object>
+  <object name="bathroom">
+    <inherit name="editor_room" />
+    <description><![CDATA[<br/>The blue-tiled bathroom features a sink, a toilet seat and a shower without a curtain. {once:Of course.}]]></description>
+    <alias>bathroom</alias>
+    <enter type="script">
+    </enter>
+    <beforefirstenter type="script"><![CDATA[
+      msg ("As you step inside the cold bathroom, you wonder how anyone can use the toilet without a door. Then, you see a semi-transparent shower curtain hanging by the opening, to be used as a room devider. Right.<br/>")
+    ]]></beforefirstenter>
+    <exit alias="north" to="corridor">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="chlorine">
+      <inherit name="editor_object" />
+      <alias>bottle of chlorine solution</alias>
+      <scenery />
+      <inroomdescription>On the floor, you can see a half-empty bottle of chlorine solution.</inroomdescription>
+      <look>The bottle contains a powerful chemical. "Keep away from eyes, hair, skin, and clothes," says the label. "Do not drink. Do not bath in it. Do not give as present to little kids." All that jazz.</look>
+      <take />
+      <takemsg>You never know when some good old chlorine solution may come in handy.</takemsg>
+      <drop type="boolean">false</drop>
+      <feature_usegive />
+      <useon>I'd rather use the chlorine solution on something.</useon>
+      <dropmsg>No, you may need it.</dropmsg>
+      <use type="script">
+        msg ("I am not going to use this on myself.")
+      </use>
+      <selfuseon type="scriptdictionary">
+        <item key="brownbra"><![CDATA[
+          if (not game.pov.parent = bathroom) {
+            msg ("You don't want to make a mess, in here.")
+          }
+          else {
+            msg ("Aha! You pour some chlorine solution on the brown thingy. Pheww!!! That smell!<br/><br/>Hey! The brown washes away and now you have a white bra, good as new. Almost.")
+            MoveObject (brownbra, GreenRoom)
+            AddToInventory (white bra)
+          }
+        ]]></item>
+        <item key="grease">
+          msg ("You pour some chlorine on the greasy floor. Some of the grease gives in, but nothing major happens. Wow! You haven't seen anything that dirty before!")
+        </item>
+        <item key="kitchen">
+          msg ("You pour some chlorine on the greasy floor. Some of the grease gives in, but nothing major happens. Wow! You haven't seen anything that dirty before!")
+        </item>
+        <item key="red shirt"><![CDATA[
+          if (not game.pov.parent = bathroom) {
+            msg ("You don't want to make a mess, in here.")
+          }
+          else {
+            msg ("You are very tempted to pour some chlorine on the red shirt. A devilish grin stretches your facial muscles, while you feel a pair of little horns popping out the top of your head. A tail lashes out. You see yourself as a sexy succubus from hell.<br/><br/>But only for an instant. You put the chlorine away. You can appreciate a good red when you see it and you don't want to ruin this fabric.<br/><br/>(Audience aaahhs in disappointment.)")
+          }
+        ]]></item>
+      </selfuseon>
+    </object>
+    <object name="cabinet">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <alias>mirror cabinet</alias>
+      <feature_container />
+      <listchildren />
+      <listchildrenprefix><![CDATA[<br/>It contains]]></listchildrenprefix>
+      <inroomdescription><![CDATA[Above the sink hangs a mirror cabinet.<br/>]]></inroomdescription>
+      <scenery />
+      <closemsg><![CDATA[You close the cabinet. It's one of these moments, in horror films, when the heroine closes the mirror cabinet, only to see the killer's reflection behind her. <br/><br/>No, there's just you. It's nice to see your face, again.]]></closemsg>
+      <openmsg>You open it. You say goodbye to your reflection, as it gives its place to the cabinet's contents.</openmsg>
+      <drop type="boolean">false</drop>
+      <look type="script">
+        if (not cabinet.isopen) {
+          msg ("You admire yourself in the mirror for a moment. Then, you continue with your quest.")
+        }
+        else {
+          msg ("The cabinet is now open.")
+        }
+      </look>
+      <object name="mouth guard">
+        <inherit name="editor_object" />
+        <scenery type="boolean">false</scenery>
+        <drop type="boolean">false</drop>
+        <alt type="stringlist">
+          <value>mouthguard</value>
+        </alt>
+        <alias>mouth guard</alias>
+        <look type="script">
+          msg ("A plastic mouth guard, for the sufferers of bruxism. You are not one of them.")
+          SetObjectFlagOn (mouth guard, "seen")
+        </look>
+        <take type="script">
+          msg ("You never clenched your jaws in your sleep. Besides, these personal artifacts are not to be shared.")
+          SetObjectFlagOn (mouth guard, "seen")
+        </take>
+      </object>
+      <object name="toothbrushes">
+        <inherit name="editor_object" />
+        <usedefaultprefix />
+        <alias>cup with about a dozen of toothbrushes</alias>
+        <scenery type="boolean">false</scenery>
+        <look>You wonder if the toothbrushes belong to different women who have slept with that guy...</look>
+        <takemsg><![CDATA[Which toothbrush to pick... They're too many!<br/><br/>Seriously, no, these personal artifacts are not to be shared.]]></takemsg>
+        <drop type="boolean">false</drop>
+        <alt type="stringlist">
+          <value>cup of toothbrushes</value>
+          <value>cup</value>
+          <value>toothbrush</value>
+          <value>brushes</value>
+          <value>brush</value>
+        </alt>
+      </object>
+    </object>
+    <object name="sink">
+      <inherit name="editor_object" />
+      <scenery />
+      <takemsg>Yeah. And then, I'll lift the whole apartment building with one hand.</takemsg>
+      <drop type="boolean">false</drop>
+      <look><![CDATA[What are you sinking about?<br/><br/>Aaahh... A good old German joke your father used to say.]]></look>
+      <alias>sink</alias>
+      <alt type="stringlist">
+        <value>basin</value>
+      </alt>
+    </object>
+    <object name="shower">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <scenery />
+      <drop type="boolean">false</drop>
+      <feature_usegive />
+      <look>{random:A shower without a curtain is like Norman Bates without his mum's wig.:Withoug a curtain, Norman Bates can't surprise you in the shower. You also can't keep the water from spraying all over the room.:They have probably used the curtain to separate the bathroom from the rest of the house. You can't expect them to buy a second one, just for the shower, can you?:The shower allegedly features hot water.:They say a shower can cure a hangover.} There are several shampoos and shower gels, as well as a soap bar. You wouldn't go near the soap bar, though; you think you can see some dude's hair on it.</look>
+      <alias>shower</alias>
+      <feature_container />
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <contentsprefix type="string"></contentsprefix>
+      <transparent type="boolean">false</transparent>
+      <take type="script">
+        take shower
+      </take>
+      <use type="script">
+        take shower
+      </use>
+      <object name="soap">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <alias>variety of shampoos 'n' gels</alias>
+        <look>Bubbly things. Someone enjoys variety of scents. The soap bar has some hair stuck to it.</look>
+        <takemsg>No, not mine.</takemsg>
+        <drop type="boolean">false</drop>
+        <feature_usegive />
+        <alt type="stringlist">
+          <value>shampoo</value>
+          <value>gel</value>
+          <value>soap bar</value>
+        </alt>
+        <inroomdescription type="string"></inroomdescription>
+        <use type="script">
+          take shower
+        </use>
+      </object>
+      <object name="body hair">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <alias>dude's body hair</alias>
+        <usedefaultprefix />
+        <alt type="stringlist">
+          <value>pubes</value>
+          <value>pubic hair</value>
+        </alt>
+        <take type="boolean">false</take>
+        <takemsg>You have no appetite to do so. Hair is fine on a dude, not on a soap. Even if the hair on the soap belongs to the dude on which the hair is fine. Did that make any sense?</takemsg>
+        <scenery />
+        <look><![CDATA[The soap has someone's hair stuck to it. You take your magnifying glass and inspect it. The hair belongs to the human race. Male's, probably. Body hair. Not sure which part. Sure that you don't want to figure it out.<br/><br/>You leave the hair where it is.]]></look>
+      </object>
+    </object>
+    <object name="curtain">
+      <inherit name="editor_object" />
+      <scenery />
+      <alias>shower curtain</alias>
+      <takemsg>What, to use as a cloak? No, thanks.</takemsg>
+      <drop type="boolean">false</drop>
+      <look>They have used the shower curtain to separate the bathroom from the rest of the house. Boredom is the auntie of invention.</look>
+      <alt type="stringlist">
+        <value>curtains</value>
+      </alt>
+    </object>
+    <object name="toilet seat">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>The toilet seat looks clean. Weird.</look>
+      <drop type="boolean">false</drop>
+      <takemsg>Yeah, just in case you need an urgent pee in the bus...</takemsg>
+      <feature_usegive />
+      <alias>toilet seat</alias>
+      <flush>You flush the toilet. Somehow, the water released looks dirtier than the one already there.</flush>
+      <use type="script">
+        toilet sit
+      </use>
+      <sit type="script">
+        toilet sit
+      </sit>
+    </object>
+    <object name="look_bathroom">
+      <inherit name="editor_object" />
+      <alias>bathroom</alias>
+      <scenery />
+      <alt type="stringlist">
+        <value>bath room</value>
+      </alt>
+      <look type="script">
+        ShowRoomDescription
+      </look>
+    </object>
+  </object>
+  <verb name="wake">
+    <property>wake</property>
+    <pattern>wake; wake up;</pattern>
+    <defaultexpression>"You can't wake " + object.article + " up."</defaultexpression>
+    <multiobjectdefault>Any better ideas?</multiobjectdefault>
+    <multiobjectmenuempty>There are no objects available to do that with.</multiobjectmenuempty>
+  </verb>
+  <verb name="take off">
+    <property>takeoff</property>
+    <pattern>take off</pattern>
+    <defaultexpression>"You can't takef " + object.article + "off."</defaultexpression>
+  </verb>
+  <verb name="put on">
+    <property>puton</property>
+    <pattern>put on; wear;</pattern>
+    <defaultexpression>"You can't wear " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="undress">
+    <pattern>undress; take off clothes; take clothes off;</pattern>
+    <unresolved type="string"></unresolved>
+    <script>
+      if (not GetBoolean(Sandy, "dressed")) {
+        msg ("You are already naked. What do you want to do? Peel your skin off?")
+      }
+      else {
+        msg ("You take the shirt off. You are, now, again, naked.")
+        SetObjectFlagOff (Sandy, "dressed")
+        EnableTimer (naked)
+      }
+    </script>
+  </command>
+  <object name="GreenRoom">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>Green Room</alias>
+    <object name="Carlos">
+      <inherit name="editor_object" />
+      <inherit name="namedmale" />
+      <look>Finally, your quest is reaching its end. You know this guy's name! His name is Carlos! Of course!</look>
+      <alt type="stringlist">
+        <value>dude</value>
+        <value>guy</value>
+        <value>lad</value>
+        <value>student</value>
+        <value>man</value>
+      </alt>
+      <takemsg>Oh, you have taken him, alright. Now it's not a time for a second round, though.</takemsg>
+      <drop type="boolean">false</drop>
+      <scenery />
+      <inroomdescription><![CDATA[<br/>Carlos hasn't moved at all, from where you have left him.<br/>]]></inroomdescription>
+      <alias>Carlos</alias>
+      <wake type="script">
+        wake Carlos
+      </wake>
+    </object>
+    <object name="Maras thing">
+      <inherit name="editor_object" />
+      <alias>not so vivid mental image of Mara's something missing</alias>
+      <visible />
+      <look><![CDATA[Well, it can be anything from a... or a... to a...<br/><br/>Whatever. The sleeping dude has taken something from Mara and he doesn't give it back. You wonder what it is. If you find it, she will tell you... probably his name! Yes! Maybe!]]></look>
+      <drop type="boolean">false</drop>
+      <dropmsg>You can't simply forget this subject by dropping it!</dropmsg>
+    </object>
+    <object name="Maras underwear image">
+      <inherit name="editor_object" />
+      <visible />
+      <alias>vivid mental image of Mara going through her things</alias>
+      <look>The image of Mara frantically going through her brassieres drawer will haunt you forever.</look>
+      <usedefaultprefix />
+      <drop type="boolean">false</drop>
+      <dropmsg>However hard you try, you can't forget this haunting image of Mara frantically going through her drawers.</dropmsg>
+    </object>
+    <object name="namelist">
+      <inherit name="editor_object" />
+      <scenery type="boolean">false</scenery>
+      <alias>list of dudes' names</alias>
+      <look><![CDATA[You have memorized the list of all the dudes' names, from the back of the photograph:<br/><br/>• Marcel "Julien" Didier<br/>• Kenny "Pistolgrip" Tracy<br/>• Carlos "Knob" Rodriguez<br/>• Mara "Bricky" Stuart<br/>• Bob "Ronnie" Dickens]]></look>
+      <drop type="boolean">false</drop>
+      <alt type="stringlist">
+        <value>catalogue</value>
+        <value>list</value>
+      </alt>
+      <dropmsg><![CDATA[Impossible. You memorise something; then, it's there forever.<br/><br/>Although, not your dates' names, apparently.]]></dropmsg>
+    </object>
+    <object name="Mara n dude">
+      <inherit name="editor_object" />
+      <alias>vivid mental image of Mara and the dude hugging</alias>
+      <look>You have a very vivid mental image of Mara and the dude hugging. The thought that -even if drunk- you have shared the same man with Mara makes you uncomfortable.</look>
+      <drop type="boolean">false</drop>
+      <dropmsg>By dropping the subject, you can't simply forget an image as vivid as that.</dropmsg>
+    </object>
+    <object name="nickname">
+      <inherit name="editor_object" />
+      <alias>knowledge of the dude's nickname</alias>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>the</prefix>
+      <look>You now know that the dude next door is called "The Knob." You suspect that it has something to do with the shape of his penis, which is one of the few things that you recall from last night.</look>
+      <drop type="boolean">false</drop>
+      <dropmsg>Dropping the knowledge means forgetting. You hate forgetting things.</dropmsg>
+    </object>
+    <object name="white bra">
+      <inherit name="editor_object" />
+      <visible />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alias>Mara's brassiere of the purest white</alias>
+      <look>The chloride solution worked wonders with it. It is now white as snow.</look>
+      <drop type="boolean">false</drop>
+      <alt type="stringlist">
+        <value>white brassiere</value>
+      </alt>
+      <feature_usegive />
+      <dropmsg>It took such effort to get! You're keeping it!</dropmsg>
+      <use type="script">
+        wear bra
+      </use>
+      <puton type="script">
+        wear bra
+      </puton>
+    </object>
+    <object name="brownbra">
+      <inherit name="editor_object" />
+      <look>This must be Mara's bra. It is a brown, old fashioned piece of lingerie from the '50s. Naah, you're just being nasty.</look>
+      <alias>Mara's brown brassiere</alias>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alt type="stringlist">
+        <value>brown bra</value>
+      </alt>
+      <feature_usegive />
+      <puton type="script">
+        wear bra
+      </puton>
+      <use type="script">
+        wear bra
+      </use>
+    </object>
+    <object name="knob">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>the</prefix>
+      <scenery />
+      <look><![CDATA[- Bring out the Knob.<br/>- The Knob's sleeping.<br/>- Then, I guess you have to wake him up, now, don't you?<br/><br/>Ah, you love movie references!]]></look>
+      <takemsg>You'd better leave his knob where it is. You fiddled with it enough, last night.</takemsg>
+      <wake>You're not waking him up just to call him "Knob." You have to know his real name, first.</wake>
+      <push>You're not waking him up just to call him "Knob." You have to know his real name, first.</push>
+    </object>
+  </object>
+  <command name="smell command">
+    <pattern>smell #object#</pattern>
+    <script><![CDATA[
+      if (object = toilet seat) {
+        msg ("It smells of chlorine. Yuck.")
+      }
+      else if (object = dude) {
+        msg ("He smells like a man who has gone through a lot of physical activity and hasn't taken a shower afterwards.")
+      }
+      else if (object = Carlos) {
+        msg ("He smells like a man who has gone through a lot of physical activity and hasn't taken a shower afterwards.")
+      }
+      else if (object = cat) {
+        msg ("Smelly cat, smelly cat<br/>What have they been feeding you?<br/><br/>You wonder where that came from!")
+      }
+      else if (object = chlorine) {
+        msg ("You once tried to sniff glue, in highschool. Chlorine is no better.")
+      }
+      else if (object = your panties) {
+        msg ("You don't have to. You know it's dirty, just by the way it looks.")
+      }
+      else if (object = memorabilia) {
+        msg ("You don't want to go too close to this drawer.")
+      }
+      else if (object = vibrator) {
+        msg ("You take the vibrator and carefully bring it close to your nose. It smells like rubber. Hmm. It's probably been washed after the last use.")
+      }
+      else if (object = womens underwear) {
+        msg ("You don't want to go too close to other people's used underwear.")
+      }
+      else if (object = grease) {
+        msg ("It smells like a mixture of olive oil, motor oil and chocolate.")
+      }
+      else {
+        msg ("You have no intention of going around sniffing things.")
+      }
+    ]]></script>
+  </command>
+  <command name="scratch sth">
+    <pattern>scratch #object#</pattern>
+    <unresolved type="string"></unresolved>
+    <script><![CDATA[
+      if (object = Sandy) {
+        msg ("Since no one's watching, you give yourself a good scratch. Aaah. Relieving!")
+      }
+      else if (object = cat) {
+        msg ("You scratch the cat. The cat scratches you. Ouch.")
+      }
+      else if (object = dude) {
+        msg ("Scratching him will probably wake him up.")
+      }
+      else if (object = Maras door) {
+        msg ("You get an urge to scratch Mara's door, like a puppy out in the rain. But you don't.")
+      }
+      else {
+        msg ("<br/>You don't want to scratch " +object.article+ ".")
+      }
+    ]]></script>
+  </command>
+  <command name="scratch">
+    <pattern>scratch</pattern>
+    <script>
+      msg ("Since no one's watching, you give yourself a good scratch. Aaah. Relieving!")
+    </script>
+  </command>
+  <command name="about">
+    <pattern>about</pattern>
+    <script><![CDATA[
+      msg ("ONE NIGHT STAND<br/><br/>Written by: Giannis G. Georgiou, using Quest<br/>Current game version: 1.5<br/><br/>Special thanks to the playtesters:<br/>Tasos Protopapas<br/>George Theodoropoulos<br/>Manos Kalaitzoglou<br/><br/>A big thanks to Quest creator Alex!<br/>Quest website: www.textadventures.co.uk")
+    ]]></script>
+  </command>
+  <command name="look room">
+    <pattern>look at room; look around; see;</pattern>
+    <script>
+      ShowRoomDescription
+    </script>
+  </command>
+  <verb name="look through">
+    <property>lookthrough</property>
+    <pattern>look through; look in; look into; see through;</pattern>
+    <defaultexpression>"You can't look through that."</defaultexpression>
+  </verb>
+  <verb name="spy on">
+    <property>watch</property>
+    <pattern>watch; spy on; spy;</pattern>
+    <defaultexpression>"You can't spy on " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="justspeak">
+    <pattern>speak; talk;</pattern>
+    <script><![CDATA[
+      msg ("{random:\"Blah blah blah...\" It's fun talking to yourself.:\"Hi, Sandy.\"<br/>\"Oh, hi Sandy!\" It's fun talking to yourself.:\"Hello? Anyone?\":You have a friend who is a writer. He often talks to himself. You don't envy him.}")
+    ]]></script>
+  </command>
+  <verb>
+    <property>flush</property>
+    <pattern>flush</pattern>
+    <defaultexpression>"You can't flush " + object.article + "."</defaultexpression>
+  </verb>
+  <function name="Mara cursing">
+    OutputTextNoBr ("you {random:horrible:disgusting:filthy:dirty:promiscuous:pathetic:shameless:exhibitionistic:audatious:maniacal:tempestuous:stinking:impossible:lupine:animalistic:bestial:low class:extra terrestrial:pornographic:ritualistic:two faced:spineless} {random:piglet:escort:whore:harlot:exhibitionist:cow:call girl:person:nymphomaniac:sex addict:scavenger:sow:porn actress:bimbo:serial killer:peasant:villager:hill billy}!\" ")
+  </function>
+  <function name="name realisation"><![CDATA[
+    if (dude.nameprogress = 2) {
+      wait {
+        msg ("<br/>So! You know that the dude's nickname is 'The Knob.' You also know, from the list of names at the back of the photo, that 'Knob' belongs to Carlos Rodriguez. This can only mean that... Yes! You are not that hangover. You put 2 + 2 together.<br/><br/>The dude next door is called Carlos!")
+      }
+      MoveObject (dude, GreenRoom)
+      MoveObject (knob, GreenRoom)
+      MoveObject (Carlos, Carlos bedroom)
+    }
+  ]]></function>
+  <function name="take shower"><![CDATA[
+    if (GetBoolean(Sandy, "dressed")) {
+      OutputTextNoBr ("With quick moves, you take the shirt off and hop into the shower. You turn the water on, while singing the theme from Psycho's shower sequence -remixed with a pinch of the theme from Friday the 13th.<br/><br/>Unfortunately, the water is icy cold. ")
+      if (GetBoolean(mouth guard, "seen")) {
+        msg ("Your teeth rattle. Maybe that mouthguard wasn't such a bad idea, after all.")
+      }
+      msg ("<br/>Okay, that's enough. You get out of the shower and dry yourself with the first towel you lay your hands on. Still shaking, you put the red shirt back on.")
+    }
+    else {
+      OutputTextNoBr ("With quick moves, you hop into the shower -you are already naked, after all. You turn the water on, while singing the theme from Psycho's shower sequence -remixed with a pinch of the theme from Friday the 13th.<br/><br/>Unfortunately, the water is icy cold. ")
+      if (GetBoolean(mouth guard, "seen")) {
+        msg ("Your teeth rattle. Maybe that mouthguard wasn't such a bad idea, after all.")
+      }
+      msg ("<br/>Okay, that's enough. You get out of the shower and dry yourself with the first towel you lay your hands on. You need to find something to put on you.")
+    }
+  ]]></function>
+  <function name="wear bra"><![CDATA[
+    msg ("You try on Mara's bra for size. Hers are bigger. Yours are probably firmer. So you hope. But then again, she is 20 and you're 34.<br/><br/>You take a moment to contemplate on the passage of time, life and death, and your purpose on this planet. Then, you put the bra back into your inventory and continue with your quest.")
+  ]]></function>
+  <function name="toilet sit"><![CDATA[
+    msg ("You sit on the toilet seat and relax your lower muscles. Then, all of a sudden, you jolt up, turn around and... throw up. Yuck.<br/><br/>You flush and try to forget about it, even though the sour aftertaste works hard to refresh your memory.")
+  ]]></function>
+  <function name="voyeurism">
+    msg ("You spot {random:a bald man dancing naked to some inaudible beat.:a redhead doing a handstand, against her kitchen wall.:a chubby guy practicing tap dancing.:a blonde woman in a bikini practicing the tenor saxophone.:two teenagers fighing with samurai swords.:a middle-aged couple playing strip paper-rock-scissors.:a man with a telescope pointed towards you.:a mother and a daughter practicing sumo wrestling.:an old couple finding that old flare among dirty dishes.} {random:Okay.:Right.:Superb.:Fantastic.:Terrific.:Aha.:Hmm.:Whatever.}")
+  </function>
+  <function name="wake Carlos"><![CDATA[
+    DisableTimer (naked)
+    msg ("<br/>Carlos half-wakes up. \"Oh, Sandy, please. Let me sleep some more, honey.\"<br/>\"Good morning, Carlos,\" you confidently say, giving him a brief kiss on the lips, as a reward (to yourself).<br/><br/>Yes! You've made it! You have completed your quest! You have not embarrassed yourself! You have treated this boy with respect! You are, indeed, a lady!")
+    wait {
+      msg ("<br/>Carlos eyes open. \"What? Oh, hello, err...\"<br/><br/>Awkward pause. Your smile freezes on your face.<br/><br/>\"Sorry. This is embarrassing, but I am horrible with names...\" confesses Carlos.<br/>\"But, you called me with my name, in your sleep,\" you protest.<br/>\"Did I?\"<br/>\"Yeah. You said, hi, Sandy...\"<br/>Carlos smiles: \"Sandy? Your name is Sandy?\"<br/>\"Yeah. So?\"<br/>\"Sandy... I was calling my cat. Her name's Sandy, too.\"")
+      wait {
+        msg ("<br/>Sigh. You don't believe what you're hearing. I mean, really?<br/><br/>\"Excuse me,\" you tell Carlos, pulling your dress from underneath him. You quickly change into your clothes and leave Carlos and Mara's flat. Forever.<br/><br/>Finally.<br/><br/>(He is a bit cute, though.)<br/><br/>THE END<br/>")
+        wait {
+          msg ("Yep, that was it!<br/><br/>More adventures of Sandy Owens will be designed and released sooner or later. Ideas for sequels welcome!<br/><br/>The author of this game would like to thank all the people who helped make it possible: Alex, who created the fantastic platform Quest, as well as jaynabonne and Pertex, who help the newbies on the Quest forum. Also, the playtesters, Manos and Theo and, especially, Tasos, for all their time and creativity.<br/><br/>Thanks for playing all the way through. This is Giannis, author of 'One Night Stand.' Logging off.<br/>")
+          finish
+        }
+      }
+    }
+  ]]></function>
+  <function name="first wake dude"><![CDATA[
+    DisableTimer (naked)
+    msg ("The dude twists a little and, without opening his eyes, he says: \"Oh, Sandy, please. Let me sleep some more, honey.\"<br/><br/>Sandy? The boy remembers your name! How sweet!<br/><br/>Then, you realise that you don't recall his. \"Oh, come on,\" you say to yourself. \"This can't be that hard...\" Gosh, what is this guy's name? At first, it feels like a little game; like a puzzle: you squeeze your brains to remember what you know about this guy. How would Sherlock Holmes solve this? \"Let's retrace our steps,\" you think. An image of him leaning towards you in a night club... His words: \"Hi, I am... My name is... My friends call me...\"<br/><br/>No. It's futile. You don't remember the name. Dammit!")
+    wait {
+      msg ("<br/>It's not a game anymore. You are starting to feel bad about this. This young dude probably had the night of his life with you. He worshipped you. He honoured you. If he were awake, he would probably offer to bring you breakfast in bed. But you... You don't even remember his name. What kind of cynical bitch are you?")
+      wait {
+        msg ("<br/>Oh my! It is true. You have turned into a serial sex machine. You have been wasting yourself, from one night stand to one night stand, from coctail party to orgy, without a single clue about whom you share this experiences with. You have been consumming men like nachos, not giving a second thought about their feelings.<br/><br/>Nor about yours! That's right! You have feelings, too! And you have been suppressing them, because of some twisted self image, which pushes you towards numb and quickly consummated relationships.<br/><br/>No more! This is a turning point! You take a deep breath and decide something very important (or so you think): You HAVE to remember this guy's name. You will make it your quest, finding out this guy's name. There is no way you leave the house before addressing him with his name. You will treat this boy with respect. And then, you will change your life.<br/><br/>You give the dude an awkward caress on the head, with an oblique \"Shhh.\" He changes side and continues sleeping.")
+        SetObjectFlagOn (dude, "first wake")
+        if (not GetBoolean(Sandy, "dressed")) {
+          msg ("<br/>Now, find some clothes to put on yourself.")
+          EnableTimer (naked)
+        }
+      }
+    }
+  ]]></function>
+  <function name="telescopeuse"><![CDATA[
+    if (game.pov.parent = corridor) {
+      msg ("You point the telescope at the corridor walls, but everything looks out of focus. Maybe the corridor is too narrow.<br/><br/>You turn the telescope backside front. Ah. That's better.")
+    }
+    else {
+      msg ("You point the telescope, from the " + game.pov.parent.alias + ", to a flat across the street.")
+      voyeurism
+    }
+  ]]></function>
+  <function name="telekinesis">
+    msg ("{random:Dammit! I knew I should have bought that book on telekinesis!:Yes, this is when telekinetic abilities come in handy...:You concentrate your thoughts in getting it to move with sheer willpower and magnetic energy flow. It doesn't even flinch. You should have practiced telekinesis more.:You project your chi towards it. No, it doesn't come any closer...}")
+  </function>
+  <function name="lookmaraswindow"><![CDATA[
+    msg ("You take a peek inside the room. You see Mara. {once:Although you don't recall much from last night, you have a vague knowledge of Mara being the other tenant in the flat.}<br/>")
+    if (GetBoolean(dude, "first wake")) {
+      msg ("Then, you ask yourself how come you remember HER name and not HIS!<br/>")
+    }
+    if (Got(Maras thing)) {
+      msg ("Wait! What's this? Mara is frantically going through one of her underwear drawers. Brassieres fly all over the place. \"Where is the damn thing?\" she screams. \"Please tell me that I've got it somewhere here!\"")
+      AddToInventory (Maras underwear image)
+    }
+    else {
+      msg ("She is sat at her desk, with her back turned to you.")
+    }
+    if (not GetBoolean(photograph, "upsidedown")) {
+      msg ("<br/>Stuck on the wall, you see a photograph. You can't really tell who is in it. On another wall, you see the poster of a pop band. Yikes. On a shelf, there is a metallic figurine.")
+    }
+    else {
+      msg ("<br/>Mara has taken the photograph off the wall and left it lying upside down, on her desk. On another wall, you see the poster of a pop band. On a shelf, there is a metallic figurine.")
+    }
+  ]]></function>
+  <walkthrough name="Tests">
+    <steps type="simplestringlist">
+      take shirt
+      wear shirt
+      s
+      knock door
+      e
+      take telescope
+      w
+      n
+      w
+      look at window
+      use telescope with photo
+      s
+      e
+      s
+      knock door
+      n
+      s
+    </steps>
+  </walkthrough>
+  <walkthrough name="All Maras door">
+    <steps type="simplestringlist">
+      take shirt
+      wear shirt
+      look at shirt
+      open drawer
+      look at memorabilia
+      take your panties
+      take dress
+      wake dude
+      s
+      knock door
+      e
+      take telescope
+      w
+      n
+      w
+      look at window
+      look at photo
+      use telescope with photo
+      x telescope
+      e
+      s
+      knock door
+      n
+      w
+      look at room
+      look through window
+      x photo
+      use telescope with photo
+      i
+      e
+      look at memorabilia
+      wear bra
+      s
+      knock door
+      s
+      take chlorine
+      use chlorine on bra
+      wear bra
+      n
+      knock door
+      i
+      look at knowledge
+      n
+      wake dude
+    </steps>
+  </walkthrough>
+  <walkthrough name="All window">
+    <steps type="simplestringlist">
+      s
+      e
+      take telescope
+      w
+      n
+      w
+      look at room
+      look at balcony
+      look through window
+      look at photo
+      use telescope with photo
+      look telescope on shirt
+      use telescope on shirt
+      i
+      use telescope on heels
+      e
+      take shirt
+      wear shirt
+      open drawer
+      look at vibrator
+      s
+      knock door
+      s
+      n
+      knock door
+      n
+      w
+      look through window
+      s
+      e
+      look at memorabilia
+      s
+      s
+      take chlorine
+      n
+      use chlorine on bra
+      s
+      use chlorine on bra
+      n
+      knock door
+      i
+      n
+      w
+      use telescope on photo
+      e
+      wake carlos
+    </steps>
+  </walkthrough>
+  <timer name="naked">
+    <interval>80</interval>
+    <enabled type="boolean">false</enabled>
+    <script><![CDATA[
+      if (not GetBoolean(Sandy, "dressed")) {
+        msg ("<br/>{random:It is a bit awkward, standing here stark naked, but you've done worse.:It's getting a bit cold. Maybe you should consider wearing something.:You're not a prude, but sashaying around a stranger's house completely naked is quite a challenge!:You think you see someone with a spyglass, across the street, pointing at... well, your naked body.:This place is quite cold... You get goose bumps.:The situation is getting a bit cold... Your nipples can pierce wood.}")
+      }
+    ]]></script>
+  </timer>
+</asl>

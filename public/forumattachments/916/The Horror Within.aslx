@@ -1,0 +1,697 @@
+<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <template name="UnresolvedObject">I don't understand your command. Try rephrasing.</template>
+  <template name="UnresolvedLocation">You can't go that way.</template>
+  <template name="NoObjectsAvailable">There are no objects available.</template>
+  <template name="UnrecognisedCommand">That sentence isn't one I recognise.</template>
+  <dynamictemplate name="DefaultKill">"It is a non-living object, so by definition you cannot kill " + object.article + "."</dynamictemplate>
+  <dynamictemplate name="DefaultSmell">"It smells just like you would expect "  + object.article + " to smell."</dynamictemplate>
+  <game name="The Horror Within">
+    <gameid>1826f393-319a-4a91-b3b5-bb194134cceb</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <subtitle>Awakening</subtitle>
+    <author>Mario Kućan</author>
+    <cover type="string"></cover>
+    <category>Horror</category>
+    <feature_pictureframe />
+    <feature_asktell />
+    <showscore type="boolean">false</showscore>
+    <feature_lightdark />
+    <gridmap type="boolean">false</gridmap>
+    <attr name="autodescription_youarein" type="int">0</attr>
+    <attr name="autodescription_description" type="int">1</attr>
+    <showhealth />
+    <backgroundimage>GameTitle2.png</backgroundimage>
+    <setbackgroundopacity type="boolean">false</setbackgroundopacity>
+    <backgroundopacity type="double">0</backgroundopacity>
+    <defaultbackground>Wheat</defaultbackground>
+    <underlinehyperlinks />
+    <menubackground>WhiteSmoke</menubackground>
+    <setcustompadding type="boolean">false</setcustompadding>
+    <showborder type="boolean">false</showborder>
+    <setcustomwidth type="boolean">false</setcustomwidth>
+    <showpanes />
+    <showlocation />
+    <custompaddingright type="int">20</custompaddingright>
+    <custompaddingleft type="int">20</custompaddingleft>
+    <menuhoverbackground>WhiteSmoke</menuhoverbackground>
+    <defaultfont>'Times New Roman', Times, serif</defaultfont>
+    <showcommandbar />
+    <defaultlinkforeground>Blue</defaultlinkforeground>
+    <defaultforeground>Black</defaultforeground>
+    <deactivatecommandlinks type="boolean">false</deactivatecommandlinks>
+    <description><![CDATA[<b>Summary</b><br/>You have been imprisoned in an old apartment. Having lost your memory and without means of escape you must search for clues that will cast light on your current predicament. The objective of the game is to find a way to escape and face the nightmares that await you. Good luck!<br/><br/>Type "help" to learn how to navigate the game.<br/>]]></description>
+    <pov type="object">player</pov>
+    <onhealthzero type="script">
+      finish
+    </onhealthzero>
+  </game>
+  <object name="New Game">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <descprefix type="string"></descprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <alias>The Horror Within</alias>
+    <picture>GameTitle2.png</picture>
+    <description><![CDATA[<b>Summary</b><br/>You have been imprisoned in an old apartment. Having lost your memory and without means of escape you must search for clues that will cast light on your current predicament. The objective of the game is to find a way to escape and face the nightmares that await you. Good luck!<br/>]]></description>
+    <exitslistprefix type="string"></exitslistprefix>
+    <beforeenter type="script">
+      play sound ("Horror Piano Theme.mp3", false, true)
+    </beforeenter>
+    <firstenter type="script">
+    </firstenter>
+    <enter type="script">
+      wait {
+        MoveObject (player, Create your character)
+      }
+    </enter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <feature_player />
+      <attr name="pov_look" type="script"><![CDATA[
+        if (player.health=100) {
+          msg ("Other then carrying some old scars, you look perfectly fine.")
+        }
+        else if (player.health>80) {
+          msg ("A few cuts and bruises cause you some discomfort, but it is nothing serious.")
+        }
+        else if (player.health>60) {
+          msg ("You have taken serious damage and blood is slowly trickling from your open wounds. The pain you feel is sharp, but endurable.")
+        }
+        else if (player.health>30) {
+          msg ("Your mobility is severly reduced as broken bones and wide open wounds inflict severe pain at your attempts to move.")
+        }
+        else if (player.health>0) {
+          msg ("You are barely alive and are having a hard time remaining conscious. You should heal yourself as soon as possible.")
+        }
+      ]]></attr>
+    </object>
+  </object>
+  <object name="Create your character">
+    <inherit name="editor_room" />
+    <descprefix type="string"></descprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <exitslistprefix type="string"></exitslistprefix>
+    <description type="string"></description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <enter type="script">
+      msg ("What is your name?")
+      get input {
+        ClearScreen
+        player.alias = result
+        msg ("Very well, " + player.alias + "." + " Are you a male or a female" + "?")
+        ShowMenu ("", Split ("Male;Female", ";"), false) {
+          ClearScreen
+          player.gender = result
+          ShowMenu ("Now, describe your age.", Split ("Teenanger;Young adult;Adult;Elder", ";"), false) {
+            player.age = result
+            ClearScreen
+            msg ("")
+            msg (player.alias + " is a " + LCase (player.gender) + " " + LCase (player.age) + ".")
+            msg ("")
+            msg ("You are finished. Press a key to begin...")
+            wait {
+              ClearScreen
+              DecreaseHealth (50)
+              MoveObject (player, hallway)
+            }
+          }
+        }
+      }
+    </enter>
+    <beforeenter type="script">
+      ClearScreen
+    </beforeenter>
+  </object>
+  <object name="hallway">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <descprefix type="string"></descprefix>
+    <objectslistprefix>You can see</objectslistprefix>
+    <exitslistprefix>You can go</exitslistprefix>
+    <picture>Dark Figure.png</picture>
+    <dark type="boolean">false</dark>
+    <description type="script"><![CDATA[
+      if (ListContains(ScopeVisible(), table)) {
+        msg ("A dark figure slowly approaches as you struggle to get on your feet. You grab the nearby table in hopes that it might support your weight, but a deep wound in your broken knee keeps you firmly on the ground. Slow and heavy breathing behind you sends cold shivers down your spine while you desperately try to keep your distance from whoever is after you. You drag yourself through blood and dirt like a wounded animal while emotions of dread and fear numb your other senses. Suddenly a shadow outlining an image of a man with an axe appears on the floor next to you and you realize the end is near. In panic you look around, but the hall leads only towards the south.<br/><br/>The hallway looks like an entrance to an abandoned hospital. The lighting is so horrible that you have to strain your eyes to make sense of the environment. Nevertheless you manage to notice a few objects in the area. A wheelchair has been knocked over and lies on the blood stained floor. Next to it you see a typical hospital bed on wheels which looks like it is going to fall apart - and on the opposite wall you notice a table and a flipped chair. Old books lie on the table's lower shelf.<br/>---")
+      }
+      else {
+        msg ("You lie on the floor facing the southern part of the hallway. The dark figure slowly approaches as you contemplate your options.<br/><br/>The hallway looks like an entrance to an abandoned hospital. The lighting is so horrible that you have to strain your eyes to make sense of the environment. Nevertheless you manage to notice a few objects in the area. A wheelchair has been knocked over and lies on the blood stained floor. Next to it you see a typical hospital bed on wheels which looks like it is going to fall apart - and on the opposite wall you notice shattered table remains and a flipped chair. There are also some old books scattered on the floor.<br/>---")
+      }
+    ]]></description>
+    <object name="dark figure">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <look>You look at the dark figure, but fear and terrible lighting in the hallway prevents you from noticing too many details. You do however manage to discern that the figure is a tall man carrying a huge bloody axe. His face is hidden behind a dirty triangular hood and his slender muscles are covered in sweat and blood behind a transparant plastic butcher's outfit.</look>
+      <visible />
+      <take type="boolean">false</take>
+      <scenery />
+      <alt type="stringlist">
+        <value>man; tall man; figure</value>
+      </alt>
+      <speak type="script"><![CDATA[
+        if (player.health<50) {
+          msg ("Against your better judgment you decide to try and talk to the dark figure, but before you can even utter a word his axe falls on your skull with a sickening crunch. Your brains splatter all over the nearby walls as life abandons you.")
+          finish
+        }
+        else {
+          DecreaseHealth (40)
+          msg ("In an act of pure desperation, you attempt to talk with the tall man behind you. Paralyzed with fear words seem to escape you as the man swings his axe at your chest. With pure luck you manage to push the falling blade to the side, preventing certain death only by an inch. However, part of the axe still connects to your ribs, shattering them as you scream in agony. (You take 40 damage)")
+        }
+      ]]></speak>
+      <attr name="attack the dark figure" type="script">
+        msg ("You nervously face the man with an axe. Gathering all your courage you start crawling towards him with a plan to attack. Unfortunately you are in no shape to pose any threat and the man shows no mercy to your foolishness. With a sickening crunch he digs his axe deep into your back. As you lie dying in your own pool of blood, the figure finishes his assault by squashing your skull under his boot.")
+        finish
+      </attr>
+      <beg type="script">
+        msg ("Against your better judgment you decide to surrender your fate in the hands of a maniac with an axe. Untouched by your pleading gestures, the figure swings his axe diagonally downwards and decapitates you with one swift blow.")
+        finish
+      </beg>
+      <attr name="defend yourself" type="script"><![CDATA[
+        if (player.health<50) {
+          msg ("Although you are heavily wounded and there is little chance of successfully defending against a maniac armed with an axe, you decide to attempt to dissarm him and use his weapon against him. You lift your hands in a tight guard and prepare for another assault. Unfortunately you are in no shape to fight with a man of his size and with one swift swing of his massive axe the dark figure breaks through your defences. You hear a sickening crunch as his axe digs deep into your chest and seconds later you choke in your own blood.")
+          finish
+        }
+        else {
+          msg ("You devise a plan how to dissarm the man with an axe and use his weapon against him. You lift your hands in a tight guard and prepare for the figure’s assault. Unfortunately you are wounded and not in a very good shape to be able to fight  from the ground. As the figure swings the axe at your chest you manage to grab the shaft of his blade. However, the blow is too powerful and it easily breaks through your weak defences. Luckily, you posses enough strength in your upper body to somewhat soften the attack, preventing the axe from digging too deep into your ribs. (You take 40 damage)")
+          DecreaseHealth (40)
+        }
+      ]]></attr>
+      <ask type="scriptdictionary" />
+    </object>
+    <object name="chair">
+      <inherit name="editor_object" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <scenery />
+      <sit>This is no time to lounge about.</sit>
+      <alt type="stringlist">
+        <value>flipped chair;</value>
+      </alt>
+      <look type="script">
+        msg ("An old chair made from cheap wood has been turned over and left lying on the floor.")
+      </look>
+    </object>
+    <object name="table">
+      <inherit name="editor_object" />
+      <look>An old table made from metal and wood stands next to a dirty blood stained wall. Other than some old books that lay scattered on the lower shelf, you do not see anything interesting.</look>
+      <alt type="stringlist" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <attr name="feature_switchable" type="boolean">false</attr>
+      <switchedon type="boolean">false</switchedon>
+      <scenery />
+      <search>Your hopes of finding something useful are quickly destroyed upon closer examination. Other than some old books that lay scattered on the lower shelf, you do not see anything interesting.</search>
+      <table1 type="script">
+        msg ("You trying to find a good hiding spot, so you crawl behind the table in hopes that it might offer you some cover. Behind the table you see the tall man approaching, his blood covered boots echoing through the empty hall. Suddenly a loud crashing sound next to your head reveals your worst fears as wood and metal shatters under the weight of the man's axe. The shock fills you with adrenaline and you quickly crawl away unscathed.")
+        MakeObjectInvisible (table)
+        MakeObjectVisible (table remains)
+        ShowRoomDescription
+      </table1>
+    </object>
+    <command name="wait1">
+      <pattern>wait; do nothing; do not move; lie still; don't move; do not move; sleep;</pattern>
+      <script>
+        msg ("You close your eyes and hope for a miracle as you lie still on the floor. 'Perhaps it is all a dream', you think to yourself while stubornly refusing to move. Suddenly a sharp pain across your back forces you to open your eyes and you feel warm blood spreading underneath you. You start choking as you desperately gasp for air and before you can make sense of what happened, darkness falls over you.")
+        finish
+      </script>
+    </command>
+    <object name="table remains">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look>All that is left from the table are its shattered remains.</look>
+      <scenery />
+      <takemsg>Although the table has been cut in half you are too weak to carry it.</takemsg>
+    </object>
+    <command>
+      <pattern>surrender to dark figure; surrender; surrender to figure; beg; beg for mercy; beg dark figure for mercy; beg figure for mercy;</pattern>
+      <script>
+        msg ("Against your better judgment you decide to surrender your fate in the hands of a maniac with an axe. Untouched by your pleading gestures, the figure swings his axe diagonally downwards and decapitates you with one swift blow.")
+        finish
+      </script>
+    </command>
+    <object name="books">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <scenery />
+      <takemsg>The books have been ruined and would just be an unnecessary burden.</takemsg>
+      <alt type="stringlist">
+        <value>old books; ruined books</value>
+      </alt>
+      <look type="script">
+        if (ListContains(ScopeVisible(), table)) {
+          msg ("You take a closer look at the books that lie on the table's lower shelf. Unfortunatelly they appear to be damaged, so you turn your attention elsewhere.")
+        }
+        else {
+          msg ("You take a closer look at the books that lie scattered on the floor. Unfortunatelly they appear to be damaged, so you turn your attention elsewhere.")
+        }
+      </look>
+    </object>
+    <object name="gurney">
+      <inherit name="editor_object" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <scenery />
+      <alt type="stringlist">
+        <value>mobile bed; bed; hospital bed</value>
+      </alt>
+      <search>Upon closer examination you fail to find anything useful.</search>
+      <look type="script">
+        msg ("You see a dusty hospital bed which probably hasn't been moved in ages. Some of the wheels have fallen off and it looks like it is going to fall apart by its own.")
+      </look>
+      <lie type="script">
+        msg ("The bed crumbles under your weight as you climb on on it. You close your eyes and hope for a miracle as you lie still. 'Perhaps it is all a dream', you think to yourself while stubornly refusing to move. Suddenly a sharp pain across your back forces you to open your eyes and you feel warm blood spreading underneath you. You start choking as you desperately gasp for air and before you can make sense of what happened, darkness falls over you.")
+        finish
+      </lie>
+    </object>
+    <command>
+      <pattern>defend yourself; kill dark figure; kill figure; fight with figure; fight with dark figure;</pattern>
+      <script><![CDATA[
+        if (player.health<50) {
+          msg ("Although you are heavily wounded and there is little chance of successfully defending against a maniac armed with an axe, you decide to attempt to dissarm him and use his weapon against him. You lift your hands in a tight guard and prepare for another assault. Unfortunately you are in no shape to fight with a man of his size and with one swift swing of his massive axe the dark figure breaks through your defences. You hear a sickening crunch as his axe digs deep into your chest and seconds later you choke in your own blood.")
+          finish
+        }
+        else {
+          msg ("You devise a plan how to dissarm the man with an axe and use his weapon against him. You lift your hands in a tight guard and prepare for the figure’s assault. Unfortunately you are wounded and not in a very good shape to be able to fight  from the ground. As the figure swings the axe at your chest you manage to grab the shaft of his blade. However, the blow is too powerful and it easily breaks through your weak defences. Luckily, you posses enough strength in your upper body to somewhat soften the attack, preventing the axe from digging too deep into your ribs. (You take 40 damage)")
+          DecreaseHealth (40)
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>hide behind table; crawl behind table; hide behind the table; crawl behind the table</pattern>
+      <unresolved type="string"></unresolved>
+      <script><![CDATA[
+        if (ListContains(ScopeVisible(), table remains)) {
+          msg ("The table was destroyed and the only thing left are its shattered remains.")
+        }
+        else {
+          msg ("You crawl behind the table in hopes that it might offer you some cover. Behind the table you see the tall man approaching, his blood covered boots echoing through the hall. Suddenly a loud crashing sound next to your head reveals your worst fears as wood and metal shatters under the weight of the man's axe. The shock fills you with adrenaline and you quickly crawl away unscathed.<br/><br/>You lie on the floor facing the southern part of the hallway. The dark figure slowly approaches as you contemplate your options.<br/>---")
+          MakeObjectInvisible (table)
+          MakeObjectVisible (table remains)
+          exitdescription = FormatExitList(game.pov.parent.exitslistprefix, GetExitsList(), Template("Or"), ".")
+          msg (exitdescription)
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>search table</pattern>
+      <script>
+        msg ("An old table made from wood and metal stands next to a dirty blood stained wall. Your hopes of finding something useful are quickly destroyed upon closer examination. Other than some old books that lay scattered on the lower shelf, you do not see anything interesting.")
+      </script>
+    </command>
+    <exit alias="south" to="southern hallway" />
+    <command>
+      <pattern>look; examine area; examine room; look at area; look at room; examine hallway; look at hallway; look at environment; examine environment; examine hall; look at hall; look around</pattern>
+      <script><![CDATA[
+        if (ListContains(ScopeVisible(), table)) {
+          msg ("The hallway looks like an entrance to an abandoned hospital. The lighting is so horrible that you have to strain your eyes to make sense of the environment. Nevertheless you manage to notice a few objects in the area. A wheelchair has been knocked over and lies on the blood stained floor. Next to it you see a typical hospital bed on wheels which looks like it is going to fall apart - and on the opposite wall you notice a table and a flipped chair. Old books lie on the table's lower shelf.<br/><br/>You lie on the floor facing the southern part of the hallway. The dark figure slowly approaches as you contemplate your options.<br/>---")
+          exitdescription = FormatExitList(game.pov.parent.exitslistprefix, GetExitsList(), Template("Or"), ".")
+          msg (exitdescription)
+        }
+        else {
+          msg ("The hallway looks like an entrance to an abandoned hospital. The lighting is so horrible that you have to strain your eyes to make sense of the environment. Nevertheless you manage to notice a few objects in the area. A wheelchair has been knocked over and lies on the blood stained floor. Next to it you see a typical hospital bed on wheels which looks like it is going to fall apart - and on the opposite wall you notice shattered table remains and a flipped chair. There are also some old books lying on the floor.<br/><br/>You lie on the floor facing the southern part of the hallway. The dark figure slowly approaches as you contemplate your options.<br/>---")
+          exitdescription = FormatExitList(game.pov.parent.exitslistprefix, GetExitsList(), Template("Or"), ".")
+          msg (exitdescription)
+        }
+      ]]></script>
+    </command>
+    <object name="wheelchair">
+      <inherit name="editor_object" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <scenery />
+      <look type="script">
+        msg ("An old wheelchair has been knocked on its side. Upon closer examination you notice that it is missing a wheel.")
+      </look>
+    </object>
+    <object name="shadow">
+      <inherit name="editor_object" />
+      <look>Nervously you look at the shadow on the floor as you hear the figure behind you approaching. It resembles a man with an axe and the site of it alone is enough to stop you in your tracks as you become paralyzed with fear.</look>
+      <alt type="stringlist" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <scenery />
+      <hit>You slam your fist into the shadow on the floor, but the only thing this achieves is hurting your hand.</hit>
+    </object>
+    <object name="dirty floor">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look>The floor is made up from black and white tiles covered in greasy blood stains. Dirt and dried blood fill its crevices and many tiles have been destroyed or are severely worn out.</look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <scenery />
+      <touch>It feels dirty and wet.</touch>
+      <sit>This is no time to lounge about.</sit>
+      <lie>You are already lying on the floor.</lie>
+    </object>
+    <object name="walls">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <scenery />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <alt type="stringlist">
+        <value>wall</value>
+      </alt>
+      <look type="script">
+        msg ("You look around at the walls that surround you. Mole and greasy blood stains cover their surface and for a moment you feel as if they will swallow you if you do not stop looking. Almost immediately you turn your eyes away while trying to focus on something else.")
+      </look>
+    </object>
+    <command>
+      <pattern>attack figure; punch figure; assault figure; hit figure; attack dark figure; punch dark figure; assault dark figure; hit dark figure; </pattern>
+      <script>
+        msg ("You nervously face the man with an axe. Gathering all your courage you start crawling towards him with a plan to attack. Unfortunately, you are in no shape to pose any threat and the man shows no mercy to your foolishness. With a sickening crunch he digs his axe deep into your back. As you lie dying in your own pool of blood, the figure finishes his assault by squashing your skull under his boot.")
+        finish
+      </script>
+    </command>
+    <command>
+      <pattern>look at southern hallway; look at south; examine southern hallway; examine south; look at southern part of the hallway; examine southern part of the hallway; look at southern part of hallway; examine southern part of hallway;</pattern>
+      <script>
+        msg ("You focus your view on the southern part of the hallway as it seems to be the only path leading away from the dark figure behind you. There is a chained door at the end of the hallway and a small hole in the floor in front of it, but you will have to come closer to see if it leads anywhere.")
+      </script>
+    </command>
+    <command>
+      <pattern>go to southern part of the hallway; go south; go to south; go to southern part; go to southern part of hallway; go to southern hallway</pattern>
+      <unresolved type="string"></unresolved>
+      <script>
+        MoveObject (player, southern hallway)
+      </script>
+    </command>
+    <command>
+      <pattern>hide under bed; crawl under bed; hide under gurney; crawl under gurney; hide under mobile bed; crawl under mobile bed; hide under hospital bed; crawl under hospital bed;</pattern>
+      <script>
+        msg ("You crawl under the hospital bed in hopes that it might offer you some cover. Under the bed you see the dark figure approaching, his blood covered boots stopping only an inch from your head. Suddenly you notice the bed flying into the air and before you can react you already feel the man's foot on your back. As you try to break free the figure swings his massive axe towards your head and delivers a deadly blow that sends your brains flying through the hallway.")
+        finish
+      </script>
+    </command>
+  </object>
+  <object name="southern hallway">
+    <inherit name="editor_room" />
+    <descprefix type="string"></descprefix>
+    <exitslistprefix>You can go</exitslistprefix>
+    <objectslistprefix>You can see</objectslistprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description><![CDATA[You pull yourself to the southern part of the hallway with the last ounce of strength as the tall man behind you lifts his axe ready to deliver a fatal blow. <br/><br/>The lighting in this part of the hallway is slightly better and it is mostly focused on the chained door in front of you. Green gloom spreads around the door and you feel uneasy just by being near it. On the floor next to the door you see a hole that is big enough for a person to fit in, but you are unsure if you should check inside.<br/>---]]></description>
+    <picture>chained door.png</picture>
+    <beforeenter type="script">
+      ClearScreen
+    </beforeenter>
+    <object name="dark figure1">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <look>The lighting in this part of the hallway is somewhat better. You look at the dark figure, but there is no time for careful examination. The tall man behind you is holding a bloody axe above his head ready to drop it on your already wounded body. Yet, even though you managed to catch only a glimpse of him, the image was horrifying. His face is hidden behind a dirty triangular hood and his slender muscles are covered in sweat and blood behind a transparant plastic butcher's outfit. It is an image you quickly wish to forget.</look>
+      <visible />
+      <take type="boolean">false</take>
+      <scenery />
+      <alt type="stringlist">
+        <value>man; tall man; figure</value>
+      </alt>
+      <alias>dark figure</alias>
+      <speak type="script"><![CDATA[
+        if (player.health<50) {
+          msg ("Against your better judgment you decide to try and talk to the dark figure, but before you can even utter a word his axe falls on your skull with a sickening crunch. Your brains splatter all over the nearby walls as life abandons you.")
+          finish
+        }
+        else {
+          DecreaseHealth (40)
+          msg ("In an act of pure desperation, you attempt to talk with the tall man behind you. Paralyzed with fear words seem to escape you as the man swings his axe at your chest. With pure luck you manage to push the falling blade to the side, preventing certain death only by an inch. However, part of the axe still connects to your ribs, shattering them as you scream in agony. (You take 40 damage)")
+        }
+      ]]></speak>
+      <attr name="attack the dark figure" type="script">
+        msg ("You nervously face the man with an axe. Gathering all your courage you start crawling towards him with a plan to attack. Unfortunately, you are in no shape to pose any threat and the man shows no mercy to your foolishness. With a sickening crunch he digs his axe deep into your back. As you lie dying in your own pool of blood, the figure finishes his assault by squashing your skull under his boot.")
+        finish
+      </attr>
+      <beg type="script">
+        msg ("Against your better judgment you decide to surrender your fate in the hands of a maniac with an axe. Untouched by your pleading gestures, the figure swings his axe diagonally downwards and decapitates you with one swift blow.")
+        finish
+      </beg>
+      <attr name="defend yourself" type="script"><![CDATA[
+        if (player.health<50) {
+          msg ("Although you are heavily wounded and there is little chance of successfully defending against a maniac armed with an axe, you decide to attempt to dissarm him and use his weapon against him. You lift your hands in a tight guard and prepare for another assault. Unfortunately you are in no shape to fight with a man of his size and with one swift swing of his massive axe the dark figure breaks through your defences. You hear a sickening crunch as his axe digs deep into your chest and seconds later you choke in your own blood.")
+          finish
+        }
+        else {
+          msg ("You devise a plan how to dissarm the man with an axe and use his weapon against him. You lift your hands in a tight guard and prepare for the figure’s assault. Unfortunately you are wounded and not in a very good shape to be able to fight  from the ground. As the figure swings the axe at your chest you manage to grab the shaft of his blade. However, the blow is too powerful and it easily breaks through your weak defences. Luckily, you posses enough strength in your upper body to somewhat soften the attack, preventing the axe from digging too deep into your ribs. (You take 40 damage)")
+          DecreaseHealth (40)
+        }
+      ]]></attr>
+      <ask type="scriptdictionary" />
+    </object>
+    <exit alias="down" to="inside the hole">
+      <inherit name="downdirection" />
+      <look>The hole is big enough for a person to crawl inside, however you cannot see how deep it is, nor can you discern where it leads.</look>
+    </exit>
+    <object name="shadow1">
+      <inherit name="editor_object" />
+      <look>Nervously you look at the shadow on the floor. It is holding an axe above his head and it is clear that your time is running out.</look>
+      <alt type="stringlist">
+        <value>tall shadow resembling a man with an axe; tall shadow; shadow of a man with an axe; shadow of a man</value>
+      </alt>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <alias>shadow</alias>
+      <hit>You slam your fist into the shadow on the floor, but the only thing this achieves is hurting your hand.</hit>
+      <scenery />
+    </object>
+    <object name="chained door">
+      <inherit name="editor_object" />
+      <usedefaultprefix />
+      <look>The door is bound by heavy chains. If you ever want to open the door, first you will have to find the keys that can release the locks. Unfortunately even if you had all the keys on you it would take some time before you could figure out which key can fit into which lock - time which at the moment you do not have.</look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <scenery />
+      <alt type="stringlist">
+        <value>chains</value>
+      </alt>
+      <pull type="script">
+        msg ("You grab the chains surrounding the door and pull with your whole strength. The chains remain unscathed by your weak attempt and you immediately realize your mistake. As you turn around in utter dread, the tall man swings his axe towards you. You lift your hands in a futile attempt to protect your face, but the cold steel cuts through them as if they were made from butter. The blow was so strong that it managed to cut your head in half.")
+        finish
+      </pull>
+      <push type="script">
+        msg ("You push at the chained door with your whole strength. The door won't budge by your weak attempt and you immediately realize your mistake. As you turn around in utter dread, the tall man swings his axe towards you. You lift your hands in a futile attempt to protect your face, but the cold steel cuts through them as if they were made from butter. The blow was so strong that it managed to cut your head in half.")
+        finish
+      </push>
+    </object>
+    <command name="wait2">
+      <pattern>wait; do nothing; do not move; lie still; don't move; do not move</pattern>
+      <script>
+        msg ("You close your eyes and hope for a miracle as you lie still on the floor. 'Perhaps it is all a dream', you think to yourself while stubornly refusing to move. Suddenly a sharp pain across your back forces you to open your eyes and you feel warm blood spreading underneath you. You start choking as you desperately gasp for air and before you can make sense of what happened, darkness falls over you.")
+        finish
+      </script>
+    </command>
+    <command>
+      <pattern>surrender to dark figure; surrender; surrender to figure; beg; beg for mercy; beg dark figure for mercy; beg figure for mercy;</pattern>
+      <script>
+        msg ("Against your better judgment you decide to surrender your fate in the hands of a maniac with an axe. Untouched by your pleading gestures, the figure swings his axe diagonally downwards and decapitates you with one swift blow.")
+        finish
+        finish
+      </script>
+    </command>
+    <object name="hole">
+      <inherit name="editor_object" />
+      <look>The hole is big enough for a person to crawl in, however you cannot see how deep it is nor can you discern where it leads.</look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <scenery />
+      <attr name="enter the hole" type="script">
+        MoveObject (player, inside the hole)
+      </attr>
+    </object>
+    <command>
+      <pattern>defend yourself; kill dark figure; kill figure; fight with figure; fight with dark figure;</pattern>
+      <script><![CDATA[
+        if (player.health<50) {
+          msg ("Although you are heavily wounded and there is little chance of successfully defending against a maniac armed with an axe, you decide to attempt to dissarm him and use his weapon against him. You lift your hands in a tight guard and prepare for another assault. Unfortunately you are in no shape to fight with a man of his size and with one swift swing of his massive axe the dark figure breaks through your defences. You hear a sickening crunch as his axe digs deep into your chest and seconds later you choke in your own blood.")
+          finish
+        }
+        else {
+          msg ("You devise a plan how to dissarm the man with an axe and use his weapon against him. You lift your hands in a tight guard and prepare for the figure’s assault. Unfortunately you are wounded and not in a very good shape to be able to fight  from the ground. As the figure swings the axe at your chest you manage to grab the shaft of his blade. However, the blow is too powerful and it easily breaks through your weak defences. Luckily, you posses enough strength in your upper body to somewhat soften the attack, preventing the axe from digging too deep into your ribs. (You take 40 damage)")
+          DecreaseHealth (0)
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>look; examine area; examine room; look at area; look at room; examine hallway; look at hallway; look at environment; examine environment; examine hall; look at hall; examine southern hallway; look at southern hallway; examine southern part of hallway; look at southern part of hallway; look around</pattern>
+      <script><![CDATA[
+        msg ("The lighting in this part of the hallway is slightly better and it is mostly focused on the chained door in front of you. Green gloom spreads around the door and you feel uneasy just by being near it. On the floor next to the door you see a hole that is big enough for a person to fit in.<br/>---")
+        exitdescription = FormatExitList(game.pov.parent.exitslistprefix, GetExitsList(), Template("Or"), ".")
+        msg (exitdescription)
+      ]]></script>
+    </command>
+    <command>
+      <pattern>attack figure; punch figure; assault figure; hit figure; attack dark figure; punch dark figure; assault dark figure; hit dark figure; </pattern>
+      <script>
+        msg ("You nervously face the man with an axe. Gathering all your courage you start crawling towards him with a plan to attack. Unfortunately, you are in no shape to pose any threat and the man shows no mercy to your foolishness. With a sickening crunch he digs his axe deep into your back. As you lie dying in your own pool of blood, the figure finishes his assault by squashing your skull under his boot.")
+        finish
+      </script>
+    </command>
+    <command>
+      <pattern>look at northern hallway; look at north; examine north hallway; examine north; look at northern part of the hallway; examine northern part of the hallway; look at northern part of hallway; examine northern part of hallway;</pattern>
+      <script>
+        msg ("You focus your view behind the dark figure, to the northern part of the hallway where you came from. Unfortunately, the figure is guarding the path back and you will have to fight him in order to be able to go there.")
+      </script>
+    </command>
+    <object name="floor1">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look>The floor is made up from black and white tiles covered in greasy blood stains. Dirt and dried blood fill its crevices and many tiles have been destroyed or are severely worn out. There is a hole in the middle of the floor and it seems to be big enough for a person to crawl in.</look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <scenery />
+      <touch>It feels disgusting.</touch>
+      <sit>This is no time to lounge about.</sit>
+      <lie>You are already lying on the floor.</lie>
+      <alias>floor</alias>
+    </object>
+    <object name="walls1">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <scenery />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <alias>walls</alias>
+      <alt type="stringlist">
+        <value>wall</value>
+      </alt>
+      <look type="script">
+        msg ("You look around at the walls that surround you. Mole and greasy blood stains cover their surface and for a moment you feel as if they will swallow you if you do not stop looking. Almost immediately you turn your eyes away.")
+      </look>
+    </object>
+    <command>
+      <pattern>look inside the hole; check inside the hole;  look into the hole; look inside hole; look into hole; check inside hole, look into the hole;</pattern>
+      <script>
+        msg ("The hole is big enough for a person to crawl in, however you cannot see how deep it is nor can you discern where it leads.")
+      </script>
+    </command>
+    <command>
+      <pattern>lockpick the door; lockpick chained door; lockpick the chained door; lockpick door;</pattern>
+      <script>
+        msg ("You do not have any lockpicks on you.")
+      </script>
+    </command>
+  </object>
+  <object name="inside the hole">
+    <inherit name="editor_room" />
+    <descprefix type="string"></descprefix>
+    <description>Darkness engulfs you upon entering the hole and before you manage to react, you feel gravity forcefully pulling you downwards. You begin falling and you close your eyes in anticipation of a painful landing. Your descent continues for what seems like an eternity and you begin wondering if you shall ever touch the ground again. ‘Is my mind playing games with me?’, you think to yourself as seconds turn into minutes and your free fall continues. Nevertheless you are afraid to open your eyes as if such an action would somehow end the fall and force you to face the reality.</description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <picture>inside the hole.png</picture>
+    <beforeenter type="script">
+      ClearScreen
+    </beforeenter>
+    <enter type="script">
+    </enter>
+    <command>
+      <pattern>open your eyes; open eyes; open my eyes</pattern>
+      <script>
+        msg ("You open your eyes.")
+        MoveObject (player, bedroom)
+      </script>
+    </command>
+    <command>
+      <pattern>grab something; reach for wall; grab wall; reach for something; reach out; reach into the darkness; reach out into darkness; reach into darkness; reach for edge; grab edge; feel around;</pattern>
+      <script>
+        msg ("Still afraid to open your eyes, you reach out blindly into the darkness in hopes that you will find something to grab, but there is nothing near you. You continue falling.")
+      </script>
+    </command>
+    <command>
+      <pattern>look; examine area; examine room; look at area; look at room; examine hole; look at hole; look at environment; examine environment; examine darkness; look at darkness; examine the hole; look at the hole; examine the darkness; look at the darkness; look around</pattern>
+      <script>
+        msg ("You need to open your eyes to be able to examine your surrounding.")
+      </script>
+    </command>
+    <command>
+      <pattern>climb up; go up; up; fly up;</pattern>
+      <script>
+        msg ("You are falling! You cannot go up.")
+      </script>
+    </command>
+  </object>
+  <command name="Help me">
+    <pattern>shout help; scream help; yell help; shout help me; yell help me; scream help me; help me; scream; shout; yell; shout for help; scream for help; yell for help</pattern>
+    <script>
+      msg ("You desperately shout for help, but nobody comes to your aid.")
+    </script>
+  </command>
+  <command name="Examine player">
+    <pattern>look at health; look at status; examine health; examine status; look at status; look at player; examine player; look at character; examine character</pattern>
+    <script><![CDATA[
+      if (player.health=100) {
+        msg ("Other then carrying some old scars, you look perfectly fine.")
+      }
+      else if (player.health>80) {
+        msg ("A few cuts and bruises cause you some discomfort, but it is nothing serious.")
+      }
+      else if (player.health>60) {
+        msg ("You have taken serious damage and blood is slowly trickling from your open wounds. The pain you feel is sharp, but endurable.")
+      }
+      else if (player.health>30) {
+        msg ("Your mobility is severly reduced as broken bones and wide open wounds inflict severe pain at your attempts to move.")
+      }
+      else if (player.health>0) {
+        msg ("You are barely alive and are having a hard time remaining conscious. You should heal yourself as soon as possible.")
+      }
+    ]]></script>
+  </command>
+  <verb name="enter the hole">
+    <pattern>enter; go into; climb into; hide into; crawl into; hide in; crawl in;</pattern>
+    <property>enter the hole</property>
+  </verb>
+  <object name="bedroom">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <descprefix type="string"></descprefix>
+    <description>You suddenly find yourself in a bedroom.</description>
+    <picture>Bedroom.png</picture>
+    <beforeenter type="script">
+      ClearScreen
+      stop sound
+    </beforeenter>
+    <enter type="script">
+      play sound ("Ambient horror track.mp3", false, false)
+    </enter>
+  </object>
+  <command>
+    <pattern>help</pattern>
+    <script><![CDATA[
+      msg ("<b>Quick Help</b><br/>- Useful general commands: HELP (brings up the Quick Help), LOOK AT PLAYER (examines your injuries),<br/>- Objects: Try LOOK AT..., SPEAK TO..., TAKE..., DROP..., OPEN..., GIVE... TO..., USE... ON/WITH...<br/>- Inventory: See which items you are carrying by typing I, INV or INVENTORY.<br/>- Moving around: Press the compass buttons, or type GO NORTH, SOUTH, E, GO TO WEST...<br/><br/><b>The commands do not work! What to do?</b><br/>Sometimes you will try a command and a message will pop up telling you that you can't do something or that you should try rephrasing your sentence. Before you give up on your command and try something else, you should always check the spelling first. If spelling is correct try to simplify your sentence. Text adventure games generally do not handle complex sentences too well, so try to keep things simple. For example, instead of LOOK AT A/THE LAMP try just LOOK AT LAMP. If your command still does not work, try using synonyms or similar words.")
+    ]]></script>
+  </command>
+  <function name="UnresolvedCommand" parameters="objectname, varname">
+    // TO DO: Update names below, we don't need these two variables
+    unresolvedobject = objectname
+    unresolvedkey = varname
+    
+    if (HasString(game.pov.currentcommandpattern, "unresolved")) {
+      if (ListCount(game.pov.currentcommandvarlist) > 1) {
+        msg (game.pov.currentcommandpattern.unresolved + " (" + unresolvedobject + ")")
+      }
+      else {
+        msg (game.pov.currentcommandpattern.unresolved)
+      }
+    }
+    else {
+		msg("You used the word \"" + unresolvedobject  + "\" in a way I don't understand.")
+    }
+    game.unresolvedcommand = game.pov.currentcommandpattern
+    game.unresolvedcommandvarlist = game.pov.currentcommandvarlist
+    game.unresolvedcommandkey = unresolvedkey
+  </function>
+  </asl>

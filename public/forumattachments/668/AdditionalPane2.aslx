@@ -1,0 +1,128 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <include ref="InvPane2.aslx" />
+  <include ref="ScopeLib.aslx" />
+  <game name="AdditionalPane">
+    <gameid>04272098-2de5-4068-af3c-92bb738310e4</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <enter type="script">
+      SetInventory2Label ("Spells")
+      SetInventory2 (GetDirectChildren (spellbook))
+    </enter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="AnObject">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <alias>Object 1</alias>
+      <use type="boolean">false</use>
+      <take />
+    </object>
+    <object name="AnObject2">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <alias>Object 2</alias>
+      <use type="boolean">false</use>
+      <take />
+    </object>
+    <exit alias="south" to="room2">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="room2">
+    <inherit name="editor_room" />
+    <object name="AnObject3">
+      <inherit name="editor_object" />
+      <alias>Object 3</alias>
+    </object>
+    <object name="AnObject4">
+      <inherit name="editor_object" />
+      <alias>Object 4</alias>
+    </object>
+    <exit alias="north" to="room">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <command name="Cast">
+    <pattern>cast #text#</pattern>
+    <script>
+      ProcessScopeCommand ("castspell", GetDirectChildren (spellbook), text, "No such spell in your book", "That's not a spell; it should not even be in your book")
+    </script>
+  </command>
+  <object name="spellbook">
+    <inherit name="editor_object" />
+    <alias>Spellbook</alias>
+    <object name="fireball_spell">
+      <inherit name="editor_object" />
+      <displayverbs type="stringlist" />
+      <inventoryverbs type="stringlist">
+        <value>Cast</value>
+      </inventoryverbs>
+      <useindividualverblist type="boolean">false</useindividualverblist>
+      <usestandardverblist />
+      <alias>Lesser Fireball</alias>
+      <castspell type="script"><![CDATA[
+        msg ("You cast a <i>Fireball</i> spell.")
+      ]]></castspell>
+    </object>
+    <object name="greater_fireball_spell">
+      <inherit name="editor_object" />
+      <displayverbs type="stringlist" />
+      <inventoryverbs type="stringlist">
+        <value>Cast</value>
+      </inventoryverbs>
+      <useindividualverblist type="boolean">false</useindividualverblist>
+      <usestandardverblist />
+      <alias>Greater Fireball</alias>
+      <castspell type="script"><![CDATA[
+        msg ("You cast a really big <i>Fireball</i> spell.")
+      ]]></castspell>
+    </object>
+    <object name="unlock_spell">
+      <inherit name="editor_object" />
+      <usestandardverblist />
+      <displayverbs type="stringlist" />
+      <inventoryverbs type="stringlist">
+        <value>Cast</value>
+      </inventoryverbs>
+      <alias>Unlock</alias>
+      <castspell type="script"><![CDATA[
+        msg ("You cast an <i>Unlock</i> spell.")
+      ]]></castspell>
+    </object>
+    <object name="mistake">
+      <inherit name="editor_object" />
+      <alias>Mistake</alias>
+      <look>Not a spell, but useful to show how it handles this.</look>
+    </object>
+  </object>
+  <verb>
+    <property>castspell</property>
+    <pattern>castspell</pattern>
+    <defaultexpression>"You can't castspell " + object.article + "."</defaultexpression>
+  </verb>
+  <walkthrough name="test">
+    <steps type="simplestringlist">
+      * simple
+      cast unlock
+      * also handles disambiguation
+      cast fireball
+      menu:Greater Fireball 
+      * catches near misses too
+      cast unlck
+      * handles things not set up properly
+      cast mistake
+      * handles failures too
+      cast nonsense
+    </steps>
+  </walkthrough>
+  <javascript src="InvPane2.js" />
+</asl>

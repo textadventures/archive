@@ -1,0 +1,467 @@
+<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <template name="UnrecognisedCommand"></template>
+  <template name="YouAreIn">You are in</template>
+  <template name="MyPull"></template>
+  <game name="A Test Concerning Your Intelligence">
+    <inherit name="theme_novella" />
+    <gameid>b325fb7a-ee06-4d8a-9086-73550d863e8a</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <autodescription />
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <echocommand type="boolean">false</echocommand>
+    <attr name="autodescription_youarein" type="int">0</attr>
+    <showscore />
+    <enablehyperlinks type="boolean">false</enablehyperlinks>
+    <statusattributes type="stringdictionary" />
+    <Score type="int">0</Score>
+    <showpanes />
+    <state type="int">0</state>
+    <start type="script">
+    </start>
+  </game>
+  <verb name="pull">
+    <pattern>pull #object#</pattern>
+    <property>pull</property>
+    <defaulttemplate>DefaultPull</defaulttemplate>
+  </verb>
+  <object name="look around room">
+    <inherit name="editor_room" />
+    <descprefix type="string"></descprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <usedefaultprefix />
+    <alias>room</alias>
+    <description type="string"></description>
+    <score type="int">0</score>
+    <state type="int">0</state>
+    <enter type="script">
+      look around room.state = 0
+      look around room.score = 1
+      EnableTimer (lookaroundroomtimer)
+      get input {
+        if (result = "look around") {
+          DisableTimer (lookaroundroomtimer)
+          lookaround
+        }
+        else if (result = "go through door") {
+          DisableTimer (lookaroundroomtimer)
+          godoor
+        }
+        else {
+        }
+      }
+    </enter>
+    <onexit type="script">
+      IncreaseScore (look around room.score)
+    </onexit>
+    <firstenter type="script">
+      play sound ("", false, false)
+      play sound ("", false, false)
+      msg ("You are in a room. Please look around. You will notice a door which will lead you to the next room. Please go through it. ")
+    </firstenter>
+    <changedstate type="script">
+    </changedstate>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <alt type="stringlist">
+        <value>me</value>
+        <value>myself</value>
+      </alt>
+      <feature_usegive />
+      <use type="script">
+      </use>
+      <useon type="scriptdictionary">
+        <item key="wire">
+          wired = true
+        </item>
+      </useon>
+      <wired type="boolean">false</wired>
+    </object>
+    <object name="piece of paper">
+      <inherit name="editor_object" />
+      <scenery />
+      <visible type="boolean">false</visible>
+      <alt type="stringlist">
+        <value>paper</value>
+        <value>piece</value>
+        <value>it</value>
+      </alt>
+      <take />
+      <paintedtext type="string"></paintedtext>
+      <painted type="boolean">false</painted>
+      <look type="script">
+        if (piece of paper.painted) {
+          msg ("It is defaced with paint spelling out \"{piece of paper.paintedtext}\".")
+        }
+        else {
+          msg ("\"If they find a parrot who could answer to everything, I would claim it to be an intelligent being without hesitation.\"")
+        }
+      </look>
+      <usestandardverblist type="boolean">false</usestandardverblist>
+      <feature_usegive />
+    </object>
+    <exit name="lookaroundroomdoor" alias="door" to="test look around room">
+      <scenery />
+      <runscript type="boolean">false</runscript>
+      <visible type="boolean">false</visible>
+    </exit>
+    <object name="lookaroundroomdoorobject">
+      <inherit name="editor_object" />
+      <alias>door</alias>
+      <scenery />
+      <visible type="boolean">false</visible>
+      <look type="string"></look>
+    </object>
+  </object>
+  <command name="PaintText">
+    <pattern>paint #text# on #object#</pattern>
+    <script>
+      if (Got(paint)) {
+        msg ("You spray the words '" + text + "' onto the " + GetDisplayAlias(object))
+        object.paintedtext = text
+        object.painted = true
+      }
+    </script>
+  </command>
+  <command name="look around">
+    <pattern>look around</pattern>
+    <script>
+      lookaround
+    </script>
+  </command>
+  <object name="pull room">
+    <inherit name="editor_room" />
+    <usedefaultprefix />
+    <alias>room</alias>
+    <objectslistprefix type="string"></objectslistprefix>
+    <descprefix>You are in</descprefix>
+    <description>Write something.</description>
+    <enter type="script">
+    </enter>
+    <firstenter type="script">
+      msg ("There is a lever. Please look around first and then pull it. ")
+    </firstenter>
+    <object name="pullroomobject">
+      <inherit name="editor_object" />
+      <look>Draw something.</look>
+      <alt type="stringlist">
+        <value>room</value>
+      </alt>
+    </object>
+    <object name="lever">
+      <inherit name="editor_object" />
+      <scenery />
+      <look type="script">
+        msg ("It's a regular lever. A beam and a hinge. You notice a wire though.")
+        MakeObjectVisible (wire)
+      </look>
+    </object>
+    <object name="wire">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <scenery />
+      <look type="script">
+        firsttime {
+          msg ("It goes somewhere into the room, but you're pretty sure it's not connected with the door.")
+        }
+        otherwise {
+          msg ("You see the end lying in front of a hook up.")
+        }
+      </look>
+      <feature_usegive />
+      <selfuseon type="scriptdictionary" />
+    </object>
+    <object name="hookup">
+      <inherit name="editor_object" />
+      <wired type="boolean">false</wired>
+      <feature_usegive />
+      <useon type="scriptdictionary">
+        <item key="wire">
+          wired = true
+          msg ("It's hooked up now.")
+        </item>
+      </useon>
+      <alias>hook up</alias>
+    </object>
+    <exit name="secret door" to="secretroom1">
+      <visible type="boolean">false</visible>
+    </exit>
+  </object>
+  <command name="go through door">
+    <pattern>go through door</pattern>
+    <script>
+      godoor
+    </script>
+  </command>
+  <object name="test look around room">
+    <inherit name="editor_room" />
+    <alias>room</alias>
+    <enter type="script">
+    </enter>
+    <firstenter type="script">
+      msg ("You are in a room.")
+    </firstenter>
+    <object name="testlookaroundroomdoorobject">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <scenery />
+    </object>
+    <object name="pieceofpaper">
+      <inherit name="editor_object" />
+      <gender>itpiece of paper</gender>
+      <scenery />
+      <visible type="boolean">false</visible>
+    </object>
+  </object>
+  <object name="yet to use">
+    <inherit name="editor_object" />
+    <scenery />
+    <visible type="boolean">false</visible>
+    <look>"Now I ask you: what can be expected of man since he is a being endowed with strange qualities? Shower upon him every earthly blessing, drown him in a sea of happiness, so that nothing but bubbles of bliss can be seen on the surface; give him economic prosperity, such that he should have nothing else to do but sleep, eat cakes and busy himself with the continuation of his species, and even then out of sheer ingratitude, sheer spite, man would play you some nasty trick. He would even risk his cakes and would deliberately desire the most fatal rubbish, the most uneconomical absurdity, simply to introduce into all this positive good sense his fatal fantastic element. It is just his fantastic dreams, his vulgar folly that he will desire to retain, simply in order to prove to himself--as though that were so necessary-- that men still are men and not the keys of a piano, which the laws of nature threaten to control so completely that soon one will be able to desire nothing but by the calendar. And that is not all: even if man really were nothing but a piano-key, even if this were proved to him by natural science and mathematics, even then he would not become reasonable, but would purposely do something perverse out of simple ingratitude, simply to gain his point. And if he does not find means he will contrive destruction and chaos, will contrive sufferings of all sorts, only to gain his point! He will launch a curse upon the world, and as only man can curse (it is his privilege, the primary distinction between him and other animals), may be by his curse alone he will attain his object--that is, convince himself that he is a man and not a piano-key! If you say that all this, too, can be calculated and tabulated--chaos and darkness and curses, so that the mere possibility of calculating it all beforehand would stop it all, and reason would reassert itself, then man would purposely go mad in order to be rid of reason and gain his point! I believe in it, I answer for it, for the whole work of man really seems to consist in nothing but proving to himself every minute that he is a man and not a piano-key! It may be at the cost of his skin, it may be by cannibalism! And this being so, can one help being tempted to rejoice that it has not yet come off, and that desire still depends on something we don't know?"</look>
+  </object>
+  <object name="parrot room">
+    <inherit name="editor_room" />
+    <firstenter type="script">
+      EnableTimer (parrottimer)
+    </firstenter>
+    <object name="parrot">
+      <inherit name="editor_object" />
+      <scenery />
+      <visible type="boolean">false</visible>
+      <alias>parrot</alias>
+      <look type="script">
+        firsttime {
+          msg ("It's pretty calm.")
+        }
+        otherwise {
+          firsttime {
+            msg ("")
+          }
+          otherwise {
+            firsttime {
+              msg ("")
+            }
+          }
+        }
+      </look>
+    </object>
+  </object>
+  <object name="final room">
+    <inherit name="editor_room" />
+    <alias>room</alias>
+    <enter type="script">
+    </enter>
+    <object name="results">
+      <inherit name="editor_object" />
+      <scenery type="boolean">false</scenery>
+      <look type="script">
+        GetScore
+      </look>
+    </object>
+  </object>
+  <object name="paint">
+    <inherit name="editor_object" />
+  </object>
+  <command>
+    <pattern>getpaint</pattern>
+    <script>
+      AddToInventory (paint)
+    </script>
+  </command>
+  <object name="push room">
+    <inherit name="editor_room" />
+  </object>
+  <object name="secretroom1">
+    <inherit name="editor_room" />
+  </object>
+  <command>
+    <pattern>pullroom</pattern>
+    <script>
+      MoveObject (player, pull room)
+    </script>
+  </command>
+  <command name="script for pull">
+    <script>
+      if (game.pov.parent = pull room) {
+        if (hook up.wired = true) {
+          MakeExitVisible (secret door)
+          msg ("A piece of the wall slides away and opens a new entrance.")
+        }
+      }
+    </script>
+    <pattern type="simplepattern"></pattern>
+  </command>
+  <function name="lookaround">
+    if (game.pov.parent = look around room) {
+      if (look around room.state = 0) {
+        look around room.state = 1
+      }
+      else {
+        look around room.score = -1
+        look around room.state = -1
+      }
+      firsttime {
+        MakeExitVisible (lookaroundroomdoor)
+        MakeObjectVisible (lookaroundroomdoorobject)
+        msg ("You see a door.")
+      }
+      otherwise {
+        firsttime {
+          MakeObjectVisible (piece of paper)
+          msg ("You notice a piece of paper.")
+        }
+        otherwise {
+        }
+      }
+    }
+    else if (game.pov.parent = pull room) {
+      firsttime {
+        msg ("You see the lever.")
+      }
+    }
+    else if (game.pov.parent = test look around room) {
+      MakeExitVisible (testlookaroundroomdoor)
+      MakeObjectVisible (testlookaroundroomdoorobject)
+      msg ("You see a door.")
+    }
+    else {
+      msg ("")
+    }
+  </function>
+  <function name="godoor">
+    if (game.pov.parent = look around room) {
+      if (look around room.state = 1) {
+        msg ("Well done! Have a cookie!")
+      }
+      else {
+        look around room.score = -1
+      }
+      if (ListContains(ScopeVisible(), lookaroundroomdoorobject)) {
+        MoveObject (player, test look around room)
+      }
+      else {
+        if (RandomChance(1)) {
+          MoveObject (player, test look around room)
+        }
+        else {
+          msg ("You bumped into something.")
+        }
+      }
+    }
+    else if (game.pov.parent = test look around room) {
+      if (ListContains(ScopeVisible(), testlookaroundroomdoorobject)) {
+        MoveObject (player, pull room)
+      }
+      else {
+        if (RandomChance(1)) {
+          MoveObject (player, pull room)
+        }
+        else {
+          msg ("You bumped into something.")
+        }
+      }
+    }
+  </function>
+  <function name="GetScore" type="int"><![CDATA[
+    if (game.score=0) {
+      msg ("Hm, well, this is quite surprising. Looking at the results, 9 out of 10 viewers are not really sure whether you're a failure or a success. It seems like non of these. These demands further analysis. Well, congratulations, you're not done yet. Please continue.")
+    }
+    else if (game.score>0) {
+      msg ("Well, sadly, 9 of 10 viewers identified you as an Artificial Intelligence")
+    }
+    else {
+      msg ("Congratulations! 9 of 10 viewers couldn't tell whether you are an Artificial Intelligence or a Human Being. This achievement brings us a huge step further ")
+    }
+  ]]></function>
+  <walkthrough name="parrotwalk">
+    <steps type="simplestringlist">
+      pewe
+    </steps>
+  </walkthrough>
+  <timer name="lookaroundroomtimer">
+    <interval>10</interval>
+    <script>
+      msg ("A trap door opens.")
+      SetTimeout (1) {
+        DisableTimer (lookaroundroomtimer)
+      }
+    </script>
+  </timer>
+  <timer name="parrottimer">
+    <interval>20</interval>
+    <script>
+      if (RandomChance(50)) {
+        msg ("")
+      }
+      else {
+        if (RandomChance(50)) {
+        }
+      }
+      play sound ("parrot.mp3", false, false)
+    </script>
+  </timer>
+  <function name="HandleCommand" parameters="command, metadata">
+    <![CDATA[
+    handled = false
+    if (game.menucallback <> null) {
+      if (HandleMenuTextResponse(command)) {
+        handled = true
+      }
+      else {
+        if (game.menuallowcancel) {
+          ClearMenu
+        }
+        else {
+          handled = true
+        }
+      }
+    }
+    if (not handled) {
+      StartTurnOutputSection
+      if (StartsWith (command, "*")) {
+        msg ("")
+        msg (SafeXML (command))
+      }
+      else {    
+        shownlink = false
+        if (game.echocommand) {
+          if (metadata <> null and game.enablehyperlinks and game.echohyperlinks) {
+            foreach (key, metadata) {
+              if (EndsWith(command, key)) {
+                objectname = StringDictionaryItem(metadata, key)
+                object = GetObject(objectname)
+                if (object <> null) {
+                  msg ("")
+                  msg ("&gt; " + Left(command, LengthOf(command) - LengthOf(key)) + "{object:" + object.name + "}" )
+                  shownlink = true
+                }
+              }
+            }
+          }
+          if (not shownlink) {
+            msg ("")
+            OutputTextRaw ("&gt; " + SafeXML(command))
+          }
+        }
+        if (game.command_newline) {
+          msg ("")
+        }
+        commands = Split(command, "")
+        game.pov.commandmetadata = metadata
+        if (ListCount(commands) = 1) {
+          game.pov.commandqueue = null
+          HandleSingleCommand (Trim(command))
+        }
+        else {
+          game.pov.commandqueue = commands
+          HandleNextCommandQueueItem
+        }
+      }
+    }
+    ]]>
+  </function>
+</asl>

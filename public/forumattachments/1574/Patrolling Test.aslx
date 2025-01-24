@@ -1,0 +1,105 @@
+<!--Saved by Quest 5.6.5783.24153-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Patrolling Test">
+    <gameid>3400b74c-78f4-4ee5-ae49-46159b4b1d51</gameid>
+    <version>1.0</version>
+    <firstpublished>2016</firstpublished>
+    <start type="script">
+    </start>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <exit alias="east" to="room 2">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="south" to="room 4">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="room 2">
+    <inherit name="editor_room" />
+    <exit alias="west" to="room">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="south" to="room 3">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="room 3">
+    <inherit name="editor_room" />
+    <exit alias="north" to="room 2">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="west" to="room 4">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="room 4">
+    <inherit name="editor_room" />
+    <object name="Patroller">
+      <inherit name="editor_object" />
+      <PatrolCount type="int">0</PatrolCount>
+      <changedPatrolCount type="script">
+        if (Patroller.PatrolCount = 1) {
+          MoveObject (Patroller, room)
+          msg ("The Patroller has changed rooms!")
+        }
+        else if (Patroller.PatrolCount = 4) {
+          MoveObject (Patroller, room 2)
+          msg ("The Patroller has changed rooms!")
+        }
+        else if (Patroller.PatrolCount = 7) {
+          MoveObject (Patroller, room 3)
+          msg ("The Patroller has changed rooms!")
+        }
+        else if (Patroller.PatrolCount = 10) {
+          MoveObject (Patroller, room 4)
+          msg ("The Patroller has changed rooms!")
+        }
+        else if (Patroller.PatrolCount = 12) {
+          Patroller.PatrolCount = 0
+        }
+      </changedPatrolCount>
+    </object>
+    <exit alias="east" to="room 3">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="north" to="room">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <turnscript name="Patroller TS">
+    <enabled />
+    <script>
+      Patroller.PatrolCount = Patroller.PatrolCount +1
+    </script>
+  </turnscript>
+  <turnscript name="Patroller Visible">
+    <enabled />
+    <script>
+      if (ListContains(ScopeVisible(), Patroller)) {
+        if (Patroller.PatrolCount = 4) {
+          msg ("The Patroller has wandered into your room!")
+        }
+        else if (Patroller.PatrolCount = 7) {
+          msg ("The Patroller has wandered into your room!")
+        }
+        else if (Patroller.PatrolCount = 10) {
+          msg ("The Patroller has wandered into your room!")
+        }
+        else if (Patroller.PatrolCount = 1) {
+          msg ("The Patroller has wandered into your room!")
+        }
+        else {
+          msg ("The Patroller is milling around the room, eyeing you with suspicion.")
+        }
+      }
+    </script>
+  </turnscript>
+</asl>

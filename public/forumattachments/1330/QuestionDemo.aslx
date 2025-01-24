@@ -1,0 +1,143 @@
+<!--Saved by Quest 5.6.5621.18142-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <include ref="QuestionLib.aslx" />
+  <game name="QuestionDemo">
+    <gameid>3e7cc103-1d3a-4fa0-b1f1-70af7702bd20</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+    <start type="script">
+      AskQuestion
+    </start>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <attr name="pov_look"><![CDATA[You are a {player.height} tall {player.race}, with {if player.race=lizardman:{player.scalescolour} scales}{if player.race<>lizardman:{player.haircolour} hair}. You are ranked as a {player.rank}.]]></attr>
+    </object>
+  </object>
+  <object name="questions">
+    <inherit name="editor_room" />
+    <object name="race">
+      <inherit name="editor_object" />
+      <inherit name="creationquestion" />
+      <alias>What race are you?</alias>
+      <look>Your race will determine much about you.</look>
+      <list type="stringlist">
+        <value>human</value>
+        <value>elf</value>
+        <value>dwarf</value>
+        <value>giant</value>
+        <value>lizardman</value>
+        <value>gnoll</value>
+        <value>orc</value>
+      </list>
+      <script type="script">
+        if (player.race = "lizardman") {
+          haircolour.show = false
+          scalescolour.show = true
+        }
+        if (player.race = "dwarf") {
+          height.from = 0
+          height.to = 4
+        }
+        if (player.race = "giant") {
+          height.from = 12
+          height.to = 0
+        }
+      </script>
+      <to type="int">-2</to>
+    </object>
+    <object name="haircolour">
+      <inherit name="editor_object" />
+      <inherit name="creationquestion" />
+      <alias>What colour is your hair?</alias>
+      <list type="stringlist">
+        <value>blonde</value>
+        <value>black</value>
+        <value>brunette</value>
+        <value>ginger</value>
+      </list>
+    </object>
+    <object name="scalescolour">
+      <inherit name="editor_object" />
+      <inherit name="creationquestion" />
+      <alias>What colour are your scales?</alias>
+      <list type="stringlist">
+        <value>green</value>
+        <value>yellow</value>
+      </list>
+      <show type="boolean">false</show>
+    </object>
+    <object name="rank">
+      <inherit name="editor_object" />
+      <inherit name="creationquestion" />
+      <show type="boolean">false</show>
+      <list type="stringlist">
+        <value>village idiot</value>
+        <value>peasant</value>
+        <value>yokel</value>
+        <value>citizen</value>
+        <value>aristocrat</value>
+        <value>lord</value>
+      </list>
+    </object>
+    <object name="height">
+      <inherit name="editor_object" />
+      <inherit name="creationquestion" />
+      <alias>How tall are you?</alias>
+      <list type="stringlist">
+        <value>4.6</value>
+        <value>4.8</value>
+        <value>4.10</value>
+        <value>5.0</value>
+        <value>5.2</value>
+        <value>5.4</value>
+        <value>5.6</value>
+        <value>5.8</value>
+        <value>5.10</value>
+        <value>6.0</value>
+        <value>6.2</value>
+        <value>6.4</value>
+        <value>6.6</value>
+        <value>6.8</value>
+        <value>6.10</value>
+        <value>7.0</value>
+        <value>7.2</value>
+        <value>7.4</value>
+        <value>7.6</value>
+      </list>
+      <from type="int">4</from>
+      <to type="int">11</to>
+    </object>
+  </object>
+  <command name="grow">
+    <pattern>grow</pattern>
+    <script>
+      if (Increase("height")) {
+        msg ("You grow two inches!")
+      }
+      else {
+        msg ("You are tall enough already")
+      }
+    </script>
+  </command>
+  <command name="orcify">
+    <pattern>orc</pattern>
+    <script>
+      if (player.race = "orc") {
+        msg ("You are already an orc!")
+      }
+      else {
+        SetTo ("race", "orc")
+        msg ("Suddenly you are an orc!")
+      }
+    </script>
+  </command>
+  <function name="QuestionCallBack">
+    msg ("Now we can play...")
+  </function>
+</asl>

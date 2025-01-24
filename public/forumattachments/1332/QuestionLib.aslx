@@ -1,0 +1,216 @@
+<library>
+
+
+  <function name="AskQuestion"><![CDATA[
+    if (not HasAttribute(questions, "list_of_questions")) {
+      questions.list_of_questions = GetDirectChildren(questions)
+      questions.pointer = 0
+    }
+    if (questions.pointer >= ListCount(questions.list_of_questions)) {
+      QuestionCallBack
+    }
+    else {
+      item = ObjectListItem(questions.list_of_questions, questions.pointer)
+      if (not item.show) {
+        if (HasInt(item, "default")) {
+          set (player, item.name + "_as_int", item.default)
+          set (player, item.name, StringListItem(item.list, item.default))
+        }
+        questions.pointer = questions.pointer + 1
+        AskQuestion
+      }
+      else {
+        if (not HasInt(item, "from")) {
+          item.from = 0
+        }
+        if (not HasInt(item, "to")) {
+          item.to = ListCount(item.list)
+        }
+        else if (item.to <= 0) {
+          item.to = ListCount(item.list) + item.to
+        }
+        shortlist = NewStringList()
+        for (i, item.from, item.to - 1) {
+          list add (shortlist, StringListItem(item.list, i))
+        }
+        list add (shortlist, "random")
+        if (HasString(item, "look")) {
+          msg (item.look)
+        }
+        questions.currentitem = item
+        ShowMenu (item.alias, shortlist, false) {
+          item = questions.currentitem
+          // msg("result=" + result)
+          // msg("item.name=" + item.name)
+          ClearScreen
+          if (result = "random") {
+            index = GetRandomInt(item.from, item.to - 1)
+          }
+          else {
+            index = IndexOf(result, item.list)
+          }
+          set (player, item.name + "_as_int", index)
+          set (player, item.name, StringListitem(item.list, index))
+          if (HasScript(item, "script")) {
+            do (item, "script")
+          }
+          questions.pointer = questions.pointer + 1
+          AskQuestion
+        }
+      }
+    }
+  ]]></function>
+
+
+ 
+  <function name="QuestionCallBack">
+  </function>
+
+  
+  <function name="Increase" type="boolean" parameters="att">
+      return (Adjust(att, 1))
+  </function>
+  
+  
+  <function name="Decrease" type="boolean" parameters="att"><![CDATA[
+      return (Adjust(att, -1))
+  ]]></function>
+  
+  
+  <function name="Adjust" type="boolean" parameters="att, n"><![CDATA[
+      index = GetInt (player, att + "_as_int") + n
+      o = GetObject(att)
+      lst = o.list
+      if (index < 0 or index >= ListCount(lst)) {
+        return (false)
+      }
+      set (player, att + "_as_int", index)
+      set (player, att, StringListItem(lst, index))
+      return (true)
+  ]]></function>
+  
+  
+  <function name="SetTo" type="boolean" parameters="att, value"><![CDATA[
+      o = GetObject(att)
+      lst = o.list
+      index = IndexOf(value, lst)
+      if (index < 0) {
+        return (false)
+      }
+      set (player, att + "_as_int", index)
+      set (player, att, value)
+      return (true)
+  ]]></function>
+  
+    
+ 
+  
+  <function name="IndexOf" type="int" parameters="item, lst">
+    if (lst = null) lst = race.list
+    for (i, 0, ListCount(lst) - 1) {
+      if (StringListItem(lst, i) = item) {
+        return (i)
+      }
+    }
+    return (-1)
+  </function>
+
+
+
+
+
+
+
+
+
+  <type name="creationquestion">
+    <from type="int">0</from>
+    <to type="int">0</to>
+    <default type="int">0</default>
+    <show type="boolean">true</show>
+  </type>
+
+
+
+
+  
+  <!-- Interface -->
+  <tab>
+    <parent>_ObjectEditor</parent>
+    <caption>Questionaire</caption>
+    <mustnotinherit>editor_room</mustnotinherit>
+
+    <control>
+      <controltype>dropdowntypes</controltype>
+      <caption>Questionaire?</caption>
+      <types>*=None; creationquestion=Question</types>
+      <width>150</width>
+      <mustnotinherit>editor_player</mustnotinherit>
+    </control>
+
+   <control>
+      <controltype>list</controltype>
+      <caption>Options</caption>
+      <attribute>list</attribute>
+      <editprompt>Please enter an option</editprompt>
+      <mustinherit>creationquestion</mustinherit>
+    </control>  
+  
+    <control>
+      <caption>Show during character creation?</caption>
+      <controltype>checkbox</controltype>
+      <attribute>show</attribute>
+      <width>200</width>
+      <mustinherit>creationquestion</mustinherit>
+    </control>
+
+    <control>
+      <caption>Include options from, including (count from zero)</caption>
+      <controltype>number</controltype>
+      <attribute>from</attribute>
+      <mustinherit>creationquestion</mustinherit>
+    </control>
+  
+    <control>
+      <caption>Include options to, excluding (or give a negative number to count back)</caption>
+      <controltype>number</controltype>
+      <attribute>to</attribute>
+      <mustinherit>creationquestion</mustinherit>
+    </control>
+    
+    <control>
+      <controltype>label</controltype>
+      <caption>
+        For instance:
+        from=2 and to=6 will skip entries 0 and 1, but include entries 2, 3, 4 and 5.
+        from=1 and to=-1 will skip the first and last entries.
+        from=0 and to=0 will give the whole list.
+      </caption>
+      <mustinherit>creationquestion</mustinherit>
+    </control>    
+  
+   <control>
+      <controltype>script</controltype>
+      <caption>Script to run after options are set (optional)</caption>
+      <attribute>script</attribute>
+      <mustinherit>creationquestion</mustinherit>
+    </control>
+
+    <control>
+      <controltype>label</controltype>
+      <caption>
+        Only use the script to control later questions.
+      </caption>
+      <mustinherit>creationquestion</mustinherit>
+    </control>    
+  
+    <control>
+      <caption>Default value (optional, and only used for questions that are not displayed)</caption>
+      <controltype>number</controltype>
+      <attribute>default</attribute>
+      <mustinherit>creationquestion</mustinherit>
+    </control>
+  
+  </tab>  
+
+</library>

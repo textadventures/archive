@@ -1,0 +1,32 @@
+<!--Saved by Quest 5.6.5621.18142-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="map">
+    <gameid>3bee71de-9e0b-4826-9ae2-01054c9e4b9a</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+    <roomcounter type="int">0</roomcounter>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <alias>Startroom</alias>
+    <description>{command:create north:create north}</description>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+  </object>
+  <command name="create_north">
+    <pattern>create north</pattern>
+    <script>
+      roomname = "room"+game.roomcounter
+      create (roomname)
+      newRoom = GetObject(roomname)
+      newRoom.description = "This is " + roomname + "    {command:create north:create north}"
+      create exit ("north"+game.roomcounter, "north", player.parent, newRoom, "northdirection")
+      create exit ("south"+game.roomcounter, "south", newRoom, player.parent, "southdirection")
+      game.roomcounter = game.roomcounter+1
+    </script>
+  </command>
+</asl>

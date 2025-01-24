@@ -1,0 +1,269 @@
+<!--Saved by Quest 5.4.4835.23029-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="TA-GB Test">
+    <gameid>6becc7a4-f026-4a47-b37e-d9a37120b134</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <start type="script">
+      save = "null"
+      SetObjectFlagOn (leaflet, "worldport")
+      msg ("Type \"easter eggs\" for all easter eggs.")
+    </start>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <alias>Text Adventure Mode</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>strength</key>
+          <value>Text adventure mode strength:!</value>
+        </item>
+      </statusattributes>
+      <strength type="int">0</strength>
+      <gstrength type="int">0</gstrength>
+      <look type="string"></look>
+    </object>
+    <object name="book">
+      <inherit name="editor_object" />
+      <read type="script">
+        ClearScreen
+        dictionary remove (player.statusattributes, "strength")
+        dictionary add (player.statusattributes, "gstrength", "Gamebook mode strength:!")
+        request (Hide, "Panes")
+        request (Hide, "Command")
+        request (Hide, "Location")
+        MoveObject (player, gamebook)
+        ClearScreen
+        msg ("You are in a garden. You can see a mailbox. ")
+        msg ("")
+        msg ("{command:open mailbox:Open the mailbox}")
+        msg ("")
+        msg ("{command:exit gamebook:Close the book}")
+      </read>
+    </object>
+    <object name="experiment book">
+      <inherit name="editor_object" />
+      <read type="script">
+        ClearScreen
+        dictionary remove (player.statusattributes, "strength")
+        dictionary add (player.statusattributes, "gstrength", "Gamebook mode strength:!")
+        request (Hide, "Command")
+        MoveObject (player, gamebook)
+        ClearScreen
+        msg ("You are in a garden. You can see a mailbox. ")
+        msg ("")
+        msg ("{command:open mailbox:Open the mailbox}")
+        msg ("")
+        msg ("{command:be stronger:Be stronger.}")
+        msg ("")
+        msg ("{command:exit gamebook:Close the book}")
+      </read>
+    </object>
+  </object>
+  <object name="gamebook">
+    <inherit name="editor_room" />
+    <alias>Gamebook Mode</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <object name="mailbox">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <isopen type="boolean">false</isopen>
+      <look type="script">
+        ClearScreen
+        msg ("It is small. It looks like it has a few stuff in it.")
+        msg ("")
+        msg ("{command:open mailbox:Check what stuff it has}")
+      </look>
+      <take />
+      <ontake type="script"><![CDATA[
+        MoveObjectHere (mailbox)
+        ClearScreen
+        if (player.gstrength > 49) {
+          msg ("Even if you are very strong, uprooting a mailbox is not good. Checking mail is good, however.")
+        }
+        else if (player.gstrength > 0) {
+          msg ("Even if you have just accumulated strength, it's not much. Perhaps all you can do is open it.")
+        }
+        else if (player.gstrength = 0) {
+          msg ("Obviously, you cannot. You can check your mail however.")
+        }
+        msg ("")
+        msg ("{command:open mailbox:Open it and check mail, then!}")
+      ]]></ontake>
+      <drop type="boolean">false</drop>
+      <object name="leaflet">
+        <inherit name="editor_object" />
+        <look type="script">
+          ReadLeaflet
+        </look>
+      </object>
+    </object>
+  </object>
+  <command>
+    <pattern>open mailbox</pattern>
+    <script>
+      OpenMailbox
+    </script>
+  </command>
+  <command>
+    <pattern>exit gamebook</pattern>
+    <script>
+      ExitGamebook
+    </script>
+  </command>
+  <command>
+    <pattern>read leaflet</pattern>
+    <script>
+      ReadLeaflet
+    </script>
+  </command>
+  <verb>
+    <property>view</property>
+    <pattern>view</pattern>
+    <defaultexpression>"You can't view " + object.article + "."</defaultexpression>
+  </verb>
+  <command>
+    <pattern>take leaflet</pattern>
+    <script>
+      TakeLeaflet
+    </script>
+  </command>
+  <command>
+    <pattern>be stronger</pattern>
+    <script>
+      BeStronger
+    </script>
+  </command>
+  <command>
+    <pattern>close mailbox</pattern>
+    <script>
+      ClearScreen
+      msg ("You have no need to.")
+      msg ("")
+      msg ("{command:open mailbox:Continue}")
+    </script>
+  </command>
+  <command name="portablity">
+    <pattern>leaflet #text#</pattern>
+    <script>
+      switch (text) {
+        case ("yes") {
+          SetObjectFlagOn (leaflet, "worldport")
+        }
+        case ("no") {
+          SetObjectFlagOff (leaflet, "worldport")
+        }
+      }
+    </script>
+  </command>
+  <command>
+    <pattern>easter eggs</pattern>
+    <script>
+      msg ("Have you tried taking the mailbox? First with no strength, then with a bit of strength and then with a lot.")
+    </script>
+  </command>
+  <function name="OpenMailbox">
+    if (Contains (mailbox,leaflet)) {
+      ClearScreen
+      msg ("There is a leaflet. ")
+      HelperOpenObject (mailbox)
+      msg ("")
+      msg ("{command:read leaflet:Read the leaflet}")
+      msg ("")
+      msg ("{command:take leaflet:Take the leaflet}")
+      msg ("")
+      msg ("{command:exit gamebook:Close the book}")
+    }
+    else {
+      create ("another leaflet")
+      MoveObject (another leaflet, mailbox)
+      ClearScreen
+      msg ("There is another leaflet, only that they look identical. ")
+      HelperOpenObject (mailbox)
+      msg ("")
+      msg ("{command:read leaflet:Read the leaflet}")
+      msg ("")
+      msg ("{command:take leaflet:Take the leaflet}")
+      msg ("")
+      msg ("{command:exit gamebook:Close the book}")
+    }
+  </function>
+  <function name="ExitGamebook">
+    ClearScreen
+    request (Show, "Panes")
+    request (Show, "Command")
+    request (Show, "Location")
+    MoveObject (player, room)
+    HelperCloseObject (mailbox)
+    player.strength = 0
+    dictionary remove (player.statusattributes, "gstrength")
+    dictionary add (player.statusattributes, "strength", "Text adventure mode strength:!")
+    if (not GetBoolean(leaflet, "worldport")) {
+      MoveObject (leaflet, mailbox)
+    }
+  </function>
+  <function name="ReadLeaflet"><![CDATA[
+    if (game.pov.parent = gamebook) {
+      ClearScreen
+      msg ("You just saw how TA-GB works. Now try closing the book.<br/><br/>There are also a few secrets in this game. One clue: try interacting with the experiment book.")
+      msg ("")
+      msg ("{command:exit gamebook:Close the gamebook.} ")
+    }
+    else {
+      msg ("Did you see how the description of the leaflet changed in Text Adventure Mode?<br/><br/>P.S. With the command \"no leaflet\", things from the GB world (the leaflet, to be precise) will not be carried to the TA world. In contrast, \"leaflet yes\" does the opposite.")
+    }
+  ]]></function>
+  <function name="TakeLeaflet"><![CDATA[
+    if (not Contains (mailbox,leaflet)) {
+      if (player.gstrength > 14) {
+        MoveObject (another leaflet, player)
+        ClearScreen
+        msg ("You take it.")
+        msg ("")
+        msg ("{command:read leaflet:Read it.}")
+        msg ("")
+        msg ("{command:exit gamebook:Close the book.}")
+      }
+      else {
+        FTakeLeaflet
+      }
+    }
+    else {
+      if (player.gstrength > 14) {
+        MoveObject (leaflet, player)
+        ClearScreen
+        msg ("You take it.")
+        msg ("")
+        msg ("{command:read leaflet:Read it.}")
+        msg ("")
+        msg ("{command:exit gamebook:Close the book.}")
+      }
+      else {
+        FTakeLeaflet
+      }
+    }
+  ]]></function>
+  <function name="BeStronger">
+    ClearScreen
+    msg ("You are now stronger.")
+    player.gstrength = player.gstrength + 5
+    msg ("")
+    msg ("{command:open mailbox:Open the mailbox}")
+    msg ("")
+    msg ("{command:be stronger:Be even stronger}")
+    msg ("")
+    msg ("{command:exit gamebook:Close the book}")
+  </function>
+  <function name="FTakeLeaflet">
+    ClearScreen
+    msg ("You are too weak.")
+    msg ("")
+    msg ("{command:open mailbox:Continue}")
+  </function>
+</asl>

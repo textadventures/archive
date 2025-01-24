@@ -1,0 +1,156 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Different approach to combat">
+    <gameid>dbe3a30c-a4ef-4975-b224-628947f98729</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <gridmap />
+    <pov type="object">player</pov>
+  </game>
+  <object name="Room 1">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <lightsource />
+    </object>
+    <exit name="Exit 1 to 3" alias="east" to="Room 3">
+      <inherit name="eastdirection" />
+      <lockmessage>That way is locked.Room 2 to Room 3</lockmessage>
+    </exit>
+  </object>
+  <object name="Room 2">
+    <inherit name="editor_room" />
+    <exit name="Exit 2 to 3" alias="south" to="Room 3">
+      <inherit name="southdirection" />
+      <locked type="boolean">false</locked>
+    </exit>
+  </object>
+  <object name="Room 3">
+    <inherit name="editor_room" />
+    <exit name="Exit 3 to 1" alias="west" to="Room 1">
+      <inherit name="westdirection" />
+    </exit>
+    <exit name="Exit 3 to 2" alias="north" to="Room 2">
+      <inherit name="northdirection" />
+      <locked type="boolean">false</locked>
+    </exit>
+    <exit name="Exit 3 to 4" alias="south" to="Room 4">
+      <inherit name="southdirection" />
+    </exit>
+    <exit name="Exit 3 to 5" alias="east" to="Room 5">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="Room 4">
+    <inherit name="editor_room" />
+    <exit name="Exit 4 to 3" alias="north" to="Room 3">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="Room 5">
+    <inherit name="editor_room" />
+    <exit name="Exit 5 to 3" alias="west" to="Room 3">
+      <inherit name="westdirection" />
+    </exit>
+    <exit name="Exit 5 to 7" alias="east" to="Room 7">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="Room 6">
+    <inherit name="editor_room" />
+    <exit name="Exit 6 to 7" alias="south" to="Room 7">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="Room 7">
+    <inherit name="editor_room" />
+    <exit name="Exit 7 to 5" alias="west" to="Room 5">
+      <inherit name="westdirection" />
+    </exit>
+    <exit name="Exit 7 to 6" alias="north" to="Room 6">
+      <inherit name="northdirection" />
+      <locked type="boolean">false</locked>
+    </exit>
+    <exit name="Exit 7 to 8" alias="south" to="Room 8">
+      <inherit name="southdirection" />
+    </exit>
+    <exit name="Exit 7 to 9" alias="east" to="Room 9">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="NPC">
+      <inherit name="editor_object" />
+      <movechance type="int">60</movechance>
+      <excludedexits type="stringlist">
+        <value>Exit 7 to 6</value>
+        <value>Exit 7 to 8</value>
+        <value>Exit 3 to 1</value>
+      </excludedexits>
+    </object>
+  </object>
+  <object name="Room 8">
+    <inherit name="editor_room" />
+    <exit name="Exit 8 to 7" alias="north" to="Room 7">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="Room 9">
+    <inherit name="editor_room" />
+    <exit name="Exit 9 to 7" alias="west" to="Room 7">
+      <inherit name="westdirection" />
+    </exit>
+    <exit name="Exit 9 to 10" alias="east" to="Room 10">
+      <inherit name="eastdirection" />
+      <locked type="boolean">false</locked>
+    </exit>
+  </object>
+  <object name="Room 10">
+    <inherit name="editor_room" />
+    <exit name="Exit 10 to 9" alias="west" to="Room 9">
+      <inherit name="westdirection" />
+      <locked type="boolean">false</locked>
+    </exit>
+  </object>
+  <turnscript name="NPC moves">
+    <enabled />
+    <script><![CDATA[
+      object1 = NPC
+      numberofexits = 0
+      moveornot = GetRandomInt (1, 100)
+      if (not moveornot > object1.movechance) {
+        list1 = NewObjectList ()
+        foreach (exit, AllExits()) {
+          if (Contains (object1.parent,exit) and exit.visible and not exit.lookonly and not exit.locked) {
+            list add (list1, exit)
+            numberofexits = numberofexits + 1
+            foreach (exit2, object1.excludedexits) {
+              if (exit.name = exit2) {
+                list remove (list1, exit)
+                numberofexits = numberofexits - 1
+              }
+            }
+          }
+        }
+        if (not numberofexits = 0) {
+          randomexit = GetRandomInt (1, numberofexits)
+          chosenexit = ObjectListItem(list1, randomexit - 1)
+          if (not HasScript(chosenexit, "script")) {
+            object1.parent = chosenexit.to
+          }
+          msg ("The NPC had a " + object1.movechance + " % chance to move and goes through " + chosenexit.name + ". He is now in " + object1.parent.name + ".")
+        }
+      }
+      else {
+        msg ("The NPC had a " + object1.movechance + " % chance to move and chooses to stay in " + object1.parent.name + ".")
+      }
+    ]]></script>
+  </turnscript>
+  <command name="Help">
+    <pattern>help</pattern>
+    <script><![CDATA[
+      msg ("You need to give every NPC who is supposed to be able to move two attributes: \"movechance\" and \"excludedexits\"<br/><br/>\"movechance\" has to be set as an integer between 0 and 100 whereby the number stands for the percental chance of the NPC to move to another room (only one room per turn)<br/>\"excludedexits\" has to be set as a string list to which you have to add one by one the names of the exits the NPC is not supposed to move through<br/><br/>Also you have to go to the turn script called \"NPC moves\" and change the first line of code: \"set variable object1 = expression NPC\" has to be set to \"set variable object1 = expression (Your NPC name)\"<br/><br/>The messages which are shown every turn can be deleted from the turn script called \"NPC moves\" and are only shown for testing purposes<br/>\"locked\" exits, \"invisible\" exits and \"look only\" exits are already excluded from the NPCs paths so you don't need to add them to \"excludedexits\"")
+    ]]></script>
+  </command>
+</asl>

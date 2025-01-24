@@ -1,0 +1,71 @@
+<!--Saved by Quest 5.6.5510.29036-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Alpha Mine">
+    <gameid>75ca0984-2d0e-4f0f-9981-64a8c26a4573</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+    <author>Rz</author>
+    <statusattributes type="stringdictionary" />
+    <onmoneyzero type="string"></onmoneyzero>
+    <moneyname type="string"></moneyname>
+    <start type="script">
+    </start>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <money type="int">100</money>
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>money</key>
+          <value></value>
+        </item>
+      </statusattributes>
+    </object>
+    <exit alias="south" to="Shop">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="Shop">
+    <inherit name="editor_room" />
+    <description><![CDATA[Do you want to {command:buy} something ?<br/>]]></description>
+    <exit alias="north" to="room">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="Trader">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+    </object>
+    <command>
+      <pattern>buy</pattern>
+      <script><![CDATA[
+        msg ("How Many ?")
+        get input {
+          ToInt (result)
+          if (player.money <= ( 10 * result )) {
+            msg ("You cant afford it")
+          }
+          else {
+            bricks.count = bricks.count + result
+            AddToInventory (bricks)
+          }
+        }
+      ]]></script>
+    </command>
+  </object>
+  <object name="bricks">
+    <inherit name="editor_object" />
+    <feature_usegive />
+    <count type="int">0</count>
+  </object>
+  <command>
+    <pattern>items</pattern>
+    <script>
+      msg ("you have" +bricks.count+ " bricks")
+    </script>
+  </command>
+</asl>

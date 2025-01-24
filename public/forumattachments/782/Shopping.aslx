@@ -1,0 +1,152 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <include ref="Shopping_sell_test_lib2.aslx" />
+  <include ref="ScopeLib.aslx" />
+  <game name="Shopping">
+    <gameid>60c82caa-6b80-48ee-9174-ccc062918680</gameid>
+  </game>
+  <object name="shopper">
+    <inherit name="editor_room" />
+    <shop />
+    <alias>Room That Is A Shop</alias>
+    <description type="script"><![CDATA[
+      a = 0
+      msg ("You can buy a hat for 6 gold coins or a coat for 11.")
+      foreach (i, AllObjects()) {
+        if (GetAttribute (i,"parent")=SoldItems) {
+          a = a + 1
+          if (a>0) {
+            msg ("You can rebuy your sold items: " + i.name + " for " + i.price + " coins.")
+          }
+        }
+      }
+    ]]></description>
+    <attr name="shop_item" type="int">1</attr>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <money type="int">20</money>
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>money</key>
+          <value></value>
+        </item>
+      </statusattributes>
+      <object name="gloves">
+        <inherit name="editor_object" />
+        <price type="int">2</price>
+        <value type="int">1</value>
+        <alias>gloves</alias>
+        <visible />
+        <attr name="sell_object" type="script">
+          msg ("You sell a " + this.alias + " for " + this.value + " coins.")
+          player.money = player.money + this.value
+          MoveObject (this, SoldItems)
+        </attr>
+      </object>
+    </object>
+    <object name="hat">
+      <inherit name="editor_object" />
+      <price type="int">6</price>
+      <scenery />
+      <alias>A Floppy Hat</alias>
+      <value type="int">4</value>
+      <attr name="shop_item" type="int">1</attr>
+      <attr name="sell_object" type="script">
+        msg ("You sell a " + this.alias + " for " + this.value + " coins.")
+        player.money = player.money + this.value
+        RemoveObject (this)
+      </attr>
+    </object>
+    <object name="cup">
+      <inherit name="editor_object" />
+      <take />
+      <scenery type="boolean">false</scenery>
+      <alias>A Funny Green Cup</alias>
+    </object>
+    <object name="coat">
+      <inherit name="editor_object" />
+      <price type="int">11</price>
+      <scenery />
+      <alias>A Long Trench Coat</alias>
+    </object>
+    <exit alias="south" to="not_a_shop">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="shopshoes">
+      <inherit name="editor_object" />
+      <price type="int">2</price>
+      <attr name="shop_item" type="int">1</attr>
+      <take type="boolean">false</take>
+      <value type="int">1</value>
+      <visible />
+      <alias>shoes</alias>
+      <scenery type="boolean">false</scenery>
+      <attr name="sell_object" type="script">
+        msg ("You sell a " + this.alias + " for " + this.value + " coins.")
+        player.money = player.money + this.value
+        RemoveObject (this)
+      </attr>
+    </object>
+    <exit alias="east" to="SoldItems">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="test">
+      <inherit name="editor_object" />
+      <take type="script">
+        foreach (i, AllObjects()) {
+          if (GetAttribute (i,"parent")=SoldItems) {
+            msg (i.name)
+          }
+        }
+      </take>
+    </object>
+  </object>
+  <object name="not_a_shop">
+    <inherit name="editor_room" />
+    <alias>Room That Is Not A Shop</alias>
+    <description>This is definitely not a shop.</description>
+    <command name="no_stuff" />
+    <exit alias="north" to="shopper">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="SoldItems">
+    <inherit name="editor_room" />
+    <exit alias="west" to="shopper">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <function name="BuyItemNotKnown">
+    if (GetBoolean(player.parent, "shop")) {
+      if (HasInt(object, "price") and GetAttribute (object,"parent")=SoldItems) {
+        msg ("You buy a " + object.name + " for " + object.price + " coins.")
+        object.parent = game.pov
+        player.money = player.money - object.price
+      }
+      else {
+        msg ("There is no such item.")
+      }
+    }
+    else {
+      msg ("This is not a shop.")
+    }
+  </function>
+  <walkthrough name="shop_test">
+    <steps type="simplestringlist">
+      buy hat
+      buy cup
+      buy coat
+      take cup
+      s
+      drop coat
+      buy coat
+      drop hat
+      take hat
+      n
+      buy coat
+      s
+    </steps>
+  </walkthrough>
+</asl>

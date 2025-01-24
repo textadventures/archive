@@ -1,0 +1,123 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Outbreak Testing">
+    <gameid>e80f93b8-d63f-4706-a85e-94919e2be81a</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+  </game>
+  <object name="storage room">
+    <inherit name="editor_room" />
+    <alias>Storage Room</alias>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <equipped type="int">0</equipped>
+    </object>
+    <object name="crate">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <hidechildren />
+      <listchildren />
+      <listchildrenprefix>Inside is</listchildrenprefix>
+      <object name="handgun">
+        <inherit name="editor_object" />
+        <ammunition type="int">15</ammunition>
+        <equipped type="boolean">false</equipped>
+        <use />
+        <take />
+        <alias>handgun</alias>
+        <equip type="script"><![CDATA[
+          if (player.equipped >1) {
+            msg ("You don't have that many hands...")
+          }
+          else {
+            if (handgun.equipped =True) {
+              msg ("You're already holding the gun.")
+            }
+            else {
+              msg ("You hold the gun.")
+              if (not Got(handgun)) {
+                AddToInventory (handgun)
+              }
+              player.equipped = player.equipped +1
+              handgun.equipped = True
+              handgun.alias = handgun.alias + " (equipped) "
+            }
+          }
+        ]]></equip>
+        <unequip type="script">
+          if (handgun.equipped =True) {
+            handgun.equipped = False
+            msg ("You holster the handgun.")
+            player.equipped = player.equipped -1
+            handgun.alias = handgun
+          }
+          else {
+            msg ("You aren't holding it.")
+          }
+        </unequip>
+      </object>
+      <object name="handgun clip">
+        <inherit name="editor_object" />
+        <amount type="int">25</amount>
+        <take />
+        <changedamount type="script"><![CDATA[
+          if (handgun_ammo.amount <1) {
+            handgun_ammo.amount = handgun_ammo.amount =0
+          }
+        ]]></changedamount>
+        <selfuseon type="scriptdictionary">
+          <item key="handgun"><![CDATA[
+            if (handgun.ammuition >0) {
+              msg ("You don't need to reload yet.")
+            }
+            else {
+              msg ("You reload the handgun.")
+              handgun.ammunition = handgun.ammunition =15
+              RemoveObject (handgun clip)
+            }
+          ]]></item>
+        </selfuseon>
+      </object>
+    </object>
+    <exit alias="east" to="street">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>equip</property>
+    <pattern>equip</pattern>
+    <defaultexpression>"You can't equip " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>shoot</property>
+    <pattern>shoot</pattern>
+    <defaultexpression>"You can't shoot " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="street">
+    <inherit name="editor_room" />
+    <object name="zombie">
+      <inherit name="editor_object" />
+      <shoot type="scriptdictionary">
+        <item key="handgun">
+          msg ("You shoot it with the handgun.")
+        </item>
+      </shoot>
+    </object>
+    <exit alias="west" to="storage room">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>reload</property>
+    <pattern>reload</pattern>
+    <defaultexpression>"You can't reload " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>unequip</property>
+    <pattern>unequip</pattern>
+    <defaultexpression>"You can't unequip " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

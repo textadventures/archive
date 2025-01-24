@@ -1,0 +1,471 @@
+<!--Saved by Quest 5.1.4426.19610-->
+<asl version="510">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="">
+    <gameid>78d79d3a-734f-4d3e-ac2e-5060dbbcd302</gameid>
+    <version>1.0</version>
+    <description type="string"></description>
+    <author>Liam Graham</author>
+  </game>
+  <object name="outside grocer">
+    <inherit name="editor_room" />
+    <description>You are outside a run down building with a sign reading "Grocer"</description>
+  </object>
+  <object name="Apartment">
+    <inherit name="editor_room" />
+    <object name="bedroom">
+      <inherit name="editor_room" />
+      <description type="script"><![CDATA[
+        if (not Got(wallet)) {
+          msg ("You are lying on a bed in a dark, sparsely furnished room. The carpet is stained and discoloured and covered with dirty clothes<br/>There is table to your left and a dresser to your right<br/>On the table is a wallet, some keys, an alarm clock reading 9:40, a note and a gun. There is a pair of worn leather shoes on the ground<br/>The bathroom is to the south and the living room to the west")
+        }
+        else {
+          msg ("You are lying on a bed in a dark, sparsely furnished room. The carpet is stained and discoloured and covered with dirty clothes<br/>There is table to your left and a dresser to your right<br/>On the table is an alarm clock reading 9:40<br/>There is a bathroom to the south and a living room to the west")
+        }
+      ]]></description>
+      <usedefaultprefix />
+      <objectslistprefix>You can see</objectslistprefix>
+      <object name="player">
+        <inherit name="defaultplayer" />
+        <look type="string"></look>
+        <yes type="script">
+          if (player.parent = main street) {
+            msg ("The police car pulls over and the officer chases after you")
+            MoveObject (player, running away)
+          }
+          if (player.parent = running away) {
+            msg ("You shoot wildly at the officer, hitting him in the leg. In the confusion you run into a dark alley")
+            MoveObject (player, alley)
+          }
+        </yes>
+        <kill type="script">
+          msg ("Why would you want to do that?")
+        </kill>
+        <shoot type="script">
+          msg ("Why would you want to do that?")
+        </shoot>
+        <object name="dirty clothing">
+          <inherit name="editor_object" />
+          <take />
+          <alt>dirty clothes</alt>
+          <dropmsg>You are not wearing any clothes. Quickly some on before anybody sees you </dropmsg>
+        </object>
+      </object>
+      <object name="bed">
+        <inherit name="editor_object" />
+        <look>The bed is small and covered with soiled sheets</look>
+        <scenery />
+      </object>
+      <exit alias="south" to="bathroom">
+        <inherit name="southdirection" />
+        <locked type="boolean">false</locked>
+      </exit>
+      <exit alias="west" to="living room">
+        <inherit name="westdirection" />
+      </exit>
+      <object name="dresser">
+        <inherit name="editor_object" />
+        <inherit name="container_closed" />
+        <openmsg>With great effort you open the dresser</openmsg>
+        <closemsg>You close the dresser</closemsg>
+        <contentsprefix>containing</contentsprefix>
+        <scenery />
+        <onopen type="script">
+          if (not Contains (dresser,clean clothing)) {
+            msg ("The dresser is empty")
+          }
+          if (Contains (dresser,clean clothing)) {
+            msg ("You see some clean clothing on the shelf")
+          }
+        </onopen>
+        <object name="clean clothing">
+          <inherit name="editor_object" />
+          <alt>clean clothes</alt>
+          <dropmsg>You are not wearing any clothes. Quickly put them back on before anybody sees you </dropmsg>
+          <take type="script">
+            if (Got(dirty clothing)) {
+              msg ("You should take off your dirty clothes first")
+            }
+            if (not Got(dirty clothing)) {
+              msg ("You put on the clean clothing")
+              MoveObject (clean clothing, player)
+            }
+          </take>
+        </object>
+      </object>
+      <object name="table">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <look type="string"></look>
+        <open type="boolean">false</open>
+        <close type="boolean">false</close>
+        <isopen type="boolean">false</isopen>
+        <usedefaultprefix />
+        <scenery />
+      </object>
+      <object name="wallet">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <isopen type="boolean">false</isopen>
+        <take />
+        <scenery type="boolean">false</scenery>
+        <usedefaultprefix />
+        <onopen type="script">
+          msg ("You see a credit card, license and medicare card")
+        </onopen>
+        <object name="credit card">
+          <inherit name="editor_object" />
+          <take />
+        </object>
+        <object name="license">
+          <inherit name="editor_object" />
+          <take />
+        </object>
+      </object>
+      <object name="keys">
+        <inherit name="editor_object" />
+        <take />
+        <scenery type="boolean">false</scenery>
+      </object>
+      <object name="gun">
+        <inherit name="editor_object" />
+        <take />
+        <scenery type="boolean">false</scenery>
+        <shoot type="script">
+          destroy ("guard")
+          destroy ("Bryce")
+        </shoot>
+      </object>
+      <object name="note">
+        <inherit name="editor_object" />
+        <take />
+        <scenery type="boolean">false</scenery>
+        <read>Remember our deal. 10:00 out the back of the grocer</read>
+      </object>
+      <object name="alarm clock">
+        <inherit name="editor_object" />
+        <look>The alarm clock display reads 9:40. </look>
+        <scenery />
+      </object>
+      <object name="shoes">
+        <inherit name="editor_object" />
+        <take />
+        <takemsg>You put on the shoes</takemsg>
+        <look>The shoes are made of worn leather. The brand name engraved in the sole is illegible</look>
+      </object>
+    </object>
+    <object name="bathroom">
+      <inherit name="editor_room" />
+      <description type="script"><![CDATA[
+        if (not Got(watch)) {
+          msg ("You are in a white, tiled bathroom, containing a sink and a shower<br/>There is a watch on the sink<br/>The bedroom is to the north")
+        }
+        else {
+          msg ("You are in a white, tiled bathroom, containing a sink and a shower<br/>The bedroom is to the north")
+        }
+      ]]></description>
+      <enter type="script">
+        if (Contains (bathroom,watch)) {
+          msg ("There is a watch on the sink")
+        }
+      </enter>
+      <exit alias="north" to="bedroom">
+        <inherit name="northdirection" />
+      </exit>
+      <object name="watch">
+        <inherit name="editor_object" />
+        <take />
+        <scenery type="boolean">false</scenery>
+        <look>The watch is gold with a white face</look>
+      </object>
+      <object name="sink">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <switchonmsg>Brown water flows out of the tap. You try to turn it off but the tap breaks</switchonmsg>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <scenery />
+      </object>
+      <object name="shower">
+        <inherit name="editor_object" />
+        <take type="boolean">false</take>
+        <switchedon type="boolean">false</switchedon>
+        <scenery />
+        <onswitchon type="script">
+          if (Got(clean clothing)) {
+            msg ("You should drop everything before you have a shower")
+          }
+          if (not Got(clean clothing)) {
+            msg ("You have a shower, washing away the dirt and grime")
+            create exit ("", "Front door", living room, parking lot, "")
+          }
+          if (not Got(clean clothing)) {
+            msg ("You have a shower, washing away the dirt and grime")
+            create exit ("", "Front door", living room, parking lot, "")
+          }
+          if (not Got(dirty clothing)) {
+            msg ("You have a shower, washing away the dirt and grime")
+            create exit ("", "Front door", living room, parking lot, "")
+          }
+        </onswitchon>
+      </object>
+    </object>
+    <object name="living room">
+      <inherit name="editor_room" />
+      <description type="script"><![CDATA[
+        if (not Got(coffee mug)) {
+          msg ("The living room is also sparsely furnished, containing only a worn couch and coffee table. <br/>On the coffee table is a television, a remote and an empty coffee mug.<br/>The kitchen is to the west, the bedroom to the east and the parking lot to the south")
+        }
+        else {
+          msg ("The living room is also sparsely furnished, containing only a worn couch and coffee table. <br/>On the coffee table is a television and a remote<br/>You can go west to the kitchen, east to the bedroom and south to the parking lot")
+        }
+      ]]></description>
+      <objectslistprefix>You can see </objectslistprefix>
+      <exit alias="east" to="bedroom">
+        <inherit name="eastdirection" />
+      </exit>
+      <object name="couch">
+        <inherit name="editor_object" />
+        <sit type="script">
+          msg ("You sit on the worn, coffee-stained couch. Nothing else happens")
+        </sit>
+        <scenery />
+      </object>
+      <exit alias="south" to="parking lot">
+        <inherit name="southdirection" />
+      </exit>
+      <object name="television">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <scenery />
+        <watch type="script">
+          if (IsSwitchedOn(television)) {
+            msg ("You pick up the remote and flick through the channels, finding only corny comedy shows and soap operas. You turn off the television and throw the remote down in disgust")
+          }
+          else {
+            msg ("You stare at the telvision for a while and discover that it isn't actually on")
+          }
+        </watch>
+        <alt>tv</alt>
+      </object>
+      <object name="coffee table">
+        <inherit name="editor_object" />
+        <look>The table is chipped and stained. On it rests a coffee mug, television and remote</look>
+        <take />
+        <scenery />
+      </object>
+      <object name="coffee mug">
+        <inherit name="editor_object" />
+      </object>
+      <exit alias="west" to="kitchen">
+        <inherit name="westdirection" />
+      </exit>
+    </object>
+    <object name="parking lot">
+      <inherit name="editor_room" />
+      <description type="script"><![CDATA[
+        if (player.parent = parking lot) {
+          msg ("The parking lot is deserted. <br/>The apartment is to the north and there is a parked car to the west ")
+        }
+      ]]></description>
+      <enter type="script">
+        if (not Got(clean clothing)) {
+          msg ("You should put on some clean clothing and collect your belongings before you go")
+        }
+      </enter>
+      <exit alias="north" to="living room">
+        <inherit name="northdirection" />
+      </exit>
+      <exit alias="west" to="parked car">
+        <inherit name="westdirection" />
+      </exit>
+    </object>
+    <object name="parked car">
+      <inherit name="editor_room" />
+      <description type="script"><![CDATA[
+        if (player.parent = parked car) {
+          msg ("You are inside an old, black car with tinted windows<br/>There is a glove box to your right<br/>The parking lot is to the east")
+        }
+      ]]></description>
+      <objectslistprefix>You can see </objectslistprefix>
+      <exit alias="east" to="parking lot">
+        <inherit name="eastdirection" />
+      </exit>
+      <object name="glove box">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <scenery />
+        <isopen type="boolean">false</isopen>
+        <onopen type="script">
+          if (Contains (glove box,bank notes)) {
+            msg ("You open the glovebox and see some bank notes inside")
+          }
+          else {
+            msg ("The glove box is empty")
+          }
+        </onopen>
+        <object name="bank notes">
+          <inherit name="editor_object" />
+          <take />
+          <giveto type="scriptdictionary">
+            <item key="beggar">
+              MoveObject (bank notes, beggar)
+              msg ("\"This looks like enough. What do you want to know?\"")
+              SetTimeout (5) {
+                msg ("\"Hurry up, I don't have all day\"")
+              }
+            </item>
+          </giveto>
+          <alt>notes; money</alt>
+          <look>The notes are tattered and stained. In total, they are worth fifteen dollars. </look>
+        </object>
+      </object>
+      <object name="car">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <scenery />
+        <onswitchon type="script">
+          MoveObject (player, main street)
+        </onswitchon>
+        <insertkeysintocar type="script">
+          MoveObject (player, main street)
+        </insertkeysintocar>
+      </object>
+    </object>
+    <object name="kitchen">
+      <inherit name="editor_room" />
+      <description type="script"><![CDATA[
+        if (not Got(knife)) {
+          msg ("The kitchen is illuminated by a single, naked bulb and contains only a small fridge, a microwave and a sink<br/>On the counted is an assortment of kitchen equipment, incluiding a knife<br/>The living room is to the east")
+        }
+        else {
+          msg ("The kitchen is illuminated by a single, naked bulb and contains only a small fridge, a microwave and a sink<br/>On the counted is an assortment of kitchen equipment<br/>The living room is to the east")
+        }
+      ]]></description>
+      <objectslistprefix>You can see </objectslistprefix>
+      <exit alias="east" to="living room">
+        <inherit name="eastdirection" />
+      </exit>
+      <object name="knife">
+        <inherit name="editor_object" />
+        <take />
+      </object>
+    </object>
+  </object>
+  <object name="Town">
+    <inherit name="editor_room" />
+    <alias>game</alias>
+    <object name="alley">
+      <inherit name="editor_room" />
+      <description type="script"><![CDATA[
+        if (Contains (alley,beggar)) {
+          msg ("The alley is dark and filled with rubbish and the building walls are covered with graffiti. <br/>A beggar is sitting against the wall. ")
+        }
+        else {
+          msg ("The alley is dark and filled with rubbish and the building walls are covered with graffiti<br/>The beggar is gone")
+        }
+      ]]></description>
+      <object name="beggar">
+        <inherit name="editor_object" />
+        <inherit name="male" />
+        <drop type="boolean">false</drop>
+        <ask type="scriptdictionary">
+          <item key="where is the grocer">
+            msg ("\"The grocer is over there, to the south\"")
+            if (Contains (beggar,bank notes)) {
+              msg ("\"The grocer is over there, to the south\"")
+              msg ("You follow the beggars directions and find yourself outside the grocer")
+              MoveObject (player, grocer)
+            }
+          </item>
+        </ask>
+        <speak type="script">
+          msg ("\"You look lost there. I might have what you need, for a price\"")
+        </speak>
+        <telldefault type="script">
+          if (Contains (beggar,bank notes)) {
+            msg ("\"The grocer is over there, to the south\"")
+            msg ("You follow the beggars directions and find yourself outside the grocer")
+            MoveObject (player, grocer)
+          }
+        </telldefault>
+      </object>
+      <exit alias="south" to="running away">
+        <inherit name="southdirection" />
+      </exit>
+      <command>
+        <script>
+          switch (text) {
+            case ("where is the grocer") {
+              if (Contains (beggar,bank notes)) {
+                msg ("\"The grocer is that way, to the south\"")
+                msg ("You follow the directions and find yourself the grocer")
+                MoveObject (player, grocer)
+                destroy ("beggar")
+              }
+              else {
+                msg ("You haven't paid me enough to know that")
+              }
+            }
+            case ("who are you") {
+              msg ("\"Who I am isn't important. But what you want to know is. And your money of course.\"")
+            }
+            default {
+              msg ("\"That isn't important. What else do you want to know?\"")
+            }
+          }
+        </script>
+        <pattern> say #text#</pattern>
+      </command>
+    </object>
+    <object name="main street">
+      <inherit name="editor_room" />
+      <description><![CDATA[You are driving along the main street and can hear sirens behind you. <br/>Do want to pull over and run away?<br/><br/><br/>]]></description>
+      <command>
+        <pattern>#text#</pattern>
+        <script>
+          switch (text) {
+            case ("yes") {
+              msg ("You pull over and run away. The police car then stops and the officer chases after you")
+              MoveObject (player, running away)
+            }
+            case ("no") {
+              msg ("The police car overtakes you and drives away, sirens still blaring")
+            }
+            default {
+              msg ("It doesn't seem like you can do that")
+            }
+          }
+        </script>
+      </command>
+    </object>
+    <object name="running away">
+      <inherit name="editor_room" />
+      <description><![CDATA[The pedestrians and shoppers around you jump out of the way as you run.<br/>Do you want to shoot the officer?<br/>]]></description>
+      <descprefix>You are</descprefix>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <command>
+        <pattern>#text#</pattern>
+        <script>
+          switch (text) {
+            case ("yes") {
+              msg ("You pull out your gun and shoot wildly at the police officer, hitting him in the leg. In the confusion you run into a narrow, darkened alley.")
+              MoveObject (player, alley)
+            }
+            case ("no") {
+              msg ("The police officer catches you and tackles you to the ground. It looks like jail for you.")
+            }
+          }
+        </script>
+      </command>
+    </object>
+    <object name="grocer">
+      <inherit name="editor_room" />
+    </object>
+  </object>
+  <verb>
+    <property>watch</property>
+    <pattern>watch </pattern>
+    <defaultexpression>"You can't watch  " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

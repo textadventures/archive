@@ -1,0 +1,94 @@
+<!--Saved by Quest 5.6.5783.24153-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Menu Loop Test">
+    <gameid>8b1d533d-3175-4c01-acf9-0c58d1e02c54</gameid>
+    <version>1.0</version>
+    <firstpublished>2016</firstpublished>
+    <pov type="object">player</pov>
+    <autodescription_youarein_newline />
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <enter type="script">
+    </enter>
+    <firstenter type="script"><![CDATA[
+      msg ("An omnipotent Wizard stands before you.<b>\"What shall I call you?\"</b> he bellows.<br/>")
+      get input {
+        set (player, "alias", result)
+        msg ("<b>'So, you really want to be called... " + result + "?<br/><br/>'Once you state 'yes' it will be forever so.  What say you?  Is " + result + " really what you want printed in the annals of history?</b><br/>")
+        get input {
+          switch (LCase(result)) {
+            case ("yes","yea","y","yep","sure","affirmative") {
+              msg ("<b>\"Okay then,\"</b> the mighty Wizard proclaims!<br/\"")
+              msg ("<b>'You are hereby known around the world as " + GetDisplayAlias(player) + "!  PLEASE DO NOT disappoint me!'<br/><br/>'Now go east and let your adventure begin!'</b>")
+              MakeExitVisible (exit1)
+            }
+            case ("no","nay","nope","n") {
+              msg ("<b>\"Ugh,\"</b> the Wizard utters in protest.  <b>\"Did you make a typo or something?  Please CORRECTLY state your name.</b>")
+              namefunction
+            }
+            default {
+              msg ("<b>\"I do not understand your response.  You'll have to try English next time.  Shall we do this again?  <u>WHAT IS YOUR NAME?\"</u></b>")
+              namefunction
+            }
+          }
+        }
+      }
+    ]]></firstenter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+    </object>
+    <exit name="exit1" alias="east" to="room2">
+      <inherit name="eastdirection" />
+      <visible type="boolean">false</visible>
+    </exit>
+    <object name="Wizard">
+      <inherit name="editor_object" />
+      <look>He's omnipotent.  It hurts your eyes to look at him.  You avert your gaze.</look>
+      <speak type="script"><![CDATA[
+        msg ("<b>'My job is done here, " + GetDisplayName(player) + ".  Go forth and adventure!'</b>")
+      ]]></speak>
+    </object>
+  </object>
+  <object name="room2">
+    <inherit name="editor_room" />
+    <object name="Mr Name Checker">
+      <inherit name="editor_object" />
+      <alias>Mr. Name Checker</alias>
+      <look>Talk to him.</look>
+      <speak type="script">
+        msg ("Ah.  You must be " + GetDisplayAlias(player) + "!  Nice to meet you!")
+      </speak>
+    </object>
+    <exit alias="west" to="room">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <function name="namefunction"><![CDATA[
+    get input {
+      set (player, "alias", result)
+      msg ("<b><br/>'So, you really want to be called... " + result + "?<br/><br/>'Once you state 'yes' it will be forever so.  What say you?  Is " + result + " really what you want printed in the annals of history?</b><br/>")
+      get input {
+        switch (LCase(result)) {
+          case ("yes","yea","y","yep","sure","affirmative") {
+            msg ("<b>\"Okay then,\"</b> the mighty Wizard proclaims!<br/>")
+            msg ("<b>'You are hereby known around the world as " + GetDisplayAlias(player) + "!  PLEASE DO NOT disappoint me!'<br/><br/>'Now go east and let your adventure begin!'</b>")
+            MakeExitVisible (exit1)
+          }
+          case ("no","nay","nope","n") {
+            msg ("<b>\"Ugh,\"</b> the Wizard utters in protest.  <b>\"Are you serious?  This isn't THAT difficult!  Please <u>CORRECTLY</u> state your name NOW!</b>")
+            namefunction
+          }
+          default {
+            msg ("<b>\"I do not understand your response.  You'll have to try English next time.  Shall we do this again?  <u>WHAT IS YOUR NAME?\"</u></b>")
+            namefunction
+          }
+        }
+      }
+    }
+  ]]></function>
+</asl>

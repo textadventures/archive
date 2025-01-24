@@ -1,0 +1,73 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="nm">
+    <gameid>46538ab8-34a9-4af7-b16a-692260fd7984</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <description type="script">
+    </description>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>attack</key>
+          <value>5</value>
+        </item>
+        <item>
+          <key>defend</key>
+          <value>3</value>
+        </item>
+        <item>
+          <key>life</key>
+          <value></value>
+        </item>
+      </statusattributes>
+      <life type="int">5</life>
+    </object>
+    <object name="hostile">
+      <inherit name="editor_object" />
+      <life type="int">5</life>
+      <attack type="int">4</attack>
+      <defend type="int">4</defend>
+      <fight type="script">
+        if (RandomChance(50)) {
+          player.attack = hostile.defend
+          msg ("You hit him for 1 damage!")
+          hostile.life = hostile.life - 1
+          if (hostile.life = 0) {
+            msg ("You killed it!")
+            player.life = player.life + 2
+            player.attack = player.attack +1
+          }
+        }
+        else {
+          msg ("Carefull!")
+        }
+        msg ("He lashes back!")
+        if (RandomChance(47)) {
+          hostile.attack = player.defense
+          msg ("Shit that hurt!")
+          player.life = player.life - 2
+          if (player.life = 0) {
+            msg ("You are dead")
+            finish
+          }
+        }
+        else {
+          msg ("Missed me!")
+        }
+      </fight>
+    </object>
+  </object>
+  <verb>
+    <property>fight</property>
+    <pattern>fight</pattern>
+    <defaultexpression>"You can't fight " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

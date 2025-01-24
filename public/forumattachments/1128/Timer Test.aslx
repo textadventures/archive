@@ -1,0 +1,90 @@
+<!--Saved by Quest 5.5.5328.26617-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Timer Tutorial">
+    <gameid>bc4658cd-1020-481d-b8be-624c46c79c31</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <author>Silver</author>
+    <description>How timers work etc. </description>
+    <start type="script">
+    </start>
+  </game>
+  <object name="Kings Cross">
+    <inherit name="editor_room" />
+    <descprefix>You are at</descprefix>
+    <beforeenter type="script">
+      msg ("You have boarded a train at Kings Cross Station. ")
+      wait {
+        msg ("The doors close and you feel the train starting to move. ")
+        request (Hide, "Command")
+        EnableTimer (Tunnel01)
+      }
+    </beforeenter>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+  </object>
+  <object name="Euston">
+    <inherit name="editor_room" />
+    <description><![CDATA[You have reached your destination. The doors open.<br/><br/>/end.]]></description>
+    <descprefix>You are at</descprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+  </object>
+  <object name="Tunnel1">
+    <inherit name="editor_room" />
+    <alias>Tunnel</alias>
+  </object>
+  <timer name="Tunnel01">
+    <interval>5</interval>
+    <script>
+      MoveObject (player, Tunnel1)
+      msg ("The platform vanishes from view and the train picks up speed.")
+      DisableTimer (Tunnel01)
+      EnableTimer (Tunnel02)
+    </script>
+  </timer>
+  <timer name="Tunnel02">
+    <interval>5</interval>
+    <script>
+      msg ("chuggety-chugg chuggety-chugg")
+      DisableTimer (Tunnel02)
+      EnableTimer (Tunnel03)
+    </script>
+  </timer>
+  <timer name="Tunnel03">
+    <interval>5</interval>
+    <script>
+      msg ("The train is hurtling through the tunnel at full pelt. You're starting to find the advertising a bit interesting. ")
+      DisableTimer (Tunnel03)
+      EnableTimer (Tunnel04)
+    </script>
+  </timer>
+  <timer name="Tunnel04">
+    <interval>5</interval>
+    <enabled type="boolean">false</enabled>
+    <script>
+      msg ("chuggety-chugg chuggety-chugg")
+      DisableTimer (Tunnel04)
+      EnableTimer (Tunnel05)
+    </script>
+  </timer>
+  <timer name="Tunnel05">
+    <interval>5</interval>
+    <script>
+      msg ("You feel the train slowing as it nears its destination.")
+      DisableTimer (Tunnel05)
+      EnableTimer (Tunnel06)
+    </script>
+  </timer>
+  <timer name="Tunnel06">
+    <interval>5</interval>
+    <script>
+      DisableTimer (Tunnel06)
+      MoveObject (player, Euston)
+    </script>
+  </timer>
+</asl>

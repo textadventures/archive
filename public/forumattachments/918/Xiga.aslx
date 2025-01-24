@@ -1,0 +1,719 @@
+<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Xiga">
+    <gameid>1a6d49d3-3c2d-48f1-b55f-a1ca65801f31</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <defaultfontsize type="int">11</defaultfontsize>
+    <setbackgroundopacity />
+    <defaultbackground>SteelBlue</defaultbackground>
+    <menubackground>SteelBlue</menubackground>
+    <author type="string"></author>
+    <showtitle />
+    <menufontsize type="int">8</menufontsize>
+    <category>Puzzle</category>
+    <difficulty>Medium</difficulty>
+    <cruelty>Merciful</cruelty>
+    <start type="script"><![CDATA[
+      msg ("What is that sound?  Water?  Are you dreaming?  No.  Wake up.  Open your eyes...<br/><br/>You wake up and open your eyes.  You're in a room you've never seen before.  You hear running water and can smell a faint burning odor.  What is this place?  Where are you?  How did you get here?  Why are you so hungry?  You feel panic start to set it, but no.  You must stay calm.  You need to get out.<br/>")
+    ]]></start>
+    <object name="kettle with water">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <look>Where to put this...</look>
+      <visible type="boolean">false</visible>
+      <scenery type="boolean">false</scenery>
+      <attr name="feature_switchable" type="boolean">false</attr>
+      <feature_usegive />
+      <onswitchon type="script">
+        AddToInventory (kettle with water)
+      </onswitchon>
+      <onswitchoff type="script">
+        RemoveObject (kettle with water)
+      </onswitchoff>
+      <selfuseon type="scriptdictionary">
+        <item key="fire">
+          msg ("You place the kettle on the fire.  Zheeeeeeee!!")
+          MakeObjectVisible (boiling kettle)
+          RemoveObject (kettle with water)
+        </item>
+      </selfuseon>
+    </object>
+    <object name="hammer plus chisel">
+      <inherit name="editor_object" />
+      <look>These look handy.</look>
+      <visible type="boolean">false</visible>
+    </object>
+    <object name="note">
+      <inherit name="editor_object" />
+      <look><![CDATA["The truth is inside.<br/>                             The truth will set you free."]]></look>
+      <visible type="boolean">false</visible>
+    </object>
+    <object name="key">
+      <inherit name="editor_object" />
+      <look>The key!</look>
+      <visible type="boolean">false</visible>
+    </object>
+    <object name="flaming mat">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <usedefaultprefix />
+      <attr name="feature_usegive" type="boolean">false</attr>
+      <look>Hurry!</look>
+      <selfuseon type="scriptdictionary">
+        <item key="fire pit">
+          msg ("You place the mat in the fire pit.  Eventually the coals light.  Congratulations!  You have successfuly created a fire!")
+          MakeObjectVisible (fire)
+          SwitchOn (fire)
+        </item>
+      </selfuseon>
+    </object>
+    <object name="jar with fish">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <look>Blub.</look>
+    </object>
+    <object name="cooked fish">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <look>How tasty!</look>
+      <attr name="feature_usegive" type="boolean">false</attr>
+      <selfuseon type="scriptdictionary">
+        <item key="plate"><![CDATA[
+          msg ("You place the fish on a plate.")
+          switch ( + 1) {
+            case (Lock1) {
+              if ( < 2) {
+                msg ("You hear a rumble.  Your stomach?")
+              }
+              else if ( = 2) {
+                MakeObjectVisible (wallpaper)
+                msg ("You hear another rumbling noise.  Wow you must be really hungry.<br/><br/>Just as you're about to eat, you notice the wallpaper on the East wall has turned concave.  Maybe you should go check it out...")
+              }
+            }
+          }
+        ]]></item>
+      </selfuseon>
+      <usestandardverblist type="boolean">false</usestandardverblist>
+    </object>
+    <object name="flaming nest">
+      <inherit name="editor_object" />
+      <look>Quick, it's burning up!</look>
+      <visible type="boolean">false</visible>
+      <attr name="feature_usegive" type="boolean">false</attr>
+      <take type="boolean">false</take>
+      <usestandardverblist type="boolean">false</usestandardverblist>
+    </object>
+    <object name="platform">
+      <inherit name="editor_object" />
+      <take type="boolean">false</take>
+      <feature_usegive />
+      <visible type="boolean">false</visible>
+      <usedefaultprefix />
+      <use type="boolean">false</use>
+      <look>What could this be used with?</look>
+      <useon type="scriptdictionary">
+        <item key="chopsticks">
+          msg ("Rubbing a chopstick by itself won't cause enough friction.  How can you combine the two?")
+        </item>
+      </useon>
+      <selfuseon type="scriptdictionary">
+        <item key="chopsticks">
+          msg ("Rubbing a chopstick by itself won't cause enough friction.  How can you combine the two?")
+        </item>
+      </selfuseon>
+      <usestandardverblist type="boolean">false</usestandardverblist>
+    </object>
+    <object name="bow drill">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <look>What could this be used with?</look>
+      <feature_usegive />
+      <take type="boolean">false</take>
+      <use type="boolean">false</use>
+      <useon type="scriptdictionary">
+        <item key="platform">
+          msg ("You press the bowdrill into the nest sitting on top of the board.  As you pull the bow drill back and forth, the nest starts to smoke.  Suddently, it catches fire.  Quick, before it burns up!")
+          create ("flaming nest")
+          MakeObjectVisible (flaming nest)
+          AddToInventory (flaming nest)
+          RemoveObject (bow drill)
+          RemoveObject (platform)
+        </item>
+        <item key="board">
+          msg ("Looks like you need something else.  What could easily catch on fire?")
+        </item>
+      </useon>
+      <selfuseon type="scriptdictionary">
+        <item key="platform">
+          msg ("You press the bowdrill into the nest sitting on top of the board.  As you pull the bow drill back and forth, the nest starts to smoke.  Suddently, it catches fire.  Quick, before it burns up!")
+          create ("flaming nest")
+          MakeObjectVisible (flaming nest)
+          AddToInventory (flaming nest)
+          RemoveObject (bow drill)
+          RemoveObject (platform)
+        </item>
+        <item key="board">
+          msg ("Looks like you need something else.  What could easily catch on fire?")
+        </item>
+      </selfuseon>
+      <usestandardverblist type="boolean">false</usestandardverblist>
+    </object>
+    <object name="Girl">
+      <inherit name="editor_object" />
+      <gender>female</gender>
+      <article>she</article>
+      <visible type="boolean">false</visible>
+      <look>Who is she?</look>
+      <object name="chisel">
+        <inherit name="editor_object" />
+        <look>A stone chisel.</look>
+        <visible type="boolean">false</visible>
+      </object>
+    </object>
+  </game>
+  <object name="Northwest Corner">
+    <inherit name="editor_room" />
+    <objectslistprefix>You can see </objectslistprefix>
+    <descprefix>You are in </descprefix>
+    <description>You see a desk as well as a stream that runs through the West side of the room.</description>
+    <beforeenter type="script">
+    </beforeenter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <exit alias="west" to="Northwest Corner">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="northwest" to="Northwest Corner">
+        <inherit name="northwestdirection" />
+      </exit>
+      <exit alias="north" to="Northwest Corner">
+        <inherit name="northdirection" />
+      </exit>
+    </object>
+    <exit alias="east" to="Northeast Corner">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="southeast" to="Southeast Corner">
+      <inherit name="southeastdirection" />
+    </exit>
+    <exit alias="south" to="Southwest Corner">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="brush">
+      <inherit name="editor_object" />
+      <look>A normal writing brush with a bamboo handle.</look>
+      <feature_usegive />
+      <take />
+      <givesingle type="script">
+        msg ("You give the brush to the girl.")
+      </givesingle>
+      <use type="script">
+        msg ("You give the brush to the girl.")
+      </use>
+    </object>
+    <object name="glass jar">
+      <inherit name="editor_object" />
+      <take />
+      <feature_usegive />
+      <selfuseon type="scriptdictionary">
+        <item key="fish">
+          msg ("You scoop up the fish with the glass jar.")
+          create ("jar with fish")
+          AddToInventory (jar with fish)
+          RemoveObject (glass jar)
+          RemoveObject (fish)
+          MakeObjectVisible (jar with fish)
+        </item>
+      </selfuseon>
+    </object>
+    <object name="Stream">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <alias>Stream</alias>
+      <feature_container />
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <look type="script">
+        msg ("A stream running along the West wall.  You see a a fish swimming in the water between the petals of a lotus flower.")
+        MakeObjectVisible (fish)
+        MakeObjectVisible (lotus flower)
+        MakeObjectVisible (water)
+      </look>
+      <object name="fish">
+        <inherit name="editor_object" />
+        <look>A nice looking fish.</look>
+        <feature_usegive />
+        <visible type="boolean">false</visible>
+        <useon type="scriptdictionary" />
+      </object>
+      <object name="lotus flower">
+        <inherit name="editor_object" />
+        <take />
+        <feature_usegive />
+        <look>It looks as if it is about to bloom.</look>
+        <visible type="boolean">false</visible>
+        <givesingle type="script">
+          msg ("You give the lotus flower to the girl.  In return she hands you her hair piece.  It is a chisel.")
+          RemoveObject (lotus flower)
+          AddToInventory (chisel)
+        </givesingle>
+      </object>
+      <object name="water">
+        <inherit name="editor_object" />
+        <feature_usegive />
+        <look>This water looks clean.</look>
+        <visible type="boolean">false</visible>
+        <useon type="scriptdictionary" />
+      </object>
+    </object>
+  </object>
+  <object name="Northeast Corner">
+    <inherit name="editor_room" />
+    <exit alias="west" to="Northwest Corner">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="south" to="Southeast Corner">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="southwest" to="Southwest Corner">
+      <inherit name="southwestdirection" />
+    </exit>
+    <object name="board">
+      <inherit name="editor_object" />
+      <look>A board with a circular indent in the middle of it.  Something small could fit here.</look>
+      <feature_usegive />
+      <take />
+      <visible type="boolean">false</visible>
+      <useon type="scriptdictionary">
+        <item key="nest">
+          msg ("You place the nest in the circular indent on the board and create a platform.")
+          create ("platform")
+          MakeObjectVisible (platform)
+          AddToInventory (platform)
+          RemoveObject (board)
+          RemoveObject (nest)
+        </item>
+      </useon>
+    </object>
+    <object name="cabinet">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <feature_container />
+      <autounlock type="boolean">false</autounlock>
+      <autoopen type="boolean">false</autoopen>
+      <nokeymessage>It is bound shut.</nokeymessage>
+      <unlockmessage>The cabinet doors are free.</unlockmessage>
+      <lockmessage>It is bound shut.</lockmessage>
+      <locked type="boolean">false</locked>
+      <close type="boolean">false</close>
+      <key type="object">twine</key>
+      <look type="script">
+        MakeObjectVisible (twine)
+        msg ("The cabinet is tied shut with a piece of twine.")
+      </look>
+      <onopen type="script">
+        msg ("You see an assortment of tea leaves on the cabinet shelves.")
+        MakeObjectVisible (tea leaves)
+      </onopen>
+      <object name="tea leaves">
+        <inherit name="editor_object" />
+        <look>Various types of tea leaves.</look>
+        <take />
+        <feature_usegive />
+        <visible type="boolean">false</visible>
+        <selfuseon type="scriptdictionary">
+          <item key="boiling kettle">
+            msg ("You add the tea leaves to the boiling kettle.")
+            create ("kettle with tea", "kettle with tea")
+            RemoveObject (tea leaves)
+          </item>
+        </selfuseon>
+      </object>
+    </object>
+    <object name="twine">
+      <inherit name="editor_object" />
+      <look>A lengthy piece of twine.</look>
+      <take type="boolean">false</take>
+      <feature_usegive />
+      <visible type="boolean">false</visible>
+      <usedefaultprefix />
+      <untie type="script">
+        msg ("You remove the twine from the cabinet doors and take it.  As you do so, the board holding the doors shut falls to the ground.")
+        AddToInventory (twine)
+        MakeObjectVisible (board)
+      </untie>
+      <cut type="script">
+        msg ("You remove the twine from the cabinet doors and take it.  As you do so, the board holding the doors shut falls to the ground.")
+        AddToInventory (twine)
+        MakeObjectVisible (board)
+      </cut>
+      <useon type="scriptdictionary" />
+      <selfuseon type="scriptdictionary" />
+    </object>
+  </object>
+  <object name="Southwest Corner">
+    <inherit name="editor_room" />
+    <exit alias="north" to="Northwest Corner">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="northeast" to="Northeast Corner">
+      <inherit name="northeastdirection" />
+    </exit>
+    <exit alias="east" to="Southeast Corner">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="fire pit">
+      <inherit name="editor_object" />
+      <drop type="boolean">false</drop>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist" />
+      <visible />
+      <feature_usegive />
+      <look type="script"><![CDATA[
+        msg ("The fire pit is full of coals.  You see a strange rock among the coals.  Is that a geode?<br/>If only we could start a fire...  ")
+        MakeObjectVisible (geode)
+      ]]></look>
+      <object name="fire">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <visible type="boolean">false</visible>
+        <feature_switchable />
+        <look><![CDATA[A beautiful roaring fire.  <br/>..."My baby!!"]]></look>
+        <feature_usegive />
+        <onswitchon type="script">
+          MakeObjectVisible (fire)
+        </onswitchon>
+        <useon type="scriptdictionary" />
+      </object>
+      <object name="boiling kettle">
+        <inherit name="editor_object" />
+        <look>Don't touch it!</look>
+        <visible type="boolean">false</visible>
+        <feature_usegive />
+        <useon type="scriptdictionary">
+          <item key="tongs">
+            msg ("Using the tongs, you transport the boiling kettle to the table.")
+            MakeObjectVisible (tea kettle)
+            RemoveObject (boiling kettle)
+          </item>
+        </useon>
+      </object>
+    </object>
+    <object name="geode">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <feature_usegive />
+      <feature_container />
+      <close type="boolean">false</close>
+      <autounlock type="boolean">false</autounlock>
+      <nokeymessage>You cannot open this.</nokeymessage>
+      <locked />
+      <unlockmessage>Using the hammer and chisel you break open the geode.  A note falls out.</unlockmessage>
+      <take />
+      <look>Hm... perhaps there is something inside...</look>
+      <visible type="boolean">false</visible>
+      <ontake type="script">
+        msg ("As you reach in the pit to take the geode, you feel a breeze from the vent above.")
+        MakeObjectVisible (vent)
+      </ontake>
+      <useon type="scriptdictionary">
+        <item key="hammer plus chisel">
+          HelperOpenObject (geode)
+          ChangePOV (note)
+        </item>
+      </useon>
+    </object>
+    <object name="hammer">
+      <inherit name="editor_object" />
+      <take />
+      <feature_usegive />
+      <look>A sturdy hammer.</look>
+      <use type="script">
+      </use>
+      <selfuseon type="scriptdictionary">
+        <item key="Closet">
+          msg ("You take out your hammer and hit the wall.  A hole appears.  You continue to knocking holes in the wall, revealing a closet.")
+          MakeExitVisible
+        </item>
+        <item key="chisel">
+          msg ("You combine the tools.")
+          RemoveObject (chisel)
+          ChangePOV (hammer plus chisel)
+        </item>
+      </selfuseon>
+      <useon type="scriptdictionary">
+        <item key="chisel">
+          msg ("You combine the tools.")
+          create ("hammer plus chisel")
+          MakeObjectVisible (hammer plus chisel)
+          AddToInventory (hammer)
+          RemoveObject (chisel)
+          RemoveObject (hammer)
+        </item>
+      </useon>
+    </object>
+    <object name="knife">
+      <inherit name="editor_object" />
+      <take />
+      <look>It looks fairly sharp.</look>
+      <feature_usegive />
+      <use type="script">
+        msg ("You try to hold the girl's arm steady as you make an incision in her arm with the knife. Her mouth opens, as if to scream, but no sound escapes from her lips. You try to tell her it will be okay, but at this point you are frenzied with the thought of escape. As she struggles, the knife cuts deeper, until it meets with something hard and metallic buried in her arm. You pry it out. It's the key!")
+        MakeObjectVisible (key)
+        AddToInventory (key)
+      </use>
+    </object>
+    <object name="pan">
+      <inherit name="editor_object" />
+      <look>For cooking.  You'd best leave this hear for now.</look>
+      <takemsg>Best leave this here for now.</takemsg>
+      <feature_usegive />
+      <attr name="feature_container" type="boolean">false</attr>
+      <use />
+      <useon type="scriptdictionary">
+        <item key="jar with fish">
+          msg ("You pour the fish out of the glass jar and into the pan.  Sizzle sizzle.")
+          create ("cooked fish")
+          AddToInventory (cooked fish)
+          RemoveObject (jar with fish)
+          AddToInventory (glass jar)
+        </item>
+      </useon>
+    </object>
+    <object name="tongs">
+      <inherit name="editor_object" />
+      <take />
+      <feature_usegive />
+      <look>A set of tongs.</look>
+      <selfuseon type="scriptdictionary">
+        <item key="boiling kettle">
+          msg ("You use the tongs to transport the boiling kettle from the fire pit to the table.")
+        </item>
+      </selfuseon>
+    </object>
+    <exit alias="up">
+      <inherit name="updirection" />
+      <visible type="boolean">false</visible>
+    </exit>
+    <object name="vent">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <visible type="boolean">false</visible>
+      <feature_container />
+      <close type="boolean">false</close>
+      <open type="boolean">false</open>
+      <isopen />
+      <look>It is not large enough to escape out of, but you do see a birds nest lodged in the opening.</look>
+      <object name="nest">
+        <inherit name="editor_object" />
+        <feature_usegive />
+        <take />
+        <look>A small nest made of dried grass and twigs.</look>
+      </object>
+    </object>
+  </object>
+  <object name="Southeast Corner">
+    <inherit name="editor_room" />
+    <exit alias="northwest" to="Northwest Corner">
+      <inherit name="northwestdirection" />
+    </exit>
+    <exit alias="north" to="Northeast Corner">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="west" to="Southwest Corner">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="east">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="chopsticks">
+      <inherit name="editor_object" />
+      <look>Standard chopsticks.</look>
+      <take />
+      <feature_usegive />
+      <visible />
+      <useon type="scriptdictionary">
+        <item key="twine">
+          msg ("You tie the twine and chopsticks together creating a bow drill.")
+          create ("bow drill")
+          MakeObjectVisible (bow drill)
+          AddToInventory (bow drill)
+          RemoveObject (chopsticks)
+          RemoveObject (twine)
+        </item>
+      </useon>
+      <selfuseon type="scriptdictionary">
+        <item key="twine">
+          msg ("You tie the twine and chopsticks together creating a bow drill.")
+          create ("bow drill")
+          MakeObjectVisible (bow drill)
+          AddToInventory (bow drill)
+          RemoveObject (chopsticks)
+          RemoveObject (twine)
+        </item>
+      </selfuseon>
+    </object>
+    <object name="cup">
+      <inherit name="editor_object" />
+      <look>Better leave these here.</look>
+      <scenery type="boolean">false</scenery>
+    </object>
+    <object name="kettle">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <look>A tea kettle.</look>
+      <take />
+      <feature_usegive />
+      <feature_container />
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <selfuseon type="scriptdictionary">
+        <item key="water">
+          msg ("You scoop water from the stream into the kettle.")
+          create ("kettle with water")
+          AddToInventory (kettle with water)
+          RemoveObject (kettle)
+          MakeObjectVisible (kettle with water)
+        </item>
+      </selfuseon>
+    </object>
+    <object name="plate">
+      <inherit name="editor_object" />
+      <look>Better leave these here.</look>
+      <scenery type="boolean">false</scenery>
+      <feature_usegive />
+      <useon type="scriptdictionary">
+        <item key="cooked fish">
+          msg ("What is that rumbling?  Just my stomach?")
+          SwitchOn
+          if (IsSwitchedOn()) {
+          }
+        </item>
+      </useon>
+    </object>
+    <object name="table">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <look>The table is set as if ready for a meal.</look>
+      <scenery type="boolean">false</scenery>
+      <visible />
+      <attr name="feature_switchable" type="boolean">false</attr>
+      <object name="tea kettle">
+        <inherit name="editor_object" />
+        <usedefaultprefix />
+        <feature_usegive />
+        <selfuseon type="scriptdictionary">
+          <item key="cup"><![CDATA[
+            msg ("You pour tea into one of the cups.")
+            switch ( + 1) {
+            }
+            if ( < 2) {
+              msg ("You hear a rumble.  Your stomach?")
+            }
+            else if ( = 2) {
+              msg ("You hear another rumbling noise.  Wow, you must be really hungry.<br/><br/>Just as you're about to eat, you notice the wallpaper on the East wall has turned concave.  Maybe you should go check it out...")
+              MakeObjectVisible (wallpaper)
+            }
+          ]]></item>
+        </selfuseon>
+      </object>
+    </object>
+    <object name="straw mat">
+      <inherit name="editor_object" />
+      <look>Straw mats outlined with wood.</look>
+      <take />
+      <feature_usegive />
+      <useon type="scriptdictionary">
+        <item key="flaming nest">
+          msg ("You combine the mat with the flaming nest.  It catches fire!  You now have a flaming mat.")
+          create ("flaming mat")
+          MakeObjectVisible (flaming nest)
+          AddToInventory (flaming mat)
+          RemoveObject (flaming nest)
+          RemoveObject (straw mat)
+        </item>
+      </useon>
+      <selfuseon type="scriptdictionary">
+        <item key="flaming nest">
+          msg ("You combine the mat with the flaming nest.  It catches fire!  You now have a flaming mat.")
+          create ("flaming mat")
+          AddToInventory (flaming mat)
+          RemoveObject (flaming nest)
+          RemoveObject (straw mat)
+        </item>
+      </selfuseon>
+    </object>
+    <object name="Closet">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <visible type="boolean">false</visible>
+      <feature_container />
+      <attr name="feature_switchable" type="boolean">false</attr>
+      <attr name="feature_usegive" type="boolean">false</attr>
+      <autounlock type="boolean">false</autounlock>
+      <autoopen />
+      <nokeymessage>You cannot access this.</nokeymessage>
+      <close type="boolean">false</close>
+      <onunlock type="script">
+        MakeObjectVisible (wardrobe)
+      </onunlock>
+      <onopen type="script">
+        MakeObjectVisible (wardrobe)
+        msg ("You reveal a closet with a wardrobe.")
+      </onopen>
+      <object name="large object">
+        <inherit name="editor_object" />
+        <look>What is this??</look>
+      </object>
+      <object name="silk kimono">
+        <inherit name="editor_object" />
+        <look>A beautiful silk kimono.</look>
+        <take />
+        <feature_usegive />
+        <givesingle type="script">
+        </givesingle>
+      </object>
+      <object name="wardrobe">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <feature_container />
+        <transparent />
+        <openmsg>You open the wardrobe and see a beautiful silk kimono hanging inside of it.</openmsg>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>Open</value>
+          <value>Close</value>
+        </displayverbs>
+        <look>It takes up the entire space of the closet.</look>
+      </object>
+    </object>
+    <object name="wallpaper">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+    </object>
+  </object>
+  <verb />
+  <verb>
+    <property>look</property>
+    <pattern>look</pattern>
+    <defaultexpression>"You can't look " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>combine</property>
+    <pattern>combine</pattern>
+    <defaultexpression>"You can't combine " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>put</property>
+    <pattern>put</pattern>
+    <defaultexpression>"You can't put " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

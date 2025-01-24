@@ -1,0 +1,56 @@
+<library>
+  <!-- Create an internal object. -->
+  <function name="Utils_CreateObject" parameters="baseName" type="object">
+    name = GetUniqueElementName(baseName)
+    create (name)
+    o = GetObject(name)
+    o.Utils_NeedsDestroy = true
+    o.visible = false
+    return (o)
+  </function>
+
+  <!-- Clone an object. The resulting object needs to be destroyed. -->
+  <function name="Utils_CloneObject" parameters="prototype" type="object">
+    o = Clone(prototype)
+    o.Utils_NeedsDestroy = true
+    if (HasScript(o, "create")) {
+      do (o, "create")
+    }
+    return (o)
+  </function>
+
+  <!-- Destroy an object that's in the global object namespace (like a cloned object). -->
+  <function name="Utils_DestroyObject" parameters="o">
+    if (GetBoolean(o, "Utils_NeedsDestroy")) {
+      if (HasScript(o, "destroy")) {
+        do (o, "destroy")
+      }
+      destroy (o.name)
+    }
+  </function>
+
+  <!-- Destroy the objects in a list. The list will be empty on return -->
+  <function name="Utils_DestroyObjectList" parameters="list">
+    <![CDATA[
+    while (ListCount(list) <> 0) {
+      o = ObjectListItem(list, 0)
+      list remove(list, o)
+      Utils_DestroyObject(o)
+    }
+    ]]>
+  </function>
+
+  <!-- Invoke a base method. The base type must have a prototype object named "type_prototype" -->
+  <function name="Utils_CallBaseMethod" parameters="o, type, method, params">
+    attribute = "callbase_" + type + "_" + method
+    if (not HasScript(o, attribute)) {
+      set (o, attribute, GetAttribute(GetObject(type + "_Prototype"), method))
+    }
+    if (params = null) {
+      do (o, attribute)
+    } else {
+      do (o, attribute, params)
+    }
+  </function>
+
+</library>

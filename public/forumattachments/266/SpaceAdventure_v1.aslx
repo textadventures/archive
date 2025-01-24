@@ -1,0 +1,82 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="SpaceAdventure_v1">
+    <gameid>eff40139-537e-4ffa-a420-92035f570f51</gameid>
+    <version>1.0</version>
+    <description type="string"></description>
+    <appendobjectdescription />
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+  </object>
+  <object name="Shuttle">
+    <inherit name="editor_room" />
+    <object name="Shuttle Cockpit">
+      <inherit name="editor_room" />
+    </object>
+    <object name="Shuttle Cabin">
+      <inherit name="editor_room" />
+      <object name="Seat 1">
+        <inherit name="editor_object" />
+        <inherit name="Seat" />
+        <alias>Your seat</alias>
+        <drop type="boolean">false</drop>
+        <displayverbs>Look at; sit on</displayverbs>
+        <sit>You sit down on your chair.</sit>
+        <Occupied type="boolean">false</Occupied>
+        <alt>chair</alt>
+        <description>Black chair </description>
+        <look type="script">
+          if (GetBoolean(Seat 1, "Occupied")) {
+            msg ("You are sitting in your chair")
+          }
+          else {
+          }
+          msg ("You chair is empty")
+        </look>
+        <use type="script">
+          MoveObject (player, Seat 1)
+          SetObjectFlagOn (Seat 1, "SeatOccupied")
+        </use>
+      </object>
+      <object name="Seat 2">
+        <inherit name="editor_object" />
+        <inherit name="Seat" />
+        <inroomdescription>Another seating space.</inroomdescription>
+        <sit>You sit down onto the seat.</sit>
+        <displayverbs>Look at; sit on</displayverbs>
+        <getup>You get up onto your feet.</getup>
+        <look type="script">
+          if (not GetBoolean(Seat 2, "s2occupied")) {
+            msg ("You are sitting in the seat.")
+          }
+          else {
+            msg ("You are no longer sitting down")
+          }
+        </look>
+        <use type="script">
+          if (GetBoolean(Seat 2, "s2occupied")) {
+            msg ("Sorry you cannot sit there.")
+          }
+          else {
+            MoveObject (player, Seat 2)
+            SetObjectFlagOn (Seat 2, "s2occupied")
+            msg ("You sit down onto the seat.")
+          }
+        </use>
+      </object>
+      <object name="player">
+        <inherit name="defaultplayer" />
+      </object>
+    </object>
+  </object>
+  <verb>
+    <property>getup</property>
+    <pattern>get up</pattern>
+    <defaultexpression>"You can't get up " + object.article + "."</defaultexpression>
+  </verb>
+  <type name="isWeapon" />
+  <type name="Seat" />
+</asl>

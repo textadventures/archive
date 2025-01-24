@@ -1,0 +1,109 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Text test">
+    <gameid>399d190a-468a-4666-99e3-82eaa5d6d324</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <autodescription type="boolean">false</autodescription>
+    <showdescriptiononenter />
+    <echohyperlinks type="boolean">false</echohyperlinks>
+    <echocommand type="boolean">false</echocommand>
+    <enablehyperlinks />
+    <underlinehyperlinks type="boolean">false</underlinehyperlinks>
+    <showpanes type="boolean">false</showpanes>
+    <showcommandbar type="boolean">false</showcommandbar>
+    <defaultlinkforeground>Black</defaultlinkforeground>
+    <autodisplayverbs type="boolean">false</autodisplayverbs>
+  </game>
+  <object name="Chapter One">
+    <inherit name="editor_room" />
+    <alias>island</alias>
+    <look>Dawn on the island.  Here is a {object:box} and a {object:key}.</look>
+    <description>A {object:box} and a {object:key1} is here.</description>
+    <object name="box">
+      <inherit name="editor_object" />
+      <inherit name="container_lockable" />
+      <inherit name="container_closed" />
+      <close type="boolean">false</close>
+      <nokeymessage>You do not have the key.  This is the message that displays that.</nokeymessage>
+      <lockmessage type="string"></lockmessage>
+      <unlockmessage type="string"></unlockmessage>
+      <openmsg>The box is now open and you can get stuff.</openmsg>
+      <hidechildren type="boolean">false</hidechildren>
+      <canlockopen type="boolean">false</canlockopen>
+      <isopen type="boolean">false</isopen>
+      <listchildren type="boolean">false</listchildren>
+      <listchildrenprefix>how bout this?</listchildrenprefix>
+      <changeddisplayverbs type="stringlist" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <key type="object">key1</key>
+      <look type="script">
+        if (not box.isopen) {
+          msg ("The box is closed and locked.")
+        }
+        else {
+          msg ("The box is now open and you can get stuff.")
+        }
+      </look>
+      <lock type="script">
+        if (this.locked) {
+          msg (DynamicTemplate("AlreadyLocked", this))
+        }
+        else if (this.isopen and not this.canlockopen) {
+          msg (DynamicTemplate("CannotLockOpen", this))
+        }
+        else {
+          if (ListContains(ScopeInventory(), this.key)) {
+            msg (this.lockmessage)
+            this.locked = true
+          }
+          else {
+            msg (this.nokeymessage)
+          }
+        }
+      </lock>
+      <unlock type="script">
+        if (not this.locked) {
+          msg (DynamicTemplate("AlreadyUnlocked", this))
+        }
+        else {
+          if (ListContains(ScopeInventory(), this.key)) {
+            msg (this.unlockmessage)
+            this.locked = false
+            if (this.autoopen and not this.isopen) {
+              TryOpenClose (true, this)
+            }
+          }
+          else {
+            msg (this.nokeymessage)
+          }
+        }
+      </unlock>
+      <onunlock type="script">
+      </onunlock>
+      <onopen type="script">
+      </onopen>
+      <useon type="scriptdictionary" />
+    </object>
+    <object name="key1">
+      <inherit name="editor_object" />
+      <alias>key</alias>
+      <take />
+      <takemsg>You got the dang key.</takemsg>
+      <inventoryverbs type="stringlist" />
+      <ontake type="script">
+      </ontake>
+      <use type="script">
+      </use>
+      <changedtype type="script">
+      </changedtype>
+    </object>
+    <object name="player">
+      <inherit name="editor_object" />
+    </object>
+  </object>
+</asl>

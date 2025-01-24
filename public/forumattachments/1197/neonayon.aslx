@@ -1,0 +1,87 @@
+<asl version="550">
+  <include ref="English.aslx"/>
+  <include ref="Core.aslx"/>
+  <game name="Testing Game Stuff">
+    <gameid>b073bbfb-0e99-45d3-9786-bb395a6bc6b0</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+  </object>
+  <object name="global_data_object">
+    <inherit name="editor_object" />
+	<neko_scriptdictionary_attribute type="scriptdictionary">
+	  <item key="1">
+	    if (HasString(player,"tail_type_string_attribute") and not player.tail_type_string_attribute = "cat") {
+		  old_tail_type_variable = player.tail_type_string_attribute
+		  player.tail_type_string_attribute = "cat"
+		  msg ("Your " + old_tail_type_variable + " tail has changed into a cat tail.")
+		} else if (HasString(player,"tail_type_string_attribute") and player.tail_type_string_attribute = "cat") {
+		  msg ("You already have a cat tail.")
+		} else {
+		  set (player,"tail_type_string_attribute","cat")
+		  msg ("You grow a cat tail.")
+		}
+	  </item>
+	  <item key="2">
+	    if (HasString(player,"skin_type_string_attribute") and not player.skin_type_string_attribute = "fur") {
+		  old_skin_type_variable = player.skin_type_string_attribute
+		  player.skin_type_string_attribute = "fur"
+		  msg ("Your " + old_skin_type_variable + " has changed into fur.")
+		} else if (HasString(player,"skin_type_string_attribute") and player.skin_type_string_attribute = "fur") {
+		  msg ("You already have fur.")
+		} else {
+		  set (player,"skin_type_string_attribute","fur")
+		  msg ("You now have fur.")
+		}
+	  </item>
+	</neko_scriptdictionary_attribute>
+	<human_scriptdictionary_attribute type="scriptdictionary">
+	  <item key="1">
+	    if (HasString(player,"tail_type_string_attribute")) {
+		  player.tail_type_string_attribute = null
+		  msg ("You no longer have a tail.")
+		} else {
+		  msg ("You already don't have a tail.")
+		}
+	  </item>
+	  <item key="2">
+	    if (HasString(player,"skin_type_string_attribute") and not player.skin_type_string_attribute = "skin") {
+		  old_skin_type_variable = player.skin_type_string_attribute
+		  player.skin_type_string_attribute = "skin"
+		  msg ("Your " + old_skin_type_variable + " has changed into skin.")
+		} else if (HasString(player,"skin_type_string_attribute") and player.skin_type_string_attribute = "skin") {
+		  msg ("You already have skin.")
+		} else {
+		  set (player,"skin_type_string_attribute","skin")
+		  msg ("You now have skin.")
+		}
+	  </item>
+	</human_scriptdictionary_attribute>
+  </object>
+  <object name="neko_potion_object">
+    <inherit name="editor_object" />
+	<alias>neko potion</alias>
+	<parent type="object">room</parent>
+	<attr name="consume" type="script">
+	  invoke (ScriptDictionaryItem(global_data_object.neko_scriptdictionary_attribute,ToString(GetRandomInt(1,DictionaryCount(global_data_object.neko_scriptdictionary_attribute)))))
+	</attr>
+  </object>
+  <object name="human_potion_object">
+    <inherit name="editor_object" />
+	<alias>human potion</alias>
+	<parent type="object">room</parent>
+	<attr name="consume" type="script">
+	  invoke (ScriptDictionaryItem(global_data_object.human_scriptdictionary_attribute,ToString(GetRandomInt(1,DictionaryCount(global_data_object.human_scriptdictionary_attribute)))))
+	</attr>
+  </object>
+  <verb>
+    <property>consume</property>
+	<pattern>consume</pattern>
+  </verb>
+</asl>

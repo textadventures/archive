@@ -1,0 +1,241 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Space Taxi">
+    <gameid>76d8a8b7-35ab-42f8-ac94-6f3430bab3d3</gameid>
+    <version>1.0</version>
+    <statusattributes type="stringdictionary" />
+    <Location type="string"></Location>
+    <compassdirections type="stringlist">
+      <value>northwest</value>
+      <value>north</value>
+      <value>northeast</value>
+      <value>west</value>
+      <value>east</value>
+      <value>southwest</value>
+      <value>south</value>
+      <value>southeast</value>
+      <value>up</value>
+      <value>down</value>
+      <value>in</value>
+      <value>out</value>
+    </compassdirections>
+    <Speed type="string"></Speed>
+  </game>
+  <object name="Mare Imbrium Taxi Port">
+    <inherit name="editor_room" />
+    <description>This is the Mare Imbrium taxi port.</description>
+    <RoomSubDescription>at the Mare Imbrium Taxi Port</RoomSubDescription>
+    <descprefix>You are at</descprefix>
+    <alias>Mare Imbrium Taxi Port</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <NextRoom type="object">Straight tunnel1</NextRoom>
+    <object name="Taxi">
+      <look>Your taxi is a standard issue vehicle that you have made considerable personal modifications to. It stands at the ready.</look>
+      <speed type="int">0</speed>
+      <description type="script">
+        msg ("You're in your humble taxi. You are currently "  +Taxi.parent.RoomSubDescription + ". ")
+      </description>
+      <enter type="script">
+        request (SetCompassDirections, "northwest;north;northeast;west;east;southwest;south;southeast;forward;reverse;in;out")
+        SetTaxiStatus
+      </enter>
+      <onexit type="script">
+        request (SetCompassDirections, "northwest;north;northeast;west;east;southwest;south;southeast;up;down;in;out")
+        SetTaxiStatus
+      </onexit>
+      <exit name="TaxiExit" alias="out" to="Mare Imbrium Taxi Port">
+        <inherit name="outdirection" />
+        <lockmessage>You can't open the door while you're in motion.</lockmessage>
+      </exit>
+      <exit name="forward" alias="forward" />
+      <exit name="reverse" alias="reverse" />
+    </object>
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+    <exit name="TaxiEntrance" alias="in" to="Taxi">
+      <inherit name="indirection" />
+    </exit>
+  </object>
+  <object name="Moonbase Alpha">
+    <inherit name="editor_room" />
+    <alias>Moonbase Alpha</alias>
+    <RoomSubDescription>at Moonbase Alpha</RoomSubDescription>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <NextRoom type="object">Curving tunnel1</NextRoom>
+  </object>
+  <command name="GoForward">
+    <pattern>forward</pattern>
+    <script>
+      switch (Taxi.speed) {
+        case (0) {
+          LockExit (TaxiExit)
+          Taxi.speed = 1
+          EnableTimer (TaxiMoveTimer)
+          SetTimerInterval (TaxiMoveTimer, 4)
+          SetTaxiStatus
+          msg ("The taxi starts slowly moving forward.")
+        }
+        case (1) {
+          Taxi.speed = 2
+          SetTimerInterval (TaxiMoveTimer, 2)
+          SetTaxiStatus
+          msg ("The taxi is now moving forward at a normal pace.")
+        }
+        case (2) {
+          msg ("This old bucket of a taxi can't go any faster.")
+        }
+        case (-2) {
+          Taxi.speed = -1
+          SetTimerInterval (TaxiMoveTimer, 4)
+          SetTaxiStatus
+          msg ("The taxi slows down.")
+        }
+        case (-1) {
+          Stop
+        }
+      }
+    </script>
+  </command>
+  <command name="GoReverse">
+    <pattern>reverse</pattern>
+    <script>
+      switch (Taxi.speed) {
+        case (0) {
+          LockExit (TaxiExit)
+          Taxi.speed = -1
+          EnableTimer (TaxiMoveTimer)
+          SetTimerInterval (TaxiMoveTimer, 4)
+          SetTaxiStatus
+          msg ("The taxi starts slowly moving backward.")
+        }
+        case (1) {
+          Stop
+        }
+        case (2) {
+          Taxi.speed = 1
+          SetTimerInterval (TaxiMoveTimer, 4)
+          SetTaxiStatus
+          msg ("The taxi slows down.")
+        }
+        case (-2) {
+          msg ("This old bucket of a taxi can't go any faster.")
+        }
+        case (-1) {
+          Taxi.speed = -2
+          SetTimerInterval (TaxiMoveTimer, 2)
+          SetTaxiStatus
+          msg ("The taxi is now moving backward at a normal pace.")
+        }
+      }
+    </script>
+  </command>
+  <object name="Straight tunnel1">
+    <inherit name="editor_room" />
+    <description>This is a straight portion of tunnel.</description>
+    <alias>Straight tunnel</alias>
+    <RoomSubDescription>in a section of straight tunnel</RoomSubDescription>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <NextRoom type="object">Straight tunnel2</NextRoom>
+  </object>
+  <object name="Straight tunnel2">
+    <inherit name="editor_room" />
+    <alias>Straight tunnel</alias>
+    <description>This is a straight portion of tunnel.</description>
+    <RoomSubDescription>in a section of straight tunnel</RoomSubDescription>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <NextRoom type="object">Moonbase Alpha</NextRoom>
+  </object>
+  <object name="Curving tunnel1">
+    <inherit name="editor_room" />
+    <description>This is a curving portion of tunnel.</description>
+    <alias>Curving tunnel</alias>
+    <RoomSubDescription>in a section of curving straight tunnel</RoomSubDescription>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <NextRoom type="object">Curving tunnel2</NextRoom>
+  </object>
+  <object name="Curving tunnel2">
+    <inherit name="editor_room" />
+    <alias>Curving tunnel</alias>
+    <description>This is a curving portion of tunnel.</description>
+    <RoomSubDescription>in a section of curving straight tunnel</RoomSubDescription>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <NextRoom type="object">Mare Imbrium Taxi Port</NextRoom>
+  </object>
+  <command name="DoStop">
+    <pattern>stop</pattern>
+    <script>
+      if (player.parent = Taxi) {
+        if (Taxi.speed = 0) {
+          msg ("The taxi is not in motion.")
+        }
+        else {
+          Stop
+        }
+      }
+      else {
+        msg ("Stop what?")
+      }
+    </script>
+  </command>
+  <function name="SetTaxiExits">
+    MoveObject (TaxiEntrance, Taxi.parent)
+    TaxiExit.to = Taxi.parent
+  </function>
+  <function name="SetTaxiStatus">
+    if (DictionaryContains(game.statusattributes, "Location")) {
+      dictionary remove (game.statusattributes, "Location")
+      dictionary remove (game.statusattributes, "Speed")
+    }
+    if (player.parent = Taxi) {
+      dictionary add (game.statusattributes, "Location", "")
+      game.Location = Taxi.parent.alias
+      dictionary add (game.statusattributes, "Speed", "")
+      switch (Taxi.speed) {
+        case (0) {
+          game.Speed = "Stopped"
+        }
+        case (1) {
+          game.Speed = "Forward slow"
+        }
+        case (2) {
+          game.Speed = "Forward normal"
+        }
+        case (-1) {
+          game.Speed = "Backward slow"
+        }
+        case (-2) {
+          game.Speed = "Reverse normal"
+        }
+      }
+    }
+  </function>
+  <function name="Drive">
+    if (player.parent = Taxi) {
+      MoveObject (Taxi, Taxi.parent.NextRoom)
+      SetTaxiExits
+      SetTaxiStatus
+      ShowRoomDescription
+    }
+    else {
+      msg ("You need to be in your taxi to drive.")
+    }
+  </function>
+  <function name="Stop"><![CDATA[
+    if (Taxi.speed <> 0) {
+      DisableTimer (TaxiMoveTimer)
+      Taxi.speed = 0
+      UnlockExit (TaxiExit)
+      SetTaxiStatus
+      msg ("The taxi stops.")
+    }
+  ]]></function>
+  <timer name="TaxiMoveTimer">
+    <interval>3</interval>
+    <script>
+      Drive
+    </script>
+  </timer>
+</asl>

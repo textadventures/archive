@@ -1,0 +1,239 @@
+<!--
+Turn a Quest text adventure into a "Choose Your Own Adventure" game!
+
+Yes, okay, you can already do a game book; this offers a alternative, that will display differently.
+
+Step 1. Go into the code, and add these two lines after line four: 
+
+  <template name="title">The Party</template>
+  <include ref="CyoaLib.aslx" />
+
+The top of the code will now look like this
+(there will be another line right at the top, but as that is an XML comment,
+it cannot appear inside an XML comment like this):
+
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <template name="title">The CYOA Game</template>
+  <include ref="CyoaLib.aslx" />
+
+
+Step 2.
+
+
+--> 
+
+
+<library>
+  <type name="page">
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>[title]</alias>
+    <description type="script"><![CDATA[
+      if (GetBoolean (game, "clearscreen")) {
+        ClearScreen
+      }
+      else {
+        HideSection
+      }
+      if (HasScript (this, "desc")) {
+        do (this, "desc")
+      }
+      else if (HasString (this, "desc")) {
+        sl = Split (this.desc, "<br>")
+        foreach (s, sl) {
+          if (LengthOf (s) > 1) msg (BasePrint (s))
+        }
+      }
+      if (HasScript (this, "pagescript")) {
+        do (this, "pagescript")
+      }
+      if (DoesInherit (this, "finalpage")) {
+        finish
+      }
+      StartSection
+      sl = NewStringList ()
+      foreach (obj, ScopeExitsForRoom (this)) {
+        list add (sl, "{exit:" + obj.name + "}")
+      }
+      s = Join (sl, "<br/>")
+      msg (s)
+      EndSection
+    ]]></description>
+  </type>
+
+  <type name="finalpage">
+    <inherit name="page" />
+    <alias>[title] (Completed)</alias>
+  </type>
+
+  <type name="chapter">
+  </type>
+  
+  
+  <function name="HideExits">
+    foreach (ex, ScopeExits ()) {
+      ex.visible = false
+    }
+  </function>
+
+
+  <function name="FlagOn" parameters="att">
+    set (player, att, true)
+  </function>
+
+  <function name="FlagOff" parameters="att">
+    set (player, att, false)
+  </function>
+
+  <function name="FlagCheck" parameters="att" type="boolean">
+    return (GetBoolean (player, att))
+  </function>
+  
+
+  <function name="StringSet" parameters="att, s">
+    set (player, att, s)
+  </function>
+
+  <function name="StringGet" parameters="att" type="string">
+    if (HasString (player, att)) {
+      return (GetString (player, att))
+    }
+    else {
+      return ("")
+    }
+  </function>
+
+  <function name="StringAdd" parameters="att, s">
+    if (HasString (player, att)) {
+      set (player, att, GetString (player, att) + s)
+    }
+    else {
+      set (player, att, Trim (s))
+    }
+  </function>
+
+  <function name="StringCheck" parameters="att, s" type="boolean">
+    if (HasString (player, att)) {
+      return (GetString (player, att) = s)
+    }
+    else {
+      return (false)
+    }
+  </function>
+
+
+  <function name="IntSet" parameters="att, s">
+    set (player, att, s)
+  </function>
+
+  <function name="IntGet" parameters="att" type="int">
+    if (HasInt (player, att)) {
+      return (GetInt (player, att))
+    }
+    else {
+      return (0)
+    }
+  </function>
+
+  <function name="IntInc" parameters="att">
+    if (HasInt (player, att)) {
+      set (player, att, GetInt (player, att) + 1)
+    }
+    else {
+      set (player, att, 1)
+    }
+  </function>
+
+  <function name="IntAdd" parameters="att, n">
+    if (HasInt (player, att)) {
+      set (player, att, GetInt (player, att) + n)
+    }
+    else {
+      set (player, att, n)
+    }
+  </function>
+
+  <function name="IntCheck" parameters="att, n" type="boolean">
+    if (HasInt (player, att)) {
+      return (GetInt (player, att) = n)
+    }
+    else {
+      return (n = 0)
+    }
+  </function>
+
+
+  
+  <function name="BasePrint" parameters="s" type="string"><![CDATA[
+    mylist = Split (s, "{")
+    output = StringListItem (mylist, 0)
+    list remove (mylist, output)
+    foreach (s1, mylist) {
+      list1 = Split (s1, "}")
+      if (not ListCount (list1) = 2) {
+        error ("Unable to parse: " + s)
+      }
+      att = StringListItem (list1, 0)
+      output = output + StringGet (att) + StringListItem (list1, 1)
+    }
+    return (output)
+  ]]></function>
+
+  
+  
+  <function name="StartSection">
+    game.currentcyoasection = StartNewOutputSection()
+  </function>
+  
+  <function name="EndSection">
+    EndOutputSection (game.currentcyoasection)
+  </function>
+  
+  <function name="HideSection">
+    if (not game.currentcyoasection = "") {
+      HideOutputSection (game.currentcyoasection)
+      game.currentcyoasection = ""
+    }
+  </function>
+  
+  
+  <tab>
+    <parent>_ObjectEditor</parent>
+    <caption>Page</caption>
+    <mustnotinherit>editor_object</mustnotinherit>
+    
+    <control>
+      <controltype>title</controltype>
+      <caption>Page</caption>
+    </control>
+    
+    <control>
+      <controltype>dropdowntypes</controltype>
+      <caption>Page?</caption>
+      <types>*=No; page=Page; finalpage=Final; chapter=Chapter</types>
+      <width>50</width>
+    </control>
+    
+    <control>
+      <mustinherit>page</mustinherit>
+      <controltype>multi</controltype>
+      <attribute>desc</attribute>
+      <caption>Text</caption>
+      <types>
+         null=No description; string=Text; script=Run script
+       </types>
+       <editors>
+        string=richtext
+      </editors>
+      <expand/>
+    </control>
+    
+    <control>
+      <mustinherit>page</mustinherit>
+      <controltype>script</controltype>
+      <attribute>pagescript</attribute>
+      <caption>Script to run</caption>
+    </control>
+  </tab>
+</library>

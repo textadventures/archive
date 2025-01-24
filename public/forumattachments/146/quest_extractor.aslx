@@ -1,0 +1,261 @@
+#  QUEST ANALYSER
+#
+# To use, you will have to change the file name at the top of the file to your own file, and you will need a Ruby interpretor installed. You can then run from the command line.
+#
+#Try to evaluate each expression for a msg command (also print), printing out an exception if that fails.
+#If you have expressions using variables this may cause an exception, but it will happily accept:
+# object.<something>    (this will appear in the text as OBJECT[<something>]
+# player.<something>    (this will appear in the text as PLAYER[<something>]
+# player.parent.<something>, player.parent.parent.<something>   (as before)
+# str                   (this will appear in the text as STR)
+#
+#Tell you how many you have of each object type (editor_room, male, etc.)
+#List all rooms without descriptions and items without look
+#List all objects without aliases
+#List all objects thgat are not scenery
+
+# Rename this to point at your own file.
+# This may work best if you put in the full path
+# Note you should either use forward slashes or double back slashes
+# eg "c:/users/pixie/quest games/The Myothian Falcon/The Myothian Falcon.aslx"
+# eg "c:\\users\\pixie\\quest games\\The Myothian Falcon\\The Myothian Falcon.aslx"
+mainfile = "C:/Users/Andy/Documents/Quest Games/The Myothian Falcon/The Myothian Falcon.aslx"
+libfile = "C:/Users/Andy/Documents/Quest Games/The Myothian Falcon/MFFunction_Lib.aslx"
+
+
+
+require "rexml/document"
+include REXML
+
+
+
+@@stats = {}
+@@missing_alias = []
+@@missing_look = []
+@@text = ''
+@@items = []
+@@ask = []
+@@tell = []
+@@funcs = 0
+@@comms = 0
+
+
+class Faker
+  def initialize s
+    @name = s
+  end
+
+  def parent
+    self
+  end
+
+  def method_missing(method_sym, *arguments, &block)
+    "#{@name}[#{method_sym.to_s}]"
+  end
+
+  def to_s
+    @name
+  end
+end
+
+
+
+def search doc, path
+  doc.elements.each(path) do |e|
+    process e
+  end
+end
+
+def process element
+  name = element.attributes["name"]
+  puts "Processing #{name}"
+
+  # What type is this?
+  types = []
+  XPath.each(element, "inherit") do |block|
+    type = block.attributes["name"]
+    if (@@stats[type])
+      @@stats[type] += 1
+    else
+      @@stats[type] = 1
+    end
+    types << type
+  end
+
+  # Does it have an alias?
+  q_alias = XPath.match(element, "alias")
+  @@missing_alias << name unless q_alias && ((q_alias.to_s =~ /alias/) || (name =~ /_region/))
+
+  # If a room, does it have a description?
+  if types.include? "editor_room"
+    look = XPath.match(element, "description")
+    @@missing_look << name unless look && ((look.to_s =~ /description/) || (name =~ /_region/))
+  end
+
+  # If an item, does it have a look?
+  if types.include? "editor_object"
+    look = XPath.match(element, "look")
+    @@missing_look << name unless look && ((look.to_s =~ /look/) || (name =~ /_region/))
+    @@items << name unless element.elements["scenery"] || types.include?("male") || types.include?("female")
+  end
+
+  # Ask and tell topics
+  XPath.match(element, "ask/item").each do |child|
+    child.attributes["key"].split(' ').each { |s| @@ask << s  unless @@ask.include? s }
+  end
+  XPath.match(element, "tell/item").each do |child|
+    child.attributes["key"].split(' ').each { |s| @@tell << s  unless @@tell.include? s }
+  end
+
+  XPath.match(element, "command/script").each do |child|
+    extract(child.text)
+  end
+
+  # Collect text
+  element.each_element_with_text do |child|
+    next if child.name == 'inventoryverbs'
+    next if child.name == 'displayverbs'
+    next if child.name == 'usedefaultprefix'
+    if (child.attributes["type"] == 'script')
+      extract(child.text)
+    else
+      @@text += "\n#{child.text.strip}" if child.text && child.text.strip.length > 5
+    end
+  end
+end
+
+def com_search doc, root
+  doc.elements.each("#{root}/command") do |e|
+    com_process e
+  end
+end
+
+def com_process element
+  name = element.attributes["name"]
+  puts "Processing #{name}"
+  XPath.match(element, "script").each do |child|
+    extract(child.text)
+  end
+  @@comms += 1
+end
+
+def func_search doc, root
+  doc.elements.each("#{root}/function") do |e|
+    func_process e
+  end
+end
+
+def func_process element
+  name = element.attributes["name"]
+  puts "Processing #{name}"
+  extract(element.text)
+  @@funcs += 1
+end
+
+def LCase s; s; end
+def FindName o; o.to_s; end
+def indent; ''; end
+
+
+def extract s
+  s.each_line("\n") do |s1|
+    s1.strip!
+    next unless (s1 =~ /print/) || (s1 =~ /msg/)
+    s2 = preprocess(s1.split(' ', 2)[1])
+    return unless s2
+
+    str = "STRING"
+    lookdesc = "LOOKDESC"
+    entry = "ENTRY"
+    no = "NO"
+    player = Faker.new 'PLAYER'
+    exit = Faker.new 'EXIT'
+    char = Faker.new 'CHAR'
+    object = Faker.new 'OBJECT'
+    object2 = Faker.new 'OBJECT2'
+    object1 = Faker.new 'OBJECT1'
+
+    begin
+      text = eval(s2).strip
+      if text != 'false'
+        @@text += "\n#{text}"
+      else
+        puts "eval returned FALSE for: #{s2}"
+      end
+    rescue Exception => ex
+      puts "eval failed for: #{s2}"
+      puts "ex=#{ex}"
+    end
+  end
+end
+
+OBJECT_ALIAS = 'OBJECT_ALIAS'
+GENDER_ALIAS = 'OBJECT_GENDER'
+ARTICLE_ALIAS = 'OBJECT_ARTICLE'
+STR = 'STR'
+
+def obj s
+  "OBJECT[#{s}]"
+end
+
+def preprocess s
+  unless s
+    puts("-Empty string found in script")
+    return nil
+  end
+  #s.gsub!(/object\.(\w+)/, "obj(\"\\1\")")
+  s.gsub! " + str + ", " + STR + "
+  s.gsub! "(str + ", "(STR + "
+  s.gsub! "+ str)", "+ STR)"
+  s
+end
+
+
+
+def run_file filename, root
+  file = File.new filename
+  doc = REXML::Document.new file
+  search doc, "#{root}/object"
+  search doc, "#{root}/object/object"
+  search doc, "#{root}/object/object/object"
+  search doc, "#{root}/object/object/object/object"
+  com_search doc, root
+  func_search doc, root
+end
+
+
+
+run_file mainfile, "asl"
+run_file libfile, "library" if libfile
+
+
+
+  #print "#{eps.methods.sort.join(', ')}\n"
+  #XPath.each(eps, "i5:blocks/i5:block") do |block|
+  #puts "  #{XPath.match(block, "i5:id")}"
+  #end
+
+File.open("text.txt", "w") { |f| f << @@text }
+puts "\n\n== Text written to file =="
+
+puts "\n\n== Statistics =="
+@@stats.each_pair { |k, v| puts "#{k} - #{v}" }
+puts "commands - #{@@comms}"
+puts "functions - #{@@funcs}"
+
+puts "\n\n== Objects without aliases =="
+puts @@missing_alias.join "\n"
+
+puts "\n\n== Objects without descriptions =="
+puts @@missing_look.join "\n"
+
+puts "\n\n== Items that are not scenery =="
+puts @@items.join "\n"
+
+puts "\n\n== Ask topic =="
+puts @@ask.sort.join "\n"
+
+puts "\n\n== Tell topic =="
+puts @@tell.sort.join "\n"
+
+puts "\n\n== All Done =="

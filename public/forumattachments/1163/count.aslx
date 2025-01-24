@@ -1,0 +1,136 @@
+<!--Saved by Quest 5.6.5510.29036-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="count">
+    <gameid>2e12d5bd-b5e8-4bd4-bbcc-b184f570b340</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+    <start type="script">
+      OutputText ("String", 7)
+    </start>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <description>A big room. An elephant stands in the middle, but please do not mention that.</description>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="bench">
+      <inherit name="editor_object" />
+      <sit type="script">
+        Sit (this)
+      </sit>
+    </object>
+    <exit alias="south" to="room2">
+      <inherit name="southdirection" />
+    </exit>
+    <command name="sit_room1">
+      <pattern>sit</pattern>
+      <script>
+        Sit (bench)
+      </script>
+    </command>
+  </object>
+  <object name="room2">
+    <inherit name="editor_room" />
+    <description>A small room, with a tiny mouse in the corner.</description>
+    <object name="chair">
+      <inherit name="editor_object" />
+      <sit type="script">
+        Sit (this)
+      </sit>
+    </object>
+    <exit alias="north" to="room">
+      <inherit name="northdirection" />
+    </exit>
+    <command name="sit_room2">
+      <pattern>sit</pattern>
+      <script>
+        Sit (chair)
+      </script>
+    </command>
+  </object>
+  <function name="ShowRoomDescription"><![CDATA[
+    isDark = CheckDarkness()
+    if (isDark) {
+      descriptionfield = "darkroomdescription"
+    }
+    else {
+      descriptionfield = "description"
+    }
+    if (game.autodescription) {
+      desc = ""
+      for (i, 1, 4) {
+        if (i = game.autodescription_youarein) {
+          if (game.autodescription_youarein_useprefix) {
+            youarein = game.pov.parent.descprefix
+            desc = AddDescriptionLine (desc, youarein + " " + GetDisplayName(game.pov.parent) + ".")
+          }
+          else {
+            desc = AddDescriptionLine (desc, "<b>" + CapFirst(GetDisplayName(game.pov.parent)) + "</b>")
+          }
+          if (game.autodescription_youarein_newline) {
+            msg (desc)
+            desc = ""
+          }
+        }
+        if (i = game.autodescription_youcansee) {
+          objects = FormatObjectList(game.pov.parent.objectslistprefix, GetNonTransparentParent(game.pov.parent), Template("And"), ".")
+          desc = AddDescriptionLine(desc, objects)
+          if (game.autodescription_youcansee_newline) {
+            msg (desc)
+            desc = ""
+          }
+        }
+        if (i = game.autodescription_youcango) {
+          exits = FormatExitList(game.pov.parent.exitslistprefix, GetExitsList(), Template("Or"), ".")
+          desc = AddDescriptionLine(desc, exits)
+          if (game.autodescription_youcango_newline) {
+            msg (desc)
+            desc = ""
+          }
+        }
+        if (i = game.autodescription_description) {
+          if (HasScript(game.pov.parent, descriptionfield)) {
+            if (LengthOf(desc) > 0) {
+              msg (desc)
+              desc = ""
+            }
+            do (game.pov.parent, descriptionfield)
+            if (game.autodescription_description_newline) {
+              msg ("")
+            }
+          }
+          else {
+            desc = AddDescriptionLine(desc, GetRoomDescription())
+            if (game.autodescription_description_newline) {
+              msg (desc)
+              desc = ""
+            }
+          }
+        }
+      }
+      if (LengthOf(desc) > 0) {
+        desc = Replace(desc, "a", "<span style=\"color:blue;\">a</span>")
+        desc = Replace(desc, "A", "<span style=\"color:blue;\">A</span>")
+        msg (desc)
+      }
+    }
+    else {
+      if (HasScript(game.pov.parent, descriptionfield)) {
+        do (game.pov.parent, descriptionfield)
+      }
+      else {
+        fulldesc = GetRoomDescription()
+        if (LengthOf(fulldesc) > 0) {
+          msg (fulldesc)
+        }
+      }
+    }
+  ]]></function>
+  <function name="Sit" parameters="seat">
+    msg ("You sit on the " + GetDisplayAlias(seat) + ".")
+  </function>
+</asl>

@@ -1,0 +1,162 @@
+<!--Saved by Quest 5.6.5510.29036-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <include ref="LevelLib.aslx" />
+  <game name=" Eanatas">
+    <gameid>ced3aa62-ef51-48b8-a371-2a72c3c6b10c</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+    <subtitle>Gargoyle Tales</subtitle>
+    <author>Robert Hatfield</author>
+    <cover>rsz_gargoyle.jpg</cover>
+    <category>Fantasy</category>
+    <difficulty>Medium</difficulty>
+    <cruelty>Tough</cruelty>
+    <backgroundimage>gargoyle.jpg</backgroundimage>
+    <defaultbackground>Silver</defaultbackground>
+    <statusattributes type="stringlist" />
+    <showhealth />
+    <feature_asktell />
+    <appendobjectdescription />
+    <multiplecommands />
+    <feature_pictureframe />
+    <gridmap />
+    <pov type="object">Eanatas</pov>
+  </game>
+  <object name="Cavern">
+    <inherit name="editor_room" />
+    <description>The heat is unbearable and the smell of sulfur is so thick it would choke the life from a normal man. An unsteady patter of footsteps breaks through the silence.  A yellowing flicker spreads across the cave's surfaces, mixing with shadows cast by the dead. Eanatas shuffled along, stirring up a cloud of dust. The glow from his torch showed his red, fiendish face. White eyes glistened above a huge, freakish grin, almost touching his pointed ears.</description>
+    <picture type="string"></picture>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+      SetFramePicture ("cave.jpg")
+    </beforeenter>
+    <object name="Eanatas">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <inherit name="namedmale" />
+      <inherit name="switchable" />
+      <usedefaultprefix />
+      <look>A fiendish face with large white eyes, a snake-like tongue curling and twisting, lashing out around long  sharp teeth. Wings of skin and claws of carbon black bone. </look>
+      <visible type="boolean">false</visible>
+      <attr name="You are" type="string"></attr>
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>You are</key>
+          <value></value>
+        </item>
+        <item>
+          <key>Flying_turns_left</key>
+          <value></value>
+        </item>
+        <item>
+          <key>Gold</key>
+          <value></value>
+        </item>
+      </statusattributes>
+      <feature_switchable />
+      <switchonmsg>You spread your wings and begin to rise.</switchonmsg>
+      <switchoffmsg>You land with a thump.</switchoffmsg>
+      <attr name="Flying_turns_left" type="int">10</attr>
+      <Gold type="int">0</Gold>
+      <drop type="boolean">false</drop>
+      <onswitchon type="script">
+        set (Eanatas, "You are", "flying")
+      </onswitchon>
+      <onswitchoff type="script">
+        set (Eanatas, "You are", "Walking")
+      </onswitchoff>
+    </object>
+    <exit alias="west" to="Mountain Path">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="east" to="Tunnel">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="Sword">
+      <inherit name="editor_object" />
+      <alias>sword1</alias>
+      <look>A basic slashing and stabbing weapon. The blade is about 2 feet long</look>
+      <take />
+    </object>
+  </object>
+  <command name="fly">
+    <pattern type="string">fly</pattern>
+    <script>
+      SwitchOn (Eanatas)
+    </script>
+  </command>
+  <object name="Tunnel">
+    <inherit name="editor_room" />
+    <exit alias="west" to="Cavern">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="east" to="Ledge">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="Ledge">
+    <inherit name="editor_room" />
+    <exit alias="west" to="Tunnel">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="north" to="Small Opening">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="Mountain Path">
+    <inherit name="editor_room" />
+    <exit alias="east" to="Cavern">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="Lair">
+    <inherit name="editor_room" />
+    <exit alias="east" to="Small Opening">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="up" to="Stairs">
+      <inherit name="updirection" />
+    </exit>
+  </object>
+  <object name="Small Opening">
+    <inherit name="editor_room" />
+    <exit alias="south" to="Ledge">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="west" to="Lair">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <command name="land">
+    <pattern type="string">land</pattern>
+    <script>
+      SwitchOff (Eanatas)
+    </script>
+  </command>
+  <object name="Stairs">
+    <inherit name="editor_room" />
+    <exit alias="down" to="Lair">
+      <inherit name="downdirection" />
+    </exit>
+    <exit alias="out" to="Forest Clearing">
+      <inherit name="outdirection" />
+    </exit>
+  </object>
+  <object name="Forest Clearing">
+    <inherit name="editor_room" />
+    <exit alias="in" to="Stairs">
+      <inherit name="indirection" />
+    </exit>
+  </object>
+  <turnscript name="flyingturncounter">
+    <enabled />
+    <script>
+      if (IsSwitchedOn(Eanatas)) {
+        set (Eanatas, "player.Flying_turns_left", player.Flying_turns_left = player.Flying_turns_left - 1)
+      }
+    </script>
+  </turnscript>
+</asl>

@@ -1,0 +1,1538 @@
+<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Democracy in Action!">
+    <gameid>66f8c09d-d324-446e-a655-9ccd8719f5b5</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <cover>magician_with_robe.png</cover>
+    <gridmap />
+    <feature_asktell />
+  </game>
+  <object name="training hall">
+    <inherit name="editor_room" />
+    <alias>Training Hall</alias>
+    <description><![CDATA[Yesterday, a woman dressed in black cloaks and veils appeared in your village and invited you to take part in special training for the best rogues, mages, and fighters in Cognosco. You were shocked to receive her invitation, but you quickly accepted. Now you are standing in a huge room. You don't know how you got here, but it's easily the most impressive place you've ever seen.<br/><br/>Rich velvet banners hang from the wall. Marble pillars bracket you on either side. There are a few people in the room -- a mage and a fighter talking quietly in a corner, and a rogue sharpening a dagger while he chuckles to himself. There is one exit, a huge white gateway. The woman in the black cloak stands in front of it.]]></description>
+    <attr name="grid_width" type="int">7</attr>
+    <attr name="grid_length" type="int">3</attr>
+    <attr name="grid_fill">SteelBlue</attr>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="banners">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <look>Red velvet banners hang from the walls. If you look closely, you can make out strange symbols woven into the threads.</look>
+      <scenery />
+      <takemsg>They are secured to the ceiling, at least ten meters above your head</takemsg>
+    </object>
+    <object name="pillars">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <scenery />
+      <alt type="stringlist">
+        <value>marble pillars</value>
+      </alt>
+      <look>Tall and ancient pillars stand in various places along the room. There is a small box at the base of one of the pillars.</look>
+      <takemsg>Not gonna happen</takemsg>
+    </object>
+    <object name="mage">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <look>A tall, thin mage with a long pointed beard stands against the west wall. His hands are hidden in his robes, and he carries a staff with a glowing globe on top.</look>
+      <speak>The mage suddenly becomes very interested in his fingernails. He says: "Hmm. I don't have time for you. You should ASK the fighter ABOUT THE KEY, if that's what you're looking for." Rolling his eyes at the fighter, he adds, "Remind me not to sneak out again. The punishment is unbearable."</speak>
+      <ask type="scriptdictionary">
+        <item key="box closed spell reach through ">
+          msg ("The mage stares at you. \"I am not here to teach foolish children party tricks.\"")
+        </item>
+      </ask>
+    </object>
+    <object name="fighter">
+      <inherit name="editor_object" />
+      <inherit name="female" />
+      <look>A female fighter with short red hair is talking to the mage. A crystal sword hangs at her hip and she wears simple leather armor. She doesn't even look at you, but continues her conversation.</look>
+      <speak>The fighter sighs and looks at you. "Yes? Was there something you wanted to ASK me ABOUT?"</speak>
+      <ask type="scriptdictionary">
+        <item key="key box keys scroll">
+          msg ("The fighter sniffs and hands you a small key. \"Oh, I suppose you're looking for this.\"")
+          AddToInventory (small key)
+        </item>
+      </ask>
+      <object name="small key">
+        <inherit name="editor_object" />
+        <look>A small silver key. It has a strange gleam.</look>
+        <take />
+        <takemsg>The fighter hands you the key</takemsg>
+        <dropmsg>You drop the small key</dropmsg>
+        <feature_usegive />
+        <use type="script">
+          key box
+        </use>
+        <selfuseon type="scriptdictionary">
+          <item key="box">
+            key box
+          </item>
+        </selfuseon>
+      </object>
+    </object>
+    <object name="rogue">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <look>The rogue grins at you in a way that makes you think he might be trying to decide how much money is in your coin purse. You decide to keep your distance.</look>
+      <speak>His grin grows wider. "Don't waste my time if you have nothing of importance to ask me."</speak>
+      <steal>The rogue glares at you. "I wouldn't try it, my friend."</steal>
+      <ask type="scriptdictionary">
+        <item key="key box keys">
+          msg ("The rogue looks bored. \"If I had a key to something, I wouldn't be one to share it.\"")
+        </item>
+        <item key="scroll ">
+          msg ("He laughs in delight. \"You're asking me about a scroll? That's like asking a duck about pizza. What's pizza, you say? It's this amazing concoction... like a piece 'o pie, but with cheese. Mmm... pizza.\"")
+        </item>
+      </ask>
+    </object>
+    <object name="cloaked woman">
+      <inherit name="editor_object" />
+      <inherit name="female" />
+      <look type="script">
+        if (Got(scroll)) {
+          msg ("The cloaked woman inclines her head (you think). \"Ah,\" she says, her voice pleased, \"the Royal Scroll of Cognosco. Traveller, you may proceed into the training yard and through the portal.\"")
+          UnlockExit (yard exit)
+        }
+        else {
+          msg ("This is the same woman who appeared in your village the other day. You can't see her face behind her veil. Voluminous black robes sheath her entire body. You have no idea what she looks like, but she's definitely blocking the gateway. When you try to move past her, she shakes her head. \"Not without the magic scroll.\"")
+        }
+      </look>
+      <speak type="script">
+        if (Got(scroll)) {
+          msg ("You think she smiles. \"Well done, child. You may now proceed to the NORTH.\" ")
+          UnlockExit (yard exit)
+        }
+        else {
+          msg ("She folds her arms. \"You may proceed no further without the scroll.\"")
+        }
+      </speak>
+    </object>
+    <object name="box">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <look>A very small box with a golden latch. It seems as if it was left here for you to find.</look>
+      <feature_container />
+      <hidechildren type="boolean">false</hidechildren>
+      <listchildren />
+      <listchildrenprefix>It contains</listchildrenprefix>
+      <openmsg>You carefully open the box.</openmsg>
+      <close type="boolean">false</close>
+      <key type="object">small key</key>
+      <onlock type="script">
+        msg ("You use the small key to lock the box.")
+      </onlock>
+      <onunlock type="script">
+        msg ("You use the small key to open the box and peer inside.")
+      </onunlock>
+      <open type="script">
+        key box
+      </open>
+      <object name="scroll">
+        <inherit name="editor_object" />
+        <inherit name="openable" />
+        <alias>strange scroll</alias>
+        <look>A weathered parchment scroll sealed with a wax seal of Cognosco.</look>
+        <alt type="stringlist">
+          <value>magic scroll</value>
+        </alt>
+        <takemsg>You take the scroll.</takemsg>
+        <dropmsg>You toss the scroll carelessly aside. Everyone in the room stops to glare. Slowly, you pick it up again.</dropmsg>
+        <drop type="boolean">false</drop>
+        <usedefaultprefix />
+        <attr name="feature_usegive" type="boolean">false</attr>
+        <attr name="feature_container" type="boolean">false</attr>
+        <isopen type="boolean">false</isopen>
+        <close type="script">
+          if (GetBoolean(scroll, "read")) {
+            msg ("You try to roll it up, but it's obvious you've tampered with it. Hopefully no one will notice.")
+          }
+          else {
+            msg ("It's tightly rolled and sealed shut.")
+          }
+        </close>
+        <take type="script">
+          msg ("You pick up the scroll. It is sealed with wax and looks very old. The cloaked woman seems to turn towards you.")
+          AddToInventory (scroll)
+        </take>
+        <ontake type="script">
+          msg ("You tuck the scroll into the leather satchel at your side. The woman in black raises her head. You can't be sure, but you think she's looking at you.")
+        </ontake>
+        <openscript type="script">
+          if (GetBoolean(scroll, "open")) {
+            msg ("You can't read it again. Spoilers!")
+          }
+          else {
+            msg ("Do you dare to break the seal of the kingdom of Cognosco? You hesitate, then unroll the scroll and lift it with shaky hands. What magical incantation might you learn? It says: \"Hello, Sweetie.\" Confused, you roll it up and seal it again.")
+          }
+        </openscript>
+        <open type="script">
+          if (not GetBoolean(scroll, "read")) {
+            msg ("Do you dare to break the seal of the kingdom of Cognosco? You hesitate, then unroll the scroll and lift it with shaky hands. What magical incantation might you learn? It says: \"Hello, Sweetie.\" ")
+            SetObjectFlagOn (scroll, "read")
+          }
+          else {
+            msg ("You can't read it again. It might contain spoilers.")
+          }
+        </open>
+      </object>
+    </object>
+    <exit alias="south" to="training hall">
+      <inherit name="southdirection" />
+      <lookonly />
+      <look>You can see a long corridor and hear voices of students training. This is definitely the famous training hall of Cognosco, but you can't go that way right now.</look>
+      <attr name="grid_length" type="int">10</attr>
+    </exit>
+    <exit name="yard exit" alias="north" to="training yard">
+      <inherit name="northdirection" />
+      <attr name="grid_length" type="int">0</attr>
+      <locked />
+      <lockmessage><![CDATA[The woman in black cloaks steps in front of you. "You may not pass this way without the magic scroll." <i> If you already have the scroll, try talking to the woman. If not, what are you waiting for? Go find it! </i>]]></lockmessage>
+    </exit>
+    <object name="gate">
+      <inherit name="editor_object" />
+      <alias>carved ivory doorway</alias>
+      <alt type="stringlist">
+        <value>door</value>
+        <value>gate</value>
+        <value>doorway</value>
+        <value>gateway</value>
+        <value>doors</value>
+        <value>doorways</value>
+      </alt>
+      <look>A huge set of double ivory doors stands behind the woman in the black cloak. They look like someone carved them by hand, and like they might lead somewhere important...</look>
+      <scenery type="boolean">false</scenery>
+      <open type="script">
+        if (Got(scroll)) {
+          msg ("The cloaked woman might be smiling. You think. \"You may now continue your journey by going NORTH,\" she says.")
+          UnlockExit (yard exit)
+        }
+        else {
+          msg ("The cloaked woman steps in front of you. \"You may not pass without the scroll,\" she says.")
+        }
+      </open>
+    </object>
+  </object>
+  <verb>
+    <property>open</property>
+    <pattern>open; read; unroll</pattern>
+    <defaultexpression>"You can't open; read; unroll " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="training yard">
+    <inherit name="editor_room" />
+    <attr name="grid_width" type="int">7</attr>
+    <attr name="grid_length" type="int">5</attr>
+    <attr name="grid_fill">Tan</attr>
+    <alias>Training Yard</alias>
+    <description><![CDATA[This is a huge, sprawling area. It is covered in dirt. You can see a fighting ring ahead of you, and some wooden practice swords along the wall. Under some trees are a circle of tree stumps. It looks like someone was conducting a class there. Someone has hung a large chalkboard. It reads:<br/><br/>COGNOSCO = DEMOCRACY<br/>IGNARUS = DICATORSHIP<br/><br/><i> Origins of the word democracy: <br/><br/>Demos = people<br/>Cratos = power or government </i><br/><br/>You marvel at these strange words before you find yourself staring at a woman standing in front of a glowing blue portal. It looks like the same woman you just talked to in the training hall. But then, the cloaks make it hard to tell.<br/>]]></description>
+    <object name="fighting ring">
+      <inherit name="editor_object" />
+      <look>A circle is scratched in the dirt. You can see footprints where fighters have shuffled back and forth in training.</look>
+      <scenery />
+      <alt type="stringlist">
+        <value>ring</value>
+        <value>training ring</value>
+      </alt>
+    </object>
+    <object name="dirt">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>You crawl on the ground and sniff the dirt before you realize what you're doing. Embarrassed, you stand up. </look>
+      <takemsg>It's kind of gross.</takemsg>
+    </object>
+    <object name="swords">
+      <inherit name="editor_object" />
+      <alt type="stringlist">
+        <value>wooden swords</value>
+        <value>sword</value>
+        <value>training sword</value>
+      </alt>
+      <scenery />
+      <look>Rough wooden swords lean against the wall. When you touch one, you expect to get a splinter, but the handles are worn smooth from years of use.</look>
+      <takemsg>You pick up one of the swords. It is heavy and wooden, well worn from years of use. Thinking it might come in handy later, you tuck it into your belt.</takemsg>
+      <dropmsg>You toss the wooden sword aside.</dropmsg>
+      <attr name="feature_usegive" type="boolean">false</attr>
+      <drop />
+      <take type="script">
+        training swords
+      </take>
+      <use type="script">
+      </use>
+      <steal type="script">
+        training swords
+      </steal>
+      <object name="wooden sword">
+        <inherit name="editor_object" />
+        <take />
+        <feature_usegive />
+        <dropmsg>You toss the wooden sword aside.</dropmsg>
+        <look>A heavy wooden sword used for training.</look>
+        <takemsg>You pick up the wooden sword</takemsg>
+        <alt type="stringlist">
+          <value>sword</value>
+        </alt>
+        <use type="script">
+          if (ListContains(ScopeVisible(), troll)) {
+            msg ("You swing the sword in a fast arc. The troll tries to block it with his club, but he's too slow. The sword hits him on the head and he collapses to the ground, snoring softly. After a few seconds, he disappears.")
+            MoveObject (troll, banners)
+            UnlockExit (troll door)
+            UnlockExit (exit behind troll)
+          }
+          else {
+            msg ("You swing the sword wildly. After a few minutes of this, feeling rather tired and foolish, you put it away.")
+          }
+        </use>
+        <selfuseanything type="script">
+          msg ("You tap it with the sword. Nothing happens.")
+        </selfuseanything>
+        <attack type="script">
+          if (ListContains(ScopeVisible(), troll)) {
+            msg ("You swing the sword in a fast arc. The troll tries to block it with his club, but he's too slow. The sword hits him on the head and he collapses to the ground, snoring softly. After a few seconds, he disappears.")
+            MoveObject (troll, banners)
+            UnlockExit (troll door)
+          }
+          else {
+            msg ("You swing the sword wildly. After a few minutes of this, feeling rather tired and foolish, you put it away.")
+          }
+        </attack>
+        <selfuseon type="scriptdictionary">
+          <item key="troll">
+            if (ListContains(ScopeVisible(), troll)) {
+              msg ("You swing the sword in a fast arc. The troll tries to block it with his club, but he's too slow. The sword hits him on the head and he collapses to the ground, snoring softly. After a few seconds, he disappears.")
+              MoveObject (troll, banners)
+              UnlockExit (troll door)
+            }
+            else {
+              msg ("You swing the sword wildly. After a few minutes of this, feeling rather tired and foolish, you put it away.")
+            }
+          </item>
+        </selfuseon>
+      </object>
+    </object>
+    <object name="trees">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>There are trees around the edges of the training yard.</look>
+    </object>
+    <object name="stumps">
+      <inherit name="editor_object" />
+      <look>A circle of stumps surrounds a chalkboard. You nudge them with your foot, but they are neither magical nor portable.</look>
+      <scenery />
+      <siton>The stumps are uncomfortable. You're glad you don't have to go to school here.</siton>
+    </object>
+    <object name="chalkboard">
+      <inherit name="editor_object" />
+      <scenery type="boolean">false</scenery>
+      <look><![CDATA[COGNOSCO = DEMOCRACY<br/>IGNARUS = DICATORSHIP<br/><br/><i> Origins of the word democracy: <br/><br/>Demos = people<br/>Cratos = power or government </i><br/><br/>You marvel at these strange words.]]></look>
+      <alt type="stringlist">
+        <value>board</value>
+        <value>blackboard</value>
+      </alt>
+      <touch>With an evil grin, you go to erase the chalkboard. You jump back with a yelp as an electric shock jolts through your finger. You hear a chuckle, but when you look around, there is no one there.</touch>
+      <drop type="boolean">false</drop>
+      <takemsg>It's secured to the tree</takemsg>
+    </object>
+    <object name="woman">
+      <inherit name="editor_object" />
+      <inherit name="female" />
+      <look>Is this also the same woman who appeared in your village the other day? You can't see her face behind her veil. Voluminous black robes sheath her entire body. You have no idea what she looks like.</look>
+      <speak type="script"><![CDATA[
+        msg ("The woman spreads her cloaked arms. \"Welcome, child,\" she says. She sounds EXACTLY like the woman from the training hall. Is it the same person? \"You are about to embark on a simple adventure. It should not challenge you greatly, but it will give you the experience you will need for... well, let's not speak of that now. Use the portal to proceed.\"<br/><br/>She smiles. \"Be careful: once the portal carries you away, you will need <b> the red key </b> to return. You won't be able to get it if you don't pay close attention to everything you see, hear, and read. You may even want to take notes. If you are prepared, go NORTH through the portal now.\"")
+        UnlockExit (portal)
+      ]]></speak>
+    </object>
+    <exit name="portal" alias="north" to="room of choosing">
+      <inherit name="northdirection" />
+      <locked />
+      <lockmessage>Try talking to the woman first</lockmessage>
+    </exit>
+  </object>
+  <object name="room of choosing">
+    <inherit name="editor_room" />
+    <alias>Room of Choosing</alias>
+    <attr name="grid_width" type="int">3</attr>
+    <attr name="grid_length" type="int">3</attr>
+    <description><![CDATA[You are in a plain white room. Walls, ceiling, floors -- they are pure white. The portal has vanished, leaving you trapped until you locate <b> the red key. </b> <br/><br/>To the east is a door with the royal crest of Cognosco.<br/><br/>To the west is a door bearing the mark of the dark King Nocens of Ignarus.<br/><br/>The room is otherwise empty.]]></description>
+    <exit alias="west" to="ignarus">
+      <inherit name="westdirection" />
+      <attr name="grid_length" type="int">3</attr>
+    </exit>
+    <exit alias="east" to="cognosco">
+      <inherit name="eastdirection" />
+      <attr name="grid_length" type="int">3</attr>
+    </exit>
+  </object>
+  <object name="ignarus">
+    <inherit name="editor_room" />
+    <alias>Throne Room of Ignarus</alias>
+    <attr name="grid_width" type="int">4</attr>
+    <attr name="grid_length" type="int">4</attr>
+    <attr name="grid_fill">SlateGrey</attr>
+    <description><![CDATA[You are in what looks like, but cannot possibly be, the throne room of the kingdom of Ignarus. You shiver -- the room is very cold. There is a black iron throne in the middle of the room, surrounded by some dark liquid that you don't want to touch. The entire room seems to have been carved out of a gleaming black material. The only light comes from a globe hanging in the middle of the room. It shines a beam of welcome warmth over you and when you step into the beam, you smell the rich scents of home: meadows, baking bread, fresh fallen rain. <br/><br/>The throne seems to cast too many shadows. You remember that Ignarus is a dictatorship under the rule of King Nocens, and that this means he is the ultimate authority in that dark kingdom. He is the only one who makes decisions, and his word is law. You shudder, grateful that Cognosco allows its citizens so much freedom and participation in government.<br/><br/>To the northeast, a massive iron gate stands closed.]]></description>
+    <exit alias="east" to="room of choosing">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit name="small hall exit" alias="northeast" to="small hall">
+      <inherit name="northeastdirection" />
+      <locked />
+      <scenery type="boolean">false</scenery>
+    </exit>
+    <object name="throne">
+      <inherit name="editor_object" />
+      <scenery type="boolean">false</scenery>
+      <sit>You approach the throne. The temperature drops and you begin to shiver. When you turn your back on the chair, you have the uncomfortable sense you are being watched. You slowly sit on the throne, and it burns through your clothes. You leap to your feet, checking for damage, but you seem to be fine.</sit>
+      <alt type="stringlist">
+        <value>chair</value>
+        <value>seat</value>
+      </alt>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <usestandardverblist />
+      <look type="script"><![CDATA[
+        if (Got(large black key)) {
+          msg ("The throne is no longer cold to the touch. You can see the words \"power to the people\" in white under the globe's light.")
+        }
+        else {
+          msg ("The throne is made of a heavy black metal twisted into shapes and letters.  You can make out words on the back: <i> Ignarus, Nocens, dictatorship. </i> ")
+        }
+      ]]></look>
+    </object>
+    <object name="pool">
+      <inherit name="editor_object" />
+      <scenery type="boolean">false</scenery>
+      <look>A shining pool of some thick black liquid surrounds the throne. A stone bridge allows you to cross over it without getting wet.</look>
+      <alt type="stringlist">
+        <value>water</value>
+        <value>liquid</value>
+      </alt>
+      <touch>You crouch down and reach towards the pool. Cold air rises around you, along with a foul smell. You decide you'd rather not put your fingers in there.</touch>
+      <swim>You crouch down and reach towards the pool. Cold air rises around you, along with a foul smell. You decide you'd rather not put your fingers in there.</swim>
+      <drink>You crouch down and reach towards the pool. Cold air rises around you, along with a foul smell. You decide you'd rather not put your fingers in there.</drink>
+      <usestandardverblist />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+    </object>
+    <object name="globe">
+      <inherit name="editor_object" />
+      <alt type="stringlist">
+        <value>light</value>
+        <value>lamp</value>
+      </alt>
+      <usestandardverblist />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <look type="script"><![CDATA[
+        if (Got(large black key)) {
+          msg ("The globe shines its warm light on the throne of Ignarus. It no longer looks so intimdating.")
+        }
+        else {
+          msg ("The globe emits a warm glow. You can see the word <i> Cognosco </i> on it, perhaps magically engraved. It looks like you might be able to TURN it.")
+        }
+      ]]></look>
+      <turn type="script"><![CDATA[
+        if (GetBoolean(globe, "turned")) {
+          msg ("The globe refuses to budge. ")
+        }
+        else {
+          msg ("You carefully grasp the globe in both hands. As you turn it, the beam of light sweeps through the dark room. At last it falls on the throne. The word <i> dictatorship </i> shifts until the letters say <i> power to the people </i> instead. A large black key falls from the globe. You bend to pick it up.")
+          AddToInventory (large black key)
+          UnlockExit (small hall exit)
+        }
+      ]]></turn>
+      <object name="large black key">
+        <inherit name="editor_object" />
+        <look>A heavy black iron key</look>
+        <alt type="stringlist">
+          <value>key</value>
+        </alt>
+        <take />
+        <takemsg>You pick up the iron key. It has the same pattern as those carved into the gate in the Ignarus Throne Room.</takemsg>
+        <dropmsg>You toss the key aside.</dropmsg>
+        <feature_usegive />
+        <use type="script">
+          ignarus key
+        </use>
+      </object>
+    </object>
+    <object name="gate1">
+      <inherit name="editor_object" />
+      <alias>gate</alias>
+      <usestandardverblist />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <look type="script"><![CDATA[
+        if (Got(large black key)) {
+          msg ("The heavy iron gates stand open, revealing a narrow corridor beyond")
+        }
+        else {
+          msg ("A huge gate carved from the same metal as the throne. When you look closer, you see a verse carved into the door:<br/><br/><i> The people of Ignarus<br/>Are cold and alone<br/>Shine the light of Cognosco<br/>On the darkest of thrones </i>")
+        }
+      ]]></look>
+      <open type="script">
+        ignarus key
+      </open>
+    </object>
+    <object name="walls">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <scenery />
+      <look>The walls are carved from some shiny material. You touch it and find it as cold and smooth as black glass.</look>
+    </object>
+  </object>
+  <object name="cognosco">
+    <inherit name="editor_room" />
+    <alias>Throne Room of Cognosco</alias>
+    <attr name="grid_width" type="int">4</attr>
+    <attr name="grid_length" type="int">4</attr>
+    <attr name="grid_fill">SkyBlue</attr>
+    <description><![CDATA[You are in what looks like, but cannot possibly be, the throne room of the kingdom of Cognosco. A large white throne dominates the room where the king would usually sit. However, you recall that in the year 1215, King John signed the <i> Magna Carta, </i> or Great Charter, transforming Cognosco into a <i> constitutional monarchy </i> -- a democracy, where the power lies in the hands of the people.<br/><br/>That means that in Cognosco, even though the king is the head of the government, the people are the ones truly in charge. In front of King Ion's throne sits a round table with space for twelve representatives, elected from the provinces of Cognosco. You excitedly find the chair labeled <i> Praesto, </i>, the name of your home province. You know that a local shopkeeper named Minerva was elected to this position. She is your province's voice in the government.<br/><br/>Aside from the gleaming white throne and the round table, the walls are white marble. The crest of Cognosco hangs behind the throne. Two smaller thrones sit to the side. Princess Lenis often occupies the one on the right. Before her death, the Queen Mother sat in the one to the left. A large white gate leads to the north. ]]></description>
+    <exit alias="west" to="room of choosing">
+      <inherit name="westdirection" />
+    </exit>
+    <exit name="northern gateway" alias="north" to="layer room">
+      <inherit name="northdirection" />
+      <locked />
+    </exit>
+    <object name="large throne">
+      <inherit name="editor_object" />
+      <look>King Ion VI of Cognosco currently uses this throne. It is beautiful and awe inspiring. However, it is also not the true seat of power. That belongs to the twelve chairs surrounding the table.</look>
+      <sit>You climb the steps to King Ion VI's throne with bated breath, but find you do not quite have the nerve to sit on it.</sit>
+      <touch>You run your fingers over the throne's delicate carvings, marveling that centuries of Cognosco's greatest rulers have sat in this very throne.</touch>
+      <usestandardverblist />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+    </object>
+    <object name="lenis throne">
+      <inherit name="editor_object" />
+      <alias>small throne to the right</alias>
+      <look>This is a soft cushioned seat often occupied by Her Majesty Princess Lenis.</look>
+      <usestandardverblist />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <siton>You carefully lower yourself into the seat. For just a moment, you think you see people in the twelve seats around the table, their heads swiveled towards you. Then the vision fades away.</siton>
+      <touch>The throne is gold plated. Its cushions are surprisingly soft and comfortable.</touch>
+      <scenery />
+    </object>
+    <object name="mother throne">
+      <inherit name="editor_object" />
+      <alias>small throne to the left</alias>
+      <look>This is a soft cushioned seat formerly occupied by the Queen Mother, who passed away last winter.</look>
+      <scenery />
+      <usestandardverblist />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <siton>You carefully settle yourself onto the throne. A memory of King Ion's and Princess Lenis' mother overwhelms you: a gentle, soft spoken, and wise woman, Queen Conscientia ruled for thirty four years before stepping aside in favor of her son, Ion VI. </siton>
+      <touch>The throne is silver plated. Its cushions are surprisingly soft and comfortable.</touch>
+    </object>
+    <object name="crest of cognosco">
+      <inherit name="editor_object" />
+      <scenery />
+      <alias>Crest of Cognosco</alias>
+      <look>The crest of Cognosco hangs from a bright banner behind the thrones. It shows the letter C circled by Cognosco's famous black pearls.</look>
+      <touch>It is soft and well worn. You wonder how long ago it was embroidered, and how it has come to be so well preserved.</touch>
+    </object>
+    <object name="chairs">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <scenery />
+      <look>Twelve chairs surround a wooden table.</look>
+      <siton>They are more comfortable than they look.</siton>
+    </object>
+    <object name="wooden table">
+      <inherit name="editor_object" />
+      <scenery type="boolean">false</scenery>
+      <look>The large wooden table is rough and uneven, but perfectly circular. This symbolizes that no one at the table is more important than anyone else. Although King Ion VI is the official leader, everyone in a democracy has an equal voice.</look>
+      <usestandardverblist />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+    </object>
+    <object name="praesto chair">
+      <inherit name="editor_object" />
+      <look><![CDATA[This is the chair where Minerva, the current representative from your province, sits when the government is in session. The people of your province <b>elected</b> her to <b>represent</b> them in the government.]]></look>
+      <alt type="stringlist">
+        <value>province chair</value>
+        <value>special chair</value>
+        <value>my chair</value>
+      </alt>
+      <alias>Chair for the Representative of Praesto</alias>
+      <usestandardverblist />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <siton type="script"><![CDATA[
+        msg ("You settle yourself in the wooden chair. Suddenly, the room springs to life. A man across from you is standing and loudly arguing. The other chairs are full, and their occupants are nodding or shaking their heads. You hear a sound, and turn to see King Ion VI himself in his throne, his hands held up for silence. \"Enough!\" He says. \"We've heard both sides of the issue. Representatives of Cognosco, it is time to vote.\"<br/><br/>The vision fades.  You shake your head and realize that there is now a large white key sitting on the table in front of you. You pick it up and turn it over in your hands before putting it in your pocket.")
+        UnlockExit (northern gateway)
+        AddToInventory (large white key)
+      ]]></siton>
+    </object>
+    <object name="gate2">
+      <inherit name="editor_object" />
+      <alias>gate</alias>
+      <visible />
+      <alt type="stringlist">
+        <value>exit</value>
+        <value>door</value>
+      </alt>
+      <look type="script"><![CDATA[
+        if (Got(large white key)) {
+          msg ("The gate stands open, leading into another room.")
+        }
+        else {
+          msg ("A large white gate, much like the one in the training hall. It is locked. When you look more closely, you see a verse engraved on it:<br/><br/><i> A representative democracy<br/>Asks each to become part of me<br/>Choose the one who represents you<br/>Who votes and sees decisions through<br/>And then at last, if you are able<br/>Take your seat at the round table </i><br/><br/>HINT: If you are stuck in this room, try ASKing THE GATE about THE PUZZLE. It sounds strange, but it just might work.")
+        }
+      ]]></look>
+      <ask type="scriptdictionary">
+        <item key="puzzle">
+          msg ("There is a deep rumble from somewhere, you don't know where, and a voice speaks all around you, saying: \"Have you tried SITting ON THE CHAIR? Just saying 'sit' isn't going to cut it, you know.\"")
+        </item>
+      </ask>
+    </object>
+  </object>
+  <verb>
+    <property>steal</property>
+    <pattern>steal</pattern>
+    <defaultexpression>"You can't steal " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="troll hall">
+    <inherit name="editor_room" />
+    <attr name="grid_width" type="int">4</attr>
+    <attr name="grid_length" type="int">4</attr>
+    <alias>Long Corridor</alias>
+    <description>This is a long, plain hallway. It is entirely, blindingly, white. A door leads to the northeast, and another to the east. There is also an exit to the west, but a huge, ugly troll stands in front of it.</description>
+    <exit name="troll door" alias="west" to="small hall">
+      <inherit name="westdirection" />
+      <locked />
+      <lockmessage>There's a troll in the way.</lockmessage>
+    </exit>
+    <exit alias="northeast" to="constitution">
+      <inherit name="northeastdirection" />
+    </exit>
+    <exit alias="east" to="layer room">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="walls1">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <alias>walls</alias>
+      <scenery />
+      <look>They are blindingly white.</look>
+      <usestandardverblist />
+    </object>
+    <object name="troll">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <look> Even though you've never met one before, there is no doubt in your mind that this is a troll. He's huge, ugly, and covered in warts. Rags hang off his body, and he is carrying a large wooden club covered in studs. He's also breathing so loudly that you can hear -- and smell -- his breath from five meters away.</look>
+      <poke>You step towards the troll with your hand outstretched. He roars and swings his club, almost denting the bright white wall. You decide not to touch him after all.</poke>
+      <speak>The troll snarls, "You must defeat me to pass."</speak>
+      <fight>You can't attack the troll with your bare hands! If you had a weapon, you could try to USE it on him.</fight>
+      <usestandardverblist />
+    </object>
+  </object>
+  <object name="layer room">
+    <inherit name="editor_room" />
+    <attr name="grid_width" type="int">5</attr>
+    <attr name="grid_length" type="int">5</attr>
+    <alias>Strange Room</alias>
+    <description type="script"><![CDATA[
+      if (Got(citizenship medallion)) {
+        msg ("The room is the same as before, except that the PROVINCIAL GOVERNMENT door now seems to be locked, and you think the west door is now open.")
+      }
+      else {
+        msg ("This room is only about half a meter wide. There is a door right in front of you in a wall, but you follow the hallway to the right. It turns left, goes another few meters, turns left again, and repeats until you're back where you started. You do find a door leading west, but it's locked right now. There's also a strange gleam on the north wall, but it vanishes when you try to look at it.<br/><br/>In shining gold letters, the wall says: <br/><br/>FEDERAL GOVERNMENT: Cognosco is our country, and at the federal level, the government makes laws and provides services that are good for everyone in our country. YOU are a CITIZEN of COGNOSCO, so you pay taxes to the FEDERAL government. You are also subject to its laws and receive its services.<br/><br/>The door in front of you has smaller gold letters that say PROVINCIAL GOVERNMENT.")
+      }
+    ]]></description>
+    <exit alias="south" to="cognosco">
+      <inherit name="southdirection" />
+    </exit>
+    <exit name="layer room lock" alias="west" to="troll hall">
+      <inherit name="westdirection" />
+      <locked />
+    </exit>
+    <exit alias="north" to="dragon">
+      <inherit name="northdirection" />
+      <scenery />
+      <locked />
+      <lockmessage>Nothing happens when you approach the wall.</lockmessage>
+    </exit>
+    <object name="shining gold letters">
+      <inherit name="editor_object" />
+      <look><![CDATA[In shining gold letters, the wall says: <br/><br/>FEDERAL GOVERNMENT: Cognosco is our country, and at the federal level, the government makes laws and provides services that are good for everyone in our country. YOU are a CITIZEN of COGNOSCO, so you pay taxes to the FEDERAL government. You are also subject to its laws and receive its services.]]></look>
+      <usestandardverblist type="boolean">false</usestandardverblist>
+      <touch>They are soft and smooth.</touch>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+    </object>
+    <object name="provincial door">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <listalias>Provinicial Government Door</listalias>
+      <usestandardverblist />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>open</value>
+      </displayverbs>
+      <look>A smooth door with a handle. It says PROVINCIAL GOVERNMENT in small gold letters.</look>
+      <attr name="feature_container" type="boolean">false</attr>
+      <hidechildren />
+      <close type="boolean">false</close>
+      <openmsg>You open the PROVINCIAL GOVERNMENT door.</openmsg>
+      <onopen type="script">
+        msg ("You are now standing in a smaller version of the exact same hallway you just left. When you walk around to the right, you find that it's a perfect square, just like the previous hall, except smaller: a room inside of a room. Slowly, you understand: you are now in the provincial government room. The provincial government works inside of the federal government. ")
+        msg ("Gold letters on the wall read: PROVINCIAL GOVERNMENT: Cognosco is our country, but within our country, we have provinces. YOU are a CITIZEN of PRAESTO, so you pay taxes to the PROVINCIAL government of PRAESTO, but NOT to Cognosco's other provinces. You are also subject to Praesto's laws and receive its services.")
+        msg ("In front of you, there is another door that says LOCAL GOVERNMENT. ")
+      </onopen>
+      <open type="script">
+        if (not Got(citizenship medallion)) {
+          msg ("You open the PROVINCIAL GOVERNMENT door.")
+          MoveObject (player, provincial room)
+        }
+        else {
+          msg ("That door now seems to be locked.")
+        }
+      </open>
+    </object>
+    <object name="provincial room">
+      <inherit name="editor_room" />
+      <attr name="grid_width" type="int">3</attr>
+      <attr name="grid_length" type="int">3</attr>
+      <attr name="grid_fill">SkyBlue</attr>
+      <description><![CDATA[You are now standing in a smaller version of the exact same hallway you just left. When you walk around to the right, you find that it's a perfect square, just like the previous hall, except smaller: a room inside of a room. Slowly, you understand: you are now in the provincial government room. The provincial government works inside of the federal government. <br/><br/>Gold letters on the wall read: PROVINCIAL GOVERNMENT: Cognosco is our country, but within our country, we have provinces. YOU are a CITIZEN of PRAESTO, so you pay taxes to the PROVINCIAL government of PRAESTO, but NOT to Cognosco's other provinces. You are also subject to Praesto's laws and receive its services.<br/><br/>In front of you, there is another door that says LOCAL GOVERNMENT. ]]></description>
+      <alias>shimmer</alias>
+      <object name="local door">
+        <inherit name="editor_object" />
+        <look>A smooth door with a handle. It says LOCAL GOVERNMENT in small gold letters.</look>
+        <usestandardverblist />
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>open</value>
+        </displayverbs>
+        <alt type="stringlist">
+          <value>door</value>
+          <value>exit</value>
+        </alt>
+        <open type="script">
+          msg ("You push open the door reading LOCAL GOVERNMENT.")
+          MoveObject (player, local room)
+        </open>
+      </object>
+      <object name="local room">
+        <inherit name="editor_room" />
+        <alias>shimmer</alias>
+        <attr name="grid_width" type="int">2</attr>
+        <attr name="grid_length" type="int">2</attr>
+        <description><![CDATA[You are now standing in a smaller version of the exact same hallway you just left. When you walk around to the right, you find that it's a perfect square, just like the previous hall, except even smaller: a room inside of a room. Slowly, you understand: you are now in the local government room. The local government works inside of the provincial government, which works inside of the federal government. <br/><br/>Gold letters on the wall read: LOCAL GOVERNMENT: Cognosco is your country and Praesto is your province, but there are things that don't matter very much to the country or province, only to your village and the people who live there. You are a RESIDENT of your VILLAGE, so you pay taxes to the LOCAL government of your village. You are also subject to its BYLAWS and receive its services.<br/><br/>In front of you, there is another door that says YOU. ]]></description>
+        <attr name="grid_fill">Tan</attr>
+        <object name="you room">
+          <inherit name="editor_room" />
+          <alias>shimmer</alias>
+          <description><![CDATA[You are in a tiny room. It is bright yellow and there is a statue of a person in the middle of the room. As you approach, you are shocked to see that the statue is you. Around its neck hangs something familiar: a medallion with the crest of Cognosco. You recveived a similar medallion when you were nine and took your citizenship oath.<br/><br/>You realize that you are at the center of all of this. The local, provincial, and federal governments work because you elect people to serve on them, and because you pay taxes so they can provide services. It is a surprising and awe-inspiring feeling. You feel grateful to be part of a country like Cognosco, where every citizen has the rights and responsibilities of contributing to government.<br/><br/>The statue's medallion gives off a strange glow.]]></description>
+          <attr name="grid_fill">Yellow</attr>
+          <object name="statue">
+            <inherit name="editor_object" />
+            <look>It's a statue of... you? You sense there is magic at play here. The statue is wearing a medallion around its neck. The medallion bears the mark of the crest of Cognosco, and looks like one you received when you were nine years old and took your citizenship oath, promising to obey the laws of Cognosco.</look>
+            <usestandardverblist />
+            <displayverbs type="stringlist">
+              <value>Look at</value>
+              <value>touch</value>
+            </displayverbs>
+            <speak>Do you really expect a response?</speak>
+            <poke type="script">
+              msg ("You touch the statue. It is warm and vibrates under your hand. ")
+            </poke>
+          </object>
+          <object name="citizenship medallion">
+            <inherit name="editor_object" />
+            <look>A medallion bearing the crest of Cognosco. It looks like one you got when you took your citizenship vows at the age of nine.</look>
+            <drop type="boolean">false</drop>
+            <wear>You are wearing the medallion around your neck.</wear>
+            <takeoff>You have no desire to take off the mark of your citizenship in this great democracy.</takeoff>
+            <take />
+            <takemsg>You lift the medallion and hang it around your neck.</takemsg>
+            <feature_usegive />
+            <ontake type="script">
+              if (Got(jade medallion)) {
+                msg ("You hang the medallion around your neck. It clanks against the jade medallion already hanging there, reminding you that you  need to ask someone about that as soon as you can. You're pretty sure there wasn't supposed to be a dragon in this trial.")
+                msg ("Your world begins to blur, You throw up your hands to shield your eyes from a flash of blinding light and find yourself once more standing in the strange corridor where you began, facing the door that says FEDERAL GOVERNMENT. You hear a click from the west door. Is it now unlocked?")
+                MoveObject (player, layer room)
+                UnlockExit (layer room lock)
+                AddToInventory (citizenship medallion)
+              }
+              else {
+                msg ("Your world begins to blur, You throw up your hands to shield your eyes from a flash of blinding light and find yourself once more standing in the strange corridor where you began, facing the door that says FEDERAL GOVERNMENT. You hear a click from the west door. Is it now unlocked?")
+                MoveObject (player, layer room)
+                UnlockExit (layer room lock)
+                AddToInventory (citizenship medallion)
+              }
+            </ontake>
+            <selfuseanything type="script">
+              msg ("You can't really do that.")
+            </selfuseanything>
+            <selfuseon type="scriptdictionary">
+              <item key="glass lid">
+                msg ("The medallion will fit into the circle in the glass. You're pretty sure you can use this to UNLOCK the LID.")
+              </item>
+            </selfuseon>
+          </object>
+        </object>
+        <object name="you door">
+          <inherit name="editor_object" />
+          <usestandardverblist type="boolean">false</usestandardverblist>
+          <displayverbs type="stringlist">
+            <value>Look at</value>
+            <value>open</value>
+          </displayverbs>
+          <look>A smooth door with a handle. It says YOU in small gold letters.</look>
+          <open type="script">
+            msg ("You push open the door that says YOU.")
+            MoveObject (player, you room)
+          </open>
+        </object>
+        <exit alias="in" to="you room">
+          <inherit name="indirection" />
+          <scenery />
+        </exit>
+      </object>
+      <exit alias="in" to="local room">
+        <inherit name="indirection" />
+        <scenery />
+      </exit>
+    </object>
+    <exit alias="in" to="provincial room">
+      <inherit name="indirection" />
+      <scenery />
+    </exit>
+    <object name="north wall">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt type="stringlist">
+        <value>gleam</value>
+        <value>strange</value>
+      </alt>
+      <look>You're sure you saw a gleam on this north wall, but when you look at it directly, there's nothing there. When you try to glimpse it out of the corner of your eye, however, there it is again.</look>
+      <poke type="script">
+        if (not Got(jade medallion)) {
+          msg ("There is a blinding flash of light. You throw up your hand to shield your eyes, and when you lower them, you are someplace new.")
+          MoveObject (player, dragon)
+        }
+        else {
+          msg ("You touch the place the wall was shimmering before, but nothing happens.")
+        }
+      </poke>
+      <examine type="script">
+        if (not Got(jade medallion)) {
+          msg ("There is a blinding flash of light. You throw up your hand to shield your eyes, and when you lower them, you are someplace new.")
+          MoveObject (player, dragon)
+        }
+        else {
+          msg ("You touch the place the wall was shimmering before, but nothing happens.")
+        }
+      </examine>
+    </object>
+  </object>
+  <object name="riddle room">
+    <inherit name="editor_room" />
+    <attr name="grid_width" type="int">4</attr>
+    <attr name="grid_length" type="int">4</attr>
+    <alias>Pillar Room</alias>
+    <description>This is a white room. Four pillars stand in its corners. There is a table in the middle of the room.</description>
+    <exit alias="east" to="constitution">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="west" to="quiz">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="walls2">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <alias>walls</alias>
+      <scenery />
+      <look>There is nothing special about them -- just plain white walls.</look>
+    </object>
+    <object name="freedom">
+      <inherit name="editor_object" />
+      <alias>Pillar of Freedom</alias>
+      <usestandardverblist />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <alt type="stringlist">
+        <value>freedom pillar</value>
+        <value>freedom</value>
+      </alt>
+      <look type="script">
+        if (GetBoolean(freedom, "set")) {
+          msg ("This is a tall pillar stretching from floor to ceiling. It has the word \"freedom\" etched into its base. There is a black metal block firmly set into a notch.")
+        }
+        else {
+          msg ("This is a tall pillar stretching from floor to ceiling. It has the word \"freedom\" etched into its base. There is a place to set a stone. You can USE something ON this pillar.")
+        }
+      </look>
+    </object>
+    <object name="justice">
+      <inherit name="editor_object" />
+      <alias>Pillar of Justice</alias>
+      <alt type="stringlist">
+        <value>justice pillar</value>
+        <value>justice</value>
+      </alt>
+      <look type="script">
+        if (GetBoolean(justice, "set")) {
+          msg ("This is a tall pillar stretching from floor to ceiling. It has the word \"justice\" etched into its base. There is a red metal block firmly set into a notch.")
+        }
+        else {
+          msg ("This is a tall pillar stretching from floor to ceiling. It has the word \"justice\" etched into its base. There is a place to set a stone. You can USE something ON this pillar.")
+        }
+      </look>
+    </object>
+    <object name="equity">
+      <inherit name="editor_object" />
+      <alias>Pillar of Equity</alias>
+      <alt type="stringlist">
+        <value>equity pillar</value>
+        <value>equity</value>
+      </alt>
+      <look type="script">
+        if (GetBoolean(equity, "set")) {
+          msg ("This is a tall pillar stretching from floor to ceiling. It has the word \"equity\" etched into its base. There is a blue metal block firmly set into a notch.")
+        }
+        else {
+          msg ("This is a tall pillar stretching from floor to ceiling. It has the word \"equity\" etched into its base. There is a place to set a stone. You can USE something ON this pillar.")
+        }
+      </look>
+    </object>
+    <object name="representation">
+      <inherit name="editor_object" />
+      <alias>Pillar of Representation</alias>
+      <alt type="stringlist">
+        <value>representation pillar</value>
+        <value>representation</value>
+      </alt>
+      <look type="script">
+        if (GetBoolean(representation, "set")) {
+          msg ("This is a tall pillar stretching from floor to ceiling. It has the word \"representation\" etched into its base. There is a green metal block firmly set into a notch.")
+        }
+        else {
+          msg ("This is a tall pillar stretching from floor to ceiling. It has the word \"representation\" etched into its base. There is a place to set a stone. You can USE something ON this pillar.")
+        }
+      </look>
+    </object>
+    <object name="table">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <look>This is a coarse wooden table.</look>
+      <feature_container />
+      <hidechildren />
+      <listchildren />
+      <contentsprefix>on which there are</contentsprefix>
+      <object name="freedom block">
+        <inherit name="editor_object" />
+        <take />
+        <takemsg>You pick up the purple block.</takemsg>
+        <dropmsg>You set the block aside.</dropmsg>
+        <feature_usegive />
+        <alias>purple block</alias>
+        <drop type="boolean">false</drop>
+        <usestandardverblist />
+        <alt type="stringlist">
+          <value>purple</value>
+        </alt>
+        <look type="script">
+          msg ("A purple metal block. There is a picture on it and the words \"people have the right to think and speak as they wish.\"")
+          picture ("rightsandfreedoms.png")
+        </look>
+        <use type="script"><![CDATA[
+          msg ("What do you want to use it on? (HINT: Type \"use <u> object </u> on <u> other object </u>)")
+        ]]></use>
+        <selfuseanything type="script">
+          msg ("This can only be used on the pillars of deomcracy.")
+        </selfuseanything>
+        <selfuseon type="scriptdictionary">
+          <item key="representation"><![CDATA[
+            <item___SPACE___key = "freedom">
+            SetObjectFlagOn (freedom, "set")
+            MoveObject (freedom block, freedom)
+            if (GetBoolean(equity, "set") and GetBoolean(representation, "set") and GetBoolean(justice, "set")) {
+              msg ("You set the freedom block in its place. The pillars shudder and suddenly glow. A key appears in your hand.")
+              AddToInventory (pillar key)
+            }
+            else {
+              msg ("You set the freedom block in its place. You hear a distinctive \"click.\"")
+            }
+            </item>
+          ]]></item>
+          <item key="justice">
+            if (GetBoolean(justice, "set")) {
+              msg ("There is already a block there. You can't add another.")
+            }
+            else {
+              msg ("You try to wedge the block into the space, but it doesn't quite fit. Perhaps it goes someplace else?")
+            }
+          </item>
+          <item key="equity">
+            if (GetBoolean(equity, "set")) {
+              msg ("There is already a block there. You can't add another.")
+            }
+            else {
+              msg ("You try to wedge the block into the space, but it doesn't quite fit. Perhaps it goes someplace else?")
+            }
+          </item>
+          <item key="freedom"><![CDATA[
+            <item___SPACE___key = "freedom">
+            SetObjectFlagOn (freedom, "set")
+            MoveObject (freedom block, freedom)
+            if (GetBoolean(GetBoolean(equity, "set") and GetBoolean(representation, "set") and GetBoolean(justice), "set")) {
+              msg ("You set the freedom block in its place. The pillars shudder and suddenly glow. A key appears in your hand.")
+              AddToInventory (pillar key)
+            }
+            else {
+              msg ("You set the freedom block in its place. You hear a distinctive \"click.\"")
+            }
+            </item>
+          ]]></item>
+        </selfuseon>
+      </object>
+      <object name="equity block">
+        <inherit name="editor_object" />
+        <feature_usegive />
+        <alias>blue block</alias>
+        <take />
+        <takemsg>You take the blue block.</takemsg>
+        <drop type="boolean">false</drop>
+        <usestandardverblist />
+        <look type="script">
+          msg ("A blue metal block reading \"individuals and groups get the same opportunities, but that doesn't always mean get treated exactly the same. Equality means same treatment; equity means FAIR treatment.\" There is a picture underneath.")
+          picture ("Equality doesnt mean Equity.jpg")
+        </look>
+        <selfuseanything type="script">
+          msg ("This can only be used on the pillars of democracy")
+        </selfuseanything>
+        <use type="script"><![CDATA[
+          msg ("What do you want to use it on? (HINT: Type \"use <u> object </u> on <u> other object </u>)")
+        ]]></use>
+        <selfuseon type="scriptdictionary">
+          <item key="equity"><![CDATA[
+            <item___SPACE___key = "equity">
+            SetObjectFlagOn (equity, "set")
+            MoveObject (equity block, equity)
+            if (GetBoolean(freedom, "set") and GetBoolean(representation, "set") and GetBoolean(justice, "set")) {
+              msg ("You set the equity block in its place. The pillars shudder and suddenly glow. A key appears in your hand.")
+              AddToInventory (pillar key)
+            }
+            else {
+              msg ("You set the equity block in its place. You hear a distinctive \"click.\"")
+            }
+            </item>
+          ]]></item>
+          <item key="freedom">
+            if (GetBoolean(freedom, "set")) {
+              msg ("There is already a block there. You can't add another.")
+            }
+            else {
+              msg ("You try to wedge the block into the space, but it doesn't quite fit. Perhaps it goes someplace else?")
+            }
+          </item>
+          <item key="justice">
+            if (GetBoolean(freedom, "set")) {
+              msg ("There is already a block there. You can't add another.")
+            }
+            else {
+              msg ("You try to wedge the block into the space, but it doesn't quite fit. Perhaps it goes someplace else?")
+            }
+          </item>
+          <item key="representation">
+            if (GetBoolean(representation, "set")) {
+              msg ("There is already a block there. You can't add another.")
+            }
+            else {
+              msg ("You try to wedge the block into the space, but it doesn't quite fit. Perhaps it goes someplace else?")
+            }
+          </item>
+        </selfuseon>
+      </object>
+      <object name="representation block">
+        <inherit name="editor_object" />
+        <look>A green metal block bearing the inscription "every person can elect someone to represent them in government."</look>
+        <take />
+        <takemsg>You pick up the green block.</takemsg>
+        <dropmsg>You set the block aside.</dropmsg>
+        <feature_usegive />
+        <alias>green block</alias>
+        <drop type="boolean">false</drop>
+        <usestandardverblist />
+        <selfuseanything type="script">
+          msg ("This block can only be used with the pillars of democracy.")
+        </selfuseanything>
+        <use type="script"><![CDATA[
+          msg ("What do you want to use it on? (HINT: Type \"use <u> object </u> on <u> other object </u>)")
+        ]]></use>
+        <selfuseon type="scriptdictionary">
+          <item key="representation"><![CDATA[
+            <item___SPACE___key = "representation">
+            SetObjectFlagOn (equity, "set")
+            MoveObject (representation block, representation)
+            if (GetBoolean(freedom, "set") and GetBoolean(equity, "set") and GetBoolean(justice, "set")) {
+              msg ("You set the representation block in its place. The pillars shudder and suddenly glow. A key appears in your hand.")
+              AddToInventory (pillar key)
+            }
+            else {
+              msg ("You set the representation block in its place. You hear a distinctive \"click.\"")
+            }
+            </item>
+          ]]></item>
+          <item key="equity">
+            if (GetBoolean(equity, "set")) {
+              msg ("There is already a block there. You can't add another.")
+            }
+            else {
+              msg ("You try to wedge the block into the space, but it doesn't quite fit. Perhaps it goes someplace else?")
+            }
+          </item>
+          <item key="freedom">
+            if (GetBoolean(freedom, "set")) {
+              msg ("There is already a block there. You can't add another.")
+            }
+            else {
+              msg ("You try to wedge the block into the space, but it doesn't quite fit. Perhaps it goes someplace else?")
+            }
+          </item>
+          <item key="justice">
+            if (GetBoolean(justice, "set")) {
+              msg ("There is already a block there. You can't add another.")
+            }
+            else {
+              msg ("You try to wedge the block into the space, but it doesn't quite fit. Perhaps it goes someplace else?")
+            }
+          </item>
+        </selfuseon>
+      </object>
+      <object name="justice block">
+        <inherit name="editor_object" />
+        <look>A red metal block bearing the inscription "fair treatment of individuals and groups."</look>
+        <take />
+        <takemsg>You take the red block.</takemsg>
+        <dropmsg>You set the block on the floor.</dropmsg>
+        <feature_usegive />
+        <alias>red block</alias>
+        <drop type="boolean">false</drop>
+        <usestandardverblist />
+        <selfuseanything type="script">
+          msg ("You can't use this on anything but the pillars.")
+        </selfuseanything>
+        <use type="script"><![CDATA[
+          msg ("What do you want to use it on? (HINT: Type \"use <u> object </u> on <u> other object </u>)")
+        ]]></use>
+        <selfuseon type="scriptdictionary">
+          <item key="justice"><![CDATA[
+            <item___SPACE___key = "justice">
+            SetObjectFlagOn (justice, "set")
+            MoveObject (justice block, justice)
+            if (GetBoolean(freedom, "set") and GetBoolean(representation, "set") and GetBoolean(equity, "set")) {
+              msg ("You set the justice block in its place. The pillars shudder and suddenly glow. A key appears in your hand.")
+              AddToInventory (pillar key)
+            }
+            else {
+              msg ("You set the justice block in its place. You hear a distinctive \"click.\"")
+            }
+            </item>
+          ]]></item>
+          <item key="freedom">
+            if (GetBoolean(freedom, "set")) {
+              msg ("There is already a block there. You can't add another.")
+            }
+            else {
+              msg ("You try to wedge the block into the space, but it doesn't quite fit. Perhaps it goes someplace else?")
+            }
+          </item>
+          <item key="equity">
+            if (GetBoolean(equity, "set")) {
+              msg ("There is already a block there. You can't add another.")
+            }
+            else {
+              msg ("You try to wedge the block into the space, but it doesn't quite fit. Perhaps it goes someplace else?")
+            }
+          </item>
+          <item key="representation">
+            if (GetBoolean(representation, "set")) {
+              msg ("There is already a block there. You can't add another.")
+            }
+            else {
+              msg ("You try to wedge the block into the space, but it doesn't quite fit. Perhaps it goes someplace else?")
+            }
+          </item>
+        </selfuseon>
+      </object>
+      <object name="pillar box">
+        <inherit name="editor_object" />
+        <inherit name="container_closed" />
+        <inherit name="container_lockable" />
+        <alias>ornate locked box</alias>
+        <look>A carefully carved lockbox.</look>
+        <feature_container />
+        <listchildren />
+        <hidechildren />
+        <key type="object">pillar key</key>
+        <object name="model">
+          <inherit name="editor_object" />
+          <take />
+          <takemsg>You pocket the model of the four pillars of democracy.</takemsg>
+          <drop type="boolean">false</drop>
+          <dropmsg>It was too annoying to get to lose it now.</dropmsg>
+          <look type="script">
+            msg ("A model of the four pillars of democracy: freedom, equity, representation, and justice.")
+            picture ("2008-05-13-2118-58-600x511.jpg")
+          </look>
+        </object>
+      </object>
+    </object>
+  </object>
+  <object name="hall of govt">
+    <inherit name="editor_room" />
+    <attr name="grid_width" type="int">4</attr>
+    <attr name="grid_length" type="int">4</attr>
+    <exit alias="south" to="constitution">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="in" to="final room">
+      <inherit name="indirection" />
+      <scenery />
+    </exit>
+  </object>
+  <object name="quiz">
+    <inherit name="editor_room" />
+    <attr name="grid_width" type="int">4</attr>
+    <attr name="grid_length" type="int">4</attr>
+    <exit alias="southwest" to="small hall">
+      <inherit name="southwestdirection" />
+    </exit>
+    <exit alias="east" to="riddle room">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="constitution">
+    <inherit name="editor_room" />
+    <attr name="grid_width" type="int">4</attr>
+    <attr name="grid_length" type="int">4</attr>
+    <alias>Emerald Room</alias>
+    <description><![CDATA[The room is blindingly green. When you look closer, you think it may have actually been carved out of a huge emerald, although that is clearly impossible. Although... when you remember some of the "tricks" mages have performed in your village, you have to wonder. Are you sure you chose the right class?<br/><br/>The only thing in the room -- aside from a whole lot of green -- is a pedestal in its center. The pedestal also seems like it was carved from marble. You approach and see that there is a clear glass lid covering a piece of paper. The glass lid has a circular space that looks like you can press something into it.]]></description>
+    <attr name="grid_fill">SpringGreen</attr>
+    <exit alias="southwest" to="troll hall">
+      <inherit name="southwestdirection" />
+    </exit>
+    <object name="glass lid">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <look><![CDATA[A clear glass lid covers the pedestal. There is a round indendation about the size of a medallion. It looks like you could put something in there.<br/><br/>Beneath the lid, you can see a weathered paper. Looking closely, you can make out the words <i> Constitution of Cognosco </i> in fancy writing. Your heart skips a beat. Is this really the Consititution, the document that holds the greatest laws of the country, that holds the Charter of Rights and Freedoms and guarantees every citizen's rights? If so, this is the very document that makes Cognosco different from Ignarus.]]></look>
+      <alt type="stringlist">
+        <value>cover</value>
+      </alt>
+      <useindividualverblist type="boolean">false</useindividualverblist>
+      <usestandardverblist />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <feature_container />
+      <close type="boolean">false</close>
+      <transparent />
+      <listchildren />
+      <listchildrenprefix>It contains</listchildrenprefix>
+      <autounlock type="boolean">false</autounlock>
+      <unlockmessage><![CDATA[The glass lid has vanished. There is a weathered paper on the pedestal. You stare in reverence at the <i> Constitution of Cognosco. </i> This is the ultimate law of the land, containing the Charter of Rights and Freedoms. It gives everyone in Cognosco rights, responsibilities, and freedoms, and it is what makes you different from Ignarus. ]]></unlockmessage>
+      <lockmessage>The glass lid is locked firmly in place.</lockmessage>
+      <nokeymessage>You do not have anything that fits the circular indentation.</nokeymessage>
+      <usedefaultprefix />
+      <isopen />
+      <autoopen />
+      <key type="object">citizenship medallion</key>
+      <onopen type="script"><![CDATA[
+        msg ("You stare in reverence at the <i> Constitution of Cognosco. </i> This is the ultimate law of the land, containing the Charter of Rights and Freedoms. It gives everyone in Cognosco rights, responsibilities, and freedoms, and it is what makes you different from Ignarus. ")
+      ]]></onopen>
+      <object name="weathered paper">
+        <inherit name="editor_object" />
+        <take />
+        <takemsg>With shaking hands, you roll the constitution and place it in your belt. You are now carrying with you the rights and freedoms of every person in Cognosco.</takemsg>
+        <drop type="boolean">false</drop>
+        <dropmsg>Who would want to lose such an important piece of paper?</dropmsg>
+        <usestandardverblist />
+        <alt type="stringlist">
+          <value>constitution</value>
+        </alt>
+        <look type="script"><![CDATA[
+          if (Got(weathered paper)) {
+            msg ("This is the Consitution of Cognosco. A constitution is the ultimate law of the land, the things and principles which <i> constitute, </i> or make up, the country.")
+          }
+          else {
+            msg ("The Constitution of Cognosco lies on the pedestal.")
+          }
+        ]]></look>
+      </object>
+    </object>
+    <object name="pedestal">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <attr name="feature_container" type="boolean">false</attr>
+      <transparent type="boolean">false</transparent>
+      <listchildren type="boolean">false</listchildren>
+      <listchildrenprefix>a weathered paper</listchildrenprefix>
+      <openmsg>The glass shudders and dissolves.</openmsg>
+      <close type="boolean">false</close>
+      <isopen type="boolean">false</isopen>
+      <usestandardverblist />
+      <open type="boolean">false</open>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <look type="script"><![CDATA[
+        if (Got(weathered paper)) {
+          msg ("An empty emerald pedestal stands before you.")
+        }
+        else {
+          msg ("An emerald pedestal stands before you. On it you see a weathered paper. Looking closely, you can make out the words <i> Constitution of Cognosco </i> in fancy writing. Your heart skips a beat. Is this really the Consititution, the document that holds the greatest laws of the country, that holds the Charter of Rights and Freedoms and guarantees every citizen's rights? If so, this is the very document that makes Cognosco different from Ignarus.")
+        }
+      ]]></look>
+    </object>
+    <object name="emeralds">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <scenery />
+      <alt type="stringlist">
+        <value>walls</value>
+        <value>green</value>
+      </alt>
+      <look>The walls, floor, ceiling, pedestal -- everything is shiny, green, and smooth. It couldn't actually be carved out of a giant emerald?</look>
+      <touch>They are smooth, but you can feel the imperfections, the bumps you would feel in any jewel.</touch>
+      <taste>You lick the walls. There is no taste. How old are you, anyway?</taste>
+      <eat>You lick the walls. There is no taste. How old are you, anyway?</eat>
+      <lick>You lick the walls. There is no taste. How old are you, anyway?</lick>
+      <smell>They have no odour</smell>
+    </object>
+    <exit alias="west" to="riddle room">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="north" to="hall of govt">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="dragon">
+    <inherit name="editor_room" />
+    <attr name="grid_width" type="int">2</attr>
+    <attr name="grid_length" type="int">2</attr>
+    <alias>Secret Room</alias>
+    <description>This is a small empty room -- except for the huge dragon in the middle. It's a terrifying sight, at least five times your size, with massive fangs. It snorts, and smoke drifts from its nostrils. You frantically search for the exit. There isn't one. Only you and the dragon.</description>
+    <object name="dragon1">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <alias>dragon</alias>
+      <look>The dragon is huge. It snarls at you. It seems there's no way out but to fight.</look>
+      <fight type="script">
+        if (Got(wooden sword)) {
+          msg ("You draw your sword and charge at the dragon. He rears onto his hind legs and sends a burst of flame in your direction. You slide beneath it and drive the point of your sword into the dragon's chest. The wooden sword is not sharp enough to pierce the dragon's scales, but it roars all the same and collapses at your feet. As you stare in amazement, the dragon slowly vanishes into smoke, leaving a green medallion in its place. You pick it up and examine it: a jade medallion with a picture of a dragon. You pick it up and hang it around your neck, making a mental note that you should probably ASK someone about it later. As soon as you touch it, the room begins to fill with smoke. When it clears, you are back in the strange hallway.")
+          AddToInventory (jade medallion)
+          MoveObject (player, layer room)
+        }
+        else {
+          msg ("You're not really enthusiastic about challenging a dragon with your bare hands, but there's nothing to use as a weapon. Too bad you didn't take a sword back in the training yard. For now, you ball up your fists and run at the beast. It blasts you with fire and you cringe, expecting to get burned. To your surprise, there is no heat, but when you open your eyes, you are back in the strange hallway. The gleam on the north wall has completely vanished.")
+          MoveObject (north wall, banners)
+          MoveObject (player, layer room)
+        }
+      </fight>
+    </object>
+  </object>
+  <object name="small hall">
+    <inherit name="editor_room" />
+    <attr name="grid_width" type="int">4</attr>
+    <attr name="grid_length" type="int">4</attr>
+    <alias>Short Corridor</alias>
+    <description>This is a short corridor with pretty much nothing in it except some doors. One leads east, one leads northeast, and one leads southwest. You're not sure, but you might hear something behind the eastern door.</description>
+    <exit alias="northeast" to="quiz">
+      <inherit name="northeastdirection" />
+    </exit>
+    <exit name="exit behind troll" alias="east" to="troll hall">
+      <inherit name="eastdirection" />
+      <locked />
+      <lockmessage>You open the door and take a look. Okay, there's a huge troll in the way. You carefully close the door again before it sees you.</lockmessage>
+    </exit>
+    <exit alias="southwest" to="ignarus">
+      <inherit name="southwestdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>swim</property>
+    <pattern>swim</pattern>
+    <defaultexpression>"You can't swim " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="large white key">
+    <inherit name="editor_object" />
+    <look>A large white key bearing the crest of Cognosco.</look>
+    <take />
+    <takemsg>The key is warm in your hand.</takemsg>
+    <feature_usegive />
+    <use type="script">
+      cognosco exit
+    </use>
+  </object>
+  <verb>
+    <property>close</property>
+    <pattern>close; roll</pattern>
+    <defaultexpression>"You can't close; roll " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>poke</property>
+    <pattern>poke; touch</pattern>
+    <defaultexpression>"You can't poke; touch " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>siton</property>
+    <pattern>sit on; sit upon; sit down on; sit down upon; sit in; sit</pattern>
+    <defaultexpression>"You can't sit on; sit upon; sit down on; sit down upon; sit in " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>attack</property>
+    <pattern>attack; fight</pattern>
+    <defaultexpression>"You can't attack; fight " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>fight</property>
+    <pattern>fight; attack; kill; battle</pattern>
+    <defaultexpression>"You can't fight; attack " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="jade medallion">
+    <inherit name="editor_object" />
+    <look>A jade medallion with a picture of a dragon. It is on a thick cord so that you can wear it around your neck.</look>
+    <take type="boolean">false</take>
+    <drop type="boolean">false</drop>
+  </object>
+  <verb>
+    <pattern>sit</pattern>
+    <multiobjectmenuempty>What do you want to sit on?</multiobjectmenuempty>
+  </verb>
+  <verb>
+    <property>takeoff</property>
+    <pattern>take off; remove</pattern>
+    <defaultexpression>"You can't take off; remove " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>examine</property>
+    <pattern>examine; inspect</pattern>
+    <defaultexpression>"You can't examine; inspect " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="final room">
+    <inherit name="editor_room" />
+  </object>
+  <object name="pillar key">
+    <inherit name="editor_object" />
+    <look>A key in the shape of a pillar.</look>
+    <take />
+    <drop type="boolean">false</drop>
+    <feature_usegive />
+    <use type="script">
+      if (game.pov.parent = riddle room) {
+        if (GetBoolean(locked box, "open")) {
+          msg ("You don't need to use this key anymore.")
+        }
+        else {
+        }
+      }
+      else {
+        msg ("There's no need for this key now.")
+      }
+    </use>
+    <selfuseanything type="script">
+      msg ("There's no need for this key now.")
+    </selfuseanything>
+    <selfuseon type="scriptdictionary">
+      <item key="locked box">
+        if (game.pov.parent = riddle room) {
+          if (GetBoolean(locked box, "open")) {
+            msg ("You don't need to use this key anymore.")
+          }
+          else {
+          }
+        }
+        else {
+          msg ("There's no need for this key now.")
+        }
+      </item>
+    </selfuseon>
+  </object>
+  <function name="key box">
+    if (game.pov.parent = training hall) {
+      if (Got(small key)) {
+        HelperOpenObject (box)
+        msg ("The box opens. Inside is a scroll.")
+      }
+      else {
+        msg ("The box is locked.")
+      }
+    }
+    else {
+      msg ("There is no further need of this key")
+    }
+  </function>
+  <function name="ignarus key">
+    if (Got(large black key)) {
+      if (game.pov.parent = ignarus) {
+        msg ("You use the key to unlock the heavy black gates.")
+      }
+      else {
+        msg ("There is no need to use that here.")
+      }
+      msg ("You do not have that key.")
+    }
+  </function>
+  <function name="cognosco exit">
+    if (Got(large white key)) {
+      msg ("The white key unlocks the gates in the Cognosco throne room.")
+    }
+    else {
+      msg ("You do not have the white key.")
+    }
+  </function>
+  <function name="training swords">
+    if (game.pov.parent = training yard) {
+      if (not Got(wooden sword)) {
+        msg ("You pick up one of the swords. It is heavy and wooden, well worn from years of use. Thinking it might come in handy later, you tuck it into your belt.")
+        AddToInventory (wooden sword)
+      }
+      else {
+        msg ("You don't want to carry more than one.")
+      }
+    }
+    else {
+      msg ("There are no swords here.")
+    }
+  </function>
+  <walkthrough name="Walkthrough to Pillar room">
+    <steps type="simplestringlist">
+      ask fighter about key
+      open box
+      take scroll
+      talk to woman
+      n
+      talk to woman
+      n
+      w
+      turn globe
+      ne
+      ne
+      e
+    </steps>
+  </walkthrough>
+</asl>

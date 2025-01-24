@@ -1,0 +1,86 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="GamebookCore.aslx" />
+  <game name="test_rand_order">
+    <gameid>a4eb438d-4df0-42c6-b995-c49060e29130</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <author>Entropic Pen</author>
+    <category>Historical</category>
+  </game>
+  <object name="Page1">
+    <inherit name="script" />
+    <description>This is page 1. Type a description here, and then create links to other pages below.</description>
+    <options type="stringdictionary">
+      <item>
+        <key>Page2</key>
+        <value>This link goes to page 2</value>
+      </item>
+      <item>
+        <key>Page3</key>
+        <value>And this link goes to page 3</value>
+      </item>
+    </options>
+    <script type="script">
+      msg ("You're going to have to set the \"Page Type\" to \"Script\" to properly use this.")
+      // Note the delimiter (the third parameter), it can be different for each list
+      rand_link_order ("Page2:Page3:Page4", "This goes to page 2:This goes to page 3:This goes to page 4", ":")
+    </script>
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+  </object>
+  <object name="Page2">
+    <inherit name="script" />
+    <description>This is page 2. Type a description here, and then create links to other pages below.</description>
+    <script type="script">
+      msg ("This is page 2. Type a description here, and then create links to other pages below.")
+      rand_link_order ("Page1,Page3,Page4", "This goes to page 1,This goes to page 3,This goes to page 4", ",")
+    </script>
+  </object>
+  <object name="Page3">
+    <inherit name="script" />
+    <description>This is page 3. Type a description here, and then create links to other pages below.</description>
+    <script type="script">
+      msg ("This is page 3. Type a description here, and then create links to other pages below.")
+      // Here, the delimiter is a hyphen (-)
+      rand_link_order ("Page1-Page2-Page4", "This goes to page 1-This goes to page 2-This goes to page 4", "-")
+    </script>
+  </object>
+  <object name="Page4">
+    <inherit name="script" />
+    <description>This is page 4. Type a description here, and then create links to other pages below.</description>
+    <script type="script">
+      msg ("This is page 4. Type a description here, and then create links to other pages below.")
+      rand_link_order ("Page1,Page2,Page3", "This goes to page 1,This goes to page 2,This goes to page 3", ",")
+    </script>
+  </object>
+  <function name="rand_link_order" parameters="item_list, item_display, delimiter">
+    // The first parameter are the names of the pages in a delimited list.
+    //
+    // The second parameter is the description of the page links, also in a delimited list.
+    //
+    // The third parameter is the delimiter for the lists.
+    //
+    // This is a list of the different pages you want implemented in a delimited split function
+    link_list = Split(item_list,delimiter)
+    link_names = Split(item_display,delimiter)
+    // Here I took the guess work out of counting the # of items in the link_list in this loop function
+    msg ("")
+    for (o, 0, ListCount(link_list) -1, 1) {
+      // This gets an integer value from ZERO to the # of items in link_list
+      rand_link = GetRandomInt(0,ListCount(link_list)-1)
+      // Then using that integer value it selects an item from the list
+      choosen_link = ListItem(link_list,rand_link)
+      choosen_link_name = ListItem(link_names,rand_link)
+      // Whatever is selected goes through a switch function which prints out a page link.  Here you'll have to edit the page text as well as what page it is going to:
+      //
+      // {page:PAGE NAME:LINK TEXT}
+      msg ("{page:" + choosen_link + ":" + choosen_link_name + "}")
+      // Once we're done with that item, we remove it from the list and add an extra space between links so it looks like a mudane list of page links.
+      list remove (link_list, choosen_link)
+      list remove (link_names, choosen_link_name)
+      msg ("")
+    }
+  </function>
+</asl>

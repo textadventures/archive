@@ -1,0 +1,90 @@
+<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="GamebookCore.aslx" />
+  <game name="Test 3">
+    <gameid>8a308535-17da-4903-a151-70c780334191</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+  </game>
+  <object name="Page1">
+    <description><![CDATA[{if r1teststart:On the screen, you read:<br/><br/><i>WELCOME TO  CYBERCAMP<br/>Your first test begins <b>now</b>.</i><br/><br/>And just like that, the lights in the room go out.}{if not r1l:{once:You open your eyes, waking from a deep sleep. }The room is dark.}<br/>{if r1l:The room is brightly lit.}<br/>Opposite the bed {if not r1stand:you are laying on }stands a desk, atop of which sits a terminal. {if r1term_disc:{if not r1term_on:It is switched off.}} {if r1term_on:Its screen {if r1l:casts a blue hue over its immediate surroundings.}{if not r1l:bathes the entire room in a cold blue light.}}<br/>{if not r1stand:{page:r1stand:Get out of bed.}}<br/>{if r1stand:{if not r1l:{if not r1teststart:{page:r1l:Light the room.}}{if r1teststart:{page:r1nl:Light the room.}}}<br/>{if not r1term_on:{if not r1term_disc:{if r1l:{page:r1term_disc:Examine the terminal.}}}{if r1term_disc:{page:r1term_on:Switch on the terminal.}}}}<br/>{if r1term_on:{page:r1term_use:Use the terminal.}<br/>{page:r1term_off:Switch off the terminal.}}]]></description>
+    <options type="stringdictionary" />
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+  </object>
+  <object name="r1l">
+    <inherit name="script" />
+    <description>This is page 2. Type a description here, and then create links to other pages below.</description>
+    <script type="script">
+      SetFlagOn ("r1l")
+      MovePlayer (Page1)
+    </script>
+  </object>
+  <object name="r1d">
+    <inherit name="script" />
+    <description>This is page 3. Type a description here, and then create links to other pages below.</description>
+    <script type="script">
+      SetFlagOff ("r1l")
+      MovePlayer (Page1)
+    </script>
+  </object>
+  <object name="r1term_disc">
+    <inherit name="script" />
+    <script type="script">
+      SetFlagOn ("r1term_disc")
+      MovePlayer (Page1)
+    </script>
+  </object>
+  <object name="r1term_on">
+    <inherit name="script" />
+    <script type="script">
+      SetFlagOn ("r1term_on")
+      MovePlayer (Page1)
+    </script>
+  </object>
+  <object name="r1term_off">
+    <inherit name="script" />
+    <script type="script">
+      SetFlagOff ("r1term_on")
+      MovePlayer (Page1)
+    </script>
+  </object>
+  <object name="r1stand">
+    <inherit name="script" />
+    <script type="script">
+      SetFlagOn ("r1stand")
+      MovePlayer (Page1)
+    </script>
+  </object>
+  <object name="r1term_use">
+    <inherit name="script" />
+    <description type="string"></description>
+    <script type="script">
+      SetFlagOff ("r1l")
+      SetFlagOn ("r1teststart")
+      MovePlayer (Page1)
+      SetCounter ("game.nervosity", 1)
+    </script>
+  </object>
+  <object name="r1nl">
+    <inherit name="script" />
+    <script type="script"><![CDATA[
+      msg ("The lightswitch does nothing.")
+      IncreaseCounter ("game.nervosity")
+      if (game.nervosity > 10) {
+        msg ("You feel like you're about to have a heart-attack.")
+      }
+      else if (game.nervosity < 10 and game.nervosity > 7) {
+        msg ("You're feeling really nervous.")
+      }
+      else if (game.nervosity < 8 and game.nervosity > 4) {
+        msg ("You're feeling quite nervous.")
+      }
+      else if (game.nervosity < 5 and game.nervosity > 2) {
+        msg ("You're starting to feel nervous.")
+      }
+      MovePlayer (Page1)
+    ]]></script>
+  </object>
+</asl>

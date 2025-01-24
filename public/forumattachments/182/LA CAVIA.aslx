@@ -1,0 +1,325 @@
+<!--Saved by Quest 5.1.4393.23459-->
+<asl version="510">
+  <include ref="italiano.aslx" />
+  <include ref="Core.aslx" />
+  <game name="LA CAVIA">
+    <gameid>d03627f9-c100-4699-879c-eed29a76da3e</gameid>
+    <version>1.0</version>
+    <description type="string"></description>
+    <author>Luca Salvicchi</author>
+    <defaultfont>Bookman Old Style</defaultfont>
+    <defaultbackground>SandyBrown</defaultbackground>
+    <defaultlinkforeground>WhiteSmoke</defaultlinkforeground>
+    <menufont>Euphemia</menufont>
+    <defaultfontsize type="int">12</defaultfontsize>
+    <start type="script"><![CDATA[
+      game.displayroomdescriptiononstart = false
+      PrintCentered ("<b> INTRO: LA CAVIA </b><br/><br/>Benvenuto. <br/><br/>Se hai già familiarità con le avventure testuali, questa storia ti riserverà poche sorprese. Ma d’altra parte, questa storia non è per te. <br/><br/>Se invece non sei pratico di queste faccende, ti annuncio che tu sarai la mia cavia. Ciò che intendo fare con te è usarti per il mio esperimento.<br/><br/>Se vuoi sapere di più a proposito del mio esperimento, premi un tast qualunque e sarai accontentato.<br/><br/><br/>")
+      wait {
+        msg ("Molto bene. <br/><br/><b>Tu sarai la mia cavia, dunque. <br/><br/>E stai per vivere una piccola avventura. </b><br/><br/>Il mio esperimento è molto semplice: voglio verificare se nel 2012 ha ancora senso proporre avventure testuali. Se raggiungerai la fine dell’avventura e ti sarai anche divertito, allora l’esperimento sarà riuscito. Altrimenti avrò fallito. Tieni conto per risolvere l’avventura ci vogliono si e no dieci minuti.<br/><br/>Ma prima di iniziare, cara la mia cavia, dovrò ammaestrarti in modo che tu possa apprezzare al meglio l’esperimento.<br/><br/><br/><i> Una piccola nota: io non sono un amico delle IF: le ritengo scomode da giocare, bisogna scaricare programmi, imparare a usarli, e poi spesso sono cervellotiche e stancanti. O almeno è quanto pensavo prima di conoscere Quest, un sistema di gioco open source (in breve: gratuito) che rende queste avventure decisamente più intuitive, e soprattutto permette di giocare online. Proprio quello che stai facendo tu, adesso. E addirittura di convertirle in app per IOS e Android. Se vorrai saperne di più, puoi visitare. Ma adesso non è importante, te lo ricorderò più avanti. </i><br/><br/>Premi un tasto qualunque per proseguire.")
+        wait {
+          OnEnterRoom (null)
+        }
+      }
+    ]]></start>
+  </game>
+  <object name="stanza">
+    <inherit name="editor_room" />
+    <descprefix>Sei in</descprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>una</prefix>
+    <description type="script"><![CDATA[
+      if (GetBoolean(frigobar, "visibile")) {
+        msg ("Grazie alla luce della candela, vedi in un angolo un piccolo frigo bar. Che ne pensi di dagli un’occhiata?")
+        MoveObject (frigobar, stanza)
+      }
+      else {
+        ClearScreen
+        msg ("Vedo che impari rapidamente. <br/> Ne sono lieto. <br/> <br/><b>Ora ascoltami e inizia ad immaginare... </b><br/><br/><br/><br/> Non c’è molta luce, salvo questa " + ObjectLink(candela) + " accesa. proprio ai tuoi piedi. Sembra incollata a terra con la sua stessa cera. <br/><br/><i> Premi un tasto</i> ")
+        wait {
+          msg ("<br/><br/>Sei in una stanza, sei esattamente al centro di una stanza silenziosa e piuttosto grande. Nella penombra, intuisci le pareti intorno a te. Gli angoli  invece sono macchie di buio. <br/>Se ti volti riconosci la tua lunga ombra, che si arrampica quasi fino al soffitto. <br/>L’odore è quello dell’intonaco fresco. <br/> Sembra che non ci sia una via di uscita. Nessuna porta, niente finestre. <br/>L’atmosfera è un tantino opprimente. <br/> <br/> <i> Se non l’hai già fatto, clicca sulla parola CANDELA (qui sopra) e scopri cosa puoi farci. Puoi ottenere lo stesso risultato anche selezionando la candela nel box qui accanto,  <b>Luoghi e Oggetti</b>, e poi fare clic su una delle voci che trovi scritte sopra al box.</i>")
+        }
+      }
+    ]]></description>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <statusattributes type="stringdictionary">cavia = </statusattributes>
+    </object>
+    <object name="candela">
+      <inherit name="switchable" />
+      <inherit name="feminine" />
+      <article>la</article>
+      <take />
+      <switchedon />
+      <switchoffmsg>Soffi con delicatezza sulla candela. Ora tutto è immerso nel buio.</switchoffmsg>
+      <takemsg><![CDATA[Ti chini a raccogliere la candela, che viene via con un piccolo strappo dal suo fragile ancoraggio di cera. <i> <br/><br/> Puoi verificare gli oggetti che hai preso e che porti con te, guardando sulla destra alla voce <b> Inventario </b> </i> <br/><br/>Non appena ti sollevi di nuovo, con la candela in mano, ti accorgi che riesci a vedere anche gli angoli della stanza. <br/><br/><i>Prova a digitare GUARDA</i>]]></takemsg>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>una</prefix>
+      <dropmsg>Appoggi la candela a terra.</dropmsg>
+      <switchonmsg>Provi ad accenderla.</switchonmsg>
+      <look type="script"><![CDATA[
+        if (GetBoolean(candela, "spenta")) {
+          msg ("E' talmente buio che non riesci nemmeno a vederla, la candela.")
+        }
+        else {
+          msg ("E' una normalissima candela bianca. Ma in questo momento è anche una preziosissima candela bianca accesa, dal momento che non c'è altra fonte di luce. <br/> E tu non possiedi nè accendino nè fiammiferi. Se dovesse spegnersi, sarebbe un vero peccato.")
+        }
+      ]]></look>
+      <ontake type="script">
+        wait {
+          SetObjectFlagOn (frigobar, "visibile")
+        }
+      </ontake>
+      <onswitchon type="script">
+        if (player.cavia = "1") {
+          msg ("D'accordo, ecco qua il miracolo: la candela è di nuovo accesa.")
+          this.switchedon = true
+          SetObjectFlagOff (candela, "spenta")
+        }
+        else {
+          this.switchedon = false
+          msg ("Devi arrenderti all'evidenza che non hai nulla con cui accenderla. Ma non voglio lasciarti al buio: digita \"sono una stupida cavia\" e verro' in tuo aiuto.")
+        }
+      </onswitchon>
+      <onswitchoff type="script">
+        SetObjectFlagOn (candela, "spenta")
+      </onswitchoff>
+    </object>
+    <object name="muro">
+      <inherit name="editor_object" />
+      <scenery />
+      <article>lo</article>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <bussasul type="script">
+        if (Got(candela)) {
+          if (Got(apribottiglie)) {
+            msg ("L’idea è geniale! Illuminare mano a mano tratti di pareti e bussare alla ricerca di un suono che faccia sperare in un muro abbastanza sottile, e quindi provare a romperlo. Ma come t’è venuto in mente? Anche se, in effetti, avresti potuto farlo anche subito, senza perdere tempo con la birra… Dai, non prendertela. Proseguiamo? PREMI UN TASTO PER CONTINUARE")
+            wait {
+              msg ("camminando e bussando lungo la parete, ti imbatti a un certo punto in un foglietto appeso con un chiodino.")
+              MoveObject (foglietto sul muro, stanza)
+              if (GetBoolean(muro, "guardato")) {
+                msg ("Avresti giurato che non c'era, quando prima hai esaminato il muro. In ogni caso: che ne dici di leggerlo?")
+              }
+              else {
+                msg ("Che ne dici di leggerlo?")
+              }
+            }
+          }
+        }
+        else {
+          msg ("meglio che prendi la candela, prima.")
+        }
+      </bussasul>
+      <look type="script">
+        verifica_candela
+        msg ("Lo guardi e lo riguardi: sembra esattamente un muro, ma somiglia anche alla parete di una stanza.")
+        SetObjectFlagOn (muro, "guardato")
+      </look>
+      <hit type="script">
+        if (Got(candela)) {
+          if (Got(apribottiglie)) {
+            msg ("Preso dallo sconforto, colpisci il muro con l'apribottiglie. Fa un rumore sordo, come se... quasi che... forse li' dietro... PREMI UN TASTO PER CONTINUARE")
+            wait {
+              verifica_candela
+              msg ("...la cosa va approfondita... forse... bussando sul muro...")
+            }
+          }
+          else {
+            msg ("Preso dallo sconforto, colpisci il muro con un calcio. Fa un rumore sordo, e un po' di intonaco viene via. Sembra come se... quasi che... forse... PREMI UN TASTO PER CONTINUARE")
+            verifica_candela
+            msg ("...la cosa va approfondita... chissà, magari bussando sul muro...")
+          }
+        }
+        else {
+          msg ("Meglio se prendi la candela, prima.")
+        }
+      </hit>
+      <useon type="scriptdictionary">
+        <item key="apribottiglie"><![CDATA[
+          create exit ("", "nord", stanza, corridoio, "northdirection")
+          msg ("L’intonaco inizia a cadere, rivelando una fragile struttura di cartongesso. Pochi altri colpi e riesci a fare un piccolo buco nella parete. Oltre, il buio e un alito d'aria fetida. Continui a colpire e finalmente lo spazio è abbastanza largo per passare.  <br/>PREMI UN TASTO PER CONTINUARE")
+          wait {
+            msg ("<br/><br/><i>Ok, ora guarda in basso a destra: vedi <b>il riquadro dal titolo LA BUSSOLA</b>? Bene, premendo quei tasti puoi spostarti tra diversi ambienti (stanze, strade, fiumi, ecc...). <br/>Fino ad ora non ci è servito perché la nostra stanza era un ambiente senza uscite. Ma ora che sei stato capace di inventarti un passaggio sulla parete nord, guarda caso puoi andare proprio a nord passando nel buco che hai creato. <br/><br/>Per farlo, puoi premere la freccia in direzione nord, che come vedi è evidenziata rispetto alle altre e indica che quella è una direzione percorribile. In alternativa, puoi digitare VAI A NORD, oppure VAI NORD o semplicemente NORD o addirittura N </i>")
+          }
+        ]]></item>
+      </useon>
+    </object>
+    <object name="sdraio">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <inherit name="plural" />
+      <article>le</article>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>una</prefix>
+      <look type="script">
+        insert ("prova.htm")
+      </look>
+    </object>
+  </object>
+  <object name="stanza fantasma e target">
+    <inherit name="editor_room" />
+    <description><![CDATA[Senti passi da dietro la porta e qualcuno ti apre. Sono io, cara la mia cavia. “Hai fatto un ottimo lavoro” ti dico, “ora sei pronto per affrontare da solo la tua avventura.” Ricordati che ciò che intendo fare è usarti per il mio esperimento. Ti ripeto dunque che se raggiungerai la fine dell’avventura e ti sarai anche divertito, allora l’esperimento sarà riuscito. Altrimenti avrò fallito. Tieni conto per risolvere l’avventura ci vogliono si e no dieci minuti. <br/><br/>Ho ancora tre cose da dirti</b>. <br/><br/>- Digitando HELP accedi a una serie di suggerimenti generici. <br/><br/>- Digitando SAVE salvi la partita. Puoi farlo anche adesso, se intendi affrontare più tardi l’avventura. <br/><br/>-Se abbandoni l'avventura, per favore digita ABBANDONO. La scienza te ne sarà grata. Se vorrai saperne di più, puoi sempre visitare. <br/><br/>Ora inizia l’avventura. <br/><br/><u>Premi un tasto qualunque per proseguire.</u>]]></description>
+    <object name="frigobar">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <alias>frigo bar</alias>
+      <article>lo</article>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>un</prefix>
+      <listchildren type="boolean">false</listchildren>
+      <alt>frigobar</alt>
+      <look>E' un piccolo frigobar, di quellic he hai visto tante volte nelle stanze di albergo. Chissà cosa contiene.</look>
+      <onopen type="script"><![CDATA[
+        msg ("Non appena apri lo sportello, i tuoi occhi sono trafitti dalla luce e si chiudono a fessura. E' solo la lampadina interna del frigobar, ma nella penombra cui ti sei abituato fa l'effetto di una lamapda da interrogatorio. <br/><br/>La "+ ObjectLink(bottiglia_di_birra) +", però, le noti subito. subito. E vedi anche, dietro la birra, un " + ObjectLink(apribottiglie) +". Che ne dici di lasciare la candela e avere così le mani libere per dare un'occhiata a piu' da vicino, soprattutto a quello strano arnese? <br/><i>Digita LASCIA CANDELA o LASCIA LA CANDELA </i>")
+      ]]></onopen>
+      <object name="bottiglia_di_birra">
+        <inherit name="openable" />
+        <article>la</article>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>una</prefix>
+        <alt>birra; birre; bottiglia</alt>
+        <alias>bottiglia di birra</alias>
+        <take type="script">
+          if (not Got(candela)) {
+            msg ("Bene, hai in mano una bottiglia di birra. Chiusa. Ora cavatela da solo. Se ti senti perso, digita SONO UNA STUPIDA CAVIA")
+            MoveObject (bottiglia di birra, player)
+          }
+          else {
+            msg ("forse è meglio se prima lasci la candela")
+          }
+        </take>
+        <openscript type="script"><![CDATA[
+          if (GetBoolean(apribottiglie, "riconosciuto")) {
+            if (Got(apribottiglie)) {
+              HelperOpenObject (bottiglia_di_birra)
+              msg ("Ottimo. Goditi la birra. Quando sei pronto, premi un tasto.")
+              wait {
+                msg ("L'euforia leggera che la birra ti ha regalato svanisce man mano che ti rendi conto di essere in una trappola. Questa maledetta stanza non ha porte, finestre, botole. Niente. A Roma si direbbe che rischi di fare la fine del sorcio. nel resto del mondo di parlerebbe di sindrome da sepolto vivo. Sarà un'impressione, ma piu' ci pensi e piu' ti manca il fiato. Come se l'aria stesse terminando. Fa' qualcosa. <i> Se ti senti perso, scrivi SONO UNA STUPIDA CAVIA </i> ")
+                player.cavia = "2"
+              }
+            }
+            else {
+              msg ("Che ne dici di prendere l'apribottiglie, prima?")
+            }
+          }
+          else {
+            msg ("Provi ad aprirla coi denti, ma senti uno scricchiolio sinistro dietro a un molare. Perche' non dai un'occhiata all'arnese?")
+          }
+        ]]></openscript>
+        <useon type="scriptdictionary">
+          <item key="apribottiglie"><![CDATA[
+            msg ("E’ stato facile, non è vero? Ok, ora goditi la birra. Quando sei pronto, premi un tasto.")
+            HelperOpenObject (bottiglia_di_birra)
+            wait {
+              ClearScreen
+              msg ("L'euforia leggera che la birra ti ha regalato svanisce man mano che ti rendi conto di essere in una trappola. Questa maledetta stanza non ha porte, finestre, botole. Niente. A Roma si direbbe che rischi di fare la fine del sorcio. nel resto del mondo di parlerebbe di sindrome da sepolto vivo. Sarà un'impressione, ma piu' ci pensi e piu' ti manca il fiato. Come se l'aria stesse terminando. Fa' qualcosa. <i> Se ti senti perso, scrivi SONO UNA STUPIDA CAVIA </i> ")
+            }
+            player.cavia = "2"
+          ]]></item>
+        </useon>
+      </object>
+      <object name="apribottiglie">
+        <inherit name="editor_object" />
+        <take />
+        <alias>grosso arnese di metallo</alias>
+        <article>lo</article>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>un</prefix>
+        <takemsg>L'hai preso. E’ piuttosto massiccio e pesante.</takemsg>
+        <look type="script"><![CDATA[
+          set (apribottiglie, "alias", apribottiglie)
+          msg ("E' una pesante statuetta in metallo, e raffigura uno strano mostro minaccioso con la bocca spalancata. Ora che lo guardi con attenzione, ti accorgi che quella bocca in realta' e' un apribottiglie! <i> Sappi che puoi usare espressioni come USA (un oggetto) SU/CON (un altro oggetto). Ad esempio: USA apribottiglie SU birra. Oppure, a volte, una volta scoperto qualcosa puoi eseguire azioni che prima non ti riuscivano. Ad esempio: APRI birra</i> ")
+          SetObjectFlagOn (apribottiglie, "riconosciuto")
+        ]]></look>
+      </object>
+    </object>
+    <object name="foglietto sul muro">
+      <inherit name="editor_object" />
+      <article>lo</article>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>un</prefix>
+      <read type="script"><![CDATA[
+        msg ("C’è scritto: <br/> <i> “Cara la mia cavia, non preoccuparti per questa inverosimile faccenda di uscire dalla stanza digitando BUSSA SUL MURO. E’ solo un esempio di certi enigmi nelle avventure testuali, enigmi a mio parere inutilmente complessi. Alla fine dell’addestramento, vivrai una storia molto più ragionevole. <br/><br/>In ogni caso, tieni a mente che puoi sempre provare ad esplorare verbi e azioni. Spesso avrai risposta banali, come “non puoi farlo”. Altre volte accadrà qualcosa di non rilevante ma solo divertente. Altre ancora, potresti cacciarti in qualche guaio. Oppure, farai scelte utili.” </i><br/><br/><br/><br/> PREMI UN TASTO PER PROSEGUIRE")
+        wait {
+          msg ("Dopo aver letto con attenzione, continui a battere fino a quando non senti, sulla parete a nord,  un rumore più sordo: qui la parete sembra davvero sottile. Con qualcosa di abbastanza massiccio, potresti romperla. <br/><br/><i> Ricorda che, per usare qualcosa su qualche altra cosa, puoi scrivere USA (oggetto1) SU/CON (oggetto2). Ad esempio: usa APRIBOTTIGLIE su MURO </i>")
+        }
+      ]]></read>
+    </object>
+    <exit alias="sud" to="corridoio">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="corridoio">
+    <inherit name="editor_room" />
+    <look>Sempre facendo luce con la candela, ti avventuri in quello spazio nero. Sembra una specie di corridoio. Fa freddo Davanti a te, a nord, intravedi una porta chiusa da cui filtra luce. A est c’è una finestrella. A ovest il muro.</look>
+    <description type="script">
+      if (GetBoolean(sgabuzzino, "visto")) {
+        msg ("Torni nel corridoio.")
+      }
+      else {
+        msg ("Sempre facendo luce con la candela, ti avventuri in quello spazio nero. Sembra una specie di corridoio. Fa freddo Davanti a te, a nord, intravedi una porta chiusa da cui filtra luce. A est c’è una porticina, sembra uno sgabuzzino. A ovest il muro.")
+      }
+    </description>
+    <exit name="uscita verso la porta" alias="nord" to="stanza fantasma e target">
+      <inherit name="northdirection" />
+      <locked type="boolean">false</locked>
+      <script type="script">
+        if (GetBoolean(sgabuzzino, "visto")) {
+          MoveObject (player, stanza fantasma e target)
+        }
+        else {
+          msg ("“vai prima a vedere la finestrella, stupida cavia.”")
+        }
+      </script>
+    </exit>
+    <exit alias="est" to="sgabuzzino">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="sgabuzzino">
+    <inherit name="editor_room" />
+    <description>vedi la rava e la fava</description>
+    <firstenter type="script">
+      SetObjectFlagOn (sgabuzzino, "visto")
+    </firstenter>
+    <exit alias="ovest" to="corridoio">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <verb />
+  <verb>
+    <property>bussasul</property>
+    <pattern>bussa sul</pattern>
+    <defaultexpression>"Non serve a molto bussarci sopra."</defaultexpression>
+  </verb>
+  <command>
+    <pattern>sono una stupida cavia</pattern>
+    <script>
+      if (GetBoolean(candela, "spenta")) {
+        player.cavia = "1"
+        msg ("ok, ora riprova ad accendere la candela.")
+      }
+      else if (player.cavia = "2") {
+        msg ("Capisco il tuo disappunto. Il fatto è che io adoro giocare con le mie cavie. lo capisci, vero? Lo faresti anche tu al mio posto. Non ti viene voglia di colpire il muro, per la rabbia e la frustrazione?")
+      }
+    </script>
+  </command>
+  <function name="verifica_candela">
+    if (not Got(candela)) {
+      msg ("Astutamente, prendi con te la candela. Non vuoi rischiare di prendere a capocciate il muro.")
+      MoveObject (candela, player)
+    }
+  </function>
+  <walkthrough name="fino alla creazione della exit">
+    <steps type="list">
+      wait 1
+      wait 2
+      prendi candela
+      guarda
+      apri frigo
+      x arnese
+      prendi arnese
+      colpisci il muro
+    </steps>
+  </walkthrough>
+</asl>

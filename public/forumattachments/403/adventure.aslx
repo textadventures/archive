@@ -1,0 +1,333 @@
+<!--Saved by Quest 5.3.4691.32450-->
+<asl version="530">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <template name="RoomInDarkness">Darkness</template>
+  <dynamictemplate name="TakeSuccessful">"Taken"</dynamictemplate>
+  <dynamictemplate name="DropSuccessful">"Dropped"</dynamictemplate>
+  <game name="ddd">
+    <gameid>da2afeef-aa83-4c1a-bf7d-92cfda28f533</gameid>
+    <version>1.0</version>
+    <firstpublished>2012</firstpublished>
+    <autodescription_youarein_useprefix type="boolean">false</autodescription_youarein_useprefix>
+    <autodescription_description_newline />
+    <autodescription_description type="int">2</autodescription_description>
+    <autodescription_youcansee type="int">3</autodescription_youcansee>
+    <autodescription_youcango type="int">4</autodescription_youcango>
+    <autodescription_youcansee_newline />
+    <autodescription />
+    <defaultfontsize type="int">10</defaultfontsize>
+    <gridmap type="boolean">false</gridmap>
+    <showpanes />
+    <showdescriptiononenter />
+    <clearframe />
+    <povstatusattributes type="stringdictionary"></povstatusattributes>
+    <autodescription_youcango_newline type="boolean">false</autodescription_youcango_newline>
+    <showscore />
+    <pov type="object">player</pov>
+  </game>
+  <command name="go">
+    <pattern type="string"><![CDATA[^go to (?<exit>.*)$|^go (?<exit>.*)$|^(?<exit>north|east|south|west|northeast|northwest|southeast|southwest|in|out|up|down|n|e|s|w|ne|nw|se|sw|o|u|d|enter|exit|leave)$]]></pattern>
+    <unresolved>You can't go there.</unresolved>
+    <script>
+      if (exit.visible) {
+        if (exit.locked) {
+          msg (exit.lockmessage)
+        }
+        else if (HasScript(exit, "script")) {
+          do (exit, "script")
+        }
+        else if (exit.lookonly) {
+          msg ("You can't go there.")
+        }
+        else {
+          game.pov.parent = exit.to
+        }
+      }
+      else {
+        msg ("You can't go there.")
+      }
+    </script>
+  </command>
+  <command name="drop">
+    <pattern>drop #object#</pattern>
+    <multiple>
+      return (ScopeInventory())
+    </multiple>
+    <script>
+      if (ListCount(ScopeInventory()) = 0) {
+        msg ("You have nothing to drop.")
+      }
+      foreach (obj, object) {
+        DoDrop (obj, multiple)
+      }
+    </script>
+  </command>
+  <command name="take">
+    <pattern>take #object#; get #object#; pick up #object#</pattern>
+    <multiple>
+      return (ListExclude(ScopeVisibleNotHeldNotScenery(), game.pov))
+    </multiple>
+    <unresolved type="list"></unresolved>
+    <script>
+      if (ListCount(ListExclude(ScopeVisibleNotHeldNotScenery(), game.pov)) = 0) {
+        msg ("There is nothing to take.")
+      }
+      else {
+        foreach (obj, object) {
+          DoTake (obj, multiple)
+        }
+      }
+    </script>
+  </command>
+  <command name="inventory">
+    <pattern type="string">^i$|^inv$|^inventory$</pattern>
+    <script>
+      list = FormatObjectList(Template("CarryingListHeader"), game.pov, Template("And"), ".", true)
+      if (list = "") {
+        msg (Template("NotCarryingAnything"))
+      }
+      else {
+        msg (list)
+      }
+    </script>
+  </command>
+  <object name="Inside Building">
+    <inherit name="editor_room" />
+    <dark type="boolean">false</dark>
+    <darkroomdescription type="string"></darkroomdescription>
+    <description type="script"><![CDATA[
+      msg ("You are inside a building, a well house for a large spring.")
+      if (keys.initial_description=True) {
+        msg ("<br/>There are some " + ObjectLink(keys) + " on the ground here.")
+      }
+      if (tasty food.initial_description=True) {
+        msg ("<br/>There is " + ObjectLink(tasty food) + "  here.")
+      }
+    ]]></description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <beforeenter type="script">
+      MoveObject (well house, Inside Building)
+    </beforeenter>
+    <object name="keys">
+      <inherit name="editor_object" />
+      <look>It's just a normal-looking set of keys.</look>
+      <objectslistprefix>You can see</objectslistprefix>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <visible />
+      <scenery type="boolean">false</scenery>
+      <take />
+      <description type="string"></description>
+      <article>them</article>
+      <initial_description />
+      <ontake type="script">
+        keys.initial_description = False
+      </ontake>
+      <alt>key; keyring; bunch</alt>
+      <count>A dozen or so keys.</count>
+      <prefix>some</prefix>
+    </object>
+    <exit alias="west" to="At End of Road">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="out" to="At End of Road">
+      <alt type="list">o; exit; leave</alt>
+    </exit>
+    <object name="tasty food">
+      <inherit name="editor_object" />
+      <inherit name="edible" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>some</prefix>
+      <take />
+      <ontake type="script">
+        tasty food.initial_description = False
+      </ontake>
+      <look>Sure looks yummy!</look>
+      <eatmsg>Delicious!</eatmsg>
+      <initial_description />
+    </object>
+  </object>
+  <object name="At End of Road">
+    <inherit name="editor_room" />
+    <dark type="boolean">false</dark>
+    <description>You are standing at the end of a road before a small brick building. Around you is a forest. A small stream flows out of the building and down a gully.</description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <beforeenter type="script">
+      MoveObject (well house, At End of Road)
+    </beforeenter>
+    <exit alias="east" to="Inside Building">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="in" to="Inside Building">
+      <inherit name="indirection" />
+      <alt type="list">; enter</alt>
+    </exit>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="well house">
+      <inherit name="editor_object" />
+      <scenery />
+      <drop type="boolean">false</drop>
+      <alt>building</alt>
+      <enter type="script">
+        if (game.pov.parent = At End of Road) {
+          MoveObject (player, Inside Building)
+        }
+        else if (game.pov.parent = Inside Building) {
+          msg ("You are already inside the well house.")
+        }
+        else if (game.pov.parent = At Hill In Road) {
+          msg ("It's too far away.")
+        }
+      </enter>
+    </object>
+    <exit alias="south" to="At Hill In Road">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <verb name="enter">
+    <pattern>enter #object#</pattern>
+    <defaulttext>You can't enter that.</defaulttext>
+    <property>enter</property>
+  </verb>
+  <object name="At Hill In Road">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <beforeenter type="script">
+      MoveObject (well house, At Hill In Road)
+    </beforeenter>
+    <exit alias="north" to="At End of Road">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <verb name="count">
+    <pattern>count #object#</pattern>
+    <property>count</property>
+    <defaulttext>There is just the one.</defaulttext>
+  </verb>
+  <type name="indirection">
+    <inherit name="inoutdirection" />
+    <alias>in</alias>
+    <alt type="list">enter</alt>
+  </type>
+  <type name="outdirection">
+    <inherit name="inoutdirection" />
+    <alias>out</alias>
+    <alt type="list">o; exit; leave</alt>
+  </type>
+  <function name="ShowRoomDescription"><![CDATA[
+    if (game.autodescription) {
+      isDark = CheckDarkness()
+      desc = ""
+      for (i, 1, 4) {
+        if (i = game.autodescription_youarein) {
+          if (game.autodescription_youarein_useprefix) {
+            youarein = game.pov.parent.descprefix
+            desc = AddDescriptionLine (desc, youarein + " " + GetDisplayName(game.pov.parent) + ".")
+          }
+          else {
+            desc = AddDescriptionLine (desc, "<b>" + CapFirst(GetDisplayName(game.pov.parent)) + "</b>")
+          }
+          if (game.autodescription_youarein_newline) {
+            desc = desc + "<br/>"
+          }
+        }
+        if (i = game.autodescription_youcansee) {
+          objects = FormatObjectList(game.pov.parent.objectslistprefix, GetNonTransparentParent(game.pov.parent), Template("And"), ".", false)
+          desc = AddDescriptionLine(desc, objects)
+          if (game.autodescription_youcansee_newline and objects<>"") {
+            desc = desc + "<br/>"
+          }
+        }
+        if (i = game.autodescription_youcango) {
+          exits = FormatExitList(game.pov.parent.exitslistprefix, ScopeExits(), Template("Or"), ".")
+          desc = AddDescriptionLine(desc, exits)
+          if (game.autodescription_youcango_newline and exits<>"") {
+            desc = desc + "<br/>"
+          }
+        }
+        if (i = game.autodescription_description) {
+          if (isDark) {
+            descriptionfield = "darkroomdescription"
+          }
+          else {
+            descriptionfield = "description"
+          }
+          if (HasScript(game.pov.parent, descriptionfield)) {
+            if (LengthOf(desc) > 0) {
+              msg (desc)
+              desc = ""
+            }
+            do (game.pov.parent, descriptionfield)
+            if (game.autodescription_description_newline) {
+              msg ("")
+            }
+          }
+          else {
+            desc = AddDescriptionLine(desc, GetRoomDescription())
+            if (game.autodescription_description_newline) {
+              desc = desc + "<br/>"
+            }
+          }
+        }
+      }
+      if (isDark) {
+        desc = "<b>"+ template("RoomInDarkness")+"</b><br/>It is pitch dark and you can't see a thing."
+      }
+      inDark = CheckDarkness()
+      if (inDark) {
+        request (UpdateLocation, template("RoomInDarkness"))
+      }
+      else {
+        request (UpdateLocation, CapFirst(GetDisplayName(game.pov.parent)))
+      }
+      if (LengthOf(desc) > 0) {
+        msg (desc)
+      }
+    }
+    else {
+      fulldesc = GetRoomDescription()
+      if (LengthOf(fulldesc) > 0) {
+        msg (fulldesc)
+      }
+    }
+  ]]></function>
+  <function name="FormatObjectList" parameters="preList, parent, preFinal, postList, useinventoryverbs" type="string"><![CDATA[
+    result = ""
+    count = 0
+    list = RemoveSceneryObjects(GetDirectChildren(parent))
+    listLength = ListCount(list)
+    foreach (item, list) {
+      if (LengthOf(result) = 0) {
+        result = preList + " "
+      }
+      verbs = GetDisplayVerbs(item)
+      result = result + GetDisplayNameLink(item, "object", verbs)
+      if (CanSeeThrough(item)) {
+        result = result + FormatObjectList(" (" + item.contentsprefix, item, preFinal, ")", useinventoryverbs)
+      }
+      count = count + 1
+      if (count = listLength - 1) {
+        result = result + " " + preFinal + " "
+      }
+      else if (count < listLength) {
+        result = result + ", "
+      }
+      else {
+        result = result + postList
+      }
+    }
+    return (result)
+  ]]></function>
+  <walkthrough name="test">
+    <steps type="list">
+      take lantern
+      n
+      switch on lantern
+      take shovel
+      s
+    </steps>
+  </walkthrough>
+</asl>

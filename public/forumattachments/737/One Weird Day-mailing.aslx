@@ -1,0 +1,291 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Gertrudes Weird Day">
+    <gameid>f507bf82-e5ea-46b0-a6f7-b607058681d9</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <statusattributes type="stringdictionary" />
+    <timeleft type="int">30</timeleft>
+    <raining type="boolean">false</raining>
+    <timeofday>AM</timeofday>
+    <defaultfont>Arial, Helvetica, sans-serif</defaultfont>
+    <start type="script"><![CDATA[
+      msg ("Your name is Gertrude, Or something like it. It's morning when our game starts, and you<br/>wake up with a yawn. There are many decisions ahead of you, and many choices.<br/>Isn't funny, that seemingly ordinary decisions can lead to extradordinary things?<br/>")
+      game.raining = RandomChance(5)
+    ]]></start>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <descprefix>You are in your</descprefix>
+    <objectslistprefix><![CDATA[<br>Some objects are a bit buried, but off the bat you can see ]]></objectslistprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      msg ("Your hair is a mess, and you would like to brush it out. But you don't want to do <br/>anything that will make you late for school.<br/>")
+      msg ("You may want to bring a reading book to school. Somewhere under a stack of pillows you have some books. But you can only take one:<br/>")
+      foreach (thingy, ScopeVisible()) {
+        if (HasAttribute(thingy, "booktitle")) {
+          msg ("<b>*  {object:" + thingy.name + "} ("+ thingy.booktitle + ") </b>")
+        }
+      }
+    ]]></description>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <inherit name="namedfemale" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+    </object>
+    <object name="Worn Pease">
+      <inherit name="editor_object" />
+      <isbook />
+      <scenery />
+      <booktitle>Worn Pease</booktitle>
+      <alias>Worn Pease</alias>
+      <look>A large book with a small title.</look>
+      <take />
+    </object>
+    <object name="Brown Bear">
+      <inherit name="editor_object" />
+      <isbook />
+      <scenery />
+      <booktitle>Brown Bear, Brown Bear, What Do You Know About the Pythagorean Theorem?</booktitle>
+      <take />
+      <takemsg>I'm a great read!</takemsg>
+      <look>A small book with a large title.</look>
+    </object>
+    <object name="Ipad">
+      <inherit name="editor_object" />
+      <take />
+      <look>You're tempted to check your mail.  You don't want to be late ...</look>
+      <checkmail type="script">
+        result = GetRandomInt(1,3)
+        switch (result) {
+          case (1) {
+            msg ("No mail from old whatsername.")
+          }
+          case (2) {
+            msg ("Cosette sent you a picture of her dog Soupy riding a duck.")
+          }
+          case (3) {
+            msg ("Sam or Perdita wants to know how to do problem 23.")
+          }
+        }
+        DecrementTime (2)
+      </checkmail>
+    </object>
+    <object name="Hair Brush">
+      <inherit name="editor_object" />
+      <useindividualverblist />
+      <brush type="script">
+        msg ("You take 5 minutes to brush your hair.")
+        SetObjectFlagOn (player, "hairbrushed")
+        DecrementTime (5)
+      </brush>
+    </object>
+    <object name="Clock">
+      <inherit name="editor_object" />
+      <useindividualverblist type="boolean">false</useindividualverblist>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <look type="script">
+        msg ("You have " + game.timeleft + " minutes before school starts.")
+      </look>
+    </object>
+    <object name="Radio">
+      <inherit name="editor_object" />
+      <useindividualverblist />
+      <listen type="script">
+        if (game.raining) {
+          msg ("It will be raining today.")
+        }
+        else {
+          msg ("Good news! No rain today!")
+        }
+        DecrementTime (1)
+      </listen>
+    </object>
+    <exit name="door to kitchen" alias="door" to="kitchen">
+      <prefix>through the </prefix>
+      <suffix>and into the kitchen.</suffix>
+      <runscript />
+      <look><![CDATA[Once you go to the kitchen, you won't have time to come back. <br>Chose wisely!]]></look>
+      <script type="script">
+        MoveObject (player, kitchen)
+      </script>
+    </exit>
+  </object>
+  <object name="stash">
+    <inherit name="editor_room" />
+    <test>Can you see me now??</test>
+    <object name="bookdict1x">
+      <inherit name="editor_object" />
+      <books type="stringlist">
+        <value>Worn Pease</value>
+        <value>Brown Bear, Brown Bear, Explain the Pythagorean Forumula</value>
+      </books>
+      <visible type="boolean">false</visible>
+      <scenery />
+      <test>What do you see here?</test>
+    </object>
+  </object>
+  <verb>
+    <property>brush</property>
+    <pattern>brush</pattern>
+    <defaultexpression>"You can't brush " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>checkmail</property>
+    <pattern>check mail</pattern>
+    <defaultexpression>"You can't check mail " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="kitchen">
+    <inherit name="editor_room" />
+    <description type="string"></description>
+    <object name="Clock1">
+      <inherit name="editor_object" />
+      <useindividualverblist type="boolean">false</useindividualverblist>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <alias>Clock</alias>
+      <look type="script">
+        msg ("You have " + game.timeleft + " minutes before school starts.")
+      </look>
+    </object>
+    <exit name="exit to living room" to="living room">
+      <locked />
+      <lockmessage>You can't leave until you've had breakfast!</lockmessage>
+    </exit>
+    <object name="breakfast">
+      <inherit name="editor_object" />
+      <inherit name="edible" />
+      <eatmsg><![CDATA[Hrrrm Yuuumm  Gobble Gobble Grrrm <br>Ahh! That was excellent. My compliments to the cook!]]></eatmsg>
+      <eat type="script">
+        if (HasString(this, "eatmsg")) {
+          msg (this.eatmsg)
+        }
+        else {
+          msg (DynamicTemplate("Eaten", this))
+        }
+        if (HasInt(game.pov, "health")) {
+          game.pov.health = game.pov.health + this.eathealth
+        }
+        destroy (this.name)
+        UnlockExit (exit to living room)
+      </eat>
+    </object>
+  </object>
+  <object name="living room">
+    <inherit name="editor_room" />
+    <object name="scooter">
+      <inherit name="editor_object" />
+      <take />
+    </object>
+    <exit name="exit living to carport" to="carport" />
+  </object>
+  <object name="carport">
+    <inherit name="editor_room" />
+    <exitslistprefix>You can go</exitslistprefix>
+    <exit name="travel by edsel" alias="via edsel" to="school waiting">
+      <runscript />
+      <prefix type="string"></prefix>
+      <suffix type="string"></suffix>
+      <look>A master piece!</look>
+      <script type="script">
+        if (game.raining) {
+          msg ("It's a shame about the rain. We'll just be careful and will soon be there.")
+          DecrementTime (12)
+          MoveObject (player, school waiting)
+          TextFX_Typewriter ("Oh  . . . what fun it is to ride in dilapidated ve-hic-le! Oh!", 200)
+          SetTimeout (1) {
+          }
+        }
+        else {
+          Ask ("Are you sure you don't want to use the scooter? Its a beautiful day. (Yes/No)") {
+            DisableTurnScript (School Starts)
+            EnableTimer (timer1)
+            msg ("And off we go. We'll be there in a few minutes. HONK! HONK!")
+            // TextFX_Typewriter ("Individual! There is a loooot of traffic this morning!", 200)
+          }
+        }
+      </script>
+    </exit>
+    <exit name="travel by scooter" alias="via scooter" to="school waiting">
+      <prefix type="string"></prefix>
+      <runscript />
+      <suffix type="string"></suffix>
+      <script type="script"><![CDATA[
+        if (Got(scooter)) {
+          msg ("Wee! This is fun! We'll be there in no time.")
+          MoveObject (player, school waiting)
+          DecrementTime (8)
+        }
+        else {
+          msg ("I'm sorry, Dave. You don't have a scooter. (Please read this in a robot voice).<br/>You'll need to take the Edsel or go find the scooter.")
+        }
+      ]]></script>
+    </exit>
+    <exit alias="house door" to="living room">
+      <lookonly type="boolean">false</lookonly>
+      <runscript />
+      <prefix>You can go back through the</prefix>
+      <suffix type="string"></suffix>
+      <look type="script">
+        msg ("Going back always takes at least 2 minutes.")
+        DecrementTime (2)
+      </look>
+      <script type="script">
+        msg ("I hope this doesn't take long.")
+        DecrementTime (2)
+        MoveObject (player, living room)
+      </script>
+    </exit>
+    <object name="edsel description">
+      <inherit name="editor_object" />
+      <alias>Edsel</alias>
+      <look>An old Ford Edsel, but still able to hit the road.</look>
+    </object>
+    <object name="scooter description">
+      <inherit name="editor_object" />
+      <alias>scooter</alias>
+      <look>Your beautiful Razor, which glows slightly as you touch it.</look>
+    </object>
+  </object>
+  <object name="school waiting">
+    <inherit name="editor_object" />
+    <alias>waiting area</alias>
+  </object>
+  <turnscript name="School Starts">
+    <enabled />
+    <script>
+      DecrementTime (1)
+    </script>
+  </turnscript>
+  <function name="DecrementTime" parameters="timedec">
+    game.timeleft = game.timeleft-timedec
+    msg ("There is now "+ game.timeleft +" minutes before school starts.")
+  </function>
+  <walkthrough name="Via Edsel">
+    <steps type="simplestringlist">
+      take Worn Pease
+      go to door
+      eat breakfast
+      go to living room
+      go to carport
+      go to via edsel
+      event:ShowMenuResponse;Yes
+    </steps>
+  </walkthrough>
+  <timer name="timer1">
+    <interval>21</interval>
+    <enabled type="boolean">false</enabled>
+    <script>
+      msg ("-- Timer script starts here --")
+      MoveObject (player, school waiting)
+      DecrementTime (12)
+      EnableTurnScript (School Starts)
+    </script>
+  </timer>
+</asl>

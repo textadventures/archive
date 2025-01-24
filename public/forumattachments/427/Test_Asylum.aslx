@@ -1,0 +1,236 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Test_Asylum">
+    <gameid>4fb6aee8-487a-4d6e-b83a-f0c27bddfff4</gameid>
+    <version>1.0</version>
+    <author>Warhead</author>
+    <category>Horror</category>
+    <defaultbackground>Black</defaultbackground>
+    <defaultforeground>White</defaultforeground>
+    <defaultlinkforeground>Green</defaultlinkforeground>
+    <autodescription_youarein type="int">1</autodescription_youarein>
+    <autodescription_description type="int">2</autodescription_description>
+    <autodescription_youcansee type="int">4</autodescription_youcansee>
+    <start type="script">
+      play sound ("Midnight Syndicate - The Apparition.mp3", false, true)
+    </start>
+    <showhealth />
+    <onhealthzero type="script">
+      msg ("You collapse to the floor, your energies depleted. The final light at the end of the tunnel is but an entry-way to Hell. Suffer well.")
+    </onhealthzero>
+    <enablehyperlinks type="boolean">false</enablehyperlinks>
+  </game>
+  <object name="Cell">
+    <inherit name="editor_room" />
+    <usedefaultprefix />
+    <descprefix>You are in what looks to be a</descprefix>
+    <description>The room is shrouded in an eerie light, originating from a solitary bulb on the ceiling. You appear to be in a "safe" cell, designed for insane patients. </description>
+    <objectslistprefix>Objects that you sense around you:</objectslistprefix>
+    <picture>padded cell.jpg</picture>
+    <firstenter type="script">
+      msg ("As you look around for a means of escape, something catches your eye in your current room. The Bed you seemingly woke up out of, has some objects on it...")
+    </firstenter>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <volume type="int">1</volume>
+      <look>You seem clad in an unraveled straight jacket. You are bare-foot and covered in what seems to be blood. Thankfully, you do not seem harmed.</look>
+      <statusattributes type="stringdictionary">turns = ;health = </statusattributes>
+      <turns type="int">0</turns>
+      <health type="int">100</health>
+    </object>
+    <object name="Bed">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <look><![CDATA[This Bed is blood-stained and appears to have been someone's final resting place. It does not seem particularly welcoming.<br/>]]></look>
+      <scenery type="boolean">false</scenery>
+      <listchildren />
+      <hidechildren />
+      <listchildrenprefix>Objects on the Bed: </listchildrenprefix>
+      <object name="handcuffs">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <inherit name="surface" />
+        <alias>Pile of Rusted Handcuffs</alias>
+        <look><![CDATA[The pile is strangely large. Dark memories reel in your head at the general imagine the rusted and bloodied objects form. <br/><br/>A small object can be glimpsed at the bottom of the pile, but you can't tell for sure without Searching the pile.]]></look>
+        <hidechildren />
+        <alt>Handcuffs; cuffs; rusted cuffs; pile; pile of cuffs</alt>
+        <drop type="boolean">false</drop>
+        <takemsg>There is no use for them.</takemsg>
+        <isopen type="boolean">false</isopen>
+        <contentsprefix type="string"></contentsprefix>
+        <visible />
+        <use type="script">
+          msg ("You do not see any use for these. You could try Searching the pile.")
+        </use>
+        <search type="script">
+          msg ("You violently push the Cuffs out of the way and out of your memory. A small Key laid underneath...")
+          RemoveObject (handcuffs)
+          set (Key, "scenery", False)
+        </search>
+      </object>
+      <object name="Puzzlebox">
+        <inherit name="editor_object" />
+        <drop type="boolean">false</drop>
+        <volume type="int">1</volume>
+        <scenery type="boolean">false</scenery>
+        <alias>Cube-like Object</alias>
+        <visible />
+        <alt>Object; cube-like object; puzzlebox; unsolvable puzzlebox</alt>
+        <weight type="int">500</weight>
+        <dropmsg>For some strange reason, you think it is a very bad idea to leave this behind. Though... equally bad to keep it; stranger still, you decide to hold on to it until you can think this through.</dropmsg>
+        <take type="script">
+          msg ("You take the object. Upon closer inspection, the shadows disperse from your eyes. You appear to be holding a fabled Unsolvable Puzzlebox.")
+          set (Puzzlebox, "alias", "Unsolvable Puzzlebox")
+          AddToInventory (Puzzlebox)
+        </take>
+        <solve type="script">
+          if (not Got(Puzzlebox)) {
+            msg ("You can't solve it like that. Pick it up first.")
+          }
+          else {
+            msg ("You attempt to solve the Puzzlebox. It is in vain. A small part of your soul seems to drain away as the hours pass.")
+            player.health = player.health - 10
+          }
+        </solve>
+        <look type="script">
+          if (not Got(Puzzlebox)) {
+            msg ("Shadows amass at your vision. You can not seem to make out what the "+Puzzlebox.alias+" actually is. Pick it up.")
+          }
+          else {
+            msg ("The fabled Unsolvable Puzzlebox. An ominous eye rests on top of it, carved from the same black material as all the shifting panels on the object. Try and Solve it, if you dare.")
+          }
+        </look>
+        <use type="script">
+          msg ("You can not use it in any way. Try Solving it.")
+        </use>
+      </object>
+      <object name="Key">
+        <inherit name="editor_object" />
+        <alt>tiny object; sliver; key; tiny key</alt>
+        <alias>Tiny Key</alias>
+        <look>A simple key. Looks disturbingly familiar. </look>
+        <scenery />
+        <take type="script">
+          msg ("You take the "+Key.name+". It shimmers faintly in your palm.")
+          AddToInventory (Key)
+        </take>
+        <selfuseon type="scriptdictionary" />
+      </object>
+    </object>
+    <exit name="Exit_DR" alias="south" to="Death_Row">
+      <inherit name="southdirection" />
+      <locked type="boolean">false</locked>
+      <lockmessage>A sturdy, albeit rusty, iron door blocks your way. No slits for view give any clue of what lays beyond. Maybe with the right key it will unlock.</lockmessage>
+      <look type="script">
+        msg ("The "+Exit_DR.Alias+".")
+      </look>
+    </exit>
+  </object>
+  <verb>
+    <property>solve</property>
+    <pattern>solve</pattern>
+    <defaultexpression>"You can't solve " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="Say">
+    <pattern>say #test#</pattern>
+    <script>
+      msg ("You attempt to say \""+test+"\", but all that comes out is a garbled string of inane sounds.")
+    </script>
+  </command>
+  <object name="Death_Row">
+    <inherit name="editor_room" />
+    <description>You appear to step into a Death Row. The stentch of putrefied remains hangs heavy in this area. The long corridor culminates in a dead end, the cells lining the walls fortunately shrouded in darkness.</description>
+    <picture>p310644-Philadelphia-Death_Row.jpg</picture>
+    <exit alias="north" to="Cell">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="safe">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <alias>Forgotten Safe</alias>
+      <alt>safe; forgotten safe</alt>
+      <drop type="boolean">false</drop>
+      <scenery type="boolean">false</scenery>
+      <takemsg>It is too heavy to budge, let alone pick up.</takemsg>
+      <hidechildren />
+      <listchildren />
+      <listchildrenprefix>The safe contains</listchildrenprefix>
+      <isopen type="boolean">false</isopen>
+      <transparent />
+      <openmsg>It opens with an ear-splitting metallic screech. The sound echoes hollowly throughout the cell block.</openmsg>
+      <closemsg>It shuts silently.</closemsg>
+      <Omen />
+      <close />
+      <open />
+      <visible />
+      <onopen type="script">
+        Safe_omen_check
+        EnableTimer (Spectre_timer)
+        EnableTurnScript (Spectre_follow)
+      </onopen>
+      <look type="script">
+        if (not safe.isopen) {
+          if (safe.Omen = True) {
+            msg ("The safe is shut. Its abandonment seems ominous. The lock is long rusted and disfunctional, the safe practically begging you to open it.")
+          }
+          else {
+            msg ("The safe is shut. It seems... like a regular, decrepit safe, now. ")
+          }
+        }
+        else {
+          msg ("The safe is open, gaping at you like a rusted hell-maw.")
+        }
+      </look>
+      <object name="syringe">
+        <inherit name="editor_object" />
+        <alias>Dirty Syringe</alias>
+        <look type="script">
+          picture ("AMANDA SYRINGE 1.jpg")
+        </look>
+      </object>
+    </object>
+  </object>
+  <object name="Spectre">
+    <inherit name="editor_object" />
+    <alias>Yog-Sothoth</alias>
+    <look>You see nothing... but you feel something. Something utterly terrible.</look>
+    <scenery type="boolean">false</scenery>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+  </object>
+  <turnscript>
+    <enabled />
+    <script>
+      set (player, "turns", player.turns + 1)
+    </script>
+  </turnscript>
+  <turnscript name="Spectre_follow">
+    <enabled type="boolean">false</enabled>
+    <script>
+      if (safe.Omen = False) {
+        MoveObject (Spectre, player.parent)
+      }
+    </script>
+  </turnscript>
+  <function name="Cell_south_door">
+    if (GetBoolean(Exit_DR_iron_door_ke_trigger, "locked")) {
+      finish
+    }
+  </function>
+  <function name="Safe_omen_check"><![CDATA[
+    if (safe.Omen = True) {
+      msg ("<br/>A harrowing shriek follows the sound of the safe opening. You can not pinpoint the exact source. You are not alone anymore.")
+      set (safe, "Omen", False)
+    }
+  ]]></function>
+  <timer name="Spectre_timer">
+    <interval>20</interval>
+    <enabled type="boolean">false</enabled>
+    <script>
+      if (safe.Omen = False) {
+        msg ("...ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn...")
+      }
+    </script>
+  </timer>
+</asl>

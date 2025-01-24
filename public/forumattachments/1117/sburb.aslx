@@ -1,0 +1,271 @@
+<!--Saved by Quest 5.5.5328.26617-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="sburb">
+    <gameid>89248626-ee89-46dc-980e-1c5348b69852</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <feature_limitinventory />
+    <showhealth />
+    <showscore type="boolean">false</showscore>
+    <feature_asktell />
+    <showpanes />
+    <pov type="object">player</pov>
+    <start type="script"><![CDATA[
+      msg ("You awake on a hard, stone floor that you are sure you had not fallen asleep on. As your eyes adjust, you see that you are in a large, stone room, lit by the energy bulbs seen only in the homes of Gor's wealthiest. <br/>You look up to see a glass dome rather than a ceiling, displaying a night sky. The three moons of Gor shine brightly amongst the glittering stars dotting the darkness. <br/>Where are you? Who even are you? It seems your identity is a bit fuzzy.")
+      msg ("What was your name again?")
+      get input {
+        player.alias = result
+        msg ("That's right, you are called " +player.alias)
+        ShowMenu ("Your gender?", Split ("Man;Woman",";"), false) {
+          player.gender = result
+          msg ("You appear to be a "+player.gender)
+          wait {
+            if (player.gender="Woman") {
+              ShowMenu ("Your caste?", Split ("Physicians;Merchants;Scribes",";"), false) {
+                player.caste = result
+                wait {
+                  MoveObject (player, Hall of the Priest Kings)
+                }
+              }
+            }
+            else {
+              ShowMenu ("Your caste?", Split ("Warriors;Merchants;Scribes",";"), false) {
+                player.caste = result
+              }
+              wait {
+                MoveObject (player, Hall of the Priest Kings)
+              }
+            }
+          }
+        }
+      }
+    ]]></start>
+    <onhealthzero type="script">
+      msg ("You have died")
+    </onhealthzero>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <descprefix type="string"></descprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <exitslistprefix type="string"></exitslistprefix>
+    <prefix type="string"></prefix>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <statusattributes type="stringdictionary" />
+    </object>
+  </object>
+  <object name="Hall of the Priest Kings">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>The</prefix>
+    <enter type="script">
+      msg ("\"I hope the teleport didn't startle you too badly.\" ")
+      msg ("You turn to see that you are not alone in the room. As well as five other people, three men and two women, there is also-")
+      msg ("What in the name of the Priest Kings is that?! A large, insectoid creature enters the room, a translator hanging about its neck as it appears to wait for you and the others to process what you are seeing.")
+      msg ("\"What is that?\" you hear one of the women whisper to a large man clad in red, obviously a warrior.")
+      msg ("Before the man can speak, the creature cuts him off. ")
+      msg ("\"This,\" he says, gesturing to himself with one hairy appendage, \"is a Priest King, as your people call us.\"")
+      SetTimeout (4) {
+        msg ("Soft murmurs of disbelief echo through the spacious hall until the sharp sound of the Priest King's foreleg striking the stone floor restores the silence.")
+        SetTimeout (3) {
+          msg ("\"Now,\" the creature says, \"I have brought you all here on a matter of great importance. I'm not entirely sure you're the people I would choose for the task, but it appears you six are the only Prospit and Derse dreamers on this planet.\"")
+          SetTimeout (3) {
+            ShowMenu ("On what planet do you dream?", Split ("Prospit;Derse",";"), false) {
+              player.dreamer = result
+              msg ("\"In two days,\" it continues, \"you will be summoned here again to take on your task. Go home and gather what you need. Take these as well. This technology will help you carry the things you will need for this.\"")
+              AddToInventory (Fetch Modus)
+              AddToInventory (Captchalogue Cards)
+              msg ("\"Now, go.\"")
+              wait {
+                AddToInventory (Strife Specibus)
+                MoveObject (player, sleeping quarters)
+              }
+            }
+          }
+        }
+      }
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <object name="Fetch Modus">
+      <inherit name="editor_object" />
+      <take />
+      <drop type="boolean">false</drop>
+      <visible />
+      <feature_usegive />
+      <scenery />
+      <use type="script">
+        RemoveObject (Fetch Modus)
+        RemoveObject (Captchalogue Cards)
+        msg ("You are now using your fetch modus, along with captchalogue cards.")
+      </use>
+    </object>
+    <object name="Captchalogue Cards">
+      <inherit name="editor_object" />
+      <visible />
+      <scenery />
+    </object>
+    <object name="Strife Specibus">
+      <inherit name="editor_object" />
+      <visible />
+      <scenery />
+      <take />
+      <feature_usegive />
+      <useon type="scriptdictionary">
+        <item key="Bow">
+          player.weaponkind = "bowkind"
+          msg ("Your strife specibus is now " +player.weaponkind)
+        </item>
+        <item key="Dagger">
+          player.weaponkind = "daggerkind"
+          msg ("Your strife specibus is now " +player.weaponkind)
+        </item>
+        <item key="hair pins">
+          player.weaponkind = "pinkind"
+          msg ("Your strife specibus is now " +player.weaponkind)
+        </item>
+        <item key="Sword">
+          player.weaponkind = result
+          msg ("Your strife specibus is now " +player.weaponkind)
+        </item>
+        <item key="Whip">
+          player.weaponkind = result
+          msg ("Your strife specibus is now " +player.weaponkind)
+        </item>
+      </useon>
+    </object>
+  </object>
+  <object name="sleeping quarters">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>your</prefix>
+    <enter type="script">
+      msg ("You awake on your own couch and sleeping pelts, morning sunlight streaming in through the window. What a strange dream.")
+      msg ("Wait. What? You feel something in your hand, and open it to reveal the device and cards given to you by the Priest King. Perhaps not a dream.")
+      msg ("You decide you will prepare as you were told.")
+    </enter>
+    <object name="chest of drawers">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <feature_container />
+      <isopen type="boolean">false</isopen>
+      <listchildren />
+      <listchildrenprefix>It contains</listchildrenprefix>
+      <openmsg>You pull open the top drawer.</openmsg>
+      <closemsg>You slide the drawer closed.</closemsg>
+      <hidechildren type="boolean">false</hidechildren>
+      <onopen type="script">
+        if (player.gender="Man") {
+          MakeObjectInvisible (hair pins)
+        }
+        else {
+          MakeObjectVisible (hair pins)
+        }
+      </onopen>
+      <object name="clothes">
+        <inherit name="editor_object" />
+        <feature_usegive />
+        <take />
+        <takemsg>You take the clothes from the drawer.</takemsg>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <wear type="string"></wear>
+        <use type="script">
+          if (player.caste="Scribes") {
+            msg ("You don the purple garments of your caste and begin your day.")
+            MakeExitVisible (door)
+            msg ("You can now explore the rest of your home.")
+          }
+          else if (player.caste="Merchants") {
+            msg ("You don the yellow garments of your caste and begin your day.")
+            MakeExitVisible (door)
+            msg ("You can now explore the rest of your home.")
+          }
+          else if (player.caste="Physicians") {
+            msg ("You don the green garments of your caste and begin your day.")
+            MakeExitVisible (door)
+            msg ("You can now explore the rest of your home.")
+          }
+          else if (player.caste="Warriors") {
+            msg ("You don the red garments of your caste and begin your day.")
+            MakeExitVisible (door)
+            msg ("You can now explore the rest of your home.")
+          }
+        </use>
+      </object>
+      <object name="hair pins">
+        <inherit name="editor_object" />
+        <visible />
+        <feature_usegive />
+        <look>Your favorite hair pins; elegant and well sharpened. </look>
+        <take />
+        <takemsg>You take the hair pins. They will make for a nice weapon.</takemsg>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix type="string"></prefix>
+        <selfuseon type="scriptdictionary">
+          <item key="Strife Specibus">
+          </item>
+        </selfuseon>
+      </object>
+    </object>
+    <exit name="door" alias="west" to="main room">
+      <inherit name="westdirection" />
+      <visible type="boolean">false</visible>
+      <scenery type="boolean">false</scenery>
+    </exit>
+  </object>
+  <object name="main room">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <object name="Chest">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <feature_container />
+      <attr name="feature_usegive" type="boolean">false</attr>
+      <hidechildren />
+      <listchildren />
+      <onopen type="script">
+        if (player.gender="Woman") {
+          MakeObjectInvisible (Sword)
+          MakeObjectInvisible (Bow)
+        }
+        else {
+          MakeObjectInvisible (Whip)
+        }
+      </onopen>
+      <object name="Sword">
+        <inherit name="editor_object" />
+        <look>Your trusty sword; sturdy and sharp.</look>
+        <take />
+        <takemsg>You take the sword. It will make a nice weapon.</takemsg>
+        <feature_usegive />
+      </object>
+      <object name="Whip">
+        <inherit name="editor_object" />
+        <look>Your slave whip; you've always wanted to use it on something other than a troublesome kajira.</look>
+        <take />
+        <takemsg>You take the whip. It will make a good weapon.</takemsg>
+      </object>
+      <object name="Dagger">
+        <inherit name="editor_object" />
+        <look>A small, handy dagger; it even has one of those neat squiggly blades.</look>
+        <take />
+        <takemsg>You take the dagger. It will make a nice weapon.</takemsg>
+      </object>
+      <object name="Bow">
+        <inherit name="editor_object" />
+        <look>Your weapon of choice for ranged fighting; blades jut from the ends of the bow for melee, but all that blood can't be doing the wood any favors.</look>
+        <take />
+        <takemsg>You take the bow. It will make a nice weapon.</takemsg>
+      </object>
+    </object>
+  </object>
+  <command>
+    <pattern type="simplepattern"></pattern>
+  </command>
+</asl>

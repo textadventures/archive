@@ -1,0 +1,117 @@
+<!--Saved by Quest 5.2.4487.32262-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Switch Library">
+    <gameid>ddf28eda-c2b3-4f2b-b00b-4f03cea7ff6e</gameid>
+    <version>1.0</version>
+    <start type="script">
+      SetObjectFlagOn (c6, "locked")
+    </start>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <character>Character 1</character>
+      <player type="string"></player>
+      <statusattributes type="stringdictionary">character = Character:!</statusattributes>
+      <playercheck type="script">
+        if (player.character = 1) {
+          player.player = "Character 1"
+        }
+        else if (player.character = 2) {
+          player.player = "Character 2"
+        }
+      </playercheck>
+    </object>
+    <object name="c1">
+      <inherit name="editor_object" />
+      <visible />
+      <scenery />
+    </object>
+    <object name="c2">
+      <inherit name="editor_object" />
+    </object>
+    <object name="c3">
+      <inherit name="editor_object" />
+    </object>
+    <object name="c4">
+      <inherit name="editor_object" />
+    </object>
+    <object name="c5">
+      <inherit name="editor_object" />
+    </object>
+    <object name="c6">
+      <inherit name="editor_object" />
+      <speak type="script">
+        msg ("You have unlocked the sixth character.")
+        SetObjectFlagOff (c6, "locked")
+      </speak>
+    </object>
+  </object>
+  <command name="switch">
+    <pattern>switch</pattern>
+    <script>
+      SwitchCharacter
+    </script>
+  </command>
+  <function name="SwitchCharacter">
+    if (GetBoolean(player, "noswitch")) {
+      msg ("You cant switch now.")
+    }
+    else {
+      if (player.character = "Character 1") {
+        msg ("You are playing as the second character.")
+        player.character = "Character 2"
+        c1.scenery = false
+        c2.scenery = true
+        MoveObject (player, c2.parent)
+      }
+      else if (player.character = "Character 2") {
+        msg ("You are playing as the third character.")
+        player.character = "Character 3"
+        c2.scenery = false
+        c3.scenery = true
+        MoveObject (player, c3.parent)
+      }
+      else if (player.character = "Character 3") {
+        msg ("You are playing as the fourth character.")
+        player.character = "Character 4"
+        c3.scenery = false
+        c4.scenery = true
+        MoveObject (player, c4.parent)
+      }
+      else if (player.character = "Character 4") {
+        msg ("You are playing as the fifth character.")
+        player.character = "Character 5"
+        c4.scenery = false
+        c5.scenery = true
+        MoveObject (player, c5.parent)
+      }
+      else if (player.character = "Character 5") {
+        if (GetBoolean(c6, "locked")) {
+          msg ("You are playing as the first character.")
+          player.character = "Character 1"
+          c5.scenery = false
+          c1.scenery = true
+          MoveObject (player, c1.parent)
+        }
+        else {
+          msg ("You are playing as the sixth character.")
+          player.character = "Character 6"
+          c5.scenery = false
+          c6.scenery = true
+          MoveObject (player, c6.parent)
+        }
+      }
+      else if (player.character = "Character 6") {
+        msg ("You are playing as the first character.")
+        player.character = "Character 1"
+        c6.scenery = false
+        c1.scenery = true
+        MoveObject (player, c1.parent)
+      }
+    }
+  </function>
+</asl>

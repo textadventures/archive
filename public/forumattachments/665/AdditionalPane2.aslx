@@ -1,0 +1,117 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <include ref="InvPane2.aslx" />
+  <game name="AdditionalPane">
+    <gameid>04272098-2de5-4068-af3c-92bb738310e4</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <enter type="script">
+      SetInventory2Label ("Spells")
+      ol = NewObjectList()
+      list add (ol, fireball_spell)
+      list add (ol, unlock_spell)
+      SetInventory2 (ol)
+    </enter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="AnObject">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <alias>Object 1</alias>
+      <use type="boolean">false</use>
+      <take />
+    </object>
+    <object name="AnObject2">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <alias>Object 2</alias>
+      <use type="boolean">false</use>
+      <take />
+    </object>
+    <exit alias="south" to="room2">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="room2">
+    <inherit name="editor_room" />
+    <object name="AnObject3">
+      <inherit name="editor_object" />
+      <alias>Object 3</alias>
+    </object>
+    <object name="AnObject4">
+      <inherit name="editor_object" />
+      <alias>Object 4</alias>
+    </object>
+    <exit alias="north" to="room">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <command name="Cast">
+    <pattern>cast #text#</pattern>
+    <script>
+      text = LCase (text)
+      obj = null
+      foreach (o, GetDirectChildren (spellbook)) {
+        if (LCase (o.name) = text) {
+          obj = o
+        }
+        else if (HasString (o, "alias")) {
+          if (LCase (o.alias) = text) {
+            obj = o
+          }
+        }
+      }
+      if (obj = null) {
+        msg ("No such spell in your book")
+      }
+      else if (not HasScript (obj, "castspell")) {
+        msg ("That's not a spell; it should not even be in your book")
+      }
+      else {
+        do (obj, "castspell")
+      }
+    </script>
+  </command>
+  <object name="spellbook">
+    <inherit name="editor_object" />
+    <alias>Spellbook</alias>
+    <object name="fireball_spell">
+      <inherit name="editor_object" />
+      <castspell type="script"><![CDATA[
+        msg ("You cast a <i>Fireball</i> spell.")
+      ]]></castspell>
+      <displayverbs type="stringlist" />
+      <inventoryverbs type="stringlist">
+        <value>Cast</value>
+      </inventoryverbs>
+      <useindividualverblist type="boolean">false</useindividualverblist>
+      <usestandardverblist />
+      <alias>Fireball</alias>
+    </object>
+    <object name="unlock_spell">
+      <inherit name="editor_object" />
+      <castspell type="script"><![CDATA[
+        msg ("You cast an <i>Unlock</i> spell.")
+      ]]></castspell>
+      <usestandardverblist />
+      <displayverbs type="stringlist" />
+      <inventoryverbs type="stringlist">
+        <value>Cast</value>
+      </inventoryverbs>
+      <alias>Unlock</alias>
+    </object>
+  </object>
+  <verb>
+    <property>castspell</property>
+    <pattern>castspell</pattern>
+    <defaultexpression>"You can't castspell " + object.article + "."</defaultexpression>
+  </verb>
+  <javascript src="InvPane2.js" />
+</asl>

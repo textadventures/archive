@@ -1,0 +1,457 @@
+<library>
+	<!--
+    Pixie's clothing Library v2.0
+ 
+		Based on: Chase's Wearables Library v2.1,
+		Based on: Pixie's Clothing Library
+		
+		You may edit this library however you please.
+		
+    I have changed the internal code a fair bit, but you should be able to swap this into any existing game with no problem,
+    the wearables type is exactly the same.
+    
+    Changes:
+    
+    The library uses game.pov rather than player, in line with other libraries, to support the POV functionality
+    
+    The verbs for each garment are changed depending on the game state. You only see "Wear" for an item
+    that can be worn right now.
+    
+    Supports inventory limits; items that are worn do not count towards the number of objects held
+    (but the so-called volume limit, which is really a weight limit, will include worn items).
+    
+    New functions:
+    WornCount           - No parameters, returns the number of garments currently worn by the player.
+    
+    GetOuter(string)    - Returns the outermost garment in the given slot.
+    
+    WearGarment(object) - Sets the given object, which must be in the player inventory, to be worn.
+                          Call this to have the player start the game wearing the object.
+                          
+                          
+    game.feature_limitinventory                          
+    game.pov.maxobjects
+    -->
+	
+	<dynamictemplate name="WearSuccessful">"You put " + object.article + " on."</dynamictemplate>
+	<dynamictemplate name="WearUnsuccessful">"You can't wear " + object.article + "."</dynamictemplate>
+	<dynamictemplate name="CannotWearIfNotHeld">"You would need to get it before you can put it on."</dynamictemplate>
+	<dynamictemplate name="AlreadyWearing">"You are already wearing " + object.article + "."</dynamictemplate>
+	<dynamictemplate name="CannotWearOver">"You cannot wear that over " + object.display + "."</dynamictemplate>
+	<dynamictemplate name="CannotWearWith">"You cannot wear that while wearing " + object.display + "."</dynamictemplate>
+	
+	<dynamictemplate name="RemoveSuccessful">"You take " + object.article + " off."</dynamictemplate>
+	<dynamictemplate name="RemoveUnsuccessful">"You can't remove " + object.article + "."</dynamictemplate>
+	<dynamictemplate name="RemoveFirst">"You can't remove that while wearing "+object.display+"."</dynamictemplate>
+	
+	<template name="Wear">Wear</template>
+	<verbtemplate name="wear">wear</verbtemplate>
+	<verbtemplate name="wear">put on</verbtemplate>
+	<verbtemplate name="wear">don</verbtemplate>
+	
+	<template name="Remove">Remove</template>
+	<verbtemplate name="remove">remove</verbtemplate>
+	<verbtemplate name="remove">take off</verbtemplate>
+	<verbtemplate name="remove">doff</verbtemplate>
+  
+  
+  
+  <object name="lists">
+    <lookat type="stringlist">
+      <value>Look at</value>
+    </lookat>
+    <drop type="stringlist">
+      <value>Look at</value>
+      <value>Drop</value>
+    </drop>
+    <remove type="stringlist">
+      <value>Look at</value>
+      <value>Remove</value>
+    </remove>
+    <wear type="stringlist">
+      <value>Look at</value>
+      <value>Drop</value>
+      <value>Wear</value>
+    </wear>
+  </object>
+ 
+  
+	
+	<command name="wear" template="wear">
+		<multiple>
+			return (ScopeInventory())
+		</multiple>
+		<script>
+			foreach (obj, object) {
+				f = DoWear(obj)
+			}
+		</script>
+	</command>
+
+	<command name="remove" template="remove">
+		<multiple>
+			return (ScopeInventory())
+		</multiple>
+		<script>
+			foreach (obj, object) {
+				f = DoRemove(obj)
+			}
+		</script>
+	</command>
+	
+  <command name="wear2">
+    <pattern>put #object# on</pattern>
+    <script>
+      DoWear (object)
+    </script>
+  </command>
+
+  <command name="remove2">
+    <pattern>take #object# off</pattern>
+    <script>
+      DoRemove (object)
+    </script>
+  </command>
+
+	<function name="DoWear" parameters="object" type="boolean"><![CDATA[
+    // Is this possible?
+		if(not HasAttribute(object,"worn") or not HasAttribute(object,"wear_slots")) {
+      // No, not a garment
+			msg (DynamicTemplate("WearUnsuccessful", object))
+      return (false)
+		}
+    if (object.parent = game.pov and object.worn = true) {
+      // No, already worn
+			msg (DynamicTemplate("AlreadyWearing", object))
+      return (false)
+		}
+    if (not ListContains(ScopeInventory(), object)) {
+      // No, not held
+			msg (DynamicTemplate("CannotWearIfNotHeld", object))
+      return (false)
+		}
+    // Are other worn garments in the way?
+    obj = GetOuterForGarment(object)
+    if (not obj = null) {
+      if (obj.wear_layer > object.wear_layer) {
+        msg(DynamicTemplate("CannotWearOver", obj))
+        return (false)
+      }
+      if (obj.wear_layer = object.wear_layer) {
+        msg(DynamicTemplate("CannotWearWith", obj))
+        return (false)
+      }
+    }
+			
+    WearGarment(object)
+    if(object.wearmsg = null) {
+      msg (DynamicTemplate("WearSuccessful",object))
+    } else {
+      msg(object.wearmsg)
+    }
+    
+    //do after
+    if (HasScript(object, "onafterwear")) {
+      do(object, "onafterwear")
+    } else if(HasString(object, "onafterwear")) {
+      msg(object.onafterwear)
+    }
+    return(true)
+	]]></function>
+	
+  <!--
+  Use this to have the player wearing an item at the start of the game.
+  Ensure it is in the player's inventory.
+  -->
+	<function name="WearGarment" parameters="object"><![CDATA[
+    object.parent = game.pov
+    object.worn = True
+    object.original_drop = object.drop
+    object.original_alias = object.alias
+    object.drop = false
+    
+    object.display = GetDisplayName(object)
+    object.alias = GetDisplayAlias(object) + " (worn)"
+    if (game.feature_limitinventory) {
+      game.pov.maxobjects = game.pov.maxobjects + 1
+    }
+    SetVerbs
+	]]></function>
+  
+  
+	<function name="DoRemove" parameters="object" type="boolean"><![CDATA[
+		if (not object.parent = game.pov or not GetBoolean(object, "worn") or not GetBoolean(object, "removeable")) {
+			msg (DynamicTemplate("RemoveUnsuccessful", object))
+      return (false)
+		}
+    if (game.feature_limitinventory and ListCount(GetDirectChildren(game.pov)) >= (game.pov.maxobjects)) {
+			msg (DynamicTemplate("MaxObjectsInInventory", object))
+      return (false)
+    }
+    
+
+    obj = GetOuterForGarment(object)
+    if (not obj = null) {
+      if (obj.wear_layer > object.wear_layer) {
+        msg(DynamicTemplate("RemoveFirst", obj))
+        return (false)
+      }
+    }
+
+    if(object.removemsg = null) {
+      msg (DynamicTemplate("RemoveSuccessful",object))
+    } else {
+      msg(object.removemsg)
+    }
+    
+    object.worn = false
+    object.drop = object.original_drop
+    object.alias = object.original_alias
+    object.original_drop = null
+    object.original_alias = null
+    object.display = null
+    if (game.feature_limitinventory) {
+      game.pov.maxobjects = game.pov.maxobjects - 1
+    }
+    
+    //do after
+    if (HasScript(object, "onafterremove")) {
+      do(object, "onafterremove")
+    } else if(HasString(object, "onafterremove")) {
+      msg(object.onafterremove)
+    }
+    SetVerbs
+    return(true)
+	]]></function>
+	
+  
+  
+  <!--
+  Returns the outermost garment in one of the slots of the given garment (not necessarily the same
+  as the outermost garment)
+  -->
+	<function name="GetOuterForGarment" parameters="garment" type="object"><![CDATA[
+    foreach (slot, garment.wear_slots) {
+      obj = GetOuter(slot)
+      if (not obj = null and not obj = garment) {
+        return (obj)
+      }
+    }
+	  return (null)
+	]]></function>
+	
+  
+  <!--
+  Returns the outermost garment in the given slot
+  -->
+	<function name="GetOuter" parameters="slot" type="object"><![CDATA[
+    garment = null
+    foreach(o, GetDirectChildren(game.pov)) {
+      if (HasAttribute(o, "wear_slots") and HasInt(o, "wear_layer") and GetBoolean(o, "worn")) {
+        if (ListContains(o.wear_slots, slot)) {
+          if (garment = null) {
+            garment = o
+          }
+          else if (o.wear_layer > garment.wear_layer) {
+            garment = o
+          }
+        }
+      }
+    }
+    return (garment)
+	]]></function>
+	
+  
+  
+	<function name="SetVerbs"><![CDATA[
+    foreach(o, GetDirectChildren(game.pov)) {
+      if (HasAttribute(o, "wear_slots") and HasInt(o, "wear_layer")) {
+        SetVerbsForGarment(o)
+      }
+    }
+	]]></function>
+	
+
+
+	<function name="WornCount" type="int"><![CDATA[
+    count = 0
+    foreach(o, GetDirectChildren(game.pov)) {
+      if (GetBoolean(o, "worn") {
+        count = count + 1
+      }
+    }
+    return (count)
+	]]></function>
+
+  
+  
+	<function name="SetVerbsForGarment" parameters="garment"><![CDATA[
+    outer = GetOuterForGarment(garment)
+    if (garment.worn) {
+      if (outer = null) {
+        garment.inventoryverbs = lists.remove
+      }
+      else if (outer.wear_layer < garment.wear_layer) {
+        garment.inventoryverbs = lists.remove
+      }
+      else {
+        garment.inventoryverbs = lists.lookat
+      }
+    }
+    else {
+      if (outer = null) {
+        garment.inventoryverbs = lists.wear
+      }
+      else if (outer.wear_layer < garment.wear_layer) {
+        garment.inventoryverbs = lists.wear
+      }
+      else {
+        garment.inventoryverbs = lists.drop
+      }
+    }
+	]]></function>
+	
+  <!--
+  Returns the items currently worn as a string in the form a one, a two, a three.
+  -->
+  <function name="ListClothes" type="string"><![CDATA[
+    sl = NewStringList()
+    foreach (o, GetDirectChildren(game.pov)) {
+      if (GetBoolean(o, "worn")) {
+        s2 = Indefinite(o)
+        list add (sl, s2)
+      }
+    }
+
+    if (ListCount(sl) = 0) return ("nothing")
+    if (ListCount(sl) = 1) return (s2)
+    list remove (sl, s2) 
+    s = LCase(Join(sl, ", ") + " and " + s2)
+    return (s)
+  ]]></function>  
+    
+  <function name="Indefinite" parameters="o" type="string"><![CDATA[
+      if (DoesInherit(o, "plural")) {
+        s = "some "
+      }
+      else {
+        s = "a "
+      }
+      return (s + LCase(Replace(o.alias, " (worn)", "")))
+  ]]></function>
+
+  
+	<type name="wearable">
+		<worn type="boolean">false</worn>
+    <take type="script">
+      msg("You pick up the " + LCase(GetDisplayAlias(this)) + ".")
+      this.inventoryverbs = if(game.pov.headwearslot = null, lists.wear, lists.drop)
+      this.parent = game.pov
+    </take>
+		<removeable type="boolean">true</removeable>
+		<wear_layer type="int">2</wear_layer>
+		<inventoryverbs type="listextend">[Wear];[Remove]</inventoryverbs>
+	</type>
+  
+  
+	<!-- Interface -->
+	<tab>
+		<parent>_ObjectEditor</parent>
+		<caption>Wearable</caption>
+		<mustnotinherit>editor_room; defaultplayer</mustnotinherit>
+		
+		<control>
+			<controltype>title</controltype>
+			<caption>Wearable</caption>
+		</control>
+		
+		<control>
+			<controltype>dropdowntypes</controltype>
+			<caption>Can be worn?</caption>
+			<types>*=Cannot be worn; wearable=Can be worn</types>
+			<width>150</width>
+		</control>
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<controltype>checkbox</controltype>
+			<attribute>removeable</attribute>
+			<caption>Removeable?</caption>
+		</control>
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<controltype>number</controltype>
+			<caption>Wear Layer</caption>
+			<attribute>wear_layer</attribute>
+		</control>
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<caption>Wear Slot</caption>
+			<controltype>list</controltype>
+			<attribute>wear_slots</attribute>
+			<editprompt>Please enter the name for the wear location</editprompt>
+		</control>
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<controltype>label</controltype>
+			<caption>If two objects have the same wear location, they will not be able to be worn at a same time. Any number items without wear locations can be worn.</caption>
+			<advanced/>
+		</control>
+		
+		<!-- snip -->
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<controltype>textbox</controltype>
+			<attribute>wearmsg</attribute>
+			<caption>Message to print when wearing (leave blank for default)</caption>
+			<nullable/>
+		</control>
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<controltype>textbox</controltype>
+			<attribute>removemsg</attribute>
+			<caption>Message to print when removing or trying to remove (leave blank for default)</caption>
+			<nullable/>
+		</control>
+		
+		<!-- Event Handlers from here down none/text/scripts -->
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<controltype>title</controltype>
+			<caption>After Wearing</caption>
+		</control>
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<selfcaption>After wearing the object</selfcaption>
+			<controltype>multi</controltype>
+			<attribute>onafterwear</attribute>
+			<types>null=None; string=Text; script=Run script</types>
+			<editors>string=textbox</editors>
+			<expand/>
+		</control>
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<controltype>title</controltype>
+			<caption>After Removing</caption>
+		</control>
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<selfcaption>After removing the object</selfcaption>
+			<controltype>multi</controltype>
+			<attribute>onafterremove</attribute>
+			<types>null=None; string=Text; script=Run script</types>
+			<editors>string=textbox</editors>
+			<expand/>
+		</control>
+		
+	</tab>
+</library>

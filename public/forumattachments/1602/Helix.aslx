@@ -1,0 +1,537 @@
+<!--Saved by Quest 5.6.5783.24153-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Helix">
+    <gameid>15af96ff-0e04-48ad-b158-6acda2470cc8</gameid>
+    <version>1.0</version>
+    <firstpublished>2016</firstpublished>
+    <subtitle>Penitentiary</subtitle>
+    <author>Luceira</author>
+    <showtitle />
+    <gridmap />
+    <feature_limitinventory />
+    <autodescription type="boolean">false</autodescription>
+    <category>Puzzle</category>
+    <defaultlinkforeground>Crimson</defaultlinkforeground>
+    <defaultfontsize type="int">13</defaultfontsize>
+    <defaultbackground>LightBlue</defaultbackground>
+    <mapsize type="int">150</mapsize>
+    <showcommandbar />
+    <setcustomwidth />
+    <customwidth type="int">1100</customwidth>
+    <setcustompadding type="boolean">false</setcustompadding>
+    <showhealth type="boolean">false</showhealth>
+    <echocommand type="boolean">false</echocommand>
+    <autodisplayverbs type="boolean">false</autodisplayverbs>
+    <command_newline />
+  </game>
+  <object name="Cell">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <attr name="grid_width" type="int">2</attr>
+    <attr name="grid_length" type="int">2</attr>
+    <description type="script"><![CDATA[
+      firsttime {
+        msg ("You open your eyes.<br/><br/>You are in a cell. The dark, musky atmosphere is lit only by a flickering light in the narrow hallway outside your bars and a foul smell lingers in the air. There is a lock on the bars. There is a bunk bed in the corner, neither of the bunks have matresses. Near the bars there is a small metal toilet and a sink. Looking around you see a couple of objects including a bucket and a pillow. A clanging echoes from down the hall masking the pitter patter of rain from the singular small window.<br/><br/>What will you do?")
+      }
+      otherwise {
+        msg ("You are in a cell. The dark, musky atmosphere is lit only by a flickering light in the narrow hallway outside your bars and a foul smell lingers in the air. The rain pitter patters outside and thunder sounds in the distance. The cell door is open, beside it there is a small metal toilet and sink.")
+      }
+    ]]></description>
+    <firstenter type="script">
+      IncreaseObjectCounter (player, "invspace")
+      IncreaseObjectCounter (player, "invspace")
+    </firstenter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>HP</key>
+          <value></value>
+        </item>
+        <item>
+          <key>str</key>
+          <value></value>
+        </item>
+        <item>
+          <key>def</key>
+          <value></value>
+        </item>
+      </statusattributes>
+      <attr name="pov_look">You look terrible.</attr>
+      <HP type="int">10</HP>
+      <str type="int">5</str>
+      <def type="int">0</def>
+      <take type="script">
+      </take>
+    </object>
+    <exit name="cell exit" alias="north" to="Hallway">
+      <inherit name="northdirection" />
+      <locked />
+      <visible />
+      <lockmessage>The cell door is locked.</lockmessage>
+      <look type="string"></look>
+    </exit>
+    <object name="Cell Key">
+      <inherit name="editor_object" />
+      <usedefaultprefix />
+      <alt type="stringlist">
+        <value>key</value>
+      </alt>
+      <take />
+      <drop type="boolean">false</drop>
+      <scenery />
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+      <look type="script">
+        if (Got(Cell Key)) {
+          msg ("Just a simple old rusty key.")
+        }
+      </look>
+    </object>
+    <object name="Cell Door">
+      <inherit name="editor_object" />
+      <look>Between you and the hallway are thick rusted bars. You could probably break them open if you had something heavy. In the center the bars are slightly forward and have a lock. The other side is a narrow hallway with a flickering light.</look>
+      <scenery type="boolean">false</scenery>
+      <alt type="stringlist">
+        <value>door</value>
+        <value>lock</value>
+      </alt>
+      <takemsg>It's a door you fool.</takemsg>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Unlock</value>
+      </displayverbs>
+      <unlock type="script">
+        if (Got(Cell Key)) {
+          msg ("You use the key and slide open the cell door.")
+          UnlockExit (cell exit)
+        }
+        else {
+          msg ("You don't have the key.")
+        }
+      </unlock>
+    </object>
+    <object name="hallway">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>A hallway barely lit by a flickering lightbulb. A few rats skitter along its floors. There appears to be mould growing on the wall. From the west comes a clanging.</look>
+      <visible type="boolean">false</visible>
+    </object>
+    <object name="Bunk Bed">
+      <inherit name="editor_object" />
+      <alt type="stringlist">
+        <value>bed</value>
+      </alt>
+      <takemsg>You can't fit that in your pockets.</takemsg>
+      <look type="script">
+        msg ("A plain, metal bunk bed with no matresses. A few of the bars are missing. There is a bag underneath it.")
+        SetObjectFlagOn (Bag, "seen")
+        MakeObjectVisible (Bag)
+      </look>
+    </object>
+    <object name="window">
+      <inherit name="editor_object" />
+      <look>The window is too high to see anything save for the storm clouds above. Raindrops pass through the bars with freedom. The heavy pitter patter continues on.</look>
+      <scenery />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+    </object>
+    <object name="Bag">
+      <inherit name="editor_object" />
+      <scenery type="boolean">false</scenery>
+      <visible type="boolean">false</visible>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <look type="script">
+        if (GetBoolean(Bag, "seen")) {
+          msg ("A small cloth bag, Hidden in the corner underneath the bunk.")
+        }
+        else if (not GetBoolean(Bag, "seen")) {
+          if (not GetBoolean(Bag, "taken")) {
+            msg ("You can't see a bag.")
+          }
+          else if (GetBoolean(Bag, "taken")) {
+            msg ("A small cloth bag.")
+          }
+        }
+      </look>
+      <take type="script"><![CDATA[
+        if (GetBoolean(Bag, "seen")) {
+          if (GetInt(player, "invspace") > 0) {
+            msg ("You pick it up. Inside was a key.")
+            AddToInventory (Bag)
+            AddToInventory (Cell Key)
+            DecreaseObjectCounter (player, "invspace")
+            SetObjectFlagOff (Bag, "seen")
+            SetObjectFlagOn (Bag, "taken")
+          }
+          else {
+            msg ("You are carrying too much.")
+          }
+        }
+        else if (GetBoolean(Bag, "taken")) {
+          if (GetInt(player, "invspace") > 0) {
+            msg ("You pick it up.")
+            AddToInventory (Bag)
+            DecreaseObjectCounter (player, "invspace")
+          }
+          else {
+            msg ("You are carrying too much.")
+          }
+        }
+      ]]></take>
+      <ondrop type="script">
+        IncreaseObjectCounter (player, "invspace")
+      </ondrop>
+    </object>
+    <object name="Cell Toilet">
+      <inherit name="editor_object" />
+      <alias>Toilet</alias>
+      <usedefaultprefix />
+      <scenery />
+      <look>A small metal toilet connected to the wall. There's no water.</look>
+      <alt type="stringlist">
+        <value>toilet</value>
+        <value>metal toilet</value>
+      </alt>
+      <sit>You struggle to sit on the toilet. It's very cold and you'd rather not think about the germs you probably just picked up.</sit>
+      <flush>Nothing happens.</flush>
+    </object>
+    <object name="Cell Sink">
+      <inherit name="editor_object" />
+      <alias>Sink</alias>
+      <scenery />
+      <look>A small metal sink connected to the wall. The tap nozzles are missing.</look>
+      <alt type="stringlist">
+        <value>sink</value>
+        <value>metal sink</value>
+      </alt>
+      <feature_usegive />
+      <givesingle type="boolean">false</givesingle>
+      <use type="script">
+        msg ("The tap nozzles are missing.")
+      </use>
+    </object>
+    <object name="Bucket">
+      <inherit name="editor_object" />
+      <look>A metal bucket with no handle. The inside is moldy.</look>
+      <alt type="stringlist">
+        <value>pail</value>
+      </alt>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <take type="script"><![CDATA[
+        if (GetInt(player, "invspace") > 0) {
+          msg ("You pick it up.")
+          AddToInventory (Bucket)
+          DecreaseObjectCounter (player, "invspace")
+        }
+        else {
+          msg ("You are carrying too much.")
+        }
+      ]]></take>
+      <ondrop type="script">
+        IncreaseObjectCounter (player, "invspace")
+      </ondrop>
+    </object>
+    <object name="Pillow">
+      <inherit name="editor_object" />
+      <look>An old, flat pillow. Holes riddle it's surface.</look>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <take type="script"><![CDATA[
+        if (GetInt(player, "invspace") > 0) {
+          msg ("You pick it up.")
+          AddToInventory (Pillow)
+          DecreaseObjectCounter (player, "invspace")
+        }
+        else {
+          msg ("You are carrying too much.")
+        }
+      ]]></take>
+      <ondrop type="script">
+        IncreaseObjectCounter (player, "invspace")
+      </ondrop>
+    </object>
+  </object>
+  <object name="Hallway">
+    <inherit name="editor_room" />
+    <attr name="grid_width" type="int">5</attr>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script">
+      firsttime {
+        msg ("You enter the dimly lit hall, leaving the cell behind you. The second you step foot outside the clanging from the west stops and is replaced by slow faint footsteps. To either side of you are dark hallways.")
+        EnableTimer (guard timer)
+      }
+      otherwise {
+        msg ("You are in a narrow hallway. The hallway continues to the east and west. To the south is an open cell.")
+      }
+    </description>
+    <exit alias="south" to="Cell">
+      <inherit name="southdirection" />
+      <lockmessage>That way is locked.</lockmessage>
+    </exit>
+    <exit alias="west" to="Hallway 3">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="east" to="Hallway 2">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>flush</property>
+    <pattern>flush</pattern>
+    <defaultexpression>"You can't flush " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>lookunder</property>
+    <pattern>look under</pattern>
+    <defaultexpression>"You can't look under " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Hallway 2">
+    <inherit name="editor_room" />
+    <attr name="grid_width" type="int">5</attr>
+    <description>You are in a very dark hall. There is a faint terrible odor. The hall continues to the west. To the east is a sturdy steel door. To the south is a closed cell.</description>
+    <alias>Hallway</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <exit alias="west" to="Hallway">
+      <inherit name="westdirection" />
+    </exit>
+    <exit name="messhalldoor" alias="east" to="Mess Hall">
+      <inherit name="eastdirection" />
+      <locked type="boolean">false</locked>
+      <lookonly type="boolean">false</lookonly>
+    </exit>
+    <exit name="cell2exit" alias="south" to="Cell 2">
+      <inherit name="southdirection" />
+      <locked />
+      <lockmessage>The cell door is locked.</lockmessage>
+    </exit>
+    <object name="Steel Door">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <look>A stury thick steel door with a handle and a keyhole.</look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <attr name="feature_container" type="boolean">false</attr>
+      <openscript type="script">
+      </openscript>
+    </object>
+    <object name="Cell 2 Door">
+      <inherit name="editor_object" />
+      <alias>Cell Door</alias>
+      <visible />
+      <look>A series of bars blocking a cell. There's a box in the center.</look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Unlock</value>
+      </displayverbs>
+      <alt type="stringlist">
+        <value>door</value>
+      </alt>
+      <unlock type="script">
+        if (Got(Cell Key)) {
+          msg ("You use the key and slide open the cell door. The key breaks in the lock.")
+          UnlockExit (cell2exit)
+          RemoveObject (Cell Key)
+        }
+        else {
+          msg ("You don't have the key.")
+        }
+      </unlock>
+    </object>
+  </object>
+  <object name="Hallway 3">
+    <inherit name="editor_room" />
+    <attr name="grid_width" type="int">5</attr>
+    <description>You are in a very dark hall. There is a strong foul smell. The hall continues to the west and east. To the south is a closed cell.</description>
+    <alias>Hallway</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <exit alias="east" to="Hallway">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="west" to="Hallway 4">
+      <inherit name="westdirection" />
+    </exit>
+    <exit name="cell3exit" alias="south" to="Cell 3">
+      <inherit name="southdirection" />
+      <locked />
+      <lockmessage>The cell door is locked.</lockmessage>
+    </exit>
+    <object name="Cell 3 Door">
+      <inherit name="editor_object" />
+      <alias>Cell Door</alias>
+      <look>A series of bars blocking a cell. It appears empty.</look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Unlock</value>
+      </displayverbs>
+      <alt type="stringlist">
+        <value>door</value>
+      </alt>
+      <unlock type="script">
+        if (Got(Cell Key)) {
+          msg ("You use the key and slide open the cell door. The key breaks in the lock.")
+          UnlockExit (cell3exit)
+          RemoveObject (Cell Key)
+        }
+        else {
+          msg ("You don't have the key.")
+        }
+      </unlock>
+    </object>
+  </object>
+  <object name="Hallway 4">
+    <inherit name="editor_room" />
+    <attr name="grid_width" type="int">5</attr>
+    <alias>Hallway</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script">
+      msg ("You are in a pitch black hall. The only thing around you that you can see is a flickering light to the east. A chill goes up your spine and you feel unnerved.")
+    </description>
+    <exit alias="east" to="Hallway 3">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="Guard">
+      <inherit name="editor_object" />
+      <inherit name="female" />
+      <hp type="int">75</hp>
+      <str type="int">20</str>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <def type="int">10</def>
+      <dirright type="int">1</dirright>
+      <look type="script">
+        if (not GetBoolean(Guard, "dead")) {
+          msg ("An incredibly bulky guard, her flesh is pale and rotten and her red uniform is tattered. As you stare into her blank white eyes you can't help but feel fear. She wields a steel baton.")
+        }
+        else {
+          msg ("A dead guard.")
+        }
+      </look>
+      <stats type="script">
+        msg ("Health: " + Guard.hp + " Strength: " + Guard.str + " Defense: " + Guard.def)
+      </stats>
+    </object>
+  </object>
+  <verb>
+    <property>stats</property>
+    <pattern>stats</pattern>
+    <defaultexpression>"You can't check the stats of " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Mess Hall">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <exit name="messhalldoor2" alias="west" to="Hallway 2">
+      <inherit name="westdirection" />
+      <locked />
+      <lockmessage>The steel door is locked.</lockmessage>
+    </exit>
+  </object>
+  <object name="Cell 2">
+    <inherit name="editor_room" />
+    <alias>Cell</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <attr name="grid_width" type="int">2</attr>
+    <attr name="grid_length" type="int">2</attr>
+    <exit alias="north" to="Hallway 2">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="Cell 3">
+    <inherit name="editor_room" />
+    <alias>Cell</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <attr name="grid_width" type="int">2</attr>
+    <attr name="grid_length" type="int">2</attr>
+    <exit alias="north" to="Hallway 3">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <function name="guardmove">
+    if (Guard.dirright = 1) {
+      if (Guard.parent = Hallway 4) {
+        MoveObject (Guard, Hallway 3)
+      }
+      else if (Guard.parent = Hallway 3) {
+        MoveObject (Guard, Hallway)
+      }
+      else if (Guard.parent = Hallway) {
+        MoveObject (Guard, Hallway 2)
+      }
+    }
+    else if (Guard.dirright = 0) {
+      if (Guard.parent = Hallway 2) {
+        MoveObject (Guard, Hallway)
+      }
+      else if (Guard.parent = Hallway 3) {
+        MoveObject (Guard, Hallway 4)
+      }
+      else if (Guard.parent = Hallway) {
+        MoveObject (Guard, Hallway 3)
+      }
+    }
+  </function>
+  <timer name="guard timer">
+    <interval>10</interval>
+    <script><![CDATA[
+      guardmove
+      if (game.pov.parent = Hallway) {
+        msg ("<br/>Footsteps echo through the hall.")
+      }
+      else if (game.pov.parent = Hallway 2) {
+        msg ("<br/>Footsteps echo through the hall.")
+      }
+      else if (game.pov.parent = Hallway 3) {
+        msg ("<br/>Footsteps echo through the hall.")
+      }
+      else if (game.pov.parent = Hallway 4) {
+        msg ("<br/>Footsteps echo through the hall.")
+      }
+      if (Guard.dirright = 1) {
+        if (Guard.parent = Hallway 2) {
+          set (Guard, dirright, 0)
+        }
+      }
+      else if (Guard.dirright = 0) {
+        if (Guard.parent = Hallway 4) {
+          set (Guard, dirright, 1)
+        }
+      }
+      if (game.pov.parent = Guard.parent) {
+        msg ("<br/>A guard enters the hall.")
+        SetTimeout (2) {
+          OutputTextNoBr ("She spots you! The guard swings at you with her baton.")
+          SetTimeout (1) {
+            if (RandomChance(60)) {
+              msg ("She hits! You take " + Guard.str + " damage!")
+              set (player, HP, - Guard.str)
+            }
+            else {
+              msg ("She missed!")
+            }
+          }
+        }
+        EnableTimer (guard fight timer)
+        DisableTimer (guard timer)
+      }
+    ]]></script>
+  </timer>
+  <timer name="guard fight timer">
+    <interval>1</interval>
+  </timer>
+</asl>

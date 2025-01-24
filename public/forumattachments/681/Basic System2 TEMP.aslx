@@ -1,0 +1,965 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <include ref="delete.aslx" />
+  <template name="DefaultObjectDescription">Nothing of particular interest.</template>
+  <template name="DefaultSelfDescription">You no longer need a mirror. But the script for this still needs to be set.</template>
+  <template name="SeeListHeader">There's</template>
+  <template name="GoListHeader">Go to:</template>
+  <template name="UnrecognisedCommand">Unknown command. Check your spelling or type help.</template>
+  <template name="YouAreIn">Location:</template>
+  <template name="DefaultHelp"><![CDATA[<u>Quick Help</u><br/><br/>
+<b>- Objects:</b>  Try LOOK AT..., SPEAK TO..., TAKE..., DROP..., OPEN..., GIVE... TO..., USE... ON/WITH...<br/>
+<b>- Inventory:</b>  See which items you are carrying by typing I, INV or INVENTORY.<br/>
+<b>- Moving around:</b>  Press the compass buttons, or type GO NORTH, SOUTH, E, GO TO...<br/>
+<b>- Shortcuts:</b>  Press the up arrow and down arrow to scroll through commands you have already typed in. Try X... as a shortcut for LOOK AT...                                              ]]></template>
+  <dynamictemplate name="TakeSuccessful">"You pick " + object.article + " up."</dynamictemplate>
+  <dynamictemplate name="FullInventory">WriteVerb(object, "be") + " to heavy to be taken."</dynamictemplate>
+  <dynamictemplate name="MaxObjectsInInventory">"You can't carry any more items."</dynamictemplate>
+  <game name="Basic System2 TEMP">
+    <gameid>047a57cf-f285-45b8-93dd-87ca46f5f0f3</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <globalclock type="int">0</globalclock>
+    <inscene type="boolean">false</inscene>
+    <statchoice type="stringlist">
+      <value>Str</value>
+      <value>Def</value>
+      <value>Agi</value>
+      <value>Spr</value>
+    </statchoice>
+    <genderchoice type="stringlist">
+      <value>Male</value>
+      <value>Female</value>
+      <value>Androgynous</value>
+    </genderchoice>
+    <category type="string"></category>
+    <inbattle type="boolean">false</inbattle>
+    <defaultbackground>DarkSlateGray</defaultbackground>
+    <defaultforeground>Gainsboro</defaultforeground>
+    <defaultlinkforeground>DeepSkyBlue</defaultlinkforeground>
+    <menuhoverbackground>DarkSeaGreen</menuhoverbackground>
+    <defaultwebfont>Scada</defaultwebfont>
+    <setbackgroundopacity type="boolean">false</setbackgroundopacity>
+    <autodisplayverbs type="boolean">false</autodisplayverbs>
+    <useweightsystem />
+    <metabolismchoice type="stringlist">
+      <value>NoGain</value>
+      <value>Cheetah</value>
+      <value>Human</value>
+      <value>Whale</value>
+    </metabolismchoice>
+    <author>Kieron</author>
+    <description>This is to show the problem I have with reordered Status Attributes.</description>
+    <helpchoice type="stringlist">
+      <value>Commands</value>
+    </helpchoice>
+    <prn>You</prn>
+    <pv>You are</pv>
+    <posse>Your</posse>
+    <tempint type="int">0</tempint>
+    <povstatusattributes type="stringdictionary">
+      <item>
+        <key>HeightI</key>
+        <value>InchesOnly: !</value>
+      </item>
+      <item>
+        <key>HeightFI</key>
+        <value><![CDATA[Feet&Inches: !]]></value>
+      </item>
+      <item>
+        <key>Weight</key>
+        <value>Weight: !</value>
+      </item>
+      <item>
+        <key>HeightCm</key>
+        <value>Centimeters: !</value>
+      </item>
+    </povstatusattributes>
+    <checkpoint type="object">room</checkpoint>
+    <pov type="object">Hero</pov>
+    <ple type="object">TestDummy</ple>
+    <hubroom type="object">room</hubroom>
+  </game>
+  <command name="oops">
+    <pattern type="string"><![CDATA[^oops (?<text>.*)$]]></pattern>
+    <isoops />
+    <script><![CDATA[
+      hasoops = false
+      if (HasAttribute(game, "unresolvedcommand")) {
+        if (game.unresolvedcommand <> null) {
+          hasoops = true
+        }
+      }
+      if (not hasoops) {
+        msg (Template("DefaultOops"))
+      }
+      else {
+        dictionary remove (game.unresolvedcommandvarlist, game.unresolvedcommandkey)
+        dictionary add (game.unresolvedcommandvarlist, game.unresolvedcommandkey, text)
+        HandleSingleCommandPattern ("", game.unresolvedcommand, game.unresolvedcommandvarlist)
+      }
+    ]]></script>
+  </command>
+  <command name="sleep">
+    <pattern type="string">^sleep$|^rest$</pattern>
+    <script>
+      msg (Template("DefaultSleep"))
+    </script>
+  </command>
+  <command name="wait">
+    <pattern type="string">^wait$|^z$</pattern>
+    <script>
+      msg (Template("DefaultWait"))
+    </script>
+  </command>
+  <command name="help">
+    <pattern type="string">^help$|^\?$</pattern>
+    <script>
+      msg (Template("DefaultHelp"))
+    </script>
+  </command>
+  <command name="take">
+    <pattern>take #object#; get #object#; pick up #object#</pattern>
+    <multiple>
+      return (ListExclude(ScopeVisibleNotHeldNotScenery(), game.pov))
+    </multiple>
+    <script>
+      foreach (obj, object) {
+        DoTake (obj, multiple)
+      }
+    </script>
+  </command>
+  <command name="lookat">
+    <pattern>look at #object#; x #object#; examine #object#; exam #object#; ex #object#</pattern>
+    <script>
+      if (GetBoolean(object, "hidechildren")) {
+        object.hidechildren = false
+      }
+      if (TypeOf(object, "look") = "script") {
+        do (object, "look")
+      }
+      else {
+        lookdesc = ""
+        if (HasString(object, "look")) {
+          lookdesc = object.look
+        }
+        if (LengthOf(lookdesc) = 0) {
+          lookdesc = Template("DefaultObjectDescription")
+        }
+        if (GetBoolean(object, "switchedon")) {
+          if (HasString(object, "switchedondesc")) {
+            lookdesc = lookdesc + " " + object.switchedondesc
+          }
+        }
+        else {
+          if (HasString(object, "switchedoffdesc")) {
+            lookdesc = lookdesc + " " + object.switchedoffdesc
+          }
+        }
+        isDark = CheckDarkness()
+        if (isDark and not GetBoolean(object, "lightsource")) {
+          lookdesc = DynamicTemplate("LookAtDarkness", object)
+        }
+        msg (lookdesc)
+      }
+      ListObjectContents (object)
+    </script>
+  </command>
+  <object name="room">
+    <inherit name="editor_room" />
+    <inherit name="SceneRoom" />
+    <alias>Testing Room</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description>Weight is supposed to be after the Heights, but it moves up one space.</description>
+    <object name="Hero">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <inherit name="PlayerOnly" />
+      <inherit name="CharaStats" />
+      <inherit name="CombatStats" />
+      <inherit name="ElementResistances" />
+      <inherit name="WeightStats" />
+      <inherit name="StatusEffects" />
+      <alias>Hero</alias>
+      <gender>you</gender>
+      <article>your</article>
+      <scenery />
+      <Str type="int">2</Str>
+      <maxobjects type="int">200</maxobjects>
+      <usestandardverblist type="boolean">false</usestandardverblist>
+      <drop type="boolean">false</drop>
+      <alt type="stringlist" />
+      <attr name="pov_alias">Hero</attr>
+      <pov_alt type="stringlist">
+        <value>myself</value>
+        <value>self</value>
+      </pov_alt>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+      <attr name="pov_gender">you</attr>
+      <listalias>Me</listalias>
+      <attr name="pov_article">you are</attr>
+      <maxvolume type="int">100</maxvolume>
+      <RawBelly type="int">13</RawBelly>
+      <Agi type="int">25</Agi>
+      <Def type="int">10</Def>
+      <Metabolism>NoGain</Metabolism>
+      <Fat type="int">5</Fat>
+      <WeaponEquip type="object">NoWeapon</WeaponEquip>
+      <TopEquip type="object">NoTop</TopEquip>
+      <look type="script">
+        ScanDescMain (this)
+      </look>
+      <attr name="pov_look" type="script">
+        ScanDescMain (this)
+      </attr>
+    </object>
+    <object name="CombatTest">
+      <inherit name="editor_room" />
+      <inherit name="SceneRoom" />
+      <alias>Combat Testing Room</alias>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <visible type="boolean">false</visible>
+      <enter type="script">
+        game.inbattle = True
+        EnableTurnScript (TestBattleTurn)
+      </enter>
+      <onexit type="script">
+        game.inbattle = False
+        DisableTurnScript (TestBattleTurn)
+      </onexit>
+      <beforeenter type="script">
+        MakeObjectInvisible (this.Nme.AftermathObj)
+        InitNmeStats1 (this.Nme)
+      </beforeenter>
+      <WinMsg type="script">
+        DisableTurnScript (TestBattleTurn)
+        msg ("You win! Surprise surprise.")
+      </WinMsg>
+      <KOLose type="script">
+        msg ("You blackout. Now, seriously!")
+      </KOLose>
+      <object name="TestDummy">
+        <inherit name="editor_object" />
+        <inherit name="CharaStats" />
+        <inherit name="CombatStats" />
+        <inherit name="NmeOnly" />
+        <inherit name="ElementResistances" />
+        <inherit name="WeightStats" />
+        <inherit name="StatusEffects" />
+        <alias>Test Dummy</alias>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>Kill</value>
+          <value>Revive</value>
+          <value>PlayerDeath</value>
+        </displayverbs>
+        <linkcolour>DarkRed</linkcolour>
+        <inventoryverbs type="stringlist" />
+        <look type="script">
+          ScanDescMain (this)
+        </look>
+        <kill type="script">
+          this.HP = 0
+        </kill>
+        <revive type="script">
+          this.HP = this.MaxHP
+        </revive>
+        <playerdeath type="script">
+          game.pov.HP = 0
+        </playerdeath>
+        <changedHP type="script"><![CDATA[
+          if (this.HP <= 0) {
+            MakeObjectVisible (this.AftermathObj)
+            MakeObjectInvisible (this)
+            DisableTurnScript (TestBattleTurn)
+            ClearScreen
+            ShowRoomDescription
+            do (game.pov.parent, "WinMsg")
+          }
+        ]]></changedHP>
+      </object>
+      <turnscript name="TestBattleTurn">
+        <enabled type="boolean">false</enabled>
+        <script><![CDATA[
+          SetTurnTimeout (1) {
+            if (game.pov.parent = TestDummy.parent and TestDummy.HP > 0) {
+              msg ("TESTING BATTLE TURN SCRIPT...")
+              // Hit
+              Hit.User = TestDummy
+              do (Hit, "Effect")
+            }
+          }
+        ]]></script>
+      </turnscript>
+      <object name="TestAftermath">
+        <inherit name="editor_object" />
+        <alias>After Battle Actions</alias>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <look>A list of actions that can be done after a battle has been won. Use this to leave.</look>
+        <scenery type="boolean">false</scenery>
+        <visible />
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>Leave</value>
+        </displayverbs>
+        <leave type="script">
+          ClearScreen
+          MoveObject (game.pov, game.checkpoint)
+        </leave>
+      </object>
+    </object>
+    <exit alias="east" to="CombatTest">
+      <inherit name="eastdirection" />
+      <suffix>: Combat Testing Room</suffix>
+    </exit>
+    <object name="StarterSupplies">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <alias>Starter Supplies</alias>
+      <listchildren />
+      <listchildrenprefix>It contains</listchildrenprefix>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Empty</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+      <isopen type="boolean">false</isopen>
+      <look>Contains everything I need to start my adventure.</look>
+      <object name="AcquireTShirt">
+        <inherit name="editor_object" />
+        <inherit name="AcquireIt" />
+        <drop />
+        <alias>T-Shirt</alias>
+        <take type="script">
+          AcquireItem (this.ReflexItem, 0)
+          MakeObjectInvisible (this)
+        </take>
+        <look type="script">
+          do (this.ReflexItem, "Desc")
+        </look>
+      </object>
+      <object name="BasicSkills">
+        <inherit name="editor_object" />
+        <inherit name="container_closed" />
+        <look>A list of basic skills every explorer needs to know.</look>
+        <take />
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Open</value>
+          <value>Close</value>
+        </inventoryverbs>
+        <alias>Basic Skills</alias>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <volume type="int">0</volume>
+        <drop type="boolean">false</drop>
+        <IsSkillBook />
+        <object name="Hit">
+          <inherit name="editor_object" />
+          <inherit name="Attacks" />
+          <look>Attack a foe with your equipped weapon.</look>
+          <alias>Hit</alias>
+          <take type="boolean">false</take>
+          <inventoryverbs type="stringlist">
+            <value>Look at</value>
+            <value>Use</value>
+          </inventoryverbs>
+          <displayverbs type="stringlist">
+            <value>Look at</value>
+          </displayverbs>
+          <drop type="boolean">false</drop>
+          <use type="script">
+            this.User = game.pov
+            PerformAttack (this, this.TargetType)
+          </use>
+          <Effect type="script">
+            this.User.WeaponEquip.User = this.User
+            this.User.WeaponEquip.Target = this.Target
+            do (this.User.WeaponEquip, "AttackScript")
+          </Effect>
+        </object>
+        <object name="Flee">
+          <inherit name="editor_object" />
+          <inherit name="Attacks" />
+          <look>Attempt to flee from battle.</look>
+          <alias>Flee</alias>
+          <take type="boolean">false</take>
+          <drop type="boolean">false</drop>
+          <inventoryverbs type="stringlist">
+            <value>Look at</value>
+            <value>Use</value>
+          </inventoryverbs>
+          <displayverbs type="stringlist">
+            <value>Look at</value>
+          </displayverbs>
+          <scenery type="boolean">false</scenery>
+        </object>
+      </object>
+      <object name="AcquireApple">
+        <inherit name="editor_object" />
+        <inherit name="AcquireIt" />
+        <alias>Apple</alias>
+        <ReflexItem type="object">Apple</ReflexItem>
+        <take type="script">
+          AcquireItem (this.ReflexItem, 0)
+          MakeObjectInvisible (this)
+        </take>
+      </object>
+    </object>
+    <object name="DebugConsole">
+      <inherit name="editor_object" />
+      <alias>Debug Console</alias>
+      <take />
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <volume type="int">1</volume>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>ChangeRace</value>
+        <value>ContractStatus</value>
+      </displayverbs>
+      <Spr type="int">23</Spr>
+      <ObjectA type="object">Hero</ObjectA>
+      <look type="script">
+        msg ("Has commands that will allow editing various attributes.")
+        game.pov.Fat = 10
+      </look>
+      <changerace type="script">
+        ChangeSpecies (game.pov)
+      </changerace>
+      <contractstatus type="script">
+        ApplyStatus ("poison", this, game.pov)
+      </contractstatus>
+    </object>
+  </object>
+  <command name="refresh">
+    <pattern>refresh; rf</pattern>
+    <script>
+      RefreshIt
+    </script>
+  </command>
+  <verb>
+    <property>changerace</property>
+    <pattern>changerace</pattern>
+    <defaultexpression>"You can't changerace " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>leave</property>
+    <pattern>leave</pattern>
+    <defaultexpression>"You can't leave " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>revive</property>
+    <pattern>revive</pattern>
+    <defaultexpression>"You can't revive " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="storagechambers">
+    <inherit name="editor_room" />
+    <object name="equipment">
+      <inherit name="editor_room" />
+      <object name="NoTop">
+        <inherit name="editor_object" />
+        <inherit name="Equipment" />
+        <CanBeDyed type="boolean">false</CanBeDyed>
+        <OrigAlias>NoTop</OrigAlias>
+        <Equipped type="boolean">false</Equipped>
+        <alias>NoTop</alias>
+        <Desc type="script">
+          msg ("No shirt.")
+        </Desc>
+        <look type="script">
+          do (this, "Desc")
+        </look>
+      </object>
+      <object name="NoBottom">
+        <inherit name="editor_object" />
+        <inherit name="Equipment" />
+        <Area>Bottom</Area>
+        <CanBeDyed type="boolean">false</CanBeDyed>
+        <OrigAlias>NoBottom</OrigAlias>
+        <Equipped type="boolean">false</Equipped>
+        <alias>NoBottom</alias>
+        <Desc type="script">
+          msg ("No pants.")
+        </Desc>
+        <look type="script">
+          do (this, "Desc")
+        </look>
+        <changedEquipped type="script">
+          SetObjectFlagOn (this, "Equipped")
+        </changedEquipped>
+      </object>
+      <object name="NoAcce">
+        <inherit name="editor_object" />
+        <inherit name="Equipment" />
+        <Area>Acce</Area>
+        <CanBeDyed type="boolean">false</CanBeDyed>
+        <OrigAlias>NoAcce</OrigAlias>
+        <Equipped type="boolean">false</Equipped>
+        <alias>NoAcce</alias>
+        <Desc type="script">
+          msg ("No accessory.")
+        </Desc>
+        <look type="script">
+          do (this, "Desc")
+        </look>
+        <changedEquipped type="script">
+          SetObjectFlagOn (this, "Equipped")
+        </changedEquipped>
+      </object>
+      <object name="NoWeapon">
+        <inherit name="editor_object" />
+        <inherit name="Weapons" />
+        <OrigAlias>NoWeapon</OrigAlias>
+        <Equipped type="boolean">false</Equipped>
+        <alias>NoWeapon</alias>
+        <Desc type="script">
+          msg ("No weapon.")
+        </Desc>
+        <look type="script">
+          do (this, "Desc")
+        </look>
+        <AttackScript type="script">
+          Dmg = this.User.Str * 2 - this.Target.Def
+          Var = GetRandomInt(Dmg,Dmg+ 5)
+          Dmg = Dmg + Var
+          Dmg = ConvInt(Dmg)
+          Dmg = NullNegi(Dmg)
+          this.Target.HP = this.Target.HP - Dmg
+          msg (this.User.alias + " attacks " + this.Target.alias + " for " + Dmg + " HP!")
+        </AttackScript>
+        <changedEquipped type="script">
+          SetObjectFlagOn (this, "Equipped")
+        </changedEquipped>
+      </object>
+      <object name="TShirt">
+        <inherit name="editor_object" />
+        <inherit name="Equipment" />
+        <alias>T-Shirt</alias>
+        <OrigAlias>T-Shirt</OrigAlias>
+        <Colour>white</Colour>
+        <take />
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Drop</value>
+          <value>Wear</value>
+          <value>Unequip</value>
+        </inventoryverbs>
+        <volume type="int">1</volume>
+        <look type="script">
+          do (this, "Desc")
+        </look>
+        <Desc type="script">
+          msg ("A " + this.Colour + " short-sleaved T-Shirt.")
+        </Desc>
+        <wear type="script">
+          EquipCloth (game.pov, game.pov.TopEquip, this)
+        </wear>
+        <unequip type="script">
+          UnequipCloth (game.pov, this)
+        </unequip>
+      </object>
+    </object>
+    <object name="foodstorage">
+      <inherit name="editor_room" />
+      <object name="Apple">
+        <inherit name="editor_object" />
+        <inherit name="Food" />
+        <alias>Apple</alias>
+        <look>A shiny apple.</look>
+        <OrigAlias>(F) Apple</OrigAlias>
+        <HPHealed type="int">10</HPHealed>
+        <APHealed type="int">2</APHealed>
+        <Value type="int">5</Value>
+        <take />
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Drop</value>
+          <value>Eat</value>
+        </inventoryverbs>
+        <eat type="script">
+          EatFood (game.pov, this)
+        </eat>
+      </object>
+    </object>
+  </object>
+  <verb>
+    <property>unequip</property>
+    <pattern>unequip</pattern>
+    <defaultexpression>"You can't unequip " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>playerdeath</property>
+    <pattern>playerdeath</pattern>
+    <defaultexpression>"You can't playerdeath " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="empty">
+    <pattern>empty #object#; take all #object#</pattern>
+    <unresolved>You can't empty that.</unresolved>
+    <script>
+      Parent = object
+      if (Parent.container = True) {
+        if (Parent.isopen = False) {
+          HelperOpenObject (Parent)
+          msg ("You open it.")
+        }
+        foreach (obj, GetDirectChildren(Parent)) {
+          if (obj.visible = True) {
+            msg (Parent.alias +" :: "+ obj.alias)
+            DoTake (obj, multiple)
+          }
+        }
+        HelperCloseObject (Parent)
+        msg ("You close it.")
+      }
+      else {
+        msg ("You can't empty that.")
+      }
+    </script>
+  </command>
+  <turnscript name="GlobalTurn">
+    <enabled />
+    <script>
+      MaintainStatuses (game.pov)
+      ProcessCalories (game.pov)
+    </script>
+  </turnscript>
+  <verb>
+    <property>contractstatus</property>
+    <pattern>contractstatus</pattern>
+    <defaultexpression>"You can't contractstatus " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="fight">
+    <pattern>fight</pattern>
+    <script>
+      // Gathers up all of a player's skills and displays a menu to choose one from
+      foreach (obj1, ScopeInventory()) {
+        if (HasAttribute(obj1, "IsSkillBook") and obj1.isopen = False) {
+          SetObjectFlagOn (obj1, "isopen")
+        }
+      }
+      MoveChoice = NewStringList()
+      foreach (obj, ScopeInventory()) {
+        if (HasAttribute(obj, "IsAttack")) {
+          list add (MoveChoice, obj.name)
+        }
+      }
+      ShowMenu ("Choose your skill.", MoveChoice, true) {
+        foreach (obj2, ScopeInventory()) {
+          if (HasAttribute(obj2, "IsSkillBook") and obj2.isopen = True) {
+            SetObjectFlagOff (obj2, "isopen")
+          }
+        }
+        msg ("TESTING FIGHT COMMAND...")
+        do (GetObject(result), "use")
+      }
+    </script>
+  </command>
+  <type name="PlayerOnly">
+    <Credits type="int">20</Credits>
+    <Exp type="int">0</Exp>
+    <ExpNeeded type="int">100</ExpNeeded>
+  </type>
+  <type name="CharaStats">
+    <MainDesc>Covered with golden brown fur. He has a fluffy tail, and amber eyes.</MainDesc>
+    <Species>Labrador</Species>
+    <GenderMsg>Male</GenderMsg>
+    <UndersideDesc>white fur</UndersideDesc>
+    <AcceEquip type="object">NoAcce</AcceEquip>
+    <TopEquip type="object">NoTop</TopEquip>
+    <BottomEquip type="object">NoBottom</BottomEquip>
+    <WeaponEquip type="object">NoWeapon</WeaponEquip>
+  </type>
+  <type name="CombatStats">
+    <HP type="int">100</HP>
+    <MaxHP type="int">100</MaxHP>
+    <AP type="int">3</AP>
+    <MaxAP type="int">3</MaxAP>
+    <Str type="int">10</Str>
+    <Def type="int">10</Def>
+    <Agi type="int">10</Agi>
+    <Spr type="int">10</Spr>
+    <Level type="int">1</Level>
+    <changedStr type="script"><![CDATA[
+      if (game.useweightsystem = True and this.Metabolism <> "NoGain") {
+        CalculateWeightStats (this)
+      }
+    ]]></changedStr>
+    <changedHP type="script"><![CDATA[
+      if (this.HP < 0) {
+        this.HP = 0
+      }
+      else if (this.HP > this.MaxHP) {
+        this.HP = this.MaxHP
+      }
+      if (this = game.pov) {
+        if (this.HP <= 0) {
+          PlayerDeath
+        }
+        else if (this.HP < 50 and this.HP > 30) {
+          msg ("You're beginning to feel worn out.")
+        }
+      }
+    ]]></changedHP>
+  </type>
+  <type name="Food">
+    <UseMsg>You ate it.</UseMsg>
+    <HPHealed type="int">0</HPHealed>
+    <APHealed type="int">0</APHealed>
+    <Uses type="int">1</Uses>
+    <Value type="int">0</Value>
+    <OrigAlias>Food</OrigAlias>
+    <changedUses type="script"><![CDATA[
+      if (this.Uses <= 0) {
+        delete (this)
+      }
+    ]]></changedUses>
+    <Effect type="script">
+      msg (this.UseMsg)
+    </Effect>
+  </type>
+  <type name="Equipment">
+    <Area>Top</Area>
+    <BaseStr type="int">0</BaseStr>
+    <BaseDef type="int">0</BaseDef>
+    <BaseAgi type="int">0</BaseAgi>
+    <EquipMsg>You equipped it.</EquipMsg>
+    <Colour>white and grey plaid</Colour>
+    <OrigAlias>Cloth</OrigAlias>
+    <CanBeDyed />
+    <Value type="int">0</Value>
+    <Equipped type="boolean">false</Equipped>
+    <BaseSpr type="int">0</BaseSpr>
+    <Desc type="script">
+      msg ("A " + this.Colour + " cloth.")
+    </Desc>
+  </type>
+  <type name="SceneRoom">
+    <Nme type="object">TestDummy</Nme>
+    <WinMsg type="script">
+      msg ("You win!")
+    </WinMsg>
+    <KOLose type="script">
+      msg ("You blackout...")
+    </KOLose>
+  </type>
+  <type name="NmeOnly">
+    <ExpWorth type="int">5</ExpWorth>
+    <CreditsWorth type="int">3</CreditsWorth>
+    <IsNme />
+    <AftermathObj type="object">TestAftermath</AftermathObj>
+  </type>
+  <type name="Attacks">
+    <TargetType>Nme</TargetType>
+    <IsAttack />
+    <User type="object">Hero</User>
+    <Target type="object">Hero</Target>
+    <Effect type="script">
+      msg ("[` _`]")
+    </Effect>
+  </type>
+  <type name="Weapons">
+    <Area>Weapon</Area>
+    <Value type="int">0</Value>
+    <Equipped type="boolean">false</Equipped>
+    <BaseStr type="int">0</BaseStr>
+    <EquipMsg>You equipped the weapon.</EquipMsg>
+    <OrigAlias>Weapon</OrigAlias>
+    <BaseSpr type="int">0</BaseSpr>
+    <BaseDef type="int">0</BaseDef>
+    <BaseAgi type="int">0</BaseAgi>
+    <User type="object">Hero</User>
+    <Target type="object">Hero</Target>
+    <Desc type="script">
+      msg ("No weapon. Str+ " + this.BaseStr)
+    </Desc>
+    <AttackScript type="script">
+      msg ("TESTING WEAPON ATTACKSCRIPT...")
+      Dmg = this.User.Str * 4 - this.Target.Def * 2
+      Var = GetRandomInt(-12,12)
+      Dmg = Dmg + Var
+      this.Target.HP = this.Target.HP - Dmg
+      msg (this.User.alias + " attacks " + this.Target.alias + " for " + Dmg + " HP!")
+    </AttackScript>
+  </type>
+  <type name="ElementResistances">
+    <Slash type="int">0</Slash>
+  </type>
+  <type name="AcquireIt">
+    <ReflexItem type="object">TShirt</ReflexItem>
+  </type>
+  <type name="WeightStats">
+    <Metabolism>NoGain</Metabolism>
+    <Calories type="int">500</Calories>
+    <WaistSize type="int">0</WaistSize>
+    <Belly type="int">0</Belly>
+    <RawBelly type="int">5</RawBelly>
+    <MaxBelly type="int">24</MaxBelly>
+    <Weight type="int">160</Weight>
+    <Fat type="int">25</Fat>
+    <Muscle type="int">0</Muscle>
+    <Other type="int">25</Other>
+    <FatPer type="int">0</FatPer>
+    <MusclePer type="int">0</MusclePer>
+    <OtherPer type="int">0</OtherPer>
+    <WeightDesc>Unfinished...</WeightDesc>
+    <Fullness>hungry</Fullness>
+    <FatKg type="int">0</FatKg>
+    <MuscleKg type="int">0</MuscleKg>
+    <OtherKg type="int">0</OtherKg>
+    <HeightFI>Not Calculated</HeightFI>
+    <HeightI type="int">66</HeightI>
+    <HeightCm type="int">0</HeightCm>
+    <WeightKg type="int">0</WeightKg>
+    <changedRawBelly type="script">
+      UpdateBelly (this)
+    </changedRawBelly>
+    <changedFat type="script">
+      CalculateWeightStats (this)
+    </changedFat>
+  </type>
+  <type name="StatusEffects">
+    <Weakened type="boolean">false</Weakened>
+    <Poisoned type="boolean">false</Poisoned>
+    <WeakTurns type="int">0</WeakTurns>
+    <PoisonTurns type="int">0</PoisonTurns>
+    <PoisonMagnitude type="int">0</PoisonMagnitude>
+  </type>
+  <function name="delete" parameters="obj">
+    if (TypeOf(obj)="object") {
+      destroy (GetString(obj, "name"))
+    }
+    else {
+      destroy (obj)
+    }
+  </function>
+  <function name="DoTake" parameters="object, ismultiple"><![CDATA[
+    prefix = ""
+    if (ismultiple) {
+      prefix = GetDisplayAlias(object) + ": "
+    }
+    if (object.parent = game.pov) {
+      msg (prefix + DynamicTemplate("AlreadyTaken", object))
+    }
+    else if (not ListContains(ScopeReachable(), object)) {
+      msg (prefix + DynamicTemplate("ObjectNotOpen", GetBlockingObject(object)))
+    }
+    else {
+      volume = 0
+      continue = true
+      foreach (obj, GetAllChildObjects(game.pov)) {
+        if (HasInt(obj, "volume")) {
+          volume = volume + obj.volume
+        }
+      }
+      if (not Contains(game.pov, object)) {
+        volume = volume + GetVolume(object,true)
+      }
+      if (HasInt(game.pov, "maxvolume")) {
+        if (volume > game.pov.maxvolume) {
+          continue = false
+          if (HasString(game.pov, "containerfullmessage")) {
+            message = prefix + game.pov.containerfullmessage
+          }
+          else {
+            message = prefix + DynamicTemplate("FullInventory", object)
+          }
+        }
+      }
+      children = GetDirectChildren(game.pov)
+      if (HasInt(game.pov, "maxobjects")) {
+        if (game.pov.maxobjects > 0) {
+          if (ListCount(children) >= game.pov.maxobjects) {
+            continue = false
+            if (HasString(game.pov, "containermaxobjects")) {
+              message = prefix + game.pov.containermaxobjects
+            }
+            else {
+              message = prefix + DynamicTemplate("MaxObjectsInInventory", object)
+            }
+          }
+        }
+      }
+      if (continue = false) {
+        msg (message)
+      }
+      else {
+        found = true
+        takemsg = object.takemsg
+        switch (TypeOf(object, "take")) {
+          case ("script") {
+            if (ismultiple) {
+              msg (prefix)
+            }
+            do (object, "take")
+            takemsg = ""
+          }
+          case ("boolean") {
+            if (object.take = true) {
+              object.parent = game.pov
+              if (takemsg = null) {
+                takemsg = DynamicTemplate("TakeSuccessful", object)
+              }
+            }
+            else {
+              found = false
+            }
+          }
+          case ("string") {
+            object.parent = game.pov
+            takemsg = object.take
+          }
+          default {
+            found = false
+          }
+        }
+        if (not found and takemsg = null) {
+          takemsg = DynamicTemplate("TakeUnsuccessful", object)
+        }
+        if (LengthOf(takemsg) > 0) {
+          msg (prefix + takemsg)
+          if (GetBoolean ( object , "scenery" )) {
+            object.scenery = false
+          }
+        }
+        if (HasScript(object, "ontake")) {
+          do (object, "ontake")
+        }
+      }
+    }
+  ]]></function>
+  <function name="DiceRoll" parameters="dicetype" type="int">
+    dpos = Instr(dicetype, "d")
+    if (dpos = 0) {
+      error ("Invalid dice type: " + dicetype)
+    }
+    else {
+      number_string = Left(dicetype, dpos - 1)
+      sides_string = Mid(dicetype, dpos + 1)
+      if (not (IsNumeric(number_string) and IsNumeric(sides_string))) {
+        error ("Invalid dice type: " + dicetype)
+      }
+      else {
+        number = ToInt(number_string)
+        sides = ToInt(sides_string)
+        total = 0
+        for (i, 1, number) {
+          total = total + GetRandomInt(1, sides)
+        }
+        return (total)
+      }
+    }
+  </function>
+  <function name="RandomChance" parameters="percentile" type="boolean"><![CDATA[
+    return (GetRandomInt(1,100) <= percentile)
+  ]]></function>
+</asl>

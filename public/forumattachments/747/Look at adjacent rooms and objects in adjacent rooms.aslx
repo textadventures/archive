@@ -1,0 +1,616 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Different approach to combat">
+    <gameid>dbe3a30c-a4ef-4975-b224-628947f98729</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <gridmap />
+    <attr name="autodescription_description" type="int">4</attr>
+    <pov type="object">player</pov>
+  </game>
+  <command name="Help">
+    <pattern>help</pattern>
+    <unresolved>You can't do that.</unresolved>
+    <script><![CDATA[
+      msg ("This code will give the player the ability to look in adjacent rooms by typing i.e. \"look north\", \"look s\", etc. and also to look at individual objects in those rooms.<br/>Everything has been done using the GUI. The rooms and objects in this file can be savely deleted since they are not essential for the code in any way. Nothing else has been changed in the code except for the following:<br/><br/>I added/modified 5 things:<br/>added 1 Command: \"LookDir\"<br/>added 6 Functions: \"ShowRoomDescriptionOfLookDir\", \"GetRoomDescriptionOfLookDir\", \"ResolveNameInternalEdited\", \"CheckDarknessOfLookDir\", \"ScopeVisibleLightsourceOfLookDir\" and \"FormatObjectListEdited\"<br/>modified 1 Funtion: \"ResolveName\"<br/><br/>I overwrote the \"lookdir\" command by creating a \"LookDir\" command with the exact same script save the change that I called the \"ShowRoomDescriptionOfLookDir\" function at the very end of the command.<br/><br/>The \"ShowRoomDescriptionOfLookDir\" function is basically just the already existing \"ShowRoomDescription\" function with some modifications in order to get the room name, objects and exits inside the room and the description of the room you are looking at instead of the one you are currently in.<br/><br/>The \"GetRoomDescriptionOfLookDir\" function is basically just the already existing \"GetRoomDescription\" function with some modifications in order to get the \"ShowRoomDescriptionOfLookDir\" function to show the room description of the adjacent room you are looking at instead of the one you are currently in.<br/><br/>The \"ResolveNameInternalEdited\" funtion is basically just the already existing \"ResolveNameInternal\" function with some modifications to extend the scope of objects that can be looked at to all rooms adjacent to the one you are currently in.<br/><br/>The \"CheckDarknessOfLookDir\" function is basically just the already existing \"CheckDarknessOfLookDir\" function with some modifications in order to see if the room you are looking at is dark.<br/><br/>The \"ScopeVisibleLightsourceOfLookDir\" function is basically just the already existing \"ScopeVisibleLightsourceOfLookDir\" function with some modifications in order to be able to see objects that are lightsources in the room you are looking at.<br/><br/>The \"FormatObjectListEdited\" function is basically just the already existing \"FormatObjectListEdited\" function with some modifications. The regular \"FormatObjectListEdited\" function uses the parent of the objects you want to list, but I needed the function to use a list of objects instead. In this case I used the list which contains all the objects inside a dark room which have the lightstrength \"weak\".<br/><br/>The \"ResolveName\" function has been modified to call the \"ResolveNameInternalEdited\" funtion for the \"lookat\" command so you can look at objects in adjacent rooms. For all other commands the regular \"ResolveNameInternal\" function is called meaning you can't for example take or open an object in an adjacent room.<br/><br/><br/>If you wish to overwrite the \"lookat\" command with one of your own (i.e. you want to call it \"Look at\" and change the command pattern itself in the process) then you have to go to the \"ResolveName\" function and change the following line:<br/>game.pov.currentcommandpattern.name = \"lookat\"<br/>has to be changed to<br/>game.pov.currentcommandpattern.name = \"(Name of your command)\"<br/>(i.e. game.pov.currentcommandpattern.name = \"Look at\")<br/><br/><br/>If there's a problem in this code just delete the \"LookDir\" command and revert the change in the \"ResolveName\" function. Thus the regular \"lookdir\" command is functional again and since the \"ResolveName\" function is the only one that has been changed the other functions aren't referred to or refer to anything else anymore.")
+    ]]></script>
+  </command>
+  <command name="LookDir">
+    <pattern type="string"><![CDATA[^look (?<exit>north|east|south|west|northeast|northwest|southeast|southwest|out|up|down|n|e|s|w|ne|nw|se|sw|o|u|d)$]]></pattern>
+    <script><![CDATA[
+      if (HasScript(exit, "look")) {
+        do (exit, "look")
+      }
+      else {
+        message = DynamicTemplate("YouLooking",exit.alias)
+        if (HasString(exit, "look")) {
+          if (exit.look <> "") {
+            message = exit.look
+          }
+        }
+        if (exit.locked) {
+          if (HasString(exit,"lockmessage")) {
+            lockmessage = exit.lockmessage
+          }
+          else {
+            lockmessage = Template("LockedExit")
+          }
+          msg (message+" "+lockmessage)
+        }
+        else {
+          msg (message)
+        }
+        ShowRoomDescriptionOfLookDir (exit)
+      }
+    ]]></script>
+  </command>
+  <object name="Room 1">
+    <inherit name="editor_room" />
+    <alias>Room labelled number 1 Red</alias>
+    <usedefaultprefix />
+    <description>The room has red walls.</description>
+    <exit alias="north" to="Room 2">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="Shovel">
+      <inherit name="editor_object" />
+      <take />
+      <look>A suprisingly clean shovel.</look>
+    </object>
+  </object>
+  <object name="Room 2">
+    <inherit name="editor_room" />
+    <alias>Room labelled number 2 Blue</alias>
+    <usedefaultprefix />
+    <description>The room has blue walls.</description>
+    <exit alias="south" to="Room 1">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="north" to="Room 3">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <object name="Large bag">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <take />
+        <look type="script">
+          list = FormatObjectList("", Large bag, ",", "", true)
+          if (list = "") {
+            if (Large bag.isopen) {
+              msg ("A large bag made of leather. It is currently open and contains nothing.")
+            }
+            else {
+              msg ("A large bag made of leather. It is currently closed.")
+            }
+          }
+          else {
+            if (Large bag.isopen) {
+              msg ("A large bag made of leather. It is currently open and contains " + list + ".")
+            }
+            else {
+              msg ("A large bag made of leather. It is currently closed.")
+            }
+          }
+        </look>
+      </object>
+      <object name="Small bag">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <take />
+        <visible />
+        <look type="script">
+          list = FormatObjectList("", Small bag, ",", "", true)
+          if (list = "") {
+            if (Small bag.isopen) {
+              msg ("A small bag made of leather. It is currently open and contains nothing.")
+            }
+            else {
+              msg ("A small bag made of leather. It is currently closed.")
+            }
+          }
+          else {
+            if (Small bag.isopen) {
+              msg ("A small bag made of leather. It is currently open and contains " + list + ".")
+            }
+            else {
+              msg ("A small bag made of leather. It is currently closed.")
+            }
+          }
+        </look>
+      </object>
+    </object>
+    <exit alias="up" to="Room 6">
+      <inherit name="updirection" />
+    </exit>
+  </object>
+  <object name="Room 3">
+    <inherit name="editor_room" />
+    <alias>Room labelled number 3 Green</alias>
+    <usedefaultprefix />
+    <description>The room has green walls.</description>
+    <dark />
+    <darkroomdescription>The room is too dark to see anything that is not lit.</darkroomdescription>
+    <exit alias="south" to="Room 2">
+      <inherit name="southdirection" />
+      <lightsource />
+      <lightstrength>weak</lightstrength>
+    </exit>
+    <exit alias="west" to="Room 4">
+      <inherit name="westdirection" />
+      <lightsource />
+      <lightstrength>weak</lightstrength>
+    </exit>
+    <exit alias="east" to="Room 5">
+      <inherit name="eastdirection" />
+      <lightsource />
+      <lightstrength>weak</lightstrength>
+    </exit>
+    <object name="Stone">
+      <inherit name="editor_object" />
+      <take />
+      <look>A perfectly round stone.</look>
+    </object>
+    <object name="Switch1">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <lightsource />
+      <alias>Switch</alias>
+      <lightstrength>weak</lightstrength>
+      <look>A mildly glowing switch. You can turn it on or off.</look>
+      <switchedon />
+      <onswitchon type="script">
+        set (Lamp1, "lightsource", true)
+      </onswitchon>
+      <onswitchoff type="script">
+        set (Lamp1, "lightsource", false)
+      </onswitchoff>
+    </object>
+    <object name="Lamp1">
+      <inherit name="editor_object" />
+      <alias>Lamp</alias>
+      <lightsource />
+      <lightstrength>strong</lightstrength>
+      <switchedon type="boolean">false</switchedon>
+      <onswitchon type="script">
+      </onswitchon>
+      <onswitchoff type="script">
+      </onswitchoff>
+    </object>
+  </object>
+  <object name="Room 4">
+    <inherit name="editor_room" />
+    <alias>Room labelled number 4 Yellow</alias>
+    <usedefaultprefix />
+    <description>The room has yellow walls.</description>
+    <exit alias="east" to="Room 3">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="Shirt">
+      <inherit name="editor_object" />
+      <take />
+      <look>A pretty dirty shirt.</look>
+      <lightsource type="boolean">false</lightsource>
+      <lightstrength type="string"></lightstrength>
+    </object>
+  </object>
+  <object name="Room 5">
+    <inherit name="editor_room" />
+    <alias>Room labelled number 5 Purple</alias>
+    <usedefaultprefix />
+    <description>The room has purple walls.</description>
+    <exit alias="west" to="Room 3">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="Room 6">
+    <inherit name="editor_room" />
+    <alias>Room labelled number 6 Orange</alias>
+    <description>The room has orange walls.</description>
+    <dark />
+    <darkroomdescription>The room is too dark to see anything that is not lit.</darkroomdescription>
+    <exit alias="down" to="Room 2">
+      <inherit name="downdirection" />
+      <lightsource />
+      <lightstrength>weak</lightstrength>
+    </exit>
+    <object name="Table">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <look>A boring old table.</look>
+      <object name="Portable lamp">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <take />
+        <look>A regular lamp. You can take it with you and turn it on as well as off.</look>
+        <usedefaultprefix />
+        <scenery type="boolean">false</scenery>
+        <lightsource />
+        <lightstrength>strong</lightstrength>
+        <switchedon />
+        <onswitchon type="script">
+          set (Portable lamp, "lightsource", true)
+        </onswitchon>
+        <onswitchoff type="script">
+          set (Portable lamp, "lightsource", false)
+        </onswitchoff>
+      </object>
+    </object>
+    <object name="Switch2">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <alias>Switch</alias>
+      <lightsource />
+      <look>A mildly glowing switch. You can turn it on or off.</look>
+      <lightstrength>weak</lightstrength>
+      <switchedon />
+      <onswitchon type="script">
+        set (Lamp2, "lightsource", true)
+      </onswitchon>
+      <onswitchoff type="script">
+        set (Lamp2, "lightsource", false)
+      </onswitchoff>
+    </object>
+    <object name="Lamp2">
+      <inherit name="editor_object" />
+      <alias>Lamp</alias>
+      <lightsource />
+      <lightstrength>strong</lightstrength>
+    </object>
+  </object>
+  <function name="ShowRoomDescriptionOfLookDir" parameters="exit"><![CDATA[
+    isDark = CheckDarknessOfLookDir(exit)
+    if (isDark) {
+      descriptionfield = "darkroomdescription"
+    }
+    else {
+      descriptionfield = "description"
+    }
+    if (game.autodescription) {
+      desc = ""
+      for (i, 1, 4) {
+        if (isDark) {
+          if (i = game.autodescription_youcansee) {
+            objects = NewObjectList()
+            foreach (object, AllObjects()) {
+              if (ListContains(ScopeVisibleLightsourceOfLookDir ("weak", exit), object)) {
+                list add (objects, object)
+              }
+            }
+            objects = FormatObjectListEdited(exit.to.objectslistprefix, objects, Template("And"), ".", false)
+            desc = AddDescriptionLine(desc, objects)
+            if (game.autodescription_youcansee_newline) {
+              msg (desc)
+              desc = ""
+            }
+          }
+          if (i = game.autodescription_youcango) {
+            exitslist = NewObjectList()
+            exitslistcount = 0
+            foreach (exit1, AllExits()) {
+              if (ListContains(ScopeVisibleLightsourceOfLookDir ("weak", exit), exit1)) {
+                list add (exitslist, exit1)
+                exitslistcount = exitslistcount + 1
+              }
+            }
+            if (exitslistcount = 1) {
+              exits = FormatExitList("You can only see the exit leading ", exitslist, "", " through which you are currently looking.")
+            }
+            else {
+              exits = FormatExitList("You can see exits leading ", exitslist, Template("And"), ".")
+            }
+            desc = AddDescriptionLine(desc, exits)
+            if (game.autodescription_youcango_newline) {
+              msg (desc)
+              desc = ""
+            }
+          }
+        }
+        else {
+          if (i = game.autodescription_youarein) {
+            desc = AddDescriptionLine (desc, "The room to the " + exit.alias + " seems to be a " + exit.to.alias + ".")
+            if (game.autodescription_youarein_newline) {
+              msg (desc)
+              desc = ""
+            }
+          }
+          if (i = game.autodescription_youcansee) {
+            objects = FormatObjectList(exit.to.objectslistprefix, GetNonTransparentParent(exit.to), Template("And"), ".", false)
+            desc = AddDescriptionLine(desc, objects)
+            if (game.autodescription_youcansee_newline) {
+              msg (desc)
+              desc = ""
+            }
+          }
+          if (i = game.autodescription_youcango) {
+            exitslist = NewObjectList()
+            exitslistcount = 0
+            foreach (exit1, AllExits()) {
+              if (exit1.parent = exit.to) {
+                list add (exitslist, exit1)
+                exitslistcount = exitslistcount + 1
+              }
+            }
+            if (exitslistcount = 1) {
+              exits = FormatExitList("You can only see the exit leading ", exitslist, "", " through which you are currently looking.")
+            }
+            else {
+              exits = FormatExitList("You can see exits leading ", exitslist, Template("And"), ".")
+            }
+            desc = AddDescriptionLine(desc, exits)
+            if (game.autodescription_youcango_newline) {
+              msg (desc)
+              desc = ""
+            }
+          }
+        }
+        if (i = game.autodescription_description) {
+          if (HasScript(exit.to, descriptionfield)) {
+            if (LengthOf(desc) > 0) {
+              msg (desc)
+              desc = ""
+            }
+            do (exit.to, descriptionfield)
+            if (game.autodescription_description_newline) {
+              msg ("")
+            }
+          }
+          else {
+            desc = AddDescriptionLine(desc, GetRoomDescriptionOfLookDir(exit))
+            if (game.autodescription_description_newline) {
+              msg (desc)
+              desc = ""
+            }
+          }
+        }
+      }
+      if (LengthOf(desc) > 0) {
+        msg (desc)
+      }
+    }
+    else {
+      if (HasScript(exit.to, descriptionfield)) {
+        do (exit.to, descriptionfield)
+      }
+      else {
+        fulldesc = GetRoomDescriptionOfLookDir(exit)
+        if (LengthOf(fulldesc) > 0) {
+          msg (fulldesc)
+        }
+      }
+    }
+  ]]></function>
+  <function name="GetRoomDescriptionOfLookDir" parameters="exit" type="string"><![CDATA[
+    fulldesc = ""
+    if (CheckDarknessOfLookDir(exit)) {
+      if (HasString(exit.to, "darkroomdescription")) {
+        if (LengthOf(exit.to.darkroomdescription) > 0) {
+          fulldesc = exit.to.darkroomdescription
+        }
+      }
+    }
+    else {
+      if (HasString(exit.to, "description")) {
+        if (LengthOf(exit.to.description) > 0) {
+          fulldesc = exit.to.description
+        }
+      }
+    }
+    if (game.appendobjectdescription) {
+      foreach (val, ScopeVisibleNotHeld()) {
+        if (HasString(val, "inroomdescription")) {
+          if (LengthOf(val.inroomdescription) > 0 and val <> game.pov) {
+            fulldesc = fulldesc + " " + val.inroomdescription
+          }
+        }
+      }
+    }
+    return (Trim(fulldesc))
+  ]]></function>
+  <function name="ResolveName" parameters="variable, value, objtype" type="object"><![CDATA[
+    found = false
+    if (game.pov.commandmetadata <> null) {
+      if (DictionaryContains(game.pov.commandmetadata, value)) {
+        result = GetObject(StringDictionaryItem(game.pov.commandmetadata, value))
+        if (result <> null) {
+          if (ListContains(ScopeVisible(), result)) {
+            found = true
+            return (result)
+          }
+        }
+      }
+    }
+    if (not found) {
+      value = LCase(value)
+      if (game.pov.currentcommandpattern.name = "lookat") {
+        result = ResolveNameInternalEdited(variable, value, objtype)
+      }
+      else {
+        result = ResolveNameInternal(variable, value, objtype)
+      }
+      if (result <> null) {
+        return (result)
+      }
+      else {
+        // TO DO: Check this behaviour. We only want to try ignoring prefixes if we have definitely got an unresolved name.
+        foreach (prefix, game.parserignoreprefixes) {
+          if (StartsWith(value, prefix + " ")) {
+            result = ResolveNameInternal(variable, Mid(value, LengthOf(prefix) + 1), objtype)
+          }
+        }
+        if (result = null and LengthOf(variable) = 0 and not GetBoolean(game.pov, "currentcommandmultiobjectpending")) {
+          UnresolvedCommand (value, game.pov.currentcommandpendingvariable)
+        }
+        return (result)
+      }
+    }
+  ]]></function>
+  <function name="ResolveNameInternalEdited" parameters="variable, value, objtype" type="object"><![CDATA[
+    fullmatches = NewObjectList()
+    partialmatches = NewObjectList()
+    game.pov.currentcommandmultiobjectpending = false
+    if (objtype = "object") {
+      list = ScopeVisible()
+      foreach (exit, ScopeExits()) {
+        if (exit.visible = true and exit.locked = false) {
+          foreach (object, AllObjects()) {
+            if (Contains (exit.to,object) and object.visible = true) {
+              if (object.parent.container = true and object.parent.isopen = true ) {
+                if (HasAttribute(object.parent, "transparent ")) {
+                  if (object.parent.transparent = true) {
+                    list add (list, object)
+                  }
+                }
+                else {
+                  list add (list, object)
+                }
+              }
+              else if (object.parent.container = false) {
+                list add (list, object)
+              }
+            }
+          }
+        }
+      }
+      scope = list
+    }
+    else if (objtype = "exit") {
+      scope = ScopeExits()
+    }
+    value = Trim(value)
+    foreach (obj, scope) {
+      name = LCase(GetDisplayAlias(obj))
+      CompareNames (name, value, obj, fullmatches, partialmatches)
+      if (obj.alt <> null) {
+        foreach (altname, obj.alt) {
+          CompareNames (LCase(altname), value, obj, fullmatches, partialmatches)
+        }
+      }
+    }
+    if (game.lastobjects <> null) {
+      foreach (obj, game.lastobjects) {
+        CompareNames (LCase(obj.article), value, obj, fullmatches, partialmatches)
+        CompareNames (LCase(obj.gender), value, obj, fullmatches, partialmatches)
+      }
+    }
+    if (ListCount(fullmatches) = 1) {
+      return (ListItem(fullmatches, 0))
+    }
+    else if (ListCount(fullmatches) = 0 and ListCount(partialmatches) = 1) {
+      return (ListItem(partialmatches, 0))
+    }
+    else if (ListCount(fullmatches) + ListCount(partialmatches) = 0) {
+      return (null)
+    }
+    else {
+      menu = NewStringDictionary()
+      GenerateMenuChoices (menu, fullmatches)
+      GenerateMenuChoices (menu, partialmatches)
+      if (LengthOf(variable) > 0) {
+        // single object command, so after showing the menu, add the object to game.pov.currentcommandresolvedelements
+        game.pov.currentcommandpendingvariable = variable
+        ShowMenu (DynamicTemplate("DisambiguateMenu", value), menu, true) {
+          varname = game.pov.currentcommandpendingvariable
+          game.pov.currentcommandpendingvariable = null
+          if (result <> null) {
+            AddToResolvedNames (varname, GetObject(result))
+          }
+        }
+      }
+      else {
+        // multi-object command, so after showing the menu, add the object to the list
+        game.pov.currentcommandmultiobjectpending = true
+        ShowMenu (DynamicTemplate("DisambiguateMenu", value), menu, true) {
+          if (result <> null) {
+            list add (game.pov.currentcommandpendingobjectlist, GetObject(result))
+            ResolveNextNameListItem
+          }
+        }
+      }
+      return (null)
+    }
+  ]]></function>
+  <function name="CheckDarknessOfLookDir" parameters="exit" type="boolean"><![CDATA[
+    roomCheckDarkness = true
+    if (GetBoolean(exit.to, "dark")) {
+      if (ListCount(ScopeVisibleLightsourceOfLookDir ("strong", exit)) > 0) {
+        roomCheckDarkness = false
+      }
+    }
+    else {
+      roomCheckDarkness = false
+    }
+    exit.to.darklevel = roomCheckDarkness
+    return (roomCheckDarkness)
+  ]]></function>
+  <function name="ScopeVisibleLightsourceOfLookDir" parameters="lightstrength, exit" type="objectlist">
+    list = NewObjectList()
+    foreach (object, AllObjects()) {
+      if (Contains (exit.to,object) and object.visible = true) {
+        if (object.parent.container = true and object.parent.isopen = true ) {
+          if (HasAttribute(object.parent, "transparent ")) {
+            if (object.parent.transparent = true) {
+              list add (list, object)
+            }
+          }
+          else {
+            list add (list, object)
+          }
+        }
+        else if (object.parent.container = false) {
+          list add (list, object)
+        }
+      }
+    }
+    result = list
+    lightobjects = NewObjectList()
+    foreach (obj, result) {
+      if (GetBoolean(obj, "lightsource") and GetString(obj, "lightstrength") = lightstrength) {
+        list add (lightobjects, obj)
+      }
+    }
+    exitslist = NewObjectList()
+    foreach (exit1, AllExits()) {
+      if (exit1.parent = exit.to) {
+        list add (exitslist, exit1)
+      }
+    }
+    exits = exitslist
+    foreach (obj, exits) {
+      if (GetBoolean(obj, "lightsource") and GetString(obj, "lightstrength") = lightstrength) {
+        list add (lightobjects, obj)
+      }
+    }
+    return (lightobjects)
+  </function>
+  <function name="FormatObjectListEdited" parameters="preList, objectlist, preFinal, postList, useinventoryverbs" type="string"><![CDATA[
+    result = ""
+    count = 0
+    listLength = ListCount(objectlist)
+    foreach (item, objectlist) {
+      if (LengthOf(result) = 0) {
+        result = preList + " "
+      }
+      verbs = GetDisplayVerbs(item)
+      result = result + GetDisplayNameLink(item, "object")
+      if (CanSeeThrough(item)) {
+        result = result + FormatObjectList(" (" + item.contentsprefix, item, preFinal, ")", useinventoryverbs)
+      }
+      count = count + 1
+      if (count = listLength - 1) {
+        result = result + " " + preFinal + " "
+      }
+      else if (count < listLength) {
+        result = result + ", "
+      }
+      else {
+        result = result + postList
+      }
+    }
+    return (result)
+  ]]></function>
+</asl>

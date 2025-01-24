@@ -1,0 +1,115 @@
+<!--Saved by Quest 5.4.4840.17608-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Experimentation">
+    <gameid>516bf7d3-011e-4924-90ab-d9c02f6e7833</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="box">
+      <inherit name="editor_object" />
+      <look type="script"><![CDATA[
+        OutputTextNoBr ("It's a box, containing ")
+        if (ListCount(GetDirectChildren(this)) = 0) {
+          msg ("nothing.")
+        }
+        d = NewStringDictionary()
+        dcount = 0
+        d2 = NewStringDictionary()
+        d2count = 0
+        foreach (object, GetDirectChildren(this)) {
+          if (object.alias = null) {
+            object.alias = object.name
+          }
+          obj = object.alias
+          if (not DictionaryContains(d, obj)) {
+            dictionary add (d, obj, ToString(1))
+            dcount = dcount + 1
+          }
+          else {
+            original = ToInt(StringDictionaryItem(d, obj))
+            dictionary remove (d, obj)
+            dictionary add (d, obj, ToString(original + 1))
+          }
+        }
+        if (dcount = 1) {
+          if (ToInt(StringDictionaryItem(d, obj)) = 1) {
+            amount = "a"
+          }
+          else {
+            amount = StringDictionaryItem(d, obj)
+          }
+          OutputTextNoBr (amount + " " + obj)
+          if (amount = "a") {
+            msg (".")
+          }
+          else {
+            msg ("s.")
+          }
+        }
+        foreach (obj, d) {
+          d2count = d2count + 1
+          dictionary add (d2, obj, ToString(d2count))
+          if (ToInt(StringDictionaryItem(d, obj)) = 1) {
+            amount = "a"
+          }
+          else {
+            amount = StringDictionaryItem(d, obj)
+          }
+          if (dcount > 1) {
+            if (not StringDictionaryItem(d2, obj) = ToString(dcount)) {
+              OutputTextNoBr (amount + " " + obj)
+              if (amount = "a") {
+                OutputTextNoBr (", ")
+              }
+              else {
+                OutputTextNoBr ("s, ")
+              }
+            }
+            else {
+              OutputTextNoBr ("and " + amount + " " + obj)
+              if (amount = "a") {
+                msg (".")
+              }
+              else {
+                msg ("s.")
+              }
+            }
+          }
+        }
+      ]]></look>
+      <object name="box1">
+        <inherit name="editor_object" />
+        <alias>box</alias>
+      </object>
+      <object name="key">
+        <inherit name="editor_object" />
+      </object>
+      <object name="key1">
+        <inherit name="editor_object" />
+        <alias>key</alias>
+      </object>
+      <object name="key2">
+        <inherit name="editor_object" />
+        <alias>key</alias>
+      </object>
+      <object name="cookie">
+        <inherit name="editor_object" />
+      </object>
+      <object name="cookie1">
+        <inherit name="editor_object" />
+        <alias>cookie</alias>
+      </object>
+      <object name="piece of chicken">
+        <inherit name="editor_object" />
+      </object>
+    </object>
+  </object>
+</asl>

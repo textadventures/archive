@@ -1,0 +1,201 @@
+<!--Saved by Quest 5.5.5328.26617-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Dopecity">
+    <inherit name="theme_hotdogstand" />
+    <gameid>3df0122f-3352-47b6-bbce-9513ad1cc1c2</gameid>
+    <version>0.666</version>
+    <firstpublished>2015</firstpublished>
+    <author>Yours Truly</author>
+    <description>What better way to spend an afternoon than to sit around and do some coke, shoot some smack and ponder the meaning of things.  </description>
+    <gridmap />
+    <showhealth />
+    <difficulty>Easy</difficulty>
+    <feature_asktell />
+    <appendobjectdescription />
+    <defaultbackground>DimGray</defaultbackground>
+  </game>
+  <object name="Living Room">
+    <inherit name="editor_room" />
+    <description>This is a gaping butthole at the end of a narrow hall. The walls encrusted with dust, the floor grimy and hard.  An old-green couch is resting in-front of the south wall, and hanging on the north wall are pictures decending like a stair case.  Windows are mysteriously absent.  </description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <attr name="grid_label">Living Room</attr>
+    <attr name="grid_width" type="int">3</attr>
+    <attr name="grid_length" type="int">2</attr>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <object name="Baseball Bat">
+        <inherit name="editor_object" />
+        <look>It's a weapon to bash heads, sleek and lightweight.</look>
+        <take />
+        <feature_usegive />
+        <use type="script">
+          msg ("Use swing at the air.  Drugs, maybe?")
+        </use>
+      </object>
+    </object>
+    <object name="Candle">
+      <inherit name="editor_object" />
+      <feature_usegive />
+      <useon type="scriptdictionary">
+        <item key="Match">
+          msg ("You light the candle with the match.")
+          MakeObjectInvisible (Match)
+        </item>
+      </useon>
+    </object>
+    <object name="Match">
+      <inherit name="editor_object" />
+      <look>Last match in a pack.</look>
+      <take />
+      <takemsg>You slip the match into your pocket.</takemsg>
+      <dropmsg>You dropped the match.</dropmsg>
+      <feature_usegive />
+      <usemenuprompt type="string"></usemenuprompt>
+      <use type="script">
+        msg ("You strike the match on your fly, illuminating a book.")
+        MakeObjectVisible (book of the dead)
+      </use>
+      <ontake type="script">
+        MoveObject (Match, player)
+      </ontake>
+    </object>
+    <exit alias="south" to="Bathroom">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="Duct Tape">
+      <inherit name="editor_object" />
+      <feature_usegive />
+      <take />
+      <takemsg>You took America's finest invention.</takemsg>
+      <use type="boolean">false</use>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>the</prefix>
+    </object>
+    <exit name="LRex2" alias="north" to="Street">
+      <inherit name="northdirection" />
+      <visible type="boolean">false</visible>
+    </exit>
+    <object name="book of the dead">
+      <inherit name="editor_object" />
+      <scenery type="boolean">false</scenery>
+      <visible type="boolean">false</visible>
+      <feature_usegive />
+      <look>An egyptian book of the dead.</look>
+    </object>
+    <object name="Pistol">
+      <inherit name="editor_object" />
+      <check type="script">
+        msg ("pisammo !")
+      </check>
+      <pisammo type="int">0</pisammo>
+      <attr name="physical_damage" type="int">15</attr>
+      <take />
+      <look>{if Pistol.pisammo=?:text} </look>
+    </object>
+    <object name="Pistol Clip">
+      <inherit name="editor_object" />
+      <take type="script">
+        msg ("You took the clip.")
+        Pistol.pisammo = Pistol.pisammo + 3
+        AddToInventory (Pistol Clip)
+      </take>
+      <drop type="boolean">false</drop>
+    </object>
+  </object>
+  <verb>
+    <property>spark</property>
+    <pattern>spark</pattern>
+    <defaultexpression>"You can't spark " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Bathroom">
+    <inherit name="editor_room" />
+    <description>Various used syringes are scattered around the floor, and a bar of soap rests directly center of the room.  Blood splats dot walls, and water in the bathtub is murky and slightly green.  A huge crack goes to the ceiling from the floor on the west wall; the east wall has various fist imprints.  </description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <object name="Toilet">
+      <inherit name="editor_object" />
+      <scenery type="boolean">false</scenery>
+      <look>A pile of bloody shit drowned by yellow water.</look>
+      <drop type="boolean">false</drop>
+      <sit>You sit for awhile and suddenly remember that age old wisdom, "either shit or get off the pot."</sit>
+    </object>
+    <exit alias="north" to="Living Room">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="Leaky Pipe">
+      <inherit name="editor_object" />
+      <feature_usegive />
+      <useon type="scriptdictionary">
+        <item key="Duct Tape">
+          msg ("You wrap the tape around the crack.")
+          MakeObjectInvisible (Duct Tape)
+          MakeExitVisible (LRex2)
+        </item>
+      </useon>
+    </object>
+  </object>
+  <object name="Street">
+    <inherit name="editor_room" />
+    <description>A periodic car zooms by you on the street.  City smog fills your nostrils with disgusting goo.  The sky is a disgusting brown color.  Grass blades loom between sidewalk cracks.  On each side of the paved road are lines of buildings, all completely trashed and abandoned.  You've seen cities like these before, usually you avoid them for obvious reasons.  A big sign looms on the tallest building of the street that reads: SKIDROW.</description>
+    <exit name="LREx" alias="south" to="Living Room">
+      <inherit name="southdirection" />
+      <visible />
+    </exit>
+    <object name="Coke">
+      <inherit name="editor_object" />
+      <feature_usegive />
+      <take />
+      <takemsg>You slid the bag into your pocket, looking left to right for cops.</takemsg>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>a thin bag of</prefix>
+      <look>It ain't yella so it ain't that great, but kicks are kicks and you'd toot it up regardless.</look>
+      <use type="script">
+        msg ("You unload the thin bag onto your hand and take a big sniff.")
+        finish
+      </use>
+    </object>
+    <object name="William">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <look>A crusty old bum.</look>
+      <feature_usegive />
+      <ask type="scriptdictionary">
+        <item key="bum homeless doing">
+          msg ("The fuckin' banks, man.  ")
+        </item>
+        <item key="banks">
+          msg ("They took everything I had.")
+        </item>
+      </ask>
+      <useon type="scriptdictionary">
+        <item key="Baseball Bat">
+          msg ("You swing the bat and hit William's head.  Blood hits your eyeballs.  You swing again and suddenly he's on the ground lifeless.")
+          RemoveObject (William)
+        </item>
+        <item key="Pistol">
+          msg ("You shot the pistol." + Pistol.pisammo + " left. ")
+          Pistol.pisammo = Pistol.pisammo-1
+        </item>
+      </useon>
+    </object>
+  </object>
+  <verb>
+    <property>load</property>
+    <pattern>load</pattern>
+    <defaultexpression>"You can't load " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>shoot</property>
+    <pattern>shoot</pattern>
+    <defaultexpression>"You can't shoot " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>check</property>
+    <pattern>check</pattern>
+    <defaultexpression>"You can't check " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

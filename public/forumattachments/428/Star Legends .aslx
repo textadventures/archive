@@ -1,0 +1,369 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Star Legends ">
+    <gameid>f2f8b58b-6cc9-417e-a86c-80c0b659901f</gameid>
+    <version>0.1.0</version>
+    <author>PhoenixAgent003</author>
+    <category>Sci-Fi</category>
+    <description><![CDATA[You were crew of the <i>CFS Evening Horizon, </i>one ship in an entire fleet discharged in search of resources to keep the populous Fleet alive. But when a horrible accident occurs, the ships of Horizon's fleet are destoryed, the crew s marooned, and the leadership of the Fleet brass is gone. Your impossible goal: rebuild.]]></description>
+    <start type="script"><![CDATA[
+      msg ("Alarms blare and red lights flash as the Evening Horizon fell towards the nearest planet. You try to maintain your balance even as the ship shakes and wall panels are torn free. Your next step is shaken out from underneath you, and your head is smashed against the bulkhead. A gas line ruptures and a single spark from a severed wire is all it takes to turn the gas line into a flamethrower, which another crew member is helplessly thrown into.<br/><br/>The escape pods are a full section aft of where you are, and by now you can barely make forward progress. Your situation is looking worse and worse, and even as you try to get back to your feet another shake violently hurls you to the ground.  There really isn't any hope, but for reason you keep trying to move for the escape pods on your hands and knees. People scream, more panels are torn from the wall, the shaking gets worse and everything starts to heat up. <br/><br/>Finally accepting that you're out of options, you brace for the inevitable impact, and hope your end is painless.<br/><br/>X<br/><br/>You groan as you regain consciousness. At first, you can't even tell you're still alive, because you can't feel or see a thing. It's only the throbbing pain in your head that reminds you ")
+    ]]></start>
+    <object name="Tutorialbot">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <alias>Tutorial</alias>
+      <visible type="boolean">false</visible>
+      <scenery />
+      <ask type="scriptdictionary">
+        <item key="Tech Glove">
+          if (GetBoolean(Player Tech Glove, "powered")) {
+            msg ("The tech glove is an innovation of Federation science, combing a wide range of tools and advanced technologies inside them. ")
+          }
+          else if (not GetBoolean(Player Tech Glove, "powered")) {
+            msg ("The tech glove is an innovation of Federation science, combing a wide range of tools and advanced technologies inside them. However, yours seems to have a faulty power cell. you'll need to replace that is you want to use the tech glove.")
+          }
+        </item>
+        <item key="obstructions"><![CDATA[
+          msg ("Obstructions are found through playspaces in the games, and come in a wide variety from thickets of dead plant life, debris from crashed ships, fires, or occasionally dead animals. They can impede progress through an area, upgrade paths, or simply just be an annoying object in the area you can't to anything with. <br/>Whatever the case may be, it's generally a good idea to get rid of them, if for no other reason than to give yourself more options in the future. <br/>Some obstruction pieces are weak enough to be cleared by the player by simply smashing it out of your way.<br/>Other obstructions are heavier and more sturdy, but can still be moved by the player with a good strong tug n pull.<br/>There are however, obsturctions that cannot be cleared by the player alone. These types of obstructions will usually require some form of function from the tech glove, or perhaps a blasting charge in order to get rid of them.")
+        ]]></item>
+      </ask>
+    </object>
+  </game>
+  <object name="wreckage">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <descprefix>You are in the </descprefix>
+    <visible type="boolean">false</visible>
+    <drop type="boolean">false</drop>
+    <alias>Wreckage</alias>
+    <description type="script">
+      if (Contains (wreckage,fire1)) {
+        msg ("Flames are scattered about, licking around the area and preventing blocking any avenue of escape or access to whatever supplies survived the crash.")
+      }
+      else {
+        msg ("The wreckage of the ship has left ragtag bits and pieces of metal scattered about, sticking out in jagged ways all over the area. The crashsite continues in every direction.")
+      }
+    </description>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <class>leader</class>
+      <attr name="Resource Points" type="int">0</attr>
+      <statusattributes type="stringdictionary">Resource Points = ;Status = </statusattributes>
+      <Health type="int">50</Health>
+      <health_max type="int">100</health_max>
+      <Status type="string"></Status>
+      <changedStatus type="script"><![CDATA[
+        if (player.Health < 100) {
+          player.Status = Good
+        }
+      ]]></changedStatus>
+    </object>
+    <object name="fire1">
+      <inherit name="editor_object" />
+      <alias>fire</alias>
+      <usedefaultprefix />
+      <drop type="boolean">false</drop>
+      <visible />
+      <scenery type="boolean">false</scenery>
+      <displayverbs>Put out; Look at</displayverbs>
+      <look>The fire doesn't seem to be spreading in your direction, but it is blocking off any path through the wreckage.</look>
+      <extinguish type="script"><![CDATA[
+        if (Got(Player Tech Glove)) {
+          msg ("Your tech glove whirs up, and panels slide back to expose the moisture collection panels. After a brief charge time, your gauntlet fires of a spray of water, and eventually the falmes are extinguished. With them gone, you can still see there is a lot of debris that needs to be cleared before you can get out of here.<br/>")
+          RemoveObject (fire1)
+          SetObjectFlagOff (Player Tech Glove, "powered")
+          msg ("However, no sooner is the fire out than a burst of sparks erupts from the tech glove, and smoke comes from where the power cell is slotted in. Sure enough, on examination, the power cell has been fried. You'll need to find another to use the tech glove for anything other than a fancy looking, five-fingered mitten.")
+          MakeObjectVisible (weakdebris1)
+          MakeObjectVisible (movabledebris1)
+          MakeObjectVisible (densewreckage1)
+        }
+        else if (not Got(Player Tech Glove)) {
+          msg ("The flames are a little too big to be simply stomped out. You'll need to find something you can use to fight the fire.")
+        }
+      ]]></extinguish>
+      <putout type="script"><![CDATA[
+        if (Got(Player Tech Glove)) {
+          msg ("Your tech glove whirs up, and panels slide back to expose the moisture collection panels. After a brief charge time, your gauntlet fires of a spray of water, and eventually the falmes are extinguished. With them gone, you can still see there is a lot of debris that needs to be cleared before you can get out of here.<br/>")
+          RemoveObject (fire1)
+          SetObjectFlagOff (Player Tech Glove, "powered")
+          msg ("However, no sooner is the fire out than a burst of sparks erupts from the tech glove, and smoke comes from where the power cell is slotted in. Sure enough, on examination, the power cell has been fried. You'll need to find another to use the tech glove for anything other than a fancy looking, five-fingered mitten.")
+          MakeObjectVisible (weakdebris1)
+          MakeObjectVisible (movabledebris1)
+          MakeObjectVisible (densewreckage1)
+        }
+        else if (not Got(Player Tech Glove)) {
+          msg ("The flames are a little too big to be simply stomped out. You'll need to find something you can use to fight the fire.")
+        }
+      ]]></putout>
+      <fight type="script"><![CDATA[
+        if (Got(Player Tech Glove)) {
+          msg ("Your tech glove whirs up, and panels slide back to expose the moisture collection panels. After a brief charge time, your gauntlet fires of a spray of water, and eventually the falmes are extinguished. With them gone, you can still see there is a lot of debris that needs to be cleared before you can get out of here.<br/>")
+          RemoveObject (fire1)
+          SetObjectFlagOff (Player Tech Glove, "powered")
+          msg ("However, no sooner is the fire out than a burst of sparks erupts from the tech glove, and smoke comes from where the power cell is slotted in. Sure enough, on examination, the power cell has been fried. You'll need to find another to use the tech glove for anything other than a fancy looking, five-fingered mitten.")
+          MakeObjectVisible (weakdebris1)
+          MakeObjectVisible (movabledebris1)
+          MakeObjectVisible (densewreckage1)
+        }
+        else if (not Got(Player Tech Glove)) {
+          msg ("The flames are a little too big to be simply stomped out. You'll need to find something you can use to fight the fire.")
+        }
+      ]]></fight>
+    </object>
+    <object name="Player Tech Glove">
+      <inherit name="editor_object" />
+      <alias>Tech Glove</alias>
+      <alt>tech gauntlet; gauntlet; omni-tool</alt>
+      <inventoryverbs>Look at; Use</inventoryverbs>
+      <take />
+      <takemsg>You pick up the glove, and after a moment of hesitation you slide its expanded sleeve over your arm and click the activation keys. The sleeve properly assembles itself tightly around your arm, it status lights flicker to life, and you can hear its various geaars and servos whirring to life.</takemsg>
+      <drop type="boolean">false</drop>
+      <displayverbs>Look at; Take</displayverbs>
+      <look type="script">
+        if (Got(Player Tech Glove)) {
+          msg ("The tech glove grips tightly to your arm, cover everything from just above your elbow all the way to your fingertips.")
+        }
+        else if (not Got(Player Tech Glove)) {
+          if (player.parent = wreckage) {
+          }
+          msg ("Glinting in the scorched and shrapnel strewn dirt, you can hardly believe your luck when you see a tech glove, in one piece.")
+        }
+      </look>
+      <ontake type="script">
+        SetObjectFlagOn (Player Tech Glove, "powered")
+      </ontake>
+      <give type="scriptdictionary" />
+      <selfuseon type="scriptdictionary" />
+      <ask type="scriptdictionary" />
+    </object>
+    <object name="weakdebris1">
+      <inherit name="editor_object" />
+      <alias>debris</alias>
+      <displayverbs>Look at; Clear</displayverbs>
+      <drop type="boolean">false</drop>
+      <look>A relavtive thin, scorched looking bit of metal blocking the path west, most likely a failed heat shield from the hull. It looks ready to crumble on its own.</look>
+      <visible type="boolean">false</visible>
+      <clear type="script">
+        msg ("Taking a moment to brace yourself, you bring your boot down hard on the weakened debris. It gives, crumbling to an unobsturctive pile of smaller bits and pieces of metal.")
+        RemoveObject (weakdebris1)
+        UnlockExit (Exitwestwreckage)
+      </clear>
+      <break type="script">
+        msg ("Taking a moment to brace yourself, you bring your boot down hard on the weakened debris. ti gives, crumbling to an unobsturctive pile of smaller bits and pieces of metal.")
+        RemoveObject (weakdebris1)
+        UnlockExit (Exitwestwreckage)
+      </break>
+      <smash type="script">
+        msg ("Taking a moment to brace yourself, you bring your boot down hard on the weakened debris. ti gives, crumbling to an unobsturctive pile of smaller bits and pieces of metal.")
+        RemoveObject (weakdebris1)
+        UnlockExit (Exitwestwreckage)
+      </smash>
+    </object>
+    <object name="movabledebris1">
+      <inherit name="editor_object" />
+      <alias>heavy girder</alias>
+      <visible type="boolean">false</visible>
+      <drop type="boolean">false</drop>
+      <displayverbs>Look at; Move</displayverbs>
+      <look>A heavy girder blocking your path east. It's in too good a condition to be simply smashed, but you might be able to lift it out of the way.</look>
+      <move type="script">
+        RemoveObject (movabledebris1)
+        msg ("Bracing yourself for the effort, you grab hold of the girder with both hands and heave. After a moment, it gives and falls to the floor so fast you have to jump back to avoid getting your foot crushed. Taking a second to catch your breath, you finish your handiwork by dragging the girder out of the way.")
+      </move>
+      <clear type="script">
+        RemoveObject (movabledebris1)
+        msg ("Bracing yourself for the effort, you grab hold of the girder with both hands and heave. After a moment, it gives and falls to the floor so fast you have to jump back to avoid getting your foot crushed. Taking a second to catch your breath, you finish your handiwork by dragging the girder out of the way.")
+      </clear>
+      <lift type="script">
+        RemoveObject (movabledebris1)
+        msg ("Bracing yourself for the effort, you grab hold of the girder with both hands and heave. After a moment, it gives and falls to the floor so fast you have to jump back to avoid getting your foot crushed. Taking a second to catch your breath, you finish your handiwork by dragging the girder out of the way.")
+      </lift>
+    </object>
+    <object name="densewreckage1">
+      <inherit name="editor_object" />
+      <alias>heavy debris</alias>
+      <displayverbs>Look at; Move</displayverbs>
+      <look>A large, sturdy look shard of metal burrowed into the ground with several jagged edges. Definitely too heavy to lift, not to mention likely to result in a cut. it's not blocking any path, but it would probably impede any serious construction endeavors.</look>
+      <visible type="boolean">false</visible>
+      <drop type="boolean">false</drop>
+      <move type="script">
+        if (GetBoolean(Player Tech Glove, "powered")) {
+          if (GetBoolean(Player Tech Glove, "strength")) {
+            msg ("Grabbing hold of the debris, you put your faith in technology and with surprising ease are able to heave the heavy chunks of debris out of the way.")
+            RemoveObject (densewreckage1)
+          }
+          else {
+            msg ("It won't budge. You aren't moving this one on your own steam.")
+          }
+        }
+        else {
+          msg ("It won't budge. You're not moving this one on your own steam.")
+        }
+      </move>
+    </object>
+    <exit name="Exitwestwreckage" alias="west" to="westwreckage">
+      <inherit name="westdirection" />
+      <locked />
+      <lockmessage>The path is blocked by flimsy debris.</lockmessage>
+    </exit>
+    <exit name="Exitenginewreck" alias="north" to="enginewreck">
+      <inherit name="northdirection" />
+      <lockmessage>Flames block your escape.</lockmessage>
+    </exit>
+  </object>
+  <verb>
+    <property>extinguish</property>
+    <pattern>extinguish</pattern>
+    <defaultexpression>"You can't extinguish " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>smash</property>
+    <pattern>smash</pattern>
+    <defaultexpression>"You can't smash " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>clear</property>
+    <pattern>clear</pattern>
+    <defaultexpression>"You can't clear " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>break</property>
+    <pattern>break</pattern>
+    <defaultexpression>"You can't break " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>putout</property>
+    <pattern>put out</pattern>
+    <defaultexpression>"You can't put out " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>fight</property>
+    <pattern>fight</pattern>
+    <defaultexpression>"You can't fight " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>lift</property>
+    <pattern>lift</pattern>
+    <defaultexpression>"You can't lift " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="westwreckage">
+    <inherit name="editor_room" />
+    <alias>West Wreckage</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <description type="script">
+      msg ("The wreckage here is cluttered, but there is a surprising lack of jagged edges, and instead the ground is littered mostly with several heat tiles and other metal panels.")
+    </description>
+    <firstenter type="script">
+      msg ("You cautiously clamber through more wreckage, careful to avoid getting cut on any jagged edges of singed by unseen flames. Here, the wreckage is just as cluttered if not worse. howver, not all of this wreckage is useless...")
+    </firstenter>
+    <exit alias="east" to="wreckage">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="scorched panels">
+      <inherit name="editor_object" />
+      <take type="boolean">false</take>
+      <drop type="boolean">false</drop>
+      <displayverbs>Look at; Assimilate</displayverbs>
+      <look>A scattered pile of scorched hull panels in relatively good condition. Unlike damaged heat shields, they are made of a much more useful material.</look>
+      <assimilate type="script">
+        if (GetBoolean(Player Tech Glove, "powered")) {
+          if (GetBoolean(Player Tech Glove, "assimilate")) {
+            if (Got(Player Matter Pack)) {
+              msg ("Your tech glove's plam emitter glows a brilliant blue before bathing the scorched panels in an energy field. Piece by piece the scorched metal panels are converted into pin points of light and pulled into the waiting matter pack.")
+              player.Resource Points = player.Resource Points+50
+              RemoveObject (scorched panels)
+            }
+          }
+        }
+        else if (not GetBoolean(Player Tech Glove, "powered")) {
+          msg ("Your tech glove remains a lifeless hunk of metal. You'll need to replace the power cell if you want to access its abilities.")
+        }
+        else if (GetBoolean(Player Tech Glove, "powered")) {
+          if (not GetBoolean(Player Tech Glove, "assimilate")) {
+            msg ("You're tech glove may have power, but it is missing the plug-in for assimilating material into resource points.")
+          }
+        }
+      </assimilate>
+    </object>
+    <object name="heavycrate1">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <alias>heavy duty crate</alias>
+      <displayverbs>Look at; Open</displayverbs>
+      <drop type="boolean">false</drop>
+      <hidechildren type="boolean">false</hidechildren>
+      <listchildren />
+      <openmsg>The lid is a little stiff, so after jerking it open fails you deliver a swift kick to the seam. A resounding crack signals success, and you easily slide the loosened lid off.</openmsg>
+      <close type="boolean">false</close>
+      <alt>crate; heavy crate</alt>
+      <object name="assimilate plugin">
+        <inherit name="editor_object" />
+        <take type="script">
+          if (GetBoolean(Player Tech Glove, "powered")) {
+            msg ("With the press of a button, the tech glove partially disassembles and reveals its plug-in slots. You insert the new plug-in, and the tech glove reforms, offering a positive whir as it runs of soft path for the new technology.")
+            SetObjectFlagOn (Player Tech Glove, "assimilate")
+            MakeObjectInvisible (assimilate plugin)
+          }
+          else if (not GetBoolean(Player Tech Glove, "powered")) {
+            msg ("You can't use this just yet, but it could come in handy later, so you tuck it into your belt's hardcase.")
+            AddToInventory (assimilate plugin)
+          }
+        </take>
+        <selfuseon type="scriptdictionary">
+          <item key="Player Tech Glove">
+            if (GetBoolean(Player Tech Glove, "powered")) {
+              MakeObjectInvisible (assimilate plugin)
+              SetObjectFlagOn (Player Tech Glove, "assimilate")
+              msg ("With the press of a button, the tech glove partially disassembles and reveals its plug-in slots. You insert the new plug-in, and the tech glove reforms, offering a positive whir as it runs of soft path for the new technology.")
+            }
+            else {
+              msg ("Your tech glove can't accept new plug-ins without power.")
+            }
+          </item>
+        </selfuseon>
+      </object>
+      <object name="Player Matter Pack">
+        <inherit name="editor_object" />
+        <take />
+        <drop type="boolean">false</drop>
+        <inventoryverbs>Look at</inventoryverbs>
+        <alias>Matter Pack</alias>
+        <look>The matter pack is another marvel of Federation technology that allows for infinite storage of assimilated resources. These provides easy storage for everything from titanium to wood while keeping the materials in a versatile state of microscopic bits.</look>
+        <check type="script">
+          msg ("You currently have " + player.Resource Points + " resource points in your matter pack.")
+        </check>
+      </object>
+    </object>
+  </object>
+  <verb>
+    <property>check</property>
+    <pattern>check</pattern>
+    <defaultexpression>"You can't check " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>assimilate</property>
+    <pattern>assimilate</pattern>
+    <defaultexpression>"You can't assimilate " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="enginewreck">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <alias>engine wreck</alias>
+    <exit alias="south" to="wreckage">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <turnscript>
+    <enabled />
+    <script><![CDATA[
+      if (player.Health > health_max) {
+        player.Health = player.Health = health_max
+      }
+    ]]></script>
+  </turnscript>
+</asl>

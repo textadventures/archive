@@ -1,0 +1,102 @@
+<!--Saved by Quest 5.6.5783.24153-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Exit with switch">
+    <gameid>3ef505eb-9a67-488b-b9a7-13810fab406b</gameid>
+    <version>1.0</version>
+    <firstpublished>2016</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <description>You are in a room.  The only exit appears to be to the north.</description>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <exit alias="north" to="room2">
+      <inherit name="northdirection" />
+      <runscript />
+      <script type="script">
+        if (not GetBoolean(door, "kicked")) {
+          msg ("There is a heavy iron door in your way.")
+        }
+        else {
+          msg ("You walk past the damaged door.")
+          MoveObject (player, room2)
+        }
+      </script>
+    </exit>
+    <object name="door">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <look type="script">
+        if (not GetBoolean(door, "kicked")) {
+          msg ("It's a large, but old iron door.")
+        }
+        else {
+          msg ("This door used to defiantly impede your path but now that you kicked it in, it is just a heap of metal.")
+        }
+      </look>
+      <feature_container />
+      <open />
+      <close />
+      <isopen type="boolean">false</isopen>
+      <onopen type="script">
+        if (not GetBoolean(door, "kicked")) {
+        }
+        else {
+          msg ("You have already kicked the door in.  All you need to do now is walk through the threshold into the other room.")
+        }
+      </onopen>
+      <push type="script">
+        if (not GetBoolean(door, "kicked")) {
+          msg ("You push with all your might and the door creaks a little but does not open.  You should get all kung-fu on it!")
+        }
+        else {
+          msg ("There is no need to push it now that you have kicked it in!")
+        }
+      </push>
+      <kick type="script">
+        if (not GetBoolean(door, "kicked")) {
+          msg ("It looks pretty formidable.  Are you sure you want to try and kick this door in?  ")
+          get input {
+            switch (LCase(result)) {
+              case ("yes","yeah","yep","yea","y") {
+                if (not GetBoolean(door, "kicked")) {
+                  msg ("You pull off a flying scissor kung-fu kick and the door crumbles inward!  You may now pass.")
+                  SetObjectFlagOn (door, "kicked")
+                }
+                else {
+                  msg ("There is no need to kick it again, Pele.")
+                }
+              }
+              case ("no","nope","nay","n","nah") {
+                msg ("You decide not to kick the door.  Chicken.")
+              }
+              default {
+                msg ("You should have answered the question.  Now you have to type 'kick door' again!")
+              }
+            }
+          }
+        }
+        else {
+          msg ("You kick the already kicked door again and just end up hurting your toe.  That was WAY less impressive than the first go-around.")
+        }
+      </kick>
+      <openmsg>You try to open the door but it seems stuck in place.</openmsg>
+      <closemsg>The door is not really closable.</closemsg>
+    </object>
+  </object>
+  <object name="room2">
+    <inherit name="editor_room" />
+    <exit alias="south" to="room">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>kick</property>
+    <pattern>kick</pattern>
+    <defaultexpression>"You can't kick " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

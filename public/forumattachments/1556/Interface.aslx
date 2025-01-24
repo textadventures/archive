@@ -1,0 +1,366 @@
+
+
+
+<library>
+
+  
+
+  <function name="InitUserInterface">
+    // Set up second inventory for spells
+    if (GetObject ("spells_known") = null) create ("spells_known")
+    SetInventory2Label ("Spells")
+    SetInventory2 (GetDirectChildren (spells_known))  
+    // cosmetic changes
+		game.font1 = "Bubblegum Sans"
+		game.font2 = "Bubblegum Sans"
+		SetWebFontName (game.font1)
+		SetWebFontName (game.font2)
+		SetForegroundColour ("Maroon")
+		JS.eval ("$('#gameBorder').css('background-color', 'AntiqueWhite');")
+		JS.eval ("$('#gamePanes').css('background-color', 'AntiqueWhite');")
+		JS.eval ("$('#status').css('border', 'none');")
+		JS.eval ("$('#status').css('background-image', 'none');")
+		JS.eval ("$('#status').css('background-color', 'BurlyWood');")
+		JS.eval ("$('#status').css('width', '950px');")
+		JS.eval ("$('#status').css('text-align', 'center');")
+		JS.eval ("$('#status').css('font-family', '" + game.font2 + "');")
+		JS.eval ("$('#status').css('font-size', '16pt');")
+		JS.eval ("$('#divOutput').css('font-family', '" + game.font1 + "');")
+		JS.eval ("$('#divOutput').css('font-size', '14pt');")
+		JS.eval ("$('#divOutput').css('color', 'Maroon');")
+		JS.eval ("$('#gamePanesFinished').css('font-family', '" + game.font1 + "');")
+		JS.eval ("$('#gamePanesFinished').css('color', 'maroon');")
+		JS.eval ("$('#txtCommandDiv a').css('color', 'maroon');")
+		JS.eval ("$('#txtCommandDiv').css('font-family', '" + game.font2 + "');")
+    request (SetInterfaceString, "PlacesObjectsLabel=People and Items")
+    // Move the compass before the inventory
+		JS.eval ("$('#compassLabel').insertBefore('#inventoryLabel')")
+		JS.eval ("$('#compassAccordion').insertBefore('#inventoryLabel')")
+  </function>
+
+  
+  <!--
+  Adds a new status panel to the left. Can be clicked to show/hide extra info.
+  In the game start script (not InitUserInterface):
+        OutputTextNoBr (interface_obj.stuff)
+  -->
+  <object name="interface_obj">
+    <stuff><![CDATA[
+       <div id="status_div" style="padding: 5px;font-weight: bold;border-radius: 5px;text-align:center;margin-top:50 px;color:maroon;font-size:14pt;position:fixed;left:5px;top:40px;border:grey solid thin;background-color:#FCF0EA;display:none;font-family:Bubblegum Sans;" onclick="ASLEvent('StatusClick', '');">
+         <table>
+           <tr>
+             <td style="text-align:right;">Hit points:</td>
+             <td style="text-align:left;"><span id="hits-span">---</span></td>
+           </tr>
+           <tr>
+             <td style="text-align:right;">Armour:</td>
+             <td style="text-align:left;"><span id="armour-span">0</span></td>
+           </tr>
+           <tr>
+             <td style="text-align:right;">Weapon:</td>
+             <td style="text-align:left;"><span id="weapon-span">---</span></td>
+           </tr>
+           <tr>
+             <td style="text-align:right;">On-going magic:</td>
+             <td style="text-align:left;"><span id="effect-span">---</span></td>
+           </tr>
+           <tr>
+             <td style="text-align:right;">Gold:</td>
+             <td style="text-align:left;"><span id="gold-span">---</span></td>
+           </tr>
+           <tr>
+             <td style="text-align:right;">Artefacts found:</td>
+             <td style="text-align:left;"><span id="artefact-span">0/14</span></td>
+           </tr>
+           <tbody id="optional" style="display:none;">
+           <tr>
+             <td style="text-align:center;" colspan="2"><i>Extended Stats:</i></td>
+           </tr>
+           <tr>
+             <td style="text-align:right;">Strength:</td>
+             <td style="text-align:left;"><span id="strength-span">0</span></td>
+           </tr>
+           <tr>
+             <td style="text-align:right;">Agility:</td>
+             <td style="text-align:left;"><span id="agility-span">0</span></td>
+           </tr>
+           <tr>
+             <td style="text-align:right;">Intelligence:</td>
+             <td style="text-align:left;"><span id="intelligence-span">0</span></td>
+           </tr>
+           <tr>
+             <td style="text-align:right;">Stamina:</td>
+             <td style="text-align:left;"><span id="stamina-span">0</span></td>
+           </tr>
+           <tr>
+             <td style="text-align:right;">Defence:</td>
+             <td style="text-align:left;"><span id="defence-span">0</span></td>
+           </tr>
+           <tr>
+             <td style="text-align:right;">Weapon stats:</td>
+             <td style="text-align:left;"><span id="weapon-stats-span">0</span></td>
+           </tr>
+           <tr>
+             <td style="text-align:right;">Deepest level:</td>
+             <td style="text-align:left;"><span id="level-span">0</span></td>
+           </tr>
+           </tbody>
+         </table>
+       </div>
+       <script>
+            function setPage(page) {
+                $('#page0').css('display', 'none');
+                $('#page1').css('display', 'none');
+                $('#page2').css('display', 'none');
+                $('#page3').css('display', 'none');
+                $('#page' + page).css('display', 'block');
+            }
+       
+            $(document).ready(function () {
+                $('#dialog_window_1').dialog({
+	                autoOpen: false,
+                   height: 400,
+                   width: 640,
+                   buttons: {
+	                   "Intro": function() { setPage(0);},
+	                   "Commands": function() { setPage(1);},  
+	                   "Hints": function() { setPage(2);},  
+	                   "Credits": function() { setPage(3);},  
+	                   "Done": function() { $(this).dialog("close");} 
+	               }
+               });
+            });
+       </script>
+    ]]></stuff>
+    </object>
+  
+  
+  <!--
+  Clicking the status panel handled here.
+  -->
+  <function name="StatusClick" parameters="s">
+    if (game.statusdisplay) {
+      JS.eval ("$('#optional').css('display', 'none');")
+      game.statusdisplay = false
+    }
+    else {
+      JS.eval ("$('#optional').css('display', 'block');")
+      game.statusdisplay = true
+    }
+  </function>
+  
+  
+  
+  
+  <!--
+  This is the character creation.
+  The start script prints "stuff" to screen, and changes some values.
+  The stuff attribute is HTML/JavaScript for the character creation panel.
+  Note the interactivity using JavaScript.
+  The setValues function communicates the data back from JavaScript to Quest
+  via the HandleDialogue function.
+  -->
+  <object name="gamestart">
+    <stuff><![CDATA[
+       <div id="dialog_window_1" class="dialog_window" title="Your Character">
+         <table style="-webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; -o-user-select: none; user-select: none;">
+           <tr class="details">
+            <td colspan="2">Name: <input type="text" id="name_input" value="Boris"/></td>
+            <td>Sex: <input type="radio" name="sex_input" value="Male" checked="checked"/>Male
+                     <input type="radio" name="sex_input" value="Female" />Female</td>
+           </tr>
+           <tr>
+            <td style="text-align:right;" width="35%">
+              <br/><b>Attributes</b>
+            </td>
+            <td width="15%">
+            </td>
+            <td>
+              <br/><b>Bonus item</b>
+            </td>
+           </tr> 
+           <tr>
+            <td style="text-align:right;">
+              Strength
+            </td>
+            <td>
+              <span onclick="incAtt('strength');" style="cursor: pointer;">&#x25B2;</span>
+              <span onclick="decAtt('strength');" style="cursor: pointer;">&#x25BC;</span>
+              <div id="strength" style="display:inline;">0</div>
+            </td>
+            <td>
+              <input type="radio" name="bonus" value="bonus1">Two healing potions
+            </td>
+           </tr> 
+           <tr>
+            <td style="text-align:right;">
+              Agility
+            </td>
+            <td>
+              <span onclick="incAtt('agility');" style="cursor: pointer;">&#x25B2;</span>
+              <span onclick="decAtt('agility');" style="cursor: pointer;">&#x25BC;</span>
+              <div id="agility" style="display:inline;">0</div>
+            </td>
+            <td>
+              <input type="radio" name="bonus" value="bonus2">Sabre
+            </td>
+           </tr> 
+           <tr>
+            <td style="text-align:right;">
+              Intelligence
+            </td>
+            <td>
+              <span onclick="incAtt('intelligence');" style="cursor: pointer;">&#x25B2;</span>
+              <span onclick="decAtt('intelligence');" style="cursor: pointer;">&#x25BC;</span>
+              <div id="intelligence" style="display:inline;">0</div>
+            </td>
+            <td>
+              <input type="radio" name="bonus" value="bonus3">Fire breath spell
+            </td>
+           </tr> 
+           <tr>
+            <td style="text-align:right;">
+              Stamina
+            </td>
+            <td>
+              <span onclick="incAtt('stamina');" style="cursor: pointer;">&#x25B2;</span>
+              <span onclick="decAtt('stamina');" style="cursor: pointer;">&#x25BC;</span>
+              <div id="stamina" style="display:inline;">0</div>
+            </td>
+            <td>
+              <input type="radio" name="bonus" value="bonus4">Medium shield
+            </td>
+           </tr> 
+           <tr>
+            <td style="text-align:right;">
+              Points left
+            </td>
+            <td>
+              <div id="points" style="display:inline;">10</div>
+            </td>
+            <td>
+              <input type="radio" name="bonus" value="bonus5">Light armour
+            </td>
+           </tr> 
+         </table>
+       </div>
+       <script>
+             jQuery('.numbersOnly').keyup(function () {
+               this.value = this.value.replace(/[^0-9\.]/g,'');
+             });
+         
+            function incAtt(att) {
+                pts = parseInt($('#points').html());
+                flag = (pts > 0);
+                if (flag) {
+                  n = parseInt($('#' + att).html());
+                  $('#' + att).html(n + 1);
+                  $('#points').html(pts - 1);
+                }
+            }
+       
+            function decAtt(att) {
+                n = parseInt($('#' + att).html());
+                flag = (n > 0);
+                if (flag) {
+                  pts = parseInt($('#points').html());
+                  $('#' + att).html(n - 1);
+                  $('#points').html(pts + 1);
+                }
+            }
+       
+            function setValues() {
+                that.dialog("close");
+                answer = $('#name_input').val() + "|" + $("input:radio[name='sex_input']:checked").val();
+                answer += "|" + parseInt($('#strength').html()) + "|" + parseInt($('#agility').html()); 
+                answer += "|" + parseInt($('#intelligence').html()) + "|" + parseInt($('#stamina').html()); 
+                answer += "|" + $("input:radio[name='bonus']:checked").val();
+                ASLEvent("HandleDialogue", answer);
+            }
+       
+            function loseCross() {
+                $("button[title='Close']")[0].style.display = 'none';
+            }
+            
+            $(document).ready(function () {
+                that = $("#dialog_window_1");
+                $('#dialog_window_1').dialog({
+                   height: 400,
+                   width: 640,
+                   buttons: {
+                      "Done": function() { setValues();}
+                  }
+               });
+            });
+       </script>
+        ]]></stuff>
+    <start type="script">
+      gamestart.startup = true
+      OutputTextNoBr (gamestart.stuff)
+      JS.eval ("$('#points').text('' + " + game.pov.maxpoints + ")")
+      JS.eval ("loseCross()")
+    </start>
+  </object>
+
+  <function name="LevelUp">
+    ShowMenu ("You can raise one of your stats!", Split("Strength|Agility|Stamina|Intelligence", "|"), false) {
+      n = GetInt(game.pov, LCase(result)) + 1
+      set (game.pov, LCase(result), n)
+      game.pov.hitpoints = game.pov.hitpoints + CalcFullHits () / 3
+      if (game.pov.hitpoints > CalcFullHits ()) game.pov.hitpoints = CalcFullHits ()
+      UpdateStats
+    }
+  </function>
+
+  <!--
+  This is called from the character creation JavaScript, and interprets the values set.
+  -->
+  <function name="HandleDialogue" parameters="answer">
+    l = Split(answer, "|")
+    if (not gamestart.startup) {
+      oldmax = CalcFullHits()
+    }
+    game.pov.strength = ToInt(StringListItem(l, 2))
+    game.pov.agility = ToInt(StringListItem(l, 3))
+    game.pov.intelligence = ToInt(StringListItem(l, 4))
+    game.pov.stamina = ToInt(StringListItem(l, 5))
+    bonus = StringListItem(l, 6)
+    if (gamestart.startup) {
+      game.pov.alias = StringListItem(l, 0)
+      game.pov.female = StringListItem(l, 1) = "Female"
+      gamestart.startup = false
+      game.pov.hitpoints = CalcFullHits()
+      request(Show, "Panes")
+      request(Show, "Command")
+      player.parent = road
+  		JS.eval ("$('#status_div').css('display', 'block')")
+    }
+    else {
+      game.pov.hitpoints = game.pov.hitpoints * CalcFullHits() / oldmax
+    }
+    UpdateHitPoints
+    if (bonus = "bonus4") {
+      CloneObjectAndMove(medium_shield, player)
+    }
+    if (bonus = "bonus1") {
+      CloneObjectAndMove(masterhealingpotion, player)
+      CloneObjectAndMove(masterhealingpotion, player)
+    }
+    if (bonus = "bonus2") {
+      CloneObjectAndMove(sabre, player)
+    }
+    if (bonus = "bonus3") {
+      CloneObjectAndMove(spell_firebreath, player)
+    }
+    if (bonus = "bonus5") {
+      armour_light.parent = player
+    }
+  </function>
+  
+  
+  
+  
+  
+  
+  
+</library>

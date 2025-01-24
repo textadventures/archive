@@ -1,0 +1,70 @@
+<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="guntraining">
+    <gameid>eaba3834-ff71-459e-8be5-5f72b041cfe9</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <shoot type="script">
+        if (Got(weapon.attribute)) {
+          msg ("The weapon fires in the direction you point. ")
+        }
+        else {
+          msg ("There's nothing to shoot at now.")
+        }
+      </shoot>
+      <object name="F49 Assualt Rifle">
+        <inherit name="editor_object" />
+        <alias>assaultrifle</alias>
+        <look>The rifle is long and somewhat bulky. It fires 500 rounds per minute with reloading clips of 60 per round. </look>
+        <alt type="stringlist">
+          <value>Assault Rifle</value>
+        </alt>
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Use</value>
+          <value>Drop</value>
+          <value>Reload</value>
+        </inventoryverbs>
+        <roundrifle type="int">60</roundrifle>
+        <take />
+        <fire type="string"></fire>
+        <shoot type="script"><![CDATA[
+          if (Got(F49 Assualt Rifle)) {
+            if (F49 Assualt Rifle.roundrifle <= 0) {
+              msg ("reload")
+            }
+            else {
+              msg ("you fired " +F49 Assualt Rifle.roundrifle+ " rounds")
+              set (F49 Assualt Rifle, "roundrifle", - (GetRandomInt(10,60)))
+            }
+          }
+        ]]></shoot>
+        <reload type="scriptdictionary" />
+      </object>
+    </object>
+  </object>
+  <verb>
+    <property>reload</property>
+    <pattern>reload #object#</pattern>
+    <defaultexpression>"You can't reload " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>shoot</property>
+    <pattern>shoot #object#; fire #object#</pattern>
+    <defaultexpression>"You can't shoot " + object.article + "."</defaultexpression>
+    <defaulttext>You can't do that here. </defaulttext>
+    <knockout type="script">
+      if (object.health = 0) {
+        MakeObjectInvisible (object.alias)
+      }
+    </knockout>
+  </verb>
+</asl>

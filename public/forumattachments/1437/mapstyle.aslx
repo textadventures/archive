@@ -1,0 +1,196 @@
+<!--Saved by Quest 5.6.5783.24153-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <function name="InitUserInterface">
+      JS.eval ("$('#gridCanvas').css('background-color','black');")
+  </function>
+  <game name="mapstyle">
+    <gameid>085affcd-6ccb-4898-a594-7b77670699e0</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+    <gridmap />
+
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <exit alias="west" to="w1">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="east" to="e1">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="north" to="n1">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="south" to="s1">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="e1">
+    <inherit name="editor_room" />
+    <exit alias="west" to="room">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="n1">
+    <inherit name="editor_room" />
+    <exit alias="south" to="room">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="north" to="n2">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="w1">
+    <inherit name="editor_room" />
+    <exit alias="east" to="room">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="south" to="s2">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="s1">
+    <inherit name="editor_room" />
+    <exit alias="north" to="room">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="n2">
+    <inherit name="editor_room" />
+    <exit alias="south" to="n1">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="east" to="e2">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="e2">
+    <inherit name="editor_room" />
+    <exit alias="west" to="n2">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="s2">
+    <inherit name="editor_room" />
+    <exit alias="north" to="w1">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <type name="defaultobject">
+    <visible />
+    <displayverbs type="stringlist">
+      <value>Look at</value>
+      <value>Take</value>
+    </displayverbs>
+    <inventoryverbs type="stringlist">
+      <value>Look at</value>
+      <value>Use</value>
+      <value>Drop</value>
+    </inventoryverbs>
+    <take type="boolean">false</take>
+    <use type="boolean">false</use>
+    <givesingle type="boolean">false</givesingle>
+    <drop />
+    <gender>it</gender>
+    <article>it</article>
+    <isopen type="boolean">false</isopen>
+    <open type="boolean">false</open>
+    <close type="boolean">false</close>
+    <container type="boolean">false</container>
+    <descprefix>You are in</descprefix>
+    <objectslistprefix>You can see</objectslistprefix>
+    <exitslistprefix>You can go</exitslistprefix>
+    <contentsprefix>containing</contentsprefix>
+    <description type="string"></description>
+    <scenery type="boolean">false</scenery>
+    <hidechildren type="boolean">false</hidechildren>
+    <listchildren type="boolean">false</listchildren>
+    <usedefaultprefix />
+    <volume type="int">0</volume>
+    <dark type="boolean">false</dark>
+    <lightstrength type="string"></lightstrength>
+    <darklevel type="boolean">false</darklevel>
+    <attr name="grid_width" type="int">1</attr>
+    <attr name="grid_length" type="int">1</attr>
+    <attr name="grid_fill">#202020</attr>
+    <attr name="grid_border">#101010</attr>
+    <attr name="grid_bordersides" type="int">15</attr>
+    <attr name="grid_render" type="boolean">false</attr>
+    <attr name="grid_label" type="string"></attr>
+    <grid_parent_offset_auto />
+    <attr name="grid_parent_offset_x" type="int">0</attr>
+    <attr name="grid_parent_offset_y" type="int">0</attr>
+    <attr name="pov_alias">me</attr>
+    <pov_alt type="stringlist">
+      <value>myself</value>
+      <value>self</value>
+    </pov_alt>
+    <attr name="pov_look">Looking good.</attr>
+    <attr name="pov_gender">you</attr>
+    <attr name="pov_article">yourself</attr>
+    <attr name="feature_usegive" type="boolean">false</attr>
+    <attr name="feature_container" type="boolean">false</attr>
+    <attr name="feature_switchable" type="boolean">false</attr>
+    <attr name="feature_edible" type="boolean">false</attr>
+    <attr name="feature_player" type="boolean">false</attr>
+    <attr name="feature_lightdark" type="boolean">false</attr>
+    <changedparent type="script">
+      if (game.pov = this) {
+        if (IsDefined("oldvalue")) {
+          OnEnterRoom (oldvalue)
+        }
+        else {
+          OnEnterRoom (null)
+        }
+        if (game.gridmap) {
+          MergePOVCoordinates
+        }
+      }
+    </changedparent>
+    <changedisopen type="script">
+      if (this.isopen and HasScript(this, "onopen")) {
+        do (this, "onopen")
+      }
+      if (not this.isopen and HasScript(this, "onclose")) {
+        do (this, "onclose")
+      }
+    </changedisopen>
+    <changedlocked type="script">
+      if (this.locked and HasScript(this, "onlock")) {
+        do (this, "onlock")
+      }
+      if (not this.locked and HasScript(this, "onunlock")) {
+        do (this, "onunlock")
+      }
+    </changedlocked>
+    <changedswitchedon type="script">
+      if (this.switchedon and HasScript(this, "onswitchon")) {
+        do (this, "onswitchon")
+      }
+      if (not this.switchedon and HasScript(this, "onswitchoff")) {
+        do (this, "onswitchoff")
+      }
+    </changedswitchedon>
+  </type>
+  <function name="Grid_DrawLine" parameters="x1, y1, x2, y2, border, borderWidth">
+    JS.Grid_DrawLine (x1, y1, x2, y2, "#4f4f4f", 3)
+  </function>
+  <function name="Grid_DrawPlayerInRoom" parameters="room">
+    if (room.grid_render) {
+      Grid_DrawRoom (room, false, game.pov)
+
+      player_x = Grid_GetGridCoordinateForPlayer(game.pov, room, "x") + room.grid_width/2.0
+      player_y = Grid_GetGridCoordinateForPlayer(game.pov, room, "y") + room.grid_length/2.0
+      player_z = Grid_GetGridCoordinateForPlayer(game.pov, room, "z")
+
+      // Grid_DrawPlayer(x, y, z, radius, border, borderWidth, fill)
+      JS.Grid_DrawPlayer(player_x, player_y, player_z, 8, "black", 2, "#7f7f7f")
+    }
+  </function>
+</asl>

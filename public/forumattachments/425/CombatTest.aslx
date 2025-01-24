@@ -1,0 +1,127 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="CombatTest">
+    <gameid>6b32731f-6d99-4d2c-bda8-d7a61150b652</gameid>
+    <version>1.0</version>
+    <autodescription />
+    <autodescription_youcansee type="int">0</autodescription_youcansee>
+    <autodescription_youcango type="int">0</autodescription_youcango>
+    <autodescription_description type="int">2</autodescription_description>
+    <showhealth />
+    <onhealthzero type="script">
+      msg ("You're pretty dead.")
+    </onhealthzero>
+  </game>
+  <object name="Dummy Cell">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description><![CDATA[You're in a plain dummy cell. It's usual for programs such as you to reside here when not in use. <br/><br/>There's a Clean Code Executable file here. <br/><br/>You can go into the HDD Partition from here.]]></description>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <look type="script">
+        msg ("You're a fragment of virus removal software.")
+      </look>
+      <object name="Executable">
+        <inherit name="editor_object" />
+        <look>Interface with this .exe file to learn two moves.</look>
+        <take type="boolean">false</take>
+        <drop type="boolean">false</drop>
+        <alt>Firewall</alt>
+        <use type="script">
+          msg ("You learn the skills!")
+          CombatMenu = NewStringList()
+          MoveObject (Executable, Dead Space)
+          list add (CombatMenu, "Clean Code")
+          list add (CombatMenu, "Defragment")
+        </use>
+      </object>
+    </object>
+    <exit alias="in" to="HDD Partition">
+      <inherit name="indirection" />
+    </exit>
+  </object>
+  <object name="HDD Partition">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description>You're in a partition of a hard drive that contains an errant virus. Other than that, the partition is blank.</description>
+    <exit alias="out" to="Dummy Cell">
+      <inherit name="outdirection" />
+    </exit>
+    <object name="enemy">
+      <inherit name="editor_object" />
+      <displayverbs>Look at; attack</displayverbs>
+      <alt>virus</alt>
+      <attack type="script">
+        dmg = GetRandomInt(1,6)
+        show menu ("What skill shall you use?", CombatMenu, false) {
+          if (result="Defragment") {
+            msg ("You delete a fragment of the virus's code. (This should do minor damage)")
+            switch (dmg) {
+              case (1) {
+                msg ("Your integrated firewall protects against the virus!")
+              }
+              case (2) {
+                msg ("The virus deletes a fragment of your code!")
+                DecreaseHealth (1)
+              }
+              case (3) {
+                msg ("The virus deletes a fragment of your code!")
+                DecreaseHealth (2)
+              }
+              case (4) {
+                msg ("The virus deletes a fragment of your code!")
+                DecreaseHealth (3)
+              }
+              case (5) {
+                msg ("The virus deletes a fragment of your code!")
+                DecreaseHealth (4)
+              }
+              case (6) {
+                msg ("The virus deletes a fragment of your code!")
+                DecreaseHealth (5)
+              }
+            }
+          }
+          else if (result="Clean Code") {
+            msg ("You delete a lot of the virus's code! (This should do high damage)")
+            switch (dmg) {
+              case (1) {
+                msg ("Your integrated firewall protects against the virus!")
+              }
+              case (2) {
+                msg ("The virus deletes a fragment of your code!")
+                DecreaseHealth (1)
+              }
+              case (3) {
+                msg ("The virus deletes a fragment of your code!")
+                DecreaseHealth (2)
+              }
+              case (4) {
+                msg ("The virus deletes a fragment of your code!")
+                DecreaseHealth (3)
+              }
+              case (5) {
+                msg ("The virus deletes a fragment of your code!")
+                DecreaseHealth (4)
+              }
+              case (6) {
+                msg ("The virus deletes a fragment of your code!")
+                DecreaseHealth (5)
+              }
+            }
+          }
+        }
+      </attack>
+    </object>
+  </object>
+  <object name="Dead Space">
+    <inherit name="editor_room" />
+  </object>
+  <verb>
+    <property>attack</property>
+    <pattern>attack</pattern>
+    <defaultexpression>"You can't attack " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

@@ -1,0 +1,155 @@
+<!--Saved by Quest 5.3.4762.29157-->
+<asl version="530">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Expiriments">
+    <gameid>9acc0c95-0c69-4a0c-8423-b80f6a7dfa50</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <autodescription_description type="int">2</autodescription_description>
+    <autodescription_youcansee type="int">3</autodescription_youcansee>
+    <autodescription_youcango type="int">4</autodescription_youcango>
+    <autodescription_youcango_newline />
+  </game>
+  <object name="storeroom">
+    <inherit name="editor_room" />
+    <alias>Storeroom</alias>
+    <description>There are many shelves filled with a wide variety of items.</description>
+    <dark type="boolean">false</dark>
+    <darkroomdescription>The room is very dark. Fortunately, someone had the foresight to put a glow-in-the-dark cover plate on the lightswitch.</darkroomdescription>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <maxvolume type="int">3</maxvolume>
+      <volume type="int">1</volume>
+      <take type="boolean">false</take>
+    </object>
+    <object name="shelves">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <look>There is quite a bit of stuff on these shelves.</look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <hidechildren />
+      <listchildren />
+      <object name="shoes">
+        <inherit name="editor_object" />
+        <volume type="int">2</volume>
+        <look>They're Nike, but they're a bit worn out.</look>
+        <take />
+      </object>
+      <object name="bucket">
+        <inherit name="editor_object" />
+        <volume type="int">1</volume>
+        <look>It's a plain metal pail with a handle.</look>
+        <take />
+      </object>
+      <object name="star">
+        <inherit name="editor_object" />
+        <look>It's a small yellow candy tin shaped like a star. It has black eyes painted on it.</look>
+        <volume type="int">1</volume>
+        <take />
+      </object>
+      <object name="duck tape">
+        <inherit name="editor_object" />
+        <volume type="int">1</volume>
+        <look>It's "Duck Tape" brand duct tape. You can never have too much of this stuff.</look>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>a roll of</prefix>
+        <quantity type="int">73</quantity>
+        <alias>duck tape</alias>
+        <listalias>duck tape</listalias>
+        <take type="script">
+          set (duck tape, "listalias", "duck tape: " + duck tape.quantity + duck tape.unit)
+          AddToInventory (duck tape)
+        </take>
+        <use type="script">
+          if (ChangeQuantity(duck tape, 40)=True) {
+            msg ("You use some of the duck tape to make a wallet. It's snazzy!")
+          }
+          else {
+            msg ("There's not enough left to just play around with it that way.")
+          }
+        </use>
+        <alt>duct tape</alt>
+        <unit>in.</unit>
+      </object>
+      <object name="exit key 1">
+        <inherit name="editor_object" />
+        <alias>key</alias>
+        <look>It's a typical house key.</look>
+        <selfuseon type="scriptdictionary">
+          <item key="exit rep 1">
+            if (sealed door 1.locked=True) {
+              UnlockExit (sealed door 1)
+              msg ("You unlock the door.")
+            }
+            else {
+              LockExit (sealed door 1)
+              msg ("You lock the door.")
+            }
+          </item>
+        </selfuseon>
+      </object>
+    </object>
+    <object name="lightswitch">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <look>It's a standard on/off lightswitch with a handy glow-in-the-dark cover.</look>
+      <switchedondesc>It's in the "on" position.</switchedondesc>
+      <switchedoffdesc>It's in the "off" position.</switchedoffdesc>
+      <lightsource />
+      <lightstrength>weak</lightstrength>
+      <onswitchon type="script">
+        set (storeroom, "dark", False)
+        OnEnterRoom (null)
+      </onswitchon>
+      <onswitchoff type="script">
+        set (storeroom, "dark", True)
+        alt room
+      </onswitchoff>
+    </object>
+    <exit name="sealed door 1" alias="east" to="hallway">
+      <inherit name="eastdirection" />
+      <locked />
+      <visible />
+      <look>You see a door.</look>
+      <prefix type="string"></prefix>
+    </exit>
+    <object name="exit rep 1">
+      <inherit name="editor_object" />
+      <alias>door</alias>
+      <look>It's a simple wooden door that locks with a key.</look>
+      <unlock type="scriptdictionary">
+        <item key="exit key 1">
+        </item>
+      </unlock>
+    </object>
+  </object>
+  <object name="hallway">
+    <inherit name="editor_room" />
+    <exit alias="west" to="storeroom">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="button">
+      <inherit name="editor_object" />
+    </object>
+  </object>
+  <function name="alt room">
+    wait {
+      currentroom = player.parent
+      RemoveObject (player)
+      ClearScreen
+      MoveObject (player, currentroom)
+    }
+  </function>
+  <function name="ChangeQuantity" parameters="objectq, consumed" type="boolean"><![CDATA[
+    if (consumed>objectq.quantity) {
+      return (False)
+    }
+    else {
+      set (objectq, "quantity", objectq.quantity-consumed)
+      set (objectq, "listalias", objectq.alias + ": " + objectq.quantity + objectq.unit)
+      return (True)
+    }
+  ]]></function>
+</asl>

@@ -1,0 +1,136 @@
+<!--Saved by Quest 5.6.5783.24153-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="OurJuds Hut">
+    <gameid>f67ad08c-2da3-42aa-82b8-2ffd4997f517</gameid>
+    <version>1.0</version>
+    <firstpublished>2016</firstpublished>
+  </game>
+  <object name="outside hut">
+    <inherit name="editor_room" />
+    <description type="script">
+      if (GetBoolean(hut, "")) {
+      }
+    </description>
+    <object name="hut">
+      <inherit name="editor_object" />
+      <look type="script">
+        if (GetBoolean(hut door, "bashed")) {
+          msg ("It's a small hut with a gaping hole where the door used to be.  The door lies around the threshold in ruins.")
+        }
+        else {
+          msg ("It's a small hut with a moderately sturdy door on its front that is supposed to keep scum like OurJud out!")
+        }
+      </look>
+    </object>
+    <object name="hut door">
+      <inherit name="editor_object" />
+      <scenery />
+      <look type="script">
+        if (GetBoolean(hut door, "bashed")) {
+          msg ("The door here lays in splinters.  You sure showed it who is boss!")
+        }
+        else {
+          msg ("It's a door that with a little ramming or slamming or kicking might just collapse inward.")
+        }
+      </look>
+      <ram type="script">
+        firsttime {
+          msg ("You slam into the door with all your might.  You hear a *CRACK* but you think that might have come from your shoulder!  Maybe you should try again?")
+        }
+        otherwise {
+          if (GetBoolean(hut door, "bashed")) {
+            msg ("Why would you want to bash an already destroyed door.  Just go in!")
+          }
+          else {
+            msg ("You throw your mighty belly against the door with all your might.  *CRASH* The door is splintered into a gazillion pieces.  Really... a gazillion.")
+            SetObjectFlagOn (hut door, "bashed")
+          }
+        }
+      </ram>
+    </object>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <exit alias="in" to="inside hut">
+      <inherit name="indirection" />
+      <locked type="boolean">false</locked>
+      <runscript />
+      <script type="script">
+        if (GetBoolean(hut door, "bashed")) {
+          msg ("You step across the recently destroyed door and into the hut.")
+          MoveObject (player, inside hut)
+        }
+        else {
+          msg ("There is a door that blocks your way.")
+        }
+      </script>
+    </exit>
+  </object>
+  <object name="inside hut">
+    <inherit name="editor_room" />
+    <description type="script">
+      if (GetBoolean(hut door, "bashed")) {
+        if (GetBoolean(axe, "taken")) {
+          msg ("You are standing in a small hut.  There is little to be seen here.  Even the priceless axe that once rested on the wall is missing.  You can go out if you step over the remains of the busted door.")
+        }
+        else {
+          msg ("You are in a small hut.  There is little to be seen here except for the small axe that is resting against the wall.  You can go out if you step over the remains of the busted door.")
+        }
+      }
+      else {
+        if (GetBoolean(axe, "taken")) {
+          msg ("You are standing in a small hut.  There is little to be seen here.  Even the priceless axe that once rested on the wall is missing.  The hut door stands firmly anchored on its hinges.")
+        }
+        else {
+          msg ("You are in a small hut.  There is little to be seen here except for the small axe that is resting against the wall.  The hut door stands firmly anchored on its hinges.")
+        }
+      }
+    </description>
+    <object name="axe">
+      <inherit name="editor_object" />
+      <take type="script">
+        msg ("Don't go cutting your thumbs off, Paul Bunyon.")
+        SetObjectFlagOn (axe, "taken")
+        AddToInventory (axe)
+      </take>
+    </object>
+    <exit alias="out" to="outside hut">
+      <inherit name="outdirection" />
+    </exit>
+    <object name="hut door1">
+      <inherit name="editor_object" />
+      <scenery />
+      <look type="script">
+        if (GetBoolean(hut door, "bashed")) {
+          msg ("The door here lays in splinters.  You sure showed it who is boss!")
+        }
+        else {
+          msg ("It's a door that with a little ramming or slamming or kicking might just collapse inward.")
+        }
+      </look>
+      <ram type="script">
+        firsttime {
+          msg ("You slam into the door with all your might.  You hear a *CRACK* but you think that might have come from your shoulder!  Maybe you should try again?")
+        }
+        otherwise {
+          if (GetBoolean(hut door, "bashed")) {
+            msg ("Why would you want to bash an already destroyed door.  Just go in!")
+          }
+          else {
+            msg ("You throw your mighty belly against the door with all your might.  *CRASH* The door is splintered into a gazillion pieces.  Really... a gazillion.")
+            SetObjectFlagOn (, "")
+          }
+        }
+      </ram>
+      <alias>hut door</alias>
+    </object>
+  </object>
+  <verb>
+    <property>ram</property>
+    <pattern>ram; slam; kick; punch; push</pattern>
+    <defaultexpression>"You can't ram; slam; kick; punch; push " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

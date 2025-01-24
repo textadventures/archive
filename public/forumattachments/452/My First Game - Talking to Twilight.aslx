@@ -1,0 +1,580 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="My First Game - Talking to Twilight">
+    <gameid>b1ee4e07-dc66-4d33-8e7a-d4e0be45eedf</gameid>
+    <version>1.0</version>
+  </game>
+  <object name="Lounge">
+    <inherit name="editor_room" />
+    <description>You are in a lounge. The carpet is red and the walls are faded orange. There is a single window on the southside wall with red curtains flowing over it. There is a an open door on the east side wall, leading into the kitchen. The room has a cozy atmosphere that puts you at ease.</description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <look>Damn nigga, you look great!</look>
+      <maxobjects type="int">5</maxobjects>
+      <kill type="script"><![CDATA[
+        if (not ListContains(ScopeVisible(), Twilight)) {
+          msg ("Welp, with Twilight dead, there is not much keeping you around in this crappy text game. With no visible exits, you decide to do the only sensible thing.<br/>You grab both your chin and the top of your head and yank your head in a  clockwise motion; you snap your own neck.<br/><br/>You are ded<br/>Game Over.")
+        }
+        else {
+          msg ("With the sudden decision to commit sudoku, you turn to Twilight. 'Hey Twilgiht, want to watch me become an hero?'<br/><br/>Twilight tilts her head innocently, 'An'? 'Don't you mean 'a'?'<br/><br/>'Just watch.' With that, you glab both your chin and the top of your head with either hand firmly. With a sudden yank in a clockwise direction, you snap your own neck. Twilight gasps in horror as she watches your lifeless body fall to the floor.<br/><br/>'...A-Anon?\"<br/><br/>You are ded.<br/>Game Over.")
+          finish
+        }
+        finish
+      ]]></kill>
+      <alt>myself; self; yourself; player</alt>
+      <fuck>You don't know how.</fuck>
+    </object>
+    <exit alias="east" to="Kitchen">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="TV">
+      <inherit name="switchable" />
+      <alt>television; the tube</alt>
+      <displayverbs>Look at; Take; Flip</displayverbs>
+      <switchonmsg>The screen flickers to life. </switchonmsg>
+      <switchoffmsg>A GAK commercial starts to play. You feel a twinge of hatred and hastily turn the TV off.</switchoffmsg>
+      <switchedoffdesc>It is currently switched off.</switchedoffdesc>
+      <switchedondesc>The channel is "The Hub". It is currently airing a commercial for the latest My Little Pony Episode. Looks like more pandering. At least there will bu cute ponies.</switchedondesc>
+      <look type="script">
+        if (not GetBoolean(TV, "broken")) {
+          msg ("It's an old TV. you don't find yourself watching the tube much anymore but you've had it your entire life so you can't let it go.")
+        }
+        else {
+          msg ("The TV is destroyed, glass shards scattered across the floor. You're not going to be watching TV anytime soon.")
+        }
+      </look>
+      <flip type="script">
+        msg ("Fuck it. You grab the corner of the TV and yank it to the left. It leans over and careens off its stand. It crashes into the floor, shattering the screen and leaving quite a mess.")
+        SetObjectFlagOn (TV, "broken")
+        if (GetBoolean(TV, "broken")) {
+        }
+      </flip>
+      <watch type="script">
+        if (IsSwitchedOn(TV)) {
+          msg ("\"It could happen! Only on The Hub!\"")
+        }
+        else {
+          msg ("The glass screen is deader than your love life.")
+        }
+      </watch>
+    </object>
+    <object name="Sofa">
+      <inherit name="editor_object" />
+      <sit>You plop yourself down on the brown sofa. You remain still for a minute, crossing your legs and rubbing your fingers together. After another minute passes, you fidget and pull yourself to your feet. you're not really in the mood to sit down.</sit>
+      <displayverbs>Look at; Take; Sit on; Jump on</displayverbs>
+      <alt>Couch</alt>
+      <jumpon>You hop up on the Sofa's cushion, your shoes digging into the fabric. You start jumping in place. Maybe if you jump high enough, you can hit the cieling. You jump about until you work up a sweat. Panting, you hop off the couch before you slip and break your neck. Who said being childish couldn't be fun?</jumpon>
+      <look>It's a green sofa. It looks soft and fuzzy. It makes a good bed in a pinch.</look>
+      <flip>God Damnit! You curl your fingers around the corner of the sofa. You moan and lift the sofa with all your might. The sofa leans back and falls to the floor with a thunderous crash!</flip>
+    </object>
+    <object name="Table">
+      <inherit name="editor_object" />
+      <displayverbs>Look at; Take; Flip</displayverbs>
+      <look type="script">
+        if (not GetBoolean(Table, "broken")) {
+          msg ("It's a plain, waist-high wooden table. A perfect home for a small object! A lit green lamp sits on its surface.")
+        }
+        else {
+          msg ("The table is upside down with a crack running through it. You're going to need to get a new table if you ever want a surfce in the living room again.")
+        }
+      </look>
+      <flip type="script">
+        msg ("You curl your fiingers under the side of the table. With a grunt and a mighty heave, you send the table flying into the air, spining wildly. It crashes on the carpet upside down. The lamp that was sitting on it shatters on impact with the floor. Fuck Everything!")
+        SetObjectFlagOn (Table, "broken")
+        SetObjectFlagOn (Lamp, "broken")
+        SwitchOff (Lamp)
+      </flip>
+    </object>
+    <object name="Wallpaper">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>The wallpaper is a faded orange, the same color as a sunset. It's starting to show its age with some peeling and stains of god knows what. May be time to get a replacement soon.</look>
+    </object>
+    <object name="carpet">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>The carpet is a lush red with straggly edges. It's a fine carpet but it is showing its age. There are spots of dust and little specks of dirt and wood.</look>
+    </object>
+    <object name="Newspaper">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <take />
+      <takemsg>You roll the newspaper in your hand and hold it under your arm.</takemsg>
+      <dropmsg>You toss the paper over your shoulder and don't even look too see where it landed.</dropmsg>
+      <look><![CDATA[You see the newspaper. The front page reads: <br/><br/>HEADLINE NEWS: SHIT IS GOING DOWN! <br/>This faily common thing is happening in our town and we are here to let you know about it. Some unimportant shit happened and everyone is left in a stir. To make our story seem more legit and relatable, we asked this old guy to comment on the situation.<br/>"This shit happens faily often so there is no need to panic. I'm an old man so you can trust what I say!"<br/><br/><br/>There are other pages as well.]]></look>
+      <usedefaultprefix />
+      <hidechildren />
+      <listchildren />
+      <listchildrenprefix>it contains</listchildrenprefix>
+      <openmsg>You flip open the pages of the newspaper</openmsg>
+      <closemsg>You fold the pages of the newspaper closed</closemsg>
+      <object name="Comics page">
+        <inherit name="editor_object" />
+        <look>You look at the comics page like you always do. They're pretty lame but you get a small giggle out of some of them.</look>
+      </object>
+      <object name="Classifieds page">
+        <inherit name="editor_object" />
+        <look>You look at the classifieds page. There's nothing good in the jobs section. There's an advertisment for "medicine" above an address. </look>
+      </object>
+      <object name="Weather page">
+        <inherit name="editor_object" />
+        <look>You look at the weather. It's going to be snowing all week. You hope the power doesn't go out.</look>
+      </object>
+    </object>
+    <object name="Window">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <look>A glass window with wooden frames. There are some smudges on it but otherwise, it's clean.</look>
+      <lookout>You look out the window. It's snowing outside. The yard is covered ina foot of snow. It's been snowing since last night, it's nice to be in the warm house.</lookout>
+      <openscript type="script">
+        msg ("You flip the looks along the halfway frame and slide the window open. An icy wind blasts into the room and some snow falls to the floor.")
+      </openscript>
+      <closescript type="script">
+        msg ("You hastily shut the window. You rub your hands together and breathe on them for warmth.")
+      </closescript>
+    </object>
+    <object name="Curtains">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <isopen />
+      <yank>you yank on the curtains, tearing them off their hingers. the curtain lies in a crumpled heap before the window.</yank>
+      <switchedon />
+      <look type="script">
+        msg ("You see the curtains. They are a flowing red, dangling in front of the windows.")
+        if (not Curtains.isopen) {
+          msg ("The curtains are shut, cutting out the light from outside.")
+          if (not IsSwitchedOn(Lamp)) {
+            msg ("The room is almost pitch black and with no light source, the dark is a bad place to be. You are likely to be eaten by a Grue.")
+            SetBackgroundColour ("Gray")
+            EnableTimer (Eaten by Grue)
+          }
+          else if (GetBoolean(Lamp, "broken")) {
+            msg ("The room is almost pitch black and with no light source, the dark is a bad place to be. You are likely to be eaten by a Grue.")
+            SetBackgroundColour ("Black")
+            EnableTimer (Eaten by Grue)
+          }
+        }
+        else {
+          msg ("Light from the outside shines into the room")
+        }
+      </look>
+      <openscript type="script">
+        msg ("You slide the curtains open to show window and let the light in.")
+        HelperOpenObject (Curtains)
+        SetBackgroundColour ("White")
+        DisableTimer (Eaten by Grue)
+        DisableTimer (Grue eats you)
+      </openscript>
+      <closescript type="script">
+        msg ("You slide the curtains closed, shutting out the light from outside.")
+        HelperCloseObject (Curtains)
+        if (not IsSwitchedOn(Lamp)) {
+          msg ("The room is almost pitch black and without a light source, the dark becomes a bad place to be. You are likely to be eaten by a grue.")
+          SetBackgroundColour ("Gray")
+          EnableTimer (Eaten by Grue)
+        }
+      </closescript>
+    </object>
+    <object name="Lamp">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <scenery type="boolean">false</scenery>
+      <switchedon />
+      <switchonmsg>The lamp flickers to life.</switchonmsg>
+      <switchoffmsg>The lamp dies down, leaving the room darkened.</switchoffmsg>
+      <switchedondesc>The lamp is shining brightly, the red shade giving everything a crimson hue.</switchedondesc>
+      <switchedoffdesc>Shit's dark yo!</switchedoffdesc>
+      <visible />
+      <look type="script">
+        if (IsSwitchedOn(Lamp)) {
+          msg ("The lamp is shining brightly.")
+          SetBackgroundColour ("White")
+        }
+        else if (not Curtains.isopen) {
+        }
+        else {
+        }
+        if (not IsSwitchedOn(Lamp)) {
+          msg ("The lamp is turned off, sitting alone in its dark place.")
+        }
+        else {
+        }
+        if (not GetBoolean(Lamp, "broken")) {
+          msg ("A green lamp with a red shade is sitting on the table.")
+        }
+        else {
+          msg ("The lamp has shattered and the light is out.")
+          if (not Curtains.isopen) {
+            msg ("The room is almost pitch black and with no light source, the dark is a bad place to be. You are likely to be eaten by a Grue.")
+            SetBackgroundColour ("Gray")
+          }
+        }
+      </look>
+      <onswitchoff type="script">
+        if (not Curtains.isopen) {
+          msg ("The room is almost pitch black and without a light source, the dark becomes a bad place to be. You are likely to be eaten by a grue.")
+          SetBackgroundColour ("Gray")
+          EnableTimer (Eaten by Grue)
+        }
+        else {
+        }
+      </onswitchoff>
+      <onswitchon type="script">
+        SetBackgroundColour ("White")
+        DisableTimer (Eaten by Grue)
+        DisableTimer (Grue eats you)
+      </onswitchon>
+    </object>
+    <object name="Twilight">
+      <inherit name="editor_object" />
+      <inherit name="female" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alt>Twi; Twilight Sparkle</alt>
+      <displayverbs>Look at; Speak to; hug</displayverbs>
+      <look type="script"><![CDATA[
+        if (GetBoolean(Twilight, "likes the player")) {
+          msg ("You look at Twilight Sparkle. She is a young purple unicorn with a dark blue mane that has pink stripe running through it. Her cutie mark is a six-pointed pink star over a five-pointed white star, the emblem is surrounded by five small white stars. <br/><br/>She is sitting on the corner of the Sofa. Her hind legs are crossed and she is twiddling her hooves together, her ears repeatedly folding up and down as if unable to find a proper bend. She notices you looking at her; a blush appears at the corners of her smile and she averts from your gaze. Despite her awkward behavior, you can tell she enjoys being around you.<br/>")
+        }
+        else {
+          msg ("You look at Twilight Sparkle. She is a young purple unicorn with a dark blue mane that has pinke stripe running thorugh it. Her cutie mark is a six-pointed pink star over a five-point white star, the emblem is surrounded by five small white stars. <br/><br/>She is sitting on the corner of the sofa, excitably looking around the room, eyes wide with a childish curiosity. ")
+        }
+        if (GetBoolean(Twilight, "wants the D")) {
+          msg ("Twilight is fidgeting about a lot. You see that her face is red and that she bites her lip whenever she takes a glance at you. She seems like she really wants something.<br/><br/>*D added to inventory*")
+          AddToInventory (D)
+        }
+      ]]></look>
+      <hug type="script">
+        msg ("You kneel beside the purple pony. She tilts her head curiously while she watches you. You then wrap your arms around the pony and pull her in for an earthly hug, holding her against your chest. She giggles and wraps her hooves around your abdomen and resting her head on your shoulder. You two hug each other for over minute before you let each other go. Twilight leans back on the Sofa with a thick blush on her cheeks and her ears titled back. She couldn't hide that silly grin for the life of her.")
+        if (not GetBoolean(Twilight, "likes the player")) {
+          SetObjectFlagOn (Twilight, "likes the player")
+          msg ("Twilight Sparkle likes you now.")
+        }
+      </hug>
+      <speak type="script"><![CDATA[
+        topics = Split ("How are you doing?;Would you like some coffee?;So, uh, you wanna 'do it'?;Let's cuddle!", ";")
+        show menu ("So, Twilight...", topics, true) {
+          switch (result) {
+            case ("How are you doing?") {
+              if (GetBoolean(Twilight, "likes the player")) {
+                msg ("'Oh, hmmm' She giggles to herself, smiling at you with half-lidded eyes, 'I'm doing just fine, Anon'")
+              }
+              else {
+                msg ("'Oh, Anon, this is so exciting! I've never been inside a human's home before. I cant wait to report to Princess Celestia about this!'")
+              }
+            }
+            case ("Would you like some coffee?") {
+              if (GetBoolean(Twilight, "has coffee")) {
+                msg ("'Oh, one cup of coffee is just enough for me!' She takes another sip of her coffee.")
+              }
+              else {
+                msg ("She get's a twinkle in her eyes and becomes all giddy, 'Do you have coffee? Ooh, I love coffee, I've always wondered what human coffee taste like! I, ah, mean if I may have some... May I have some, Anon?'")
+              }
+            }
+            case ("So, uh, you wanna 'do it'?") {
+              msg ("")
+              if (GetBoolean(Twilight, "likes the player")) {
+                msg ("Twilight freezes up and her face goes as red as a cherry. She chokes on a breath before slowly exhaling, smiling wryly, 'D-Don't tease me like that, Anon!\"")
+              }
+              else {
+                msg ("'...wh-what? Oh!  Haha, that's a good joke, Anon.' She nervously stokes her mane.")
+              }
+            }
+            case ("Let's cuddle!") {
+              if (GetBoolean(Twilight, "likes the player")) {
+                msg ("You site on the sofa beside Twilight and hold you arm out behind on the arch of the Sofa. Her ever redder face curves into the cutest smile you've seen and she leans into you, pressing her cheek into yours. you wrap your arms her and hold her close. You two sit like that for a short while.<br/><br/>Then, Twilight looks up at you, catching you in the eyes. Without a word, she presses her snout against your lips and kisses you sweetly. It is brief but when she pulls away, she gives a curt giggle and returns to nuzzling your cheek.<br/><br/>After a short while passes, you two let each other go. Her hoof holds onto your hand as you slide away and returns to sitting on the edge sofa by herself.")
+                SetObjectFlagOn (Twilight, "wants the D")
+              }
+              else {
+                msg ("'Haha, well, um...' She looks around nervously, \"Can't we just talk instead?\"")
+              }
+            }
+          }
+        }
+      ]]></speak>
+      <useon type="scriptdictionary" />
+      <ask type="scriptdictionary">
+        <item key="coffee"><![CDATA[
+          msg ("You ask Twilight if she likes coffee. She gets a twinkle in her eyes and she starts to act giddy, \"Do you have coffee? Ooh, I love coffee, I've always wondered what human coffee taste like! Ooh, I can't wait to report to Princess Celestia! I, ah, mean if I may have some... May I have some, Anon?\"<br/><br/>You recall you have some coffee in the kitchen.")
+        ]]></item>
+      </ask>
+      <kill type="script"><![CDATA[
+        msg ("Twilight has been going on about her studies for princess celestia for awhile now and you're starting to get sick of it. You might as well kill her.<br/>'Hey Twilight,' you call for her attention<br/><br/>'Uh, y-yes, Anon?'<br/><br/>You wind your fist back, 'Study this!' You catch Twilight by suprise, punching her face as hard you can. She is flung from her spot on the cofa is flies towards the wall. She hits it hard and you hear a sick crunch. She lands in a crumpled heap at the foot of the wall.<br/><br/>You have killed Twilight Sparkle..")
+        MakeObjectInvisible (Twilight)
+        MakeObjectVisible (Dead Twilight)
+      ]]></kill>
+      <fuck type="script"><![CDATA[
+        msg (">fucking horses<br/>There is no horsefuckery going on here, Anon")
+      ]]></fuck>
+      <object name="D">
+        <inherit name="editor_object" />
+        <look>You know what to do, Anon.</look>
+        <giveto type="scriptdictionary">
+          <item key="Twilight"><![CDATA[
+            msg ("You present the 'D' to Twilight. She is silent as she stares at the 'D', occasionallly glancing around the room as if worried someone might see. You smile at her reassuringly, letting her know that everything is okay and that she is free to accept or refuse any gift you want to give her. She chuckles softly and she nods. 'Of course I'll accept your gift, Anon. I-I like you! L-Like like you!'<br/><br/>'Oh my gosh, I'm not sure if I should report this 'finding' to Princess Celestia.\"<br/><br/>You have given Twilight the 'D'. Congratulations.<br/>The End")
+            finish
+          ]]></item>
+        </giveto>
+      </object>
+    </object>
+    <object name="Grue">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <visible type="boolean">false</visible>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <gender>it</gender>
+      <article>it</article>
+    </object>
+    <object name="Bloodied Sofa">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <look>The spot where Twilight was sitting is now covered in stains of blood and gore. Only few strands of Twilight's mane remains...</look>
+    </object>
+    <object name="Dead Twilight">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <look>Twilight Sparkle is dead. Her corpse is left bleeding out at the foot of your west side wall. Her face has become a bloody pulp and her horn is broken. She was the prize student of Princess Celestia, had many lifelong friends, a dedicated brother and loving parents. She may have a been a popwerful unicorn someday. Now, she is just another dead horse set for the glue factory.</look>
+      <fuck>What the fuck is wrong with you?</fuck>
+    </object>
+  </object>
+  <object name="Kitchen">
+    <inherit name="editor_room" />
+    <description>You are in the kitchen. The counters are a cool grey granite and the floors are a white linoleum with snowflake patterns. The door to the Lounge is on the west side wall. On the east side wall is an archway leading into the living room and on the north side wall is a closed door leading to your Bedroom. The south side wall hold the kitchen appliances: the grey metal sink, a white refrigerator, and a coffee machine on the counter. The kitchen is very clean, you have always been a tidy person.</description>
+    <exit alias="west" to="Lounge">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="Sink">
+      <inherit name="editor_object" />
+      <displayverbs>Look at</displayverbs>
+      <look>It's a silver metal sink. It's clean and empty. Seeing the faucet is making you a bit thirsty.</look>
+    </object>
+    <object name="flour">
+      <inherit name="editor_object" />
+      <weight type="int">500</weight>
+      <look>It's a brown paper bag of white flour. you've made plenty'a pastries with this stuff.</look>
+    </object>
+    <object name="eggs">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <weight type="int">250</weight>
+      <look type="script">
+        msg ("A box of eggs, weighing " + eggs.weight + " grams.")
+        msg ("A box of white and brown eggs. A dozen total. You're favorite thing to eat in the morning and, after some drinks, a tasy beverage!")
+      </look>
+    </object>
+    <object name="sugar">
+      <inherit name="editor_object" />
+      <weight type="int">1000</weight>
+      <take />
+      <takemsg>You grab the bag of sugar</takemsg>
+      <dropmsg>You set the bag of sugar down carefully.</dropmsg>
+      <look>It's a glass bottle of granulated sugar.</look>
+      <selfuseon type="scriptdictionary">
+        <item key="Full Coffee Mug">
+          msg ("You sprinkle some lumps sugar into the the full coffee mug. You could say your coffee is lumpy!")
+          RemoveObject (Full Coffee Mug)
+          AddToInventory (Sweetened Full Coffee Mug)
+        </item>
+      </selfuseon>
+      <object name="Sweetened Full Coffee Mug">
+        <inherit name="editor_object" />
+        <visible />
+        <alt>coffee</alt>
+        <look>It's a full mug of "Italian Roast" coffee with sugar added. The flavor is just right!</look>
+        <giveto type="scriptdictionary">
+          <item key="Twilight">
+            msg ("You offer the sweetened coffee mug to Twilight. She giggles, \"Oh anon, you didn't need to do this. You're really sweet~\" She uses her magic to levitate it from your hands and she sips on it cheerfully.")
+            RemoveObject (Sweetened Full Coffee Mug)
+            SetObjectFlagOn (Twilight, "has coffee")
+          </item>
+        </giveto>
+      </object>
+    </object>
+    <object name="Cupboards">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <look>The the white cupboards beneath the coffee machine.</look>
+      <hidechildren type="boolean">false</hidechildren>
+      <listchildren />
+      <listchildrenprefix>it contains</listchildrenprefix>
+      <openmsg>The door squeaks as you open it</openmsg>
+      <closemsg>the door swings shut</closemsg>
+      <object name="Coffee Can">
+        <inherit name="editor_object" />
+        <take />
+        <takemsg>You hold the coffee can</takemsg>
+        <dropmsg>You drop the coffee can, a *clang* ringing out as it hits the floor.</dropmsg>
+        <look>It's a can of coffee, "Italian Roast"</look>
+        <shake>You shake the coffee can, you it's half full of grounds</shake>
+        <selfuseon type="scriptdictionary">
+          <item key="Coffee Machine">
+            msg ("You twist the cap off the can and hold it over the machine, giving it a little shake.")
+          </item>
+        </selfuseon>
+      </object>
+    </object>
+    <object name="Coffee Machine">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look type="script">
+        if (GetBoolean(Coffee Machine, "coffee ready")) {
+          msg ("It's your best friend, the Coffee Machine. You'd be lost without it. There is a fresh batch of \"Italian Roast\".")
+        }
+        else {
+          msg ("It's your best friend, the Coffee Machine. You'd be lost without it. There are cupboards beneath it.")
+        }
+      </look>
+      <useon type="scriptdictionary">
+        <item key="Coffee Can">
+          msg ("You pour the coffee grounds from the can into the pre-set filter. You activate the machine and with a hiss, it brews some hot coffee.")
+          SetObjectFlagOn (Coffee Machine, "coffee ready")
+        </item>
+      </useon>
+      <object name="Full Coffee Mug">
+        <inherit name="editor_object" />
+        <visible />
+        <look>It's a mug full of Hot Coffee. Italian roast master race!</look>
+        <alt>coffee</alt>
+        <giveto type="scriptdictionary">
+          <item key="Twilight">
+            msg ("\"Oh Anon~\"  She giggles in a sweet, sing-song voice, \"I LOVE it black! Thanks you so, so much!\" She uses her magic to levitate the mug from your hands and she sips on it heartily.")
+            RemoveObject (Full Coffee Mug)
+            SetObjectFlagOn (Twilight, "has coffee")
+          </item>
+        </giveto>
+      </object>
+    </object>
+    <object name="Strainer">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <look>Beside the sink is a strainer. It's full of clean dishes. It holds a plate, coffee mug, a glass bowl, and some silverware.</look>
+      <close type="boolean">false</close>
+      <transparent />
+      <object name="Plate">
+        <inherit name="editor_object" />
+        <look>A ceramic plate. A little gift from the family. You're certain it was from a yard sale.</look>
+        <take />
+      </object>
+      <object name="Coffee Mug">
+        <inherit name="editor_object" />
+        <look>It's your favorite coffee mug. It's your favorite color and posesses an appealing pattern.</look>
+        <take />
+        <takemsg>You slip your fingers through the handle loop and hold the coffee mug with ease.</takemsg>
+        <selfuseon type="scriptdictionary">
+          <item key="Coffee Machine">
+            if (GetBoolean(Coffee Machine, "coffee ready")) {
+              msg ("You press the mug into button beneath the spout for the coffee. Within seconds, ou are now the proud owner of a full mug of coffee")
+              RemoveObject (Coffee Mug)
+              AddToInventory (Full Coffee Mug)
+            }
+            else {
+              msg ("You press the \"pour coffee\" button under the spout but nothing happens. You need to make coffee silly!\"")
+            }
+          </item>
+        </selfuseon>
+      </object>
+      <object name="Glass Bowl">
+        <inherit name="editor_object" />
+        <look>It's a perfectly clean glasss bowl</look>
+        <take />
+      </object>
+      <object name="Silverware">
+        <inherit name="editor_object" />
+        <look>Spoons, knives, forks. The essential tools for stuffing your face.</look>
+        <take />
+      </object>
+    </object>
+  </object>
+  <verb>
+    <property>watch</property>
+    <pattern>watch</pattern>
+    <defaultexpression>"You can't watch " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>jumpon</property>
+    <pattern>jump on</pattern>
+    <defaultexpression>"You can't jump on " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>flip</property>
+    <pattern>flip</pattern>
+    <defaultexpression>"You can't flip " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>lookout</property>
+    <pattern>look out</pattern>
+    <defaultexpression>"You can't look out " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>yank</property>
+    <pattern>yank; pull</pattern>
+    <defaultexpression>"You can't yank; pull " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="Say">
+    <pattern>say #text#; shout #text#; yell #text#</pattern>
+    <script>
+      msg ("You say '" + text + "', but you recieve no reply")
+    </script>
+  </command>
+  <command name="Weigh">
+    <pattern>weigh #object#</pattern>
+    <script>
+      if (HasAttribute(object, "weight")) {
+        msg ("It weighs " + object.weight + " grams.")
+      }
+      else {
+        msg ("You can't weigh that.")
+      }
+    </script>
+  </command>
+  <verb>
+    <property>shake</property>
+    <pattern>shake</pattern>
+    <defaultexpression>"You can't shake " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>hug</property>
+    <pattern>hug</pattern>
+    <defaultexpression>"You can't hug " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <pattern>kill</pattern>
+    <property>kill</property>
+    <defaultexpression>"You can't kill " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <pattern>fuck</pattern>
+    <property>fuck</property>
+    <defaultexpression>"You can't fuck " + object.article + "."</defaultexpression>
+  </verb>
+  <timer name="Eaten by Grue">
+    <interval>10</interval>
+    <script><![CDATA[
+      if (ListContains(ScopeVisible(), Dead Twilight)) {
+        msg ("You hear a deep growl. Suddenly, you hear the sound of wet crunches and bones splitting.<br/>Twilght's corpse has been eaten by a Grue.")
+        DisableTimer (Eaten by Grue)
+        EnableTimer (Grue eats you)
+      }
+      if (ListContains(ScopeVisible(), Twilight)) {
+        msg ("You hear a deep growl. Suddenly, you hear a bloodcurdling scream from Twilight imediately followed by the sound of wet crunches and bones splitting.<br/>Twilight Sparkle has been eaten by a Grue.")
+        MakeObjectInvisible (Twilight)
+        MakeObjectInvisible (Sofa)
+        MakeObjectVisible (Bloodied Sofa)
+        DisableTimer (Eaten by Grue)
+        EnableTimer (Grue eats you)
+      }
+      else {
+        EnableTimer (Grue eats you)
+      }
+    ]]></script>
+  </timer>
+  <timer name="Grue eats you">
+    <interval>10</interval>
+    <script><![CDATA[
+      msg ("You hear another growl. You don't even so much as see the monster before you fall victim to the creature's monstrous jaws.<br/>You have been eaten by a Grue.<br/>Game over.")
+      finish
+    ]]></script>
+  </timer>
+</asl>

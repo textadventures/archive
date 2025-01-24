@@ -1,0 +1,372 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="The Undiscovered Continent">
+    <gameid>244e616f-d696-42ab-bb45-892851661131</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <echocommand type="boolean">false</echocommand>
+    <showcommandbar type="boolean">false</showcommandbar>
+    <showhealth type="boolean">false</showhealth>
+    <appendobjectdescription type="boolean">false</appendobjectdescription>
+    <attr name="autodescription_youcango" type="int">3</attr>
+    <attr name="autodescription_description" type="int">1</attr>
+    <autodescription_description_newline />
+    <showscore type="boolean">false</showscore>
+    <autodescription />
+    <showdescriptiononenter />
+    <autodisplayverbs type="boolean">false</autodisplayverbs>
+    <attr name="autodescription_youarein" type="int">0</attr>
+    <attr name="autodescription_youcansee" type="int">2</attr>
+    <autodescription_youcansee_newline />
+    <showpanes type="boolean">false</showpanes>
+    <autodescription_youcango_newline />
+    <autodescription_youarein_newline />
+    <description><![CDATA[Random text hint for event.<br/><br/>Find items, combine them to get poem.<br/><br/>Trigger new event.<br/><br/>Tasks:<br/><br/>Text hint unhides objects.<br/><br/><br/><br/><br/>The heart asks pleasure first, <br/>And then, excuse from pain; <br/>And then, those little anodynes <br/>That deaden suffering; <br/>  <br/>And then, to go to sleep;         <br/>And then, if it should be <br/>The will of its Inquisitor, <br/>The liberty to die.]]></description>
+    <autodescription_youarein_useprefix />
+    <gridmap type="boolean">false</gridmap>
+    <clearframe type="boolean">false</clearframe>
+    <povstatusattributes type="stringdictionary" />
+    <object name="garden">
+      <inherit name="editor_room" />
+      <exitslistprefix>Emily can go to the</exitslistprefix>
+      <descprefix type="string"></descprefix>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <objectslistprefix>Emily sees</objectslistprefix>
+      <picture>garden.jpg</picture>
+      <beforeenter type="script">
+        ClearScreen
+      </beforeenter>
+      <onexit type="script">
+      </onexit>
+      <enter type="script">
+      </enter>
+      <exit alias="kitchen" to="kitchen">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit to="bedroom" />
+    </object>
+    <object name="bedroom">
+      <inherit name="editor_room" />
+      <exitslistprefix>Emily can go to the</exitslistprefix>
+      <descprefix type="string"></descprefix>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <objectslistprefix>Emily sees</objectslistprefix>
+      <picture>bedroom.jpg</picture>
+      <description type="string"></description>
+      <beforeenter type="script">
+        ClearScreen
+      </beforeenter>
+      <exit alias="sitting room" to="sitting room">
+        <inherit name="westdirection" />
+      </exit>
+      <exit to="garden" />
+    </object>
+    <object name="sitting room">
+      <inherit name="editor_room" />
+      <descprefix type="string"></descprefix>
+      <exitslistprefix>Emily can go to the</exitslistprefix>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <objectslistprefix>Emily sees</objectslistprefix>
+      <picture>drawing room.jpg</picture>
+      <responses type="stringlist">
+        <value>tesetstt</value>
+      </responses>
+      <beforeenter type="script">
+        ClearScreen
+        outcome = GetRandomInt(1,1)
+        count = ListCount(poems.story)
+        if (count = 0) {
+          msg ("End of poems for today.")
+        }
+        else {
+          s = StringListItem(poems.story, GetRandomInt(0, count-1))
+          list remove (poems.story, s)
+          do (poems.story, s)
+        }
+      </beforeenter>
+      <enter type="script">
+      </enter>
+      <exit alias="bedroom" to="bedroom">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="kitchen" to="kitchen" />
+      <object name="mirror">
+        <inherit name="editor_object" />
+        <visible type="boolean">false</visible>
+        <displayverbs type="stringlist">
+          <value>Take</value>
+        </displayverbs>
+        <inventoryverbs type="stringlist">
+          <value>Use</value>
+        </inventoryverbs>
+        <take />
+        <takemsg>Emily thinks of the bird's hopeful song as she looks at herself in the mirror.</takemsg>
+        <use />
+        <drop type="boolean">false</drop>
+        <ontake type="script"><![CDATA[
+          msg ("<br/>I've heard it in the chillest land<br/>And on the strangest sea,<br/>Yet never, in extremity,<br/>It asked a crumb of me.")
+        ]]></ontake>
+      </object>
+      <object name="bird">
+        <inherit name="editor_object" />
+        <take />
+        <takemsg>The bird sings to Emily...</takemsg>
+        <dropmsg>It slips from Emily's thoughts.</dropmsg>
+        <displayverbs type="stringlist">
+          <value>Take</value>
+        </displayverbs>
+        <use />
+        <inventoryverbs type="stringlist" />
+        <scenery type="boolean">false</scenery>
+        <listalias>bird</listalias>
+        <alias>bird in a cage</alias>
+        <drop type="boolean">false</drop>
+        <visible type="boolean">false</visible>
+        <ontake type="script"><![CDATA[
+          msg ("<br/>\"Hope\" is the thing with feathers<br/>That perches in the soul<br/>And sings the tune without the words<br/>And never stops at all,")
+          MakeObjectVisible (storm)
+        ]]></ontake>
+      </object>
+    </object>
+    <object name="kitchen">
+      <inherit name="editor_room" />
+      <exitslistprefix>Emily can go to the</exitslistprefix>
+      <descprefix type="string"></descprefix>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <objectslistprefix>Emily sees</objectslistprefix>
+      <picture>kitchen.jpg</picture>
+      <description type="string"></description>
+      <beforeenter type="script">
+        ClearScreen
+      </beforeenter>
+      <onexit type="script">
+      </onexit>
+      <exit alias="sitting room" to="sitting room">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="garden" to="garden">
+        <inherit name="westdirection" />
+      </exit>
+    </object>
+    <object name="niece">
+      <inherit name="editor_object" />
+      <inherit name="namedfemale" />
+      <displayverbs type="stringlist">
+        <value>Speak to</value>
+        <value>Look at</value>
+      </displayverbs>
+      <take type="boolean">false</take>
+      <alias>Mattie</alias>
+      <look>Mattie is her young niece.</look>
+      <responses type="stringlist">
+        <value>She is crying.  She tells Emily she saw a bird fall out of its nest but was too frightening to help it.</value>
+        <value>2</value>
+        <value>3</value>
+        <value>4</value>
+      </responses>
+      <speak type="script">
+        firsttime {
+          msg ("The little girl says she saw a wounded bird outside.  She is crying.")
+          MoveObject (robin, garden)
+          MoveObject (nest, garden)
+        }
+        otherwise {
+          msg ("The little girl says she saw a wounded bird outside.  She is crying.")
+        }
+      </speak>
+    </object>
+    <object name="mother">
+      <inherit name="editor_object" />
+      <inherit name="namedfemale" />
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <alias>her mother</alias>
+      <displayverbs type="stringlist">
+        <value>Speak to</value>
+      </displayverbs>
+      <telldefault type="script">
+      </telldefault>
+      <askdefault type="script">
+      </askdefault>
+      <speak type="script">
+        msg ("Emily's mother is devastated from the loss of a friend.  She asks Emily for medicine to help her to sleep.")
+        firsttime {
+          outcome = GetRandomInt(1,4)
+          if (outcome = 1) {
+            MoveObject (medicine, garden)
+          }
+          else if (outcome = 2) {
+            MoveObject (medicine, kitchen)
+          }
+          else if (outcome = 3) {
+            MoveObject (medicine, bedroom)
+          }
+          else if (outcome = 4) {
+            MoveObject (medicine, sitting room)
+          }
+        }
+        otherwise {
+          msg ("Emily's mother is devastated from the loss of a friend.  She asks Emily for medicine to help her to sleep.")
+        }
+      </speak>
+    </object>
+    <object name="brother">
+      <inherit name="editor_object" />
+      <inherit name="namedmale" />
+      <alias>Austin</alias>
+      <look>Austin is her brother.</look>
+    </object>
+    <object name="sister_in_law">
+      <inherit name="editor_object" />
+      <inherit name="namedfemale" />
+      <alias>Sue</alias>
+      <look>Sue is her sister-in-law.</look>
+    </object>
+    <object name="sister">
+      <inherit name="editor_object" />
+      <inherit name="namedfemale" />
+      <alias>Vinnie</alias>
+      <look>Vinnie is her sister.</look>
+    </object>
+    <object name="nephew">
+      <inherit name="editor_object" />
+      <inherit name="namedmale" />
+      <alias>Gib</alias>
+      <look>Gib is her young nephew.</look>
+    </object>
+    <object name="father">
+      <inherit name="editor_object" />
+      <inherit name="namedmale" />
+      <article>her</article>
+      <alias>her father</alias>
+      <displayverbs type="stringlist">
+        <value>Speak to</value>
+      </displayverbs>
+    </object>
+    <object name="medicine">
+      <inherit name="editor_object" />
+      <take />
+      <visible />
+      <displayverbs type="stringlist">
+        <value>Take</value>
+        <value>Look at</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Give</value>
+        <value>Drop</value>
+        <value>Look at</value>
+      </inventoryverbs>
+      <alias>medicine tin</alias>
+      <use type="boolean">false</use>
+      <givesingle />
+      <givemenuprompt>To whom?</givemenuprompt>
+      <takemsg>Emily picks it up.</takemsg>
+      <drop />
+      <dropmsg>Emily puts it down.</dropmsg>
+      <look>It is helpful for rest.</look>
+      <ontake type="script">
+      </ontake>
+      <giveto type="scriptdictionary">
+        <item key="mother"><![CDATA[
+          msg ("Emily gives the medicine to her mother and soothes her as she falls into a fitful sleep.  <br/><br/>The heart asks pleasure first, <br/>And then, excuse from pain; <br/>And then, those little anodynes <br/>That deaden suffering; <br/>  <br/>And then, to go to sleep;        <br/>And then, if it should be <br/>The will of its Inquisitor, <br/>The liberty to die.")
+          RemoveObject (medicine)
+          RemoveObject (mother)
+        ]]></item>
+      </giveto>
+    </object>
+    <object name="nest">
+      <inherit name="editor_object" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist" />
+      <look>A small, empty bird's nest.</look>
+      <visible />
+    </object>
+    <object name="robin">
+      <inherit name="editor_object" />
+      <take />
+      <visible />
+      <scenery type="boolean">false</scenery>
+      <displayverbs type="stringlist">
+        <value>Take</value>
+        <value>Look at</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Drop</value>
+        <value>Give</value>
+      </inventoryverbs>
+      <drop />
+      <takemsg>Emily picks it up.</takemsg>
+      <dropmsg>Emily puts it down.</dropmsg>
+      <givesingle />
+      <givemenuprompt>To whom?</givemenuprompt>
+      <alias>bird</alias>
+      <look>A weak but uninjured robin lies at the base of the tree.</look>
+      <ontake type="script">
+      </ontake>
+      <giveto type="scriptdictionary">
+        <item key="nest"><![CDATA[
+          msg ("Emily places the robin into the nest, then comforts her niece.<br/><br/>If I can stop one heart from breaking, <br/>I shall not live in vain; <br/>If I can ease one life the aching, <br/>Or cool one pain, <br/>Or help one fainting robin<br/>Unto his nest again, <br/>I shall not live in vain.")
+          RemoveObject (robin)
+          RemoveObject (nest)
+          RemoveObject (niece)
+        ]]></item>
+      </giveto>
+    </object>
+    <object name="porch">
+      <inherit name="editor_room" />
+      <exitslistprefix>Emily can go to the</exitslistprefix>
+      <exit name="Doorway" to="sitting room" />
+      <object name="player">
+        <inherit name="editor_object" />
+        <inherit name="editor_player" />
+        <statusattributes type="stringdictionary" />
+        <turns type="int">0</turns>
+        <maxobjects type="int">1</maxobjects>
+        <take type="boolean">false</take>
+        <containermaxobjects>Emily needs to drop what she's carrying to pick this up.</containermaxobjects>
+      </object>
+    </object>
+    <object name="poems">
+      <inherit name="editor_object" />
+      <story type="stringlist">
+        <value>pa</value>
+        <value>pb</value>
+        <value>pc</value>
+      </story>
+      <pc type="script">
+      </pc>
+      <pb type="script">
+      </pb>
+      <pa type="script">
+        firsttime {
+          msg ("The little girl says she saw a wounded bird outside.  She is crying.")
+          MoveObject (robin, garden)
+          MoveObject (nest, garden)
+        }
+        otherwise {
+          msg ("The little girl says she saw a wounded bird outside.  She is crying.")
+        }
+      </pa>
+    </object>
+  </game>
+  <verb>
+    <property>giveto</property>
+    <pattern>give to</pattern>
+    <defaultexpression>"You can't give to " + object.article + "."</defaultexpression>
+  </verb>
+  <turnscript>
+    <enabled />
+    <script>
+      outcome = GetRandomInt(1,1)
+      if (outcome = 1) {
+        msg ("Emily hears her niece.")
+      }
+    </script>
+  </turnscript>
+</asl>

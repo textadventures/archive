@@ -1,0 +1,58 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="roomopen">
+    <gameid>cdb5deeb-638b-45a5-af2f-ac5804e96c5d</gameid>
+    <version>1.0</version>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+    <object name="newspaper">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <hidechildren />
+      <listchildren />
+      <read type="script"><![CDATA[
+        msg ("Wonder what is in the Daily Echo today?")
+        SetTimeout (3) {
+          msg ("Mmm, main headlines are grim, time to skip to page 2")
+        }
+        SetTimeout (5) {
+          msg ("Page 2 is not much better. Lots of petty crime and nastiness.")
+        }
+        SetTimeout (7) {
+          msg ("Page 3 is all about some planning application for Tescos. Boring... Not sure its worth carrying on to Page 4")
+        }
+        SetTimeout (9) {
+          if (Ask("Shall you go to Page 4?")) {
+            msg ("<br/>What on earth is this....")
+            MoveObject (Map, newspaper)
+            msg ("THIS IS WHERE WE WANT THE MAP TO BE AS AN UNDERLINE LINK")
+          }
+          else {
+            msg ("You carefully fold the newspaper and dump it in the nearest bin")
+            MoveObject (newspaper, hidden)
+          }
+        }
+      ]]></read>
+      <displayverbs>Look at; Take; Open; Close; Read</displayverbs>
+      <onopen type="script">
+        msg ("What's this......")
+        MoveObject (Map, newspaper)
+        clue.isopen = true
+        ListObjectContents (clue)
+      </onopen>
+      <isopen type="boolean">false</isopen>
+    </object>
+  </object>
+  <object name="hidden">
+    <inherit name="editor_room" />
+    <object name="Map">
+      <inherit name="editor_object" />
+    </object>
+  </object>
+</asl>

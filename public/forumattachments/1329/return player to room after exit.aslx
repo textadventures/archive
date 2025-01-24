@@ -1,0 +1,138 @@
+<!--Saved by Quest 5.6.5621.18142-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="sample start room okay to delete">
+    <gameid>b5e85fd3-ee07-4310-ab7e-6a7a198bcca1</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+    <pov type="object">Magoo</pov>
+  </game>
+  <object name="starting player location room">
+    <inherit name="editor_room" />
+    <description type="script">
+      if (GetBoolean(switch, "on")) {
+        msg ("The lights in the room aren't very useful, but, if you squint, at least you can see.  There isn't much here other than a busted up cardboard box in the middle of the room.")
+      }
+      else {
+        msg ("You can't see a whole lot in here other than an illuminated switch on a nearby wall.")
+      }
+    </description>
+    <enter type="script">
+    </enter>
+    <object name="cardboard box">
+      <inherit name="editor_object" />
+      <look>It's a... well... it used to be a cardboard box.  Now it is just a busted up pile of cardboard.  Stamped on the side of the box are the words "Ship to Stupidville".  </look>
+      <takemsg>Nope.  You don't need this busted pile of cardboard.</takemsg>
+      <read>"Ship to Stupidville"</read>
+      <scenery type="boolean">false</scenery>
+      <visible type="boolean">false</visible>
+    </object>
+    <object name="switch">
+      <inherit name="editor_object" />
+      <look>It's a switch for the lights.  Try to use it.</look>
+      <feature_usegive />
+      <scenery />
+      <use type="script">
+        if (GetBoolean(switch, "on")) {
+          msg ("You turn the lights back off...")
+          SetObjectFlagOff (switch, "on")
+          MakeObjectInvisible (cardboard box)
+        }
+        else {
+          msg ("You flip the light switch.  The lights flicker and come on.  ")
+          SetObjectFlagOn (switch, "on")
+          MakeObjectVisible (cardboard box)
+          firsttime {
+            msg ("The lights in the room aren't very useful, but, if you squint, at least you can see.  There isn't much here other than a busted up cardboard box in the middle of the room.")
+          }
+          otherwise {
+            msg ("Still dim.  Still not much too look at other than that box.")
+          }
+        }
+      </use>
+    </object>
+    <exit alias="north" to="dead end">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="unknown dark room">
+    <inherit name="editor_room" />
+    <description>You are in a confined space.  It smells a bit like packing peanuts and cardboard.  You can't really see anything, but you can certainly feel the walls of this cramped room.</description>
+    <usedefaultprefix />
+    <onexit type="script">
+      msg ("You stretch your limbs as far out as possible and the box prison you are in breaks free and you fall out into a dark room.")
+    </onexit>
+    <enter type="script">
+      SetObjectFlagOff (switch, "on")
+    </enter>
+    <exit name="out of box exit" alias="out" to="starting player location room">
+      <inherit name="outdirection" />
+      <visible type="boolean">false</visible>
+      <lockmessage type="string"></lockmessage>
+      <runscript type="boolean">false</runscript>
+    </exit>
+    <object name="walls">
+      <inherit name="editor_object" />
+      <visible />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <scenery />
+      <look type="script">
+        msg ("You can't really see the walls because it is too dark.  You should try feeling them.")
+      </look>
+      <touch type="script">
+        firsttime {
+          msg ("You reach out and place your bare hand on the walls of this room.  It feels like... cardboard?  Are you in a box?  I bet if you really wanted to you could get 'out' of the box.  ")
+          MakeExitVisible (out of box exit)
+        }
+        otherwise {
+          msg ("Yep... you're still in a box.  Exit the box by typing 'out', genius.")
+        }
+      </touch>
+      <feel type="script">
+        firsttime {
+          msg ("You reach out and place your bare hand on the walls of this room.  It feels like... cardboard?  Are you in a box?  I bet if you really wanted to you could get 'out' of the box.  ")
+          MakeExitVisible (out of box exit)
+        }
+        otherwise {
+          msg ("Yep... you're still in a box.  Exit the box by typing 'out', genius.")
+        }
+      </feel>
+    </object>
+    <object name="Magoo">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <inherit name="namedmale" />
+      <attr name="pov_look">You're Magoo.  A simple being trapped in a test game.</attr>
+      <scenery />
+      <look type="script">
+        if (game.pov = Xanadu) {
+          msg ("Holy moly!  That looks exactly like you!  To take control of Magoo, just type 'switch to Magoo'.")
+        }
+        else {
+          msg ("You are a simple being trapped in a test game.")
+        }
+      </look>
+    </object>
+  </object>
+  <verb>
+    <property>feel</property>
+    <pattern>feel</pattern>
+    <defaultexpression>"You can't feel " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="dead end">
+    <inherit name="editor_room" />
+    <enter type="script">
+    </enter>
+    <beforeenter type="script"><![CDATA[
+      msg ("You head through the doorway to the north and...<br/><br/>")
+    ]]></beforeenter>
+    <description type="script"><![CDATA[
+      msg ("You bump your head against the massive brick wall blocking your path.  There's no way through, around, or over this thing.  You return to the room you just left.<br/>")
+      wait {
+        MoveObject (Magoo, starting player location room)
+      }
+    ]]></description>
+    <descprefix>You have abruptly reached</descprefix>
+  </object>
+</asl>

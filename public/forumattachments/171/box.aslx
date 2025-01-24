@@ -1,0 +1,54 @@
+<!--Saved by Quest 5.1.4393.23459-->
+<asl version="510">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="box">
+    <gameid>15025691-8b28-4a57-b74d-69bd0a5ea242</gameid>
+    <version>1.0</version>
+    <description type="string"></description>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+    <object name="box">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <inherit name="container_lockable" />
+      <take />
+      <isopen type="boolean">false</isopen>
+      <autounlock type="boolean">false</autounlock>
+      <unlock type="script">
+        if (not this.locked) {
+          msg (DynamicTemplate("AlreadyUnlocked", this))
+        }
+        else {
+          msg ("Plz insert the code:")
+          if (GetInput() ="761") {
+            msg (this.unlockmessage)
+            this.locked = false
+            if (this.autoopen and not this.isopen) {
+              TryOpenClose (true, this)
+            }
+          }
+          else {
+            msg (this.nokeymessage)
+          }
+        }
+      </unlock>
+      <lock type="script">
+        if (this.locked) {
+          msg (DynamicTemplate("AlreadyLocked", this))
+        }
+        else if (this.isopen and not this.canlockopen) {
+          msg (DynamicTemplate("CannotLockOpen", this))
+        }
+        else {
+            msg (this.lockmessage)
+            this.locked = true
+        }
+      </lock>
+    </object>
+  </object>
+</asl>

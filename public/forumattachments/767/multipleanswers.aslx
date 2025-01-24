@@ -1,0 +1,82 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="test">
+    <gameid>2fbd21b5-fdb0-44e7-a2ac-7c09cbef7d46</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <start type="script">
+    </start>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <usedefaultprefix />
+    <alias type="script">
+      msg (game.pov.alias)
+    </alias>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <inherit name="container_limited" />
+      <maxobjects type="int">0</maxobjects>
+      <containermaxobjects>asd</containermaxobjects>
+      <alias>me</alias>
+    </object>
+    <object name="box">
+      <inherit name="editor_object" />
+      <inherit name="container_limited" />
+      <close />
+      <open />
+      <maxobjects type="int">0</maxobjects>
+      <scenery type="boolean">false</scenery>
+      <drop type="boolean">false</drop>
+      <isopen type="boolean">false</isopen>
+      <transparent />
+      <look>It's a box with a fancy design on it.</look>
+      <candidates type="stringlist">
+        <value>Option 1</value>
+        <value>Option 2</value>
+        <value>Option 3</value>
+        <value>Option 4</value>
+        <value>Option 5</value>
+        <value>Option 6</value>
+        <value>Option 7</value>
+        <value>Option 8</value>
+        <value>Option 9</value>
+        <value>Option 10</value>
+      </candidates>
+      <answers type="stringlist" />
+      <correctanswers type="stringlist">
+        <value>Option 1</value>
+        <value>Option 2</value>
+        <value>Option 3</value>
+        <value>Option 4</value>
+      </correctanswers>
+    </object>
+  </object>
+  <command>
+    <pattern>test</pattern>
+    <script>
+      ThisFunction
+    </script>
+  </command>
+  <function name="ThisFunction"><![CDATA[
+    ShowMenu ("Which of the following are correct?", box.candidates, false) {
+      list remove (box.candidates, result)
+      list add (box.answers, result)
+      if (ListCount(box.answers) < 4) {
+        ThisFunction
+      }
+      else {
+        score = 0
+        foreach (item, box.answers) {
+          if (ListContains(box.correctanswers,item)) {
+            score = score + 1
+          }
+        }
+        msg ("You got " + score + " out of 4 correct.")
+      }
+    }
+  ]]></function>
+</asl>

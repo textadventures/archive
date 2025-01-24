@@ -1,0 +1,145 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <include ref="../lib/PixLib.aslx" />
+  <include ref="../lib/PrettyPrintLib.aslx" />
+  <include ref="../lib/PathLib.aslx" />
+  <game name="Event Tester">
+    <gameid>0be5c6ce-c7a0-43fb-836c-6ce248a2ef4d</gameid>
+    <version>1.0</version>
+    <turn type="int">0</turn>
+    <statusattributes type="stringdictionary">turn = </statusattributes>
+    <turn_functions type="list">EachTurn</turn_functions>
+    <help type="list">There is no help for you!</help>
+  </game>
+  <command name="wait_subverted">
+    <pattern type="string">^wait$|^z$</pattern>
+    <script>
+      Print ("Times passes")
+    </script>
+  </command>
+  <object name="room">
+    <inherit name="editor_room" />
+    <usedefaultprefix />
+    <alias>Robot Testing Room</alias>
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+    <object name="robot">
+      <inherit name="editor_object" />
+      <path_events type="stringdictionary">2 = RobotTurn2;5 = RobotTurn5;7 = RobotTurn7;8 = RobotTurn8;9 = RobotTurn9;10 = RobotTurn10</path_events>
+      <alias>Ronnie the Robot</alias>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+    </object>
+    <object name="automaton">
+      <inherit name="editor_object" />
+      <path_events type="stringdictionary">2 = RobotTurn2;5 = RobotTurn5;7 = RobotTurn7;8 = RobotTurn8;9 = RobotTurn9;10 = RobotTurn10</path_events>
+      <alias>Audry the Automaton</alias>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+    </object>
+    <object name="red_button">
+      <inherit name="editor_object" />
+      <alias>Red Button</alias>
+      <press type="script">
+        PathStart (robot)
+        Print ("You press the button, and the robot is activated.")
+      </press>
+    </object>
+    <object name="blue_button">
+      <inherit name="editor_object" />
+      <alias>Blue Button</alias>
+      <press type="script">
+        PathStart (automaton)
+        Print ("You press the button, and the robot is activated.")
+      </press>
+    </object>
+    <object name="switch">
+      <inherit name="editor_object" />
+      <press type="script">
+        if (PathIsRunning (robot)) {
+          PathPause (robot)
+          Print ("You press the switch, and the robot goes into sleep mode.")
+        }
+        else {
+          PathPlay (robot)
+          Print ("You press the switch, and the robot wakes from sleep mode.")
+        }
+      </press>
+    </object>
+  </object>
+  <verb>
+    <property>press</property>
+    <pattern>press</pattern>
+    <defaultexpression>"You can't press " + object.article + "."</defaultexpression>
+  </verb>
+  <turnscript />
+  <function name="RobotTurn2" parameters="obj" type="string">
+    Print ("On turn 2 the " + obj.name + " does stuff.")
+    return ("")
+  </function>
+  <function name="RobotTurn5" parameters="obj" type="string">
+    Print ("On turn 5 the " + obj.name + " does more stuff.")
+    return ("")
+  </function>
+  <function name="RobotTurn7" parameters="obj" type="string">
+    Print ("On turn 7 the " + obj.name + " does other stuff.")
+    return ("")
+  </function>
+  <function name="RobotTurn8" parameters="obj" type="string">
+    Print ("On turn 8 the " + obj.name + " does other stuff.")
+    return ("")
+  </function>
+  <function name="RobotTurn9" parameters="obj" type="string">
+    Print ("On turn 9 the " + obj.name + " does other stuff.")
+    return ("")
+  </function>
+  <function name="RobotTurn10" parameters="obj" type="string">
+    Print ("On turn 10 the " + obj.name + " does other stuff.")
+    return ("")
+  </function>
+  <function name="EachTurn" type="string">
+    Print ("Well that was another turn used!")
+    return ("")
+  </function>
+  <walkthrough name="test">
+    <steps type="list">
+      *A function is set to run each turn to say a turn is used, to show what is considered a turn
+      *First input unfortunately counts as a turn whatever, could not find a way around that
+      *But from now on comments, unparsed commands and meta-game command like help do not count as a turn
+      help
+      *Pressing the button starts the robot (this is turn 1)
+      press red button
+      *On turn 2, the robot does something
+      z
+      *No narrative response to these unrecognised commands, so no turn increment
+      dxbhxb
+      bnn  n  n
+      z
+      z
+      *After five turns it does something
+      z
+      *Pressing the switch pauses the robot
+      press switch
+      *Turns pass, but not for the robot
+      z
+      z
+      z
+      z
+      *Let us start the automaton now, running independantly
+      press blue button
+      z
+      z
+      *Unpause the robot
+      press switch
+      *After seven turns (ignoring when the robot was paused) it does something
+      z
+      press switch
+      press switch
+      press switch
+      press switch
+      z
+      z
+    </steps>
+  </walkthrough>
+</asl>

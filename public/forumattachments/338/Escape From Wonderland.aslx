@@ -1,0 +1,1637 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Escape From Wonderland">
+    <gameid>fa43b450-3a9b-46a1-a945-ac582e6747f6</gameid>
+    <version>1.0</version>
+    <description type="string"></description>
+    <author>Sisters Russell</author>
+    <category>Fantasy</category>
+    <underlinehyperlinks type="boolean">false</underlinehyperlinks>
+    <defaultlinkforeground>Black</defaultlinkforeground>
+    <autodescription_youcansee type="int">0</autodescription_youcansee>
+    <autodescription_youcango type="int">2</autodescription_youcango>
+    <autodescription_description type="int">4</autodescription_description>
+    <showhealth />
+    <enablehyperlinks type="boolean">false</enablehyperlinks>
+    <showpanes type="boolean">false</showpanes>
+    <defaultfontsize type="int">10</defaultfontsize>
+    <autodescription />
+    <start type="script"><![CDATA[
+      SetForegroundColour ("DarkGreen")
+      msg ("Welcome to Wonderland. Have fun trying to escape.<br/>Your health is currently at 100. To see your health, type \"show health.\"<br/><br/>")
+      SetForegroundColour ("Black")
+      SetFontSize (9)
+      msg ("A Nine of Hearts and a Six of Spades fling you roughly into the Red Queen's outdoor dungeon known as the Queen's Guarden. You hear the click of a lock as the iron gate swings shut. You pick yourself up and look around.<br/><br/>")
+      SetTurnTimeout (4) {
+        msg ("<br/>You see a purple cat with an eerily large grin floating outside the gate. He teasingly waves a key in the air and then disappears.")
+        UnlockExit (Through gate)
+        SetObjectFlagOn (Gate, "unlocked")
+      }
+      SetTurnTimeout (6) {
+        msg ("<br/>You see the cat reappear on a limb of the large tree. He hides the key in a small hole.")
+      }
+    ]]></start>
+    <onhealthzero type="script"><![CDATA[
+      SetForegroundColour ("DarkRed")
+      msg ("<br/>In case you haven't noticed, you are dead. Please restart the game and be a bit more careful, or play a game more suitable to your intelligence level.<br/>")
+      finish
+    ]]></onhealthzero>
+  </game>
+  <object name="Queens Guarden">
+    <inherit name="editor_room" />
+    <descprefix>You are in </descprefix>
+    <objectslistprefix>You can see </objectslistprefix>
+    <description><![CDATA[<br/><br/>The garden is lush and green, lined with blooming, red rose bushes. To the west is the gate through which you were thrown. To the south is a pond, dotted with water-lilies. East of the pond is a bush, which appears to have some sort of berry growing on it. To the north stands a tree, several times your height with few branches. It looks like there is a sign on the tree. East of that is a mushroom grove. You are surrounded by air.<br/><br/>]]></description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <alias>Queen's Guarden</alias>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <scenery />
+      <look><![CDATA[<br/><br/>Isn't that a bit narcissistic?]]></look>
+      <health type="int">100</health>
+      <statusattributes type="stringdictionary"></statusattributes>
+      <alt>myself; self; player</alt>
+      <useon type="scriptdictionary">
+        <item key="small mushroom">
+          msg ("The world around you seems to grow.")
+          SetObjectFlagOn (player, "shrink")
+        </item>
+        <item key="big mushroom">
+          msg ("The world shrinks.")
+          SetObjectFlagOn (player, "grow")
+        </item>
+        <item key="turtle shell">
+          UnlockExit (underneath pond)
+          msg ("You feel a little fishy.")
+        </item>
+      </useon>
+    </object>
+    <exit alias="southeast" to="bush">
+      <inherit name="southeastdirection" />
+    </exit>
+    <exit alias="north" to="tree">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="south" to="pond">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="northeast" to="mushroom grove">
+      <inherit name="northeastdirection" />
+    </exit>
+    <exit alias="east" to="East rose bushes">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="west" to="Gate">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="northwest" to="Northwest Rose Bushes">
+      <inherit name="northwestdirection" />
+    </exit>
+    <exit alias="southwest" to="Southwest Rose Bushes">
+      <inherit name="southwestdirection" />
+    </exit>
+    <object name="air">
+      <inherit name="editor_object" />
+      <visible />
+      <scenery type="boolean">false</scenery>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>some</prefix>
+      <look><![CDATA[<br/><br/>I don't see that here. ]]></look>
+      <take />
+      <takemsg>You take a deep breath of air.</takemsg>
+      <dropmsg>You exhale.</dropmsg>
+      <alt>nothing</alt>
+    </object>
+  </object>
+  <verb>
+    <property>pick</property>
+    <pattern>pick</pattern>
+    <defaultexpression>"You can't pick " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Rabbit house">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description><![CDATA[<br/>You are beneath the ground in a well-decorated, earthen room. A pale yellow rabbit reads at a table. There is a small kitchen, largely consisting of shelves filled with jars labeled "Hunny." A rope hangs next to the door.]]></description>
+    <alias>Rabbit's house</alias>
+    <descprefix>You are in </descprefix>
+    <objectslistprefix>You can see </objectslistprefix>
+    <object name="Hunny pots">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <inherit name="edible" />
+      <look><![CDATA[<br/><br/>The Hunny pots are of various colors. Some of them are very sticky. ]]></look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <weight type="int">0</weight>
+      <alt>honey; hunny; pots; pot; jar; jars</alt>
+      <take />
+      <takemsg>You take the hunny pots. Your hands are now sticky.</takemsg>
+      <eatmsg>You are as happy as a pooh while eating this golden deliciousness.</eatmsg>
+      <break type="script"><![CDATA[
+        msg ("<br/>You violently smash the hunny pots, causing the room and yourself to become very sticky. This angers Rabbit, who then chases you out of his house with a hoe, locking the door behind you.<br/>")
+        DecreaseHealth (30)
+        MoveObject (player, bush)
+        RemoveObject (Rabbit hole)
+        RemoveObject (Rabbit house)
+        LockExit (Down the rabbit hole)
+        SetObjectFlagOn (player, "dumbass")
+        if (GetBoolean(player, "dumbass")) {
+          LockExit (Down the rabbit hole)
+          LockExit (Up the rabbit hole)
+        }
+      ]]></break>
+    </object>
+    <object name="rope">
+      <inherit name="editor_object" />
+      <look><![CDATA[<br/><br/>A 50 foot length of silk rope. This rope has 4 hit points and can be burst with a successful Strength check (DC 24). It is so supple that it adds a +2 circumstance bonus to Use Rope checks. ]]></look>
+      <take />
+      <alt>silk rope</alt>
+      <selfuseon type="scriptdictionary">
+        <item key="tree1"><![CDATA[
+          msg ("<br/>You swing the rope over the branch and climb up.<br/>")
+          MoveObject (player, Top of Tree)
+          UnlockExit (Up tree)
+          SetObjectFlagOn (tree, "roped")
+        ]]></item>
+      </selfuseon>
+    </object>
+    <object name="table">
+      <inherit name="editor_object" />
+      <look><![CDATA[<br/><br/>It is a round wooden table. ]]></look>
+    </object>
+    <object name="Rabbit">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <look><![CDATA[<br/><br/>He looks at you with contempt as you snoop around his house. ]]></look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+    </object>
+    <exit name="Up the rabbit hole" alias="up" to="bush">
+      <inherit name="updirection" />
+      <locked />
+      <lockmessage>You're too big to fit in there.</lockmessage>
+    </exit>
+    <object name="kitchen">
+      <inherit name="editor_object" />
+      <look><![CDATA[ 
+<br/><br/>The kitchen is very organized.                                          ]]></look>
+    </object>
+  </object>
+  <verb>
+    <property>lookunder</property>
+    <pattern>look under</pattern>
+    <defaultexpression>"You can't look under " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="chess game">
+    <inherit name="editor_room" />
+    <description><![CDATA[<br/><br/>Ah, chess. A classic game of strategy in which the only objective is to capture the king. <br/><br/><br/><br/>On one side you see a White King as well as a White Knight. On the opposing side, a Black Knight stands next to his King while their Bishop prays.]]></description>
+    <descprefix>You are in </descprefix>
+    <objectslistprefix>You can see </objectslistprefix>
+    <enter type="script">
+      picture ("chess game.gif")
+    </enter>
+    <object name="Black King">
+      <inherit name="male" />
+      <inherit name="editor_object" />
+      <look><![CDATA[<br/><br/>He has very large lips.]]></look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>the</prefix>
+      <capture type="script"><![CDATA[
+        msg ("<br/>You throw your arms around the king in an attempt to capture him. He looks down at you in irritation. \"Insolent pest!\" he booms. He picks you up and drops you down his enormous throat.<br/>")
+        MoveObject (player, rose bush)
+        MoveObject (book, White Knight)
+        SetObjectFlagOff (White King, "joined")
+      ]]></capture>
+    </object>
+    <object name="White King">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look><![CDATA[<br/><br/>He is regal and majestic. He wears a worried expression on his face.]]></look>
+      <prefix>the</prefix>
+    </object>
+    <object name="White Knight">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <look><![CDATA[<br/>He is talking gently to his horse.<br/>]]></look>
+      <object name="book">
+        <inherit name="editor_object" />
+        <alias>Chess for Dummys</alias>
+        <look><![CDATA[<br/><br/>It is a book entitled "Chess for Dummys". It contains the secret to success. ]]></look>
+        <alt>book</alt>
+        <read type="script"><![CDATA[
+          msg ("<br/>The secret is...<br/><br/>Capture the king.")
+        ]]></read>
+      </object>
+    </object>
+    <object name="Black Bishop">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <alt>Bishop</alt>
+      <look><![CDATA[ 
+<br/><br/>He has his head bowed in prayer.                                                      ]]></look>
+      <ask type="scriptdictionary" />
+    </object>
+    <object name="Black Knight">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <look><![CDATA[<br/><br/>He is surveying the battlefield, sharpening his sword almost gleefully.]]></look>
+      <object name="Sword">
+        <inherit name="editor_object" />
+      </object>
+    </object>
+    <object name="White horse">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <look><![CDATA[ 
+<br/><br/>It is a white horse suitable for any knight in shining armor...like the one standing next to him.                                          ]]></look>
+    </object>
+  </object>
+  <object name="tree">
+    <inherit name="editor_room" />
+    <look><![CDATA[<br/><br/>It is a large oak tree several times your height. A sign hangs on the tree and on one of the few branches sits a bird's nest. Just above that branch is a small hole, probably created by a pencil bird. ]]></look>
+    <descprefix>You are at </descprefix>
+    <objectslistprefix>You can see </objectslistprefix>
+    <description type="script"><![CDATA[
+      if (GetBoolean(tree, "roped")) {
+        msg ("<br/>It is a large oak tree several times your height. A sign hangs on the tree and on one of the few branches sits a bird's nest; from that branch hangs a rope. Just above that branch is a small hole, probably created by a pencil bird. There is a small pile of gold sitting at the base of the tree. To the north are some rose bushes that appear to have something glinting behind them. East is the mushroom grove. ")
+      }
+      else {
+        msg ("<br/>It is a large oak tree several times your height. A sign hangs on the tree and on one of the few branches sits a bird's nest. Just above that branch is a small hole, probably created by a pencil bird. There is a small pile of gold sitting at the base of the tree. To the north are some rose bushes that appear to have something glinting behind them. East is the mushroom grove. ")
+      }
+    ]]></description>
+    <useon type="scriptdictionary">
+      <item key="rope"><![CDATA[
+        msg ("<br/>You swing the rope over the branch and climb up.<br/>")
+        MoveObject (player, Top of Tree)
+        UnlockExit (Up tree)
+        SetObjectFlagOn (tree, "roped")
+      ]]></item>
+    </useon>
+    <object name="rose bush">
+      <look><![CDATA[<br/><br/>The thorny bush is covered with beautiful roses. You see something glinting behind the branches. ]]></look>
+      <alt>bush; roses; rose bushes</alt>
+      <description><![CDATA[<br/><br/>Behind the bushes you find a large, ornate mirror.]]></description>
+      <object name="mirror">
+        <inherit name="editor_object" />
+        <look><![CDATA[<br/><br/>The surface of the mirror ripples slightly. It seems almost ethereal - as though you could walk right through it. ]]></look>
+        <lookin type="script"><![CDATA[
+          msg ("<br/>You peer into the mirror, seeing, not yourself, but, instead, black and white shrouded by fog.")
+        ]]></lookin>
+      </object>
+      <exit alias="south" to="tree">
+        <inherit name="southdirection" />
+      </exit>
+      <exit alias="in" to="chess game">
+        <inherit name="indirection" />
+      </exit>
+      <object name="rose bush1">
+        <inherit name="editor_object" />
+        <alias>rose bush</alias>
+        <alt>bush; roses; rose bushes</alt>
+        <look><![CDATA[<br/><br/>There are thorns all around you.]]></look>
+      </object>
+    </object>
+    <object name="small hole">
+      <look><![CDATA[<br/><br/>It is a small hole. You cannot see much more from down here. ]]></look>
+      <alt>hole</alt>
+    </object>
+    <object name="sign">
+      <inherit name="editor_object" />
+      <look><![CDATA[<br/><br/>The sign reads "If you listen while dry, you shrivel and die." ]]></look>
+      <takemsg>You attempt to pry the sign off of the tree, but it remains firmly in place.</takemsg>
+      <read type="script"><![CDATA[
+        msg ("<br/>The sign reads \"If you listen while dry, you shrivel and die.\"")
+      ]]></read>
+    </object>
+    <object name="nest">
+      <inherit name="editor_object" />
+      <look><![CDATA[<br/><br/>It's too high to see details, but it appears to be very sturdy and well-made. ]]></look>
+    </object>
+    <exit alias="east" to="mushroom grove">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="south" to="Queens Guarden">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="north" to="rose bush">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="southeast" to="bush">
+      <inherit name="southeastdirection" />
+    </exit>
+    <object name="gold">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>some</prefix>
+      <look><![CDATA[<br/><br/>A pile of gold. 'Ooh,' you think. 'Shiny.' ]]></look>
+      <takemsg>You find the gold, you TAKE the gold, then you run back to the Gaurden like there's no manana!</takemsg>
+      <alt>money</alt>
+      <giveto>You're too greedy for that.</giveto>
+      <take type="script"><![CDATA[
+        msg ("You find the gold, you TAKE the gold, then you run back to the Gaurden like there's no manana!<br/>")
+        MoveObject (player, Queens Guarden)
+        AddToInventory (gold)
+      ]]></take>
+      <givesingle type="script"><![CDATA[
+        msg ("<br/>You're too greedy for that.")
+      ]]></givesingle>
+    </object>
+    <exit name="Up tree" alias="up" to="Top of Tree">
+      <inherit name="updirection" />
+      <locked />
+      <lockmessage>It's too high.</lockmessage>
+    </exit>
+    <object name="tree1">
+      <inherit name="editor_object" />
+      <alias>tree</alias>
+      <look><![CDATA[<br/><br/>It is a large oak tree several times your height. A sign hangs on the tree and on one of the few branches sits a bird's nest. Just above that branch is a small hole, probably created by a pencil bird.]]></look>
+      <climb type="script"><![CDATA[
+        if (Got(rope)) {
+          msg ("<br/>You swing the rope over the branch and climb up.<br/>")
+          MoveObject (player, Top of Tree)
+          UnlockExit (Up tree)
+          SetObjectFlagOn (tree, "roped")
+        }
+        else {
+          msg ("<br/>You attempt to scramble up the trunk, but find few footholds and cannot make it very far.")
+        }
+      ]]></climb>
+    </object>
+  </object>
+  <object name="mushroom grove">
+    <inherit name="editor_room" />
+    <look>This part of the Guarden is filled with mushrooms of various colorations. On one of the larger mushrooms sits a blue caterpillar, puffing lightly on a hookah and singing softly to himself.</look>
+    <description><![CDATA[<br/><br/>This part of the Guarden is filled with mushrooms of various colorations. On one of the larger mushrooms sits a blue caterpillar, puffing lightly on a hookah and singing softly to himself. ]]></description>
+    <descprefix>You are in </descprefix>
+    <objectslistprefix>You can see </objectslistprefix>
+    <object name="Caterpillar">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <look><![CDATA[<br/><br/>The caterpillar glares at you as you stare openly at him. He seems grumpy and unapproachable. You are uncertain about the safety of speaking to him. ]]></look>
+      <ask type="scriptdictionary">
+        <item key="ignoring"><![CDATA[
+          msg ("<br/>\"I have no further use for you.\"<br/>")
+        ]]></item>
+      </ask>
+      <object name="small mushroom">
+        <inherit name="editor_object" />
+        <take />
+        <eatmsg>The world around you seems to grow.</eatmsg>
+        <alt>small mushroom; small shroom; shrinking shroom; shrink mushroom; shrink shroom</alt>
+        <alias>shrinking mushroom</alias>
+        <use type="script">
+          msg ("The world around you seems to grow.")
+          if (GetBoolean(player, "dumbass")) {
+            LockExit (Down the rabbit hole)
+          }
+          else {
+            UnlockExit (Down the rabbit hole)
+            UnlockExit (Up the rabbit hole)
+          }
+        </use>
+        <eat type="script">
+          msg ("The world around you seems to grow.")
+          if (GetBoolean(player, "dumbass")) {
+            LockExit (Down the rabbit hole)
+          }
+          else {
+            UnlockExit (Down the rabbit hole)
+            UnlockExit (Up the rabbit hole)
+          }
+        </eat>
+        <selfuseon type="scriptdictionary">
+          <item key="player"><![CDATA[
+            msg ("<br/>The world around you seems to grow.<br/>")
+            if (GetBoolean(player, "dumbass")) {
+              LockExit (Down the rabbit hole)
+            }
+            else {
+              UnlockExit (Down the rabbit hole)
+              UnlockExit (Up the rabbit hole)
+            }
+          ]]></item>
+        </selfuseon>
+      </object>
+      <object name="big mushroom">
+        <inherit name="editor_object" />
+        <take />
+        <alt>big mushroom; big shroom; grow mushroom; grow shroom; growing shroom</alt>
+        <alias>growing mushroom</alias>
+        <use type="script">
+          msg ("The world shrinks.")
+          LockExit (Down the rabbit hole)
+          LockExit (Up the rabbit hole)
+          SetObjectFlagOff (player, "shrink")
+        </use>
+        <eat type="script">
+          msg ("The world grows smaller.")
+          LockExit (Down the rabbit hole)
+          LockExit (Up the rabbit hole)
+          LockExit
+          SetObjectFlagOff (player, "shrink")
+        </eat>
+      </object>
+    </object>
+    <object name="mushrooms">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <look><![CDATA[<br/><br/>The mushrooms are various sizes and colors. You are unsure of their toxicity. ]]></look>
+      <take />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alt>mushroom; shroom; shrooms</alt>
+      <eat type="script"><![CDATA[
+        msg ("<br/>Nice try, but they don't seem to be hallucinogenic.")
+      ]]></eat>
+    </object>
+    <exit alias="west" to="tree">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="southwest" to="Queens Guarden">
+      <inherit name="southwestdirection" />
+    </exit>
+  </object>
+  <object name="pond">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <descprefix>You are by </descprefix>
+    <objectslistprefix>You can see </objectslistprefix>
+    <look type="script"><![CDATA[
+      if (Contains (pond,Mock Turtle)) {
+        msg ("<br/>The otherwise quiet pond is disturbed by a small rodent swimming serenely through the water lilies. The silence is punctuated by sobbing sounds coming from a peculiar looking creature perched on a rock on the eastern shore.")
+      }
+      else {
+        msg ("<br/>The otherwise quiet pond is disturbed by a small rodent swimming serenely through the water lilies. The remnants of your earlier meal stain the eastern shore.")
+      }
+    ]]></look>
+    <description type="script"><![CDATA[
+      if (Contains (pond,Mock Turtle)) {
+        msg ("<br/>The otherwise quiet pond is disturbed by a small rodent swimming serenely through the water lilies. The silence is punctuated by sobbing sounds coming from a peculiar looking creature perched on a rock on the shore.")
+      }
+      else {
+        msg ("<br/>The otherwise quiet pond is disturbed by a small rodent swimming serenely through the water lilies. The remnants of you earlier meal stain the shore.")
+      }
+    ]]></description>
+    <drink type="script"><![CDATA[
+      msg ("<br/>You cup your hands and drink from the pond. It tastes like plants, but you feel refreshed.")
+      IncreaseHealth (5)
+    ]]></drink>
+    <washhands type="script"><![CDATA[
+      msg ("<br/>You wash your hands in the clear water. They feel clean now.")
+    ]]></washhands>
+    <object name="bottom of the pond">
+      <look><![CDATA[<br/>The bottom of the pond is filled with stems from water lilies floating on the surface.]]></look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>the</prefix>
+      <alt>bottom</alt>
+      <description><![CDATA[<br/><br/>The bottom of the pond is filled with stems from water lilies floating on the surface. ]]></description>
+      <onexit type="script"><![CDATA[
+        msg ("<br/>You rise to the surface.<br/>")
+      ]]></onexit>
+      <object name="water lily roots">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <look><![CDATA[<br/><br/>These roots achor the flower to the ground. They are said to provide relief from sinus pressure as well as gastrointestinal, genital, and bronchial conditions. ]]></look>
+        <take />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <alt>roots; lily roots; stems</alt>
+        <giveto type="scriptdictionary">
+          <item key="Caterpillar"><![CDATA[
+            msg ("<br/>You hand the roots to the caterpillar. He takes them without a word. After a moment, he gestures lazily to the mushroom. \"This side,\" he says, \"shrinks you. This side makes you grow.\" He goes back to ignoring you.<br/><br/>You obtain the Growing Mushroom and the Shrinking Mushroom.<br/>")
+            AddToInventory (small mushroom)
+            AddToInventory (big mushroom)
+            RemoveObject (water lily roots)
+            SetObjectFlagOn (Caterpillar, "lilies")
+          ]]></item>
+        </giveto>
+      </object>
+      <exit alias="up" to="inside the pond">
+        <inherit name="updirection" />
+      </exit>
+    </object>
+    <object name="Mock Turtle">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>the</prefix>
+      <alt>Turtle; creature</alt>
+      <eatmsg>You viciously tear his shell from his body. You scald his well-cleansed calf's head, remove the brain, tie it up in a cloth, and boil an hour, or until the meat easily slips from the bone. You remove the head from the water, saving the broth. You then cut it into small square pieces, and throw them into cold water; when cool, you put it in his shell and cover it with some of the broth. After letting it boil until quite tender, you set it aside. In another shell, you melt some butter and in it put a quarter of a pound of lean ham, cut small, with fine herbs to taste, including parsley and one onion. You add about a pint of the broth and let it simmer for two hours. You then dredge in a small quantity of flour and add the remainder of the broth. You let it all stew quietly for ten minutes and rub it through a medium sieve. Next, you add the calf's head, seasoned with very little cayenne pepper, a small amount of salt, the juice of one lemon, and, if desired, a quarter teaspoonful of pounded mace and a dessert-spoon of sugar. Having previously prepared force meat balls, you add them to the soup, and after five minutes, serve it piping hot. He is delicious.      (Your alignment is now evil.)</eatmsg>
+      <look type="script"><![CDATA[
+        if (GetBoolean(Mock Turtle, "happy")) {
+          msg ("<br/>The Mock Turtle is admiring his bouquet.")
+        }
+        else {
+          msg ("<br/>It is a strange creature with the body of a turtle and the head, hooves, and tail of a calf. If you remember correctly, it's called a Mock Turtle. He is crying uncontrollably.")
+        }
+      ]]></look>
+      <comfort type="script"><![CDATA[
+        msg ("<br/>You pat the turtle on his back, offering comforting words, but your efforts seems to be in vain.")
+      ]]></comfort>
+      <console type="script"><![CDATA[
+        msg ("<br/>You pat the turtle on his back, offering comforting words, but your efforts seems to be in vain.")
+      ]]></console>
+      <eat type="script"><![CDATA[
+        msg ("<br/>You viciously tear his shell from his body. You scald his well-cleansed calf's head, remove the brain, tie it up in a cloth, and boil an hour, or until the meat easily slips from the bone. You remove the head from the water, saving the broth. You then cut it into small square pieces, and throw them into cold water; when cool, you put it in his shell and cover it with some of the broth. After letting it boil until quite tender, you set it aside. In another shell, you melt some butter and in it put a quarter of a pound of lean ham, cut small, with fine herbs to taste, including parsley and one onion. You add about a pint of the broth and let it simmer for two hours. You then dredge in a small quantity of flour and add the remainder of the broth. You let it all stew quietly for ten minutes and rub it through a medium sieve. Next, you add the calf's head, seasoned with very little cayenne pepper, a small amount of salt, the juice of one lemon, and, if desired, a quarter teaspoonful of pounded mace and a dessert-spoon of sugar. Having previously prepared force meat balls, you add them to the soup, and after five minutes, serve it piping hot. He is delicious.      (Your alignment is now evil.)<br/>")
+        RemoveObject (Mock Turtle)
+        if (not Got(turtle shell)) {
+          AddToInventory (turtle shell)
+        }
+      ]]></eat>
+      <give type="scriptdictionary">
+        <item key="roses">
+          msg ("The Mock Turtle looks tearfully at the bouquet and slowly stops crying. \"Thank you,\" he says as he hands you a turtle shell. \"Take this. You may find it useful.\"")
+          SetObjectFlagOn (Mock Turtle, "happy")
+          AddToInventory (turtle shell)
+          RemoveObject (roses)
+        </item>
+        <item key="water lilies"><![CDATA[
+          msg ("<br/>He pauses his tears long enough to look at your offering. \"I-I d-don't like lil-lil-lilies,\" he sobs. \"T-those are the only fl-flowers I ever get...\"")
+        ]]></item>
+        <item key="berries"><![CDATA[
+          msg ("<br/>He sniffs, \"They're red...my favorite color...but I hate currants...\"")
+        ]]></item>
+      </give>
+      <object name="turtle shell">
+        <inherit name="editor_object" />
+        <take />
+        <look><![CDATA[<br/><br/>It glows with a faint octarine color. ]]></look>
+        <alt>shell</alt>
+        <use type="script"><![CDATA[
+          msg ("<br/>You feel a little fishy.")
+          UnlockExit (underneath pond)
+        ]]></use>
+        <wear type="script"><![CDATA[
+          msg ("<br/>You feel a little fishy.")
+          UnlockExit (underneath pond)
+        ]]></wear>
+        <selfuseon type="scriptdictionary">
+          <item key="player"><![CDATA[
+            msg ("<br/>You feel a little fishy.")
+            UnlockExit (underneath pond)
+          ]]></item>
+          <item key="pond"><![CDATA[
+            msg ("<br/>You use the shell as a cup and drink the pond water. It tastes a little fishy, but you feel very refreshed.")
+            IncreaseHealth (10)
+          ]]></item>
+        </selfuseon>
+      </object>
+    </object>
+    <object name="Mouse">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <look><![CDATA[<br/><br/>A white mouse paddles calmly around the pond. He glances at you curiously. ]]></look>
+      <usedefaultprefix />
+      <prefix type="string"></prefix>
+      <object name="Hatter key">
+        <inherit name="editor_object" />
+        <selfuseon type="scriptdictionary">
+          <item key="door">
+            UnlockExit (through Hatters door)
+            msg ("You unlock the door.")
+          </item>
+        </selfuseon>
+      </object>
+    </object>
+    <exit alias="north" to="Queens Guarden">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="east" to="bush">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="inside the pond">
+      <inherit name="editor_room" />
+      <descprefix>You are standing in </descprefix>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alias>pond</alias>
+      <description><![CDATA[<br/><br/>You are surrounded by water lilies bobbing quietly on the surface. The mouse swims past you.]]></description>
+      <prefix>the </prefix>
+      <onexit type="script"><![CDATA[
+        if (not player.parent = bottom of the pond) {
+          msg ("<br/>You are soaking wet.<br/>")
+		  if (not GetObject ( "turnscript" ) = null) {
+				destroy ("turnscript")
+		  }	
+          SetTurnTimeout (5) {
+            if (GetBoolean(player, "wet")) {
+              msg ("<br/>Your clothes have dried.<br/>")
+              SetObjectFlagOff (player, "wet")
+            }
+          }
+        }
+      ]]></onexit>
+      <divein type="script"><![CDATA[
+        if (Got(turtle shell)) {
+          msg ("<br/>You dive to the bottom of the pond, surprised to find you are able to breath easily.")
+          MoveObject (player, bottom of the pond)
+        }
+        else {
+          msg ("<br/>It's too deep. You can't hold your breath that long and are forced to rise to the surface.")
+        }
+      ]]></divein>
+      <swim type="script"><![CDATA[
+        msg ("<br/>You swim in circles around the pond.")
+      ]]></swim>
+      <swimin type="script"><![CDATA[
+        msg ("<br/>You swim in circles around the pond.")
+      ]]></swimin>
+      <enter type="script">
+        if (GetBoolean(player, "wet")) {
+          SetObjectFlagOff (player, "wet")
+          SetObjectFlagOn (player, "wet")
+        }
+        else {
+          SetObjectFlagOn (player, "wet")
+        }
+      </enter>
+      <exit name="underneath pond" alias="down" to="bottom of the pond">
+        <inherit name="downdirection" />
+        <locked />
+        <lockmessage>It's too deep. You can't hold your breath that long and are forced to rise to the surface.</lockmessage>
+      </exit>
+      <exit alias="out" to="pond">
+        <inherit name="outdirection" />
+      </exit>
+      <object name="water lilies">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <look><![CDATA[<br/><br/>Aquatic plants of the genus <i>Nymphaea</i>, having large leaves and showy white flowers that float on the surface of the water. The roots extend to the bottom of the pond.]]></look>
+        <take />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <takemsg>You are able to take the flower, but the roots break in the process, leaving you with but a soggy leaf and a blossom.</takemsg>
+        <dropmsg>It goes plop.</dropmsg>
+        <alt>lilies; plants; flowers; flower; lily; lillies; lilly</alt>
+      </object>
+      <object name="Pond1">
+        <inherit name="editor_object" />
+        <alias>pond</alias>
+        <look><![CDATA[<br/><br/>]]></look>
+        <swim type="script"><![CDATA[
+          msg ("<br/>You swim in circles around the pond.")
+        ]]></swim>
+        <swimin type="script"><![CDATA[
+          msg ("<br/>You swim in circles around the pond.")
+        ]]></swimin>
+      </object>
+      <object name="Mouse1">
+        <inherit name="editor_object" />
+        <inherit name="male" />
+        <alias>Mouse</alias>
+      </object>
+    </object>
+    <exit alias="in" to="inside the pond">
+      <inherit name="indirection" />
+    </exit>
+  </object>
+  <object name="bush">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <descprefix>You are at </descprefix>
+    <objectslistprefix>You can see </objectslistprefix>
+    <look type="script"><![CDATA[
+      if (Contains (bush1,berries)) {
+        msg ("<br/>It is a bush laden with various berries.")
+      }
+      else if (Contains (bush1,berries1)) {
+        msg ("<br/>It is a bush laden with various berries.")
+      }
+      else if (Contains (bush1,berries2)) {
+        msg ("<br/>It is a bush laden with various berries.")
+      }
+      else if (Contains (bush1,berries3)) {
+        msg ("<br/>It is a bush laden with various berries.")
+      }
+      else if (Contains (bush1,berries4)) {
+        msg ("<br/>It is a bush laden with various berries.")
+      }
+      else {
+        msg ("<br/>It is a bush laden only with leaves.")
+      }
+    ]]></look>
+    <description type="script"><![CDATA[
+      if (Contains (bush1,berries)) {
+        msg ("<br/>It is a bush laden with various berries. It looks like there is something hidden under the bush.")
+      }
+      else if (Contains (bush1,berries1)) {
+        msg ("<br/>It is a bush laden with various berries. It looks like there is something hidden under the bush.")
+      }
+      else if (Contains (bush1,berries2)) {
+        msg ("<br/>It is a bush laden with various berries. It looks like there is something hidden under the bush.")
+      }
+      else if (Contains (bush1,berries3)) {
+        msg ("<br/>It is a bush laden with various berries. It looks like there is something hidden under the bush.")
+      }
+      else if (Contains (bush1,berries4)) {
+        msg ("<br/>It is a bush laden with various berries. It looks like there is something hidden under the bush.")
+      }
+      else {
+        msg ("<br/>It is a bush laden only with leaves. It looks like there is something hidden under the bush.")
+      }
+    ]]></description>
+    <lookunder type="script"><![CDATA[
+      msg ("<br/>You lift the branches of the bush and peer underneath it, revealing a small rabbit's hole.")
+      MakeObjectVisible (Rabbit hole)
+      create exit ("", "down the rabbit hole", bush, Rabbit house, "")
+    ]]></lookunder>
+    <object name="Rabbit hole">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <alt>hole</alt>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look type="script"><![CDATA[
+        if (GetBoolean(player, "shrink")) {
+          UnlockExit (Down the rabbit hole)
+          msg ("It is a rabbit hole. It seems to be just the right size for you to go down.")
+        }
+        else {
+          msg ("<br/>It is a small rabbit hole.")
+        }
+      ]]></look>
+      <beforeenter type="script">
+        if (GetBoolean(small mushroom, "shrink")) {
+          UnlockExit (Down the rabbit hole)
+        }
+      </beforeenter>
+      <lookinto type="script"><![CDATA[
+        msg ("<br/>You peer into the hole and see only darkness.")
+      ]]></lookinto>
+    </object>
+    <exit alias="northwest" to="Queens Guarden">
+      <inherit name="northwestdirection" />
+    </exit>
+    <exit alias="west" to="pond">
+      <inherit name="westdirection" />
+    </exit>
+    <exit name="Down the rabbit hole" alias="down" to="Rabbit house">
+      <inherit name="downdirection" />
+      <locked />
+      <lockmessage>You're too big to fit down there.</lockmessage>
+    </exit>
+    <object name="bush1">
+      <inherit name="editor_object" />
+      <alias>bush</alias>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <isopen />
+      <transparent />
+      <listchildren />
+      <maxobjects type="int">5</maxobjects>
+      <contentsprefix type="string"></contentsprefix>
+      <maxvolume type="int">100</maxvolume>
+      <listchildrenprefix>The bush is laden with </listchildrenprefix>
+      <look type="script"><![CDATA[
+        if (Contains (bush1,berries)) {
+          msg ("<br/>It is a bush laden with various berries. It looks like there is something hidden under the bush.")
+        }
+        else if (Contains (bush1,berries1)) {
+          msg ("<br/>It is a bush laden with various berries. It looks like there is something hidden under the bush.")
+        }
+        else if (Contains (bush1,berries2)) {
+          msg ("<br/>It is a bush laden with various berries. It looks like there is something hidden under the bush.")
+        }
+        else if (Contains (bush1,berries3)) {
+          msg ("<br/>It is a bush laden with various berries. It looks like there is something hidden under the bush.")
+        }
+        else if (Contains (bush1,berries4)) {
+          msg ("<br/>It is a bush laden with various berries. It looks like there is something hidden under the bush.")
+        }
+        else {
+          msg ("<br/>It is a bush laden only with leaves. It looks like there is something hidden under the bush.")
+        }
+      ]]></look>
+      <lookunder type="script"><![CDATA[
+        msg ("<br/>You lift the branches of the bush and peer underneath it, revealing a small rabbit's hole.")
+        MakeObjectVisible (Rabbit hole)
+      ]]></lookunder>
+      <object name="berries">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <look><![CDATA[<br/><br/>The berries appear to be currants. ]]></look>
+        <eathealth type="int">10</eathealth>
+        <take />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <eatmsg>The berries are tart and juicy. You feel refreshed.</eatmsg>
+        <alt>red berries; berries; berry; red berries; red berry</alt>
+        <alias>red berries</alias>
+        <eat type="script"><![CDATA[
+          msg ("<br/>The berries are tart and juicy. You feel refreshed.")
+          IncreaseHealth (10)
+          RemoveObject (berries)
+        ]]></eat>
+      </object>
+      <object name="berries1">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <look><![CDATA[<br/><br/>The berries appear to be blueberries. ]]></look>
+        <eathealth type="int">10</eathealth>
+        <take />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <eatmsg>The berries are tart and juicy. You feel refreshed.</eatmsg>
+        <alt>blue berries; blueberries; blue berry; berry; berries</alt>
+        <alias>blue berries</alias>
+        <eat type="script"><![CDATA[
+          msg ("<br/>The berries are tart and juicy. You feel refreshed.")
+          IncreaseHealth (10)
+          RemoveObject (berries1)
+        ]]></eat>
+      </object>
+      <object name="berries2">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <look><![CDATA[<br/><br/>They remind you of fish...but you can't be certain as to why.]]></look>
+        <eathealth type="int">10</eathealth>
+        <take />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <eatmsg>The berries are tart and juicy. You feel refreshed.</eatmsg>
+        <alt>salmon berries; salmonberries; salmon berry; berry; berries</alt>
+        <alias>salmon berries</alias>
+        <eat type="script"><![CDATA[
+          msg ("<br/>The berries are tart and juicy. You feel refreshed.")
+          IncreaseHealth (10)
+          RemoveObject (berries2)
+        ]]></eat>
+      </object>
+      <object name="berries3">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <look><![CDATA[<br/><br/>They are rather...purple. ]]></look>
+        <eathealth type="int">10</eathealth>
+        <take />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <eatmsg>The berries are tart and juicy. You feel refreshed.</eatmsg>
+        <alt>purple berries; purpleberries; purple berry; berry; berries</alt>
+        <alias>purple berries</alias>
+        <eat type="script"><![CDATA[
+          msg ("<br/>The berries are tart and juicy. You feel refreshed.")
+          IncreaseHealth (10)
+          RemoveObject (berries3)
+        ]]></eat>
+      </object>
+      <object name="berries4">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <look><![CDATA[<br/><br/>You are my sunshine, my only sunshine, <br/><br/>You fill my health up when it is low. ]]></look>
+        <eathealth type="int">10</eathealth>
+        <take />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <eatmsg>The berries are tart and juicy. You feel refreshed.</eatmsg>
+        <alt>yellow berries; yellowberries; yellow berry; berry; berries</alt>
+        <alias>yellow berries</alias>
+        <eat type="script"><![CDATA[
+          msg ("<br/>The berries are tart and juicy. You feel refreshed.")
+          IncreaseHealth (10)
+          RemoveObject (berries4)
+        ]]></eat>
+      </object>
+    </object>
+    <exit alias="north" to="East rose bushes">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="East rose bushes">
+    <inherit name="plural" />
+    <inherit name="editor_room" />
+    <look>The bushes line the entire Guarden. Red roses bloom on their branches. Watch out for thorns.</look>
+    <description><![CDATA[<br/><br/>The bushes line the entire Guarden. Red roses bloom on their branches. Watch out for thorns. <br/><br/>It looks like there is a door to the north.]]></description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <descprefix>You are at </descprefix>
+    <prefix>the</prefix>
+    <objectslistprefix>You can see </objectslistprefix>
+    <object name="roses">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <look><![CDATA[<br/><br/>They are beautiful red roses. ]]></look>
+      <take />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alt>rose; flower; flowers; bouquet</alt>
+      <takemsg>You manage to pick a few roses, enduring only minor scratches.</takemsg>
+      <ontake type="script">
+        DecreaseHealth (3)
+      </ontake>
+      <pick type="script">
+        AddToInventory (roses)
+        msg ("You pick the sweet-smelling flowers.")
+        DecreaseHealth (3)
+      </pick>
+    </object>
+    <exit alias="west" to="Queens Guarden">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="thorns">
+      <inherit name="editor_object" />
+      <look type="script"><![CDATA[
+        msg ("<br/>You poke your eye on the thorns.<br/>(I didn't mean watch them that closely!)")
+        DecreaseHealth (3)
+      ]]></look>
+      <watch type="script"><![CDATA[
+        msg ("<br/>You poke your eye on the thorns.<br/>(You don't need to watch them that closely!)")
+        DecreaseHealth (3)
+      ]]></watch>
+    </object>
+    <object name="Hatters door">
+      <alias>door</alias>
+      <description><![CDATA[<br/><br/>There is a wooden door lodged in the hedges. A crooked sign reads "Hatter's Corner."]]></description>
+      <descprefix>You are at a </descprefix>
+      <exit name="through Hatters door" alias="north" to="Hatters Corner">
+        <inherit name="northdirection" />
+        <locked />
+      </exit>
+      <exit alias="south" to="East rose bushes">
+        <inherit name="southdirection" />
+      </exit>
+      <object name="door">
+        <inherit name="editor_object" />
+      </object>
+    </object>
+    <exit alias="south" to="bush">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="north" to="Hatters door">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="Gate">
+    <inherit name="editor_room" />
+    <descprefix>You are at </descprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <look type="string"></look>
+    <description><![CDATA[<br/><br/>It is a sturdy, wrought-iron gate that appears to be locked. ]]></description>
+    <visible type="boolean">false</visible>
+    <objectslistprefix>You can see </objectslistprefix>
+    <useon type="scriptdictionary">
+      <item key="key"><![CDATA[
+        if (GetBoolean(Gate, "unlocked")) {
+          SetObjectFlagOff (Gate, "unlocked")
+          SetObjectFlagOn (Gate, "locked")
+          msg ("<br/>You hear the turning of a lock.")
+          LockExit (Through gate)
+        }
+        else if (GetBoolean(Gate, "locked")) {
+          SetObjectFlagOff (Gate, "locked")
+          SetObjectFlagOn (Gate, "unlocked")
+          UnlockExit (Through gate)
+          msg ("<br/>You hear the turning of a lock.")
+        }
+      ]]></item>
+    </useon>
+    <exit name="Through gate" alias="west" to="Outside">
+      <inherit name="westdirection" />
+      <locked />
+      <lockmessage>The gate is securely locked.</lockmessage>
+    </exit>
+    <exit alias="east" to="Queens Guarden">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="Gate1">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <alias>gate</alias>
+      <look><![CDATA[<br/><br/>It is a sturdy, wrought-iron gate that appears to be locked. <br/><br/>]]></look>
+      <unlock type="script"><![CDATA[
+        if (GetBoolean(Gate, "unlocked")) {
+          SetObjectFlagOff (Gate, "unlocked")
+          SetObjectFlagOn (Gate, "locked")
+          msg ("<br/>You hear the turning of a lock.")
+          LockExit (Through gate)
+        }
+        else if (GetBoolean(Gate, "locked")) {
+          SetObjectFlagOff (Gate, "locked")
+          SetObjectFlagOn (Gate, "unlocked")
+          UnlockExit (Through gate)
+          msg ("<br/>You hear the turning of a lock.")
+        }
+      ]]></unlock>
+      <openscript type="script">
+        if (GetBoolean(Gate, "unlocked")) {
+          msg ("You swing the gate open.")
+          HelperOpenObject (Gate1)
+        }
+        else {
+          msg ("You push on the gate, but it does not budge.")
+        }
+      </openscript>
+      <closescript type="script">
+        msg ("You close the gate.")
+        HelperCloseObject (Gate1)
+      </closescript>
+      <useon type="scriptdictionary">
+        <item key="key">
+          unlock gate
+        </item>
+      </useon>
+    </object>
+  </object>
+  <object name="Outside">
+    <inherit name="editor_room" />
+    <descprefix>You are</descprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="string"></description>
+    <firstenter type="script"><![CDATA[
+      SetForegroundColour ("MediumVioletRed")
+      SetFontSize (11)
+      PrintCentered ("<br/>Congratulations! You have escaped the Queen's Guarden! <br/><br/>(Have fun escaping the guards!)<br/><br/><br/>The End")
+      finish
+    ]]></firstenter>
+  </object>
+  <object name="Northwest Rose Bushes">
+    <inherit name="editor_room" />
+    <descprefix>You are at </descprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <description><![CDATA[<br/><br/>The bushes are covered with rose buds. ]]></description>
+    <objectslistprefix>You can see </objectslistprefix>
+    <object name="Rose Buds">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <look><![CDATA[<br/><br/>These roses are not quite ready to be picked. ]]></look>
+      <alt>buds; roses; flowers; bud; rose; flower</alt>
+      <takemsg>These roses are not quite ready to be picked.</takemsg>
+    </object>
+    <exit alias="southeast" to="Queens Guarden">
+      <inherit name="southeastdirection" />
+    </exit>
+  </object>
+  <object name="Southwest Rose Bushes">
+    <inherit name="editor_room" />
+    <descprefix>You are at </descprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <description><![CDATA[<br/><br/>It looks as though someone has already taken the roses from this area. ]]></description>
+    <objectslistprefix>You can see </objectslistprefix>
+    <exit alias="northeast" to="Queens Guarden">
+      <inherit name="northeastdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>weigh</property>
+    <pattern>weigh</pattern>
+    <defaultexpression>"You can't weigh " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="say">
+    <pattern>say #text#; shout #text#; yell #text#; scream #text#</pattern>
+    <script><![CDATA[
+      msg ("<br/>The Cheshire Cat appears in front of you and grins. ''Talking to yourself again? That's a sign of insanity, you know.'' He disappears.<br/>")
+    ]]></script>
+  </command>
+  <command name="weigh">
+    <pattern>weigh #object#</pattern>
+    <script>
+      msg ("It weighs " + object.weight + " grams.")
+      if (HasAttribute(object, "weight")) {
+        msg ("It weighs " + object.weight + " grams.")
+      }
+      else {
+        msg ("Why would you want to weigh that?")
+      }
+    </script>
+  </command>
+  <verb>
+    <property>capture</property>
+    <pattern>capture</pattern>
+    <defaultexpression>"You can't capture " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="speak to">
+    <pattern>speak to #object#; talk to #object#</pattern>
+    <script><![CDATA[
+      switch (object) {
+        case (Black Bishop) {
+          if (GetBoolean(Black King, "joined")) {
+            msg ("<br/>\"I still don't trust you,\" he says, \"but I will not go against my lord's wishes.\"")
+          }
+          else if (GetBoolean(White King, "joined")) {
+            msg ("<br/>The Black Bishop growls \"May the gods smite you down if you come one step closer to my lord!\"")
+          }
+          else {
+            msg ("<br/>\"Watch your steps closely,\" he says warningly. \"They may be your last.\"")
+          }
+        }
+        case (White Knight) {
+          if (GetBoolean(White King, "joined")) {
+            msg ("<br/>The White Knight smiles at you. \"You seem to be underprepared,\" he says. \"Here, take this. Good luck on your conquest.\" He hands you a book entitled \"Chess for Dummys.\" It contains the secret to success.")
+            AddToInventory (book)
+          }
+          else if (GetBoolean(Black King, "joined")) {
+            msg ("<br/>He glares at you. \"I had thought you a good man.\"")
+          }
+          else {
+            msg ("<br/>The White Knight says \"My king has been greatly distressed as of late.\"")
+          }
+        }
+        case (White King) {
+          if (not GetBoolean(White King, "joined")) {
+            if (not GetBoolean(Black King, "joined")) {
+              msg ("<br/>The White King looks at you mournfully. \"We have been at war for many years. There have been a large number of casualties on both sides. If only we could capture the Black King, we could at last bring peace to the land.\"")
+              if (Ask("Would you like to join the White King?")) {
+                SetObjectFlagOn (White King, "joined")
+                msg ("<br/>The King sings, \"I was wise to have chosen you.\" He looks at you, \"You'd be wise to agree.\"")
+              }
+              else {
+                msg ("<br/>He shakes his head. \"Shame.\"")
+              }
+            }
+            else {
+              msg ("<br/>He looks at you  sadly and sighs, \"Another soul lost to darkness.\"")
+            }
+            msg ("")
+          }
+          else {
+            msg ("<br/>\"We must find a way to capture the Black King, else the kingdom will collapse into chaos.\"")
+          }
+        }
+        case (Black King) {
+          if (not GetBoolean(Black King, "joined")) {
+            if (not GetBoolean(White King, "joined")) {
+              msg ("<br/>The Bishop watches you suspciously as you approach his king. \"This war,\" says the Black King, glancing at the White King, \"has gone on far too long. I am more suited to be ruler than that fool. If he were dead, we could end this feud and unite the people under my hand.\"")
+              if (Ask("Would you like to join the Black King?")) {
+                SetObjectFlagOn (Black King, "joined")
+                msg ("<br/>\"Do not fail me.\"")
+              }
+              else {
+                msg ("<br/>\"If you are not with me, then you are against me.\"")
+              }
+            }
+            else {
+              msg ("<br/>\"Guard! Sieze him! Lock him in a cell!\" he sings.")
+            }
+            msg ("")
+          }
+          else {
+            msg ("<br/>\"Are you waiting for another to do your dirty work?\" he asks you coldly.")
+          }
+        }
+        case (Black Knight) {
+          if (GetBoolean(Black King, "joined")) {
+            if (Got(Sword)) {
+              msg ("<br/>\"Remember, carpe jugulum.\"")
+            }
+            else {
+              msg ("<br/>The Knight claps you on the back. \"Glad ta have ye, laddie.\" He looks closer and gasps at your lack of weapons. \"Rather unprepared for a war, aren't ye?\" he asks heartily. \"You'll never get far that way. Here, take this!\" He hands you a sword. \"Don't worry,\" he adds, producing another sword, \"I've got more.\"")
+              AddToInventory (Sword)
+            }
+          }
+          else if (GetBoolean(White King, "joined")) {
+            msg ("<br/>\"Diiiee, ye scurvy rat!\"")
+          }
+          else {
+            msg ("<br/>He's too preoccupied to answer you. He calls over to the White Knight, \"Ah, I see you have a sword. I have one, too.\" He unsheaths his sword. \"They're very... manly.\"")
+          }
+        }
+        case (Rabbit) {
+          msg ("<br/>You think you hear him grumble something about crows always messing up his garden.")
+        }
+        case (Mouse) {
+          msg ("<br/>The mouse stops swimming and turns to you. \"Would you like to hear a tale? William the Conqueror, whose cause was favoured by the pope, was soon submitted to by the English, who wanted leaders, and had been of late much accustomed to usurpation and conquest. Edwin and Morcar, the earls of Mercia and Northumbria...\"<br/>")
+          if (Ask("Would you like to continue listening?")) {
+            msg ("<br/>\"declared for him: and even Stigand, the patriotic archbishop of Canterbury, found it advisable to go with Edgar Atheling to meet William and offer him the crown. William's conduct at first was moderate. But the insolence of his Normans...\"")
+            if (GetBoolean(player, "wet")) {
+              msg ("<br/>You listen for a time to his dry tale. When he finishes, you find yourself to be just as dry.<br/>")
+              SetObjectFlagOff (player, "wet")
+              if (not GetBoolean(Mouse, "heard")) {
+                AddToInventory (Hatter key)
+                msg ("\"Thank you for listening to me. As a token of my thanks, I give you this key. It will provide you entrance to the residence of my cousin, the Dormouse.\"")
+              }
+              SetObjectFlagOn (Mouse, "heard")
+            }
+            else {
+              msg ("<br/>His dry tale seems to suck all the moisture from your body. You shrivel and die.")
+              if (player.health=97) {
+                DecreaseHealth (97)
+              }
+              else if (player.health=100) {
+                DecreaseHealth (100)
+              }
+              else if (player.health=60) {
+                DecreaseHealth (60)
+              }
+              else if (player.health=10) {
+                DecreaseHealth (10)
+              }
+              else if (player.health=57) {
+                DecreaseHealth (57)
+              }
+              else {
+                DecreaseHealth (100)
+              }
+            }
+          }
+          else {
+            msg ("<br/>You politely excuse yourself from the Mouse's company.")
+          }
+        }
+        case (Mock Turtle) {
+          if (GetBoolean(Mock Turtle, "happy")) {
+            msg ("<br/>Thank you so much! I've never been to happy in my life.")
+          }
+          else {
+            msg ("<br/>He is sobbing too harshly to reply.")
+          }
+        }
+        case (Caterpillar) {
+          if (GetBoolean(Caterpillar, "lilies")) {
+            msg ("He glances at you disinterestedly and ignores you.")
+          }
+          else {
+            msg ("<br/>\"If you're going to stand there, why don't you make yourself useful?\" he drawls. \"Go down to the pond and fetch me some water lily roots. If you need some incentive, I suppose I could compensate.\"")
+          }
+        }
+        case (Mouse1) {
+          msg ("<br/>The mouse stops swimming and turns to you. \"Would you like to hear a tale? William the Conqueror, whose cause was favoured by the pope, was soon submitted to by the English, who wanted leaders, and had been of late much accustomed to usurpation and conquest. Edwin and Morcar, the earls of Mercia and Northumbria...\"<br/>")
+          if (Ask("Would you like to continue listening?")) {
+            msg ("<br/>\"declared for him: and even Stigand, the patriotic archbishop of Canterbury, found it advisable to go with Edgar Atheling to meet William and offer him the crown. William's conduct at first was moderate. But the insolence of his Normans...\"")
+            if (GetBoolean(player, "wet")) {
+              msg ("<br/>You listen for a time to his dry tale. When he finishes, you find yourself to be just as dry.<br/>")
+              SetObjectFlagOff (player, "wet")
+              if (not GetBoolean(Mouse, "heard")) {
+                AddToInventory (Hatter key)
+                msg ("\"Thank you for listening to me. As a token of my thanks, I give you this key. It will provide you entrance to the residence of my cousin, the Dormouse.\"")
+              }
+              SetObjectFlagOn (Mouse, "heard")
+            }
+            else {
+              msg ("<br/>His dry tale seems to suck all the moisture from your body. You shrivel and die.")
+              if (player.health=97) {
+                DecreaseHealth (97)
+              }
+              else if (player.health=100) {
+                DecreaseHealth (100)
+              }
+              else if (player.health=60) {
+                DecreaseHealth (60)
+              }
+              else if (player.health=10) {
+                DecreaseHealth (10)
+              }
+              else if (player.health=57) {
+                DecreaseHealth (57)
+              }
+              else {
+                DecreaseHealth (100)
+              }
+            }
+          }
+          else {
+            msg ("<br/>You politely excuse yourself from the Mouse's company.")
+          }
+        }
+        case (air) {
+          msg ("<br/>You swear you hear it whispering to you.")
+        }
+        case (rope) {
+          msg ("<br/>It's too wrapped up in itself to talk to you.")
+        }
+        case (White horse) {
+          msg ("<br/>It looks at you in confusion and then attempts to eat your hair.")
+        }
+        case (Hatter) {
+          if (Ask("You must have a cup of tea!")) {
+            msg ("<br/>You join the Hatter and his friends in their boistrous tea party. When you finally leave, you feel as though a great deal of time has passed.<br/>")
+            MoveObject (player, East rose bushes)
+          }
+          else {
+            msg ("<br/>The Hatter shrugs his shoulders and tips a tea pot down his collar.")
+          }
+        }
+        case (Dormouse) {
+          msg ("<br/>He looks at you sleepily and sings a little song.<br/>\"Twinkle, twinkle little bat, how I wonder where you're at.<br/>Up above the world you fly like a tea tray in the sky...\"")
+        }
+        case (March Hare) {
+          if (Ask("Is today your unbirthday, too?")) {
+            msg ("<br/>He gleefully pulls you to the table. \"What a small world it is!\" he exclaims. He begins to sing:<br/>\"Have a very merry unbirthday!\"<br/>\"To me?\" you ask.<br/>\"To you! A very merry unbrithday!\"<br/>\"For me?\"<br/>\"For you! Now blow the candle out and make your wish come true!\"<br/><br/>You join the Hatter and his friends in their boistrous tea party. When you finally leave, you feel as though a great deal of time has passed.<br/>")
+            MoveObject (player, East rose bushes)
+          }
+          else {
+            msg ("<br/>Then there's no room for you.")
+          }
+        }
+        default {
+          msg ("<br/>Apparently it's ignoring you right now.")
+        }
+      }
+    ]]></script>
+  </command>
+  <command name="attack">
+    <pattern>kill #object#; maim #object#; destroy #object#; attack #object#; use Sword on #object#</pattern>
+    <script><![CDATA[
+      switch (object) {
+        case (Black King) {
+          msg ("<br/>The Black King slaps you down with his powerful fist. \"Traitor!\" he cries, \"Never allow yourself to enter my presence again!\"<br/>")
+          if (player.health = 47) {
+            DecreaseHealth (47)
+          }
+          else {
+            DecreaseHealth (50)
+          }
+        }
+        case (Black Knight) {
+          if (Got(Sword)) {
+            msg ("<br/>The Black Knight laughs at your attempt. \"You really think ye could even scratch me, boy? And with me own sword. What audacity.\" He easily deflects your attack, sending you sprawling.")
+          }
+          else {
+            msg ("<br/>The Black Knight laughs at your attempt. \"You really think ye could even scratch me, boy? And without a weapon?! What audacity.\" He easily deflects your attack, sending you sprawling.")
+          }
+          if (player.health = 47) {
+            DecreaseHealth (47)
+          }
+          else {
+            DecreaseHealth (50)
+          }
+        }
+        case (Black Bishop) {
+          msg ("<br/>\"I knew you couldn't be trusted.\" The Bishop calls upon his god to smite you to the earth. You are nothing but a pile of charred flesh. ")
+          if (player.health = 100) {
+            DecreaseHealth (100)
+          }
+          if (player.health = 50) {
+            DecreaseHealth (50)
+          }
+          if (player.health = 97) {
+            DecreaseHealth (97)
+          }
+          if (player.health = 47) {
+            DecreaseHealth (47)
+          }
+        }
+        case (White Knight) {
+          msg ("<br/>The Knight deflects your attack, returning with one of his own. \"May your chaotic soul one day find peace.\"")
+          if (player.health = 47) {
+            DecreaseHealth (47)
+          }
+          else {
+            DecreaseHealth (50)
+          }
+        }
+        case (White King) {
+          if (Got(Sword)) {
+            msg ("<br/>You stealthily move up behind the White King and plunge your sword into his side. The King cries out, falling to the ground. The White Knight rushes over, sword drawn and quickly cuts you down.  The world goes black.<br/><br/>You wake up in front of the mirror with a splitting pain in your side.")
+          }
+          else {
+            msg ("<br/>You stealthily move up behind the White King and leap onto his back, wrapping your arm around his neck to strangle him. The White Knight rushes over, sword drawn and quickly cuts you down.  The world goes black.<br/><br/>You wake up in front of the mirror with a splitting pain in your side.")
+          }
+          DecreaseHealth (40)
+          MoveObject (player, rose bush)
+          MoveObject (Sword, Black Knight)
+          SetObjectFlagOff (Black King, "joined")
+        }
+        case (White horse) {
+          msg ("<br/>The horse rears, coming down on top of you. The White Knight pulls the horse off of you, speaking softly to calm the animal down.")
+          DecreaseHealth (50)
+        }
+        default {
+          msg ("<br/>You roll a natural 1 and hit yourself instead. Roll damage.")
+          DecreaseHealth (3)
+        }
+      }
+    ]]></script>
+  </command>
+  <verb>
+    <property>health</property>
+    <pattern>health</pattern>
+    <defaultexpression>"You can't health " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="show health">
+    <pattern>show health</pattern>
+    <script>
+      msg ("Your health is: " + player.health)
+    </script>
+  </command>
+  <object name="Top of Tree">
+    <inherit name="editor_room" />
+    <description><![CDATA[<br/><br/>From up here you can see the entirety of the spacious Guarden. Beside you, on the branch, is the nest that you saw from below. It contains a small, strange-looking bird. You are also now better able to see the small hole in the trunk of the tree.]]></description>
+    <descprefix>You are in the </descprefix>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>top of the tree</alias>
+    <objectslistprefix>You can see </objectslistprefix>
+    <exit alias="down" to="tree">
+      <inherit name="downdirection" />
+    </exit>
+    <object name="nest2">
+      <inherit name="editor_object" />
+      <alias>nest</alias>
+      <look><![CDATA[<br/>It is a sturdy, wooden nest.<br/>]]></look>
+    </object>
+    <object name="Hammer Bird">
+      <inherit name="editor_object" />
+      <look><![CDATA[<br/><br/>It is a Hammer Bird: a bird with the body and head of a hammer and the wings and feet of a bird. <br/><br/>It doesn't appear to be moving.]]></look>
+      <take />
+      <takemsg>You gingerly pick up the Hammer Bird. It is stiff in your hands.</takemsg>
+      <alt>bird; hammer</alt>
+      <poke type="script"><![CDATA[
+        msg ("<br/>It doesn't move.")
+      ]]></poke>
+      <selfuseon type="scriptdictionary">
+        <item key="Small hole2">
+          find key
+        </item>
+      </selfuseon>
+      <useon type="scriptdictionary" />
+    </object>
+    <object name="Small hole2">
+      <inherit name="editor_object" />
+      <alias>small hole</alias>
+      <alt>hole</alt>
+      <look><![CDATA[<br/><br/>The hole is not quite big enough for you to reach into.]]></look>
+      <lookinto type="script"><![CDATA[
+        msg ("<br/>You think you see something silvery inside.")
+      ]]></lookinto>
+      <enlarge type="script">
+        find key
+      </enlarge>
+      <object name="key">
+        <inherit name="editor_object" />
+        <take />
+      </object>
+    </object>
+  </object>
+  <verb>
+    <property>poke</property>
+    <pattern>poke</pattern>
+    <defaultexpression>"You can't poke " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>washhands</property>
+    <pattern>wash hands</pattern>
+    <defaultexpression>"You can't wash hands " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>break</property>
+    <pattern>break</pattern>
+    <defaultexpression>"You can't break " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>useon</property>
+    <pattern>use on</pattern>
+    <defaultexpression>"You can't use on " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>lickfingers</property>
+    <pattern>lick fingers</pattern>
+    <defaultexpression>"You can't lick fingers " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>divein</property>
+    <pattern>dive in</pattern>
+    <defaultexpression>"You can't dive in " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>swim</property>
+    <pattern>swim</pattern>
+    <defaultexpression>"You can't swim " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>swimin</property>
+    <pattern>swim in</pattern>
+    <defaultexpression>"You can't swim in " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>watch</property>
+    <pattern>watch</pattern>
+    <defaultexpression>"You can't watch " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>comfort</property>
+    <pattern>comfort</pattern>
+    <defaultexpression>"You can't comfort " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>console</property>
+    <pattern>console</pattern>
+    <defaultexpression>"You can't console " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Hatters Corner">
+    <inherit name="editor_room" />
+    <alias>Hatter's Corner</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description><![CDATA[<br/><br/>You find yourself in a room of choatic revelry. It looks as though there is supposed to be a tea party going on, however, it could just as easily be a yard sale featuring cracked and chipped tea ware. A large table is overflowing with tea sets of all sizes and colors as well as a multitude of sweets. A man wearing a large top hat (he seems to have forgotten to take the price tag off) sits at the head of the table. To his side is a psychotic looking brown hare. A small mouse sleeps on a bed of pastries.]]></description>
+    <descprefix>You are in the </descprefix>
+    <objectslistprefix>You can see </objectslistprefix>
+    <object name="Hatter">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>the </prefix>
+      <alt>Mad Hatter; man</alt>
+      <look><![CDATA[ 
+<br/><br/>This must be the one known as the Mad Hatter. You are unsure about the "hatter" part, but he is definitely mad.                  ]]></look>
+    </object>
+    <object name="Dormouse">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <suffix type="string"></suffix>
+      <prefix>the </prefix>
+      <alt>mouse</alt>
+      <look><![CDATA[ 
+<br/><br/>The Dormouse sleeps soundly.                  ]]></look>
+    </object>
+    <object name="March Hare">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>the </prefix>
+      <alt>hare; rabbit</alt>
+      <look><![CDATA[ 
+<br/><br/>You wonder when he will begin his march.                  ]]></look>
+    </object>
+    <exit alias="south" to="Hatters door">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>lookinto</property>
+    <pattern>look into</pattern>
+    <defaultexpression>"You can't look into " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>lookin</property>
+    <pattern>look in</pattern>
+    <defaultexpression>"You can't look in " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>enlarge</property>
+    <pattern>enlarge</pattern>
+    <defaultexpression>"You can't enlarge " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="use bird on hole">
+    <pattern>use Hammer Bird on Small hole2</pattern>
+    <script>
+      find key
+    </script>
+  </command>
+  <command name="use key on gate">
+    <pattern>use key on Gate1</pattern>
+    <script>
+      unlock gate
+    </script>
+  </command>
+  <command name="go inside pond">
+    <pattern>go in pond; go in the pond</pattern>
+    <script><![CDATA[
+      if (player.parent = pond) {
+        MoveObject (player, inside the pond)
+      }
+      else {
+        msg ("<br/>You're not even near the pond!")
+      }
+    ]]></script>
+  </command>
+  <command name="swim pond">
+    <pattern>swim in pond; swim in the pond</pattern>
+    <script><![CDATA[
+      if (player.parent = inside the pond) {
+        msg ("<br/>You swim in circles around the pond.")
+      }
+      else if (player.parent = pond) {
+        MoveObject (player, inside the pond)
+        msg ("<br/>You jump in the pond and swim around.")
+      }
+      else {
+        msg ("<br/>You're nowhere near the pond!")
+      }
+    ]]></script>
+  </command>
+  <command name="say to">
+    <pattern>say #text_talk# to #object#; ask #object# #text_talk#</pattern>
+    <script><![CDATA[
+      switch (object) {
+        case (Caterpillar) {
+          if (GetBoolean(Caterpillar, "lilies")) {
+            msg ("<br/>\"Go away,\" he says, not even glancing at you. \"I have no further use for you.\"")
+          }
+          else {
+            msg ("<br/>He sighs annoyedly at your impudence.")
+          }
+        }
+        case (Black Knight) {
+          if (player.parent = chess game) {
+            if (GetBoolean(White King, "joined")) {
+              msg ("<br/>\"Don't ye be talkin' to me, scum,\" he says warningly.")
+            }
+            else if (GetBoolean(Black King, "joined")) {
+              msg ("<br/>")
+            }
+          }
+        }
+      }
+    ]]></script>
+  </command>
+  <function name="find key"><![CDATA[
+    msg ("<br/>You use the beak of the bird to pry open the small hole, making it big enough for your hand to fit through. You reach in and feel something cool against your fingertips. You pull out a small, silver key.")
+    AddToInventory (key)
+  ]]></function>
+  <function name="unlock gate"><![CDATA[
+    if (GetBoolean(Gate, "unlocked")) {
+      SetObjectFlagOff (Gate, "unlocked")
+      SetObjectFlagOn (Gate, "locked")
+      msg ("<br/>You hear the turning of a lock.")
+      LockExit (Through gate)
+    }
+    else if (GetBoolean(Gate, "locked")) {
+      SetObjectFlagOff (Gate, "locked")
+      SetObjectFlagOn (Gate, "unlocked")
+      UnlockExit (Through gate)
+      msg ("<br/>You hear the turning of a lock.")
+    }
+  ]]></function>
+</asl>

@@ -1,0 +1,81 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Place It">
+    <gameid>5077de18-964d-4b2d-9539-7a729e5c21c4</gameid>
+    <version>1.0</version>
+    <author>Brian H - Suwonian</author>
+    <description>Can place movable objects on different surfaces and in open containers in the room.</description>
+    <category>Educational</category>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+    <object name="Table1">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <listchildren />
+      <displayverbs>Look at</displayverbs>
+      <alias>big table</alias>
+      <object name="hammer">
+        <inherit name="editor_object" />
+        <take />
+        <displayverbs>Look at; Take</displayverbs>
+        <inventoryverbs>Look at; Place</inventoryverbs>
+      </object>
+      <object name="wrench">
+        <inherit name="editor_object" />
+        <take />
+        <inventoryverbs>Look at; Place</inventoryverbs>
+      </object>
+      <object name="screwdriver">
+        <inherit name="editor_object" />
+        <take />
+        <inventoryverbs>Look at; Place</inventoryverbs>
+      </object>
+    </object>
+    <object name="Table2">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <listchildren />
+      <displayverbs>Look at</displayverbs>
+      <alias>small table</alias>
+    </object>
+    <object name="Box1">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <isopen />
+      <listchildren />
+      <alias>blue box</alias>
+      <take />
+      <inventoryverbs>Look at; Drop; Open; Close</inventoryverbs>
+    </object>
+    <object name="floor1">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <listchildren />
+      <listchildrenprefix>On the floor you see</listchildrenprefix>
+      <displayverbs>Look at</displayverbs>
+      <alias>floor</alias>
+    </object>
+  </object>
+  <command name="Placer">
+    <pattern>place #object_troll#</pattern>
+    <script><![CDATA[
+      myDict = NewStringDictionary()
+      foreach (object, ScopeReachable()) {
+        if (object.isopen=true) {
+          dictionary add (myDict, object.name, object.alias)
+        }
+      }
+      show menu ("Where?", myDict, true) {
+        if (result <> null) {
+          MoveObject (object_troll, GetObject(result))
+        }
+      }
+    ]]></script>
+  </command>
+</asl>

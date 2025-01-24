@@ -1,0 +1,81 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Trial &amp; Error">
+    <gameid>2ab09222-862b-4931-93bb-60bd2e31992a</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <author type="string"></author>
+    <start type="script">
+      msg ("This isn't a game, it's just where I try things out.")
+      msg ("")
+    </start>
+    <defaultfont>Georgia, serif</defaultfont>
+    <defaultlinkforeground>Teal</defaultlinkforeground>
+    <showscore type="boolean">false</showscore>
+  </game>
+  <object name="bedroom">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="bed">
+      <inherit name="editor_object" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Look under</value>
+      </displayverbs>
+      <alias>bed</alias>
+      <look>Your bed.</look>
+      <listchildren />
+      <isopen type="boolean">false</isopen>
+      <contentsprefix>Under the bed is</contentsprefix>
+      <hidechildren type="boolean">false</hidechildren>
+      <under type="script">
+        HelperOpenObject (bed)
+        if (not Contains (bed,magazine)) {
+          msg ("There's nothing else under the bed.")
+        }
+        else {
+          ListObjectContents (bed)
+        }
+      </under>
+      <object name="magazine">
+        <inherit name="editor_object" />
+        <look>The september issue of GamesMaster.</look>
+        <take />
+        <alias>magazine</alias>
+      </object>
+    </object>
+    <object name="dresser">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <alias>dresser</alias>
+      <isopen type="boolean">false</isopen>
+      <listchildren />
+      <look>Your dresser.</look>
+      <object name="book">
+        <inherit name="editor_object" />
+        <look>Green fingers by H. Ulkman</look>
+        <alias>book</alias>
+        <take />
+      </object>
+    </object>
+  </object>
+  <verb name="look under">
+    <pattern>look under #object#;l under #object#; look underneath #object#; l underneath #object#</pattern>
+    <defaulttext>There's nothing under that.</defaulttext>
+    <property>under</property>
+    <attr name="look under" type="script">
+      if (HasAttribute(object, "under")) {
+        do (object, "under")
+      }
+      else {
+        msg ("You look under the " + object.alias + " and find nothing.")
+      }
+    </attr>
+  </verb>
+</asl>

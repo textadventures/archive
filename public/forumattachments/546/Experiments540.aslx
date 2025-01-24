@@ -1,0 +1,303 @@
+<!--Saved by Quest 5.4.4812.28144-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Experiments540">
+    <gameid>ba1ee291-7806-4d0a-8739-668cda6c3e16</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <showscore type="boolean">false</showscore>
+    <showhealth />
+    <underlinehyperlinks type="boolean">false</underlinehyperlinks>
+    <autodisplayverbs />
+    <povstatusattributes type="stringdictionary">
+      <item>
+        <key>Mana</key>
+        <value></value>
+      </item>
+    </povstatusattributes>
+    <onhealthzero type="script">
+      msg ("You are dead! (Since this is a demo, I'lll let you have 25 health back, to keep you going.)")
+      IncreaseHealth (25)
+    </onhealthzero>
+    <object name="marble prime">
+      <inherit name="editor_object" />
+      <inherit name="prime_object" />
+      <alias>held marble</alias>
+      <look>It's a little glass ball.</look>
+      <replicant type="object">marble replicant</replicant>
+    </object>
+    <object name="Potion1 Prime">
+      <inherit name="editor_object" />
+      <inherit name="prime_object" />
+      <alias>Healing Potion</alias>
+      <look>It's a glass vial containing a blessed liquid for healing minor injuries.</look>
+      <replicant type="object">Potion1 Replicant</replicant>
+      <drink type="script"><![CDATA[
+        if (DecQ(this, 1)=True) {
+          msg ("You drink a healing potion, \"GULP!\"<br/>You gain 20 health.")
+          IncreaseHealth (20)
+        }
+        else {
+          msg ("You drink a healing potion, \"GULP!\"<br/>You gain 20 health.")
+          IncreaseHealth (20)
+          RemoveObject (this)
+        }
+      ]]></drink>
+    </object>
+    <object name="bauble">
+      <inherit name="editor_object" />
+      <look>It's a shiny bauble.</look>
+      <take />
+    </object>
+    <object name="trinket">
+      <inherit name="editor_object" />
+      <look>It's a fancy trinket.</look>
+      <take />
+    </object>
+    <object name="widget">
+      <inherit name="editor_object" />
+      <look>It's a complicated looking widget.</look>
+      <take />
+    </object>
+  </game>
+  <object name="Basement">
+    <inherit name="editor_room" />
+    <description>It's dank in here—cold, dark, and dank. There is a small window near the ceiling in one corner, but it only helps a little.</description>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="window">
+      <inherit name="editor_object" />
+      <view type="stringdictionary">
+        <item>
+          <key>1</key>
+          <value>You see a frog.</value>
+        </item>
+        <item>
+          <key>2</key>
+          <value>You see a log.</value>
+        </item>
+        <item>
+          <key>3</key>
+          <value>You see Bob!</value>
+        </item>
+        <item>
+          <key>4</key>
+          <value>You see a tree.</value>
+        </item>
+        <item>
+          <key>5</key>
+          <value>You see a bee.</value>
+        </item>
+      </view>
+      <tinker>"tinker, tinker, tinker"</tinker>
+      <look type="script">
+        msg (StringDictionaryItem(window.view, ToString(GetRandomint( 1 , 5 ) ) ))
+      </look>
+      <ask type="scriptdictionary">
+        <item key="escaping">
+          msg ("The window says, \"Yeah, good luck with that. HA HA HA HA HA!\"")
+        </item>
+      </ask>
+    </object>
+    <object name="marble replicant">
+      <inherit name="editor_object" />
+      <inherit name="replicant_object" />
+      <alias>marble</alias>
+      <look>It's a little glass ball.</look>
+      <prime type="object">marble prime</prime>
+    </object>
+    <object name="marble replicant1">
+      <inherit name="editor_object" />
+      <inherit name="replicant_object" />
+      <alias>marble</alias>
+      <look>It's a little glass ball.</look>
+      <prime type="object">marble prime</prime>
+    </object>
+    <object name="Potion1 Replicant">
+      <inherit name="editor_object" />
+      <inherit name="replicant_object" />
+      <alias>Healing Potion</alias>
+      <look>It's a glass vial containing a blessed liquid for healing minor injuries.</look>
+      <drink>You have to take it before you can drink it. Don't worry, I won't make you open it.</drink>
+      <prime type="object">Potion1 Prime</prime>
+      <use type="script">
+        msg ("You have to take it before you can drink it. Don't worry, I won't make you open it.")
+      </use>
+    </object>
+    <object name="Potion1 Replicant1">
+      <inherit name="editor_object" />
+      <inherit name="replicant_object" />
+      <alias>Healing Potion</alias>
+      <look>It's a glass vial containing a blessed liquid for healing minor injuries.</look>
+      <drink>You have to take it before you can drink it. Don't worry, I won't make you open it.</drink>
+      <prime type="object">Potion1 Prime</prime>
+      <use type="script">
+        msg ("You have to take it before you can drink it. Don't worry, I won't make you open it.")
+      </use>
+    </object>
+    <object name="metal pole">
+      <inherit name="editor_object" />
+      <look>It's the center support for the floor above. Jagged metal juts out all over it. It looks like someone tried to cleave it in half. It probably wouldn't be too safe to touch it...</look>
+      <use type="boolean">false</use>
+      <touch type="script"><![CDATA[
+        msg ("\"YEE-OUCH!\"<br/>You can't help crying out, as you are cut by the jagged metal on the pole.")
+        DecreaseHealth (25)
+      ]]></touch>
+    </object>
+    <object name="crazy guy">
+      <inherit name="editor_object" />
+      <inherit name="namedmale" />
+      <look>He looks crazy.</look>
+      <askdefault type="script">
+        msg ("He says, \"I am very sorry to say this, good sir, but I am afraid I know nothing of that subject. Good day.\"")
+      </askdefault>
+      <ask type="scriptdictionary">
+        <item key="escaping">
+          msg ("He says, \"Gk.ejh f wJ wrGH A/H G/Lrgh !!!\"")
+        </item>
+      </ask>
+    </object>
+    <exit name="door" alias="door" to="Kitchen">
+      <inherit name="updirection" />
+      <prefix>out the</prefix>
+      <suffix>at the top of the stairs</suffix>
+      <locked type="boolean">false</locked>
+    </exit>
+    <verb>
+      <pattern>unlock</pattern>
+      <defaultexpression>UnlockExit (door)</defaultexpression>
+    </verb>
+    <object name="junk bin">
+      <inherit name="editor_object" />
+      <look>It's a large tupperware style storage bin filled with a variety of odds and ends.</look>
+      <take type="script">
+        firsttime {
+          msg ("The bin itself is too cumbersome to carry around. You should just take out what you need.")
+        }
+        binstuff = NewStringList()
+        list add (binstuff, "bauble")
+        list add (binstuff, "trinket")
+        list add (binstuff, "widget")
+        request (Hide, "Command")
+        ShowMenu ("What would you like to take from the bin?", binstuff) {
+          switch (result) {
+            case ("bauble") {
+              if (not Got(bauble)) {
+                msg ("You take a bauble.")
+                AddToInventory (bauble)
+              }
+              else {
+                msg ("You've already got a bauble. You should see if there's anything useful to do with it before taking more of them.")
+              }
+            }
+            case ("trinket") {
+              if (not Got(trinket)) {
+                msg ("You take a trinket.")
+                AddToInventory (trinket)
+              }
+              else {
+                msg ("You've already got a trinket. You should see if there's anything useful to do with it before taking more of them.")
+              }
+            }
+            case ("widget") {
+              if (not Got(widget)) {
+                msg ("You take a widget.")
+                AddToInventory (widget)
+              }
+              else {
+                msg ("You've already got a widget. You should see if there's anything useful to do with it before taking more of them.")
+              }
+            }
+          }
+          request (Show, "Command")
+        }
+      </take>
+    </object>
+  </object>
+  <verb>
+    <property>tinker</property>
+    <pattern>tinker</pattern>
+    <defaultexpression>"You can't tinker " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Kitchen">
+    <inherit name="editor_room" />
+    <description>It's a lovely kitchen.</description>
+    <exit alias="down" to="Basement">
+      <inherit name="downdirection" />
+    </exit>
+  </object>
+  <type name="replicant_object">
+    <quantity type="int">1</quantity>
+    <prime type="object">player</prime>
+    <take type="script">
+      msg ("You take the " + this.alias + ".")
+      if (Got(this.prime)) {
+        IncQ (this.prime, this.quantity)
+        RemoveObject (this)
+      }
+      else {
+        RemoveObject (this)
+        AddToInventory (this.prime)
+      }
+    </take>
+  </type>
+  <type name="prime_object">
+    <quantity type="int">1</quantity>
+    <unit type="string"></unit>
+    <replicant type="object">player</replicant>
+    <drop type="script"><![CDATA[
+      if (this.quantity>1) {
+        msg ("You drop a " + this.alias + ".")
+        CloneObjectAndMove (this.replicant, player.parent)
+        DecQ (this, 1)
+      }
+      else {
+        msg ("You drop the " + this.alias + ".")
+        CloneObjectAndMove (this.replicant, player.parent)
+        RemoveObject (this)
+      }
+    ]]></drop>
+    <changedquantity type="script"><![CDATA[
+      if (this.quantity>1) {
+        set (this, "listalias", this.alias + ": " + this.quantity + " " + this.unit)
+      }
+      else {
+        set (this, "listalias", this.alias)
+      }
+    ]]></changedquantity>
+  </type>
+  <function name="IncQ" parameters="objectq, increment">
+    set (objectq, "quantity", objectq.quantity+increment)
+  </function>
+  <function name="DecQ" parameters="objectq, decrement" type="boolean"><![CDATA[
+    if (decrement>objectq.quantity) {
+      return (False)
+    }
+    else {
+      set (objectq, "quantity", objectq.quantity-decrement)
+      return (True)
+    }
+  ]]></function>
+  <function name="IntString" parameters="number" type="string">
+    switch (number) {
+      case (1) {
+        return ("1")
+      }
+      case (2) {
+        return ("2")
+      }
+      case (3) {
+        return ("3")
+      }
+      case (4) {
+        return ("4")
+      }
+      case (5) {
+        return ("5")
+      }
+    }
+  </function>
+</asl>

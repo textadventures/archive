@@ -1,0 +1,290 @@
+<library>
+	<!--
+		Chase's Wearables Library v2.1,
+		Based on: Pixie's Clothing Library
+		
+		You may edit this library however you please.
+		
+		I decided to include a UI, since not having a UI kinda bugged me.
+		
+		v1.01
+		-Fixed a typo
+		
+		v1.02
+		+Added Event Handlers
+		+Fixed drop bug
+		
+		v1.03
+		+Added configurable wear/remove messages
+		-Removed redundant events
+		
+		v1.04
+		=Fixed an issue with wearing multiple blank items
+		=Fixed the issue with wearing items without aliases
+		
+		v2.0
+		=Rewritten to better support base systems, may have broken older usages
+		+Added wear layer support
+		
+		v2.1
+		=Fixed an issue of an error being thrown when trying to wear something that is not wearable.
+		
+		Chase
+		chasesan@gmail.com
+	-->
+	
+	<dynamictemplate name="WearSuccessful">"You put " + object.article + " on."</dynamictemplate>
+	<dynamictemplate name="WearUnsuccessful">"You can't wear " + object.article + "."</dynamictemplate>
+	<dynamictemplate name="AlreadyWearing">"You are already wearing " + object.article + "."</dynamictemplate>
+	<dynamictemplate name="CannotWearOver">"You cannot wear that over " + object.display + "."</dynamictemplate>
+	<dynamictemplate name="CannotWearWith">"You cannot wear that while wearing " + object.display + "."</dynamictemplate>
+	
+	<dynamictemplate name="RemoveSuccessful">"You take " + object.article + " off."</dynamictemplate>
+	<dynamictemplate name="RemoveUnsuccessful">"You can't remove " + object.article + "."</dynamictemplate>
+	<dynamictemplate name="RemoveFirst">"You can't remove that while wearing "+object.display+"."</dynamictemplate>
+	
+	<template name="Wear">Wear</template>
+	<verbtemplate name="wear">wear</verbtemplate>
+	<verbtemplate name="wear">put on</verbtemplate>
+	
+	<template name="Remove">Remove</template>
+	<verbtemplate name="remove">remove</verbtemplate>
+	<verbtemplate name="remove">take off</verbtemplate>
+	
+	<command name="wear" template="wear">
+		<multiple>
+			return (ScopeInventory())
+		</multiple>
+		<script>
+			foreach (obj, object) {
+				DoWear(obj)
+			}
+		</script>
+	</command>
+
+	<command name="remove" template="remove">
+		<multiple>
+			return (ScopeInventory())
+		</multiple>
+		<script>
+			foreach (obj, object) {
+				DoRemove(obj)
+			}
+		</script>
+	</command>
+	
+	<function name="DoWear" parameters="object"><![CDATA[
+		if(not HasAttribute(object,"worn")) {
+			msg (DynamicTemplate("WearUnsuccessful", object))
+		} else if (object.parent = player and object.worn = true) {
+			msg (DynamicTemplate("AlreadyWearing", object))
+		} else if (not ListContains(ScopeInventory(), object)) {
+			msg (DynamicTemplate("WearUnsuccessful", object))
+		} else {
+			isLayerProblem = false
+			conflictedItem = null
+			
+			if(HasAttribute(object,"wear_slots")) {
+				foreach(item, ScopeReachableInventory()) {
+					if (HasAttribute(item,"worn")and HasAttribute(item,"wear_slots")){
+						if(item.worn = true) {
+							foreach(itemSlot,item.wear_slots) {
+								if(ListContains(object.wear_slots,itemSlot)) {
+									if(object.wear_layer < item.wear_layer) {
+										conflictedItem = item
+										isLayerProblem = true
+									} else if(object.wear_layer = item.wear_layer) {
+										conflictedItem = item
+									}
+								}
+							}
+						}
+					}	
+				}
+			}
+			
+			if(conflictedItem = null) {
+				object.worn = True
+				object.original_drop = object.drop
+				object.original_alias = object.alias
+				object.drop = false
+				
+				object.display = GetDisplayName(object)
+				object.alias = GetDisplayAlias(object) + " (worn)"
+				
+				if(object.wearmsg = null) {
+					msg (DynamicTemplate("WearSuccessful",object))
+				} else {
+					msg(object.wearmsg)
+				}
+				
+				//do after
+				if (HasScript(object, "onafterwear")) {
+					do(object, "onafterwear")
+				} else if(HasString(object, "onafterwear")) {
+					msg(object.onafterwear)
+				}
+			} else if(isLayerProblem = true) {
+				msg(DynamicTemplate("CannotWearOver",conflictedItem))
+			} else {
+				msg(DynamicTemplate("CannotWearWith",conflictedItem))
+			}
+			
+		}
+	]]></function>
+	
+	<function name="DoRemove" parameters="object"><![CDATA[
+		if (not object.parent = player or not object.worn or not object.removeable) {
+			msg (DynamicTemplate("RemoveUnsuccessful", object))
+		} else {
+			conflictedItem = null
+			//check if we are wearing anything over it
+			if(HasAttribute(object,"wear_slots")) {
+				foreach(item, ScopeReachableInventory()) {
+					if (HasAttribute(item,"worn")and HasAttribute(item,"wear_slots")){
+						if(item.worn = true) {
+							foreach(itemSlot,item.wear_slots) {
+								if(ListContains(object.wear_slots,itemSlot)) {
+									if(object.wear_layer < item.wear_layer) {
+										conflictedItem = item
+									}
+								}
+							}
+						}
+					}	
+				}
+			}
+			
+			if(conflictedItem = null) {
+				if(object.removemsg = null) {
+					msg (DynamicTemplate("RemoveSuccessful",object))
+				} else {
+					msg(object.removemsg)
+				}
+				
+				object.worn = false
+				object.drop = object.original_drop
+				object.alias = object.original_alias
+				object.original_drop = null
+				object.original_alias = null
+				object.display = null
+				
+				//do after
+				if (HasScript(object, "onafterremove")) {
+					do(object, "onafterremove")
+				} else if(HasString(object, "onafterremove")) {
+					msg(object.onafterremove)
+				}
+			} else {
+				msg (DynamicTemplate("RemoveFirst", conflictedItem))
+			}
+		}
+	]]></function>
+	
+	<type name="wearable">
+		<worn type="boolean">false</worn>
+		<removeable type="boolean">true</removeable>
+		<wear_layer type="int">2</wear_layer>
+		<inventoryverbs type="listextend">[Wear];[Remove]</inventoryverbs>
+	</type>
+	<!-- Interface -->
+	<tab>
+		<parent>_ObjectEditor</parent>
+		<caption>Wearable</caption>
+		<mustnotinherit>editor_room; defaultplayer</mustnotinherit>
+		
+		<control>
+			<controltype>title</controltype>
+			<caption>Wearable</caption>
+		</control>
+		
+		<control>
+			<controltype>dropdowntypes</controltype>
+			<caption>Can be worn?</caption>
+			<types>*=Cannot be worn; wearable=Can be worn</types>
+			<width>150</width>
+		</control>
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<controltype>checkbox</controltype>
+			<attribute>removeable</attribute>
+			<caption>Removeable?</caption>
+		</control>
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<controltype>number</controltype>
+			<caption>Wear Layer</caption>
+			<attribute>wear_layer</attribute>
+		</control>
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<caption>Wear Slot</caption>
+			<controltype>list</controltype>
+			<attribute>wear_slots</attribute>
+			<editprompt>Please enter the name for the wear location</editprompt>
+		</control>
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<controltype>label</controltype>
+			<caption>If two objects have the same wear location, they will not be able to be worn at a same time. Any number items without wear locations can be worn.</caption>
+			<advanced/>
+		</control>
+		
+		<!-- snip -->
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<controltype>textbox</controltype>
+			<attribute>wearmsg</attribute>
+			<caption>Message to print when wearing (leave blank for default)</caption>
+			<nullable/>
+		</control>
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<controltype>textbox</controltype>
+			<attribute>removemsg</attribute>
+			<caption>Message to print when removing or trying to remove (leave blank for default)</caption>
+			<nullable/>
+		</control>
+		
+		<!-- Event Handlers from here down none/text/scripts -->
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<controltype>title</controltype>
+			<caption>After Wearing</caption>
+		</control>
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<selfcaption>After wearing the object</selfcaption>
+			<controltype>multi</controltype>
+			<attribute>onafterwear</attribute>
+			<types>null=None; string=Text; script=Run script</types>
+			<editors>string=textbox</editors>
+			<expand/>
+		</control>
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<controltype>title</controltype>
+			<caption>After Removing</caption>
+		</control>
+		
+		<control>
+			<mustinherit>wearable</mustinherit>
+			<selfcaption>After removing the object</selfcaption>
+			<controltype>multi</controltype>
+			<attribute>onafterremove</attribute>
+			<types>null=None; string=Text; script=Run script</types>
+			<editors>string=textbox</editors>
+			<expand/>
+		</control>
+		
+	</tab>
+</library>

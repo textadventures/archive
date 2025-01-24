@@ -1,0 +1,2269 @@
+<!--Saved by Quest 5.4.4835.23029-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <template name="UnresolvedLocation">.....I can't go that way!</template>
+  <template name="UnresolvedObject">.....It's not relevant!</template>
+  <template name="DefaultObjectDescription">.....Nothing special.</template>
+  <template name="DefaultSelfDescription">.....I could do with losing a few pounds! Not too many, mind you.</template>
+  <template name="SeeListHeader">.....I see</template>
+  <template name="NotCarryingAnything">.....I've nothing with me.</template>
+  <template name="CarryingListHeader">.....I've got:-</template>
+  <template name="UnrecognisedCommand">.....I don't understand what you're trying to say.</template>
+  <template name="CannotDoThat">.....I can't do that?</template>
+  <template name="NoObjectsAvailable">.....Do what with what?</template>
+  <template name="DefaultListen">.....Can't hear anything!</template>
+  <template name="DefaultJump">.....I'm too old for jumping!</template>
+  <template name="DefaultSitDown">.....Please..Don't tempt me!</template>
+  <template name="DefaultLieDown">.....Huh! I'd never get up again.</template>
+  <template name="DefaultSleep">.....I've slept too long as it is.</template>
+  <template name="EditorVerbDefaultExpression">.....I just don't understand that!</template>
+  <dynamictemplate name="TakeSuccessful">".....OK."</dynamictemplate>
+  <dynamictemplate name="TakeUnsuccessful">".....Sorry no can do!"</dynamictemplate>
+  <dynamictemplate name="MaxObjectsInInventory">".....I can't carry any more! not without a hand cart!"</dynamictemplate>
+  <dynamictemplate name="MaxObjectsInContainer">"I can't put anything else in there! " </dynamictemplate>
+  <dynamictemplate name="DropSuccessful">".....Ok!"</dynamictemplate>
+  <dynamictemplate name="DropUnsuccessful">".....Can't do that!"</dynamictemplate>
+  <dynamictemplate name="AlreadyTaken">".....I've already got it."</dynamictemplate>
+  <dynamictemplate name="NotCarrying">".....I have'nt got that!"</dynamictemplate>
+  <dynamictemplate name="DefaultSpeakTo">" .....There is no reply."</dynamictemplate>
+  <dynamictemplate name="AlreadyOpen">".....It's already open!"</dynamictemplate>
+  <dynamictemplate name="AlreadyClosed">".....It's already closed!"</dynamictemplate>
+  <dynamictemplate name="CantOpen">".....Can't open that"</dynamictemplate>
+  <dynamictemplate name="CantClose">".....Can't do it!"</dynamictemplate>
+  <dynamictemplate name="AlreadyThere">"I'm already there!"</dynamictemplate>
+  <dynamictemplate name="YouLooking">".....Is there any point in that?."</dynamictemplate>
+  <dynamictemplate name="DefaultClimb">".....Climb what? "</dynamictemplate>
+  <dynamictemplate name="DefaultDrink">".....I can't drink that?"</dynamictemplate>
+  <dynamictemplate name="DefaultHit">".....Is that your answer to everything?"</dynamictemplate>
+  <dynamictemplate name="DefaultKill">"Kill what, the Winchesters are the ones you need!"</dynamictemplate>
+  <dynamictemplate name="DefaultLie">".....I've no time for that, must push on."</dynamictemplate>
+  <dynamictemplate name="DefaultListenTo">"Listening brings no joy, at all"</dynamictemplate>
+  <dynamictemplate name="DefaultLock">".....I can't do that"</dynamictemplate>
+  <dynamictemplate name="DefaultMove">".....Not likely?"</dynamictemplate>
+  <dynamictemplate name="DefaultPull">".....I can't pull that"</dynamictemplate>
+  <dynamictemplate name="DefaultPush">".....I can't push that"</dynamictemplate>
+  <dynamictemplate name="DefaultRead">".....Read what?"</dynamictemplate>
+  <dynamictemplate name="DefaultSearch">".....Search where?"</dynamictemplate>
+  <dynamictemplate name="DefaultSit">".....I can't sit there"</dynamictemplate>
+  <dynamictemplate name="DefaultSmell">".....Your sense of smell is a bit strange"</dynamictemplate>
+  <dynamictemplate name="DefaultTaste">".....Taste what?"</dynamictemplate>
+  <dynamictemplate name="DefaultThrow">".....I'll only pull a muscle."</dynamictemplate>
+  <dynamictemplate name="DefaultTouch">".....Ok!"</dynamictemplate>
+  <dynamictemplate name="DefaultTurn">".....Sorry I can't do that"</dynamictemplate>
+  <dynamictemplate name="DefaultUnlock">".....I can't do that"</dynamictemplate>
+  <dynamictemplate name="DefaultUntie">"I can't untie that"</dynamictemplate>
+  <dynamictemplate name="DefaultUseOn">"I can't use it that way!"</dynamictemplate>
+  <dynamictemplate name="DefaultWear">".....I can't wear that"</dynamictemplate>
+  <game name="dark mirrors2">
+    <gameid>e36e75ef-8588-49f5-99e6-d9810666a781</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <attr name="autodescription_description" type="int">1</attr>
+    <attr name="autodescription_youarein" type="int">0</attr>
+    <menubackground>Black</menubackground>
+    <menuforeground>WhiteSmoke</menuforeground>
+    <autodisplayverbs type="boolean">false</autodisplayverbs>
+    <showpanes type="boolean">false</showpanes>
+    <defaultbackground>Black</defaultbackground>
+    <defaultforeground>WhiteSmoke</defaultforeground>
+    <menufont>'Comic Sans MS', cursive, sans-serif</menufont>
+    <defaultfontsize type="int">9</defaultfontsize>
+    <start type="script"><![CDATA[
+      game.press = whitespaces (11) + "(Press any Key)" + "<br/>"
+      request (Hide, "Location")
+    ]]></start>
+    <defaultfont>'Comic Sans MS', cursive, sans-serif</defaultfont>
+  </game>
+  <command name="lookat">
+    <pattern>look at #object#; x #object#; examine #object#; exam #object#; ex #object#; look #object#; read #object#; read the #object#; look at the #object#; look on #object#; look in #object#;look on the #object#;look in the #object#</pattern>
+    <script>
+      if (GetBoolean(object, "hidechildren")) {
+        object.hidechildren = false
+      }
+      if (TypeOf(object, "look") = "script") {
+        do (object, "look")
+      }
+      else {
+        lookdesc = ""
+        if (HasString(object, "look")) {
+          lookdesc = object.look
+        }
+        if (LengthOf(lookdesc) = 0) {
+          lookdesc = Template("DefaultObjectDescription")
+        }
+        if (GetBoolean(object, "switchedon")) {
+          if (HasString(object, "switchedondesc")) {
+            lookdesc = lookdesc + " " + object.switchedondesc
+          }
+        }
+        else {
+          if (HasString(object, "switchedoffdesc")) {
+            lookdesc = lookdesc + " " + object.switchedoffdesc
+          }
+        }
+        msg (lookdesc)
+      }
+      ListObjectContents (object)
+    </script>
+  </command>
+  <command name="inventory">
+    <pattern type="string">^i$|^inv$|^inventory$</pattern>
+    <script>
+      list = FormatObjectList(Template("CarryingListHeader"), player, Template("And"), ".", true)
+      if (list = "") {
+        msg (Template("NotCarryingAnything"))
+      }
+      else {
+        msg (list)
+      }
+    </script>
+  </command>
+  <object name="Recap">
+    <inherit name="editor_room" />
+    <picture>darker mirror2.jpg</picture>
+    <description type="script"><![CDATA[
+      PrintCentered ("<br/><br/>Waking up in a strange bed was enough for me, never mind about having to claw my way out<br/>of the bedroom to find a huge tree on the other side of the wardrobe. Only to climb up to the<br/>top and be sprayed by some fungi growing there. And then to be transported through the<br/>mirror to a dim corridor. Having found my way out of there, I was met by challenges from<br/>one location to another, picking up clues to who I was, but not what I was doing or<br/>how I came to be there. Hopefully now, I will find the rest of the answers<br/>and solve the enigmas that have eluded me.<br/><br/>")
+      PrintCentered ("(Press any Key)")
+      wait {
+        ClearScreen
+        PrintCentered ("<br/>Finally made it to a river and having paid the ferryman for passage across gave me<br/>time to reflect on this quest and to think what might be waiting ahead for me.<br/><br/>It seemed like a long voyage sitting in that filthy rat infested boat. Not once did the<br/>ferryman look in my direction to acknowledge me, or gave rise to my presence<br/>being there at all! And yet the  journey itself was smooth, and the unearthly<br/>craft cleaved its way through the high waves as though they were ethereal<br/>carriers holding us aloft on cumulous clouds in the night sky.<br/><br/>")
+        PrintCentered ("(Press any Key)")
+        wait {
+          ClearScreen
+          PrintCentered ("<br/>Journey's end, on this side of the shore and I have vacated the boat. Looking<br/>back I see his bloodshot eyes fix their gaze upon me as  thread veins from <br/>the sockets stagger down his boney cheeks. A look that made me shiver<br/>in revulsion, he points his boney finger to a cave behind me and casts<br/>the boat off gently gliding upstream against the current till the mists<br/>cover the conveyor and his craft.<br/><br/><br/>(Press any Key)")
+          wait {
+            ClearFramePicture
+            ClearScreen
+            MoveObject (player, Shore Side)
+          }
+        }
+      }
+    ]]></description>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <maxobjects type="int">5</maxobjects>
+      <containermaxobjects>.....Sorry I just can't carry anymore!</containermaxobjects>
+      <look type="string"></look>
+    </object>
+  </object>
+  <object name="Shore Side">
+    <inherit name="editor_room" />
+    <description type="script"><![CDATA[
+      if (GetBoolean(player, "boatdragged")) {
+        firsttime {
+          msg (".....Phew! I'm standing by the edge of the river. I feel tired, sweaty<br/>and aching after pulling that boat from the dark cave. Well at least<br/>now I'll be able to travel downstream, albeit nervously.")
+          SetObjectFlagOn (Canoe, "alongside")
+        }
+        otherwise {
+          msg (".....I'm standing on the side of the river, the ferry man is still no-where<br/>in sight. I will admit though I did feel safer with him than without. And<br/>now being alone I feel nervous and cold. The water laps gently onto<br/>the edge of the shore.")
+          SetObjectFlagOn (Canoe, "alongside")
+        }
+      }
+      else {
+        msg (".....I'm standing on the side of the wide river, the ferry man has gone.<br/>Although his demeanor was offensive and formidable, I felt safer with<br/>him than without. And now being alone I feel nervous and cold. The<br/>water laps gently onto the edge of the shore.")
+      }
+      picture ("linebarblue2.jpg")
+      msg ("")
+    ]]></description>
+    <beforeenter type="script">
+      ClearScreen
+      SetForegroundColour ("WhiteSmoke")
+      SetBackgroundColour ("Black")
+    </beforeenter>
+    <object name="Edge">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt type="stringlist">
+        <value>side</value>
+        <value>water's edge</value>
+        <value>waters edge</value>
+        <value>bank</value>
+        <value>rivers edge</value>
+        <value>river's edge</value>
+        <value>edge of water</value>
+        <value>edge of river</value>
+        <value>the edge of the water</value>
+        <value>the edge of the river</value>
+        <value>shore</value>
+        <value>edge of shore</value>
+        <value>the edge of the shore</value>
+        <value>shoreline</value>
+      </alt>
+      <look type="script"><![CDATA[
+        if (GetBoolean(Yale key, "got")) {
+          msg (".....The water gently cascades in ripples over the small stones.")
+        }
+        else {
+          msg (".....The edge of the water cascades in gentle ripples over the<br/>small stones that lie below on the river bed, I see a shiny key<br/>nestled in amongst the shingles.")
+          MoveObject (Yale key, Shore Side)
+          SetObjectFlagOn (Edge, "looked")
+        }
+      ]]></look>
+    </object>
+    <object name="River">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt type="stringlist">
+        <value>canal</value>
+        <value>estuary</value>
+        <value>fast flowing river</value>
+        <value>fast river</value>
+        <value>flowing river</value>
+      </alt>
+      <look type="script"><![CDATA[
+        msg (".....The centre of the muddy water runs north to south at a rapid pace.<br/>")
+      ]]></look>
+    </object>
+    <object name="Stones">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt type="stringlist">
+        <value>shingles</value>
+        <value>pebbles</value>
+        <value>small stones</value>
+        <value>stone</value>
+        <value>small pebbles</value>
+      </alt>
+      <drop type="boolean">false</drop>
+      <look type="script">
+        msg (".....The stones are covered in a green slime.")
+      </look>
+      <take type="script">
+        msg (".....I'm not taking them they're slimey,ugh!")
+      </take>
+      <clean type="script">
+        msg (".....No reason to clean the stones.")
+      </clean>
+    </object>
+    <command>
+      <pattern>go river;go #text# river;swim river;swim #text# river; jump river;jump #text# river;go water;go #text# water;swim water;swim #text# water; jump water;jump #text# water</pattern>
+      <script><![CDATA[
+        msg (".....The wide river flows too fast in the centre and looks very deep,<br/>besides that I cannot swim. I've always been terrified of the water. ")
+      ]]></script>
+    </command>
+    <command>
+      <pattern>paddle river;paddle #text# river;wade river;wade #text# river;paddle water;paddle #text# water;wade water;wade #text# water;splash river;splash #text# river;splash water;splash #text# water</pattern>
+      <script>
+        msg (".....I really have no time for these sheenanigans, sorry!")
+      </script>
+    </command>
+    <command>
+      <pattern>look round;look #text# round;look around;look #text# around;look round #text#;look #text# round #text#;look around #text#;look #text# around #text#</pattern>
+      <script><![CDATA[
+        if (not GetBoolean(player, "boatdragged")) {
+          msg (".....Looking around I see the fast flowing river, of which I have no means<br/>to travel along it. The cave I am situated in, is damp and the odour in the<br/>air is stagnant. I shall be glad to move on but to where? This is not like the<br/>outside where the sun shone warm on my face and the birds shrills filled the<br/>air with songs of joy. There is a gloomy tunnel behind me.")
+        }
+        else if (GetBoolean(Canoe, "river")) {
+          msg (".....Looking around I see the fast flowing river, and I see the canoe at the<br/>water's edge. The cave is damp and the odour in the air is rancid. I'll be<br/>bloody glad to go down the river and leave this dreadful place behind.")
+        }
+        else {
+          msg (".....Looking around I see the fast flowing river, and I've got a canoe now<br/>that I can travel in. The cave I am in, is damp and the odour in the air is<br/>stagnant and rancid. I'll be pleased to move on now. This is not like the<br/>outside where the sun shone warm on my face and the birds shrills filled<br/>the air with songs of joy.")
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>look ferryman;look #text# ferryman;look #text# ferryman #text#</pattern>
+      <script>
+        msg (".....He's gone, although I wish he was still here. I'd like to go back.")
+      </script>
+    </command>
+    <command>
+      <pattern>look tunnel;look #text# tunnel;look #text# tunnel #text#</pattern>
+      <script><![CDATA[
+        msg (".....I'm not keen on going down there, but it's better than<br/>standing here for the rest of my life and freezing to death")
+      ]]></script>
+    </command>
+    <command>
+      <pattern>go tunnel;go #text# tunnel;walk tunnel;walk #text# tunnel;go passage;go #text# passage;walk passage;walk #text# passage;go passageway;go #text# passageway;walk passageway;walk #text# passageway</pattern>
+      <script>
+        if (Got(Coil of Rope)) {
+          if (GetBoolean(Wood Ring, "tied")) {
+            if (GetBoolean(Canoe, "alongside")) {
+              SetObjectFlagOff (Canoe, "alongside")
+              MoveObject (Coil of Rope, Shore Side)
+              msg (whitespaces(7) + "I'll just pop the rope down here for a while.")
+              msg (game.press)
+              wait {
+                MoveObject (player, Tunnel)
+              }
+            }
+            else {
+              MoveObject (player, Tunnel)
+            }
+          }
+          else {
+            MoveObject (player, Tunnel)
+          }
+        }
+        else {
+          MoveObject (player, Tunnel)
+        }
+      </script>
+    </command>
+    <object name="Slime">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt type="stringlist">
+        <value>green slime</value>
+      </alt>
+      <look type="script">
+        msg (".....It's green and slimey.")
+      </look>
+    </object>
+    <command>
+      <pattern>look cave;look #text# cave;look #text# cave #text#;</pattern>
+      <script><![CDATA[
+        msg (".....The cave I am situated in, is damp and the odour in the<br/>air is stagnant. I shall be pleased to move on but to where?")
+      ]]></script>
+    </command>
+    <command>
+      <pattern>hint;hints</pattern>
+      <script><![CDATA[
+        if (not GetBoolean(Edge, "looked")) {
+          SetForegroundColour ("CadetBlue")
+          msg ("<br/>" + whitespaces(9) + "(look at the edge of the water)")
+          SetForegroundColour ("WhiteSmoke")
+        }
+        else if (not GetBoolean(Yale key, "got")) {
+          SetForegroundColour ("CadetBlue")
+          msg ("<br/>" + whitespaces(9) + "(get the key)")
+          SetForegroundColour ("WhiteSmoke")
+        }
+        else if (GetBoolean(Canoe, "alongside")) {
+          SetForegroundColour ("CadetBlue")
+          msg ("<br/>" + whitespaces(9) + "(push the canoe)")
+          SetForegroundColour ("WhiteSmoke")
+        }
+        else if (not GetBoolean(player, "boatdragged")) {
+          SetForegroundColour ("CadetBlue")
+          msg ("<br/>" + whitespaces(9) + "(go tunnel)")
+          SetForegroundColour ("WhiteSmoke")
+        }
+        else {
+          SetForegroundColour ("CadetBlue")
+          msg ("<br/>" + whitespaces(9) + "(if you're sure you've got everything)")
+          msg (whitespaces(19) + "(then get in the canoe)")
+          SetForegroundColour ("WhiteSmoke")
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>look centre;look #text# centre;look #text# centre #text#</pattern>
+      <script>
+        msg (".....It's flowing at a rapid pace.")
+      </script>
+    </command>
+    <command>
+      <pattern>look river bed;look #text# river bed;look #text# river bed #text#</pattern>
+      <script>
+        if (not GetBoolean(Canoe, "river")) {
+          msg (".....Ok, I see the canoe floating on the side of the river.")
+        }
+        else {
+          msg (".....Ok.")
+        }
+      </script>
+    </command>
+    <command>
+      <pattern>pull canoe;pull #text# canoe;pull #text# canoe #text#;tug canoe;tug #text# canoe;tug #text# canoe #text#;drag canoe;drag #text# canoe;drag #text# canoe #text#;pull boat;pull #text# boat;pull #text# boat #text#;tug boat;tug #text# boat;tug #text# boat #text#;drag boat;drag #text# boat;drag #text# boat #text#</pattern>
+      <script>
+        if (GetBoolean(player, "boatdragged")) {
+          msg ("..... I've dragged it around enough, I just need to get it in the water now!")
+        }
+        else {
+          msg (".....There's no canoe here.")
+        }
+      </script>
+    </command>
+  </object>
+  <object name="Store">
+    <inherit name="editor_room" />
+    <object name="Spray bottle">
+      <inherit name="editor_object" />
+      <scenery type="boolean">false</scenery>
+    </object>
+    <object name="Yale key">
+      <inherit name="editor_object" />
+      <alt type="stringlist">
+        <value>key</value>
+        <value>shiny key</value>
+        <value>door key</value>
+        <value>doorkey</value>
+        <value>house key</value>
+      </alt>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <look type="script"><![CDATA[
+        firsttime {
+          msg (".....The yale key seems shiny as if it was brand new, and yet it's been<br/>in the river for some time surely it would be a little rusty to say the least.")
+        }
+        otherwise {
+          msg (".....The key's shape is flat and should fit a normal door lock.")
+        }
+      ]]></look>
+      <take type="script">
+        SetObjectFlagOn (Yale key, "got")
+        MoveObject (Yale key, player)
+        msg (".....Ok.")
+      </take>
+      <drop type="script"><![CDATA[
+        if (Got(Yale key)) {
+          MoveObject (Yale key, player.parent)
+          msg ("<br/>" + ".....Ok.." + "<br/>" + whitespaces(10) + FormatObjectList(player.parent.objectslistprefix, GetNonTransparentParent(player.parent), Template("And"), ".", false))
+        }
+        else {
+          msg (".....Sorry I haven't got a key?")
+        }
+      ]]></drop>
+    </object>
+    <object name="Oar">
+      <inherit name="editor_object" />
+      <takemsg>.....Holding this makes me feel good.</takemsg>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alt type="stringlist">
+        <value>blade</value>
+      </alt>
+      <take type="script"><![CDATA[
+        if (player.parent = The River) {
+          msg (".....I will have it to help steer the canoe as the flowing river<br/>will take me with the current. So if I stay close to the edge<br/>of the shore I should be a lot safer.")
+          MoveObject (Oar, player.parent)
+        }
+        else {
+          msg (".....I think it's best to leave it there at the moment.")
+        }
+      ]]></take>
+      <look type="script">
+        msg (".....It's a typical one bladed oar. About 3 to 4 ft in length.")
+      </look>
+      <ontake type="script">
+        SetObjectFlagOn (Oar, "got")
+      </ontake>
+    </object>
+    <object name="Wood Ring">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt type="stringlist">
+        <value>wooden ring</value>
+        <value>ring</value>
+      </alt>
+      <look type="script">
+        msg (".....It's a wooden ring which has been lashed to the bow.")
+      </look>
+      <take type="script">
+        msg (".....It's tied down and attached to the canoe!")
+      </take>
+    </object>
+    <object name="Canoe">
+      <inherit name="editor_object" />
+      <alt type="stringlist">
+        <value>boat</value>
+        <value>dugout canoe</value>
+        <value>dinghy</value>
+        <value>rowboat</value>
+        <value>row boat</value>
+        <value>paddle boat</value>
+        <value>kayak</value>
+        <value>skiff</value>
+      </alt>
+      <listchildren />
+      <hidechildren />
+      <jump>try this</jump>
+      <take type="script">
+        msg (".....I cannot physically pick this up it's too heavy for me.")
+      </take>
+      <lookin type="script">
+        if (GetBoolean(Oar, "got")) {
+          msg (".....There's nothing in the canoe")
+        }
+        else {
+          msg (".....There's an oar in the bottom of the canoe.")
+          SetObjectFlagOn (Canoe, "lookedin")
+          MoveObject (Oar, player.parent)
+        }
+      </lookin>
+      <lookbow type="script">
+        msg (".....It's just the front of the canoe!")
+      </lookbow>
+    </object>
+    <object name="Conkers">
+      <inherit name="editor_object" />
+      <alt type="stringlist">
+        <value>conker</value>
+        <value>chestnut</value>
+        <value>chestnuts</value>
+        <value>horse chestnut</value>
+        <value>horse chestnuts</value>
+      </alt>
+      <scenery type="boolean">false</scenery>
+      <take />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>some </prefix>
+      <look type="script"><![CDATA[
+        msg (".....The brown smooth conkers shine with a lustre. Takes me<br/>back to my childhood of threading them on a shoelace and<br/>either soaking or boiling them in vinegar to harden them.")
+      ]]></look>
+    </object>
+  </object>
+  <command>
+    <pattern>help</pattern>
+    <script><![CDATA[
+      SetForegroundColour ("CadetBlue")
+      msg ("<br/>" + whitespaces(35) + "(COMMANDS)")
+      msg (whitespaces(5) + "LOOK:")
+      SetForegroundColour ("WhiteSmoke")
+      msg (whitespaces(20) + " Will bring up the room description.")
+      SetForegroundColour ("CadetBlue")
+      msg (whitespaces(5) + "LOOK ROUND OR LOOK AROUND")
+      SetForegroundColour ("WhiteSmoke")
+      msg (whitespaces(20) + "Shows different messages sometimes, which may help a great deal")
+      SetForegroundColour ("CadetBlue")
+      msg (whitespaces(5) + "CLS, CLR or CLEAR SCREEN")
+      SetForegroundColour ("WhiteSmoke")
+      msg (whitespaces(20) + " Will clear the screen, and bring up the room description.")
+      SetForegroundColour ("CadetBlue")
+      msg (whitespaces(5) + "OBJECTS:-")
+      SetForegroundColour ("WhiteSmoke")
+      msg (whitespaces(20) + "Try LOOK AT..., SPEAK TO..., TAKE..., DROP..., OPEN...,")
+      SetForegroundColour ("CadetBlue")
+      msg (whitespaces(5) + "INVENTORY:-")
+      SetForegroundColour ("WhiteSmoke")
+      msg (whitespaces(20) + "See which items you are carrying around by typing I, INV or INVENTORY.")
+      SetForegroundColour ("CadetBlue")
+      msg (whitespaces(5) + "MOVING AROUND:-")
+      SetForegroundColour ("WhiteSmoke")
+      msg (whitespaces(20) + "Type GO NORTH, SOUTH, E, GO TO...")
+      SetForegroundColour ("CadetBlue")
+      msg (whitespaces(5) + "HINT")
+      SetForegroundColour ("WhiteSmoke")
+      msg (whitespaces(20) + " (Spoilers) - Only use this command if you think it's really necessary.")
+    ]]></script>
+  </command>
+  <object name="Tunnel">
+    <inherit name="editor_room" />
+    <description type="script"><![CDATA[
+      msg (".....I'm in a dark damp tunnel the curved rocky walls are slimey to<br/>look at. Mostly in part to the water that trickles down the sides to<br/>a ridge in the floor that runs the full length of the passage.")
+      picture ("linebarblue2.jpg")
+      msg ("")
+      if (ListContains(ScopeReachable(), Canoe)) {
+        SetObjectFlagOn (Canoe, "alongside")
+      }
+    ]]></description>
+    <beforeenter type="script">
+      ClearScreen
+    </beforeenter>
+    <exit alias="south" to="Shore Side">
+      <inherit name="southdirection" />
+      <script type="script">
+        if (Got(Coil of Rope)) {
+          if (GetBoolean(Wood Ring, "tied")) {
+            if (GetBoolean(Canoe, "alongside")) {
+              MoveObject (Coil of Rope, Tunnel)
+              msg (whitespaces(7) + "I'll just pop the rope down here for a while.")
+              msg (game.press)
+              wait {
+                MoveObject (player, Shore Side)
+              }
+            }
+            else {
+              MoveObject (player, Shore Side)
+            }
+          }
+          else {
+            MoveObject (player, Shore Side)
+          }
+        }
+        else {
+          MoveObject (player, Shore Side)
+        }
+      </script>
+    </exit>
+    <object name="Ridge">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt type="stringlist">
+        <value>rut</value>
+        <value>ruts</value>
+        <value>ridges</value>
+        <value>trough</value>
+        <value>furrow</value>
+      </alt>
+      <look type="script"><![CDATA[
+        msg (".....Looking at the ridge in the ground, it runs the entire length<br/>of the tunnel. It actually looks like something long has been<br/>dragged through here")
+      ]]></look>
+    </object>
+    <object name="Tunnel Wall">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt type="stringlist">
+        <value>wall</value>
+        <value>walls</value>
+        <value>rock wall</value>
+        <value>rock walls</value>
+        <value>rocky wall</value>
+        <value>rocky walls</value>
+      </alt>
+      <look type="script">
+        msg (".....They're covered with slimey water trickling down from")
+        msg ("the roof and running in the ridge down the tunnel.")
+      </look>
+    </object>
+    <object name="Floor">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt type="stringlist">
+        <value>ground</value>
+        <value>soil</value>
+      </alt>
+      <look type="script"><![CDATA[
+        msg (".....There's a ridge in the floor that runs the entire<br/>length of the damp tunnel.")
+      ]]></look>
+    </object>
+    <exit alias="north" to="Clearing">
+      <inherit name="northdirection" />
+      <script type="script">
+        SetObjectFlagOff (Canoe, "alongside")
+        MoveObject (player, Clearing)
+        if (Got(Coil of Rope)) {
+          if (GetBoolean(Wood Ring, "tied")) {
+            if (GetBoolean(Canoe, "alongside")) {
+              SetObjectFlagOff (Canoe, "alongside")
+              MoveObject (Coil of Rope, Tunnel)
+              msg (whitespaces(7) + "I'll just pop the rope down here for a while.")
+              msg (game.press)
+              wait {
+                MoveObject (player, Clearing)
+              }
+            }
+            else {
+              MoveObject (player, Clearing)
+            }
+          }
+          else {
+            MoveObject (player, Clearing)
+          }
+        }
+        else {
+          MoveObject (player, Clearing)
+        }
+      </script>
+    </exit>
+    <command>
+      <pattern>pull canoe;pull #text# canoe;pull #text# canoe #text#;tug canoe;tug #text# canoe;tug #text# canoe #text#;drag canoe;drag #text# canoe;drag #text# canoe #text#;pull boat;pull #text# boat;pull #text# boat #text#;tug boat;tug #text# boat;tug #text# boat #text#;drag boat;drag #text# boat;drag #text# boat #text#</pattern>
+      <script><![CDATA[
+        if (GetBoolean(Canoe, "alongside")) {
+          if (Got(Coil of Rope)) {
+            if (GetBoolean(Wood Ring, "tied")) {
+              msg ("<br/>" + whitespaces(7) +"Where to?")
+              get input {
+                if (result = "south" or result = "to south" or result = "to the south" or result = "shore" or result = "to shore" or result = "to the shore" or result = "river" or result = "to river" or result = "to the river" or result = "s" or result = "the south" or result = " the shore" or result = "the river") {
+                  if (not GetBoolean(Canoe, "lookedin")) {
+                    SetObjectFlagOn (player, "boatdragged")
+                    MoveObject (Canoe, Shore Side)
+                    MoveObject (Wood Ring, Shore Side)
+                    MoveObject (player, Shore Side)
+                  }
+                  else {
+                    SetObjectFlagOn (player, "boatdragged")
+                    MoveObject (Canoe, Shore Side)
+                    MoveObject (Oar, Shore Side)
+                    MoveObject (Wood Ring, Shore Side)
+                    MoveObject (player, Shore Side)
+                  }
+                }
+                else {
+                  msg ("<br/>" + whitespaces(11) + "I think I need to get this boat to the river now, hang on.")
+                  msg (game.press + "<br/>")
+                  wait {
+                    if (GetBoolean(Canoe, "lookedin")) {
+                      MoveObject (Canoe, Shore Side)
+                      MoveObject (Wood Ring, Shore Side)
+                      MoveObject (player, Shore Side)
+                    }
+                    else {
+                      MoveObject (Oar, Shore Side)
+                      MoveObject (Canoe, Shore Side)
+                      MoveObject (Wood Ring, Shore Side)
+                      MoveObject (player, Shore Side)
+                    }
+                  }
+                }
+              }
+            }
+            else {
+              msg (".....I can't drag the canoe by holding the ring with my hands,<br/>It hurts them. I could do with tying something to the wooden<br/>ring and pulling the canoe that way!")
+            }
+          }
+          else {
+            msg (".....I haven't got any rope.")
+          }
+        }
+        else {
+          msg (".....I can't see a canoe here.")
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>hint;hints</pattern>
+      <script><![CDATA[
+        if (not GetBoolean(Canoe, "alongside")) {
+          SetForegroundColour ("CadetBlue")
+          msg ("<br/>" + whitespaces(9) + "(no hints available at the moment)")
+          SetForegroundColour ("WhiteSmoke")
+        }
+        else {
+          SetForegroundColour ("CadetBlue")
+          msg ("<br/>" + whitespaces(9) + "(drag canoe.)")
+          SetForegroundColour ("WhiteSmoke")
+        }
+      ]]></script>
+    </command>
+  </object>
+  <verb>
+    <property>clean</property>
+    <pattern>clean;rinse;wash</pattern>
+    <defaultexpression>".....I can't clean that"</defaultexpression>
+  </verb>
+  <command>
+    <pattern>cls;clr;clear screen</pattern>
+    <script>
+      ClearScreen
+      ShowRoomDescription
+    </script>
+  </command>
+  <command>
+    <pattern>hint;hints</pattern>
+    <script><![CDATA[
+      SetForegroundColour ("CadetBlue")
+      msg ("<br/>" + whitespaces(9) + "(There's nothing here to help, sorry.)")
+      SetForegroundColour ("WhiteSmoke")
+    ]]></script>
+  </command>
+  <object name="Clearing">
+    <inherit name="editor_room" />
+    <description type="script"><![CDATA[
+      msg (".....I'm standing in a clearing, by what looks like the same tree as the one that was<br/>on the other side of the wardrobe when I first began this journey. The ravaged<br/>behemoth shows signs of growth, and buds are developing on the branches, the<br/>tendrils are no longer present. The doorway that was carved into the trunk is not<br/>there anymore.")
+      picture ("linebarblue2bbb.jpg")
+      msg ("")
+      if (ListContains(ScopeReachable(), Canoe)) {
+        SetObjectFlagOn (Canoe, "alongside")
+      }
+    ]]></description>
+    <beforeenter type="script">
+      ClearScreen
+    </beforeenter>
+    <exit alias="south" to="Tunnel">
+      <inherit name="southdirection" />
+      <script type="script">
+        if (Got(Coil of Rope)) {
+          if (GetBoolean(Wood Ring, "tied")) {
+            if (GetBoolean(Canoe, "alongside")) {
+              SetObjectFlagOff (Canoe, "alongside")
+              MoveObject (Coil of Rope, Clearing)
+              msg (whitespaces (7) + "I'll just pop the rope down here for a while!")
+              msg (game.press)
+              wait {
+                MoveObject (player, Tunnel)
+              }
+            }
+            else {
+              MoveObject (player, Tunnel)
+            }
+          }
+          else {
+            MoveObject (player, Tunnel)
+          }
+        }
+        else {
+          MoveObject (player, Tunnel)
+        }
+      </script>
+    </exit>
+    <exit alias="east" to="Copse">
+      <inherit name="eastdirection" />
+      <script type="script">
+        if (Got(Coil of Rope)) {
+          if (GetBoolean(Wood Ring, "tied")) {
+            if (GetBoolean(Canoe, "alongside")) {
+              SetObjectFlagOff (Canoe, "alongside")
+              MoveObject (Coil of Rope, Clearing)
+              msg (whitespaces (7) + "I'll just pop the rope down here for a while!")
+              msg (game.press)
+              wait {
+                MoveObject (player, Copse)
+              }
+            }
+            else {
+              MoveObject (player, Copse)
+            }
+          }
+          else {
+            MoveObject (player, Copse)
+          }
+        }
+        else {
+          MoveObject (player, Copse)
+        }
+      </script>
+    </exit>
+    <exit alias="west" to="Dark Cave">
+      <inherit name="westdirection" />
+      <script type="script">
+        if (GetBoolean(Wood Ring, "tied")) {
+          if (Got(Coil of Rope)) {
+            if (GetBoolean(Canoe, "alongside")) {
+              SetObjectFlagOff (Canoe, "alongside")
+              MoveObject (Coil of Rope, Clearing)
+              msg (whitespaces(7) + "I'll just pop the rope down here for a while.")
+              msg (game.press)
+              wait {
+                MoveObject (player, Dark Cave)
+              }
+            }
+            else {
+              MoveObject (player, Dark Cave)
+            }
+          }
+          else {
+            MoveObject (player, Dark Cave)
+          }
+        }
+        else {
+          MoveObject (player, Dark Cave)
+        }
+      </script>
+    </exit>
+    <command>
+      <pattern>pull canoe;pull #text# canoe;pull #text# canoe #text#;tug canoe;tug #text# canoe;tug #text# canoe #text#;drag canoe;drag #text# canoe;drag #text# canoe #text#;pull boat;pull #text# boat;pull #text# boat #text#;tug boat;tug #text# boat;tug #text# boat #text#;drag boat;drag #text# boat;drag #text# boat #text#</pattern>
+      <script><![CDATA[
+        if (GetBoolean(Canoe, "alongside")) {
+          if (Got(Coil of Rope)) {
+            if (GetBoolean(Wood Ring, "tied")) {
+              msg ("<br/>" + whitespaces(7) +"Where to?")
+              get input {
+                if (result = "south" or result = "to south" or result = "to the south" or result = "tunnel" or result = "to tunnel" or result = "to the tunnel" or result = "s" or result = "the south" or result = "the tunnel") {
+                  if (not GetBoolean(Canoe, "lookedin")) {
+                    MoveObject (Canoe, Tunnel)
+                    MoveObject (Wood Ring, Tunnel)
+                    MoveObject (player, Tunnel)
+                  }
+                  else {
+                    MoveObject (Oar, Tunnel)
+                    MoveObject (Canoe, Tunnel)
+                    MoveObject (Wood Ring, Tunnel)
+                    MoveObject (player, Tunnel)
+                  }
+                }
+                else {
+                  if (result = "cave" or result = "to cave" or result = "to the cave" or result = "west" or result = "to west" or result = " to the west" or result = "w" or result = "dark cave" or result = "to dark cave" or result = "the dark cave" or result = "to the dark cave") {
+                    msg ("<br/>" + whitespaces(10) + "Listen Nancy I think I need to get this canoe to")
+                    msg (whitespaces(13) + "the river now don't you? Not take it backwards.")
+                  }
+                  else {
+                    msg ("<br/>" + whitespaces(11) + "Well that doesn't make any sense to me at all!")
+                  }
+                }
+              }
+            }
+            else {
+              msg (".....I can't drag the canoe by holding the ring with my hands,<br/>It hurts them. I could do with tying something to the wooden<br/>ring and pulling the canoe that way!")
+            }
+          }
+          else {
+            msg (".....I haven't got any rope.")
+          }
+        }
+        else {
+          msg (".....I can't see a canoe here.")
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>look tree;look #text# tree;x tree;x #text# tree;exam tree;exam #text# tree;examine tree;examine#text# tree;look tree #text#; look #text# tree #text#;x tree #text#;x #text# tree #text#;exam tree #text#;exam #text# tree #text#;examine tree #text#;examine #text# tree #text#</pattern>
+      <script>
+        msg (".....This one is in better health now the buds are growing on the branches.")
+      </script>
+    </command>
+    <command>
+      <pattern>look branches;look #text# branches;look branches #text#;look #text# branches #text#;x branches;x #text# branches;x branches #text#;x #text# branches #text#;Qexam branches;exam #text# branches;exam branches #text#;exam #text# branches #text#;examine branches;examine #text# branches;examine branches #text#;examine #text# branches #text#</pattern>
+      <script>
+        msg ("....They're just branches growing from a healthy tree.")
+      </script>
+    </command>
+    <command>
+      <pattern>look clearing;look #text# clearing;look clearing #text#;look #text# clearing #text#;x clearing;x #text# clearing; clearing #text#;x #text# clearing #text#;exam clearing;exam #text# clearing;exam clearing #text#;exam #text# clearing #text#;examine clearing;examine #text# clearing;examine clearing #text#;examine #text# clearing #text#</pattern>
+      <script><![CDATA[
+        msg (".....The clearing has several bushes dotted around the area.<br/>Off to the east I see a small clump of trees in the distance.")
+      ]]></script>
+    </command>
+    <command>
+      <pattern>climb tree;climb #text# tree;climb tree #text#;climb #text# tree #text#</pattern>
+      <script>
+        msg (".....Listen Mable I'm afraid of heights so the answer to that is no!")
+      </script>
+    </command>
+    <command>
+      <pattern>look bushes;look #text# bushes;look shrubs;look #text# shrubs</pattern>
+      <script>
+        msg (".....They're just bushes surrounding the clearing.")
+      </script>
+    </command>
+    <exit alias="north" to="Outside Shed">
+      <inherit name="northdirection" />
+    </exit>
+    <command>
+      <pattern>hint;hints</pattern>
+      <script><![CDATA[
+        if (not GetBoolean(Canoe, "alongside")) {
+          SetForegroundColour ("CadetBlue")
+          msg ("<br/>" + whitespaces(9) + "(no hints available at the moment)")
+          SetForegroundColour ("WhiteSmoke")
+        }
+        else {
+          SetForegroundColour ("CadetBlue")
+          msg ("<br/>" + whitespaces(9) + "(drag canoe.)")
+          SetForegroundColour ("WhiteSmoke")
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>look east;look #text# east;look trees;look #text# trees;look #text# trees #text#</pattern>
+      <script><![CDATA[
+        msg (".....Looking to the east I'm sure I can see a group of horse<br/>chestnut trees swaying in the breeze. But I would be sure<br/>if I went and had a closer look at them.")
+      ]]></script>
+    </command>
+    <command>
+      <pattern>look buds;look #text# buds;look #text# buds #text#</pattern>
+      <script>
+        msg (".....They're bursting forth from the branches.")
+      </script>
+    </command>
+    <object name="Broken branch">
+      <inherit name="editor_object" />
+      <alt type="stringlist">
+        <value>bough</value>
+        <value>broken bough</value>
+        <value>branch</value>
+      </alt>
+      <takemsg>.....Mmmm! Wonder what I could do with this?</takemsg>
+      <take type="script">
+        if (GetBoolean(Broken branch, "lodged")) {
+          msg (".....I can't reach it from here, it's stuck the in the tree.")
+        }
+        else {
+          msg (".....Mmmm! I could do something with this!")
+          MoveObject (Broken branch, player)
+        }
+      </take>
+      <look type="script"><![CDATA[
+        if (Got(Broken branch)) {
+          msg (".....The branch I am holding is solid and it is heavy in weight.")
+        }
+        else if (ListContains(ScopeReachable(), Broken branch)) {
+          msg (".....The broken branch is on the floor at the moment. It's about<br/>2ft in length and around 3\" thick. It's a solid piece of wood.")
+        }
+        else {
+          msg (".....The broken bough has obviously fallen from the tree and is<br/>just lying on the ground, the branch is quite thick and solid. I'd<br/>say it's about 2ft in length an around 3\" thick.")
+        }
+      ]]></look>
+    </object>
+  </object>
+  <object name="Copse">
+    <inherit name="editor_room" />
+    <beforeenter type="script">
+      ClearScreen
+    </beforeenter>
+    <description type="script"><![CDATA[
+      msg (".....Wow! I'm standing in a small cluster of trees. They seem to<br/>be congregating together, as if they were whispering to each<br/>other and dancing in the gentle breeze. The branches of the<br/>trees are heavily laden with leaves and fruit.")
+      picture ("linebarblue2bb.jpg")
+      msg ("")
+    ]]></description>
+    <exit alias="west" to="Clearing">
+      <inherit name="westdirection" />
+    </exit>
+    <command>
+      <pattern>look branches;look #text# branches;look boughs;look #text# boughs;look branches #text#;look #text# branches #tex#t;look #text# bough #text#;look bough #text#;look boughs #text#;look #text# boughs #text#</pattern>
+      <script><![CDATA[
+        if (GetBoolean(Conkers, "fallen")) {
+          msg (".....The intermingling branches are full of leaves and fruit. I can<br/>just make out where the stuck branch is amongst al the others.")
+        }
+        else {
+          if (GetBoolean(Broken branch, "lodged")) {
+            msg (".....The intermingling branches are full of leaves and fruit. There<br/>is a coil of rope hanging down from them.")
+          }
+          else {
+            msg (".....The intermingling branches are full of leaves and fruit.")
+          }
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>look fruit;look #text# fruit;look fruit #text#;look #text# fruit #text#</pattern>
+      <script>
+        msg (".....The fruit on the trees appears to be horse chestnuts.")
+      </script>
+    </command>
+    <command>
+      <pattern>look horse chestnuts;look #text# horse chestnuts;look horse chestnuts #text#;look #text# horse chestnuts #text#;look conkers;look #text# conkers;look conkers #text#;look #text# conkers #text#;look chestnuts;look #text# chestnuts;look chestnut;look #text# chestnut;look chestnuts #text#;look #text# chestnuts #text#;look chestnut #text#;look #text# chestnut #text#</pattern>
+      <script><![CDATA[
+        if (Got(Conkers)) {
+          msg (".....The brown smooth conkers, which have burst out of their<br/>thorny green shells, shine with a lustre. Takes me back to my<br/>childhood of threading them on a shoelace and either soaking<br/>or boiling them in vinegar to harden them.")
+        }
+        else if (GetBoolean(Conkers, "fallen")) {
+          if (not ListContains(ScopeReachable(), Conkers)) {
+            msg (".....The conkers are hanging off the branches.")
+          }
+          else {
+            msg (".....The brown smooth conkers, which have burst out of their<br/>thorny green shells, shine with a lustre. Takes me back to my<br/>childhood of threading them on a shoelace and either soaking<br/>or boiling them in vinegar to harden them.")
+          }
+        }
+        else {
+          msg (".....The conkers are hanging off the branches.")
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>climb tree;climb #text# tree;climb tree #text#;climb #text# tree #text#;climb trees;climb #text# trees;climb trees #text#;climb #text# trees #text#</pattern>
+      <script><![CDATA[
+        msg (".....I may, or may not have mentioned this before but I'm frightened<br/>of heights, so there is no way on god's earth that I am climbing any<br/>of those trees. However I feel as if I may need some of those horse<br/>chestnuts. Just a gut feeling!")
+      ]]></script>
+    </command>
+    <command>
+      <pattern>get conkers;get #text# conkers;get conkers #text#;get #text# conkers #text#;take conkers;take #text# conkers;take conkers #text#;take #text# conkers #text#;get chestnuts;get #text# chestnuts;get chestnuts #text#;chestnuts #text# chestnuts #text#;take chestnuts;take #text# chestnuts;take chestnuts #text#;take #text# chestnuts #text#;get chestnut;get #text# chestnut;get chestnut #text#;chestnut #text# chestnut #text#;take chestnut;take #text# chestnut;take chestnut #text#;take #text# chestnut #text#</pattern>
+      <script><![CDATA[
+        if (not Got(Conkers)) {
+          if (not ListContains(ScopeReachable(), Conkers)) {
+            msg (".....I can't reach them from here. No! I'm not climbing the tree.<br/>There must be some other way round this problem.")
+          }
+          else {
+            msg (".....Ok.")
+            MoveObject (Conkers, player)
+          }
+        }
+        else {
+          msg (".....I've got some, that's enough surely!")
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>look leaves;look #text# leaves;look leaves #text#;look #text# leaves #text#</pattern>
+      <script>
+        msg (".....Strange, but they're luxuriously green.")
+      </script>
+    </command>
+    <command>
+      <pattern>look conker trees;look #text# conker trees;look conker trees #text#;look #text# conker trees #text#;look chestnut trees;look #text# chestnut trees;look chestnut trees #text#;look #text# chestnut trees #text#:look horse chestnut trees;look #text# horse chestnut trees;look horse chestnut trees #text#;look #text# horse chestnut trees #text#</pattern>
+      <script><![CDATA[
+        msg (".....The small group of trees all cluster round each other as  they<br/>sway gently in the cold breeze that wafts through here. I'm really<br/>surprised that they grow at all in these dull caverns. there is no<br/>sunlight to warm them. And yet the fruit still grows!")
+      ]]></script>
+    </command>
+    <command>
+      <pattern>throw branch;throw broken branch;throw #text# branch;throw branch #text#;throw broken branch #text#;throw #text# branch #text#;chuck branch;chuck broken branch;chuck #text# branch;chuck branch #text#;chuck broken branch #text#;chuck #text# branch #text#;sling branch;sling broken branch;sling #text# branch;sling branch #text#;sling broken branch #text#;sling #text# branch #text#;</pattern>
+      <script><![CDATA[
+        if (GetBoolean(Broken branch, "tied")) {
+          if (Got(Broken branch)) {
+            msg (".....Oh crap! Throwing that branch has got it lodged in with the<br/>other branches in the tree. The tied rope is hanging down from<br/>it to the floor. Mmmm!")
+            SetObjectFlagOn (Broken branch, "lodged")
+            MoveObject (Broken branch, Store)
+          }
+          else {
+            msg (".....I haven't got a branch with me.")
+          }
+        }
+        else {
+          if (Got(Broken branch)) {
+            msg (".....Ok, I've done that and the branch has bounced off the<br/>tree trunk and landed back on the floor.<br/>")
+            MoveObject (Broken branch, player.parent)
+            msg (whitespaces(11) + FormatObjectList(player.parent.objectslistprefix, GetNonTransparentParent(player.parent), Template("And"), ".", false))
+          }
+          else {
+            msg (".....I haven't got a branch with me.")
+          }
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>pull rope;pull #text# rope;pull rope#text#;pull #text# rope #text#;yank rope;yank #text# rope;yank rope#text#;yank #text# rope #text#;tug rope;tug #text# rope;tug rope#text#;tug #text# rope #text#</pattern>
+      <script><![CDATA[
+        if (GetBoolean(Broken branch, "lodged")) {
+          msg (".....Ok, I'll do that.")
+          msg (game.press)
+          wait {
+            msg (".....Oh dear, pulling on the rope that was tied to the branch has caused<br/>some of the conkers to fall down onto the ground and now the damned<br/>thing's stuck up there in amongst all the other branches. And oh bloody<br/>great! the rope's come untied as well and has fell down onto the ground.<br/>Wonderful!<br/>")
+            MoveObject (Conkers, Copse)
+            MoveObject (Coil of Rope, Copse)
+            Coil of Rope.alias = "Coil of Rope"
+            SetObjectFlagOn (Conkers, "fallen")
+            SetObjectFlagOff (Broken branch, "tied")
+            SetObjectFlagOn (Broken branch, "stuckfast")
+            msg (whitespaces(11) + FormatObjectList(player.parent.objectslistprefix, GetNonTransparentParent(player.parent), Template("And"), ".", false))
+          }
+        }
+        else {
+          if (not Got(Coil of Rope)) {
+            msg (".....I haven't got one to pull?")
+          }
+          else {
+            msg (".....I can't see the sense in that.")
+          }
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>look trees;look #text# trees;look trees #text#;look #text# trees #text#;look tree;look #text# tree;look tree #text#;look #text# tree #text#</pattern>
+      <script>
+        if (not GetBoolean(Broken branch, "lodged")) {
+          msg (".....The trees are heavily laden with horse chestnuts.")
+        }
+        else {
+          if (GetBoolean(Broken branch, "stuckfast")) {
+            msg (".....I can just see the broken branch that's stuck up there.")
+          }
+          else {
+            msg (".....I can see a rope hanging down from one of the branches.")
+          }
+        }
+      </script>
+    </command>
+    <command>
+      <pattern>get branch;get #text# branch;get branch #text#;get #text# branch #text#;get broken branch;get #text# broken branch;get broken branch #text#;get #text# broken branch #text#;take branch;take #text# branch;take branch #text#;take #text# branch #text#;take broken branch;take #text# broken branch;take broken branch #text#;take #text# broken branch #text#</pattern>
+      <script>
+        if (GetBoolean(Broken branch, "lodged")) {
+          msg (".....I can't reach it from here!")
+        }
+        else if (ListContains(ScopeReachable(), Broken branch)) {
+          msg (".....Mmmm! I could something with this.")
+          MoveObject (Broken branch, player)
+        }
+        else if (Got(Broken branch)) {
+          msg (".....I'm already carrying it.")
+        }
+        else {
+          msg (".....I can't see one round here!")
+        }
+      </script>
+    </command>
+    <command>
+      <pattern>look branch;look #text# branch;look branch #text#;look #text# branch #text#;look broken branch;look #text# broken branch;look broken branch #text#;look #text# broken branch #text#</pattern>
+      <script>
+        if (GetBoolean(Broken branch, "lodged")) {
+          msg (".....It's jammed in between the other branches in one of the trees.")
+        }
+        else if (Got(Broken branch)) {
+          msg (".....The branch is solid and heavy.")
+        }
+        else if (not ListContains(ScopeReachable(), Broken branch)) {
+          msg (".....I can't see the broken branch round here!")
+        }
+      </script>
+    </command>
+  </object>
+  <object name="Dark Cave">
+    <inherit name="editor_room" />
+    <beforeenter type="script">
+      ClearScreen
+    </beforeenter>
+    <description type="script"><![CDATA[
+      firsttime {
+        msg (".....The dark cave I'm standing in chills me to the bone. Not<br/>that it's cold but there's something here that hangs over the<br/>atmosphere of this area and feels intimidating in its entirety.<br/>I'm starting to get cold!")
+        picture ("linebarblue2bbb.jpg")
+        msg ("")
+        msg (whitespaces(11) + FormatObjectList(player.parent.objectslistprefix, GetNonTransparentParent(player.parent), Template("And"), ".", false))
+        if (ListContains(ScopeReachable(), Canoe)) {
+          SetObjectFlagOn (Canoe, "alongside")
+        }
+      }
+      otherwise {
+        msg (".....The dark cave I'm standing in chills me to the bone. Not<br/>that it's cold but there's something here that hangs over the<br/>atmosphere of this area and feels intimidating in its entirety.<br/>I'm starting to get cold!")
+        picture ("linebarblue2bbb.jpg")
+        msg ("")
+        if (ListContains(ScopeReachable(), Canoe)) {
+          SetObjectFlagOn (Canoe, "alongside")
+        }
+      }
+    ]]></description>
+    <exit alias="east" to="Clearing">
+      <inherit name="eastdirection" />
+      <script type="script">
+        if (Got(Coil of Rope)) {
+          if (GetBoolean(Wood Ring, "tied")) {
+            if (GetBoolean(Canoe, "alongside")) {
+              SetObjectFlagOff (Canoe, "alongside")
+              MoveObject (Coil of Rope, Dark Cave)
+              msg (whitespaces (7) + "I'll just pop the rope down here for a while!")
+              msg (game.press)
+              wait {
+                MoveObject (player, Clearing)
+              }
+            }
+            else {
+              MoveObject (player, Clearing)
+            }
+          }
+          else {
+            MoveObject (player, Clearing)
+          }
+        }
+        else {
+          MoveObject (player, Clearing)
+        }
+      </script>
+    </exit>
+    <command>
+      <pattern>look round;look #text# round;look around;look #text# around;look round #text#;look #text# round #text#;look around #text#;look #text# around #text#</pattern>
+      <script><![CDATA[
+        msg (".....This dark cave is a lot like the tunnel only wider, there is<br/>slimey water trickling down the walls from the roof into the<br/>ridge on the floor leading to the corner.")
+      ]]></script>
+    </command>
+    <object name="Furrow">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt type="stringlist">
+        <value>rut</value>
+        <value>ruts</value>
+        <value>ridges</value>
+        <value>ridge</value>
+        <value>trough</value>
+      </alt>
+      <look type="script">
+        msg (".....The ridge runs directly into the corner.")
+      </look>
+    </object>
+    <object name="Walls">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt type="stringlist">
+        <value>wall</value>
+        <value>walls</value>
+        <value>rock wall</value>
+        <value>rock walls</value>
+      </alt>
+      <look type="script"><![CDATA[
+        msg (".....They're covered with slimey water trickling down from<br/>the roof and running in the ridge to the corner.")
+      ]]></look>
+    </object>
+    <object name="Cave Floor">
+      <inherit name="editor_object" />
+      <scenery />
+      <look type="script">
+        msg (".....I see a furrow on the ground leading to the corner.")
+      </look>
+    </object>
+    <command>
+      <pattern>look corner;look #text# corner;look #text# corner #text#;x corner;x #text# corner;x #text# corner #text#;exam corner;exam #text# corner;exam #text# corner #text#;examine corner;examine #text# corner;examine #text# corner #text#</pattern>
+      <script><![CDATA[
+        msg ("<br/>.....It's pretty dark here I will go and have a look.<br/>")
+        msg (space () + game.press + "<br/>")
+        wait {
+          MoveObject (player, Corner)
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>go corner;go #text# corner;go #text# corner #text#</pattern>
+      <script><![CDATA[
+        if (not GetBoolean(Canoe, "dragged")) {
+          msg (".....Ok I'll go and have a look! <br/>")
+          msg (game.press)
+          wait {
+            MoveObject (player, Corner)
+          }
+        }
+        else {
+          msg (".....The corner's empty now, I don't want to go back.")
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>pull canoe;pull #text# canoe;pull #text# canoe #text#;tug canoe;tug #text# canoe;tug #text# canoe #text#;drag canoe;drag #text# canoe;drag #text# canoe #text#;pull boat;pull #text# boat;pull #text# boat #text#;tug boat;tug #text# boat;tug #text# boat #text#;drag boat;drag #text# boat;drag #text# boat #text#</pattern>
+      <script><![CDATA[
+        if (GetBoolean(Canoe, "alongside")) {
+          if (Got(Coil of Rope)) {
+            if (GetBoolean(Wood Ring, "tied")) {
+              msg ("<br/>" + whitespaces(7) +"Where to?")
+              get input {
+                if (result = "east" or result = "to east" or result = "to the east" or result = "clearing" or result = "to clearing" or result = "to the clearing" or result = "e" or result = "the east" or result = "the clearing") {
+                  if (not GetBoolean(Canoe, "lookedin")) {
+                    MoveObject (Canoe, Clearing)
+                    MoveObject (Wood Ring, Clearing)
+                    MoveObject (player, Clearing)
+                  }
+                  else {
+                    MoveObject (Oar, Clearing)
+                    MoveObject (Canoe, Clearing)
+                    MoveObject (Wood Ring, Clearing)
+                    MoveObject (player, Clearing)
+                  }
+                }
+                else {
+                  if (result = "corner" or result = "to corner" or result = "to the corner" or result = "back to the corner") {
+                    msg ("<br/>" + whitespaces(7) + "Why should I want to drag it back there for?")
+                  }
+                  else {
+                    msg ("<br/>" + whitespaces(11) + "Well that doesn't make any sense to me at all!")
+                  }
+                }
+              }
+            }
+            else {
+              msg (".....I can't drag the canoe by holding the ring with my hands,<br/>It hurts them. I could do with tying something to the wooden<br/>ring and pulling the canoe that way!")
+            }
+          }
+          else {
+            msg (".....I haven't got any rope.")
+          }
+        }
+        else {
+          msg (".....I can't see a canoe here.")
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>hint;hints</pattern>
+      <script><![CDATA[
+        if (not GetBoolean(Canoe, "alongside")) {
+          SetForegroundColour ("CadetBlue")
+          msg ("<br/>" + whitespaces(9) + "(no hints available at the moment)")
+          SetForegroundColour ("WhiteSmoke")
+        }
+        else {
+          SetForegroundColour ("CadetBlue")
+          msg ("<br/>" + whitespaces(9) + "(drag canoe)")
+          SetForegroundColour ("WhiteSmoke")
+        }
+      ]]></script>
+    </command>
+  </object>
+  <object name="Corner">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script">
+      if (GetBoolean(Tarpaulin, "moved")) {
+        if (GetBoolean(Canoe, "dragged")) {
+          msg (whitespaces (11) + "I'm in the corner of a cave, it's very chilly in here.")
+          msg (whitespaces(9) + "The tarpaulin lies crumpled in a heap on the floor.")
+          picture ("long linebar.jpg")
+        }
+        else {
+          SetObjectFlagOn (Canoe, "alongside")
+          msg (whitespaces(7) + "There is a long canoe here in the corner!")
+          picture ("scroll elongated.gif")
+        }
+      }
+      else {
+        msg (whitespaces(9) + "Here in the slimey wet corner of the cave")
+        msg (whitespaces(9) + "lies a crumpled tarpaulin. It seems to be")
+        msg (whitespaces(13) + "covering some thing large and long.")
+        picture ("small extra linebar.jpg")
+      }
+      if (ListContains(ScopeReachable(), Canoe)) {
+        SetObjectFlagOn (Canoe, "alongside")
+      }
+    </description>
+    <object name="Tarpaulin">
+      <inherit name="editor_object" />
+      <alt type="stringlist">
+        <value>canvass</value>
+        <value>dropcloth</value>
+        <value>sailcloth</value>
+        <value>oilcloth</value>
+        <value>oilskin</value>
+        <value>sheet</value>
+        <value>cover</value>
+        <value>covering</value>
+        <value>crumpled tarpaulin</value>
+        <value>crumpled tarp</value>
+        <value>crumpled cover</value>
+        <value>crumpled canvass</value>
+      </alt>
+      <scenery />
+      <take type="script"><![CDATA[
+        if (GetBoolean(Tarpaulin, "moved")) {
+          msg (".....I've moved it once, that's enough! I don't need it.")
+        }
+        else {
+          msg (".....I can't take that, but I'll see what's underneath!<br/>")
+          SetObjectFlagOn (Canoe, "alongside")
+          SetObjectFlagOn (Tarpaulin, "moved")
+          MoveObject (Canoe, Corner)
+          MoveObject (Wood Ring, Corner)
+          msg (whitespaces(11) + FormatObjectList(player.parent.objectslistprefix, GetNonTransparentParent(player.parent), Template("And"), ".", false))
+        }
+      ]]></take>
+      <look type="script">
+        msg (".....The thick cover is oil based and waterproof.")
+      </look>
+      <pull type="script"><![CDATA[
+        if (GetBoolean(Tarpaulin, "moved")) {
+          msg (".....I've moved it once, that's enough!")
+        }
+        else {
+          msg (".....Ok, let's see what's underneath?<br/>")
+          SetObjectFlagOn (Canoe, "alongside")
+          SetObjectFlagOn (Tarpaulin, "moved")
+          MoveObject (Canoe, Corner)
+          MoveObject (Wood Ring, Corner)
+          msg (whitespaces(11) + FormatObjectList(player.parent.objectslistprefix, GetNonTransparentParent(player.parent), Template("And"), ".", false))
+        }
+      ]]></pull>
+      <remove type="script">
+        if (GetBoolean(Tarpaulin, "moved")) {
+          msg (".....I've moved it once, that's enough.")
+        }
+        else {
+          msg (".....Ok, let's see what's underneath.")
+          SetObjectFlagOn (Canoe, "alongside")
+          SetObjectFlagOn (Tarpaulin, "moved")
+          MoveObject (Canoe, Corner)
+          MoveObject (Wood Ring, Corner)
+          msg (whitespaces(11) + FormatObjectList(player.parent.objectslistprefix, GetNonTransparentParent(player.parent), Template("And"), ".", false))
+        }
+      </remove>
+      <tug type="script">
+        if (GetBoolean(Tarpaulin, "dragged")) {
+          msg (".....I've moved it once, that's enough.")
+        }
+        else {
+          msg (".....Ok, let's see what's underneath.")
+          SetObjectFlagOn (Canoe, "dragged")
+          SetObjectFlagOn (Tarpaulin, "moved")
+          MoveObject (Canoe, Corner)
+          MoveObject (Wood Ring, Corner)
+          msg (whitespaces(11) + FormatObjectList(player.parent.objectslistprefix, GetNonTransparentParent(player.parent), Template("And"), ".", false))
+        }
+      </tug>
+    </object>
+    <command>
+      <pattern>look corner;look #text# corner; exam corner;exam #text# corner;examine corner;examine#text# corner; x corner;x #text# corner</pattern>
+      <script><![CDATA[
+        if (GetBoolean(Canoe, "dragged")) {
+          msg (".....The damp corner is wet with mildew, there's a tarp all crumpled up.")
+        }
+        else {
+          if (GetBoolean(Tarpaulin, "moved")) {
+            msg (".....I see a large canoe nestled in the corner.")
+          }
+          else {
+            msg (".....Here in the slimey wet corner of the cave lies a crumpled<br/>tarpaulin. It seems to be covering some thing large and long.")
+          }
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>go cave;go #text# cave</pattern>
+      <script><![CDATA[
+        if (GetBoolean(Wood Ring, "tied")) {
+          msg (".....Ok.<br/>")
+          msg (game.press)
+          wait {
+            SetObjectFlagOff (Canoe, "alongside")
+            MoveObject (Oar, Store)
+            MoveObject (Coil of Rope, Corner)
+            MoveObject (player, Dark Cave)
+          }
+        }
+        else {
+          msg (".....Ok<br/>")
+          msg (game.press)
+          wait {
+            SetObjectFlagOff (Canoe, "alongside")
+            MoveObject (Oar, Store)
+            MoveObject (player, Dark Cave)
+          }
+        }
+      ]]></script>
+    </command>
+    <object name="Corner Ridge">
+      <inherit name="editor_object" />
+      <alt type="stringlist">
+        <value>furrow</value>
+        <value>rut</value>
+      </alt>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <scenery />
+      <look type="script"><![CDATA[
+        if (GetBoolean(Tarpaulin, "moved")) {
+          msg (".....It seems that dragging the canoe, caused the ridge in the floor")
+        }
+        else {
+          msg (".....The ridge is deep and pretty wide. It look like something<br/>has been dragged along the floor and created this furrow.")
+        }
+      ]]></look>
+    </object>
+    <command>
+      <pattern>look floor;look #text# floor;look ground;look #text# ground;x floor;x #text# floor;x ground;x #text# ground;exam floor;exam #text# floor;exam ground;exam #text# ground;examine floor;examine #text# floor;examine ground;examine #text# ground</pattern>
+      <script>
+        msg (".....There is a ridge embedded in the ground.")
+      </script>
+    </command>
+    <command>
+      <pattern>pull canoe;pull #text# canoe;pull #text# canoe #text#;tug canoe;tug #text# canoe;tug #text# canoe #text#;drag canoe;drag #text# canoe;drag #text# canoe #text#;pull boat;pull #text# boat;pull #text# boat #text#;tug boat;tug #text# boat;tug #text# boat #text#;drag boat;drag #text# boat;drag #text# boat #text#</pattern>
+      <script><![CDATA[
+        if (GetBoolean(Canoe, "alongside")) {
+          if (Got(Coil of Rope)) {
+            if (GetBoolean(Wood Ring, "tied")) {
+              msg (whitespaces(8) + "Let's get it out of the corner.")
+              msg (whitespaces(12) + "At least that will be a start." + "<br/>")
+              msg (game.press)
+              wait {
+                if (not GetBoolean(Canoe, "lookedin")) {
+                  SetObjectFlagOn (Canoe, "dragged")
+                  MoveObject (Canoe, Dark Cave)
+                  MoveObject (Wood Ring, Dark Cave)
+                  MoveObject (player, Dark Cave)
+                }
+                else {
+                  SetObjectFlagOn (Canoe, "dragged")
+                  MoveObject (Oar, Dark Cave)
+                  MoveObject (Canoe, Dark Cave)
+                  MoveObject (Wood Ring, Dark Cave)
+                  MoveObject (player, Dark Cave)
+                }
+              }
+            }
+            else {
+              msg (".....I can't drag the canoe by holding the ring with my hands,<br/>It hurts them. I could do with tying something to the wooden<br/>ring and pulling the canoe that way!")
+            }
+          }
+          else {
+            msg (".....I haven't got the rope.")
+          }
+        }
+        else {
+          msg (".....I can't see a canoe here.")
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>hint;hints</pattern>
+      <script><![CDATA[
+        if (GetBoolean(Canoe, "dragged")) {
+          SetForegroundColour ("CadetBlue")
+          msg ("<br/>" + whitespaces(9) + "(Nothing to add I'm afraid.)")
+          SetForegroundColour ("WhiteSmoke")
+        }
+        else if (not GetBoolean(Tarpaulin, "moved")) {
+          SetForegroundColour ("CadetBlue")
+          msg ("<br/>" + whitespaces(9) + "(Move the tarpaulin.)")
+          SetForegroundColour ("WhiteSmoke")
+        }
+        else if (not GetBoolean(Wood Ring, "tied")) {
+          SetForegroundColour ("CadetBlue")
+          msg ("<br/>" + whitespaces(9) + "(Need to tie a rope to the wooden ring.)")
+          SetForegroundColour ("WhiteSmoke")
+        }
+        else {
+          SetForegroundColour ("CadetBlue")
+          msg ("<br/>" + whitespaces(9) + "(Drag canoe.)")
+          SetForegroundColour ("WhiteSmoke")
+        }
+      ]]></script>
+    </command>
+  </object>
+  <verb>
+    <property>lookin</property>
+    <pattern>look in;look inside</pattern>
+    <defaultexpression>"I can't look in there"</defaultexpression>
+  </verb>
+  <command>
+    <pattern>go canoe; go #text# canoe;get in canoe;get in the canoe;climb #text# canoe;jump #text# canoe;go boat; go #text# boat;get in boat;get in the boat;climb #text# boat;jump #text# boat</pattern>
+    <script><![CDATA[
+      if (player.parent = Shore Side) {
+        if (GetBoolean(Canoe, "river")) {
+          msg (".....Ok, give me a second, you know I do not like water<br/>at the best of times, because I can't swim so I'm scared.<br/>")
+          msg (game.press)
+          wait {
+            MoveObject (Oar, The Canoe)
+            MoveObject (player, The Canoe)
+          }
+        }
+        else {
+          if (not GetBoolean(Canoe, "alongside")) {
+            msg (".....I'm sorry, I can't see the canoe here.")
+          }
+          else {
+            msg (".....I can't see the sense in getting in the canoe just yet.<br/>I'll be getting out again, it's just a waste of time, isn't it? ")
+          }
+        }
+      }
+      else {
+        if (not GetBoolean(Canoe, "alongside")) {
+          msg (".....There's no canoe here!")
+        }
+        else {
+          msg (".....I can't see the sense in getting in the canoe just yet.<br/>I'll only be getting out again, that's  just a waste of time.")
+        }
+      }
+    ]]></script>
+  </command>
+  <command>
+    <pattern>look bow;look #text# bow;look #text# bow #text#</pattern>
+    <script>
+      if (not GetBoolean(Canoe, "alongside")) {
+        msg (".....The canoe is not here.")
+      }
+      else {
+        msg (".....It's just the front of the canoe")
+      }
+    </script>
+  </command>
+  <verb>
+    <property>remove</property>
+    <pattern>remove;remove the;move;look under;look below;look underneath</pattern>
+    <defaultexpression>"You can't do that"</defaultexpression>
+  </verb>
+  <object name="The River">
+    <inherit name="editor_room" />
+  </object>
+  <verb>
+    <property>tug</property>
+    <pattern>tug;drag;tug the;drag the</pattern>
+    <defaultexpression>"Drag what?"</defaultexpression>
+  </verb>
+  <command>
+    <pattern>look round;look #text# round;look round #text#;look #text# round #text#;look around;look #text# around;look around #text#;look #text# around #text#</pattern>
+    <script>
+      msg (".....I can't see any different round here to help!")
+    </script>
+  </command>
+  <command>
+    <pattern>look oar;look #text# oar</pattern>
+    <script>
+      if (not GetBoolean(Canoe, "alongside")) {
+        msg (".....I'm sorry, there's no oar here!")
+      }
+      else {
+        msg (".....It's a typical one bladed oar. About 3 to 4 ft in length.")
+      }
+    </script>
+  </command>
+  <command>
+    <pattern>look canoe;look boat;look boat #text#;look canoe #text#</pattern>
+    <script><![CDATA[
+      if (GetBoolean(Canoe, "river")) {
+        msg (".....The canoe's bobbing about on the edge of the shore.")
+      }
+      else if (not GetBoolean(Canoe, "alongside")) {
+        msg (".....I can't see a canoe here.")
+      }
+      else if (GetBoolean(Wood Ring, "tied")) {
+        msg (".....The canoe is large and heavy, but well constructed. There is<br/>a rope tied to the wooden ring that's lashed to bow of the boat.")
+      }
+      else {
+        msg (".....It's a long canoe which sits in the ridge on the floor. It seems that<br/>the canoe was responsible for creating the furrow. The boat was built<br/>using strips of pliable wood, covered with bark from a birch tree. But<br/>none-the-less it seems very sturdy. There is a wooden ring lashed to<br/>the bow.")
+      }
+    ]]></script>
+  </command>
+  <object name="The Canoe">
+    <inherit name="editor_room" />
+  </object>
+  <command>
+    <pattern>push boat;push canoe;push #text# boat;push #text# canoe;shove boat;shove canoe;shove #text# boat;shove #text# canoe</pattern>
+    <script><![CDATA[
+      if (player.parent = Shore Side) {
+        if (GetBoolean(Canoe, "alongside")) {
+          if (GetBoolean(Canoe, "river")) {
+            msg (".....It's already in the water, waiting.")
+          }
+          else {
+            if (not GetBoolean(Wood Ring, "tied")) {
+              msg (".....Ok, heave!<br/>")
+              msg (game.press)
+              wait {
+                msg (".....Oh what the bloody hell have I done! That was your insane suggestion,<br/>pushing the canoe into the river without having the rope tied to the ring has<br/>caused it to drift into the current and has floated away down the river. Now<br/>what the freaking hell am I going to do, that was my only way off this area.<br/>")
+                EnableTimer (endtimer)
+              }
+            }
+            else {
+              msg (".....Ok, heave!<br/>")
+              msg (game.press)
+              wait {
+                msg (".....Phew! Ok the canoe's in the water.")
+                SetObjectFlagOn (Canoe, "river")
+                SetObjectFlagOff (Canoe, "alongside")
+              }
+            }
+          }
+        }
+        else {
+          msg (".....There is no canoe here!")
+        }
+      }
+      else {
+        if (not GetBoolean(Canoe, "dragged")) {
+          msg (".....There is no canoe round here!")
+        }
+        else {
+          msg (".....I have enough trouble dragging it!")
+        }
+      }
+    ]]></script>
+  </command>
+  <object name="Outside Shed">
+    <inherit name="editor_room" />
+    <description type="script"><![CDATA[
+      msg (".....I'm outside an old wooden shed. It seems a little unloved with it's<br/>cracked window pane and it's wooden sides rotting away. The door<br/>is jammed and slightly hangs off of one broken rusted hinge. This is<br/>really strange as it reminds me immensely of my mother's shed at the<br/>bottom of the garden. ")
+      picture ("linebarblue2bbb.jpg")
+      msg ("")
+    ]]></description>
+    <beforeenter type="script">
+      ClearScreen
+    </beforeenter>
+    <object name="Shed Door">
+      <inherit name="editor_object" />
+      <inherit name="container_limited" />
+      <alt type="stringlist">
+        <value>door</value>
+        <value>gate</value>
+        <value>hut door</value>
+        <value>shack door</value>
+        <value>wood door</value>
+        <value>wooden door</value>
+      </alt>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <scenery />
+      <look type="script"><![CDATA[
+        if (not GetBoolean(Shed Door, "kickedin")) {
+          msg (".....The shed door's locked and is held fast. I presume by the rusted<br/>hinge that has performed it's duty over the years but now it is aged<br/>and failing.")
+        }
+        else {
+          msg (".....The shed door has been kicked wide open and sort of lying half<br/>off of it hinges and half leaning on the interior wall.")
+        }
+      ]]></look>
+      <openscript type="script">
+        msg (".....The door is jammed fast, no conventional method will open this.")
+      </openscript>
+    </object>
+    <command>
+      <pattern>look shed;look #text# shed;look #text# shed #text#;look hut;look #text# hut;look #text# hut #text#;look wood shed;look #text# wood shed;look #text# wood shed #text#;look wooden shed;look #text# wooden shed;look wooden shed #text#;look #text# wooden shed #text#;look wood hut;look #text# wood hut;look wood hut #text#;look #text# wood hut #text#;look wooden hut;look #text# wooden hut;look wooden hut #text#;look #text# wooden hut #text#;look shack;look #text# shack;look shack #text#;look #text# shack #text#;look wood shack;look #text# wood shack;look wood shack #text#;look #text# wood shack #text#;look wooden shack;look #text# wooden shack;look wooden shack #text#;look #text# wooden shack #text#</pattern>
+      <script><![CDATA[
+        if (not GetBoolean(Shed Door, "kickedin")) {
+          msg (".....The delapidated wooden shed has seen far better days, but<br/>like everything else, we all our shelf lives before we expire.")
+        }
+        else {
+          msg (".....The decrepit ramshackle hut has had it's door kicked open.")
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>open door;open #text# door;open door #text#;open #text# door #text#</pattern>
+      <script><![CDATA[
+        if (not GetBoolean(Shed Door, "kickedin")) {
+          msg (".....The shed door is competely jammed, no conventional<br/>method will open this door up, I dare say.")
+        }
+        else {
+          msg (".....The shed door is wide open. So that is pointless, don't you think?")
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>close door;close #text# door;close door #text#;close #text# door #text#;shut door;shut #text# door;shut door #text#;shut #text# door #text#</pattern>
+      <script>
+        if (not GetBoolean(Shed Door, "kickedin")) {
+          msg (".....Listen, get a grip, it's already shut.")
+        }
+        else {
+          msg (".....It's happy being open, so I'm not going to upset it!")
+        }
+      </script>
+    </command>
+    <command>
+      <pattern>kick door;kick #text# door;kick door #text#;kick #text# door #text#;break door;break #text# door;break door #text#;break #text# door #text#;smash door;smash #text# door;smash door #text#;smash #text# door #text#</pattern>
+      <script><![CDATA[
+        if (not GetBoolean(Shed Door, "kickedin")) {
+          msg (".....Ok, I'll give a hard kick and see what happens.<br/>")
+          msg (game.press)
+          wait {
+            msg (whitespaces (5) + "Ouch ! That hurt my ankle but it's open now.")
+            SetObjectFlagOn (Shed Door, "kickedin")
+            create exit ("", "shed", Outside Shed, Inside Shed, "")
+            msg ("<br/>" + whitespaces (9) + FormatExitList(player.parent.exitslistprefix, ScopeExits(), Template("Or"), "."))
+          }
+        }
+        else {
+          msg (whitespaces (7) + "Listen to me Bruce Lee it's been kicked open once.")
+        }
+      ]]></script>
+    </command>
+    <command>
+      <pattern>look window;look#text# window;look window #text#;look #text# window #text#</pattern>
+      <script><![CDATA[
+        msg (".....Can't see through the cracked window, it's filthy<br/>and I've got absolutely nothing to clean it with at all. ")
+      ]]></script>
+    </command>
+    <command>
+      <pattern>look hinge;look #text# hinge;look hinge #text#;look #text# hinge #text#;look hinges;look #text# hinges;look hinges #text#;look #text# hinges #text#</pattern>
+      <script>
+        msg (".....The rusty hinge barely holds onto the door.")
+      </script>
+    </command>
+    <command>
+      <pattern>go in shed;go in the shed;go into shed;go into the shed;go through door;go through the door;go in;enter shed;enter #text# shed;enter shed #text#;enter #text# shed #text#;go inside;go inside shed;go inside the shed</pattern>
+      <script>
+        if (GetBoolean(Shed Door, "kickedin")) {
+          MoveObject (player, Inside Shed)
+        }
+        else {
+          msg (".....The shed door is jammed.")
+        }
+      </script>
+    </command>
+    <command>
+      <pattern>put key #text#;put #text# key #text# door;put key #text# door;place key #text#;place #text# key #text# door;place key #text# door;slot key #text#;slot #text# key #text# door;slot key #text# door;slide key #text#;slide #text# key #text# door;slide key #text# door;insert key #text#;insert #text# key #text# door;insert key #text# door;use key lock;use #text# key #text# lock;use key #text# lock;use #text# key #text# lock #text#;fit key lock;fit #text# key lock;fit #text# key #text# lock;fit key #text#</pattern>
+      <script>
+        if (Got(Yale key)) {
+          msg (".....The yale key doesn't fit in the lock.")
+        }
+        else {
+          msg (".....I have no key for it, besides the lock seems broken.")
+        }
+      </script>
+    </command>
+    <command>
+      <pattern>look lock;look lock #text#;look #text# lock; look #text# lock #text#</pattern>
+      <script>
+        msg (".....The rusty lock is broken.")
+      </script>
+    </command>
+    <command>
+      <pattern>break lock;break #text# lock;break lock #text#;break #text# lock #text#;smash lock;smash #text# lock;smash lock #text#;smash #text# lock #text#;hit lock;hit #text# lock;hit lock #text#;hit #text# lock #text#</pattern>
+      <script>
+        msg (".....He he, good idea but the lock's already broken.")
+      </script>
+    </command>
+    <exit alias="south" to="Clearing">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="Inside Shed">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      msg (".....I'm standing here inside this dirty shed, there are bloody<br/>cobwebs all over the inside of the roof and in the corners of<br/>the walls. Where there are webs, there are spiders. I detest<br/>and loathe the creatures, ever since one fell in my hair as a<br/>child. I was never the same since. I see a rope hanging up.")
+      picture ("linebarblue2.jpg")
+      msg ("")
+    ]]></description>
+    <beforeenter type="script">
+      ClearScreen
+    </beforeenter>
+    <object name="Coil of Rope">
+      <inherit name="editor_object" />
+      <take />
+      <usedefaultprefix />
+      <alt type="stringlist">
+        <value>rope</value>
+        <value>length of rope</value>
+      </alt>
+      <look type="script">
+        if (GetBoolean(Wood Ring, "tied")) {
+          msg (".....The rope is tied to the ring on the canoe.")
+        }
+        else if (GetBoolean(Canoe, "tied")) {
+          msg (".....The rope is tied to the broken branch.")
+        }
+        else {
+          msg (".....It's a long coil of old rope.")
+        }
+      </look>
+      <ontake type="script">
+        SetObjectFlagOn (Coil of Rope, "got")
+        MoveObject (Coil of Rope, player)
+      </ontake>
+    </object>
+    <object name="Small Spider">
+      <inherit name="editor_object" />
+      <scenery />
+      <alt type="stringlist">
+        <value>spider</value>
+      </alt>
+      <takemsg>.....You must be mad, Gladyss.</takemsg>
+      <look type="script"><![CDATA[
+        msg (".....Oh no, you're kidding me I'd rather get out of here. And fast<br/>at that! If one was in the house mom would pick it up in a glass<br/>and put it outside, but never harm one. She would have sprayed<br/>the thresholds with I believe some mixture of horse chestnut and<br/>clove of oil.")
+      ]]></look>
+      <kill type="script">
+        msg (".....I am not going anywhere near it.")
+      </kill>
+    </object>
+    <command>
+      <pattern>look shed;look #text# shed;look shed #text#;look #text# shed #text#;look hut;look #text# hut;look hut #text#;look #text# hut #text#</pattern>
+      <script>
+        msg (".....The inside of the hut is absolutely filthy.")
+      </script>
+    </command>
+    <command>
+      <pattern>look roof;look #text# roof;look roof #text#;look #text# roof #text#</pattern>
+      <script>
+        msg (".....Yeuck! It's covered in cobwebs.")
+      </script>
+    </command>
+    <command>
+      <pattern>look cobwebs;look cobwebs #text#;look #text# cobwebs #text#;look #text# cobwebs;look cobweb;look cobweb #text#;look #text# cobweb #text#;look #text# cobweb;look webs;look webs #text#;look #text# webs #text#;look #text# webs;look web;look web #text#;look #text# web #text#;look #text# web</pattern>
+      <script>
+        msg (".....Oh crap! there is a spider here in one of the webs.")
+      </script>
+    </command>
+    <exit alias="out" to="Outside Shed">
+      <inherit name="outdirection" />
+    </exit>
+    <command>
+      <pattern>look window;look#text# window;look window #text#;look #text# window #text#</pattern>
+      <script><![CDATA[
+        msg (".....Can't see through the cracked window, it's filthy<br/>and I've got absolutely nothing to clean it with at all. ")
+      ]]></script>
+    </command>
+    <command>
+      <pattern>get web;get #text# web;get web #tex#;get #text# web #text#;get webs;get #text# webs;get webs #tex#;get #text# webs #text#;get cobweb;get #text# cobweb;get cobweb #tex#;get #text# cobweb #text#;get cobwebs;get #text# cobwebs;get cobwebs #tex#;get #text# cobwebs #text#;take web;take #text# web;take web #tex#;take #text# web #text#;take webs;take #text# webs;take webs #tex#;take #text# webs #text#;take cobweb;take #text# cobweb;take cobweb #tex#;take #text# cobweb #text#;take cobwebs;take #text# cobwebs;take cobwebs #tex#;take #text# webs #text#</pattern>
+      <script>
+        msg (".....You have to be joking!")
+      </script>
+    </command>
+  </object>
+  <command>
+    <pattern>tie rope wooden ring;tie rope ring;tie rope #text# ring;tie rope #text# wooden ring;tie #text# rope #text# ring;tie #text# rope #text# wooden ring;tie rope #text# wood ring;tie rope #text# wood ring;tie #text# rope #text# wood ring;fasten rope wooden ring;fasten rope ring;fasten rope #text# ring;fasten rope #text# wooden ring;fasten #text# rope #text# ring;fasten #text# rope #text# wooden ring;fasten rope #text# wood ring;fasten rope #text# wood ring;fasten #text# rope #text# wood ring;connect rope wooden ring;connect rope ring;connect rope #text# ring;connect rope #text# wooden ring;connect #text# rope #text# ring;connect #text# rope #text# wooden ring;connect rope #text# wood ring;connect rope #text# wood ring;connect #text# rope #text# wood ring</pattern>
+    <script><![CDATA[
+      if (Got(Coil of Rope)) {
+        if (GetBoolean(Canoe, "alongside")) {
+          if (not GetBoolean(Broken branch, "tied")) {
+            if (GetBoolean(Wood Ring, "tied")) {
+              msg (".....It's already tied to the ring.")
+            }
+            else {
+              msg (".....Ok, give me a second here!<br/>")
+              msg (game.press)
+              wait {
+                msg (whitespaces(7) + "There that's all done")
+                SetObjectFlagOn (Wood Ring, "tied")
+                Coil of Rope.alias = "Rope tied to canoe"
+              }
+            }
+          }
+          else {
+            msg (".....At the moment it's tied to the broken branch.")
+          }
+        }
+        else {
+          msg (".....The canoe is not here at the moment.")
+        }
+      }
+      else {
+        msg (".....I'm not in the possession of the rope.")
+      }
+    ]]></script>
+  </command>
+  <command>
+    <pattern>untie #text# rope;untie rope;disconnect rope;untie rope wooden ring;untie rope ring;untie rope #text# ring;untie rope #text# wooden ring;untie #text# rope #text# ring;untie #text# rope #text# wooden ring;untie rope #text# wood ring;untie rope #text# wood ring;untie #text# rope #text# wood ring;unfasten rope wooden ring;unfasten rope ring;unfasten rope #text# ring;unfasten rope #text# wooden ring;unfasten #text# rope #text# ring;unfasten #text# rope #text# wooden ring;unfasten rope #text# wood ring;unfasten rope #text# wood ring;unfasten #text# rope #text# wood ring;disconnect rope wooden ring;disconnect rope ring;disconnect rope #text# ring;disconnect rope #text# wooden ring;disconnect #text# rope #text# ring;disconnect #text# rope #text# wooden ring;disconnect rope #text# wood ring;disconnect rope #text# wood ring;disconnect #text# rope #text# wood ring;undo rope;undo #text# rope;undo rope #text#;undo #text# rope #text#</pattern>
+    <script><![CDATA[
+      if (ListContains(ScopeReachable(), Coil of Rope)) {
+        if (GetBoolean(Wood Ring, "tied")) {
+          if (GetBoolean(Canoe, "river")) {
+            msg (".....Ok, I'll do untie the rope from the wood ring.<br/>")
+            msg (game.press)
+            wait {
+              msg (".....Oh what the bloody hell have I done! That was your insane<br/>suggestion. Untying that rope from the canoe has caused it to<br/>drift into the current and has carried it away down stream. Now<br/>what the freaking hell am I going to do, that was my only way<br/>from this area.<br/>")
+              EnableTimer (endtimer)
+            }
+          }
+          else {
+            msg (".....Ok, that's done.")
+            SetObjectFlagOff (Wood Ring, "tied")
+            Coil of Rope.alias = "Coil of Rope"
+          }
+        }
+        else {
+          if (GetBoolean(Broken branch, "tied")) {
+            msg (".....Ok, that's done!")
+            SetObjectFlagOff (Broken branch, "tied")
+            Coil of Rope.alias = "Coil of Rope"
+          }
+          else {
+            msg (".....The rope isn't tied to anything!")
+          }
+        }
+      }
+      else {
+        msg (".....There is no rope around here.")
+      }
+    ]]></script>
+  </command>
+  <command>
+    <pattern>tie rope broken branch;tie rope branch;tie rope #text# branch;tie rope #text# broken branch;tie #text# rope #text# branch;tie #text# rope #text# broken branch;tie rope #text# broken branch;tie rope #text# broken branch;tie #text# rope #text# broken branch;fasten rope broken branch;fasten rope branch;fasten rope #text# branch;fasten rope #text# broken branch;fasten #text# rope #text# branch;fasten #text# rope #text# broken branch;fasten rope #text# broken branch;fasten rope #text# broken branch;fasten #text# rope #text# broken branch;connect rope broken branch;connect rope branch;connect rope #text# branch;connect rope #text# broken branch;connect #text# rope #text# branch;connect #text# rope #text# broken branch;connect rope #text# broken branch;connect rope #text# broken branch;connect #text# rope #text# broken branch</pattern>
+    <script>
+      if (not GetBoolean(Wood Ring, "tied")) {
+        if (not GetBoolean(Broken branch, "tied")) {
+          if (Got(Coil of Rope)) {
+            if (Got(Broken branch)) {
+              msg (".....Ok, that's done")
+              SetObjectFlagOn (Broken branch, "tied")
+              Coil of Rope.alias = "rope tied to the branch"
+            }
+            else {
+              msg (".....I haven't got a branch.")
+            }
+          }
+          else {
+            msg (".....I'm not carrying any rope.")
+          }
+        }
+        else {
+          msg (".....It's already tied to the branch!")
+        }
+      }
+      else {
+        msg (".....I'm afraid it's tied to the ring on the canoe.")
+      }
+    </script>
+  </command>
+  <command>
+    <pattern>tie rope canoe;tie rope #text# canoe;tie rope #text# canoe #text#;tie #text# rope #text# canoe;fasten rope canoe;fasten rope #text# canoe;fasten rope #text# canoe #text#;fasten #text# rope #text# canoe;tie rope boat;tie rope #text# boat;tie rope #text# boat #text#;tie #text# rope #text# boat;fasten rope boat;fasten rope #text# boat;fasten rope #text# boat #text#;fasten #text# rope #text# boat</pattern>
+    <script><![CDATA[
+      if (Got(Coil of Rope)) {
+        if (GetBoolean(Canoe, "alongside")) {
+          if (not GetBoolean(Wood Ring, "tied")) {
+            if (GetBoolean(Broken branch, "tied")) {
+              msg (".....It's already tied to the branch.")
+            }
+            else {
+              msg (".....I presume you mean the ring on the canoe, so<br/>ok give me a second here just to tie it on.<br/>")
+              msg (game.press)
+              wait {
+                msg (whitespaces(7) + "There that's all done")
+                SetObjectFlagOn (Wood Ring, "tied")
+                Coil of Rope.alias = "Rope tied to the canoe"
+              }
+            }
+          }
+          else {
+            msg (".....It's already tied to the wooden ring.")
+          }
+        }
+        else {
+          msg (".....The canoe is not here at the moment.")
+        }
+      }
+      else {
+        msg (".....I'm not in the possession of a rope.")
+      }
+    ]]></script>
+  </command>
+  <function name="DoTake" parameters="object, ismultiple"><![CDATA[
+    prefix = ""
+    if (ismultiple) {
+      prefix = GetDisplayAlias(object) + ": "
+    }
+    if (object.parent = player) {
+      msg (prefix + DynamicTemplate("AlreadyTaken", object))
+    }
+    else if (not ListContains(ScopeReachable(), object)) {
+      msg (prefix + DynamicTemplate("ObjectNotOpen", GetBlockingObject(object)))
+    }
+    else {
+      volume = 0
+      continue = true
+      foreach (obj, GetAllChildObjects(player)) {
+        if (HasInt(obj, "volume")) {
+          volume = volume + obj.volume
+        }
+      }
+      if (not Contains(player, object)) {
+        volume = volume + GetVolume(object,true)
+      }
+      if (HasInt(player, "maxvolume")) {
+        if (volume > player.maxvolume) {
+          continue = false
+          if (HasString(player, "containerfullmessage")) {
+            message = prefix + player.containerfullmessage
+          }
+          else {
+            message = prefix + DynamicTemplate("FullInventory", object)
+          }
+        }
+      }
+      children = GetDirectChildren(player)
+      if (HasInt(player, "maxobjects")) {
+        if (player.maxobjects > 0) {
+          if (ListCount(children) >= player.maxobjects) {
+            continue = false
+            if (HasString(player, "containermaxobjects")) {
+              message = prefix + player.containermaxobjects
+            }
+            else {
+              message = prefix + DynamicTemplate("MaxObjectsInInventory", object)
+            }
+          }
+        }
+      }
+      if (continue = false) {
+        msg (message)
+      }
+      else {
+        found = true
+        takemsg = object.takemsg
+        switch (TypeOf(object, "take")) {
+          case ("script") {
+            if (ismultiple) {
+              msg (prefix)
+            }
+            do (object, "take")
+            takemsg = ""
+          }
+          case ("boolean") {
+            if (object.take = true) {
+              object.parent = player
+              if (takemsg = null) {
+                takemsg = DynamicTemplate("TakeSuccessful", object)
+              }
+            }
+            else {
+              found = false
+            }
+          }
+          case ("string") {
+            object.parent = player
+            takemsg = object.take
+          }
+          default {
+            found = false
+          }
+        }
+        if (not found and takemsg = null) {
+          takemsg = DynamicTemplate("TakeUnsuccessful", object)
+        }
+        if (LengthOf(takemsg) > 0) {
+          msg (prefix + takemsg)
+        }
+        if (HasScript(object, "ontake")) {
+          do (object, "ontake")
+        }
+      }
+    }
+  ]]></function>
+  <function name="HandleCommand" parameters="command"><![CDATA[
+    msg ("")
+    msg ("> " + SafeXML(command))
+    commands = Split(command, ".")
+    if (ListCount(commands) = 1) {
+      HandleSingleCommand (Trim(command))
+    }
+    else {
+      player.commandqueue = commands
+      HandleNextCommandQueueItem
+    }
+  ]]></function>
+  <function name="UnresolvedCommand" parameters="objectname, varname"><![CDATA[
+    // TO DO: Update names below, we don't need these two variables
+    unresolvedobject = objectname
+    unresolvedkey = varname
+    if (HasString(player.currentcommandpattern, "unresolved")) {
+      if (ListCount(player.currentcommandvarlist) > 1) {
+        msg (player.currentcommandpattern.unresolved)
+      }
+      else {
+        msg (player.currentcommandpattern.unresolved)
+      }
+    }
+    else {
+      if (ListCount(player.currentcommandvarlist) > 1) {
+        msg (Template("UnresolvedObject"))
+      }
+      else {
+        msg (Template("UnresolvedObject"))
+      }
+    }
+    game.unresolvedcommand = player.currentcommandpattern
+    game.unresolvedcommandvarlist = player.currentcommandvarlist
+  ]]></function>
+  <function name="ScopeExits" type="objectlist">
+    return (ScopeExitsForRoom(player.parent))
+  </function>
+  <function name="ShowRoomDescription"><![CDATA[
+    if (game.autodescription) {
+      desc = ""
+      request (Hide, "Location")
+      for (i, 1, 4) {
+        if (i = game.autodescription_youarein) {
+          if (game.autodescription_youarein_useprefix) {
+            youarein = player.parent.descprefix
+            desc = AddDescriptionLine (desc, youarein + " " + GetDisplayName(player.parent) + ".")
+          }
+          else {
+            desc = AddDescriptionLine (desc, "<b>" + CapFirst(GetDisplayName(player.parent)) + "</b>")
+          }
+        }
+        if (i = game.autodescription_youcansee) {
+          objects = whitespaces(8) + FormatObjectList(player.parent.objectslistprefix, GetNonTransparentParent(player.parent), Template("And"), ".", false)
+          desc = AddDescriptionLine(desc, objects)
+        }
+        if (i = game.autodescription_youcango) {
+          exits = whitespaces(4) + FormatExitList(player.parent.exitslistprefix, ScopeExits(), Template("Or"), ".")
+          desc = AddDescriptionLine(desc, exits)
+        }
+        if (i = game.autodescription_description) {
+          if (HasScript(player.parent, "description")) {
+            if (LengthOf(desc) > 0) {
+              msg (desc)
+              desc = ""
+            }
+            do (player.parent, "description")
+          }
+          else {
+            desc = AddDescriptionLine(desc, GetRoomDescription())
+          }
+        }
+      }
+      if (LengthOf(desc) > 0) {
+        msg (desc)
+      }
+    }
+    else {
+      fulldesc = GetRoomDescription()
+      if (LengthOf(fulldesc) > 0) {
+        msg (fulldesc)
+      }
+    }
+  ]]></function>
+  <function name="FormatExitList" parameters="preList, list, preFinal, postList" type="string"><![CDATA[
+    result = ""
+    listLength = ListCount(list)
+    if (listLength > 0) {
+      half = 0
+      if (listLength > 5) {
+        half = listLength / 2
+      }
+      count = 0
+      result = preList + " "
+      foreach (item, list) {
+        result = result + GetDisplayNameLink(item, "exit", item.displayverbs)
+        count = count + 1
+        if (count = listLength - 1) {
+          result = result + " " + preFinal + " "
+        }
+        else if (count < listLength) {
+          result = result + ", "
+        }
+        if (count=half) {
+          result = result + "<br />" +  whitespaces(12)
+        }
+      }
+      result = result + postList
+    }
+    return (result)
+  ]]></function>
+  <function name="whitespaces" parameters="number" type="string"><![CDATA[
+    text = ""
+    for (x, 1, number) {
+      text = text+ " "
+    }
+    return ("<b>"+text+"</b>")
+  ]]></function>
+  <function name="space" parameters="number" type="string"><![CDATA[
+    text = ""
+    for (x, 1, 10, 1) {
+      text = text+ " "
+      return ("<b>"+text+"</b>")
+    }
+  ]]></function>
+</asl>

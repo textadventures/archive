@@ -1,0 +1,178 @@
+<library>
+
+  <!--
+  Title: terse
+  Version: 1.3
+  Author: The Pixie
+  Requires: None
+  Quest version: 5.4
+
+  With this library installed, the built-in function OnEnterRoom is replaced.
+  The player will see the name of the room plus a description when he first enters the room
+  but only the name subsequently. He can get full descriptions by typing VERBOSE,
+  and no descriptions at all with BRIEF; back to normal with TERSE.
+  
+  NOTE: If you use "Automaticaly generate room descriptons", the name of the room will
+  always appear first as a heading.
+  -->
+
+
+
+
+  <command name="terse" pattern="^terse$">
+    <script><![CDATA[
+      game.verbose = false
+      game.brief = false
+      msg ("[Done]")
+    ]]></script>
+  </command>
+
+  <command name="brief" pattern="^brief$">
+    <script><![CDATA[
+      game.brief = true
+      game.verbose = false
+      msg ("[Done]")
+    ]]></script>
+  </command>
+
+
+  <command name="verbose" pattern="^verbose$">
+    <script><![CDATA[
+      game.verbose = true
+      game.brief = false
+      msg ("[Done]")
+    ]]></script>
+  </command>
+
+  <function name="OnEnterRoom" parameters="oldRoom"><![CDATA[
+    game.displayroomdescriptiononstart = false
+    if (IsDefined("oldRoom")) {
+      if (oldRoom <> null) {
+        if (HasScript(oldRoom, "onexit")) {
+          do (oldRoom, "onexit")
+        }
+      }
+    }
+    on ready {
+      if ((not GetBoolean(game.pov.parent, "visited")) and HasScript(game.pov.parent, "beforefirstenter")) {
+        do (game.pov.parent, "beforefirstenter")
+      }
+      on ready {
+        if (HasScript(game.pov.parent, "beforeenter")) {
+          do (game.pov.parent, "beforeenter")
+        }
+        on ready {
+          if (game.gridmap) {
+            Grid_CalculateMapCoordinates (game.pov.parent)
+            Grid_DrawPlayerInRoom (game.pov.parent)
+          }
+          if (IsDefined("oldRoom")) {
+            if (oldRoom <> null) {
+              msg ("")
+            }
+          }
+          request (UpdateLocation, CapFirst(GetDisplayName(game.pov.parent)))
+          msg ("<b>" + GetDisplayName(game.pov.parent)) + "</b>")
+          roomFrameExists = false
+          if (HasString(game.pov.parent, "picture")) {
+            if (LengthOf(game.pov.parent.picture) > 0) {
+              roomFrameExists = true
+              SetFramePicture (game.pov.parent.picture)
+            }
+          }
+          if (game.clearframe and not roomFrameExists) {
+            ClearFramePicture
+          }
+          if (not GetBoolean(game, "brief") and (GetBoolean(game, "verbose") or not GetBoolean(game.pov.parent, "visited"))) {
+            ShowRoomDescription
+          }
+          if ((not GetBoolean(game.pov.parent, "visited")) and HasScript(game.pov.parent, "firstenter")) {
+            do (game.pov.parent, "firstenter")
+          }
+          on ready {
+            if (HasScript(game.pov.parent, "enter")) {
+              do (game.pov.parent, "enter")
+            }
+          }
+          set (game.pov.parent, "visited", true)
+        }
+      }
+    }
+  ]]></function>
+
+
+  <function name="ShowRoomDescription"><![CDATA[
+    isDark = CheckDarkness()
+    if (isDark) {
+      descriptionfield = "darkroomdescription"
+    }
+    else {
+      descriptionfield = "description"
+    }
+    if (game.autodescription) {
+      desc = ""
+      for (i, 1, 4) {
+        if (i = game.autodescription_youarein) {
+          if (game.autodescription_youarein_useprefix) {
+            youarein = game.pov.parent.descprefix
+            desc = AddDescriptionLine (desc, youarein + " " + GetDisplayName(game.pov.parent) + ".")
+          }
+          if (game.autodescription_youarein_newline) {
+            msg (desc)
+            desc = ""
+          }
+        }
+        if (i = game.autodescription_youcansee) {
+          objects = FormatObjectList(game.pov.parent.objectslistprefix, GetNonTransparentParent(game.pov.parent), Template("And"), ".", false)
+          desc = AddDescriptionLine(desc, objects)
+          if (game.autodescription_youcansee_newline) {
+            msg (desc)
+            desc = ""
+          }
+        }
+        if (i = game.autodescription_youcango) {
+          exits = FormatExitList(game.pov.parent.exitslistprefix, GetExitsList(), Template("Or"), ".")
+          desc = AddDescriptionLine(desc, exits)
+          if (game.autodescription_youcango_newline) {
+            msg (desc)
+            desc = ""
+          }
+        }
+        if (i = game.autodescription_description) {
+          if (HasScript(game.pov.parent, descriptionfield)) {
+            if (LengthOf(desc) > 0) {
+              msg (desc)
+              desc = ""
+            }
+            do (game.pov.parent, descriptionfield)
+            if (game.autodescription_description_newline) {
+              msg ("")
+            }
+          }
+          else {
+            desc = AddDescriptionLine(desc, GetRoomDescription())
+            if (game.autodescription_description_newline) {
+              msg (desc)
+              desc = ""
+            }
+          }
+        }
+      }
+      if (LengthOf(desc) > 0) {
+        msg (desc)
+      }
+    }
+    else {
+      if (HasScript(game.pov.parent, descriptionfield)) {
+        do (game.pov.parent, descriptionfield)
+      }
+      else {
+        fulldesc = GetRoomDescription()
+        if (LengthOf(fulldesc) > 0) {
+          msg (fulldesc)
+        }
+      }
+    }
+  ]]></function>
+
+</library>

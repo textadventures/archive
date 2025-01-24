@@ -1,0 +1,713 @@
+<!--Saved by Quest 5.6.5621.18142-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="computer system 2">
+    <gameid>2d5bd4d5-5018-4095-a4fc-b39500a4ec05</gameid>
+    <version>1.0</version>
+    <firstpublished>2015</firstpublished>
+  </game>
+  <object name="sarlashkars office">
+    <inherit name="editor_room" />
+    <alias>Sarlashkar's Office</alias>
+    <description>You are in the office of what you are guessing is one of the militant leaders in this compound.  There is a large desk here partially hiding a comfy chair.  On the desk you see a picture frame, computer, and a desktop calendar.</description>
+    <object name="desk">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <look>The desk is large and made of mahogany.  On the desk is a computer, calendar, and picture frame.  Oddly enough, however, there are no drawers.</look>
+      <alt type="stringlist">
+        <value>large desk</value>
+      </alt>
+      <takemsg>It is far too large for you to move or carry.</takemsg>
+      <feature_container />
+      <isopen type="boolean">false</isopen>
+      <hidechildren />
+      <listchildren />
+    </object>
+    <object name="calendar">
+      <inherit name="editor_object" />
+      <look><![CDATA[You glance at the calendar and notice a couple of interesting items.  Tomorrow's date is circled and in red ink the words "Assassinate Scientist Prisoner" are written inside the circle.  Three days from today you notice the words "Make Ultimatum to US Gov't" and five days from today you see the words "initiate project clean sweep".<br/><br/>None of that sounds any good at all.  You must stop Dingo at all costs.]]></look>
+      <read>You glance at the calendar and notice a couple of interesting items.  Tomorrow's date is circled and in red ink the words "Assassinate Scientist Prisoner" are written inside the circle.  Three days from today you notice the words "Make Ultimatum to US Gov't" and five days from today you see the words "initiate project clean sweep".</read>
+      <takemsg>There is no need to take anything from this room.  Certainly, in doing so, it will hasten your recapture.</takemsg>
+    </object>
+    <object name="picture frame">
+      <inherit name="editor_object" />
+      <alt type="stringlist">
+        <value>award</value>
+      </alt>
+      <read>It reads: "This award is presented to:  Sarlashkar Hailu Ivebeenabad for exemplary work on behalf of Dingo Nation."  Signed by Dr. Dingo.  There is an engraving on the back of the frame.</read>
+      <takemsg>You do not want to disturb anything in this office for fear of being caught.</takemsg>
+      <look type="script">
+        picture ("award 2.jpg")
+        msg ("Looks like an award received by whoever calls this room their office.")
+      </look>
+    </object>
+    <object name="computer">
+      <inherit name="editor_object" />
+      <look>It is a sleek, modern computer.  It is currently turned on.</look>
+      <feature_usegive />
+      <attr name="feature_switchable" type="boolean">false</attr>
+      <use type="script"><![CDATA[
+        if (GetBoolean(computer, "hacked")) {
+          msg ("You punch in the password again and are prompted with your program choice again.")
+          msg ("<br/>Which program would you like to run (type 'stop' to stop using the computer)?<br/>1 - Dingo Database<br/>2 - Compound Information<br/>Stop - stop using computer<br/>")
+          get input {
+            switch (result) {
+              case ("1") {
+                computer loop
+              }
+              case ("2") {
+                computer loop 2
+              }
+              case ("stop") {
+                msg ("<br/>You type stop and hit enter.  You back away from the computer and look for better things to do.<br/>")
+                MoveObject (Xanadu, sarlashkars office)
+              }
+              default {
+                msg ("<br/>Input not recognized.<br/>")
+                default to program
+              }
+            }
+          }
+        }
+        else {
+          msg ("You move the mouse and the screen changes to...")
+          picture ("password1.png")
+          msg ("What will you enter?")
+          get input {
+            switch (result) {
+              case ("1HailuvaLOVER4") {
+                SetObjectFlagOn (computer, "hacked")
+                IncreaseScore (10)
+                msg ("<br/>The password screen fades away and you are presented with another option.<br/><br/>Which program would you like to run (type 'stop' to stop using the computer)?<br/>1 - Dingo Database<br/>2 - Compound Information<br/>Stop - stop using computer<br/>")
+                get input {
+                  switch (result) {
+                    case ("1") {
+                      computer loop
+                    }
+                    case ("2") {
+                      computer loop 2
+                    }
+                    case ("stop") {
+                      msg ("<br/>You type stop and hit enter.  You back away from the computer and look for better things to do.<br/>")
+                      MoveObject (Xanadu, sarlashkars office)
+                    }
+                    default {
+                      msg ("Input not recognized.")
+                      default to program
+                    }
+                  }
+                }
+              }
+              default {
+                msg ("You type in " + result + " and hit enter.  You immediately receive a nasty little shock!  Those security encryptions sure do sting!")
+                DecreaseHealth (3)
+              }
+            }
+          }
+        }
+      ]]></use>
+    </object>
+    <object name="engraving">
+      <inherit name="editor_object" />
+      <scenery />
+      <look type="string"></look>
+      <read type="script">
+        msg ("On the back of the picture frame is an engraving...")
+        picture ("engraving.jpg")
+      </read>
+    </object>
+    <object name="Xanadu">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <inherit name="male" />
+      <scenery />
+      <pov_alt type="stringlist">
+        <value>myself</value>
+        <value>self</value>
+        <value>me</value>
+      </pov_alt>
+      <drop type="boolean">false</drop>
+      <alt type="stringlist">
+        <value>me</value>
+        <value>xan</value>
+        <value>magoo</value>
+        <value>xanadu</value>
+      </alt>
+      <maxvolume type="int">7</maxvolume>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look type="script"><![CDATA[
+        if (game.pov = Xanadu) {
+          if (GetBoolean(keffiyeh dishdasha1, "worn")) {
+            msg ("Still mousy, still thirty-two, still 5'8\" tall, still ever-so-slightly above IQ, but now you are dressed in traditional Beduoin clothing.  To take off the robe and hat, simply say 'remove robe and hat'.")
+          }
+          else {
+            firsttime {
+              msg ("You are Xanadu Magoo.  When you first started this journey (back in Part I), you lacked considerably in the departments of strength and good looks.  Now, though, after narrowly surviving the first chapter, you are only lacking in those departments mildly.  Your weighty 101 IQ and clever problem solving skills got you out of the desert and into...<br/><br/>well... into this nasty predicament you find yourself now.  I know it doesn't sound like much, but trust me, it's better than being stuck out in the desert.")
+            }
+            otherwise {
+              msg ("Xanadu Magoo<br/><br/><b><u>Age</b></u>:  32<br/><b><u>Height</b></u>:  5'8\"<br/><b><u>Weight</b></u>:  105<br/><b><u>Hair</b></u>:  Mousy Brown<br/><b><u>IQ</b></u>:  101")
+            }
+          }
+        }
+        else {
+          msg ("Bigger me is sleepy.  Drool on chin. Totally passed out.  Hope he is safe there.")
+        }
+      ]]></look>
+      <attr name="pov_look" type="script"><![CDATA[
+        if (game.pov = Xanadu) {
+          if (GetBoolean(keffiyeh dishdasha1, "worn")) {
+            msg ("Still mousy, still thirty-two, still ever-so-slightly above IQ, but now you are dressed in traditional Beduoin clothing.  To take off the robe and hat, simply say 'remove robe and hat'.")
+          }
+          else {
+            firsttime {
+              msg ("You are Xanadu Magoo.  When you first started this journey (back in Part I), you lacked considerably in the departments of strength and good looks.  Now, though, after narrowly surviving the first chapter, you are only lacking in those departments mildly.  Your weighty 101 IQ and clever problem solving skills got you out of the desert and into...<br/><br/>well... into this nasty predicament you find yourself now.  I know it doesn't sound like much, but trust me, it's better than being stuck out in the desert.")
+            }
+            otherwise {
+              msg ("Xanadu Magoo<br/><br/><b><u>Age</b></u>:  32<br/><b><u>Weight</b></u>:  105<br/><b><u>Hair</b></u>:  Mousy Brown<br/><b><u>IQ</b></u>:  101")
+            }
+          }
+        }
+        else {
+          msg ("Bigger me is sleepy.  Drool on chin. Totally passed out.  Hope he is safe there.")
+        }
+      ]]></attr>
+      <take type="script"><![CDATA[
+        if (game.pov = Xanadu) {
+          msg ("Why don't <i>you</i> try and take <i>yourself</i>?  Tell me how that works out for you...")
+        }
+        else {
+          msg ("You are pretty strong, but not strong enough to lift even puny Xan.")
+        }
+      ]]></take>
+      <visible type="boolean">false</visible>
+    </object>
+    <command name="turn on comp cmd">
+      <pattern>turn on computer</pattern>
+      <script>
+        msg ("It's already on and you should leave it that way.")
+      </script>
+    </command>
+    <command name="turn off comp cmd">
+      <pattern>turn off computer</pattern>
+      <script>
+        msg ("There is no need for you to turn it off.")
+      </script>
+    </command>
+    <object name="box">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <look>It's one of those cardboard boxes with a lid and handle for storing and moving stuff.</look>
+      <feature_container />
+      <hidechildren />
+      <listchildren />
+      <onopen type="script">
+        msg ("You open up the cardboard box.")
+      </onopen>
+      <object name="encrypted files">
+        <inherit name="editor_object" />
+        <takemsg>As damning or as important as these may seem, there is nothing you can really do with them.  You leave them be.</takemsg>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <look type="script">
+          msg ("The box is basically a file for a lot of papers.  You flip through the papers and see that they are all encrypted and you have no way of decoding them.  You notice a small slip of paper near the back of the box that seems out of place.")
+          MoveObject (slip of paper, box)
+        </look>
+      </object>
+    </object>
+  </object>
+  <object name="Item Warehouse">
+    <inherit name="editor_room" />
+    <object name="slip of paper">
+      <inherit name="editor_object" />
+      <look>It's a folded slip of paper about the size of a fortune cookie.  Perhaps you should read it.</look>
+      <read>It reads, "Password Reminder:  split # of rooms in the "ring" with my nickname"</read>
+      <take />
+    </object>
+  </object>
+  <function name="computer loop"><![CDATA[
+    msg ("<br/>The screen clears and a single prompt appears in green.<br/><br/>Please type the last name of the person you would like to search or type 'stop' to quit using the computer or type 'return' to return to the program selection screen:<br/>")
+    get input {
+      switch (result) {
+        case ("Dingo", "dingo") {
+          play sound ("alarm.mp3", false, false)
+          msg ("CLASSIFIED...<br/><br/>CLASSIFIED...<br/><br/>ACCESS DENIED.<br/><br/>CLASSIFIED...<br/><br/>CLASSIFIED...<br/><br/>ACCESS DENIED.")
+          wait {
+            computer loop
+          }
+        }
+        case ("Magoo","magoo") {
+          msg ("<b><u>Name:</b></u>  Xanadu Magoo<br/><br/><b><u>General Appearance:</b></u>  Serious dork.  Early thirties.  5'8\".  105 pounds.  Light brown hair, hazel eyes, pasty white complexion.<br/><br/><b><u>Occupation:</b></u>  Science Teacher at the Holy Moly Incapables<br/><b><u>Ethnicity:</b></u>  Caucasian, American<br/><br/><b><u>Specialties:</b></u>  Above average knowledge in science, especially physics and chemisty<br/><br/><b><u>Notes:</b></u>  Escaped several assassination attempts in the desert.  In doing so, killed two desert patrol guards, one via electrocution and one died of complication with an unknown biotic factor.  Infiltrated our compound for unknown reasons.  Was forced into unconsciousness by Dr. Dingo himself upon arrival.  Assassination was to immediately follow, but Dr. Dingo would not allow it.  Instead, Xanadu Magoo is currently being help captive in prison cell one by orders of Dr. Dingo.")
+          wait {
+            computer loop
+          }
+        }
+        case ("Mamouf","mamouf") {
+          msg ("<b><u>Name:</b></u>  Kadeesh Mamouf<br/><br/><b><u>General Appearance:</b></u>  6'4\", 175 pounds, dark skin, dark eyes, dark hair, noticeble scar above right eyebrow, cleanly shaven.<br/><br/><b><u>Occupation:</b></u>  Southern Gate Keeper, Telecommunication leader of Desert Compound<br/><b><u>Ethnicity:</b></u>  Middle Eastern<br/><br/><b><u>Specialties:</b></u>  Excels in hardware installation, software encryption, leads communication efforts with fellow Dingo branches.<br/><br/><b><u>Notes:</b></u>  Superb job with encrypting computers.  Extremely organized.")
+          wait {
+            computer loop
+          }
+        }
+        case ("Halil") {
+          msg ("<b><u>Name:</b></u>  Gebhart Galil<br/><br/><b><u>General Appearance:</b></u>  5'5\".  325 pounds.  Thinning, brown hair.  Green eyes.  Red face, round belly.  <br/><br/><b><u>Occupation:</b></u>  Gopher.  Does whatever meaningless job is required that no one else wants to do.  Part time janitor, exterminator, trash collector, toilet plunger, \"guard\".<br/><b><u>Ethnicity:</b></u>  Middle Eastern, Mediterrean Peninsula<br/><br/><b><u>Specialties:</b></u>  None<br/><br/><b><u>Notes:</b></u>  Has been seen by Dr. Punjab eighteen times in the last month for apparent heart related problems.")
+          wait {
+            computer loop
+          }
+        }
+        case ("return") {
+          msg ("<br/>You type in 'return' and you return to the program option screen.<br/>")
+          wait {
+            msg ("<br/>Which program would you like to run (type 'stop' to stop using the computer)?<br/>1 - Dingo Database<br/>2 - Compound Information<br/>Stop - quit using computer<br/>")
+            get input {
+              switch (result) {
+                case ("1") {
+                  computer loop
+                }
+                case ("2") {
+                  computer loop 2
+                }
+                case ("stop") {
+                  msg ("You type quit and hit enter.  You back away from the computer and look for better things to do.")
+                }
+                default {
+                  default to program
+                }
+              }
+            }
+          }
+        }
+        case ("stop") {
+          msg ("You stop using the computer and you look for better things to do.")
+          wait {
+            MoveObject (Xanadu, sarlashkars office)
+          }
+        }
+        case ("Punjab", "punjab") {
+          msg ("<b><u>Name:</b></u>  Patty Punjab<br/><br/><b><u>General Appearance:</b></u> 5'10\", slim, 165 pound, long and narrow features, neatly cropped auburn hair, dark eyes.  Forty-six years old.<br/><br/><b><u>Occupation:</b></u>  Doctor of Medicine<br/><b><u>Ethnicity:</b></u>  India, Irish<br/><br/><b><u>Specialties:</b></u>  Trauma wounds, Internal medicine, treatment of insect/animal stings/bites<br/><br/><b><u>Notes:</b></u>  Trustworthy.  Close relationship with Dr. Dingo.  One of two members of the Dingo nation to have access to B-Locked rooms.")
+          wait {
+            computer loop
+          }
+        }
+        case ("Blerk", "blerk", "Berk", "berk") {
+          msg ("<b><u>Name:</b></u>  Berk?  Blerk?  Unknown.<br/><br/><b><u>General Appearance:</b></u>  Unknown.  Relatively small.  Perhaps the size of a medium sized dog?  30-40 pounds.<br/><br/><b><u>Occupation:</b></u>  None<br/><b><u>Ethnicity:</b></u>  Unknown<br/><br/><b><u>Specialties:</b></u>  Hides well.  According to Vaughn Willows, the lead custodian, he/she/it likes to tell jokes and can be helpful.  Very elusive.<br/><br/><b><u>Notes:</b></u>  Four years ago, in Dr. Dingo's absence, this unknown helped a prisoner escape from one of the prison cells.  How it happened is still a mystery.  The aided prisoner was a member of one of the US military.  This prisoner's whereabouts are currently unknown.  The creature was rumored to have been created in the lab by Dr. Dingo and his scientists.")
+          wait {
+            computer loop
+          }
+        }
+        case ("Humperdinck", "humperdinck") {
+          msg ("<b><u>Name:</b></u>  Gretel Humperdinck<br/><br/><b><u>General Appearance:</b></u>  5'11\".  280 pounds.  Red, curly hair.  Green eyes.  Large frame.<br/><br/><b><u>Occupation:</b></u>  Desert Compound Chef, administer of kitchen staff<br/><b><u>Ethnicity:</b></u>  German<br/><br/><b><u>Specialties:</b></u>  Cooking, baking.  Suprisingly useful in the field of battle in case of emergency.  Played rugby for the Brussels Bulldozers.<br/><br/><b><u>Notes:</b></u>  Makes a mean dish of dumplings.  She once \"accidentally\" killed a man that wondered into her kitchen whilst she was tenderizing meat.  Revered and should not be messed with.  Gets along with Roonil W. well for whatever reason?")
+          wait {
+            computer loop
+          }
+        }
+        case ("Wazlib", "wazlib") {
+          msg ("<b><u>Name:</b></u>  Roonil (Roonie) Wazlib<br/><br/><b><u>General Appearance:</b></u>  5'9\", 180 pounds.  Brown hair.  Scraggly and mostly curly, brown beard.  Tan skin, but not dark.<br/><br/><b><u>Occupation:</b></u>  Mechanic in garage (works primarily on the military vehicles)<br/><b><u>Ethnicity:</b></u>  Turkish<br/><br/><b><u>Specialties:</b></u>  168 Mechanical/Spatial IQ.  Heavy Vehicle Operation<br/><br/><b><u>Notes:</b></u>  Has been reprimanded multiple times for writing on the bathroom stall walls.  Admittedly his doodles are mildy amusing, our janitor, Vaughn Willows, has been forced to work overtime several days because of this.<br/><br/>Come to think of it... this guy sort of, in a very mild way, looks similar to you.  Of course you don't have a beard and aren't dressed like a Dingo.  Oh, nevermind...")
+          wait {
+            computer loop
+          }
+        }
+        case ("Ivebeenabad", "ivebeenabad") {
+          msg ("<b><u>Name:</b></u>  Hailu Ivebeenabad<br/><br/><b><u>General Appearance:</b></u>  6'5\", 220 pounds.  Imposing figure.  Short, black hair.  Black eyes.  Black skin.  Wide scar across the right side of his face, starting by his ear and running down across his neck.<br/><br/><b><u>Occupation:</b></u>  Sahlashkar of Desert Compound, Military leader, control Dingo army at desert compound<br/><b><u>Ethnicity:</b></u>  Iraq, French<br/><br/><b><u>Specialties:</b></u>  Trained in hand-to-hand combat, distance combat, sniping, heavy vehicle operation.<br/><br/><b><u>Notes:</b></u>  In charge of the 227 militant Dingoes at the compound.  Personal executed 22 Dingoes who could not \"cut it\" and over 200 opposers of Dingo Nation.  Dr. Dingo's left hand man and enforcer of the Doctor's will.  Allergic to peanut products.")
+          wait {
+            computer loop
+          }
+        }
+        case ("Mongo", "mongo") {
+          msg ("<b><u>Name:</b></u>  Hercules Mongo<br/><br/><b><u>General Appearance:</b></u>  6'8\".  290 pounds.  Massive.  Bald.  Blue eyes.<br/><br/><b><u>Occupation:</b></u>  Bodyguard.  <br/><b><u>Ethnicity:</b></u>  British<br/><br/><b><u>Specialties:</b></u>  Strongest Man in the compound.  Very intimidating.<br/><br/><b><u>Notes:</b></u>  Many of the Dingoes do not trust Hercules.  He has been accused of multiple infractions ranging from security clearance breaches, defacing compound property, and bullying.  He is very useful, but has been reprimanded/questions many times.  There is no viable reason to punish him at this point however, but he is on the radar.")
+          wait {
+            computer loop
+          }
+        }
+        case ("wallows","Wallows","Custodian","custodian","janitor","Janitor") {
+          msg ("<br/><b><u>Name:</b></u>  Eugenio Wallows<br/><br/><b><u>General Appearance:</b></u>  5'8\", rail thin at 145 pounds, dark hair, light brown skin, noticeable under right eye<br/><br/><b><u>Occupation:</b></u>  Head Custodian<br/><b><u>Ethnicity:</b></u>  Iranian<br/><br/><b><u>Specialties:</b></u>  Follows orders well, dedicated to job<br/><br/><b><u>Notes:</b></u>  Eugenio does a fantastic job as lead custodian.  He never complains and is always in a good mood.  He spends most of his time in the restroom, barracks, and the commons.  Is believed to be the only one to see the mysterious creature that roams the ventilation system.<br/>")
+        }
+        default {
+          msg ("<br/>UNIDENTIFIED.  Please enter a new last name, or type 'stop' or 'return'.<br/>")
+          computer loop
+        }
+      }
+    }
+  ]]></function>
+  <function name="default to program"><![CDATA[
+    msg ("<br/>Try again.  Please enter '1', '2', or 'stop',<br/>")
+    get input {
+      switch (result) {
+        case ("1") {
+          computer loop
+        }
+        case ("2") {
+          computer loop 2
+        }
+        case ("stop") {
+          msg ("You type stop and hit enter.  You back away from the computer and look for better things to do.")
+          wait {
+            MoveObject (Xanadu, sarlashkars office)
+          }
+        }
+        default {
+          default to program
+        }
+      }
+    }
+  ]]></function>
+  <function name="computer loop 2"><![CDATA[
+    msg ("<br/>The screen clears and a single prompt appears in green.<br/><br/>Please type the name of the room you would like more information on or type 'stop' to quit using the computer or type 'return' to return to the program selection screen (if you are having problems, disable caps lock or use all lowercase letters in your search) :<br/>")
+    get input {
+      switch (result) {
+        case ("south gate","Southern Gate","southern gate","South gate","South Gate","s gate","S Gate","S gate") {
+          msg ("<b><u>Room Name:</b></u>Southern Gate<br/><br/><b><u>Location Within Compound:</b></u> Southern most room, south of long hallway near the janitor's closet.<br/><br/><b><u>Key Need to Access:</b></u>  None, but filled with Dingoes, so no one who in unauthorized can get in or out without permission or proper clearance.<br/><br/><b><u>Room Notes:</b></u>  None<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">NO HINTS.  Sorry.</font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("junctions","Junctions","small junctions","small junction","junction","Junction","Small Junctions") {
+          msg ("<b><u>Room Name:</b></u>  Junctions, Small Junctions<br/><br/><b><u>Location Within Compound:</b></u>  One is west of a north-south hallway attached to a prison cell and south of the science laboratory.  The other joins the dining room, garage, and chemical warehouse and is in the southeast of the compound.<br/><br/><b><u>Key Need to Access:</b></u>  None.<br/><br/><b><u>Room Notes:</b></u>  Both junctions have exits that require key fobs ranging from B, C, and D.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">NO HINTS.  Sorry.</font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          computer loop 2
+        }
+        case ("restroom","Restroom","bathroom","Bathrooom","washcloset","loo","shitter","the shitter","stalls","bathroom stalls") {
+          msg ("<b><u>Room Name:</b></u>  Restroom<br/><br/><b><u>Location Within Compound:</b></u>  southwest of southeasternmost north-south hallway (whew... that's a mouthful)<br/><br/><b><u>Key Need to Access:</b></u>  None.<br/><br/><b><u>Room Notes:</b></u>  Nearest stall is currently out of order.  Please do not tamper with.  Also, please do not deface the walls of the stalls.  There have been problems with this recently.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">1.  You'll need to make the janitor spend a LOT of time in here.  2.  Why would the janitor spend so much time in the restroom per his job description?  3.  Have you found the nasty food?  4.  It is in a prison cell.  5.  What happens if you eat really, really bad food?  6.  Now, I hope you enjoy your bathroom experience!  </font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("maximum security","max security","max sec","maximum security cell","max security cell","max sec cell","maximum security prison","max security prison","max sec prison","max security prison cell","max sec prison cell","maximum security prison cell") {
+          msg ("<b><u>Room Name:</b></u>  Maximum Security Prison Cell<br/><br/><b><u>Location Within Compound:</b></u>  North of southernmost long hallway, between, but not accessible from, the janitor's closet and the restroom.<br/><br/><b><u>Key Need to Access:</b></u>  Key fob A.<br/><br/><b><u>Room Notes:</b></u>  Dr. Dingo and the Sarlashkar are the only Dingoes with key fob A clearance.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">1.  There is another \"person\" who can access the maximum security prison.  2.  If you live in a seasonal environment, what do you experience a lot in the winter when the air is VERY dry?  3.  ZAAAAAP!!  4.  How can you eliminate that (#3)?  There are usually just two ways.  You'll need to do both.  5.  Done in laundry lately?  6.  Electrons transfer quickly into water molecules, thus static electricity does not have the chance to build up on the surface of say... your skin.  7.  Blerk will need to do this part for you... he needs rubbed in fabric softener sheets and he'll need to spray the air around/above the maximum security prison.  Then he can enter from above through the grate.  </font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("return") {
+          msg ("You type in 'return' and you return to the program option screen.")
+          wait {
+            msg ("<br/>Which program would you like to run (type 'stop' to stop using the computer)?<br/>1 - Dingo Database<br/>2 - Compound Information<br/>Stop - quit using computer<br/>")
+            get input {
+              switch (result) {
+                case ("1") {
+                  msg ("<br/>The screen clears and a single prompt appears in green.<br/><br/>Please type the last name of the person you would like to search or type 'stop' to quit using the computer or type 'return' to return to the program selection screen:")
+                  get input {
+                    switch (result) {
+                      case ("Dingo", "dingo") {
+                        play sound ("alarm.mp3", false, false)
+                        msg ("CLASSIFIED...<br/><br/>CLASSIFIED...<br/><br/>ACCESS DENIED.<br/><br/>CLASSIFIED...<br/><br/>CLASSIFIED.")
+                        wait {
+                          computer loop
+                        }
+                      }
+                      case ("Magoo"," magoo") {
+                        msg ("<b><u>Name:</b></u>  Xanadu Magoo<br/><br/><b><u>General Appearance:</b></u>  Serious dork.  Early thirties.  5'8\".  105 pounds.  Light brown hair, hazel eyes, pasty white complexion.<br/><br/><b><u>Occupation:</b></u>  Science Teacher at the Holy Moly Incapables<br/><b><u>Ethnicity:</b></u>  Caucasian, American<br/><br/><b><u>Specialties:</b></u>  Above average knowledge in science, especially physics and chemisty<br/><br/><b><u>Notes:</b></u>  Escaped several assassination attempts in the desert.  In doing so, killed two desert patrol guards, one via electrocution and one died of complication with an unknown biotic factor.  Infiltrated our compound for unknown reasons.  Was forced into unconsciousness by Dr. Dingo himself upon arrival.  Assassination was to immediately follow, but Dr. Dingo would not allow it.  Instead, Xanadu Magoo is currently being help captive in prison cell one by orders of Dr. Dingo.")
+                        wait {
+                          computer loop
+                        }
+                      }
+                      case ("Mamouf","mamouf") {
+                        msg ("<b><u>Name:</b></u>  Kadeesh Mamouf<br/><br/><b><u>General Appearance:</b></u>  6'4\", 175 pounds, dark skin, dark eyes, dark hair, noticeble scar above right eyebrow, cleanly shaven.<br/><br/><b><u>Occupation:</b></u>  Southern Gate Keeper, Telecommunication leader of Desert Compound<br/><b><u>Ethnicity:</b></u>  Middle Eastern<br/><br/><b><u>Specialties:</b></u>  Excels in hardware installation, software encryption, leads communication efforts with fellow Dingo branches.<br/><br/><b><u>Notes:</b></u>  Superb job with encrypting computers.  Extremely organized.")
+                        wait {
+                          computer loop
+                        }
+                      }
+                      case ("Halil") {
+                        msg ("<b><u>Name:</b></u>  Gebhart Galil<br/><br/><b><u>General Appearance:</b></u>  5'5\".  325 pounds.  Thinning, brown hair.  Green eyes.  Red face, round belly.  <br/><br/><b><u>Occupation:</b></u>  Gopher.  Does whatever meaningless job is required that no one else wants to do.  Part time janitor, exterminator, trash collector, toilet plunger, \"guard\".<br/><b><u>Ethnicity:</b></u>  Middle Eastern, Mediterrean Peninsula<br/><br/><b><u>Specialties:</b></u>  None<br/><br/><b><u>Notes:</b></u>  Has been seen by Dr. Punjab eighteen times in the last month for apparent heart related problems.")
+                        wait {
+                          computer loop
+                        }
+                      }
+                      case ("return") {
+                        msg ("You type in 'return' and you return to the program option screen.")
+                        wait {
+                          msg ("Which program would you like to run (type 'stop' to stop using the computer)?<br/>1 - Dingo Database<br/>2 - Compound Information<br/>Stop - quit using computer")
+                          get input {
+                            switch (result) {
+                              case ("1") {
+                                msg ("The screen clears and a single prompt appears in green.<br/><br/>Please type the last name of the person you would like to search or type 'stop' to quit using the computer or type 'return' to return to the program selection screen:")
+                                get input {
+                                  switch (result) {
+                                    case ("Dingo", "dingo") {
+                                      play sound ("alarm.mp3", false, false)
+                                      msg ("CLASSIFIED...<br/><br/>CLASSIFIED...<br/><br/>ACCESS DENIED.<br/><br/>CLASSIFIED...<br/><br/>CLASSIFIED.")
+                                      wait {
+                                        computer loop
+                                      }
+                                    }
+                                    case ("Magoo"," magoo") {
+                                      msg ("<b><u>Name:</b></u>  Xanadu Magoo<br/><br/><b><u>General Appearance:</b></u>  Serious dork.  Early thirties.  5'8\".  105 pounds.  Light brown hair, hazel eyes, pasty white complexion.<br/><br/><b><u>Occupation:</b></u>  Science Teacher at the Holy Moly Incapables<br/><b><u>Ethnicity:</b></u>  Caucasian, American<br/><br/><b><u>Specialties:</b></u>  Above average knowledge in science, especially physics and chemisty<br/><br/><b><u>Notes:</b></u>  Escaped several assassination attempts in the desert.  In doing so, killed two desert patrol guards, one via electrocution and one died of complication with an unknown biotic factor.  Infiltrated our compound for unknown reasons.  Was forced into unconsciousness by Dr. Dingo himself upon arrival.  Assassination was to immediately follow, but Dr. Dingo would not allow it.  Instead, Xanadu Magoo is currently being help captive in prison cell one by orders of Dr. Dingo.")
+                                      wait {
+                                        computer loop
+                                      }
+                                    }
+                                    case ("Mamouf","mamouf") {
+                                      msg ("<b><u>Name:</b></u>  Kadeesh Mamouf<br/><br/><b><u>General Appearance:</b></u>  6'4\", 175 pounds, dark skin, dark eyes, dark hair, noticeble scar above right eyebrow, cleanly shaven.<br/><br/><b><u>Occupation:</b></u>  Southern Gate Keeper, Telecommunication leader of Desert Compound<br/><b><u>Ethnicity:</b></u>  Middle Eastern<br/><br/><b><u>Specialties:</b></u>  Excels in hardware installation, software encryption, leads communication efforts with fellow Dingo branches.<br/><br/><b><u>Notes:</b></u>  Superb job with encrypting computers.  Extremely organized.")
+                                      wait {
+                                        computer loop
+                                      }
+                                    }
+                                    case ("Halil") {
+                                      msg ("<b><u>Name:</b></u>  Gebhart Galil<br/><br/><b><u>General Appearance:</b></u>  5'5\".  325 pounds.  Thinning, brown hair.  Green eyes.  Red face, round belly.  <br/><br/><b><u>Occupation:</b></u>  Gopher.  Does whatever meaningless job is required that no one else wants to do.  Part time janitor, exterminator, trash collector, toilet plunger, \"guard\".<br/><b><u>Ethnicity:</b></u>  Middle Eastern, Mediterrean Peninsula<br/><br/><b><u>Specialties:</b></u>  None<br/><br/><b><u>Notes:</b></u>  Has been seen by Dr. Punjab eighteen times in the last month for apparent heart related problems.")
+                                      wait {
+                                        computer loop
+                                      }
+                                    }
+                                    case ("return") {
+                                      msg ("You type in 'return' and you return to the program option screen.")
+                                      wait {
+                                        msg ("Which program would you like to run (type 'stop' to stop using the computer)?<br/>1 - Dingo Database<br/>2 - Compound Information<br/>Stop - quit using computer")
+                                      }
+                                    }
+                                    case ("stop") {
+                                      msg ("You stop using the computer and you look for better things to do.")
+                                    }
+                                    case ("Punjab", "punjab") {
+                                      msg ("<b><u>Name:</b></u>  Patty Punjab<br/><br/><b><u>General Appearance:</b></u> 5'10\", slim, 165 pound, long and narrow features, neatly cropped auburn hair, dark eyes.  Forty-six years old.<br/><br/><b><u>Occupation:</b></u>  Doctor of Medicine<br/><b><u>Ethnicity:</b></u>  India, Irish<br/><br/><b><u>Specialties:</b></u>  Trauma wounds, Internal medicine, treatment of insect/animal stings/bites<br/><br/><b><u>Notes:</b></u>  Trustworthy.  Close relationship with Dr. Dingo.  One of two members of the Dingo nation to have access to B-Locked rooms.")
+                                      wait {
+                                        computer loop
+                                      }
+                                    }
+                                    case ("Blerk", "blerk", "Berk", "berk") {
+                                      msg ("<b><u>Name:</b></u>  Berk?  Blerk?  Unknown.<br/><br/><b><u>General Appearance:</b></u>  Unknown.  Relatively small.  Perhaps the size of a medium sized dog?  30-40 pounds.<br/><br/><b><u>Occupation:</b></u>  None<br/><b><u>Ethnicity:</b></u>  Unknown<br/><br/><b><u>Specialties:</b></u>  Hides well.  According to Vaughn Willows, the lead custodian, he/she/it likes to tell jokes and can be helpful.  Very elusive.<br/><br/><b><u>Notes:</b></u>  Four years ago, in Dr. Dingo's absence, this unknown helped a prisoner escape from one of the prison cells.  How it happened is still a mystery.  The aided prisoner was a member of one of the US military.  This prisoner's whereabouts are currently unknown.  The creature was rumored to have been created in the lab by Dr. Dingo and his scientists.")
+                                      wait {
+                                        computer loop
+                                      }
+                                    }
+                                    case ("Humperdinck", "humperdinck") {
+                                      msg ("<b><u>Name:</b></u>  Gretel Humperdinck<br/><br/><b><u>General Appearance:</b></u>  5'11\".  280 pounds.  Red, curly hair.  Green eyes.  Large frame.<br/><br/><b><u>Occupation:</b></u>  Desert Compound Chef, administer of kitchen staff<br/><b><u>Ethnicity:</b></u>  German<br/><br/><b><u>Specialties:</b></u>  Cooking, baking.  Suprisingly useful in the field of battle in case of emergency.  Played rugby for the Brussels Bulldozers.<br/><br/><b><u>Notes:</b></u>  Makes a mean dish of dumplings.  She once \"accidentally\" killed a man that wondered into her kitchen whilst she was tenderizing meat.  Revered and should not be messed with.  Gets along with Roonil W. well for whatever reason?")
+                                      wait {
+                                        computer loop
+                                      }
+                                    }
+                                    case ("Wazlib", "wazlib") {
+                                      msg ("<b><u>Name:</b></u>  Roonil (Roonie) Wazlib<br/><br/><b><u>General Appearance:</b></u>  5'9\", 180 pounds.  Brown hair.  Scraggly and mostly curly, brown beard.  Tan skin, but not dark.<br/><br/><b><u>Occupation:</b></u>  Mechanic in garage (works primarily on the military vehicles)<br/><b><u>Ethnicity:</b></u>  Turkish<br/><br/><b><u>Specialties:</b></u>  168 Mechanical/Spatial IQ.  Heavy Vehicle Operation<br/><br/><b><u>Notes:</b></u>  Has been reprimanded multiple times for writing on the bathroom stall walls.  Admittedly his doodles are mildy amusing, our janitor, Vaughn Willows, has been forced to work overtime several days because of this.<br/><br/>Come to think of it... this guy sort of, in a very mild way, looks similar to you.  Of course you don't have a beard and aren't dressed like a Dingo.  Oh, nevermind...")
+                                      wait {
+                                        computer loop
+                                      }
+                                    }
+                                    case ("Ivebeenabad", "ivebeenabad") {
+                                      msg ("<b><u>Name:</b></u>  Hailu Ivebeenabad<br/><br/><b><u>General Appearance:</b></u>  6'5\", 220 pounds.  Imposing figure.  Short, black hair.  Black eyes.  Black skin.  Wide scar across the right side of his face, starting by his ear and running down across his neck.<br/><br/><b><u>Occupation:</b></u>  Sahlashkar of Desert Compound, Military leader, control Dingo army at desert compound<br/><b><u>Ethnicity:</b></u>  Iraq, French<br/><br/><b><u>Specialties:</b></u>  Trained in hand-to-hand combat, distance combat, sniping, heavy vehicle operation.<br/><br/><b><u>Notes:</b></u>  In charge of the 227 militant Dingoes at the compound.  Personal executed 22 Dingoes who could not \"cut it\" and over 200 opposers of Dingo Nation.  Dr. Dingo's left hand man and enforcer of the Doctor's will.  Allergic to peanut products.")
+                                      wait {
+                                        computer loop
+                                      }
+                                    }
+                                    case ("Mongo", "mongo") {
+                                      msg ("<b><u>Name:</b></u>  Hercules Mongo<br/><br/><b><u>General Appearance:</b></u>  6'8\".  290 pounds.  Massive.  Bald.  Blue eyes.<br/><br/><b><u>Occupation:</b></u>  Bodyguard.  <br/><b><u>Ethnicity:</b></u>  British<br/><br/><b><u>Specialties:</b></u>  Strongest Man in the compound.  Very intimidating.<br/><br/><b><u>Notes:</b></u>  Many of the Dingoes do not trust Hercules.  He has been accused of multiple infractions ranging from security clearance breaches, defacing compound property, and bullying.  He is very useful, but has been reprimanded/questions many times.  There is no viable reason to punish him at this point however, but he is on the radar.")
+                                      wait {
+                                        computer loop
+                                      }
+                                    }
+                                    default {
+                                      msg ("UNIDENTIFIED.")
+                                    }
+                                  }
+                                }
+                              }
+                              case ("2") {
+                                msg ("The screen clears and a single prompt appears in green.<br/><br/>Please type the last name of the room you would like to search (type 'return' to return to the home screen):")
+                              }
+                              case ("stop") {
+                                msg ("You type quit and hit enter.  You back away from the computer and look for better things to do.")
+                              }
+                            }
+                          }
+                        }
+                      }
+                      case ("stop") {
+                        msg ("You stop using the computer and you look for better things to do.")
+                        wait {
+                          msg ("You step away from the computer screen and return to the room.  Time to find better things to do with your time.")
+                          MoveObject (Xanadu, sarlashkars office)
+                        }
+                      }
+                      case ("Punjab", "punjab") {
+                        msg ("<b><u>Name:</b></u>  Patty Punjab<br/><br/><b><u>General Appearance:</b></u> 5'10\", slim, 165 pound, long and narrow features, neatly cropped auburn hair, dark eyes.  Forty-six years old.<br/><br/><b><u>Occupation:</b></u>  Doctor of Medicine<br/><b><u>Ethnicity:</b></u>  India, Irish<br/><br/><b><u>Specialties:</b></u>  Trauma wounds, Internal medicine, treatment of insect/animal stings/bites<br/><br/><b><u>Notes:</b></u>  Trustworthy.  Close relationship with Dr. Dingo.  One of two members of the Dingo nation to have access to B-Locked rooms.")
+                        wait {
+                          computer loop
+                        }
+                      }
+                      case ("Blerk", "blerk", "Berk", "berk") {
+                        msg ("<b><u>Name:</b></u>  Berk?  Blerk?  Unknown.<br/><br/><b><u>General Appearance:</b></u>  Unknown.  Relatively small.  Perhaps the size of a medium sized dog?  30-40 pounds.<br/><br/><b><u>Occupation:</b></u>  None<br/><b><u>Ethnicity:</b></u>  Unknown<br/><br/><b><u>Specialties:</b></u>  Hides well.  According to Vaughn Willows, the lead custodian, he/she/it likes to tell jokes and can be helpful.  Very elusive.<br/><br/><b><u>Notes:</b></u>  Four years ago, in Dr. Dingo's absence, this unknown helped a prisoner escape from one of the prison cells.  How it happened is still a mystery.  The aided prisoner was a member of one of the US military.  This prisoner's whereabouts are currently unknown.  The creature was rumored to have been created in the lab by Dr. Dingo and his scientists.")
+                        wait {
+                          computer loop
+                        }
+                      }
+                      case ("Humperdinck", "humperdinck") {
+                        msg ("<b><u>Name:</b></u>  Gretel Humperdinck<br/><br/><b><u>General Appearance:</b></u>  5'11\".  280 pounds.  Red, curly hair.  Green eyes.  Large frame.<br/><br/><b><u>Occupation:</b></u>  Desert Compound Chef, administer of kitchen staff<br/><b><u>Ethnicity:</b></u>  German<br/><br/><b><u>Specialties:</b></u>  Cooking, baking.  Suprisingly useful in the field of battle in case of emergency.  Played rugby for the Brussels Bulldozers.<br/><br/><b><u>Notes:</b></u>  Makes a mean dish of dumplings.  She once \"accidentally\" killed a man that wondered into her kitchen whilst she was tenderizing meat.  Revered and should not be messed with.  Gets along with Roonil W. well for whatever reason?")
+                        wait {
+                          computer loop
+                        }
+                      }
+                      case ("Wazlib", "wazlib") {
+                        msg ("<b><u>Name:</b></u>  Roonil (Roonie) Wazlib<br/><br/><b><u>General Appearance:</b></u>  5'9\", 180 pounds.  Brown hair.  Scraggly and mostly curly, brown beard.  Tan skin, but not dark.<br/><br/><b><u>Occupation:</b></u>  Mechanic in garage (works primarily on the military vehicles)<br/><b><u>Ethnicity:</b></u>  Turkish<br/><br/><b><u>Specialties:</b></u>  168 Mechanical/Spatial IQ.  Heavy Vehicle Operation<br/><br/><b><u>Notes:</b></u>  Has been reprimanded multiple times for writing on the bathroom stall walls.  Admittedly his doodles are mildy amusing, our janitor, Vaughn Willows, has been forced to work overtime several days because of this.<br/><br/>Come to think of it... this guy sort of, in a very mild way, looks similar to you.  Of course you don't have a beard and aren't dressed like a Dingo.  Oh, nevermind...")
+                        wait {
+                          computer loop
+                        }
+                      }
+                      case ("Ivebeenabad", "ivebeenabad") {
+                        msg ("<b><u>Name:</b></u>  Hailu Ivebeenabad<br/><br/><b><u>General Appearance:</b></u>  6'5\", 220 pounds.  Imposing figure.  Short, black hair.  Black eyes.  Black skin.  Wide scar across the right side of his face, starting by his ear and running down across his neck.<br/><br/><b><u>Occupation:</b></u>  Sarlashkar of Desert Compound, Military leader, control Dingo army at desert compound<br/><b><u>Ethnicity:</b></u>  Iraq, French<br/><br/><b><u>Specialties:</b></u>  Trained in hand-to-hand combat, distance combat, sniping, heavy vehicle operation.<br/><br/><b><u>Notes:</b></u>  In charge of the 227 militant Dingoes at the compound.  Personal executed 22 Dingoes who could not \"cut it\" and over 200 opposers of Dingo Nation.  Dr. Dingo's left hand man and enforcer of the Doctor's will.  Allergic to peanut products.")
+                        wait {
+                          computer loop
+                        }
+                      }
+                      case ("Mongo", "mongo") {
+                        msg ("<b><u>Name:</b></u>  Hercules Mongo<br/><br/><b><u>General Appearance:</b></u>  6'8\".  290 pounds.  Massive.  Bald.  Blue eyes.<br/><br/><b><u>Occupation:</b></u>  Bodyguard.  <br/><b><u>Ethnicity:</b></u>  British<br/><br/><b><u>Specialties:</b></u>  Strongest Man in the compound.  Very intimidating.<br/><br/><b><u>Notes:</b></u>  Many of the Dingoes do not trust Hercules.  He has been accused of multiple infractions ranging from security clearance breaches, defacing compound property, and bullying.  He is very useful, but has been reprimanded/questions many times.  There is no viable reason to punish him at this point however, but he is on the radar.")
+                        wait {
+                          computer loop
+                        }
+                      }
+                      default {
+                        msg ("<br/>UNIDENTIFIED.<br/>")
+                      }
+                    }
+                  }
+                }
+                case ("2") {
+                  computer loop 2
+                }
+                case ("stop") {
+                  msg ("<br/>You type quit and hit enter.  You back away from the computer and look for better things to do.<br/>")
+                }
+                default {
+                  default to program
+                }
+              }
+            }
+          }
+        }
+        case ("stop") {
+          msg ("You stop using the computer and you look for better things to do.")
+          wait {
+            MoveObject (Xanadu, sarlashkars office)
+          }
+        }
+        case ("janitor closet","Janitor closet","janitor's closet","Janitor's closet","Janitor's Closet","Janitors Closet","janitor","janitors room","janitor's room","janitors office","janitor's office","janitor office","Janitor office","Janitors office","Janitor's office","Janitor's Office","Willows office","willows","willow's office","Willow's office","Willow's Office") {
+          msg ("<b><u>Room Name:</b></u>  Janitor's Closet, Janitor's Office, Willow's Office<br/><br/><b><u>Location Within Compound:</b></u>  North and west of southernmost long hallway.  <br/><br/><b><u>Key Need to Access:</b></u>  None, but the door is locked with a traditional turnbolt keylatch.<br/><br/><b><u>Room Notes:</b></u>  Mr. Willow's (current janitor) keeps some cleaning supplies and maintenance supplies in this office.  All delivers marked 'custodial' get shipped here.  Ground level access to the ventilation system is also found here.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">1.  You will never find a key to this door.  2.  If you can get Mr. Willow to leave in a hurry, he will leave the door ajar.  3.  See Restroom hint for more detail, but basically you need to make a major mess somewhere.  4.  Once in the room, you will find several key items (notepad w/note), mint, and a whistle.  5.  What do you do with a whistle?</font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("long halls","Long Halls","Long halls","long hallways","Long Hallways","Long hallways","long hallway","Long Hallway","Long hallway","hallway","hallways","ns hallways","NS hallway","ns hallway","NS hallways","NS Hallways","NS Hallway","north south hallway","North South Hallway","North south hallway","north south hallways","North South Hallways","North south hallways") {
+          msg ("<b><u>Room Name:</b></u>Long Hallway<br/><br/><b><u>Location Within Compound:</b></u>There is one on the north end of the \"ring\" and one on the south end.  <br/><br/><b><u>Key Need to Access:</b></u>  None.<br/><br/><b><u>Room Notes:</b></u>  None.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">NO HINTS.  Sorry.</font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("Corners","corners","corner halls","Corner halls","Corner Halls","Corner Hallways","corner hallways","corner hallway","Corner Hallway") {
+          msg ("<b><u>Room Name:</b></u>  Corner Hallway<br/><br/><b><u>Location Within Compound:</b></u>  There are eight total.  Two in each of the northeast, northwest, southwest, and southeast corners of the \"ring\" within the compound.<br/><br/><b><u>Key Need to Access:</b></u>  None.<br/><br/><b><u>Room Notes:</b></u>  None.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">NO HINTS.  Sorry.</font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("Armory", "armory") {
+          msg ("<b><u>Room Name:</b></u>  Armory<br/><br/><b><u>Location Within Compound:</b></u>  Northernmost room, central.<br/><br/><b><u>Key Need to Access:</b></u>  Key fob B.<br/><br/><b><u>Room Notes:</b></u>  The armaments of the Dingo army are here.  This room is heavily barracked and protected.  There are two people who have access to this room - Dr. Dingo and the Sarlashkar.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">1.  Near the end of the game you will need in here, but you will need to have key fob B to do so.  2.  You will never get Dr. Dingo's or Sarlashkar Ivebeenabad's key fob B.  3.  The only other key fob can be found in the armory itself.  4.  Who can get places that you can't?  5.  Blerk will need to retrieve this for you.  6.  Blerk does not like the dark, so he'll need something to light his way (see ventilation system) for more hints.</font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("Barracks","barracks","barrack","Barrack") {
+          msg ("<b><u>Room Name:</b></u>  Barracks<br/><br/><b><u>Location Within Compound:</b></u>  Northeasternmost room, north of the dining area and showers.<br/><br/><b><u>Key Need to Access:</b></u>  None.<br/><br/><b><u>Room Notes:</b></u>  Recreation/Resting area for Dingo Nation.  Vending machines, pools, and cots fill the room.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">1.  The chair is most likely the most important item in this busy room.  2.  The chair is movable.  3.  You can stand on the chair which proves useful for two reasons.  4.  The first is that it will allow you to see on top of things you normally wouldn't be able to see on top of.  5.  It gives you buoyant body a \"gravitational\" advantage.  6.  ... ... ...  7.  Move chair to pool.  Stand on it.  Jump in pool.  You'll sink for just enough time.  8.  Move chair to vending machine.  Stand on chair.  Look at top of machine.  Now you have money for the machine.  </font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("commons", "Commons") {
+          msg ("<b><u>Room Name:</b></u>  Commons<br/><br/><b><u>Location Within Compound:</b></u>  Central.  Inside the \"ring\".<br/><br/><b><u>Key Need to Access:</b></u>  None.<br/><br/><b><u>Room Notes:</b></u>  Workout/Gathering/Training Room.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">1.  To access, you'll need to fit in AND create a minor diversion.  2.  If you have had a \"successful\" encounter (see shower hints) in the shower stall, there will be someone on the \"chopping block\" and your diversion will be set.  3.  Mongo, the scapegoat snitch, will be the cruel victim of a public execution at the hands of Salashkar Ivebeenabad.  4.  While this is happening, don't watch it or waste time, just get what you need from the commons and get out of there!!  You'll have about five minutes to look around in here before the execution is over.  5.  Make sure you get everything that is \"gettable\"!  </font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("laundry room","Laundry Room","Laundry room","laundry","Laundry") {
+          msg ("<b><u>Room Name:</b></u>  Laundry Room<br/><br/><b><u>Location Within Compound:</b></u>  East of southeasternmost north-south hallway.<br/><br/><b><u>Key Need to Access:</b></u>  Key fob D.<br/><br/><b><u>Room Notes:</b></u>  All of the Dingoes clothes are laundered here.  Machines are in good working order.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">1.  The dryer will be useful.  2.  What does a dryer do?  3.  The hint is in the dryer's description.  4.  Dryers get hot.  5.  Heat shrinks stuff, especially plastic and rubber.  6.  The tube you will find needs shrunk.</font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("Chemical Warehouse","Chemical warehouse","chemical warehouse","chemicals","chemical","chemical storage","Chemical Storage","Chemical storage","chemical room","Chemical room","Chemical Room") {
+          msg ("<b><u>Room Name:</b></u><br/><br/><b><u>Location Within Compound:</b></u><br/><br/><b><u>Key Need to Access:</b></u><br/><br/><b><u>Room Notes:</b></u><br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">NO HINTS.  Sorry.</font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("Garage","garage") {
+          msg ("<b><u>Room Name:</b></u>  Garage<br/><br/><b><u>Location Within Compound:</b></u>  Southeastern most room, southeast of junction<br/><br/><b><u>Key Need to Access:</b></u>  Key fob D<br/><br/><b><u>Room Notes:</b></u>  Storage of large military vehicles are here (tanks and ATVs/SUVs) along with Dr. Dingo's personal exotic vehicles.  Roonil Wazlin is in charge here.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">1.  You'll eventually need to disable the exotic cars and the SUV's before your big getaway (R = red, B = black, S = SUV).  You'll know when it is time!  2.  R = What can you access on the red car?  Not much, but of the stuff you can get to, what can you disable?  B = You can open something up on this car, right?  S = It's the only automobile in the garage with one of these.  3.  R = Work on those tires.  B = Open the hood.  S = Notice the hitch?  4.  R = You'll need to slice the tires, but you'll need something really sharp and durable.  B = You'll need to put something in the radiator.  S = You won't be hauling anything.  Think of the hitch as an alternative \"braking/breaking\" system.  5.  R = You'll find what you need for this, once you get into the armory.  B = You'll need something from the Chemical Storage room.  Something that does not mix well with water and with heat.  Read your labels!  S = You'll find a chain in the armory.</font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.<br/><br/><b><u>Other Hints:</b></u>  1.  Make sure you examine everything very carefully in here.  2.  Read the descriptions of the other vehicles and look at their parts.  3.  You should be able to find a tube, a *map, and batteries. (*not essential to game completion)")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("Mechanics room","mechanics room","Mechanics Room","Mechanic's room","mechanic's room","Mechanic's Room","Mechanics","Mech","mechanics","mech","mechanic's","Mechanic's") {
+          msg ("<b><u>Room Name:</b></u>Mechanic's Office<br/><br/><b><u>Location Within Compound:</b></u>North of the garage.<br/><br/><b><u>Key Need to Access:</b></u>None, but Roonil (the Garage boss), has a special key for his special door.<br/><br/><b><u>Room Notes:</b></u>Do not remove anything from this room without Roonil's permission.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">1.  You'll need help to get in here because you don't have a key and you will never find one.  2.  So, obviously, you'll need help from your good friend.  3.  Once inside, make sure you get everything that you can take.  4.  Notice the four keys on the peg board?  I wander what FOUR things these could go in?  5.  You will want to make sure these keys do not work where they are supposed to work.  You will want to save at least one of these keys.  They are cheap pieces of metal, right (Nickel-plated, if I recall)?  6.  What happens when you heat metal?  7.  You'll need pretty substantial heat to do the trick... somewhere in the range of 2,500 degrees F!  8.  You can find that heat in the laboratory.  </font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("Dining hall","Dining Hall","dining hall","Dining room","dining room","Dining Room","cafe","Cafeteria","cafeteria") {
+          msg ("<b><u>Room Name:</b></u>  Dining Room<br/><br/><b><u>Location Within Compound:</b></u>  East of northeasternmost north-south hallway, northeast of southeastern most small junction.<br/><br/><b><u>Key Need to Access:</b></u>  None.<br/><br/><b><u>Room Notes:</b></u>  Please clean up after yourselves.  Please treat Ms. Humperdinck with respect.  Return all trays to the soiled utensil slots on the east wall.  Do not put paper products in the slot however.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">Gaining access to the Kitchen:  1.  Make sure you read the signs.  2.  Have you disposed of your dirty dining utensils?  3.  Were you a responsible cafeteria user when doing so?  4.  Put tray minus the soiled napkin into the slot.  5.  Conversation with Gretel Humperdinck begins.  6.  If you could only give her the right name, she might grant you access to the kitchen?  7.  Read any good bathroom stall art recently?  8. No more hints on the name - enough is enough!  9.  Now you have permission to enter the kitchen, but you still don't look like RW and Humperdinck will now it.  10.  What do all members of Dingo nation look like?  11.  Specifically, what about RW?  12.  You'll need Dingo garb and a beard - both can be found in the shower.  (see shower hints if needed).</font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("Showers","showers") {
+          msg ("<b><u>Room Name:</b></u>  Showers<br/><br/><b><u>Location Within Compound:</b></u>  North of Dining Room, South of Barracks<br/><br/><b><u>Key Need to Access:</b></u>  None.<br/><br/><b><u>Room Notes:</b></u>  Please try to keep it clean.  Remember your password.  If you have password problems, please see Mr. Willows in the Janitor's Closet.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">1.  You'll want to get into the correct locker, but which one?  There are more than 200 Dingos and the lockers aren't labeled by name, just number.  2.  Somewhere, you will find a name and a locker number.  3.  You've already been in the Janitor's Room.  4.  Read the notepad.  5.  Now you have one-half of your disguise.  You still need a beard, however.  6.  Have you explored all of the shower stalls?  (You might want to save the game here...)<br/><br/><b><u>Further Hints:</b></u>  1.  Save!!  2.  After entering the third of three stalls, a couple of Dingoes walk in to use the shower.  3.  Listen to their conversation closely - it may be helpful.  4.  Eventually, one of the Dingoes is going to shower IN YOUR STALL!!  5.  This Dingo needs to think the stall is occupied.  6.  Is there any way you can make him think the stall is occupied BEFORE he open the curtain?  7.  ... ... ... 8.  Use the lever.  9.  When you return to the shower stalls, go examine the shower stalls that these two men used.  You'll find your \"beard\" in there.  Bleck.  10.  You'll need to fix the beard to your face with something.  I'm sure you can find something sticky around somewhere.  Part two of your disguise is complete.</font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.<br/><br/>")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("Kitchen","kitchen") {
+          msg ("<b><u>Room Name:</b></u>  Kitchen<br/><br/><b><u>Location Within Compound:</b></u>  East of the Dining Hall<br/><br/><b><u>Key Need to Access:</b></u>  None.<br/><br/><b><u>Room Notes:</b></u>  Listen to Ms. Humperdinck at all costs.  See runs the ship in there.  Better be on your best behavior.  A+ cleanliness rating.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">1.  Don't meander too long in here.  2.  Don't try and be social with anyone.  3.  Just get in the pantry and get what you think you need and get back out again.</font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("Pantry","pantry") {
+          msg ("<b><u>Room Name:</b></u>  Pantry<br/><br/><b><u>Location Within Compound:</b></u>  Easternmost room in compound.  East of kitchen.<br/><br/><b><u>Key Need to Access:</b></u>  None.<br/><br/><b><u>Room Notes:</b></u>  Basic storage for food and kitchen supplies.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">Just take what you need and leave..</font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("sarlashkars office","Sarlashkars","Sarlashkars office","Sarlashkars Office","sarlashkar's office","Sarlashkar's","Sarlashkar's office","Sarlashkar's Office") {
+          msg ("<b><u>Room Name:</b></u>  Sarlashkar's Office<br/><br/><b><u>Location Within Compound:</b></u>  West of Barracks.<br/><br/><b><u>Key Need to Access:</b></u>  None.  Sarlashkar's personal lock.  Ivebeenabad is the only one with this key.<br/><br/><b><u>Room Notes:</b></u>  None.<br/><br/><b><u>Hint:</b></u>Highlight <b>SLOWLY</b>from here --><font color=\"white\">1.  You'll really want access to that computer!  2.  But, it is password protected.  3.  Look at everything in the office.  4.  You need to know nothing other than the thing you can find in the office except... I hope you drew a map?  5.  The \"ring\" is the a reference to the <i>circular</i> pattern of rooms surrounding the Commons.  6.  The frame was a gift.  7.  Check the frame closely.  There's something there you can read.  8.  Remember to read the slip of paper.  9. It is case sensitive, as are most passwords.  10.  ..............................................................  11.  1HailuvaLOVER4</font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("laboratory","lab","Lab","Laboratory","Science Lab","science lab","Science lab") {
+          msg ("<b><u>Room Name:</b></u>  Laboratory, Science Lab<br/><br/><b><u>Location Within Compound:</b></u>  Northwest corner of compound, north of northwest Small Junction<br/><br/><b><u>Key Need to Access:</b></u>  Key fob B<br/><br/><b><u>Room Notes:</b></u>  High Clearance personel only.  Scientists personally selected by Dr. Dingo himself have a special access key.  No lit flames and no static in this room please.<br/><br/><b><u>Hint:</b></u>Highlight <b>SLOWLY</b> from here --><font color=\"white\">1.  Even with key fob B, entering this room would be unwise.  These are the most observant minds in the compound and they will surely recognize you as a fraud.  2.  You'll need to create an accident inside the lab, but you can't go in yet, right?  Who else can possible get in or at least close?  3.  It is far too windy for an individual to crawl through the ventilation system surrounding the lab.  (see ventilation system hints if you can't access the VS above the lab).  4.  Scientists are always super cautious around foreign smells.  Do you have anything that is \"smellable\" and is a dangerous?  5.  Check the laundry room.  6.  Hmm... don't mix bleach with what?  7.  There is one place that smells ripely of ammonia.  Go smell the air there.  8.  You will need your little companion for this part, too.  Sorry, Blerk!  9.  That's all I want to give here.  Figure the rest out.  If you can't, ask on the comment section of the game.  10.  There is only one exit from the lab and it is very close to the infirmary.  Could you get into the lab if sick scientists are roaming around?  Probably not, so you'll need to lock them in the lab.  11.  Do you have anything that you could use to bar the door shut from the outside?  12.  You'll find what you need in the mechanics room.  13.  Once inside, you should know what you should do.  (see garage hints if you can't make progress).  </font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("Small Room","small room","Small room") {
+          msg ("<b><u>Room Name:</b></u>  Small Room<br/><br/><b><u>Location Within Compound:</b></u>  East of Laboratory<br/><br/><b><u>Key Need to Access:</b></u>  None.<br/><br/><b><u>Room Notes:</b></u>  None.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">1.  Can't find Dr. Dingo?  He's VERY close.  2.  There is a hidden panel here.  Search for it.  3.  Try moving stuff around?  4.  The answer the puzzle is held in secret by the person in the maximum security prison.  5.  Hopefully you haven't forgotten what he said.  6.  If you have forgotten, Blerk has got a damn good memory!</font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("Dingos Office","dingos office","Dingos office","Dingo's Office","dingo's office","Dingo's office","dingos","Dingos","dingo's","Dingo's","dingo","Dingo") {
+          msg ("CLASSIFIED...<br/><br/>CLASSIFIED...<br/><br/>ACCESS DENIED.<br/><br/>CLASSIFIED...<br/><br/>CLASSIFIED...<br/><br/>ACCESS DENIED.")
+          play sound ("alarm.mp3", false, false)
+          wait {
+            computer loop 2
+          }
+        }
+        case ("Infirmary","infirmary") {
+          msg ("<b><u>Room Name:</b></u>  Infirmary<br/><br/><b><u>Location Within Compound:</b></u>  Westernmost room in compound.<br/><br/><b><u>Key Need to Access:</b></u>  Key fob C.<br/><br/><b><u>Room Notes:</b></u>  Appointment required barring an emergency.  Dr. Patty Punjab is the current lead physician at the compound.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">1.  <b>Once you get key fob C and enter the Infirmary, the Dining Hall, Showers, and Barracks will be closed FOREVER.</b> SAVE BEFORE ENTERING PLEASE!  Hopefully you can't get key fob C before getting everything you need from these areas, but I cannot promise!  There will be a \"You better save now\" warning before entering the room.  2.  Once you are in the room, just take everything that you can.  Explore throughly.</font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("doctors office","doctors","Doctors","doctor's office","doctor's","Doctor's","Doctor's Office","Doctor's office") {
+          msg ("<b><u>Room Name:</b></u>  Doctor's Office, Punjab's Office<br/><br/><b><u>Location Within Compound:</b></u>East of Infirmary<br/><br/><b><u>Key Need to Access:</b></u>  None.<br/><br/><b><u>Room Notes:</b></u>  Do not enter unless you have Dr. Punjab's permission.  There may be dangerous viral or bacterial samples stored here.  Dr. Punjab only please.<br/><br/><b><u>Hint:</b></u>Highlight from here --><font color=\"white\">1.  You will need to do some research on the samples, if you do not already know what they are.  2.  To do this, use the book on the desk.  3.  Make sure you know which one you will want to use on your enemy.  4.  Perhaps the prisoner in the maximum security cell can help with this.  5.  If you can't remember what the prisoner said, ask Blerk.  Blerk has a damned good memory!</font><-- to here if you are stuck and want a hint regarding this room.  Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        case ("ventilation system","Ventilation system","Ventilation System","vents","Vents") {
+          msg ("<b><u>Room Name:</b></u>  Ventilation System<br/><br/><b><u>Location Within Compound:</b></u>  All above the compound.<br/><br/><b><u>Key Need to Access:</b></u>  None.<br/><br/><b><u>Room Notes:</b></u>  There are grates above each prisoner cell, the laboratory, and above the doctors office.  <br/><br/><b><u>Hint:</b></u>These hints will be in order as they roughly appear in the game.  Highlight <b>SLOWLY</b> the sections where you are stuck.<br/><br/>TO ACCESS THE 'TOO HOT' AREA:  <font color=\"white\"><br/>1.  You obviously need to cool down to pass through.<br/>2.  Ice will do the trick... partially.<br/>3.  But you'll need an appropriate container to carry it in.<br/>4.  A thermal cooler should do the trick (you can find one in the... ... ... pantry)<br/>5.  You'll need to wear the cooler because as soon as the ice is out of the cooler, it will melt.  But... <br/>6.  How can you wear a cooler?   Well, you can't, but someone else can as long as there are holes for the legs.<br/>7.  But cutting holes in the legs just makes it leak, so you will need a sealant of some kind.  Remember, you are using this thing in the <i>DUCT</i> work.  Get it?<br/>8.  Now that you should be able to wear the cooler, you will still find it is not enough.  You'll need to create a cold reaction in there...<br/>9.  Remember, you are a science teacher.  You have seen your fair share of really, really lame science fair projects involving the two things you will need!<br/>10.  Pour them both in and you should have a cold enough cooler to make your way through!<br/>11.  Ask on the comments section of the game if you are stuck here.</font><br/><br/>TO ACCESS THE 'MAX SECURITY GRATE:<font color=\"white\"><br/>1.  You'll need to make sure you don't get shocked.<br/>2.  There are two things you an do to lessen the shock factor.<br/>3.  One thing you need you will find in the laundry room.  -- It often goes in the dryer.<br/>4.  The other thing you will need is some water.  You should already have the water from a previous successful mission through the grates.</font><br/><br/>TO ACCESS THE 'TOO DARK' AREA:<font color=\"white\"><br/>1.  You'll obviously need a light.<br/>2.  There is just such a thing in the mechanics room, but...<br/>3.  The batteries in it are dead!<br/>4.  So... find you some batteries.  They are hidden somewhere in the garage (see garage hints if you are stuck)</font><br/><br/>TO ACCESS THE 'TOO WINDY' AREA:<font color=\"white\"><br/>1.  You'll need an item that will weigh \"you\" down a bit more.<br/>2.  You'll also need something to tie that object to \"you\".<br/>3.  You can find a sturdy rope in the garage.<br/>4.  You can find a suitable weight in the Commons area.</font><br/><br/> Only use in case of EMERGENCIES!!  Highlight slowly from left to right for gradually more obvious hints.  If you are still stuck, ask on the comment section of the game.")
+          wait {
+            computer loop 2
+          }
+        }
+        default {
+          msg ("<br/>UNIDENTIFIED.  Please enter a room name, or type 'stop' or 'return'.<br/>")
+          wait {
+            computer loop 2
+          }
+        }
+      }
+    }
+  ]]></function>
+</asl>

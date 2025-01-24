@@ -1,0 +1,605 @@
+<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="test">
+    <gameid>c3c86aff-021f-486a-88ad-8057c2a2c61c</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <author>T-Bear</author>
+    <showhealth />
+    <showscore />
+    <feature_limitinventory />
+    <feature_lightdark />
+    <showcommandbar />
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <category>Horror</category>
+    <gridmap />
+    <mapscale type="int">20</mapscale>
+    <mapsize type="int">200</mapsize>
+    <description type="string"></description>
+    <pov type="object">player</pov>
+    <onhealthzero type="script">
+      die ("Health reached 0.")
+    </onhealthzero>
+    <start type="script"><![CDATA[
+      msg ("<b><u>Before starting the game, have a look at the help.</u> This help can be shown while playing at any time, simply by typing \"help\".</b><br/>")
+      showhelp
+    ]]></start>
+  </game>
+  <command name="help">
+    <pattern type="string">^help$|^\?$</pattern>
+    <script>
+      showhelp
+    </script>
+  </command>
+  <object name="L1_Introduction">
+    <inherit name="editor_room" />
+    <dark />
+    <darkroomdescription>An extremely dark room. Nothing to be seen.</darkroomdescription>
+    <object name="office1">
+      <inherit name="editor_room" />
+      <alias>Office</alias>
+      <dark />
+      <darkroomdescription>The room is extremely dark. Nothing can be seen in the darkness.</darkroomdescription>
+      <description>The room looks like it once was an office. There is an empty shelf against the wall and a desk against the opposite wall.</description>
+      <exit alias="west" to="corridor1">
+        <inherit name="westdirection" />
+        <lightsource />
+        <lightstrength>weak</lightstrength>
+      </exit>
+      <object name="shelf2">
+        <inherit name="editor_object" />
+        <look>An empty shelf with nothing left on it.</look>
+        <scenery />
+        <alias>Shelf</alias>
+      </object>
+      <object name="desk1">
+        <inherit name="editor_object" />
+        <inherit name="surface" />
+        <alias>Desk</alias>
+        <look>A massive desk made out of stone with drawers made from heavy wood.</look>
+        <feature_container />
+        <hidechildren />
+        <listchildren />
+        <object name="oil2">
+          <inherit name="editor_object" />
+          <oil type="int">3</oil>
+          <alias>Pot of oil</alias>
+          <take type="script">
+            msg ("You picked up a pot of oil.")
+            player.oil = player.oil + this.oil
+            RemoveObject (this)
+          </take>
+        </object>
+        <object name="note3">
+          <inherit name="editor_object" />
+          <look><![CDATA[<i><b>Note to self 3</b><br/>Placeholder.<br/></i>]]></look>
+          <alias>Note</alias>
+        </object>
+        <object name="drawers1">
+          <inherit name="editor_object" />
+          <inherit name="container_closed" />
+          <look>Big wooden drawers. Strange patterns are carved into the wood.</look>
+          <feature_container />
+          <openmsg>You opened the drawers.</openmsg>
+          <closemsg>You closed the drawers.</closemsg>
+          <alias>Drawers</alias>
+          <listchildren />
+          <object name="key2">
+            <inherit name="editor_object" />
+            <alias>Key</alias>
+            <look>Small steel key.</look>
+            <take />
+          </object>
+          <object name="oil3">
+            <inherit name="editor_object" />
+            <oil type="int">3</oil>
+            <alias>Pot of oil</alias>
+            <take type="script">
+              msg ("You picked up a pot of oil.")
+              player.oil = player.oil + this.oil
+              RemoveObject (this)
+            </take>
+          </object>
+        </object>
+      </object>
+    </object>
+    <object name="corridor2">
+      <inherit name="editor_room" />
+      <alias>Corridor</alias>
+      <description>This seems to be the corner of the corridor. There is a door leading to another room. </description>
+      <exit alias="east" to="corridor1">
+        <inherit name="eastdirection" />
+        <attr name="grid_length" type="int">0</attr>
+      </exit>
+      <exit alias="south" to="corridor3">
+        <inherit name="southdirection" />
+        <attr name="grid_length" type="int">0</attr>
+      </exit>
+      <exit alias="west" to="miscroom1">
+        <inherit name="westdirection" />
+      </exit>
+    </object>
+    <object name="storageroom1">
+      <inherit name="editor_room" />
+      <alias>Small storage room</alias>
+      <dark type="boolean">false</dark>
+      <description>A dark room with a wooden shelf against one of the walls and a closet against the inner wall. In the middle of the room there is a table.</description>
+      <exit alias="north" to="corridor1">
+        <inherit name="northdirection" />
+      </exit>
+      <object name="table2">
+        <inherit name="editor_object" />
+        <inherit name="surface" />
+        <alias>Table</alias>
+        <feature_container />
+        <listchildren />
+        <hidechildren />
+        <object name="note2">
+          <inherit name="editor_object" />
+          <look><![CDATA[<i><b>Note to self 2</b><br/>I will provide you with a lantern, which should be usefull in dark rooms. Use it with care though as you don't want to run out of oil in the dark rooms of this mansion. Trust me.<br/></i>]]></look>
+          <alias>Note</alias>
+          <take type="boolean">false</take>
+          <volume type="int">0</volume>
+        </object>
+        <object name="lantern">
+          <inherit name="editor_object" />
+          <inherit name="switchable" />
+          <take />
+          <takemsg>You picked up a lantern.</takemsg>
+          <drop type="boolean">false</drop>
+          <volume type="int">3</volume>
+          <feature_switchable />
+          <feature_lightdark />
+          <lightsource type="boolean">false</lightsource>
+          <lightstrength>strong</lightstrength>
+          <switchonmsg>You switched on the lantern.</switchonmsg>
+          <switchoffmsg>You switched off the lantern.</switchoffmsg>
+          <onswitchon type="script"><![CDATA[
+            if (player.oil > 0) {
+              SetObjectLightstrength (lantern, "strong")
+              ShowRoomDescription
+            }
+            else {
+              msg ("You have no oil left.")
+            }
+          ]]></onswitchon>
+          <onswitchoff type="script">
+            SetObjectLightstrength (lantern, "")
+            ShowRoomDescription
+          </onswitchoff>
+          <look type="script"><![CDATA[
+            msg ("A simple lantern. It needs oil to use. <b>Current oil: " + lantern.oil + ".</b>")
+          ]]></look>
+        </object>
+      </object>
+      <object name="shelf1">
+        <inherit name="editor_object" />
+        <inherit name="surface" />
+        <alias>Shelf</alias>
+        <scenery />
+        <feature_container />
+        <hidechildren />
+        <listchildren />
+        <listchildrenprefix>There is</listchildrenprefix>
+        <object name="oil1">
+          <inherit name="editor_object" />
+          <oil type="int">3</oil>
+          <alias>Pot of oil</alias>
+          <take type="script">
+            msg ("You picked up a pot of oil.")
+            player.oil = player.oil + this.oil
+            RemoveObject (this)
+          </take>
+        </object>
+      </object>
+    </object>
+    <object name="corridor1">
+      <inherit name="editor_room" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <description><![CDATA[You are at the end of a corridor which continue into the dark to the west. To the east there is a door. To the south there is a door. The room is illuminated by a chandelier hanging from the ceiling.<br/>]]></description>
+      <attr name="grid_width" type="int">2</attr>
+      <attr name="grid_label">Corridor</attr>
+      <attr name="grid_borderwidth" type="int">1</attr>
+      <dark />
+      <darkroomdescription>You are in a very dark place. You can't see anything of interest.</darkroomdescription>
+      <alias>Corridor</alias>
+      <exit alias="north" to="bedroom">
+        <inherit name="northdirection" />
+      </exit>
+      <exit alias="south" to="storageroom1">
+        <inherit name="southdirection" />
+      </exit>
+      <exit alias="west" to="corridor2">
+        <inherit name="westdirection" />
+        <attr name="grid_length" type="int">0</attr>
+      </exit>
+      <exit alias="east" to="office1">
+        <inherit name="eastdirection" />
+      </exit>
+      <object name="Chandelier">
+        <inherit name="editor_object" />
+        <look>A small, simple chandelier burning oil lamps hanging from the ceiling.</look>
+        <usestandardverblist type="boolean">false</usestandardverblist>
+        <scenery />
+        <feature_lightdark />
+        <lightsource />
+        <lightstrength>strong</lightstrength>
+      </object>
+    </object>
+    <object name="bedroom">
+      <inherit name="editor_room" />
+      <dark />
+      <darkroomdescription type="string"></darkroomdescription>
+      <description>You are in a relatively small square room. The walls are made out of huge stones. There is a door to the south and a window to the north which illuminates the room. A simple table is in one of the corners. A wooden bed is located against the wall.</description>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <attr name="grid_width" type="int">1</attr>
+      <object name="player">
+        <inherit name="editor_object" />
+        <inherit name="editor_player" />
+        <inherit name="male" />
+        <statusattributes type="stringdictionary">
+          <item>
+            <key>Hunger</key>
+            <value>Hunger: !/5.</value>
+          </item>
+          <item>
+            <key>insanity</key>
+            <value>Insanity: !/4.</value>
+          </item>
+          <item>
+            <key>disease</key>
+            <value>Disease: !</value>
+          </item>
+          <item>
+            <key>oil</key>
+            <value>Oil: !</value>
+          </item>
+        </statusattributes>
+        <Hunger type="int">0</Hunger>
+        <take type="boolean">false</take>
+        <maxvolume type="int">10</maxvolume>
+        <containerfullmessage>Your inventory is full. Get rid of some items before taking anything more.</containerfullmessage>
+        <insanity type="int">0</insanity>
+        <alias>self</alias>
+        <disease type="int">0</disease>
+        <oil type="int">0</oil>
+        <hungercounter type="int">0</hungercounter>
+        <oilcounter type="int">0</oilcounter>
+        <changedoil type="script">
+          if (player.oil = 0) {
+            msg ("You ran out of oil.")
+            SwitchOff (lantern)
+          }
+        </changedoil>
+      </object>
+      <exit name="RoomToRoom2_Exit" alias="south" to="corridor1">
+        <inherit name="southdirection" />
+        <locked />
+        <look>There is a massive wooden door, reinforced by metal.</look>
+      </exit>
+      <object name="door1">
+        <inherit name="editor_object" />
+        <look>It is a large wooden door, reinforced with steel.</look>
+        <alias>Door</alias>
+        <scenery />
+        <unlock type="script">
+          if (Got(key1)) {
+            UnlockExit (RoomToRoom2_Exit)
+            RemoveObject (key1)
+            msg ("You unlocked the door!")
+          }
+          else {
+            msg ("You need a key to unlock the door.")
+          }
+        </unlock>
+      </object>
+      <exit alias="north" to="bedroom">
+        <inherit name="northdirection" />
+        <lookonly />
+        <look>There is a snow covered pine forest outside. The sun is high in the sky and not one cloud can be seen.</look>
+      </exit>
+      <object name="window">
+        <inherit name="editor_object" />
+        <scenery />
+        <look>It is a quite old, quite dark window which barely let's through enough light to illuminate the room.</look>
+        <feature_lightdark />
+        <lightsource />
+        <lightstrength>strong</lightstrength>
+        <attr name="feature_container" type="boolean">false</attr>
+        <open />
+        <openscript type="script">
+          msg ("You try to open the window but it doesn't move.")
+          HelperCloseObject (window)
+        </openscript>
+      </object>
+      <object name="table1">
+        <inherit name="editor_object" />
+        <inherit name="surface" />
+        <scenery />
+        <look>It is a simple wooden table. Nothing special about it.</look>
+        <feature_container />
+        <listchildren />
+        <listchildrenprefix>It has</listchildrenprefix>
+        <alias>Table</alias>
+        <hidechildren />
+        <object name="Note">
+          <inherit name="editor_object" />
+          <look><![CDATA[<i><b>Note to self 1</b><br/>Welcome to my mansion. You may not remember it but you used to live here. A few things have changed since you last were here. I think you will find that the mansion is slightly... less pleasant than before.</i><br/>]]></look>
+          <take type="boolean">false</take>
+          <takemsg>You took the note.</takemsg>
+          <volume type="int">0</volume>
+        </object>
+        <object name="Apple">
+          <inherit name="editor_object" />
+          <nutrition type="int">1</nutrition>
+          <usedefaultprefix />
+          <displayverbs type="stringlist">
+            <value>Look at</value>
+            <value>Take</value>
+            <value>Eat</value>
+          </displayverbs>
+          <inventoryverbs type="stringlist">
+            <value>Look at</value>
+            <value>Eat</value>
+            <value>Drop</value>
+          </inventoryverbs>
+          <take />
+          <takemsg>You picked up an apple.</takemsg>
+          <look>A delicious looking read apple.</look>
+          <volume type="int">1</volume>
+          <eat type="script">
+            eatfood (Apple)
+          </eat>
+        </object>
+        <object name="key1">
+          <inherit name="editor_object" />
+          <look>It is a big slightly rusty, metal key.</look>
+          <take />
+          <takemsg>You picked up a key.</takemsg>
+          <volume type="int">1</volume>
+          <alias>Key</alias>
+        </object>
+      </object>
+      <object name="bed">
+        <inherit name="editor_object" />
+        <look>A beautifully crafted bed with complex patterns carved into the wood.</look>
+        <scenery />
+      </object>
+    </object>
+    <object name="corridor3">
+      <inherit name="editor_room" />
+      <alias>Corridor</alias>
+      <attr name="grid_width" type="int">1</attr>
+      <attr name="grid_length" type="int">2</attr>
+      <dark />
+      <description>You are standing in an end of a corridor. There is a door to the south.</description>
+      <darkroomdescription>A dark part of the corridor.</darkroomdescription>
+      <exit alias="north" to="corridor2">
+        <inherit name="northdirection" />
+        <attr name="grid_length" type="int">0</attr>
+      </exit>
+      <object name="door2">
+        <inherit name="editor_object" />
+        <alias>Door</alias>
+        <unlock type="script">
+          if (Got(key2)) {
+            UnlockExit (corridor3tolevel2)
+            RemoveObject (key2)
+            msg ("You unlocked the door!")
+          }
+          else {
+            msg ("You need a key to unlock the door.")
+          }
+        </unlock>
+      </object>
+      <exit name="corridor3tolevel2" alias="south" to="FirstroomL2">
+        <inherit name="southdirection" />
+        <locked />
+        <runscript />
+        <script type="script">
+          MoveObject (player, FirstroomL2)
+          progress
+        </script>
+      </exit>
+    </object>
+    <object name="miscroom1">
+      <inherit name="editor_room" />
+      <alias>Room</alias>
+      <dark />
+      <darkroomdescription>A dark room.</darkroomdescription>
+      <description>A small room. A work bench is against a wall.</description>
+      <exit alias="east" to="corridor2">
+        <inherit name="eastdirection" />
+      </exit>
+      <object name="workbench1">
+        <inherit name="editor_object" />
+        <inherit name="surface" />
+        <alias>Work bench</alias>
+        <scenery type="boolean">false</scenery>
+        <feature_container />
+        <object name="note4">
+          <inherit name="editor_object" />
+          <look><![CDATA[<i><b>Note to self 4</b><br/>Have some more oil. You will need it soon enough.</i>]]></look>
+          <alias>Note</alias>
+        </object>
+        <object name="oil4">
+          <inherit name="editor_object" />
+          <oil type="int">3</oil>
+          <alias>Pot of oil</alias>
+          <take type="script">
+            msg ("You picked up a pot of oil.")
+            player.oil = player.oil + this.oil
+            RemoveObject (this)
+          </take>
+        </object>
+      </object>
+    </object>
+  </object>
+  <object name="L2_">
+    <inherit name="editor_room" />
+    <object name="FirstroomL2">
+      <inherit name="editor_room" />
+      <exit alias="north" to="corridor3">
+        <inherit name="northdirection" />
+        <locked />
+      </exit>
+    </object>
+  </object>
+  <function name="CheckDarkness" type="boolean"><![CDATA[
+    roomCheckDarkness = true
+    if (GetBoolean(game.pov.parent, "dark")) {
+      if (ListCount(ScopeVisibleLightsource("strong")) > 0) {
+        roomCheckDarkness = false
+      }
+      if (ListCount(ScopeInventoryLightsources()) > 0) {
+        roomCheckDarkness = false
+      }
+    }
+    else {
+      roomCheckDarkness = false
+    }
+    game.pov.parent.darklevel = roomCheckDarkness
+    return (roomCheckDarkness)
+  ]]></function>
+  <function name="increasefood" parameters="Amount"><![CDATA[
+    player.Hunger = player.Hunger-Amount
+    if (player.Hunger <= 0) {
+      player.Hunger = 0
+    }
+    msg ("Hunger decreased by " + Amount)
+  ]]></function>
+  <function name="decreasefood" parameters="Amount"><![CDATA[
+    player.Hunger = player.Hunger+Amount
+    if (player.Hunger > 5) {
+      die ("You starved to death.")
+    }
+    msg ("Hunger increased by " + Amount)
+  ]]></function>
+  <function name="increaseinsanity" parameters="Amount"><![CDATA[
+    player.Insanity = player.Insanity+Amount
+    if (player.Hunger >= 4) {
+      player.Insanity = 4
+    }
+    msg ("Insanity increased by " + Amount)
+  ]]></function>
+  <function name="decreaseinsanity" parameters="Amount"><![CDATA[
+    player.insanity = player.insanity-Amount
+    if (player.insanity<= 0) {
+      player.insanity = 0
+    }
+    msg ("Insanity decreased by " + Amount)
+  ]]></function>
+  <function name="eatfood" parameters="fooditem">
+    if (HasAttribute(fooditem, "nutrition")) {
+      increasefood (fooditem.nutrition)
+      if (HasAttribute(fooditem, "eatdiseaseincrease")) {
+        increasedisease (fooditem.eatdiseaseincrease)
+        msg ("Disease increased by " + fooditem.eatdiseaseincrease)
+      }
+      RemoveObject (fooditem)
+    }
+    else {
+      msg ("You can not eat this item.")
+    }
+  </function>
+  <function name="die" parameters="message">
+    msg (message)
+    msg ("You lost!")
+    finish
+  </function>
+  <function name="savegame">
+    request (RequestSave, "")
+  </function>
+  <function name="increasedisease" parameters="Amount">
+    player.disease = player.disease + Amount
+  </function>
+  <function name="decreasedisease" parameters="Amount"><![CDATA[
+    player.disease = player.disease - Amount
+    if (player.disease < 0) {
+      player.disease = 0
+    }
+  ]]></function>
+  <function name="progress"><![CDATA[
+    msg ("You progressed!")
+    decreaseinsanity (1)
+    if (player.disease > 0) {
+      DecreaseHealth (player.disease)
+      msg ("Health decreased by " + player.disease + " because of disease.")
+    }
+    IncreaseScore (1)
+    decreasedisease (1)
+    msg ("Disease decreased by 1.")
+  ]]></function>
+  <function name="ScopeInventoryLightsources" type="objectlist">
+    result = ScopeInventory()
+    lightobjects = NewObjectList()
+    foreach (obj, result) {
+      if (GetBoolean(obj, "lightsource") and GetString(obj, "lightstrength") = "strong") {
+        list add (lightobjects, obj)
+      }
+    }
+    return (lightobjects)
+  </function>
+  <function name="showhelp"><![CDATA[
+    stoptimers
+    msg ("<b>To read a note or get description of an object use \"<font color=\"red\">look at [object name]</font>\".<br/>To unlock a door when key is available, just use \"<font color=\"red\">unlock [object name]</font>\".<br/>Use \"<font color=\"red\">eat [object name]</font>\" to eat an object.<br/>Use \"<font color=\"red\">take [object name]</font>\" to pick up an object and put it into your inventory.<br/>To walk in a direction use \"<font color=\"red\">go [in/out/east/west/north/south/up/down]</font>\"<br/><br/>You lose if your hunger becomes greater than 5 or health reaches 0%.<br/>Important stats and inventory are shown in the panel to the right.</b><br/>Press any key to continue...")
+    wait {
+      starttimers
+    }
+  ]]></function>
+  <function name="stoptimers">
+    DisableTimer (Hunger increase)
+    DisableTimer (Oil decrease)
+  </function>
+  <function name="starttimers">
+    EnableTimer (Hunger increase)
+    EnableTimer (Oil decrease)
+  </function>
+  <walkthrough name="Walkthrough">
+    <steps type="simplestringlist">
+      look at window
+      look north
+      look at table
+      look at note
+      take apple
+      take key
+      unlock door
+      go south
+      go south
+      look at table
+      look at note
+      take lantern
+      look at shelf
+      take pot of oil
+      go north
+      go east
+      switch on lantern
+    </steps>
+  </walkthrough>
+  <timer name="Hunger increase">
+    <interval>1</interval>
+    <enabled type="boolean">false</enabled>
+    <script><![CDATA[
+      player.hungercounter = player.hungercounter+1
+      if (player.hungercounter > 120) {
+        decreasefood (1)
+        player.hungercounter = 0
+      }
+    ]]></script>
+  </timer>
+  <timer name="Oil decrease">
+    <interval>1</interval>
+    <enabled type="boolean">false</enabled>
+    <script><![CDATA[
+      if (IsSwitchedOn(lantern)) {
+        player.oilcounter = player.oilcounter+1
+        if (player.oilcounter > 30) {
+          player.oil = player.oil-1
+          msg ("Your lantern burnt a unit of oil.")
+        }
+      }
+    ]]></script>
+  </timer>
+</asl>

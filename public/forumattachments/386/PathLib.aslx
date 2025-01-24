@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<library>
+
+  <!--
+  The TurnCounter turnscript will increment the variable game.turn,
+  but only when a successful command has been responded to. Specifically,
+  any command that sets game.command_successful to True. Commands that
+  use Print will do this automatically, if you use PrettyPrint, then
+  any using Whitespaces, including get, drop, open, close will.
+
+  When the turn counter is incremented, all objects registered as having a path
+  will be checked for events. 
+
+  If you want to have a path running from the start, you must create an attribute
+  on game called "path_objects" that is an object list. There appears to be no way to do this
+  through the GUI, so do it as part of the start-up script.
+
+  If an event is to have a path, you must set up a string dictionary on it called
+  "path_events". Each event must be set up as an entry in this dictionary.
+  The key is the turn number (but as a string, note), the value is a function to call
+  (again as a string).
+
+  It is then necessary to create a function for each event. The function must accept the
+  object itself as the only parameter, and must have a return type, even though the value
+  is not used (this is a limitation of the Eval function).
+
+  Also, all functions listed in game.turn_functions (a stringlist) will be run each turn.
+  These functions must take no parameters, but again must return somethung.
+
+  You will probably need to override the wait command. Ensure that it sets
+  game.command_successful to True (say by called Print).
+  -->
+  <turnscript name="TurnCounter">
+    <enabled />
+    <script><![CDATA[
+    if (GetBoolean (game, "command_successful")) {
+      if (not HasInt (game, "turn")) game.turn = 0
+      game.turn = game.turn + 1
+      if (not HasAttribute(game, "path_objects")) game.path_objects = NewObjectList ()
+      PathRunner ()
+      if (not HasAttribute(game, "turn_functions")) game.turn_functions = NewStringList ()
+      TurnFunctions ()
+      // reset this last as paths mat set it again.
+      game.command_successful = False
+    }
+    ]]></script>
+  </turnscript>
+
+
+  <!--
+  Used by TurnCounter.
+  -->
+  <function name="PathRunner"><![CDATA[
+    foreach (obj, GetAttribute(game, "path_objects")) {
+      if (obj.path_is_playing) {
+        dict = obj.path_events
+        key = ToString (game.turn - obj.path_start_turn)
+        if (DictionaryContains (dict, key)) {
+          evt = DictionaryItem (dict, key)
+          game.tmp = obj
+          s = evt + " (game.tmp)"
+          tmp = eval (s)
+        }
+      }
+      else {
+        // Changing the start turn will in effect pause this path
+        obj.path_start_turn = obj.path_start_turn + 1
+      }
+    }
+  ]]></function>
+
+
+  <!--
+  Used by TurnCounter.
+  -->
+  <function name="TurnFunctions"><![CDATA[
+    foreach (s, GetAttribute(game, "turn_functions")) {
+      tmp = Eval (s + " ()")
+    }
+  ]]></function>
+
+
+  <!--
+  Call this for an object and its path will be set to play.
+  -->
+  <function name="PathPlay" parameters="obj"><![CDATA[
+    obj.path_is_playing = True
+  ]]></function>
+
+
+  <!--
+  Call this for an object and its path will be set to pause,
+  effectively putting it in suspended animation until set to play again.
+  -->
+  <function name="PathPause" parameters="obj"><![CDATA[
+    obj.path_is_playing = False
+  ]]></function>
+
+
+  <!--
+  Call this for an object and its path will be set to pause,
+  effectively putting it in suspended animation until set to play again.
+  -->
+  <function name="PathIsRunning" parameters="obj" type="boolean"><![CDATA[
+    return (GetBoolean (obj, "path_is_playing"))
+  ]]></function>
+
+
+  <!--
+  Call this for an object to start its path. The object will be registered
+  with the system as have a path, and its timeline will be set to start
+  from this time.
+
+  If you call this from the start script you must ensure there is an object list
+  set up on game called "path_objects".
+  -->
+  <function name="PathStart" parameters="obj"><![CDATA[
+    obj.path_is_playing = True
+    obj.path_start_turn = game.turn
+    list add (game.path_objects, obj)
+  ]]></function>
+
+  <!--
+  Ends the path for the given object, removing it from the path register.
+  -->
+  <function name="PathTerminate" paramters="obj"><![CDATA[
+    list remove (game.path_objects, obj)
+  ]]></function>
+
+
+</library>

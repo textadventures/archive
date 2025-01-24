@@ -1,0 +1,249 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Testing">
+    <gameid>79014589-2bd1-4347-a7cd-cac7a0aa475c</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+  </game>
+  <command name="put">
+    <pattern type="string"><![CDATA[^put (?<object1>.*) (on|in) (?<object2>.*)$]]></pattern>
+    <script>
+      // put object1 in/on object 2
+      if (object1.parent = object2) {
+        msg (DynamicTemplate("AlreadyThere", object1))
+      }
+      else if (not ListContains(ScopeInventory(), object1)) {
+        msg (DynamicTemplate("NotCarrying", object1))
+      }
+      else if (not ListContains(ScopeReachable(), object1)) {
+        msg (DynamicTemplate("ObjectNotOpen", GetBlockingObject(object1)))
+      }
+      else if (not ListContains(ScopeReachable(), object2)) {
+        msg (DynamicTemplate("ObjectNotOpen", GetBlockingObject(object2)))
+      }
+      else if (not object2.container) {
+        msg (Template("CannotDoThat"))
+      }
+      else if (not object2.isopen) {
+        msg (DynamicTemplate("ObjectNotOpen", object2))
+      }
+      else {
+        if (GetBoolean(object2, "hidechildren")) {
+          object2.hidechildren = false
+        }
+        if (HasDelegateImplementation(object2, "addscript")) {
+          rundelegate (object2, "addscript", object1)
+        }
+        else {
+          object1.parent = object2
+          msg (Template("Done"))
+        }
+      }
+      // must be carrying object1
+      // object1 must not be inside a closed container
+      // object2 must not be inside a closed container
+      // object2 must be an open container or surface
+    </script>
+  </command>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="apple">
+      <inherit name="editor_object" />
+      <take />
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Drop</value>
+        <value>Put</value>
+      </inventoryverbs>
+      <usestandardverblist />
+      <put type="scriptdictionary">
+        <item key="red_bowl">
+          if (HasAttribute(red_bowl, "maxobjects")) {
+            count = ListCount(GetDirectChildren(red_bowl))
+            max_count = red_bowl.maxobjects
+          }
+          else {
+            count = 1
+            max_count = 2
+          }
+          if (count = max_count) {
+            msg ("The bowl is full.")
+          }
+          else {
+            if (red_bowl.isopen) {
+              msg ("You put the apple in the red bowl.")
+              MoveObject (apple, red_bowl)
+            }
+            else {
+              msg ("The bowl isn't open.")
+            }
+          }
+        </item>
+        <item key="orange_bowl">
+          if (HasAttribute(orange_bowl, "maxobjects")) {
+            count = ListCount(GetDirectChildren(orange_bowl))
+            max_count = orange_bowl.maxobjects
+          }
+          else {
+            count = 1
+            max_count = 2
+          }
+          if (count = max_count) {
+            msg ("The bowl is full.")
+          }
+          else {
+            if (orange_bowl.isopen) {
+              msg ("You put the apple in the orange bowl.")
+              MoveObject (apple, orange_bowl)
+            }
+            else {
+              msg ("The bowl isn't open.")
+            }
+          }
+        </item>
+      </put>
+    </object>
+    <object name="orange">
+      <inherit name="editor_object" />
+      <take />
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Drop</value>
+        <value>Put</value>
+      </inventoryverbs>
+      <usestandardverblist />
+      <put type="scriptdictionary">
+        <item key="red_bowl">
+          if (HasAttribute(red_bowl, "maxobjects")) {
+            count = ListCount(GetDirectChildren(red_bowl))
+            max_count = red_bowl.maxobjects
+          }
+          else {
+            count = 1
+            max_count = 2
+          }
+          if (count = max_count) {
+            msg ("The bowl is full.")
+          }
+          else {
+            if (red_bowl.isopen) {
+              msg ("You put the orange in the red bowl.")
+              MoveObject (orange, red_bowl)
+            }
+            else {
+              msg ("The bowl isn't open.")
+            }
+          }
+        </item>
+        <item key="orange_bowl">
+          if (HasAttribute(orange_bowl, "maxobjects")) {
+            count = ListCount(GetDirectChildren(orange_bowl))
+            max_count = orange_bowl.maxobjects
+          }
+          else {
+            count = 1
+            max_count = 2
+          }
+          if (count = max_count) {
+            msg ("The bowl is full.")
+          }
+          else {
+            if (orange_bowl.isopen) {
+              msg ("You put the orange in the orange bowl.")
+              MoveObject (orange, orange_bowl)
+            }
+            else {
+              msg ("The bowl isn't open.")
+            }
+          }
+        </item>
+      </put>
+    </object>
+    <object name="red_bowl">
+      <inherit name="editor_object" />
+      <inherit name="container_limited" />
+      <alias>red bowl</alias>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <maxobjects type="int">1</maxobjects>
+    </object>
+    <object name="orange_bowl">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <alias>orange bowl</alias>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <isopen />
+    </object>
+    <object name="banana">
+      <inherit name="editor_object" />
+      <usestandardverblist />
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Drop</value>
+        <value>Put</value>
+      </inventoryverbs>
+      <take />
+      <put type="scriptdictionary">
+        <item key="red_bowl">
+          if (HasAttribute(red_bowl, "maxobjects")) {
+            count = ListCount(GetDirectChildren(red_bowl))
+            max_count = red_bowl.maxobjects
+          }
+          else {
+            count = 1
+            max_count = 2
+          }
+          if (count = max_count) {
+            msg ("The bowl is full.")
+          }
+          else {
+            if (red_bowl.isopen) {
+              msg ("You put the banana in the red bowl.")
+              MoveObject (banana, red_bowl)
+            }
+            else {
+              msg ("The bowl isn't open.")
+            }
+          }
+        </item>
+        <item key="orange_bowl">
+          if (HasAttribute(orange_bowl, "maxobjects")) {
+            count = ListCount(GetDirectChildren(orange_bowl))
+            max_count = orange_bowl.maxobjects
+          }
+          else {
+            count = 1
+            max_count = 2
+          }
+          if (count = max_count) {
+            msg ("The bowl is full.")
+          }
+          else {
+            if (orange_bowl.isopen) {
+              msg ("You put the banana in the orange bowl.")
+              MoveObject (banana, orange_bowl)
+            }
+            else {
+              msg ("The bowl isn't open.")
+            }
+          }
+        </item>
+      </put>
+    </object>
+  </object>
+  <verb>
+    <property>put</property>
+    <pattern>put</pattern>
+    <defaultexpression>"You can't put " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

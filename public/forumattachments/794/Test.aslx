@@ -1,0 +1,120 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="Deutsch.aslx" />
+  <include ref="CoreNewMenu.aslx" />
+  <game name="Test">
+    <gameid>ab095414-aa4c-4ff4-9713-27bda642766f</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <autodescription type="boolean">false</autodescription>
+    <showdescriptiononenter type="boolean">false</showdescriptiononenter>
+    <echocommand type="boolean">false</echocommand>
+    <autodisplayverbs type="boolean">false</autodisplayverbs>
+    <pov type="object">player</pov>
+    <showpanes type="boolean">false</showpanes>
+    <showcommandbar type="boolean">false</showcommandbar>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <beforeenter type="script">
+      player.Name = "Default"
+      player.Height = 176
+      player.Weight = 72
+      player.Age = 31
+      player.Appearance = 6
+      player.ST = 10
+      player.DX = 12
+      player.IQ = 12
+      player.HT = 11
+      player.HP = 11
+      player.Will = 12
+      player.Per = 13
+      player.FP = 11
+      msg (player.Height)
+      SuccessRolls ("Accounting")
+    </beforeenter>
+    <enter type="script">
+      Choices = NewStringList ()
+      list add (Choices, "erst einmal die Umgebung ertasten.")
+      list add (Choices, "weiter versuchen, etwas in der Dunkelheit zu erkennen.")
+      msg ("Du öffnest die Augen. Schwärze, unendliche Schwärze.")
+      msg ("Dein Kopf fühlt sich schwer an, obwohl du scheinbar geschlafen hast bist du völlig erschöpft.")
+      msg ("")
+      ShowLinks ("Möchtest du...", "erst einmal die Umgebung ertasten.", "room1", "weiter versuchen, etwas in der Dunkelheit zu erkennen.", "room1", "", "", "", "")
+    </enter>
+    <onexit type="script">
+    </onexit>
+    <beforefirstenter type="script">
+    </beforefirstenter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+  </object>
+  <object name="room1">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+  </object>
+  <object name="Choices">
+    <inherit name="editor_object" />
+    <visible type="boolean">false</visible>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+  </object>
+  <function name="SuccessRolls" parameters="skillname">
+    if (skillname = "Accounting") {
+    }
+  </function>
+  <function name="ToStringInt" parameters="value" type="int">
+    value = ToString(value)
+    value = ToInt(value)
+    return (value)
+  </function>
+  <function name="ShowLinks" parameters="MenuCaption, Choice1, Choice1Room, Choice2, Choice2Room, Choice3, Choice3Room, Choice4, Choice4Room">
+    msg (Choice1)
+    Choices.Choice1 = Choice1
+    Choices.Choice1Room = Choice1Room
+    Choices.Choice2 = Choice2
+    Choices.Choice2Room = Choice2Room
+    Choices.Choice3 = Choice3
+    Choices.Choice3Room = Choice3Room
+    Choices.Choice4 = Choice4
+    Choices.Choice4Room = Choice4Room
+    Choices = NewStringList ()
+    list add (Choices, Choice1)
+    if (not Choice2 = "") {
+    }
+    list add (Choices, Choice2)
+    if (not Choice3 = "") {
+    }
+    list add (Choices, Choice3)
+    if (not Choice4 = "") {
+    }
+    list add (Choices, Choice4)
+    msg ("")
+    ShowMenu (MenuCaption, Choices, false) {
+      msg (result)
+      msg (Choices.Choice1Room)
+      if (result = Choices.Choice1) {
+        ClearScreen
+        MoveObject (player, Choices.Choice1Room)
+      }
+      else if (result = "Choice2") {
+        ClearScreen
+        MoveObject (player, Choice2Room)
+      }
+      else if (result = "Choice3") {
+        ClearScreen
+        MoveObject (player, Choice3Room)
+      }
+      else if (result = "Choice4") {
+        ClearScreen
+        MoveObject (player, Choice4Room)
+      }
+    }
+  </function>
+  <walkthrough name="Problem">
+    <steps type="simplestringlist">
+      event:ShowMenuResponse;erst einmal die Umgebung ertasten.
+    </steps>
+  </walkthrough>
+</asl>

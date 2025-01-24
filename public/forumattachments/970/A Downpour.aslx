@@ -1,0 +1,656 @@
+<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="A Downpour">
+    <inherit name="theme_typewriter" />
+    <gameid>3149ceb8-4b78-44fe-9ddf-fc686dec5d7e</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <author>John Knauss</author>
+    <subtitle>A text adventure about life.</subtitle>
+    <gridmap type="boolean">false</gridmap>
+    <feature_lightdark />
+    <feature_asktell />
+    <defaultbackground>LightGrey</defaultbackground>
+    <echocommand />
+    <autodisplayverbs type="boolean">false</autodisplayverbs>
+    <autodescription />
+    <showdescriptiononenter type="boolean">false</showdescriptiononenter>
+    <command_newline />
+    <echohyperlinks type="boolean">false</echohyperlinks>
+    <appendobjectdescription type="boolean">false</appendobjectdescription>
+    <showpanes type="boolean">false</showpanes>
+    <showcommandbar />
+    <showborder type="boolean">false</showborder>
+    <attr name="autodescription_youarein_newline" type="boolean">false</attr>
+    <attr name="autodescription_youcansee_newline" type="boolean">false</attr>
+    <attr name="autodescription_youcango_newline" type="boolean">false</attr>
+    <attr name="autodescription_description_newline" type="boolean">false</attr>
+    <attr name="autodescription_youcansee" type="int">2</attr>
+    <attr name="autodescription_youcango" type="int">0</attr>
+    <attr name="autodescription_description" type="int">1</attr>
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <attr name="autodescription_youarein" type="int">0</attr>
+    <category>Slice of Life</category>
+    <difficulty>Medium</difficulty>
+    <cruelty>Merciful</cruelty>
+    <enablehyperlinks type="boolean">false</enablehyperlinks>
+  </game>
+  <object name="rm_second_floor">
+    <inherit name="editor_room" />
+    <alias>second floor of your parents' shed</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the </prefix>
+    <description type="script"><![CDATA[
+      msg ("You are on the second floor of your parents' shed, which you helped renovate into a makeshift studio apartment space with your father several years ago. A wooden stairway beyond a thin door leads down. You can see the rain falling through a set of windows in the wall. <br/>")
+      if (not ListContains(ScopeVisible(), obj_PC)) {
+        msg ("There is an antique desk upon which sits a large, upright object covered in a black plastic cover.")
+      }
+      else {
+        msg ("There is an an antique desk upon which sits a desktop PC you left here a year and a half ago.")
+      }
+    ]]></description>
+    <firstenter type="script">
+      msg ("It has been three days since your return to the US, with the warmth of Southeast Asia turning to the cool of the eastern seaboard. A steady downpour has greyed the skies since your arrival to match your spirits. ")
+    </firstenter>
+    <object name="obj_player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <inherit name="male" />
+      <scenery />
+      <gender>he</gender>
+      <article>him</article>
+      <attr name="feature_player" type="boolean">false</attr>
+    </object>
+    <object name="obj_desk">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <alias>desk</alias>
+      <scenery />
+      <alt type="stringlist">
+        <value>old desk</value>
+        <value>antique desk</value>
+        <value>table</value>
+        <value>old table</value>
+        <value>antique table</value>
+      </alt>
+      <take type="boolean">false</take>
+      <drop type="boolean">false</drop>
+      <feature_container />
+      <look type="script"><![CDATA[
+        if (ListContains(ScopeVisible(), obj_PC)) {
+          msg ("The desk has a ring of colorful Buddhist prayer beads hanging from its single drawer knob: a memento from time spent in Thailand. <br/><br/>A desktop PC you left here a year and a half ago sits atop the desk.")
+        }
+        else {
+          msg ("The desk has a ring of colorful Buddhist prayer beads hanging from its single drawer knob: a memento from time spent in Thailand. <br/><br/>A large, upright object covered in a black plastic cover sits atop the desk.")
+        }
+      ]]></look>
+      <openscript type="script">
+        msg ("You pull the desk drawer open.")
+      </openscript>
+      <closescript type="script">
+        msg ("You close the desk drawer.")
+      </closescript>
+    </object>
+    <object name="obj_PC">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <alias>PC</alias>
+      <scenery />
+      <feature_switchable />
+      <switchedoffdesc>The PC screen is blank.</switchedoffdesc>
+      <switchedondesc>The PC displays a welcome screen asking for your password.</switchedondesc>
+      <switchonmsg>The PC takes a moment to boot up, and then displays a welcome screen asking for a password.</switchonmsg>
+      <switchoffmsg>The PC powers down with a diminishing hum.</switchoffmsg>
+      <drop type="boolean">false</drop>
+      <visible type="boolean">false</visible>
+      <alt type="stringlist">
+        <value>computer</value>
+      </alt>
+      <switchedon type="boolean">false</switchedon>
+      <feature_usegive />
+      <look type="script">
+        if (not ListContains(ScopeReachable(), obj_PC_cover)) {
+          if (IsSwitchedOn(obj_PC)) {
+            if (GetBoolean(obj_PC, "email read")) {
+              msg ("You've seen all you need to see.")
+            }
+            else {
+              msg ("The PC displays a welcome screen asking for a password.")
+            }
+          }
+          else {
+            msg ("The PC screen is dark.")
+          }
+        }
+        else {
+          msg ("A cover has been placed over the PC to protect from accumulated dust.")
+        }
+      </look>
+      <onswitchon type="script">
+      </onswitchon>
+      <onswitchoff type="script">
+      </onswitchoff>
+      <turnon type="script">
+        if (ListContains(ScopeReachable(), this)) {
+          if (this.switchedon) {
+            msg (DynamicTemplate("AlreadySwitchedOn", this))
+          }
+          else {
+            if (HasString(this, "switchonmsg")) {
+              msg (this.switchonmsg)
+            }
+            else {
+              msg (DynamicTemplate("SwitchedOn", this))
+            }
+            this.switchedon = true
+          }
+        }
+        else {
+          msg (DynamicTemplate("DefaultTurnOn", this))
+        }
+      </turnon>
+      <use type="script"><![CDATA[
+        if (GetBoolean(obj_PC, "email read")) {
+          msg ("You don't feel the need to use the PC for anything else right now.")
+        }
+        else if (IsSwitchedOn(obj_PC)) {
+          msg ("enter password:")
+          get input {
+            if (result = "1siEun4!") {
+              msg ("<br/>The desktop screen appears, revealing a number of icons. You move the cursor to your email browser, and upon opening it notice a new message you've been anticipating for several days now. <br/><br/>You double click on the message, which expands to full screen.<br/><br/>-------------------------------------------------------------<br/><br/>from:  Sieun Kim <ks1992@kmail.com><br/>to:  James <@spotmail.com><br/>date:  Wed, Jul 2, 2014 at 7:26 PM<br/>subject:  Re: writing you from the airport...<br/><br/>James,<br/><br/>I took time to write because I didn't know what to say at first. i think you are back home now in the states and I hope your flight was good and your family is happy to see you.<br/><br/>Your right what we had was good but its over now. I didn't tell you while you were still in Pusan but I started seeing someone and I think you need to know that. You are a very special person and I know there is also a very special person for you out there that you will meet some time. <br/><br/>I don't think it is good to keep talking about the same things over and over. I was very sad when we broke up and I cried for a lot during that week but every thing has an end and a new beginning. I know you weren't trying to be mean when you wrote but I think it is better if we don't write any more.<br/><br/>Do you remember what I told you that night in the park? Please don't forget that for me.<br/><br/>I will miss you.<br/><br/>This will be my last email.<br/><br/><br/>S.<br/><br/>-------------------------------------------------------------")
+              SetObjectFlagOn (obj_PC, "email read")
+            }
+            else {
+              msg ("<br/>The password you entered is incorrect.")
+            }
+          }
+        }
+        else if (not ListContains(ScopeVisible(), obj_PC)) {
+          msg ("There is nothing visible to do that with.")
+        }
+        else {
+          msg ("The PC is not turned on.")
+        }
+      ]]></use>
+    </object>
+    <object name="obj_drawer">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <feature_container />
+      <take />
+      <drop />
+      <scenery />
+      <alias>drawer</alias>
+      <alt type="stringlist">
+        <value>desk drawer</value>
+      </alt>
+      <openscript type="script">
+        msg ("You open the drawer.")
+        HelperOpenObject (obj_drawer)
+      </openscript>
+      <closescript type="script">
+        msg ("You close the drawer.")
+        HelperCloseObject (obj_drawer)
+      </closescript>
+      <remove type="script">
+        if (ListContains(ScopeReachable(), obj_drawer)) {
+          msg ("You take the drawer.")
+          AddToInventory (obj_drawer)
+        }
+        else {
+          msg ("You can't see the drawer.")
+        }
+      </remove>
+      <replace type="script">
+        if (game.pov.parent = rm_second_floor) {
+          if (Got(obj_drawer)) {
+            msg ("You replace the drawer.")
+            MoveObjectHere (obj_drawer)
+          }
+          else {
+            msg ("You don't have the drawer.")
+          }
+        }
+        else {
+          if (Got(obj_drawer)) {
+            msg ("The desk is not here.")
+          }
+          else {
+            msg ("You don't have the drawer.")
+          }
+        }
+      </replace>
+      <look type="script">
+        if (Got(obj_drawer)) {
+          msg ("The drawer is empty.")
+        }
+        else if (obj_drawer.isopen) {
+          msg ("The drawer is empty.")
+        }
+        else {
+          msg ("A ring of colorful Buddhist prayer beads hangs from its single knob: a memento from time spent in Thailand. ")
+        }
+      </look>
+      <lookin type="script">
+        if (Got(obj_drawer)) {
+          msg ("The drawer is empty.")
+        }
+        else if (obj_drawer.isopen) {
+          msg ("The drawer is empty.")
+        }
+        else {
+          msg ("The drawer isn't open.")
+        }
+      </lookin>
+      <lookwithin type="script">
+        if (Got(obj_drawer)) {
+          msg ("The drawer is empty.")
+        }
+        else if (obj_drawer.isopen) {
+          msg ("The drawer is empty.")
+        }
+        else {
+          msg ("The drawer isn't open.")
+        }
+      </lookwithin>
+      <lookunder type="script">
+        if (Got(obj_drawer)) {
+          msg ("On the underside of the drawer is written \"1siEun4!\" ")
+        }
+        else if (obj_drawer.isopen) {
+          msg ("You can't see from this angle.")
+        }
+        else {
+          msg ("The drawer isn't open.")
+        }
+      </lookunder>
+      <lookunderneath type="script">
+        if (Got(obj_drawer)) {
+          msg ("On the underside of the drawer is written \"1siEun4!\" ")
+        }
+        else if (obj_drawer.isopen) {
+          msg ("You can't see from this angle.")
+        }
+        else {
+          msg ("The drawer isn't open.")
+        }
+      </lookunderneath>
+    </object>
+    <object name="obj_PC_cover">
+      <inherit name="editor_object" />
+      <alias>cover</alias>
+      <alt type="stringlist" />
+      <drop type="boolean">false</drop>
+      <look>The cover is made of a black plastic, and is used to protect a PC.</look>
+      <scenery />
+      <take type="script">
+        if (ListContains(ScopeReachable(), obj_PC_cover)) {
+          msg ("You take the cover.")
+          RemoveObject (obj_PC_cover)
+          MakeObjectVisible (obj_PC)
+          RemoveObject (obj_object)
+        }
+        else {
+          msg ("You have already removed the cover.")
+        }
+      </take>
+      <remove type="script">
+        if (ListContains(ScopeReachable(), obj_PC_cover)) {
+          msg ("You take the cover.")
+          RemoveObject (obj_PC_cover)
+          MakeObjectVisible (obj_PC)
+          RemoveObject (obj_object)
+        }
+        else {
+          msg ("You have already removed the cover.")
+        }
+      </remove>
+      <lift type="script">
+        if (ListContains(ScopeReachable(), obj_PC_cover)) {
+          msg ("You take the cover.")
+          RemoveObject (obj_PC_cover)
+          MakeObjectVisible (obj_PC)
+          RemoveObject (obj_object)
+        }
+        else {
+          msg ("You have already removed the cover.")
+        }
+      </lift>
+    </object>
+    <command name="cmd_enter password">
+      <unresolved type="string"></unresolved>
+      <pattern>enter password; type password; input password; give password</pattern>
+      <script><![CDATA[
+        if (GetBoolean(obj_PC, "email read")) {
+          msg ("You don't feel the need to use the PC for anything else right now.")
+        }
+        else if (IsSwitchedOn(obj_PC)) {
+          msg ("enter password:")
+          get input {
+            if (result = "1siEun4!") {
+              msg ("<br/>The desktop screen appears, revealing a number of icons. You move the cursor to your email browser, and upon opening it notice a new message you've been anticipating for several days now. <br/><br/>You double click on the message, which expands to full screen.<br/><br/>-------------------------------------------------------------<br/><br/>from:  Sieun Kim <ks1992@kmail.com><br/>to:  James <@spotmail.com><br/>date:  Wed, Jul 2, 2014 at 7:26 PM<br/>subject:  Re: writing you from the airport...<br/><br/>James,<br/><br/>I took time to write because I didn't know what to say at first. i think you are back home now in the states and I hope your flight was good and your family is happy to see you.<br/><br/>Your right what we had was good but its over now. I didn't tell you while you were still in Pusan but I started seeing someone and I think you need to know that. You are a very special person and I know there is also a very special person for you out there that you will meet some time. <br/><br/>I don't think it is good to keep talking about the same things over and over. I was very sad when we broke up and I cried for a lot during that week but every thing has an end and a new beginning. I know you weren't trying to be mean when you wrote but I think it is better if we don't write any more.<br/><br/>Do you remember what I told you that night in the park? Please don't forget that for me.<br/><br/>I will miss you.<br/><br/>This will be my last email.<br/><br/><br/>S.<br/><br/>-------------------------------------------------------------")
+              SetObjectFlagOn (obj_PC, "email read")
+            }
+            else {
+              msg ("<br/>The password you entered is incorrect.")
+            }
+          }
+        }
+        else if (not ListContains(ScopeVisible(), obj_PC)) {
+          msg ("There is nothing visible to do that with.")
+        }
+        else {
+          msg ("The PC is not turned on.")
+        }
+      ]]></script>
+    </command>
+    <object name="obj_ stairway">
+      <inherit name="editor_object" />
+      <alias>stairway</alias>
+      <alt type="stringlist">
+        <value>stairs</value>
+        <value>stairwell</value>
+        <value>wooden stairway</value>
+        <value>wooden stairs</value>
+        <value>wooden stairwell</value>
+        <value>stair</value>
+        <value>wooden stair</value>
+        <value>stairway</value>
+      </alt>
+      <scenery />
+      <look>A length of bare treads leads down to the first floor.</look>
+      <drop type="boolean">false</drop>
+    </object>
+    <object name="obj_door">
+      <inherit name="editor_object" />
+      <alt type="stringlist">
+        <value>thin door</value>
+      </alt>
+      <scenery />
+      <alias>door</alias>
+      <look>The door is made from two pieces of lauan with a drawer pull serving as a handle. </look>
+      <drop type="boolean">false</drop>
+    </object>
+    <object name="obj_wall">
+      <inherit name="editor_object" />
+      <alias>wall</alias>
+      <scenery />
+      <look>The walls are unfinished, with fiberglass insulation held in place by plastic sheeting. A few of your framed sketches or ink and brush paintings have been hung in places to dress up the space.</look>
+      <alt type="stringlist">
+        <value>walls</value>
+      </alt>
+      <gender>them</gender>
+      <article>them</article>
+    </object>
+    <object name="obj_rain">
+      <inherit name="editor_object" />
+      <alias>rain</alias>
+      <scenery />
+      <alt type="stringlist">
+        <value>window</value>
+        <value>windows</value>
+        <value>downpour</value>
+      </alt>
+      <look>Looking out the set of windows, you can see a dim light from your parents' back porch through the steady downpour.</look>
+      <lookout>Looking out the set of windows, you can see a dim light from your parents' back porch through the steady downpour.</lookout>
+    </object>
+    <exit alias="down" to="rm_first_floor">
+      <inherit name="downdirection" />
+    </exit>
+    <object name="obj_beads">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <alias>beads</alias>
+      <alt type="stringlist">
+        <value>prayer beads</value>
+        <value>buddhist beads</value>
+        <value>buddhist prayer beads</value>
+      </alt>
+      <scenery />
+      <look>The beads are made from yak bone, with various painted colors and a yellow tassel at the end.</look>
+      <drop type="boolean">false</drop>
+      <gender>they</gender>
+      <article>them</article>
+    </object>
+    <object name="obj_object">
+      <inherit name="editor_object" />
+      <alias>object</alias>
+      <alt type="stringlist">
+        <value>large object</value>
+        <value>upright object</value>
+        <value>large, upright object</value>
+        <value>large upright object</value>
+      </alt>
+      <look>You remember it to be your desktop PC.</look>
+      <scenery />
+      <visible type="boolean">false</visible>
+    </object>
+  </object>
+  <verb>
+    <property>remove</property>
+    <pattern>remove</pattern>
+    <defaultexpression>"You can't remove " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>lift</property>
+    <pattern>lift</pattern>
+    <defaultexpression>"You can't lift " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>stand</property>
+    <pattern>stand</pattern>
+    <defaultexpression>"You can't stand " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>replace</property>
+    <pattern>replace</pattern>
+    <defaultexpression>"You can't replace " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>lookin</property>
+    <pattern>look in; look inside</pattern>
+    <defaultexpression>"You can't look in; look inside " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>lookwithin</property>
+    <pattern>look within</pattern>
+    <defaultexpression>"You can't look within " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>lookunder</property>
+    <pattern>look under; look on bottom of</pattern>
+    <defaultexpression>"You can't look under; look on bottom of " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="rm_first_floor">
+    <inherit name="editor_room" />
+    <alias>first floor of your parents' shed</alias>
+    <description type="script"><![CDATA[
+      msg ("You are on the first floor of your parents' shed, which your father has turned into a crowded workspace over the years. A wooden stairway leads up, and a door leads out. You can see the rain falling through a single window set into the wall. <br/>")
+    ]]></description>
+    <exit alias="up" to="rm_second_floor">
+      <inherit name="updirection" />
+    </exit>
+    <object name="obj_rucksack">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <alias>rucksack</alias>
+      <scenery type="boolean">false</scenery>
+      <alt type="stringlist">
+        <value>bag</value>
+        <value>backpack</value>
+        <value>pack</value>
+      </alt>
+      <take />
+      <lookunderneath>On the underside of the rucksack is written the local phone numbers of a few friends you met in your travels. You smile, remembering your habit of writing things on the bottom of personal belongings.</lookunderneath>
+      <feature_container />
+      <isopen type="boolean">false</isopen>
+      <look>This is the rucksack you traveled with through India, Asia, and the Pacific over the past year. You didn't bother to sew on fabric patches from the countries visited, but you did have friends you met sign the blaze orange pack with a black permanent marker. It has served you well.</look>
+      <openmsg>You undo the clasps atop the rucksack.</openmsg>
+      <closemsg>You redo the clasps atop the rucksack.</closemsg>
+      <listchildren type="boolean">false</listchildren>
+      <inroomdescription type="string"></inroomdescription>
+      <lookin type="script"><![CDATA[
+        if (not obj_rucksack.isopen) {
+          msg ("The rucksack is closed.")
+        }
+        else {
+          msg ("The rucksack is empty. In the past few days, you've moved what few travel belongings you had to the room on the second floor.<br/><br/>On the inside of the top flap, you see your passport number and a few other bits of personal information. When your rucksack was secure with a small padlock, this was the most secure place you thought of to store certain information.")
+        }
+      ]]></lookin>
+      <lookwithin type="script"><![CDATA[
+        if (not obj_rucksack.isopen) {
+          msg ("The rucksack is closed.")
+        }
+        else {
+          msg ("The rucksack is empty. In the past few days, you've moved what few travel belongings you had to the room on the second floor.<br/><br/>On the inside of the top flap, you see your passport number and a few other bits of personal information. When your rucksack was secure with a small padlock, this was the most secure place you thought of to store certain information.")
+        }
+      ]]></lookwithin>
+      <lookunder type="script">
+        msg ("On the underside of the rucksack is written the local phone numbers of a few friends you met in your travels. You smile, remembering your habit of writing things on the bottom of personal belongings.")
+      </lookunder>
+    </object>
+    <object name="obj_shoes">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <alias>pair of shoes</alias>
+      <gender>they</gender>
+      <article>them</article>
+      <look>These are your trail running shoes which served as all-purpose footwear for your year abroad.</look>
+      <alt type="stringlist">
+        <value>running shoes</value>
+        <value>trail running shoes</value>
+        <value>shoe</value>
+      </alt>
+      <take />
+      <smell>A bit... funky.</smell>
+      <lookin>You see nothing.</lookin>
+      <lookwithin>You see nothing.</lookwithin>
+      <lookunder type="script">
+        if (Got(obj_shoes)) {
+          msg ("Between the treads of the soles, you have written the digits of your one and only credit card in various places to be recombined in case of an emergency. You chuckle, remembering this method of \"security\" you often employed by writing on the bottom of personal items.")
+        }
+        else {
+          msg ("You can't see from this angle.")
+        }
+      </lookunder>
+      <lookunderneath type="script">
+        if (Got(obj_shoes)) {
+          msg ("Between the treads of the soles, you have written the digits of your one and only credit card in various places to be recombined in case of an emergency. You chuckle, remembering this method of \"security\" you often employed by writing on the bottom of personal items.")
+        }
+        else {
+          msg ("You can't see from this angle.")
+        }
+      </lookunderneath>
+    </object>
+    <object name="obj_ workspace">
+      <inherit name="editor_object" />
+      <alias>workspace</alias>
+      <scenery />
+      <look>Your father has a variety of tools and gear hanging from the walls of the room, and numerous tables and benches on the floorspace.</look>
+      <alt type="stringlist">
+        <value>space</value>
+      </alt>
+    </object>
+    <object name="obj_wall2">
+      <inherit name="editor_object" />
+      <alias>wall</alias>
+      <scenery />
+      <gender>they</gender>
+      <article>them</article>
+      <alt type="stringlist">
+        <value>walls</value>
+      </alt>
+      <look>Your father has a variety of tools and gear hanging from the walls of the room.</look>
+    </object>
+    <object name="obj_stairway2">
+      <inherit name="editor_object" />
+      <alias>stairway</alias>
+      <scenery />
+      <gender>it</gender>
+      <article>it</article>
+      <look>A length of bare treads leads up to the second floor.</look>
+      <alt type="stringlist">
+        <value>stair</value>
+        <value>stairs</value>
+        <value>stairway</value>
+        <value>stairwell</value>
+        <value>wooden stair</value>
+        <value>wooden stairway</value>
+        <value>wooden stairs</value>
+        <value>wooden stairwell</value>
+      </alt>
+    </object>
+    <object name="obj_rain2">
+      <inherit name="editor_object" />
+      <alias>rain</alias>
+      <alt type="stringlist">
+        <value>window</value>
+        <value>downpour</value>
+        <value>single window</value>
+      </alt>
+      <look>Looking out the window, you can see a dim light from your parents' back porch through the steady downpour.</look>
+      <scenery />
+    </object>
+    <exit alias="out; outside; through door" to="rm_shed_steps">
+      <inherit name="outdirection" />
+      <locked type="boolean">false</locked>
+    </exit>
+    <object name="obj_door2">
+      <inherit name="editor_object" />
+      <alias>door</alias>
+      <scenery />
+      <look>It is a simple door leading out.</look>
+      <alt type="stringlist">
+        <value>doorway</value>
+      </alt>
+      <feature_usegive />
+      <exitthrough type="script">
+        MoveObject (obj_player, rm_shed_steps)
+      </exitthrough>
+      <use type="script">
+        MoveObject (obj_player, rm_shed_steps)
+      </use>
+    </object>
+  </object>
+  <verb>
+    <property>lookout</property>
+    <pattern>look out; look outside; look beyond; look through</pattern>
+    <defaultexpression>"You can't look out; look outside; look beyond; look through " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>lookunderneath</property>
+    <pattern>look underneath</pattern>
+    <defaultexpression>"You can't look underneath " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="rm_shed_steps">
+    <inherit name="editor_room" />
+    <description>You are standing on the wooden steps outside of your parents' shed. A small overhang shelters you from the rain. A door leads back in. You can see a dim light from your parents' back porch through the steady downpour.</description>
+    <alias>steps of your parents' shed</alias>
+    <enter type="script"><![CDATA[
+      if (GetBoolean(obj_PC, "email read")) {
+        msg ("You step out onto the wooden steps of your parents' shed, where a small overhang shelters you from the rain. You can see a dim light from your parents' back porch through the steady downpour.<br/><br/>You stand still for a moment, listening to the percussive sound of the rain against wood, metal, and earth. ")
+        MoveObject (obj_player, rm_second_floor)
+        MoveObject (obj_rucksack, rm_shed_steps)
+      }
+      else {
+      }
+    ]]></enter>
+    <exit alias="in" to="rm_first_floor">
+      <inherit name="indirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>exitthrough</property>
+    <pattern>exit through</pattern>
+    <defaultexpression>"You can't exit through " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="rm_arrivals_west">
+    <inherit name="editor_room" />
+    <description>hello world</description>
+    <alias>the international arrivals wing of the airport</alias>
+    <enter type="script">
+    </enter>
+  </object>
+</asl>

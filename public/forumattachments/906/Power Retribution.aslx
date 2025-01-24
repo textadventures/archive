@@ -1,0 +1,190 @@
+<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Power Retribution">
+    <gameid>f49e9e7b-0349-47ec-a23e-250d5b0e21f0</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+  </game>
+  <object name="Storage">
+    <inherit name="editor_room" />
+    <exit name="Experimentation Room Exit" alias="to the Experimentation Room" to="Experimentation Room">
+      <inherit name="northdirection" />
+      <locked />
+    </exit>
+    <object name="Door to Experimentation Room">
+      <inherit name="editor_object" />
+      <scenery type="boolean">false</scenery>
+      <feature_usegive />
+      <useon type="scriptdictionary">
+        <item key="key">
+          UnlockExit (experimentation room exit)
+          msg ("door unlock")
+        </item>
+      </useon>
+      <look>It is a Big Metal Door. You notice there are scratch marks in the middle of the door. What could be lurking inside.....</look>
+    </object>
+    <object name="key">
+      <inherit name="editor_object" />
+      <take />
+      <feature_usegive />
+      <use />
+    </object>
+    <exit alias="to the Secretary Room" to="Secretary Room">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="Experimentation Room">
+    <inherit name="editor_room" />
+    <exit alias="back to the Storage Room" to="Storage">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="Secretary Room">
+    <inherit name="editor_room" />
+    <exit name="office exit" alias="to Office" to="Office">
+      <inherit name="southdirection" />
+      <locked />
+      <scenery type="boolean">false</scenery>
+    </exit>
+    <object name="officeDoor">
+      <inherit name="editor_object" />
+      <alias>office door</alias>
+      <feature_usegive />
+      <useon type="scriptdictionary" />
+      <look>It is a metal door. Why would they need a metal door? What are they hiding....</look>
+      <useanything type="script">
+        wait {
+          switch () {
+          }
+        }
+      </useanything>
+      <selfuseon type="scriptdictionary" />
+    </object>
+    <exit alias="to the Storage Room" to="Storage">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="namedmale" />
+      <object name="Sledgehammer">
+        <inherit name="editor_object" />
+      </object>
+      <object name="Satchel">
+        <inherit name="editor_object" />
+      </object>
+    </object>
+    <object name="Painting">
+      <inherit name="editor_object" />
+      <look>It is an oil painting of a warm summer day. </look>
+      <feature_usegive />
+      <useon type="scriptdictionary">
+        <item key="Convex Lens">
+          if (Got(Convex Lens)) {
+            msg ("You look closely there are a line of numbers 4863 and a word EVIL")
+          }
+          else {
+            msg ("A pretty picture of a mountainous landscape")
+          }
+        </item>
+      </useon>
+      <visible />
+      <scenery type="boolean">false</scenery>
+      <search type="string"></search>
+    </object>
+    <object name="Small Desk">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <search type="script">
+      </search>
+      <look type="script">
+        msg ("A small 3 drawer desk made of oak. It has a PC and various writing materials and paper on it.")
+        if (search Small Desk) {
+          MakeObjectVisible (Drawer 1)
+          MakeObjectVisible (Drawer 2)
+          MakeObjectVisible (Drawer 3)
+        }
+      </look>
+      <feature_usegive />
+      <use type="boolean">false</use>
+      <useon type="scriptdictionary" />
+      <feature_container />
+      <listchildren />
+      <isopen />
+      <close type="boolean">false</close>
+      <open type="boolean">false</open>
+      <object name="Drawer 1">
+        <inherit name="editor_object" />
+        <inherit name="container_closed" />
+        <inherit name="container_lockable" />
+        <look>There is a keyhole on the front</look>
+        <search>Its locked. You need a key to open it.</search>
+        <feature_usegive />
+        <feature_container />
+        <key type="object">Key2</key>
+      </object>
+      <object name="Drawer 2">
+        <inherit name="editor_object" />
+        <inherit name="container_closed" />
+        <search type="string"></search>
+        <feature_usegive />
+        <feature_container />
+        <take />
+        <look type="string"></look>
+        <onopen type="script">
+          msg ("It contains a CONVEX LENS and a photo")
+        </onopen>
+        <object name="Convex Lens">
+          <inherit name="editor_object" />
+          <take />
+          <feature_usegive />
+          <use />
+          <ontake type="script">
+            AddToInventory (Convex Lens)
+          </ontake>
+          <search type="string"></search>
+        </object>
+        <object name="Photo">
+          <inherit name="editor_object" />
+          <look type="string"></look>
+          <take />
+          <search type="string"></search>
+        </object>
+      </object>
+      <object name="Drawer 3">
+        <inherit name="editor_object" />
+        <attr name="feature_usegive" type="boolean">false</attr>
+        <feature_container />
+      </object>
+    </object>
+    <object name="PC">
+      <inherit name="editor_object" />
+      <search>It requires a password</search>
+    </object>
+    <object name="Keypad">
+      <inherit name="editor_object" />
+      <feature_usegive />
+      <use type="script">
+        msg ("Please enter security code")
+        if (result="4863") {
+          UnlockExit (office exit)
+          msg ("The Office is now unlocked")
+        }
+        else {
+          msg ("Nothing happens. The code seems to be wrong")
+        }
+      </use>
+    </object>
+  </object>
+  <object name="Office">
+    <inherit name="editor_room" />
+    <exit alias="to the Secretary Room" to="Secretary Room">
+      <inherit name="northdirection" />
+      <scenery type="boolean">false</scenery>
+    </exit>
+    <object name="Key2">
+      <inherit name="editor_object" />
+    </object>
+  </object>
+</asl>

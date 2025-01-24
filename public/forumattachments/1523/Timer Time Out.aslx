@@ -1,0 +1,118 @@
+<!--Saved by Quest 5.6.5783.24153-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Timer Time Out">
+    <gameid>99e26be6-48df-4400-ad61-0d72fc751d49</gameid>
+    <version>1.0</version>
+    <firstpublished>2016</firstpublished>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <enter type="script">
+    </enter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <exit alias="south" to="room 2">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="room 2">
+    <inherit name="editor_room" />
+    <description type="script">
+      msg ("This is the self destruct room.")
+    </description>
+    <enter type="script"><![CDATA[
+      firsttime {
+        if (GetBoolean(self destruct button, "pushed")) {
+          msg ("\"You have ten seconds to push the cancellation button.\"")
+        }
+        else {
+          ShowYouTube ("BKAdkbQWAJ8")
+          SetObjectFlagOn (self destruct button, "pushed")
+          msg ("<br/>You walk into the room and see your nemesis, Lonestar.  Since his Schwartz is bigger than yours he overpowers you and you stumble backward into the self destruct button.<br/><br/>A voice booms, \"Thank you for pressing the self destruct button.  You have 20 seconds to push the cancellation button.\"")
+          SDB
+        }
+      }
+      otherwise {
+        if (GetBoolean(self destruct button, "pushed")) {
+          msg ("\"You have ten seconds to push the cancellation button.\"")
+        }
+        else {
+          ShowYouTube ("BKAdkbQWAJ8")
+          msg ("<br/>Really?  It happened again?  Will you ever learn?  20 seconds and counting.")
+          SetObjectFlagOn (self destruct button, "pushed")
+          SDB
+        }
+      }
+    ]]></enter>
+    <exit alias="north" to="room">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="self destruct button">
+      <inherit name="editor_object" />
+      <look type="script">
+        if (GetBoolean(self destruct button, "pushed")) {
+          msg ("It appears to be safely deactivated.  It no longer blinks in warning.")
+        }
+        else {
+          msg ("It appears to have been activated.  It is blinking red!")
+        }
+      </look>
+      <push type="script">
+        if (GetBoolean(deactivation button, "pushed")) {
+          msg ("In hopes of deactivating it, you push it again.  Nothing happens.  It is still blinking and it is still active!")
+        }
+        else {
+          msg ("No.  You do not want to intentionally blow up the game, especially with you in it!")
+        }
+      </push>
+    </object>
+    <exit alias="south" to="room 3">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="room 3">
+    <inherit name="editor_room" />
+    <object name="deactivation button">
+      <inherit name="editor_object" />
+      <look type="script">
+        if (GetBoolean(deactivation button, "pushed")) {
+          msg ("It is slowly blinking a dull green indicating that things are normal! ")
+        }
+        else {
+          msg ("It is emitting no light.  Maybe you should push it?")
+        }
+      </look>
+      <push type="script">
+        if (GetBoolean(deactivation button, "pushed")) {
+          msg ("You push the calm green light, but nothing happens.")
+        }
+        else {
+          if (GetBoolean(self destruct button, "pushed")) {
+            msg ("You jam your palm down on the deactivate button and it begins flashing green.")
+            SetObjectFlagOn (deactivation button, "pushed")
+            SetObjectFlagOff (self destruct button, "pushed")
+          }
+        }
+      </push>
+    </object>
+    <exit alias="north" to="room 2">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <function name="SDB"><![CDATA[
+    SetTimeout (25) {
+      if (GetBoolean(self destruct button, "pushed")) {
+        ClearScreen
+        ShowYouTube ("3UunQXXxAWY")
+        finish
+      }
+      else {
+        msg ("<br/>\"Long Live Dark Helmet!\"")
+      }
+    }
+  ]]></function>
+</asl>

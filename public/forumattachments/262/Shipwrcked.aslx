@@ -1,0 +1,377 @@
+<!--Saved by Quest 5.1.4426.19610-->
+<asl version="510">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Shipwrecked">
+    <gameid>0208cad6-eac8-4811-9546-ee3a6073d429</gameid>
+    <version>1.0</version>
+    <description><![CDATA[You are on a lonely island,when your majestic ship,the <i>Crystal Robinson </i>wrecked far away.You are now just like your ship's name,a Robinson.]]></description>
+    <category>Puzzle</category>
+    <defaultfont>Comic Sans MS</defaultfont>
+    <defaultbackground>SandyBrown</defaultbackground>
+  </game>
+  <object name="island">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>an</prefix>
+    <description>You are in an lonely island.You can see something in the south.</description>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <statusattributes type="stringdictionary"></statusattributes>
+      <scenery />
+      <berries type="int">0</berries>
+      <jottings type="string"></jottings>
+      <object name="blade">
+        <inherit name="editor_object" />
+        <look>A small blade which can't cut unless you have a better handle.</look>
+      </object>
+      <object name="journal">
+        <inherit name="editor_object" />
+        <look>A green journal with a small pencil.</look>
+        <inventoryverbs>Look at; Use; Read</inventoryverbs>
+        <read type="script">
+          msg ("This is what is written on your journal:" + player.jottings + "")
+        </read>
+        <use type="script">
+          msg ("Whad'ya wanna write,matey?")
+          new_text = GetInput()
+          player.jottings = player.jottings + " " + new_text
+        </use>
+      </object>
+    </object>
+    <object name="tree">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <look>You could cut the tree to get wood,but you don't have anything to cut with. There are also berries on the tree,but it's too high to reach.</look>
+      <contentsprefix>which has</contentsprefix>
+      <hidechildren />
+      <object name="berries">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <look>Sweet berries which you can't reach.What a pity.Six of them would be enough for you.</look>
+        <eatenough type="int">0</eatenough>
+        <inventoryverbs>Look at; Use; Eat</inventoryverbs>
+        <take type="boolean">false</take>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>some</prefix>
+        <eat type="script">
+          if (player.berries = 0) {
+            msg ("You don't have any berries with you!")
+          }
+          else if (berries.eatenough = 5) {
+            msg ("Your hunger is gone,it's time to explore the island.")
+            UnlockExit (island2exit)
+          }
+          else {
+            msg ("You eat five small berries.They're very sweet.")
+            player.berries = player.berries - 5
+            berries.eatenough = berries.eatenough + 5
+          }
+        </eat>
+      </object>
+    </object>
+    <exit alias="south" to="island">
+      <inherit name="southdirection" />
+      <lookonly />
+      <look>It's a sea.This is the sea where your ship wrecked.The current must have swept off everything.If you had a telescope you could look out for more ships.</look>
+      <suffix>to the sea</suffix>
+    </exit>
+    <object name="rope">
+      <inherit name="editor_object" />
+      <look>A big brown rope.It has its uses.</look>
+      <take />
+      <selfuseon type="scriptdictionary">
+        <item key="blade">
+          msg ("You combine the rope and the blade to make a long grappling hook!")
+          RemoveObject (rope)
+          RemoveObject (blade)
+          MoveObject (grappling hook, player)
+        </item>
+      </selfuseon>
+    </object>
+    <exit name="island2exit" alias="north" to="island2">
+      <inherit name="northdirection" />
+      <locked />
+      <lockmessage>You are feeling hungry,so you better eat something before you go exploring.</lockmessage>
+      <prefix type="string"></prefix>
+      <suffix>to another unknown place</suffix>
+    </exit>
+    <exit alias="in" to="house">
+      <inherit name="indirection" />
+      <prefix type="string"></prefix>
+      <suffix>to your house</suffix>
+      <script type="script">
+        if (ListContains(ScopeVisible(), house)) {
+          msg ("You go inside the house.")
+          MoveObject (player, house)
+        }
+        else {
+          msg ("I don't see any house 'ere,matey!'re you imagining things?")
+        }
+      </script>
+    </exit>
+  </object>
+  <object name="sea">
+    <inherit name="editor_room" />
+    <description type="string"></description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>The</prefix>
+  </object>
+  <object name="grappling hook">
+    <inherit name="editor_object" />
+    <look>A grappling hook which can get things that are unreachable.</look>
+    <take />
+    <alt>hook</alt>
+    <selfuseon type="scriptdictionary">
+      <item key="berries">
+        msg ("You throw the hook onto the berries.Six berries berry falls down.")
+        player.berries = player.berries + 6
+      </item>
+      <item key="tree">
+        msg ("Good idea,but that won't work.Your blade is not strong enough.")
+      </item>
+      <item key="plank">
+        msg ("You don't need scratches on the plank.")
+      </item>
+    </selfuseon>
+  </object>
+  <object name="island2">
+    <inherit name="editor_room" />
+    <alias>island</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>an</prefix>
+    <description>This is another portion of the island.</description>
+    <firstenter type="script">
+      island2exit.suffix = "to the second island"
+    </firstenter>
+    <object name="plank">
+      <inherit name="editor_object" />
+      <look><![CDATA[This is a plank of wood.You realize it's from the <i>Crystal Robinson</i>,your ship.The plank of wood may come in handy for building things.]]></look>
+      <take />
+      <selfuseon type="scriptdictionary">
+        <item key="stone"><![CDATA[
+          if (ListContains(ScopeVisible(), note)) {
+            msg ("You decide to make fire with the two substances when you spot a note.Why don't you read it first?")
+          }
+          else {
+            msg ("You realize what the note said:<i>No explorer can reach here by his will.</i>So no planes can come here,no matter how mant fires you make.So first find shelter and make it inside for warmth and food!")
+          }
+        ]]></item>
+      </selfuseon>
+    </object>
+    <exit alias="south" to="island">
+      <inherit name="southdirection" />
+      <prefix type="string"></prefix>
+      <suffix>back to your island</suffix>
+    </exit>
+    <object name="note">
+      <inherit name="editor_object" />
+      <look>A small white note.</look>
+      <take />
+      <read type="script"><![CDATA[
+        msg ("I belive the person who reads this is shipwrecked.No explorer can reach here by his will.This island is...")
+        msg ("It ends there.Looks like you need to find the other piece.You tear the note after reading it and copy whatever is written in your journal.")
+        RemoveObject (note)
+        player.jottings = player.jottings + "I found a note.This is what was written:<i>I belive the person who reads this is shipwrecked.No explorer can reach here by his will.This island is...</i>That is where it ends.Looks like I have to find another piece."
+      ]]></read>
+    </object>
+    <object name="stone">
+      <inherit name="editor_object" />
+      <look>A black stone lying near the plank.</look>
+      <take />
+      <takemsg>You try to take it.</takemsg>
+      <use type="script">
+        msg ("Yes,you can make fire with it,but there should be something else with ypu.")
+      </use>
+      <ontake type="script">
+        if (Contains (island,house)) {
+          msg ("You try to pull out the stone but all you get are stone pieces.That can be useful in the house.")
+          MoveObject (stone, island2)
+          MoveObject (stones, player)
+        }
+        else {
+          msg ("Matey!You can't pull the stone!Aaargh!")
+          MoveObject (stone, island2)
+        }
+      </ontake>
+      <selfuseon type="scriptdictionary" />
+    </object>
+    <exit name="island3exit" alias="north" to="island3">
+      <inherit name="northdirection" />
+      <prefix type="string"></prefix>
+      <suffix>to another unknown place</suffix>
+    </exit>
+  </object>
+  <object name="island3">
+    <inherit name="editor_room" />
+    <alias>island</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>an</prefix>
+    <description>Yet another portion of the island.</description>
+    <firstenter type="script">
+      island3exit.suffix = "to the third island"
+    </firstenter>
+    <exit alias="south" to="island2">
+      <inherit name="southdirection" />
+      <prefix type="string"></prefix>
+      <suffix>back to the second place</suffix>
+    </exit>
+    <object name="axe">
+      <inherit name="editor_object" />
+      <look>Something to cut a tree.It doesn't look sharpened,however.</look>
+      <take />
+      <selfuseon type="scriptdictionary">
+        <item key="stone">
+          if (not GetBoolean(axe, "sharpened")) {
+            msg ("You sharpen the axe on the stick.The axe is now sharpened.")
+            SetObjectFlagOn (axe, "sharpened")
+          }
+          else {
+            msg ("The axe is already sharpened.")
+          }
+        </item>
+        <item key="tree">
+          if (GetBoolean(axe, "sharpened")) {
+            msg ("You cut down the tree and make it into pieces of wood.The berries fall down too.")
+            RemoveObject (tree)
+            MoveObject (pieces of wood, player)
+            MoveObject (berries, player)
+          }
+          else {
+            msg ("The axe is not sharp enough.")
+          }
+        </item>
+      </selfuseon>
+    </object>
+    <exit name="island4exit" alias="north" to="island4">
+      <inherit name="northdirection" />
+      <suffix>to another unknown island</suffix>
+      <locked />
+      <lockmessage>Why don't you make a house and a fire before exploring more?</lockmessage>
+    </exit>
+  </object>
+  <object name="pieces of wood">
+    <inherit name="editor_object" />
+    <inherit name="plural" />
+    <alt>wood</alt>
+    <look>Brown pieces of wood.</look>
+    <take />
+    <use type="script">
+      msg ("You make a big house with the pieces.")
+      MoveObject (house, island)
+    </use>
+  </object>
+  <object name="house">
+    <look>A small hut where you can stay.</look>
+    <description>A big house.It's hard to imagine you built this.</description>
+    <exit alias="out" to="island">
+      <inherit name="outdirection" />
+      <prefix type="string"></prefix>
+      <suffix>to your island</suffix>
+    </exit>
+  </object>
+  <object name="stones">
+    <inherit name="editor_object" />
+    <inherit name="plural" />
+    <look>Small stone pieces of the big black stone.</look>
+    <take />
+    <use type="script">
+      if (player.parent = house) {
+        msg ("You keep the stones down and make a fire.")
+        MoveObject (fire, house)
+        stones.take = false
+        UnlockExit (island4exit)
+      }
+      else {
+        msg ("Use it in 'our house,matey!")
+      }
+    </use>
+  </object>
+  <object name="fire">
+    <inherit name="editor_object" />
+    <look>Red,hot and burning fire just for you.</look>
+    <useon type="scriptdictionary">
+      <item key="berries">
+        msg ("The lone berry.What would happen if you heat a berry?")
+        msg ("Ooh,the berry gets very hot.You can use this somewhere else.")
+        SetObjectFlagOn (berries, "overheat")
+      </item>
+    </useon>
+  </object>
+  <object name="island4">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>island</alias>
+    <prefix>an</prefix>
+    <description>The fourth island you reached so far.</description>
+    <firstenter type="script">
+      island4exit.suffix = "to the fourth island"
+    </firstenter>
+    <exit alias="south" to="island3">
+      <inherit name="southdirection" />
+      <suffix>to the third island</suffix>
+    </exit>
+    <object name="telescope piece">
+      <inherit name="editor_object" />
+      <look>Wow,it's a piece for a telescope.Now just for three more pieces.</look>
+      <take type="script">
+        msg ("You take the piece,but you wake the sleeping guardian crab!")
+        guardiancrab.sleeping = false
+      </take>
+    </object>
+    <object name="guardiancrab">
+      <inherit name="editor_object" />
+      <look>A big red crab that's sleeping.</look>
+      <alt>crab; guardiancrab.callme</alt>
+      <sleeping />
+      <callme type="string"></callme>
+      <alias>guardian crab</alias>
+      <useon type="scriptdictionary">
+        <item key="berries">
+          if (guardian crab.sleeping = false) {
+            if (GetBoolean(berries, "overheat")) {
+              msg ("You give the crab the overheated berry.He likes it!He likes you too!Why don't you give him a name?He will follow you,always.")
+              msg ("Enter the crab's name(you may call him like that,too)")
+              guardiancrab.callme = GetInput()
+            }
+            else {
+              msg ("He likes overheated berries only.")
+            }
+          }
+          else {
+            msg ("Why do you want to wake him up?")
+          }
+        </item>
+      </useon>
+    </object>
+  </object>
+  <walkthrough name="The Guide to Shipwreck Island">
+    <steps type="list">
+      look at tree
+      use rope on blade
+      use hook on berries
+      eat berries
+      eat berries
+      read note
+      use plank on stone
+      take axe
+      use axe on stone
+      go south
+      use stone on tree
+      go south
+      use wood
+      go north
+      take stone
+      go south
+      go north
+      go in
+      go north
+      use stone
+      use berries on stone
+      go out
+      go north
+      go north
+      go north
+    </steps>
+  </walkthrough>
+</asl>

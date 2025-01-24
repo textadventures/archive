@@ -1,0 +1,288 @@
+<!--Saved by Quest 5.5.5173.27901-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Puzzle room">
+    <gameid>f472ae6e-9252-4cf4-a123-58af9449f1a2</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <showpanes type="boolean">false</showpanes>
+  </game>
+  <object name="puzzle room">
+    <inherit name="editor_room" />
+    <description><![CDATA[Welcome to the puzzle room.<br/><br/>There is only one way out. To solve the puzzle... and when you've done that to go North.<br/><br/>But the puzzle is a puzzle within a puzzle. And possibly some more puzzles on top of that.<br/><br/>Perhaps the greatest puzzle is... what is the puzzle?<br/><br/>There is a control panel wired to the door.]]></description>
+    <usedefaultprefix />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <exit name="the solution door" alias="north" to="outside world">
+      <inherit name="northdirection" />
+      <locked />
+      <lockmessage>You must solve the puzzle first</lockmessage>
+      <scenery type="boolean">false</scenery>
+    </exit>
+    <object name="swivel chair">
+      <inherit name="editor_object" />
+      <look>It is a leather and chrome swivel chair.</look>
+      <feature_usegive />
+      <useon>There's no time to sit down now. Solve the puzzle!</useon>
+      <sit>This isn't the time for lounging about! Solve the puzzle!</sit>
+    </object>
+    <object name="desk">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <inherit name="surface" />
+      <feature_usegive />
+      <feature_container />
+      <contentsprefix type="string"></contentsprefix>
+      <look type="script">
+        msg ("It is a solid mahogony desk with a single large drawer across the middle. There is a bankers lamp on top, and a old looking computer. There is also a book.")
+        MakeObjectVisible (book)
+        MakeObjectVisible (drawer)
+        MakeObjectVisible (computer)
+        MakeObjectVisible (bankers lamp)
+      </look>
+      <use type="script">
+      </use>
+      <object name="drawer">
+        <inherit name="editor_object" />
+        <inherit name="container_closed" />
+        <inherit name="container_lockable" />
+        <feature_container />
+        <autounlock />
+        <autoopen />
+        <nokeymessage>It is locked, it seems you need to find a key.</nokeymessage>
+        <lockmessage type="string"></lockmessage>
+        <visible type="boolean">false</visible>
+        <look type="string"></look>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <key type="object">key</key>
+        <onunlock type="script">
+          MakeObjectVisible
+        </onunlock>
+        <object name="paper note">
+          <inherit name="editor_object" />
+          <feature_usegive />
+          <look>It is a note, it simply reads "The ninth, when most virile."</look>
+        </object>
+      </object>
+      <object name="computer">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <inherit name="surface" />
+        <alias>computer</alias>
+        <feature_switchable />
+        <visible type="boolean">false</visible>
+        <feature_container />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <onswitchon type="script">
+          msg ("The computer comes out of standby mode, and a scrolling text screensaver appears. It reads \"II, III, V, VII, XI, XIII, XVII, IXX, XXIII\" and then cycles again.")
+        </onswitchon>
+        <look type="script"><![CDATA[
+          msg ("It is one of the older computers, with a big beige CRT monitor and a really old keyboard. There is a tower unit here.<br/><br/>It is on standby at the moment. You can switch the computer on.")
+          MakeObjectVisible (tower unit)
+        ]]></look>
+        <object name="tower unit">
+          <inherit name="editor_object" />
+          <inherit name="surface" />
+          <feature_container />
+          <contentsprefix type="string"></contentsprefix>
+          <look type="script">
+            msg ("This tower unit is clearly from before computers became more popular. There are no USB slots, only a button under a long rechtangular opening. You suspect it is an old kind of disc drive.")
+            MakeObjectVisible (CD Drive)
+          </look>
+          <object name="CD Drive">
+            <inherit name="editor_object" />
+            <inherit name="openable" />
+            <feature_container />
+            <isopen type="boolean">false</isopen>
+            <openscript type="script">
+              msg ("You open the CD drive, there is a key inside. You take the key.")
+              AddToInventory (key)
+            </openscript>
+            <object name="key">
+              <inherit name="editor_object" />
+              <take type="script">
+                AddToInventory (key)
+              </take>
+            </object>
+          </object>
+        </object>
+      </object>
+      <object name="book">
+        <inherit name="editor_object" />
+        <inherit name="surface" />
+        <look><![CDATA[It is a leatherbound edition of "Great Expectations" with the first letters of the author's christian name and surname done out in very large and elaborate text.<br/><br/>There is a post-it note stuck to the front cover, with arrows pointing to the first letters of the author's name. It reads "the key drive".<br/><br/>There is a bookmark sticking out part way through.]]></look>
+        <visible type="boolean">false</visible>
+        <scenery type="boolean">false</scenery>
+        <feature_container />
+        <contentsprefix type="string"></contentsprefix>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <object name="bookmark">
+          <inherit name="editor_object" />
+          <look type="script">
+            msg ("The bookmark is blank, but parts of it have a slightly rough texture. It is stuck in page 23.")
+            if (not IsSwitchedOn(bankers lamp)) {
+              msg ("In the dark, glowing letters printed on the bookmark reveal themselves. They read \"It is what you see, when you can't see.\"")
+            }
+          </look>
+          <object name="Bookmark letters">
+            <inherit name="editor_object" />
+            <look>The letters glow in the dark. They read "It is what you see, when you can't see."</look>
+          </object>
+        </object>
+      </object>
+      <object name="bankers lamp">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <feature_switchable />
+        <switchedon />
+        <look>It is a normal green bankers lamp. Apart from the switches light bulbs, it is the only light in the room.</look>
+        <visible type="boolean">false</visible>
+        <scenery type="boolean">false</scenery>
+        <onswitchoff type="script">
+          if (not IsSwitchedOn(switch 1)) {
+            if (not IsSwitchedOn(switch 2)) {
+              if (not IsSwitchedOn(switch 3)) {
+                if (not IsSwitchedOn(switch 4)) {
+                  MakeObjectVisible (Bookmark letters)
+                  msg ("Something near the book seems to glow...")
+                }
+              }
+            }
+          }
+        </onswitchoff>
+      </object>
+    </object>
+    <object name="control panel">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <feature_container />
+      <contentsprefix type="string"></contentsprefix>
+      <look type="script">
+        msg ("There are four old chrome switches on the brass panel with light bulbs above each one. The lights are off now, but you can still see the switches because underneath each one is a glow in the dark printed number. There is also a single large red switch marked \"Solution Switch\".")
+      </look>
+      <object name="switch 1">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <feature_switchable />
+        <switchonmsg>The light above the switch starts to glow. The light is bright, so bright you can't see what number it is. You can only tell becaue of where it is on the wall.</switchonmsg>
+        <switchoffmsg>the light dimms and goes out, leaving the glow in the dark switch name indicator</switchoffmsg>
+        <visible />
+        <look>At the top, there is a light blub. Below that, an old chrome metal switch, and then below that, the number "1" glows in the dark. </look>
+        <onswitchoff type="script">
+        </onswitchoff>
+        <onswitchon type="script">
+          if (not IsSwitchedOn(switch 2)) {
+            if (not IsSwitchedOn(switch 3)) {
+              if (IsSwitchedOn(switch 4)) {
+                UnlockExit (the solution door)
+              }
+            }
+          }
+        </onswitchon>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+      </object>
+      <object name="switch 2">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <feature_switchable />
+        <switchonmsg>The light above the switch starts to glow. The light is bright, so bright you can't see what number it is. You can only tell becaue of where it is on the wall.</switchonmsg>
+        <switchoffmsg>the light dimms and goes out, leaving the glow in the dark switch name indicator</switchoffmsg>
+        <switchedondesc>the light is bright, so bright you can't see what number it is. You can only tell becaue of where it is on the wall.</switchedondesc>
+        <look>At the top, there is a light blub. Below that, an old chrome metal switch, and then below that, third switchthe number "2" glows in the dark. </look>
+        <visible />
+        <onswitchon type="script">
+        </onswitchon>
+        <onswitchoff type="script">
+          if (IsSwitchedOn(switch 1)) {
+            if (not IsSwitchedOn(switch 3)) {
+              if (IsSwitchedOn(switch 4)) {
+                UnlockExit (the solution door)
+              }
+            }
+          }
+        </onswitchoff>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+      </object>
+      <object name="switch 3">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <feature_switchable />
+        <switchonmsg>The light above the switch starts to glow. The light is bright, so bright you can't see what number it is. You can only tell becaue of where it is on the wall.</switchonmsg>
+        <switchoffmsg>the light dimms and goes out, leaving the glow in the dark switch name indicator</switchoffmsg>
+        <switchedondesc>the light is bright, so bright you can't see what number it is. You can only tell becaue of where it is on the wall.</switchedondesc>
+        <look>At the top, there is a light blub. Below that, an old chrome metal switch, and then below that, the number "3" glows in the dark. </look>
+        <visible />
+        <onswitchon type="script">
+        </onswitchon>
+        <onswitchoff type="script">
+          if (IsSwitchedOn(switch 1)) {
+            if (not IsSwitchedOn(switch 2)) {
+              if (IsSwitchedOn(switch 4)) {
+                UnlockExit
+              }
+            }
+          }
+        </onswitchoff>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+      </object>
+      <object name="switch 4">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <feature_switchable />
+        <switchonmsg>The light above the switch starts to glow. The light is bright, so bright you can't see what number it is. You can only tell becaue of where it is on the wall.</switchonmsg>
+        <switchoffmsg>the light dimms and goes out, leaving the glow in the dark switch name indicator</switchoffmsg>
+        <switchedondesc>the light is bright, so bright you can't see what number it is. You can only tell becaue of where it is on the wall.</switchedondesc>
+        <switchedoffdesc>there is a glow in the dark number beneath</switchedoffdesc>
+        <look>At the top, there is a light blub. Below that, an old chrome metal switch, and then below that, the number "4" glows in the dark. </look>
+        <visible />
+        <onswitchon type="script">
+          if (not IsSwitchedOn(switch 2)) {
+            if (not IsSwitchedOn(switch 3)) {
+              if (IsSwitchedOn(switch 1)) {
+                UnlockExit (the solution door)
+              }
+            }
+          }
+        </onswitchon>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+      </object>
+      <object name="solution switch">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <look type="string"></look>
+        <feature_switchable />
+        <onswitchon type="script">
+          if (IsSwitchedOn(switch 1)) {
+            if (not IsSwitchedOn(switch 2)) {
+              if (not IsSwitchedOn(switch 3)) {
+                if (IsSwitchedOn(switch 4)) {
+                  UnlockExit (the solution door)
+                  msg ("The door creeks free... have you solved the puzzle...?")
+                }
+              }
+            }
+          }
+          if (IsSwitchedOn(switch 2)) {
+            msg ("You flip the solution switch. Nothing happens.")
+          }
+          if (IsSwitchedOn(switch 3)) {
+            msg ("You flip the solution switch. Nothing happens.")
+          }
+          if (not IsSwitchedOn(switch 4)) {
+            msg ("You flip the solution switch. Nothing happens.")
+          }
+          if (not IsSwitchedOn(switch 1)) {
+            msg ("You flip the solution switch. Nothing happens.")
+          }
+        </onswitchon>
+      </object>
+    </object>
+  </object>
+  <object name="outside world">
+    <inherit name="editor_room" />
+    <description>You have escaped the puzzle room. You have won!</description>
+  </object>
+</asl>

@@ -1,0 +1,115 @@
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Testing Game Stuff">
+    <gameid>cd102f9d-370a-4bda-b6ea-ca42288f619c</gameid>
+    <version>1.0</version>
+    <start type="script">
+      msg ("What is your name?")
+      get input {
+        msg (" - " + result)
+        player.alias_x = result
+        show menu ("What is your gender?", split ("male;female" , ";"), false) {
+          player.gender_x = result
+          show menu ("What is your race?", split ("human;elf;dwarf" , ";"), false) {
+            player.race = result
+            show menu ("What is your class?", split ("warrior;cleric;mage;thief" , ";"), false) {
+              player.class = result
+              msg (player.alias_x + " is a " + " " + player.gender_x + " " + player.race + " " + player.class + ".")
+            }
+          }
+        }
+      }
+    </start>
+	<turns type="int">0</turns>
+	<statusattributes type="simplestringdictionary">turns = </statusattributes>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_player" />
+	  <inherit name="editor_object" />
+	  <alias_x type="string"></alias_x>
+      <gender_x type="string"></gender_x>
+      <strength type="int">0</strength>
+      <intelligence type="int">0</intelligence>
+      <agility type="int">0</agility>
+      <statusattributes type="simplestringdictionary">alias_x = Name: !;gender_x = Gender" !;strength = ;intelligence = ;agility = ;level = ;experience = ;cash = </statusattributes>
+      <level type="int">0</level>
+      <experience type="int">0</experience>
+      <cash type="int">0</cash>
+    </object>
+    <object name="potion100">
+      <inherit name="editor_object" />
+      <alias>potexp100</alias>
+      <take />
+      <displayverbs type="simplestringlist">Look at; Take; Drink</displayverbs>
+      <inventoryverbs type="simplestringlist">Look at; Use; Drop; Drink</inventoryverbs>
+      <drink type="script">
+        msg ("You drink the exp potion, receiving 100 experience.")
+        player.experience = player.experience + 100
+      </drink>
+    </object>
+    <object name="potion300">
+      <inherit name="editor_object" />
+      <alias>potexp300</alias>
+      <take />
+      <displayverbs type="simplestringlist">Look at; Take; Drink</displayverbs>
+      <inventoryverbs type="simplestringlist">Look at; Use; Drop; Drink</inventoryverbs>
+      <drink type="script">
+        msg ("You drink the exp potion, receiving 300 experience.")
+        player.experience = player.experience + 300
+      </drink>
+    </object>
+  </object>
+  <turnscript name="global_events_turnscript">
+    <enabled />
+    <script>
+      leveling_function
+      game.turns = game.turns + 1
+    </script>
+  </turnscript>
+  <function name="leveling_function"><![CDATA[
+    if (player.experience >= player.level * 100 + 100) {
+      player.experience = player.experience - (player.level * 100 + 100)
+      player.level = player.level + 1
+      switch (player.gender_x) {
+        case ("male") {
+          player.strength = player.strength + 1
+        }
+        case ("female") {
+          player.agility = player.agility + 1
+        }
+      }
+      switch (player.race) {
+        case ("dwarf") {
+          player.strength = player.strength + 2
+        }
+        case ("elf") {
+          player.agility = player.intelligence + 2
+        }
+        case ("human") {
+          player.strength = player.strength + 1
+          player.agility = player.agility + 1
+        }
+      }
+      switch (player.class) {
+        case ("warrior") {
+          player.strength = player.strength + 2
+        }
+        case ("cleric") {
+          player.intelligence = player.intelligence + 1
+          player.agility = player.agility + 1
+        }
+        case ("mage") {
+          player.intelligence = player.intelligence + 2
+        }
+        case ("thief") {
+          player.strength = player.strength + 1
+          player.agility = player.agility + 1
+        }
+      }
+      leveling_function
+    }
+  ]]></function>
+</asl>

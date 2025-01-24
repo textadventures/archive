@@ -1,0 +1,348 @@
+    <asl version="530">
+      <include ref="English.aslx" />
+      <include ref="Core.aslx" />
+      <game name="Test">
+        <gameid>d83ba5bb-2e3c-4f31-80c9-3e88a2dc082c</gameid>
+        <version>1.0</version>
+        <pov type="object">player</pov>
+        <start type="script">
+          cc
+        </start>
+        <turns type="int">0</turns>
+        <statusattributes type="stringdictionary">turns = </statusattributes>
+      </game>
+      <object name="room">
+        <inherit name="editor_room" />
+        <object name="player">
+          <inherit name="defaultplayer" />
+          <inherit name="pc" />
+          <cur_hp type="int">999</cur_hp>
+          <max_hp type="int">999</max_hp>
+          <str type="int">100</str>
+          <end type="int">100</end>
+          <dex type="int">100</dex>
+          <agi type="int">100</agi>
+          <spd type="int">100</spd>
+          <hc type="int">100</hc>
+          <pd type="int">100</pd>
+          <pr type="int">100</pr>
+        </object>
+        <object name="orc1">
+          <inherit name="editor_object" />
+          <inherit name="npc" />
+          <hostile type="boolean">true</hostile>
+          <dead type="boolean">false</dead>
+          <alias>orc</alias>
+          <cur_hp type="int">999</cur_hp>
+          <max_hp type="int">999</max_hp>
+          <str type="int">25</str>
+          <end type="int">25</end>
+          <dex type="int">25</dex>
+          <agi type="int">25</agi>
+          <spd type="int">75</spd>
+          <hc type="int">25</hc>
+          <pd type="int">25</pd>
+          <pr type="int">25</pr>
+        </object>
+      </object>
+      <turnscript name="game_turns">
+        <enabled />
+        <script>
+          sa
+          game.turns = game.turns + 1
+        </script>
+      </turnscript>
+      <command name="fight">
+        <pattern>fight #text#</pattern>
+        <script>
+          battle_system (game.pov,text)
+        </script>
+      </command>
+      <type name="char">
+        <cur_hp type="int">0</cur_hp>
+        <drop type="boolean">false</drop>
+        <defending type="boolean">false</defending>
+        <max_hp type="int">0</max_hp>
+        <str type="int">0</str>
+        <end type="int">0</end>
+        <dex type="int">0</dex>
+        <agi type="int">0</agi>
+        <spd type="int">0</spd>
+        <hp type="int">0</hp>
+        <hc type="int">0</hc>
+        <pd type="int">0</pd>
+        <pr type="int">0</pr>
+      </type>
+      <type name="pc">
+        <inherit name="char" />
+        <statusattributes type="stringdictionary">hp = ;str = ;end = ;dex = ;agi = ;spd = ;hc = ;pd = ;pr = </statusattributes>
+      </type>
+      <type name="npc">
+        <inherit name="char" />
+        <dead type="boolean">false</dead>
+        <hostile type="boolean">false</hostile>
+        <displayverbs type="list">Look at; Talk; Fight</displayverbs>
+      </type>
+      <function name="cc">
+        msg ("What is your name?")
+        get input {
+          game.pov.alias = result
+          msg (" - " + game.pov.alias)
+          show menu ("What is your gender?", split ("male;female" , ";"), false) {
+            game.pov.gender = result
+            show menu ("What is your race?", split ("human;dwarf;elf" , ";"), false) {
+              game.pov.race = result
+              show menu ("What is your class?", split ("warrior;cleric;mage;thief" , ";"), false) {
+                game.pov.class = result
+                msg (game.pov.alias + " is a " + game.pov.gender + " " + game.pov.race + " " + game.pov.class + ".")
+                wait {
+                  ClearScreen
+				  
+                }
+              }
+            }
+          }
+        }
+      </function>
+      <function name="sa">
+        game.pov.hp = game.pov.cur_hp + " / " + game.pov.max_hp
+      </function>
+      <function name="battle_system" parameters="self,text">
+        enemy = GetObject (text)
+        if (enemy = null) {
+          foreach (obj,AllObjects()) {
+            if (obj.alias=text) {
+              enemy = obj
+            }
+          }
+        }
+        if (enemy = null) {
+          msg ("There is no " + text + " here.")
+        }
+        else if (not Doesinherit (enemy,"npc")) {
+          msg ("You can not battle that!")
+        }
+        else if (not npc_reachable (enemy)) {
+          msg ("There is no " + enemy.alias + " in your vicinity.")
+        }
+        else if (GetBoolean (enemy,"dead") = true) {
+          msg (enemy.alias + " is already dead.")
+        }
+        else if (GetBoolean (enemy,"hostile") = false) {
+          msg (enemy.alias + " is not hostile.")
+        }
+        else {
+			battle_sequence (self,enemy)
+    	} 
+
+      </function>
+      <function name="battle_sequence" parameters="self,enemy"><![CDATA[
+		if (enemy.dead = false) {
+			playerfirst=false
+			if (GetInt (self,"spd") > GetInt (enemy,"spd")) {
+				playerfirst=true
+			} else if (GetInt (self,"spd") = GetInt (enemy,"spd") and RandomChance (50)) {
+				playerfirst=true
+			}   		  
+			
+			if (playerfirst) {
+			   msg ("You get to go first for this round")
+			   self_battle_turn (self,enemy) 
+			   on ready {
+				 if (not enemy.dead){
+				   enemy_battle_turn (self,enemy) 
+				 }
+			   }
+			} else {
+			   msg (enemy.alias + " gets to go first for this round.")
+				enemy_battle_turn (self,enemy) 
+				msg ("It is now your turn.")
+				self_battle_turn (self,enemy) 
+			}
+			on ready {
+				msg ("The round has ended.")
+				msg("")  
+				battle_sequence (self,enemy)	
+			}	
+        } 	else { 
+				msg ("The battle is over.")
+        }
+      ]]></function>
+      <function name="self_battle_turn" parameters="self,enemy"><![CDATA[
+		msg (self.alias + " has " + self.cur_hp + " HP left.")
+        msg (enemy.alias + " has " + enemy.cur_hp + " HP left.")
+        wait {
+          show menu ("What is your battle choice?", split ("Attack;Defend;Cast;Item;Run", ";"), false) {
+            switch (result) {
+              case ("Attack") {
+                fourth_value = false
+                if (RandomChance (GetInt (enemy,"agi") - GetInt (self,"spd")) = true) {
+                  msg (enemy.alias + "evaded your attack!")
+                  fourth_value = true
+                }
+                else if (RandomChance (GetInt (enemy,"Dex") - GetInt (self,"agi")) = true) {
+                  msg (enemy.alias + "parried your attack!")
+                  fourth_value = true
+                }
+                else if (RandomChance (GetInt (enemy,"agi") - GetInt (self,"dex")) = true) {
+                  msg (enemy.alias + "blocked your attack!")
+                  fourth_value = true
+                }
+                else if (RandomChance (GetInt (self,"dex") - GetInt (enemy,"spd")) = false) {
+                  msg ("Your attack missed " + enemy.alias +"!")
+                  fourth_value = true
+                }
+                else if (RandomChance (GetInt (enemy,"pr") - GetInt (self,"hc")) = true) {
+                  msg ("Your attack got resisted by " + enemy.alias +"!")
+                  fourth_value = true
+                }
+                else if (fourth_value = false) {
+                  if (self.defending = true and enemy.defending = true) {
+                    enemy.cur_hp = enemy.cur_hp - (crit_hit (self) * 2 * GetInt (self,"pd") / 2 + GetInt (self,"pd") * (GetInt (self,"str") - GetInt (enemy,"end")) / 100)
+                    msg (enemy.alias + " has " + enemy.cur_hp + " HP left.")
+                    self.defending = false
+                  }
+                  else if (self.defending = true and enemy.defending = false) {
+                    enemy.cur_hp = enemy.cur_hp - (crit_hit (self) * 2 * GetInt (self,"pd") + GetInt (self,"pd") * (GetInt (self,"str") - GetInt (enemy,"end")) / 100)
+                    msg (enemy.alias + " has " + enemy.cur_hp + " HP left.")
+                    self.defending = false
+                  }
+                  else if (self.defending = false and enemy.defending = true) {
+                    enemy.cur_hp = enemy.cur_hp - (crit_hit (self) * GetInt (self,"pd") / 2 + GetInt (self,"pd") * (GetInt (self,"str") - GetInt (enemy,"end")) / 100)
+                    msg (enemy.alias + " has " + enemy.cur_hp + " HP left.")
+                  }
+                  else if (self.defending = false and enemy.defending = false) {
+                    enemy.cur_hp = enemy.cur_hp - (crit_hit (self) * GetInt (self,"pd") + GetInt (self,"pd") * (GetInt (self,"str") - GetInt (enemy,"end")) / 100)
+                    msg (enemy.alias + " has " + enemy.cur_hp + " HP left.")
+                  }
+                }
+              }
+              case ("Defend") {
+                if (self.defending = false) {
+                  self.defending = true
+                }
+              }
+              case ("Cast") {
+                self.defending = false
+              }
+              case ("Item") {
+                self.defending = false
+              }
+              case ("Run") {
+                self.defending = false
+              }
+            }
+            if (GetInt (enemy,"cur_hp") > 0) {
+			  if ( RandomChance (GetInt (self,"spd") - GetInt (enemy,"spd"))= true) {
+                msg ("You get an extra battle turn!")
+                self_battle_turn (self,enemy)
+              }
+              else {
+                msg ("Your battle turn is over.")
+              }
+            }
+            else if (GetInt (enemy,"cur_hp") <= 0) {
+              msg (enemy.alias + " is dead.")
+              msg ("You have won the battle!")
+              enemy.defending = false
+              enemy.dead = true
+              }
+
+          }
+        }
+      ]]></function>
+      <function name="enemy_battle_turn" parameters="self,enemy"><![CDATA[
+        msg (self.alias + " has " + self.cur_hp + " HP left.")
+        msg (enemy.alias + " has " + enemy.cur_hp + " HP left.")
+        result = GetRandomInt (1,3)
+        switch (result) {
+          case (1) {
+            sixth_value = false
+            if (RandomChance (GetInt (self,"agi") - GetInt (enemy,"spd")) = true) {
+              msg ("You have evaded the attack!")
+              sixth_value = true
+            }
+            else if (RandomChance (GetInt (self,"dex") - GetInt (enemy,"agi")) = true) {
+              msg ("You have parried the attack!")
+              sixth_value = true
+            }
+            else if (RandomChance (GetInt (self,"agi") - GetInt (enemy,"dex")) = true) {
+              msg ("You have blocked the attack!")
+              sixth_value = true
+            }
+            else if (RandomChance (GetInt (enemy,"dex") - GetInt (self,"spd")) = false) {
+              msg (enemy.alias +"'s attack missed!")
+              sixth_value = true
+            }
+            else if (RandomChance (GetInt (self,"pr") - GetInt (enemy,"hc")) = true) {
+              msg ("You resisted the attack!")
+              sixth_value = true
+            }
+            else if (sixth_value = false) {
+              if (enemy.defending = true and self.defending = true) {
+                self.cur_hp = self.cur_hp - (crit_hit (enemy) * 2 * GetInt (enemy,"pd") / 2 + GetInt (enemy,"pd") * (GetInt (enemy,"str") - GetInt (self,"end")) / 100)
+                msg (self.alias + " has " + self.cur_hp + " HP left.")
+                enemy.defending = false
+              }
+              else if (enemy.defending = true and self.defending = false) {
+                self.cur_hp = self.cur_hp - (crit_hit (enemy) * 2 * GetInt (enemy,"pd") + GetInt (enemy,"pd") * (GetInt (enemy,"str") - GetInt (self,"end")) / 100)
+                msg (self.alias + " has " + self.cur_hp + " HP left.")
+                enemy.defending = false
+              }
+              else if (enemy.defending = false and self.defending = true) {
+                self.cur_hp = self.cur_hp - (crit_hit (enemy) * GetInt (enemy,"pd") / 2 + GetInt (enemy,"pd") * (GetInt (enemy,"str") - GetInt (self,"end")) / 100)
+                msg (self.alias + " has " + self.cur_hp + " HP left.")
+              }
+              else if (enemy.defending = false and self.defending = false) {
+                self.cur_hp = self.cur_hp - (crit_hit (enemy) * GetInt (enemy,"pd") + GetInt (enemy,"pd") * (GetInt (enemy,"str") - GetInt (self,"end")) / 100)
+                msg (self.alias + " has " + self.cur_hp + " HP left.")
+              }
+            }
+          }
+          case (2) {
+            if (enemy.defending = false) {
+              msg (enemy.alias + " has choosen to defend itself.")
+              enemy.defending = true
+            }
+          }
+          case (3) {
+            enemy.defending = false
+            msg ("Cast")
+          }
+        }
+        if (GetInt (self,"cur_hp") > 0) {
+          if (RandomChance (GetInt (enemy,"spd") - GetInt (self,"spd")) = true) {
+            msg (enemy.alias + " gets an extra battle turn!")
+            wait {
+              enemy_battle_turn (self,enemy)
+            }
+          }
+          else {
+            msg (enemy.alias + " 's battle turn is over.")
+          }
+        }
+        else if (GetInt (self,"cur_hp") <= 0) {
+          msg (self.alias + " has died.")
+          msg ("GAME OVER")
+          finish
+        }
+      ]]></function>
+      <function name="npc_reachable" parameters="object" type="boolean">
+        value = false
+        foreach (x,ScopeReachableNotHeld ()) {
+          if (x=object) {
+            value = true
+          }
+        }
+        return (value)
+      </function>
+      <function name="crit_hit" parameters="object" type="int">
+        if (RandomChance (GetInt (object,"luck")) = true) {
+          value = 2
+        }
+        else {
+          value = 1
+        }
+        return (value)
+      </function>
+    </asl>

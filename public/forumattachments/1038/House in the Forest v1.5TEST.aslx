@@ -1,0 +1,2844 @@
+<!--Saved by Quest 5.5.5328.26617-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <include ref="Clock_Lib.aslx" />
+  <include ref="Journal_lib.aslx" />
+  <game name="House in the Forest v1.6">
+    <gameid>9be6728a-09c6-497c-b177-4ae477ea644c</gameid>
+    <version>1.6</version>
+    <attr name="autodescription_youarein" type="int">0</attr>
+    <attr name="autodescription_youcansee" type="int">2</attr>
+    <attr name="autodescription_description" type="int">1</attr>
+    <attr name="autodescription_youcango" type="int">0</attr>
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <showhealth type="boolean">false</showhealth>
+    <defaultfontsize type="int">14</defaultfontsize>
+    <author>orgo-member-xv</author>
+    <description><![CDATA[<i><b>You wake up in an unknown place surrounded by unknown people and you have no idea who you are. <br/><br/>What's worse is that whenever you see one of the people there you get some kind of wierd uncontrollable fear at the pit of your stomic. <br/><br/>Why are you here? Who are you? Why do you fear one of the people there? And what do they want you for? <br/><br/>These are the questions you ask yourself as you figure out your identity in a little house in the forest. <br/></b></i><br/>~~~~~~~~~~~~~~~` <br/><br/>~~~~~~~~~~~~~~~ <br/><br/>This is a simulation of a place where me and my friend made up in a roleplay we deicded to keep it as the home for any RP that use's the certain characters that live here and it consists of the house the forest the field behind the house and a portal in the backroom that leads somewhere special! I made it for them so that they could walk around and interact with the things we desribed in the roleplay but i had to make it so that the person playing it could discover things about the character's since they are the characters we use to Roleplay with.<br/>]]></description>
+    <category>Simulation</category>
+    <difficulty>Easy</difficulty>
+    <cruelty>Merciful</cruelty>
+    <showscore />
+    <pov type="object">player</pov>
+    <onhealthzero type="script">
+      msg ("You fall over and you slowly start to go the last thought that reachs your mind before the darkness is. \"I hope this doesn't happen to anyone again...\"")
+      finish
+    </onhealthzero>
+    <command name="say">
+      <pattern>say #text#</pattern>
+    </command>
+    <object name="Broom Closet Chest Key">
+      <inherit name="editor_object" />
+      <look>It was a large metal key that looked like it was meant to open something...large and metal and heavy! You should keep it on you just in case you find something that was large metal and heavy.</look>
+      <alias>Large Heavy Metal key</alias>
+      <take />
+      <takemsg>You pick up the key and it weighed down your hand.</takemsg>
+      <dropmsg>You let go of they key and it makes a loud thunk when it hit the ground.</dropmsg>
+    </object>
+  </game>
+  <object name="Waking up">
+    <inherit name="editor_room" />
+    <description type="script"><![CDATA[
+      if (GetBoolean(player, "MaleNormal")) {
+        msg ("\"Do you think he's awake?\" it was a female voice.<br/><br/>\"Christian...you shouldn't have used that spell you know how dangerous it is...\" aanother female voice it sounded older then the first girl.<br/><br/>\"I know but I needed to use it...it'll all make sense when he wakes up..if he's alive...\" it was a guy's voice and he sounded distracted.<br/><br/>You felt someone pat your shoulder and something poke you in the gut. <br/><br/>You make a groaning noise like you were trying to say something. <br/><br/>One of the girl's gasp but the guy shush's her. <br/><br/>\"Can you open your eyes?\" the guy was talking to you.<br/>")
+      }
+      else if (GetBoolean(player, "FemaleNormal")) {
+        msg ("\"Do you think she's awake?\" it was a female voice.<br/><br/>\"Christian...you shouldn't have used that spell you know how dangerous it is...\" aanother female voice it sounded older then the first girl.<br/><br/>\"I know but I needed to use it...it'll all make sense when she wakes up if she's alive...\" it was a guy's voice and he sounded distracted.<br/><br/>You felt someone pat your shoulder and something poke you in the gut. <br/><br/>You make a groaning noise like you were trying to say something. <br/><br/>One of the girl's gasp but the guy shush's her. <br/><br/>\"Can you open your eyes?\" the guy was talking to you.<br/>")
+      }
+    ]]></description>
+    <beforeenter type="script">
+      if (GetBoolean(player, "Male")) {
+        SetObjectFlagOff (player, "Male")
+        SetObjectFlagOn (player, "MaleNormal")
+      }
+      else if (GetBoolean(player, "Female")) {
+        SetObjectFlagOff (player, "Female")
+        SetObjectFlagOn (player, "FemaleNormal")
+      }
+    </beforeenter>
+    <object name="eyes">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <close type="boolean">false</close>
+      <look>You can't look at your eyes! It's not eye-ception!</look>
+      <scenery />
+      <open />
+      <alt type="stringlist">
+        <value>my eyes</value>
+      </alt>
+      <touch>You feel the skin of your eyes but you should open them before they think you're blind...</touch>
+      <openscript type="script">
+        SetObjectFlagOn (player, "Basement Normal")
+        MoveObject (player, basement)
+      </openscript>
+    </object>
+  </object>
+  <verb>
+    <property>pinch</property>
+    <pattern>pinch</pattern>
+    <defaultexpression>"You can't pinch " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="basement">
+    <inherit name="editor_room" />
+    <dark type="boolean">false</dark>
+    <description type="script"><![CDATA[
+      firsttime {
+        msg ("As you open your eyes you find that you're not in a place you thought you were but since you were kind of disoriented it took a while for your eyes to stop making the room spin. <br/><br/>\"Are you okay?\" the voice of the first girl sounded sweetly in your ears as you were coming around. \"Can you understand me?\" a girl about 16 or 17 you couldn't really tell was standing in front of you with a concerned look on her face. <br/><br/>\"Thier not an alien Maddie they can understand you\"The guy's voice was coming from the left. <br/><br/>\"But they might be in shock!\" The other girls voice comes from the right. \"They woke up in a wierd place amongst wierd people talking about wierd things\" She sounded concerned. <br/><br/>\"Sorry it'll be okay we're not going to hurt you and you're safe here\" she smiles at you. \"Christian...can we take them to thier room? They must be tired from all of this magical stuff\" <br/><br/>\"Alright fine but stright to the room...after they sleep then we'll get to explaining...alright?\"Walks past you and up the stair's to the south. <br/><br/>\"Come on!\"She smiles and goes up the stairs as well. <br/><br/>\"Hurry I know you're tired\"the other girl walks up the stairs as well leaving you alone in the wierd basement.")
+      }
+      otherwise {
+        msg ("You walk back down the stairs and look around and see the things you saw the first time. But you still feel the bad feeling you had when you first woke up in this strange place.")
+      }
+    ]]></description>
+    <exit name="West Wall" alias="west" to="basement">
+      <inherit name="westdirection" />
+      <lookonly />
+      <look type="script">
+        msg ("The guy you heard was sitting at a desk cluttered with old looking books and papers of all kinds. The wall had shelves and they had objects that you can't discern from your vantage point on the hard wooden chair that you were seated in. The walls were some kind of stone and it made it look like you were in a dungeon. There was also a large lamp next to the desk providing light.")
+      </look>
+    </exit>
+    <exit name="North Wall" alias="north" to="basement">
+      <inherit name="northdirection" />
+      <lookonly />
+      <look>The girl who asked if you were okay was sitting there looking at you. So she was blocking some of the stuff that was on the wall which wasn't that much just a couple of cleaning suppiles and a box.</look>
+    </exit>
+    <object name="Shelves">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <listchildren />
+      <hidechildren />
+      <look>There were 4 shelves attached to the stone wall and they had item's on them they were made from wood and they looked recently put up.</look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <object name="Shelved Items">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <look>From where you were you couldn't see what they were but they looked like bottems and little trickets that you would find in an old man's house to decorate thier house.</look>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+      </object>
+    </object>
+    <object name="Books">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <look>They were old and thick books. The kind you would find in an old chest in your grandfather's attic. From where you were sitting you couldn't see the titles on the spine's but they were in a diffrent langauge anyway so it wouldn't have mattered.</look>
+      <takemsg>You can't take them...thier not your's!</takemsg>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+    </object>
+    <object name="Papers">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <look>The paper's much like the books were old and yellowed but they were in english. They didn't look like they were printed paper's but someone had handwritten them all. Most of the paper's were underneath books so you couldn't read what they had on them.</look>
+      <lookthrough>You leaf through all of the papers but you couldn't understand any of the paper's that were there.</lookthrough>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <drop type="boolean">false</drop>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <take type="script">
+        msg ("You can't take them...you can't even touch them for some reason your hand wouldn't even get near the top one like there was something keeping you from touching it.")
+      </take>
+    </object>
+    <object name="Desk">
+      <inherit name="editor_object" />
+      <look>It was a standerd oak desk you would see in any school room. It looked new out of place in the dimness of this basement. </look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <usedefaultprefix />
+    </object>
+    <object name="Stone Wall">
+      <inherit name="editor_object" />
+      <look>It wasn't slimy or wet like you would expect from an underground stone wall it was perfectly dry and made the basment look like a dungeon and since you didn't know how you got here or why you were here it felt like it was a dungeon!</look>
+    </object>
+    <object name="Box">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <look>It was a moving box but it was covered in dirt so you couldn't read the logo on the side of it. The mop and the bucket were leaning on the side of it. </look>
+      <autoopen />
+      <nokeymessage>This isn't your box! Go ask permission!</nokeymessage>
+      <lockmessage>That's tresspassing ask permission first!</lockmessage>
+      <canlockopen type="boolean">false</canlockopen>
+      <open />
+      <transparent type="boolean">false</transparent>
+      <openmsg>You pry open the lid of the box flinging dirt up into the air letting the smell of musty...stuff up there as well.</openmsg>
+      <closemsg>You just put the lid back down and keep getting rid of the smell.</closemsg>
+      <takemsg>The box was too heavy to take with you...</takemsg>
+      <key type="object">Maddie</key>
+    </object>
+    <object name="Mop">
+      <inherit name="editor_object" />
+      <look>It's a ratty old mop that looked like it's seen better days. But if it had to be used it would still work.</look>
+      <takemsg>Why would you want a mop? There's nothing to mop right now?</takemsg>
+    </object>
+    <object name="Bucket">
+      <inherit name="editor_object" />
+      <look>It was a bucket that held the water for the mop. You hope it's empty...did the water move...</look>
+      <takemsg>The bucket was filled wth dirty water and there was mold on the inside you don't even want to touch it.</takemsg>
+    </object>
+    <exit name="East Wall" alias="east" to="basement">
+      <inherit name="eastdirection" />
+      <lookonly />
+      <look>This wall was empty like it was waiting for someone to place something over there.</look>
+    </exit>
+    <exit name="Stairs" alias="up" to="Upstairs">
+      <inherit name="updirection" />
+      <look>It was a set of normal stairs leading up to the main floor.</look>
+    </exit>
+    <object name="Metal Chair">
+      <inherit name="editor_object" />
+      <look>It was an Iron Metal chair that you woke up in and even though you had been sitting on it for a while it was still cold to the touch.</look>
+      <takemsg>It was bolted to the floor so you can't even move it around.</takemsg>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <sit>You put your but on the metal of the chair and then the cold just went stright into you making you really cold.</sit>
+    </object>
+  </object>
+  <turnscript name="Player Turns">
+    <enabled />
+    <script>
+      player.turns = player.turns+1
+    </script>
+  </turnscript>
+  <object name="Upstairs">
+    <inherit name="editor_room" />
+    <alias>Hallway</alias>
+    <description type="script"><![CDATA[
+      firsttime {
+        msg ("As you walked through the door from the basment you find yourself in a hallway leading to your left and your right. <br/><br/>\"Over here!\" the girl waved over to you from the left and dissappered into a room. <br/><br/>To the right there were sounds of a TV so it must lead to the living room. <br/><br/>The only thing you saw besides the hallway was a picture of a bear on the wall and a long carpet on the floor. Along with a door right next to the bear picture it might be some kind of closet maybe?")
+      }
+      otherwise {
+        msg ("There was a picture of a bear on the wall the door to the basment going down and another door in the wall next to the bear picture which was probably a closet.And then the long carpet on the floor. As well as the opening leading to the living room.")
+      }
+    ]]></description>
+    <exit name="Basement door" alias="down" to="basement">
+      <inherit name="downdirection" />
+      <locked type="boolean">false</locked>
+      <look>It's the door to the basement stairs where you somehow woke up in. How you got there you don't know but you don't really feel like going back down there.</look>
+    </exit>
+    <exit alias="west" to="Hallway">
+      <inherit name="westdirection" />
+      <look>The hallway extends down to a dark orange door and it turns to the left down another hallway.</look>
+    </exit>
+    <exit alias="east" to="Living room">
+      <inherit name="eastdirection" />
+      <look>The only thing you could see was a corner of a couch you'll have to walk in that direction to see more.</look>
+    </exit>
+    <object name="Bear picture">
+      <inherit name="editor_object" />
+      <look>It was a large blown up photo of a bear in the woods. It stood in front of a waterfall and was catching tuna that were trying to swim up it. </look>
+      <takemsg>Why would you take thier painting? That's mean.</takemsg>
+      <drop type="boolean">false</drop>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+    </object>
+    <object name="Long Carpet">
+      <inherit name="editor_object" />
+      <look>It was a long rectangular carpet that started at one of the rooms at the end of the hall and stopped in front of the door leading down to the basment and it had an abstract design on it.</look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <takemsg>The carpet was too long and to bulky to take with you besides what do you want with a carpet?</takemsg>
+    </object>
+    <exit alias="north" to="Broom Closet">
+      <inherit name="northdirection" />
+      <look>There was a brown door with a silver doorknob.</look>
+    </exit>
+  </object>
+  <verb>
+    <property>flirt</property>
+    <pattern>flirt</pattern>
+    <defaultexpression>"You can't flirt " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>ask</property>
+    <pattern>ask</pattern>
+    <defaultexpression>"You can't ask " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Hallway">
+    <inherit name="editor_room" />
+    <description type="script"><![CDATA[
+      firsttime {
+        msg ("The hallway stretchs down to the south leading to another hallway. <br/><br/>There was a room in front of you with a dark orange door. And another door to the north that was slightly open. <br/><br/>\"Hey! In here!\"The girl from before open the grey door and smiled at you. <br/><br/>\"This is your room..\"She stepped out of the door and closed it for you. <br/><br/>\"If you need anything come find me or Lily and this is the key to your door it's the same color so you won't get them mixed up\"Holds up a little grey key. \"I'll leave it here so you don't forget it or lose it\"She places the key on a little night stand in the corner between the two rooms in the hallway. <br/><br/>\"My name's Maddie by the way...so...\"She giggled and went toward the living room. Leaving you alone in the hallway to explore. ")
+      }
+      otherwise {
+        msg ("The hallway Stretchs down to the south leading to another hallway.<br/><br/>There was a room right in front of you with a dark Orange door and another door to the north that had a grey door. Your room.")
+      }
+    ]]></description>
+    <exit alias="east" to="Upstairs">
+      <inherit name="eastdirection" />
+      <look>This is back down the hallway that leads to the living room and the basement.</look>
+    </exit>
+    <exit alias="west" to="Christian Room">
+      <inherit name="westdirection" />
+      <look>This is the direction that the grey door is in.</look>
+    </exit>
+    <exit alias="south" to="Hallway 2">
+      <inherit name="southdirection" />
+      <look>This leads down some more hallway and toward the rest of the bedrooms.</look>
+    </exit>
+    <object name="nightstand">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <hidechildren />
+      <listchildren />
+      <listchildrenprefix>There is</listchildrenprefix>
+      <look>It was a sqaure 4 legged end table snug in the corner of the hallway that had a dark blue table cloth which a lamp was sitting on.</look>
+      <alias>Nightstand</alias>
+      <scenery type="boolean">false</scenery>
+      <alt type="stringlist">
+        <value>table</value>
+        <value>desk</value>
+        <value>counter'</value>
+        <value>end table</value>
+      </alt>
+      <object name="Grey Key">
+        <inherit name="editor_object" />
+        <look>It was a little grey key that look like it had been painted with spray paint.</look>
+        <take />
+        <takemsg>You take the key with you.</takemsg>
+        <dropmsg>You drop the key.</dropmsg>
+        <volume type="int">5</volume>
+        <alt type="stringlist">
+          <value>your key</value>
+        </alt>
+      </object>
+      <object name="lamp">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <look>It was a small little house lamp.</look>
+        <switchedon />
+        <switchonmsg>The switch turns and bathes the hallway with soft white light.</switchonmsg>
+        <switchoffmsg>The switch turns and drowns the hallway in darkness.</switchoffmsg>
+        <switchedondesc>It gives off a soft warm white light that lights up the hallway.</switchedondesc>
+        <switchedoffdesc>It is sitting on the table waiting for someone to turn it on so it can do what it was made to do.</switchedoffdesc>
+      </object>
+    </object>
+    <object name="Grey Door">
+      <inherit name="editor_object" />
+      <look>It was a solid grey door but it didn't look like it was always that color there was a little scratch on the bottem of it that showed a diffrent color then grey. </look>
+      <alt type="stringlist">
+        <value>my door</value>
+      </alt>
+      <unlock type="script">
+        if (game.pov.parent = Guest Room) {
+          if (Got(Grey Key)) {
+            msg ("The key slid into the door and with a click it was unlocked.")
+            UnlockExit (Your room 2)
+          }
+          else {
+            msg ("You can't unlock the door if you don't have the key you need a key to unlock a door.")
+          }
+        }
+        else {
+          if (Got(Grey Key)) {
+            msg ("The key slid into the door and with a click it was unlocked.")
+            UnlockExit (Your room)
+          }
+          else {
+            msg ("You can't unlock the door if you don't have the key you need a key to unlock a door.")
+          }
+        }
+      </unlock>
+      <lock type="script">
+        if (game.pov.parent = Guest Room) {
+          if (Got(Grey Key)) {
+            msg ("The key slid into the door and with a click it was locked.")
+            LockExit (Your room 2)
+          }
+          else {
+          }
+        }
+      </lock>
+      <useon type="scriptdictionary">
+        <item key="Grey Key">
+          msg ("The key slides into the door and you hear a click as the lock unlocks for you.")
+          UnlockExit (Your room)
+        </item>
+      </useon>
+    </object>
+    <object name="Dark Orange Door">
+      <inherit name="editor_object" />
+      <look>It's almost like a burnt orange or an orange orange and it was painted over just like your door was.</look>
+    </object>
+    <exit name="Your room" alias="north" to="Guest Room">
+      <inherit name="northdirection" />
+      <locked />
+      <lockmessage>Seems that Maddie kept the door locked when she left you need to find a key to unlock it.</lockmessage>
+      <look>It was a solid grey door but it didn't look like it was always that color there was a little scratch on the bottem of it then showed a diffrent color of grey.</look>
+      <lookonly type="boolean">false</lookonly>
+    </exit>
+  </object>
+  <object name="Living room">
+    <inherit name="editor_room" />
+    <enter type="script">
+      if (player.days=4) {
+        MoveObject (Christian, Living room)
+        MoveObject (Maddie, Living room)
+        MoveObject (Lily, Living room)
+      }
+    </enter>
+    <description type="script"><![CDATA[
+      if (player.days=4) {
+        msg ("The room was warm and cozy as the heater was pumping in a ton of warm air because of the cold tempetures outside. All of the furniture was still there but in the corner where the calander was there was a Christmas Tree but it wasn't covered in any lights or decorations yet. Maybe you should ask Maddie or Lily about why there's a naked tree here.")
+      }
+      else {
+        firsttime {
+          msg ("The living was spacious with just a couple of things withen it. There was a Couch in the middle of the room facing the wall that had the hallway going into the main part of the house. And it was between two armchairs one of which had maddie sitting on one ignoring you since she didnt notice you coming in cause she was watching her favorite show. Once apon a Time. <br/><br/>She was watching it on a flatscreen TV that was taking up most of the wall other then a clock that was right above it that didnt seem like it was working since it was stuck on 4: 37.<br/><br/>There was a coffee table in front of the couch that had a bunch of remotes ontop of it and a video game controller. <br/><br/>Directly oppisite the wall with the TV was the wall that had the door to the back room and there was a calander next to that to the left of that wall was the opening to the kitchen and across from that was the front door and a large window looking out to the front of the yard.<br/>")
+          if (Ask("Continue?")) {
+            msg ("After a while of you standing there akwardly trying to not look to wierd a commercail turns on and maddie immeidatly looks at you and she has a large smile on her bright face.<br/><br/>\"Hello there!\" She looks up at you from the chair. \"How are you feeling? Are you okay? Are you here looking for Christain or Lily so you can ask them about why you're here?\" She was asking the questions so fast that you couldn't answer them and she stands up. <br/><br/>\"I'll go look for them for you stay here and wait i'f i'm not back i'm proabably out looking for them...or i might have been kidnapped who knows?\"She smiles and then walks back into the hallway,")
+            MoveObject (Maddie, TEST ROOM)
+          }
+          else {
+            msg ("Maddie turns off the TV ignoreing you and walks directly into the hallway and off to wherever she's going.")
+          }
+        }
+        otherwise {
+          msg ("The living was spacious with just a couple of things withen it. There was a Couch in the middle of the room facing the wall that had the hallway going into the main part of the house. And it was between two armchairs that had two little throw pillows resting on top of them.<br/><br/>There was a flatscreen TV that was taking up most of the west wall other then a clock that was right above it that didnt seem like it was working since it was stuck on 4: 37.<br/><br/>There was a coffee table in front of the couch that had a bunch of remotes ontop of it and a video game controller. <br/><br/>Directly oppisite the wall with the TV was the wall that had the door to the back room and there was a calander next to that to the left of that wall was the opening to the kitchen and across from that was the front door and a large window looking out to the front of the yard.")
+        }
+      }
+    ]]></description>
+    <exit alias="west" to="Upstairs">
+      <inherit name="westdirection" />
+      <look>This is the directioin to the hallway where the bedrooms and the basement are.</look>
+    </exit>
+    <exit alias="north" to="Front of house">
+      <inherit name="northdirection" />
+      <lookonly type="boolean">false</lookonly>
+      <look>It's the front door leading to outside the house.</look>
+    </exit>
+    <exit alias="south" to="Kitchen">
+      <inherit name="southdirection" />
+      <look>There isn't a door it's mostly an opening to the kitchen so you can see everything.</look>
+    </exit>
+    <exit alias="east" to="Back Room">
+      <inherit name="eastdirection" />
+      <look>It's just a wierd door that didnt look like it was part of the house since it was a diffrent color then the rest of the doors in the house or it might be the only true color and wasn't painted over.</look>
+    </exit>
+    <object name="Map">
+      <inherit name="editor_object" />
+      <take />
+      <takemsg>You roll up the map and stuff it in your pocket so you can remember where you are.</takemsg>
+      <look>It's a framed map of the house it shows all of the rooms and it looked like it was made with some wierd videogame then an actully floorplan of the house...well it's better then nothing right. This was on the wall adjacent to the hallway that you used to get here. Its put on the wall with tape so you're able to pull it off and take it with you.</look>
+      <scenery />
+      <use type="script">
+        picture ("Floor map of the house.png")
+      </use>
+    </object>
+    <object name="Couch">
+      <inherit name="editor_object" />
+      <look>This is a Puffy brown 2 seater couch with a throw pillow and a blanket drapped over the back of the couch. </look>
+      <sit>You sit on the cushion and rest your legs you must have been walking alot huh!</sit>
+      <nap type="script">
+        set (player, "days", player.days+0.5)
+        msg ("You relax yourself and curl up as you start to fall asleep on one of the couch's little resting pillow.")
+      </nap>
+    </object>
+    <object name="Armchair">
+      <inherit name="editor_object" />
+      <alias>Left Armchair</alias>
+      <look><![CDATA[This armchair is an exact twin to the other Armchair to the right of the couch and its the same chocolate brown color and it's very comfy when you sit inside it.
+<br/><br/>                                                                                                                                           ]]></look>
+      <sit>You sit on the cushion and rest your legs you must have been walking alot huh!</sit>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <nap type="script">
+        set (player, "days", player.days+0.5)
+        msg ("You slid down into the chair and tilt your head back and close your eyes.")
+      </nap>
+    </object>
+    <object name="Armchair2">
+      <inherit name="editor_object" />
+      <alias>Right Armchair</alias>
+      <look>This armchair is an exact twin to the other Armchair to the left of the couch and its the same chocolate brown color and it's very comfy when you sit inside it. </look>
+      <sit>You sit on the cushion and rest your legs you must have been walking alot huh!</sit>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <nap type="script">
+        set (player, "days", player.days+0.5)
+        msg ("You slid down into the chair and tilt your head back and close your eyes.")
+      </nap>
+    </object>
+    <object name="Coffee Table">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <look>It's a solid glass Coffee Table with a wooden trim and steel legs going to the floor there was a floral print carved into the wood so it would look preaty.</look>
+      <listchildren />
+      <object name="Video Game Controller">
+        <inherit name="editor_object" />
+        <alias>Xbox Controller</alias>
+        <look>It was a black Xbox controller.</look>
+        <scenery type="boolean">false</scenery>
+        <take />
+        <takemsg>You grab the controller. What are you going to do with it?</takemsg>
+        <dropmsg>You let go of the controller and abandond it for someone else.</dropmsg>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>An</prefix>
+      </object>
+      <object name="Universal Remote">
+        <inherit name="editor_object" />
+        <look>It was a long black and grey remote that was used for everything that needed a remote in the room for the DVD player or for the TV or for anything else they might buy. Though for the DVD player the close button wouldn't work so you'd have to go to the DVD player itself and shut it off manually.</look>
+        <useindividualverblist type="boolean">false</useindividualverblist>
+        <takemsg>You shouldn't take the remote...you should leave it here for the TV...</takemsg>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <selfuseon type="scriptdictionary">
+          <item key="TV">
+            msg ("You push the on button and the The TV turns on and it shows a baby bunny hopping across the screen almost like it some kind of wierd waiting screen for something because all it shows is the bunny hopping across the screen.")
+            SwitchOn (TV)
+          </item>
+          <item key="DVD player">
+            if (IsSwitchedOn(DVD player)) {
+              if (DVD player.isopen) {
+                HelperCloseObject (DVD player)
+                msg ("The tray on the DVD player closes.")
+              }
+              else if (not DVD player.isopen) {
+                HelperOpenObject (DVD player)
+                msg ("The tray on the DVD player opens and waits for a DVD to be put inside.")
+              }
+            }
+            else {
+              SwitchOn (DVD player)
+            }
+          </item>
+        </selfuseon>
+      </object>
+    </object>
+    <object name="TV">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <look>It's a large flat screen TV that takes up most of the wall. </look>
+      <switchonmsg>You used the remote and the TV screen lit up.</switchonmsg>
+      <switchoffmsg>The screen shut off and went black.</switchoffmsg>
+      <switchedondesc>The screen is on i think you should shut it off if you're not useing it.</switchedondesc>
+      <switchedoffdesc>It's just sitting there waiting for someone to watch it.</switchedoffdesc>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>The</prefix>
+    </object>
+    <object name="East Living room Wall">
+      <inherit name="editor_object" />
+      <look>This is the wall of the living room that had the door going into the back room. This wall had a calander on it that showed the date of today whenever you looked at it. </look>
+      <scenery />
+    </object>
+    <object name="Calander">
+      <inherit name="editor_object" />
+      <look><![CDATA[It was a basic calander for the 2014-2015 year that had the month of november and december of 2013 on it. If you looked at it it'll tell you what the date is and if anything is happening today. <br/><br/>If you want to <b>check the date on </b>the<b> calander</b> you'll have to look at it.]]></look>
+      <checkdateoncalander type="script">
+        if (player.days=1) {
+          msg ("The calander says that today is the 22nd of December 2013 and there isn't anything going on today except for the fact that it's the day after the world was going to end so let's Celebrate!!")
+        }
+        else if (player.days=2) {
+          msg ("The calander says that today is the 23rd of December 2013 And there's nothing written down for today.")
+        }
+        else if (player.days=3) {
+          msg ("The Calander says that today is the 24th of December 2013. It's christmas eve today!! LATE NIGHT PARTY!!")
+        }
+        else if (player.days=4) {
+          msg ("Merry Christmas! The Calander says that today is the 25th of December Merry Christmas everyone! And if you don't celebrate Christmas then happy holidays!")
+        }
+        else if (player.days=5) {
+          msg ("The Calander Says today is the 26th of December after Christmas hope you got everything you wanted!")
+        }
+        else if (player.days=6) {
+          msg ("Today is the 27th of December. Nothing's going on today.")
+        }
+        else if (player.days=7) {
+          msg ("Today is the 28th of December. There's nothing going on today.")
+        }
+        else if (player.days=8) {
+          msg ("Today is the 29th of December. There's nothing going on today.")
+        }
+        else if (player.days=9) {
+          msg ("Today is the 30th of December. There's nothing going on today.")
+        }
+        else if (player.days=10) {
+          msg ("Today is the 31th of December. Happy New years eve...wonder what kind of party this'll be!")
+        }
+        else if (player.days=11) {
+          msg ("Today is January 1st. Happy New Years!! 2014!!")
+        }
+        else if (player.days=12) {
+          msg ("Today is January 2nd")
+        }
+        else {
+        }
+      </checkdateoncalander>
+    </object>
+    <object name="Entertainment Center">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <close type="boolean">false</close>
+      <transparent />
+      <open type="boolean">false</open>
+      <look>It was a large entertainment center that was surronding the large TV kinda like a frame of some kind that held all of the important Entertainment machines that connected to the flat screen.</look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>An</prefix>
+      <object name="DVD player">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <inherit name="openable" />
+        <look>It's a sony DVD Player that lets you play DVD's but not Bluerays. It's a shiny black and it's kinda new though not a Blueray player.</look>
+        <switchonmsg>The blue light on the corner turns on.</switchonmsg>
+        <switchoffmsg>The light blinked for a few seconds and then went dark.</switchoffmsg>
+        <switchedondesc>The little blue light was shining looing cool.</switchedondesc>
+        <switchedoffdesc>There wasn't anything on the DVD player and it must be off.</switchedoffdesc>
+      </object>
+      <object name="Xbox 360">
+        <inherit name="editor_object" />
+        <look><![CDATA[It's a black Xbox 360 sitting on its side covered in dust cause it hasn't been moved.
+<br/><br/>                                                                                                                                                                                         ]]></look>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>An</prefix>
+      </object>
+      <object name="DVD">
+        <inherit name="editor_object" />
+        <look>It's the DVD of Season 1 of My Little Pony Friendship if Magic The DVD isn't inside it must be inside the DVD player.</look>
+      </object>
+    </object>
+    <object name="Carpet">
+      <inherit name="editor_object" />
+      <look>It's a solid red carpet that's rectangle shaped and makes the couchs and armchairs look a darker chocolate color then they already are.</look>
+      <alias>Red Carpet</alias>
+    </object>
+  </object>
+  <object name="Christian Room">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>Christian's Room</alias>
+    <description><![CDATA[When you walk in the walls were a complete white which seemed wierd since the door was orange but the carpet was also white it kinda looked like you went into the matrix or something. There was a bed on the left side Completly white just like everything else. There was a Bookcase next to it and that wasn't white niether were the books that were resting inside it. <br/><br/>Most of them were like the ones that you've seen everywhere else Spellbook's but there were other's that were the regular kind of books Harry Potter books Hunger Games and various others. <br/><br/>He had a desk but this one was white just like the floor and it looked more elegant and expensive then the one's you saw in Maddie's or Lily's Room. There was an Ornate looking box on top of the desk along with a lamp and a laptop. The Lamp looked like the one that was in Maddie's room the kind you see in a buisness cubicle and the laptop was black which made it look even blacker in the white room. There was a letter Q on the top of the laptop or it could be a C? <br/><br/>Other then that the room was bare there was a hamper in the corner right next to the closet. <br/>]]></description>
+    <enter type="script">
+      if (player.days=8) {
+        MoveObject (Cathrine, Christian Room)
+        MoveObject (Christian, TEST ROOM)
+      }
+      else if (player.days=15) {
+        MoveObject (Cathrine, TEST ROOM)
+        MoveObject (Christian, Christian Room)
+      }
+    </enter>
+    <exit alias="east" to="Hallway">
+      <inherit name="eastdirection" />
+      <look>It's the back of the orange door that you walked through to get in here.</look>
+    </exit>
+    <object name="Christian">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look type="script">
+        if (player.days=1) {
+          msg ("He looked to be around the same age as the first girl but you couldn't really tell with him. He had dark black hair that kinda covered his eyes which were a chocolate brown. For some reason when you looked at him you felt something in your gut move around like when you go into a dark room that you can't see anything or when you're scared at someting.")
+        }
+        else if (player.days=5) {
+          msg ("For some reason he seemed distant and a little shorter then he had been before...his hair was longer and his clothes started to fit him a little baggy.")
+        }
+        else if (player.days=6) {
+          msg ("He seemed to be even shorter and he was wearing a hat now but you could still see his hair and his clothes were even baggier now.")
+        }
+        else if (player.days=7) {
+          msg ("You couldn't even recongnize him anymore he was almost a head shorter then you his hair was reaching his shoulders and he was wearing a sweatshirt and sweatpants and whenever you talked to him he used short sentences and tried to get away from you as fast as possible but you could tell that there was something wrong with his voice.")
+        }
+        else if (player.days=2) {
+        }
+        else if (player.days=3) {
+        }
+        else if (player.days=4) {
+        }
+      </look>
+      <changedgender type="script">
+        if (player.Days=5 ) {
+          msg ("she")
+        }
+      </changedgender>
+      <ask type="scriptdictionary">
+        <item key="Cathrine">
+          msg ("What do you mean? I dont know who you're talking about!")
+        </item>
+        <item key="Lily">
+          msg ("You stay away from her! *looks like he's about to squish you like you were some kind of bug* Sorry...Lily's..she's my girlfriend sorry it's just there's been alot of people trying to get to her and Maddie and i dont like it.")
+        </item>
+        <item key="Maddie">
+          msg ("She's one of my oldest friends...i found her when she was small and we've been living together for a long time she's like my little sister.")
+        </item>
+        <item key="yourself">
+          if (player.days=1) {
+            msg ("Oh i don't really have time to answer that right now get it from one Maddie or Lily.")
+          }
+          else if (player.days=2) {
+            msg ("")
+          }
+        </item>
+      </ask>
+    </object>
+    <object name="bed2">
+      <inherit name="editor_object" />
+      <look>It was the completly white bed with the white comferter and 3 white puffy pillows and it just screamed. FLUFFY to you and it made you sleepy staring at it.</look>
+      <alias>Christian's Bed</alias>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>sleep</value>
+      </displayverbs>
+      <alt type="stringlist">
+        <value>Christians bed</value>
+      </alt>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <sleep type="script">
+        set (player, "days", player.days+1)
+        msg ("You feel yourself drift away to dreams that don't make any sense to you if only you could figure out who you were and why they wanted you.")
+      </sleep>
+    </object>
+    <object name="White desk">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <look>It was a white desk the same color as his bed and eveything else in the room. It was made of wood and was just a table where he had this things on it.</look>
+      <usedefaultprefix />
+      <object name="Laptop2">
+        <inherit name="editor_object" />
+        <look><![CDATA[His laptop was black which made it look even blacker in the white room. There was a letter Q on the top of the laptop or it could be a C? <br/>]]></look>
+        <takemsg>Why would you take his laptop? </takemsg>
+        <drop type="boolean">false</drop>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <alias>Christian's Laptop</alias>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <turnon type="script">
+          msg ("You opened the laptop and pushed the on button and after a few minutes the boot screen showed up but then it just stopped at the log in screen because you didn't know his password.")
+        </turnon>
+      </object>
+      <object name="lamp3">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <switchedon />
+        <switchonmsg>You push the button down on the stand and the light turns on bathing the desk in light.</switchonmsg>
+        <switchoffmsg>You push the button and the light shuts off leaing the desk dark.</switchoffmsg>
+        <switchedondesc>The light was yellow and warm</switchedondesc>
+        <switchedoffdesc>The lightbulb was one of those curly ones that save energy for the enviroment.</switchedoffdesc>
+        <look>It looks like the same kind of lamp that someone would use if they were working in a buisness cubicle. </look>
+        <alias>Desk Lamp</alias>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+      </object>
+      <object name="Ornate box">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <inherit name="container_lockable" />
+        <look>This box looked like it was meant to hold like royal jewels and things it was white like the rest of the room but it had gold trimming and a lock right in the middle of it.</look>
+        <open />
+        <close />
+        <isopen type="boolean">false</isopen>
+        <nokeymessage>You don't have the key that unlocks this awesome box.</nokeymessage>
+        <unlockmessage>The box unlocked with a click.</unlockmessage>
+        <lockmessage>The box locked with a click.</lockmessage>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>An</prefix>
+      </object>
+    </object>
+    <object name="Hamper">
+      <inherit name="editor_object" />
+      <look>It's just a regular hamper and it even had some dirty clothes in it...i bet it's not laundry day yet.</look>
+      <alias>Christian's Hamper</alias>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+    </object>
+    <object name="Bookshelf">
+      <inherit name="editor_object" />
+      <look>It was a largish bookcase that took up most of the wall that it was on but like the laptop and his door it wasn't white but it was a light brown and it was bursting with books of all kinds which were not white.</look>
+    </object>
+    <exit alias="west">
+      <inherit name="westdirection" />
+      <look>The door to his closet was white as well but for some reason you couldn't get into it...like there was something on the inside of something on the doorknob that was keeping it closed.</look>
+      <lookonly />
+    </exit>
+  </object>
+  <object name="Lily Room">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>Lily's room</alias>
+    <description><![CDATA[As the door opens you can see that this wasn't a typical girl's room the walls were bright pink but they were darkish purple almost like they wanted the walls to be black but they weren't trying to scare people away so they went with a purple. The carpet on the floor was the only thing that was purple and it made the room look inviting to someone who wanted to come visit. <br/><br/>She had everything a typical room would have on the wall that the door opened up on the bed was extended off the wall. <br/><br/>But there was something off about this room it didn't seem as livable like the others that you've been too. It felt musty and a little cold almost like noone's ben in this room for a while there were books like the ones in the basment scattered all over the place and there was dust everywhere. <br/><br/>The bed looked like no one had slept in it for a while. Just like maddie's room there was a window leading outside of the house but instead of looking out into the forest this was looking out into a field of flowers behind the house so her room was brighter then maddie's. There was also a desk underneath the window also with a bunch of books almost as thick as the ones in the basment but there was also a thick layer of dust covering everything meaning that no one has touched them in quite a long time.<br/><br/>]]></description>
+    <beforeenter type="script">
+      EnableTimer (Baby bunny)
+    </beforeenter>
+    <onexit type="script">
+      DisableTimer (Baby bunny)
+    </onexit>
+    <exit alias="north" to="Hallway 2">
+      <inherit name="northdirection" />
+      <look>Her door like her carpet were a darkish purple and like your room and Christian's the door was painted over the original color.</look>
+    </exit>
+    <object name="Lily">
+      <inherit name="editor_object" />
+      <inherit name="female" />
+      <look><![CDATA[She was older then Maddie and from what you could see she was a looker. She looked to be around her very early twenties or her late teens. <br/><br/>Since she was around that age she had grown into her body quite well and had some well devoloped curves. Though when she caught you looking she got a wierd growling look at you and it was the bad growly. <br/><br/>She wasn't as tall as Christain but she was taller then maddie she had blonde hair and liked to wear a lot of purple for some reason...though her room could have given you a clue as to her favorite color choice....]]></look>
+      <ask type="scriptdictionary">
+        <item key="yourself">
+          msg ("*She had a worried look on her face* You don't remember anything about youself... that shouldn't happen i'll have to ask Christain about it but just know that we're not going to hurt you so you're safe here with us.")
+        </item>
+        <item key="Christian">
+          msg ("*She blushed a little* He's my boyfriend! We've been together...since we were little kids till...that happened and then when i came back we started off where we left off though...that... well *then she blushed some more and didn't want to say anything else*")
+        </item>
+        <item key="Maddie">
+          msg ("Oh you mean my little Hunny Bunny maddie's like a daughter/ little sister to me! When we were growing up christain and i used to help take care of her since she was around 6 and 7 at the time so she's my family.")
+        </item>
+        <item key="orbs">
+          msg ("You found one of them? Well Christian is the one who knows most about them but thier some kind of key that he used so he could lock the portal to the other demension.")
+        </item>
+      </ask>
+      <tell type="scriptdictionary">
+        <item key="bunny">
+          msg ("You found a bunny! *huggles it but she didn't squeal* well i dont think you should keep it it has a family you should try looking in the forest.")
+        </item>
+      </tell>
+    </object>
+    <object name="bed3">
+      <inherit name="editor_object" />
+      <alias>Lily's bed</alias>
+      <look>Just like the rest of her room it was awash with the color purple though her pillows were black it didnt look well slept in for a while...</look>
+      <alt type="stringlist">
+        <value>Lily's bed</value>
+      </alt>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Sleep</value>
+      </displayverbs>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <sleep type="script">
+        set (player, "days", player.days+1)
+        msg ("You feel yourself drift away to dreams that don't make any sense to you if only you could figure out who you were and why they wanted you.")
+      </sleep>
+    </object>
+    <object name="desk">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <hidechildren />
+      <listchildren />
+      <look>It looked almost like a clone of the one in Maddie's room but this one was covered in a layer of dust and piled with books just like the floor. There didn't seem to be anything else ontop of the desk but there might be something under the books or inside the drawer. </look>
+      <alias>Lily's Desk</alias>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <object name="floor books">
+        <inherit name="editor_object" />
+        <look>This book was the size of a poptart and it was very small it was a deep reddish purple and it had a clasp on it but the clasp looked like someone had tried to pry it open with a screwdriver so the lock was broken so if you had the key you wouldn't be able to open it anyway so the secrets of the book were forever hidden unless there was a way to burn or melt away the clasp without hurting the book.</look>
+        <alias>Little red book</alias>
+        <take />
+        <takemsg>You take the poptart book with the broken lock. Maybe you can find something to help open the clasp and look at the secrets withen,</takemsg>
+        <dropmsg>You leave the book alone knowing that you'll never be able to figure out the secrets withen the book.</dropmsg>
+      </object>
+      <object name="desk books">
+        <inherit name="editor_object" />
+        <look>This book was like the twin to the little red one but this one was green. The clasp on this one wasn't broken but you couldn't lock it anyway so you'd be able to read it. There was a picture of a little flower on the front of it so it might be a plant book.</look>
+        <read type="string"></read>
+        <take />
+        <takemsg>You take the little green book. Maybe it can help you plant a garden?</takemsg>
+        <dropmsg>You leave the book alone knowing you aren't going to grow mushrooms anytime soon.</dropmsg>
+        <alias>Little Green Book</alias>
+      </object>
+      <object name="book3">
+        <inherit name="editor_object" />
+        <look>It looked like no other book you've seen before because it was a metal book. The front cover had a knight on it and it looked like it was gaurding something. </look>
+        <alias>Metal book</alias>
+        <touchthe>As your hand touchs the cover of the book the little knight on the front raises its sword and points it at you. </touchthe>
+        <tapthe>The knight swings it's sword and the metal of the book raises as the sword goes toward your finger.</tapthe>
+      </object>
+      <object name="book4">
+        <inherit name="editor_object" />
+        <look>This book was like a regular book made out of cardboard and paper the cover was half pink and half blue. It kinda looked like the kinda book you would read if you were going to have twins. It even had a combination of the male and female signs on the front so it could be a pregenancy book.</look>
+        <alias>Cotton Candy Book</alias>
+        <usedefaultprefix />
+      </object>
+      <object name="book5">
+        <inherit name="editor_object" />
+        <look>This was like the pink and blue book but this one was a bright yellow book and instead of cardboard it felt like the cover of the book was covered in feathers. Really soft feathers.</look>
+        <touchthe>Your hand went over the soft yellow feathers and it felt like you were petting a little tiny bird.</touchthe>
+        <alias>Yellow book</alias>
+      </object>
+      <object name="book6">
+        <inherit name="editor_object" />
+        <look><![CDATA[This book didn't even look like a book anymore. The cover was chewed up and torn the pages were almost fallinging out and the spine was damanged to the point that if you picked it up it would probably fall apart there were words on the cover but sincei twas so chewed up you couldn't read what the front of it said but the last two letters were EN.<br/><br/>But even though the book was so badly damanged you couldn't help but notice that it seemed important somehow...you should probably take it...<br/>]]></look>
+        <alias>Damaged Brown book</alias>
+        <take />
+        <takemsg>You carfully pick it up so that you don't damage it more then before.</takemsg>
+        <drop type="boolean">false</drop>
+        <giveto type="scriptdictionary">
+          <item key="portal">
+            MoveObject (Green Purple sphere, Back Room)
+            msg ("As you place the book onto the pedistal it burst into flames. And not just regular flames these were green flames. And what was left behind wasn't ashes but a purple and green sphere sitting on the pedistal.")
+            RemoveObject (book6)
+          </item>
+        </giveto>
+      </object>
+    </object>
+    <object name="dust">
+      <inherit name="editor_object" />
+      <look>It's just like all the other dust that's covering the room it was thick and grey.</look>
+      <scenery />
+      <swipeat>Your hand slides through the dust and it coats it but it makes the dust float around the air and it's getting hard to breathe now.</swipeat>
+      <blowatthe>You take a deep breath and huff at the dust but some of it gets in your face and into your noise and it's making you want to sneeze.</blowatthe>
+    </object>
+    <exit name="Lilys Closet" alias="west" to="Lilys closet">
+      <inherit name="westdirection" />
+      <look>It's just a plain ordinary door that looks like it could be hiding the secret's of the universe....or dirty clothes?</look>
+    </exit>
+    <object name="lily floor">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <scenery />
+      <look>It's a brown carpet and that hadn't been walked on for a few years and was covered in dust that flew up into the air if you walked to hard on it. There were also more books scattered on the floor about 7 of them.</look>
+      <hidechildren />
+      <listchildren />
+      <object name="book7">
+        <inherit name="editor_object" />
+        <alias>Green Book</alias>
+        <look>It was to dirty to make out the title or the color or the words. It might not even be a book.</look>
+      </object>
+      <object name="book8">
+        <inherit name="editor_object" />
+        <alias>Orange Book</alias>
+        <look>It's one of the newest books you've ever seen it's even still in it's plastic bag.</look>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>An</prefix>
+      </object>
+      <object name="book13">
+        <inherit name="editor_object" />
+        <alias>Pink Book</alias>
+        <look>This book was laying ontop of the new orange book that's still in a plastic bag. It's pink and it's really thin almost a magazine really...</look>
+        <takemsg>Sorry you shouldn't really take this book magazine thing...lily might get mad.</takemsg>
+      </object>
+      <object name="book12 hallow">
+        <inherit name="editor_object" />
+        <inherit name="container_limited" />
+        <containermaxobjects>Sorry there's no more room in here.</containermaxobjects>
+        <isopen type="boolean">false</isopen>
+        <openmsg>When you open the book instead of paper's you see that it's hallow on the inside and there's something inside it.</openmsg>
+        <closemsg>You close the book so that anyone else looking for it will just think it's a regular book.</closemsg>
+        <alias>Royal Purple Book</alias>
+        <look>This book looked a little too perfect to be a real book. It was a Royal Purple and it was painted with the letters T and S right on the front of it.</look>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>Take</value>
+        </displayverbs>
+        <take />
+        <takemsg>You pick up the book and it doesn't feel like it should it was a little too light and it felt cold like metal and you could hear something rattleing around inside of it.</takemsg>
+        <dropmsg>You let go of the book and it makes a clang noise.</dropmsg>
+        <object name="Purple Sphere">
+          <inherit name="editor_object" />
+          <look>This sphere was the same size and shape as the others but this one was a deep Royal Purple and had a Star in the middle of it with sparkles that almost looked like the large star in front.</look>
+          <takemsg>As you take the purple sphere you could feel almost like an electrivty in the air almost like when there was a thunderstorm in the area.</takemsg>
+          <dropmsg>When you drop it the feeling of electricy on the back of your neck goes away.</dropmsg>
+          <take />
+          <use type="script">
+            msg ("When you focus on it you felt the electricty on the back of your neck flow into you and you felt Powerful.")
+            SetObjectFlagOn (player, "Magic")
+          </use>
+          <selfuseon type="scriptdictionary">
+            <item key="Portal">
+              msg ("The sphere dissappears and the portal turns from white to Purple.")
+            </item>
+          </selfuseon>
+        </object>
+      </object>
+      <object name="book11">
+        <inherit name="editor_object" />
+        <alias>Black book</alias>
+        <look>This is just a book..nothing special about it.</look>
+        <scenery />
+      </object>
+      <object name="book10">
+        <inherit name="editor_object" />
+        <alias>Purple book</alias>
+        <scenery />
+        <look>This is just a book...nothing special about it.</look>
+      </object>
+      <object name="book9">
+        <inherit name="editor_object" />
+        <alias>White book</alias>
+        <scenery />
+        <look>This is just a book...nothing special about it.</look>
+      </object>
+    </object>
+  </object>
+  <object name="Maddie Room">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>Maddie's Room</alias>
+    <description><![CDATA[As you open the door the first thing you see is that the rooms walls and the cieling were painted an aqua blue it almost looked like you were on the bottem of the ocean the walls were that blue. <br/><br/>You can see a window right in front of you and through it you can see into the forest with all of it's tree's and the animals were running around the forest looking for a place to spend thier time. Underneath the window there was a desk with a lamp that was angled down on a laptop that was closed and an old looking book almost as old as the ones that you saw in the basment where you woke up but the title on this one was in english and it wasn't that thick maybe you'll be able to read this one? <br/><br/>To the right of the window her bed was up against the wall and it was surronded by a bunch of roses and other kinds of flowers that she must of picked out in the forest and the field on the other side of the house. They gave the room a nice sceant that floated around making you feel calm and rested and almost a little sleepy. <br/><br/>Right next to you on the wall that the door was opened at was a drawer that she kept all of her clothes in and there was a jewlery box on the top of it. <br/><br/>On the wall to the left was a bunch of art's and crafts stuff that looked like had been used quite recently and if you looked closer you might be able to find something in one of the art's and crafts boxs. <br/><br/>On the wall right next to the window was a key that looked smaller then the key you used on your guest room but it must unlock something. <br/><br/>The floor had a brown carpet that made the room look even more like the bottem of the ocean all that was missing was a bunch a fish somewhere maybe she hadn't made them yet or she hid them from you so you wouldnt think she was wierd. <br/><br/>]]></description>
+    <exit alias="north" to="Hallway 2">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="Des">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <hidechildren type="boolean">false</hidechildren>
+      <listchildren />
+      <look>It was an ordinary writing desk with a brown glossy finish but the legs looked like that had been chewed and scratched on. Meaning that whoever had owned it first had pets that liked to chew and scratch it up.</look>
+      <alias>Desk</alias>
+      <object name="Laptop">
+        <inherit name="editor_object" />
+        <look>It was a black gateway that was running window's but it was off and since it was a laptop it meant that it was locked with a password that wouldn't let you get into the computer you shouldnt snoop in a girl's computer anyway its rude!</look>
+        <alt type="stringlist">
+          <value>computer</value>
+          <value>pc</value>
+        </alt>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+      </object>
+      <object name="Spelbook">
+        <inherit name="editor_object" />
+        <alt type="stringlist">
+          <value>book</value>
+        </alt>
+        <look><![CDATA[The book was almost the same size as the laptop that was right next to it but it was three times as thick. The title on the book said. <br/><br/><b>MAGICAL ART'S FOR NOVICES.</b> <br/><br/>It looks like maddie was trying to do magic and she wasn't that good at it but if this book is real and it does what it says it does then maybe you'll be able to learn a thing or two if you read it. ]]></look>
+        <read>You open the book up to it's last read page because there was a bookmark opening it up. It was a chapter on how to make transformation potions and other kinds of potions most of the stuff that it listed was forign to you since you had skipped all of the other chapters before but the book was too big for you to take maybe if you find a smaller version you might be able to learn a thing or two and make your own potions?</read>
+        <drop type="boolean">false</drop>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>read</value>
+        </displayverbs>
+        <take type="boolean">false</take>
+        <takemsg>You shouldn't take things that don't belong to you.</takemsg>
+      </object>
+      <object name="Lamp">
+        <inherit name="editor_object" />
+        <inherit name="switchable" />
+        <switchonmsg>You click the Lamp on and it bathes the desk in warm yellow light.</switchonmsg>
+        <switchoffmsg>The light goes dark.</switchoffmsg>
+        <switchedondesc>The light was lighting up the desk since the sun was being blocked a litte by the forest.</switchedondesc>
+        <switchedoffdesc>It was dark in the room and if you wanted to read  the spellbook it would be hard to.</switchedoffdesc>
+        <look>The lamp was a small black one that was used in buisness to light up cubicles because of the small size and it's bright light.</look>
+      </object>
+    </object>
+    <object name="Bed1">
+      <inherit name="editor_object" />
+      <look><![CDATA[Her bed look soft and really comfterble to sleep on. <br/><br/>It had white sheets and a black bedspread. She only had two black pillows but there were stuffed animals sitting there waiting for her to come back and sleep with them. <br/><br/>There was a pony plushie but not any kind of pony it looked like one of the my little pony ponie's but it must have been a custom pony cause it didn't look like any of the ones from the show. There was a stuffed puppy a stuffed brown bear and a small stuffed bunny. <br/><br/>And you could see something underneath the bed hidden by the bedspread but enough was being shown that you could tell that it was something made of metal. <br/><br/>]]></look>
+      <alias>Soft bed</alias>
+      <lookunder type="script">
+        msg ("When you kneel next to the bed and look underneath it you see that there's a cauldren like the one's witchs use to make potions but this one was a tiny one that you could but on the floor and make small batchs of potions.")
+        MoveObject (Cauldron, Maddie Room)
+      </lookunder>
+      <sleep type="script">
+        set (player, "days", player.days+1)
+        msg ("You feel yourself drift away to dreams that don't make any sense to you if only you could figure out who you were and why they wanted you.")
+      </sleep>
+      <object name="Cauldron">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <close type="boolean">false</close>
+        <open type="boolean">false</open>
+        <hidechildren />
+        <look>It looked exactly like a witch's cauldron would but smaller so that it would be able to be used anywhere so it was portable.</look>
+        <object name="Stuffed fox">
+          <inherit name="editor_object" />
+          <alias>Mr. Fox plush</alias>
+          <look>It was a stuffed animal fox but it look a little real it was a red fox and almost as large as a real fox. </look>
+          <take />
+          <takemsg>You grab the fox out of the cauldron and it makes you feel happy holding it.</takemsg>
+          <dropmsg>You let go of the fox and it makes you sad just leaving it there all on it's own.</dropmsg>
+          <volume type="int">3</volume>
+          <inventoryverbs type="stringlist">
+            <value>Look at</value>
+            <value>Drop</value>
+          </inventoryverbs>
+          <ontake type="script">
+            AddToInventory (Stuffed foc)
+          </ontake>
+        </object>
+      </object>
+    </object>
+    <object name="Window1">
+      <inherit name="editor_object" />
+      <alias>Window</alias>
+      <look>You could see the forest on the other side of the window and you could see a den of bunnies running around the front of the forest entrence like they were looking for something.</look>
+    </object>
+    <object name="Jewlery Box Key">
+      <inherit name="editor_object" />
+      <take />
+      <takemsg>It's a small metal key to open the jewlery box.</takemsg>
+      <look>It wa the same color as the Jewlery box that it unlocks. </look>
+    </object>
+    <object name="Dresser">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <hidechildren />
+      <look>It's a normal chest of Drawers but you couldn't open the drawers cause that would be rude.</look>
+      <listchildren />
+      <object name="Jewlery Box">
+        <inherit name="editor_object" />
+        <inherit name="container_closed" />
+        <inherit name="container_lockable" />
+        <listchildren />
+        <openmsg>The top opens and lets you look inside it's velvity interior.</openmsg>
+        <closemsg>The little clasp in the front closes the box and makes it look like noone had ever opened it.</closemsg>
+        <listchildrenprefix>On the bottem of the box there is </listchildrenprefix>
+        <autoopen type="boolean">false</autoopen>
+        <nokeymessage>The clasp doesn't mvoe and it turns out that the box is locked.</nokeymessage>
+        <unlockmessage>The key slides into the lock then there was a click telling you that it unlocked.</unlockmessage>
+        <lockmessage>The key slides into the lock then there was a click telling you that it's locked.</lockmessage>
+        <autounlock />
+        <look>It was a jewlery box that kinda looked like a mini version of the chest in your room but this one needed a key to open.</look>
+        <key type="object">Jewlery Box Key</key>
+        <object name="Necklace">
+          <inherit name="editor_object" />
+          <take />
+          <takemsg>You take the necklace and place it in your pocket for later.</takemsg>
+          <look type="script">
+            msg ("It was a simple Silver necklace that had a wierd symbol on it and it looked like it would be big enough to fit you.")
+          </look>
+          <use type="script">
+            msg ("You feel a warm feeling wash over you and you feel normal again.")
+            SetObjectFlagOn (player, "normal")
+          </use>
+        </object>
+        <object name="White Sphere">
+          <inherit name="editor_object" />
+          <take />
+          <takemsg>You pick up the sphere.</takemsg>
+          <look>The orb was a milky white and it was the same size as a small apricot. It had 3 purple daimonds on the front of it and it was cool to the touch.</look>
+          <usedefaultprefix />
+          <alt type="stringlist">
+            <value>white ball</value>
+            <value>sphere</value>
+            <value>ball</value>
+            <value>orb</value>
+          </alt>
+          <dropmsg>You drop the sphere and it rolls away from you.</dropmsg>
+          <use type="script">
+            msg ("You felt something warm go from the sphere to your hand and then up your arm and you feel diffrent.")
+            SetObjectFlagOff (player, "normal")
+            SetObjectFlagOn (player, "Generosity")
+          </use>
+        </object>
+      </object>
+      <object name="jat">
+        <inherit name="editor_object" />
+        <alias>Jar of Pixie Dust</alias>
+        <scenery />
+        <look>It was a small jar like it used to hold a jelly or a jam of some kind but now it held some wierd golden glitter that seemed to be emitting a little light.</look>
+        <take />
+        <takemsg>You pick up the jar and for some reason it's a little lighter then you thought it should be.</takemsg>
+        <dropmsg>It falls but doesn't smash and it even bounced a little before rolling away.</dropmsg>
+      </object>
+    </object>
+    <object name="Rose wildflowers">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>It was a bunch of wild flowers that Maddie must have picked from the forest or the meadow behing the house that you could see from Lily's room window they even smelled nice.</look>
+      <smell>They smelled nice but they tickled you nose a little and it felt a little like you were about to sneeze.</smell>
+    </object>
+    <object name="Arts crafts">
+      <inherit name="editor_object" />
+      <look>There were a bunch of arts and crafts items like color pencils regular pencils and all kinds of paper and arts supplies that looked well used.</look>
+    </object>
+  </object>
+  <object name="Guest Room">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>Your room</alias>
+    <description type="script"><![CDATA[
+      firsttime {
+        msg ("The walls were painted a light grey not to dark to be depressing but grey anyway. The ceiling had a fan. There was a brown carpet on the floor and the room was empty. <br/><br/>There was a window with blue curtains letting in the only light that was in the room shining on a dresser that had a small little chest ontop of it. There was also a little backpack leaning up against the side of the dresser and it didnt look like there was anything inside it. <br/><br/>There was also a king sized bed waiting for you with grey wool blankets ontop of it and as you saw it you noticed that you were very very tired even though you had just woken up in the basment. Maybe once you take a nap you can go and search for the other girl or the guy and have them explain why you were there and who they were. ")
+      }
+      otherwise {
+        msg ("The walls were painted a light grey not to dark to be depressing but grey anyway. The ceiling had a fan. There was a brown carpet on the floor and the room was empty. <br/><br/>There was a window with blue curtains letting in the only light that was in the room shining on a dresser that had a small little chest ontop of it. There was also a little backpack leaning up against the side of the dresser and it didnt look like there was anything inside it. <br/><br/>There was also a king sized bed waiting for you with grey wool blankets ontop of it and as you saw it you noticed that you were very very tired even though you had just woken up in the basment.")
+      }
+    ]]></description>
+    <firstenter type="script">
+      CloneObjectAndMove (Grey Door, Guest Room)
+    </firstenter>
+    <exit name="Your room 2" alias="south" to="Hallway">
+      <inherit name="southdirection" />
+      <scenery type="boolean">false</scenery>
+      <look>Back through the grey door to the hallway!</look>
+    </exit>
+    <object name="Window">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <look>It's just a plain window with some grey old looking window shades and there was some dust on them. But it was big enough to if you were to sueeze through get outside from your room.</look>
+      <openscript type="script">
+        msg ("A slight breeze flows into the room rustling the drapes and cooling you off.")
+      </openscript>
+      <closescript type="script">
+        msg ("The breeze gets cut off and it starts to get a little stuffy in the room.")
+      </closescript>
+      <squeezethrough type="script">
+        if (Window.isopen) {
+          msg ("As you squeeze through your foot gets caught on the window sill and you fall over and onto the soft grass of the front lawn.")
+          MoveObject (player, Front of house)
+        }
+        else {
+          msg ("Are you a ghost? You can't go through solid objects!!")
+        }
+      </squeezethrough>
+    </object>
+    <object name="Bed">
+      <inherit name="editor_object" />
+      <look>It was an ordinary twin sized bed. Keeping with the look of the room it was covered in a grey blanket and grey sheets and even had grey pillows on it. Though it looked a little old it looked really soft and well put together so you could probably use it to barricade your door if something were to come through.</look>
+      <layon>you lay back down on the bed and the tension in your muscles eases and you feel relaxed.</layon>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>sleep</value>
+        <value>lay on</value>
+      </displayverbs>
+      <alt type="stringlist">
+        <value>my bed</value>
+      </alt>
+      <sleep type="script">
+        set (player, "days", player.days+1)
+        msg ("You feel yourself drift away to dreams that don't make any sense to you if only you could figure out who you were and why they wanted you.")
+      </sleep>
+      <turnscript name="Days">
+        <script><![CDATA[
+          player.Days => {
+            player.Days = player.Days+1
+          }
+        ]]></script>
+      </turnscript>
+    </object>
+    <object name="dresser">
+      <inherit name="editor_object" />
+      <inherit name="container_limited" />
+      <hidechildren type="boolean">false</hidechildren>
+      <listchildren />
+      <transparent type="boolean">false</transparent>
+      <maxobjects type="int">3</maxobjects>
+      <isopen type="boolean">false</isopen>
+      <look>It was a regular set of drawers that were a little empty...it seems that you don't have any clothesFirst Drawer to wear maybe you can ask them where you could get some? Maybe if you open it up there might be something in there?</look>
+      <containerfullmessage>Sorry there isn't any room for more stuff...</containerfullmessage>
+      <close type="boolean">false</close>
+      <open type="boolean">false</open>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <alias>Your Dresser</alias>
+      <object name="First Drawer">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <isopen type="boolean">false</isopen>
+        <openmsg>You pull open the drawer and look inside for something.</openmsg>
+        <closemsg>You push the drawer back in for later.</closemsg>
+        <look>It was  a pull out drawer that was the same color as the whole dresser with an ornate handle that you could use to pull it open.</look>
+        <onopen type="script">
+          msg ("You pull the handles and look inside the drawer to see what was inside.")
+        </onopen>
+        <onclose type="script">
+          msg ("You push the drawer back into the dreser.")
+        </onclose>
+        <object name="Paper Package">
+          <inherit name="editor_object" />
+          <inherit name="container_closed" />
+          <close />
+          <take />
+          <takemsg>You pick up the package.</takemsg>
+          <drop type="boolean">false</drop>
+          <dropmsg>You should really open it.</dropmsg>
+          <look type="script">
+            if (GetBoolean(player, "MaleNormal")) {
+              msg ("It was a small paper package wrapped in butcher paper and tied up with twine but you already knew what it was cause there was a large tag on it that said HIS CLOTHES. These must be the clothes that maddie told you were in your room. It didn't seem lke enough but maybe they would get you more if you asked or you would have to go and get some more later. You should open it so you can see what kind of clothes they were and if they would fit you.")
+            }
+            else if (GetBoolean(player, "FemaleNormal")) {
+              msg ("It was a small paper package wrapped in butcher paper and tied up with twine but you already knew what it was cause there was a large tag on it that said HER CLOTHES. These must be the clothes that maddie told you were in your room. It didn't seem lke enough but maybe they would get you more if you asked or you would have to go and get some more later. You should open it so you can see what kind of clothes they were and if they would fit you.")
+            }
+          </look>
+          <onopen type="script">
+            msg ("You rip open the paper and get a full outfit.")
+            RemoveObject
+            AddToInventory
+          </onopen>
+        </object>
+      </object>
+      <object name="Second Drawer">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <look>It was  a pull out drawer that was the same color as the whole dresser with an ornate handle that you could use to pull it open just like the other two.</look>
+      </object>
+      <object name="Third Drawer">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <look>It was  a pull out drawer that was the same color as the whole dresser with an ornate handle that you could use to pull it open but the handle on this one felt a little loose so don't open it to hard.</look>
+      </object>
+    </object>
+    <object name="Backpack">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <look>It was a simple little backpack that you can take with you so that you can carry things and make it more comfterble to walk around.</look>
+      <alias>backpack</alias>
+      <alt type="stringlist">
+        <value>Bag</value>
+        <value>pack</value>
+      </alt>
+      <take />
+      <takemsg>You put the backpack on and it fits snuggly on your back</takemsg>
+      <dropmsg>it slips off your back and sits lonley on the floor waiting for someone else to wear it.</dropmsg>
+      <isopen type="boolean">false</isopen>
+      <openmsg>You pull the zipper to the right and it opens up to reveal whats inside.</openmsg>
+      <closemsg>You zip it up and close it from the outside world.</closemsg>
+      <listchildren />
+      <listchildrenprefix>There is </listchildrenprefix>
+      <ontake type="script">
+        AddToInventory (Backpack)
+      </ontake>
+      <object name="paper">
+        <inherit name="editor_object" />
+        <look>It looked like a paper that had been ripped out of a notebook and it looked kinda used there were creases on it showing that it had been folded over and over again and it also looked like it ahd been crushed one time but whatever was written on it was still readable but not all of it.</look>
+        <alias>Note</alias>
+        <alt type="stringlist">
+          <value>paper</value>
+          <value>note</value>
+          <value>page</value>
+        </alt>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>Take</value>
+        </displayverbs>
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Use</value>
+          <value>Drop</value>
+          <value>read</value>
+        </inventoryverbs>
+        <read type="script"><![CDATA[
+          msg ("I am writing this down so that i won't forget how to open it just in case i do something to my mind or i'm too scared to figure it out or someone else wants to open up the lock in the back room across the hall near the living room.")
+          PrintCentered ("This is the right order the sphere's have to go in to unlock the portal in the back room.<br/>White<br/>Light Blue<br/>Orange<br/>Pink<br/>Yellow<br/>Purple<br/>Green purple<br/><br/>You need to use them in this order or they wont work<br/>")
+          msg ("The rest of the note was to damaged to read but you could make out the words Maddie and white.")
+        ]]></read>
+      </object>
+    </object>
+    <object name="Little Chest">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <hidechildren />
+      <listchildren />
+      <openmsg>The hinges squeak like it handed been opened for a while.</openmsg>
+      <closemsg>It squeaked again maybe you need to keep using it to stop the sqeaking.</closemsg>
+      <locked type="boolean">false</locked>
+      <autoopen type="boolean">false</autoopen>
+      <nokeymessage>You do not have the key.</nokeymessage>
+      <unlockmessage>The lock clicks telling you it unlocked!.</unlockmessage>
+      <lockmessage>The lock clicks teling you it's locked.</lockmessage>
+      <canlockopen type="boolean">false</canlockopen>
+      <look>It was a small little chest that kinda looked like the tresure chests that you see in a pirate captian's room. It was a wooden chest with dull grey trimming and a gold colored lock in the middle of the top.</look>
+      <move>You slid it to the otherside. Is it in a better place?</move>
+      <alt type="stringlist">
+        <value>chest</value>
+      </alt>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Open</value>
+        <value>Close</value>
+        <value>unlock</value>
+        <value>lock</value>
+      </displayverbs>
+      <key type="object">chest key</key>
+      <object name="chest key">
+        <inherit name="editor_object" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>The</prefix>
+        <look>It's the same color as the chest it unlocks. It was a dull grey metal with a brown wood outline.</look>
+      </object>
+    </object>
+  </object>
+  <object name="Hallway 2">
+    <inherit name="editor_room" />
+    <description><![CDATA[This hallway was the same as the first hallway but this hallway ended with three doors in three directions it was a bathroom Lily's room and maddie's room. <br/><br/>The carpet was the same as the one from the first hallway but this one just had an overhead light and nothing on the walls.<br/><br/>]]></description>
+    <alias>Hallway</alias>
+    <exit alias="north" to="Hallway">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="west" to="Maddie Room">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="east" to="Bathroom">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="south" to="Lily Room">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="Light2">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <switchedon />
+      <switchoffmsg>You flip the switch and the hallway goes dark as you turn off the light.</switchoffmsg>
+      <switchonmsg>You flip the switch and the hallway brightens up as the light is turned on.</switchonmsg>
+      <switchedondesc>The white light is hurting your eyes looking stright at it.</switchedondesc>
+      <switchedoffdesc>The light is off and it's a little hard to see with out it.</switchedoffdesc>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Switch on</value>
+        <value>Switch off</value>
+      </displayverbs>
+      <alt type="stringlist">
+        <value>Light</value>
+      </alt>
+      <alias>Overhead Light </alias>
+      <look>It was the same light as the kinds you see in buisnesses or the store and it was giving off the same harsh white light that hurt your eyes when you stared right into it the whole time.</look>
+      <scenery />
+    </object>
+    <object name="Wall">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>It was the same white wall that was in the rest of the house and didn't have anything on them like the walls of the first hallway.</look>
+    </object>
+    <object name="floor">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>Its just a regular brown carpet that looked like it was the one that the house came with it was a clean carpet so they have been vaccuming it regularly.</look>
+    </object>
+  </object>
+  <object name="Bathroom">
+    <inherit name="editor_room" />
+    <description><![CDATA[It was the only bathroom in the house so it had to be large though because it was a house with two teenage girls in it there was a bunch of make up and feminine products in here. <br/><br/>There was a large shower on the far wall opposite the door you took to get in here the toilet was right next to that and it was facing the door so if anyone tried to come in you could see before they did.<br/> <br/>The sink, mirror and the Medicine Cabinet was the left adjacent wall from the doorway and they were very clean and didn't have any soap stains or fingers prints on it.]]></description>
+    <exit alias="east" to="Hallway 2">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="Shower">
+      <inherit name="editor_object" />
+      <look>It was a normal shower with a bunch of soaps and shampoos probably from the girls and the shower curtain was just a seris of blue polka dots on a field of green.</look>
+    </object>
+    <object name="Sink1">
+      <inherit name="editor_object" />
+      <alias>Sink</alias>
+      <look>It was  metal sink that you could use to brush your teeth or wash your hands.</look>
+    </object>
+    <object name="Mirror1">
+      <inherit name="editor_object" />
+      <alias>Mirror</alias>
+      <look>It was a large mirror that you could see yourself in finally since you got here and you look nice.</look>
+    </object>
+    <object name="Toilet">
+      <inherit name="editor_object" />
+      <look>It's a toilet...just a normal white Toilet.</look>
+    </object>
+    <object name="Medicine Cabinet">
+      <inherit name="editor_object" />
+      <look>It was a medicine cabinet off to the left side of the mirror but it had a lock since medicine is dangerous but there might be other things in there that you dont want to know.</look>
+    </object>
+  </object>
+  <object name="Front of house">
+    <inherit name="editor_room" />
+    <description><![CDATA[As you walk through the door you feel better knowing that you didnt have to be confined in that house the whole time. Knowing you can leave the house whenever you wnat made you feel better but that was short lived as you couldn't see anything around you that could be used as a landmark showing you where you were in the world. <br/><br/>Not like you could remember ever being here anyway since you couldn't remember anything not even your name. When you look in front of you there's a path leading to the left and to the right in front of the gate that's surrounding the house. There's a mailbox in front of the gate telling you that they aren't in the middle of nowhere and that a mailman comes out here and delivers the mail so you're not alone. The gate has a hinge and it was hanging open telling you that someone has been through it and they forgot to close it. <br/><br/>To the right there's a forest the one that you could see through the window in Maddie's room and the path winds right into the darkness of the forest so you couldn't see if theres anything at the end of it you might just have to explore to the right you couldn't see anything since the forest extends to the front of the house and to the right as well but there aren't any paths leading into it so it'll be more dangerous to go into there the path that leads to the right goes around the house and leads to behind it maybe to the plains area you could see from lily's window maybe if you go over there you can stand on one of the hills and look to see if you can spot another house or a town...or another human being. <br/><br/>Other then that there was nothing else out here but there was a waterhose laying in the front yard rolled up in the tall uncut grass.]]></description>
+    <exit alias="south" to="Living room">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="Uncut grass">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>It was a lush thick lawn that covered your shoes and went up to almost the top of your socks someone should probably cut it but it looks really comfterble to lie on. </look>
+      <lie>You lay down on the grass and you let the smell waft over you and it makes you relax. </lie>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+    </object>
+    <object name="fence">
+      <inherit name="editor_object" />
+      <scenery />
+      <look><![CDATA[It was an ordinary metal fence with the holes in them to let the wind through but to keep leaes and large animals out of the yard.
+<br/><br/>                                                                                                                                                                                                                         ]]></look>
+    </object>
+    <object name="path">
+      <inherit name="editor_object" />
+      <look>The path was made of cobblestone's and led out of the fence surronding the house and to the left and the right.</look>
+    </object>
+    <object name="mailbox">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <look>It was a typical mailbox the half cylinder shaped one that was grey and had the little red flag on the side of it the little flag was up so it meant that there was something inside the mailbox. Maybe it's chocolate?!</look>
+      <openmsg>You hear the sound of metal grating together as you open the little door in front of the mailbox.</openmsg>
+      <closemsg>You hear the metal grating together again as the door to the mailbox shuts closed.</closemsg>
+      <listchildren />
+      <hidechildren type="boolean">false</hidechildren>
+      <listchildrenprefix>There is </listchildrenprefix>
+      <object name="Package">
+        <inherit name="editor_object" />
+        <inherit name="openable" />
+        <close type="boolean">false</close>
+        <look>It was a small round package and it wasa wrapped in brown butcher paper? Maybe it is chocolate...</look>
+        <take />
+        <takemsg>You pull out the package </takemsg>
+        <drop type="boolean">false</drop>
+        <dropmsg>For some reason you want to open the package more then you want to get rid of it.</dropmsg>
+        <openscript type="script">
+          msg ("You rip open the pacakge and drop the paper on the floor.")
+          RemoveObject (Package)
+          AddToInventory (Green Potion)
+          AddToInventory (note)
+        </openscript>
+        <object name="Package paper">
+          <inherit name="editor_object" />
+          <look>It's the ripped up paper box that held the potion and the note maybe you should get rid of it.</look>
+          <alias>Paper Box</alias>
+          <dropmsg>You dop the paper box. Litterer!!</dropmsg>
+          <alt type="stringlist">
+            <value>package</value>
+          </alt>
+        </object>
+      </object>
+    </object>
+    <exit alias="north" to="Front of gate">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="Kitchen">
+    <inherit name="editor_room" />
+    <description><![CDATA[When you walk into the kitchen which was preaty easy since there weren't any doors cosing off the kitchen from the rest of the house. It was an open kitchen so you could see the stuff from the living room. <br/><br/>Right directlyu in front of you you could see the Refridgorator the Stove and the counters with the Sink between them. <br/><br/>Right in the middle of the kitchen was three cabinets making up an island that someone could sit down and eat thier lunch or breakfast or someone could use to make thier dinner and what-not. On the counter part of the island there was a countainer with salt inside it and a bag of suger that looked like it was almost empty and it might have enough sugar to make something. <br/><br/>One of the counters next to the stove was a microwave that was plugged into the wall and sitting in the corner that was unplugged was a coffeepot ready to make coffee. <br/><br/>One of the counters the one to the left of the sink had a drawer in it Christain won't mind if you look through it right? It's not like they have secrets they need to hide from you right? <br/><br/>On the counter to the right of the sink there was metal bowl and a pan used to bake a cake like someone was in the process of making one but something happened and they just took the bowl and the pan out. <br/><br/>]]></description>
+    <exit alias="north" to="Living room">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="Fridge">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <look>It was a double doored stainless steel fridge since it was stainless steel the front diffrent have all of those little magnets and things that someone's fridge would half. Thier on the sides of it!</look>
+      <alt type="stringlist">
+        <value>icebox</value>
+        <value>refridgerator</value>
+      </alt>
+      <isopen type="boolean">false</isopen>
+      <listchildren />
+      <onopen type="script">
+        msg ("You open the fridge door which is the left one and you see all of the things a fridge would have.")
+      </onopen>
+      <onclose type="script">
+        msg ("You close the door so that it wouldn't make the kitchen closed and make all of the food go bad.")
+      </onclose>
+      <object name="eggs">
+        <inherit name="editor_object" />
+        <inherit name="container_closed" />
+        <look>It was an ordinary carton of eggs but it seemed light. There might not be that many eggs left.</look>
+        <onopen type="script">
+          msg ("You lift the carboard top.")
+        </onopen>
+        <onclose type="script">
+          msg ("You close the carboard top.")
+        </onclose>
+        <object name="egg 1">
+          <inherit name="editor_object" />
+          <look>This is just a regular white egg that you would use to make breakfast or make a cake with!</look>
+          <alias>Egg</alias>
+          <take />
+          <takemsg>You pull the egg out of the carton better use it before it turns into a rotton egg.</takemsg>
+          <dropmsg>You let go of the egg and it gets destroyed so no more cake...</dropmsg>
+          <ondrop type="script">
+            RemoveObject (egg 1)
+          </ondrop>
+        </object>
+        <object name="egg 2">
+          <inherit name="editor_object" />
+          <look>This is just a regular white egg that you would use to make breakfast or make a cake with!</look>
+          <alias>Egg</alias>
+          <takemsg>You pull the egg out of the carton better use it before it turns into a rotton egg.</takemsg>
+          <take />
+          <dropmsg>You drop the egg and it cracks all over the floor so no more cake!</dropmsg>
+          <ondrop type="script">
+            RemoveObject (egg 2)
+          </ondrop>
+        </object>
+      </object>
+      <object name="Milk">
+        <inherit name="editor_object" />
+        <inherit name="edible" />
+        <look>It was a small carton of milk that didnt seem that full but it looked to be enough to make something with it or you could drink it?</look>
+        <take />
+        <takemsg>You take the carton of milk. Better take it before it curddles and makes you smell gross.</takemsg>
+        <dropmsg>You drop the milk and it spills...hope you don't cry about it though.</dropmsg>
+        <eatmsg>You open the carton of milk and drink it down!</eatmsg>
+        <ondrop type="script">
+          RemoveObject (Milk)
+        </ondrop>
+      </object>
+      <object name="Cheese">
+        <inherit name="editor_object" />
+        <look>It was a small bag of Mozzerella cheese that was half full i bet you could make something with this? But what could you do?</look>
+        <alias>Bag of Mozzerella</alias>
+        <take />
+        <takemsg>You grab the bag maybe you can cook something with it.</takemsg>
+        <dropmsg>You drop the bag if you don't put it back into the fridge it's going to go rotton and make the place smell!</dropmsg>
+      </object>
+      <object name="Soda can">
+        <inherit name="editor_object" />
+        <alias>Coke</alias>
+        <look>It was a solitary can of coco cola waiting for someone to open it and drink it.</look>
+        <take />
+        <takemsg>You grab the soda and it fills chilly in your hand.</takemsg>
+        <dropmsg>You drop the can and as you do it makes a dent in the can and if you open it up then it'll spray you in the face.</dropmsg>
+      </object>
+      <object name="Leftover Food 1">
+        <inherit name="editor_object" />
+        <take />
+        <takemsg>You take the plastic bowl and you might want to eat it.</takemsg>
+        <dropmsg>You leave it alone and it'll porbably stay good since it's in a plastic bowl.</dropmsg>
+        <look>It's just a plastic container with some leftover food...wonder if it's still good?</look>
+      </object>
+      <object name="mustard">
+        <inherit name="editor_object" />
+        <take />
+        <takemsg>What are you going to do with mustard?</takemsg>
+        <drop type="boolean">false</drop>
+        <look>It's a regular container of mustard.</look>
+      </object>
+      <object name="Ketchup">
+        <inherit name="editor_object" />
+        <takemsg>What are you going to do with ketchup?</takemsg>
+        <take />
+        <drop type="boolean">false</drop>
+        <look>It's a regular container of ketchup but it was half empty.</look>
+      </object>
+      <object name="Stick of butter">
+        <inherit name="editor_object" />
+        <look>It's a single stick of butter which you will need if you want to make a cake. </look>
+        <take />
+        <takemsg>You grab the butter. You're making a cake aren't you?</takemsg>
+      </object>
+    </object>
+    <object name="Oven">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <look>It's an old looking oven that looked like it's been cooking and heating things for years. It was well cleaned and looked like it was ready for you to make something?</look>
+      <bakeacake type="script">
+        if (Got()) {
+          msg ("You plave the pan with the batter inside the oven and almost immeditally you can smell the cake baking and somehow the bell dings moments after you close the oven door almost like the cake was made by magic!")
+        }
+      </bakeacake>
+    </object>
+    <object name="Cabinet">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <look>This is the cabinet to the left of the oven that has the drawer inside it so you can come here and look around inside it there is also a book ontop of it!</look>
+      <scenery />
+      <alias>Left Cabinet</alias>
+      <object name="Book of Recipes">
+        <inherit name="editor_object" />
+        <look>There was a pictue of a delicous looking cake on the front of it.</look>
+        <read type="script"><![CDATA[
+          msg ("You open up the book and you see that there's a recipe to make a decilous cake on the inside.")
+          PrintCentered ("REMEMBER YOU MUST FOLLOW THE RULES OF THIS RECIPE EACH STEP AFTER STEP OTHERWISE NO CAKE!<br/>Step 1 Add both of the eggs.<br/>Step 2 Add the Milk inside with the eggs.<br/>Step 3 Add the sugar to the bowl with the milk and the eggs.<br/>Step 4 Add the stick of butter with the other wet ingrediants.<br/>Step 5 Find something to mix the ingreadiants together into some kind of paste.<br/>Step 6 Add the Flour mixed with baking powder and salt to the mixture and mix again<br/><br/>Once you have done that put that in the cake pan place that in the oven and then you'll get your cake.<br/><br/>")
+        ]]></read>
+      </object>
+    </object>
+    <object name="Microwave">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <look>This microwave was large and looked like it could hold at last 3 boxes of pizza inside it or even a well seasoned turkey? Or maybe that leftover food in the fridge if it was still good.</look>
+    </object>
+    <object name="Sink">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <look>It was just an ordinary white sink with silver handles and a dish rag a sponge and a scrub brush behind the faucet ready to clean the dirty dishs. </look>
+      <switchedon type="boolean">false</switchedon>
+      <switchonmsg>You turn the handle and water starts to come out of the faucet.</switchonmsg>
+      <switchoffmsg>You turn the handle and the wate stopes coming out of the faucet.</switchoffmsg>
+      <switchedondesc>The water is coming out of the faucet and is going down the drain you should probably turn it off before you use up all of the water.</switchedondesc>
+      <switchedoffdesc>The inside of the sink was dry and and a little dirty maybe you should turn the water on.</switchedoffdesc>
+      <hidechildren />
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Switch on</value>
+        <value>Switch off</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+      <alt type="stringlist">
+        <value>sink</value>
+        <value>washbin</value>
+      </alt>
+      <onswitchon type="script">
+        msg ("After the water turned on you heard something else hit the bottem of the sink and it was making the water start to rise like something was blocking the drain.")
+      </onswitchon>
+      <onswitchoff type="script">
+        msg ("Now that the water was not coming into the sink anymore you could see what was blocking the drain in the sink.")
+        MoveObject (Light Blue Sphere, Kitchen)
+      </onswitchoff>
+    </object>
+    <object name="Counter 1">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <alias>Island Counter</alias>
+      <look>It was a set of three counters in the middle of the kitchen they were used as counters to cut up stuff and to eat on for breakfest. There wasn't anything on top of them at the moment but there could be later maybe you should look around the house?</look>
+      <hidechildren />
+      <listchildren />
+      <object name="Sugar">
+        <inherit name="editor_object" />
+        <look>It's an ordinary bag of cane sugar you'll need this if you want to make something made of Sugar!</look>
+      </object>
+    </object>
+    <object name="Stool">
+      <inherit name="editor_object" />
+      <sit>You sit on the stool and put your elbows on the island in the middle of the kitchen and it makes you wish you had something to eat.</sit>
+      <look>It was just a simple wooden stool with a red Cushion on it and it looked nice to sit on.</look>
+    </object>
+    <object name="Sponge">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>It was one of those double sided sponges the yellow ones with the rough green side on it that you could use on sticky stuff.</look>
+    </object>
+    <object name="washcloth">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>It was a tiny little blue washcloth that could be used to wash the dishes with.</look>
+    </object>
+    <object name="Scrub brush">
+      <inherit name="editor_object" />
+      <usedefaultprefix />
+      <scenery />
+      <look>This was a scrub brush that you would use tos scrub the hard stains on the dirty dishes.</look>
+    </object>
+    <object name="drawer">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <scenery />
+      <look>It's a kitchen drawer set inside the cabinet to the left of the oven that held various things that didnt have a home so they all came together here.</look>
+      <isopen type="boolean">false</isopen>
+      <listchildren />
+      <onopen type="script">
+        msg ("You pull on the handle and when you do most of the stuff on he inside shifts toward you.")
+      </onopen>
+      <onclose type="script">
+        msg ("The items inside shift again.")
+      </onclose>
+      <object name="needle">
+        <inherit name="editor_object" />
+        <look>It's a regular sowing needle that you can use to pop things or sow a blanket! </look>
+        <take />
+        <takemsg>You grab the needle be carful don't poke yourself with it! You might need it for something.</takemsg>
+        <dropmsg>you drop the needle...but you might need that later!</dropmsg>
+        <alias>Sewing Needle</alias>
+      </object>
+      <object name="thumbtacks">
+        <inherit name="editor_object" />
+        <alias>Box of Thumbtacks</alias>
+        <look>It's a plastic thumbtack box which a bunch of thumbtacks inside but you don't need them do you?</look>
+        <takemsg>Sorry you don't need them...</takemsg>
+      </object>
+      <object name="paperclips">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <look>There were a bunch of Paperclips everywhere just strewn throughout the drawer.</look>
+        <scenery type="boolean">false</scenery>
+      </object>
+      <object name="Wierd pendent">
+        <inherit name="editor_object" />
+        <look>This pendent was wierd it was just a simple little metal pendent that was shaped like a tiny fire emblem and it had a red ribbon attached to it that would let you put it on. Should  you take it?</look>
+        <alt type="stringlist">
+          <value>pendent</value>
+        </alt>
+        <take />
+        <takemsg>You grab the pendent and the metal of the flame felt warm to the touch.</takemsg>
+        <dropmsg>You drop the pendent.</dropmsg>
+      </object>
+      <object name="wadded up paper">
+        <inherit name="editor_object" />
+        <look>It's an old wadded up paper...maybe there's something written on it that's important why would they keep it in this drawer?</look>
+      </object>
+      <object name="pennys">
+        <inherit name="editor_object" />
+        <look>Just a bunch of old penny's?</look>
+      </object>
+    </object>
+    <object name="Freezer">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <scenery />
+      <look>It's the same as the fridge it's just oppisite looking since it's the right door instead of the left.</look>
+      <isopen type="boolean">false</isopen>
+      <listchildren />
+      <onopen type="script">
+        msg ("You open the left door of the fridge and immediatlly feel the chilly air of the freezer hit you.")
+      </onopen>
+      <onclose type="script">
+        msg ("You close the door quickly so you woulnd't freeze the whole house.")
+      </onclose>
+    </object>
+    <object name="top of fridge">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <look>It had a bunch of plastic baggys full of lollipops and a couple of boxes of cereal.</look>
+      <scenery />
+      <listchildren />
+    </object>
+    <object name="Cabinet 2">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <alias>Right Cabinet</alias>
+      <look><![CDATA[This is the cabinet to the right of the oven that has the metal bowl the metal pan for the cake and a dry mat that you can put wet untensials on after you wash them. <br/><br/>]]></look>
+      <object name="Metal Bowl">
+        <inherit name="editor_object" />
+        <look>This bowl was a large one that you could use to mix the batter for the cake? </look>
+      </object>
+      <object name="Cake pan">
+        <inherit name="editor_object" />
+        <look>This pan you could use to put the cake batter in so you can bake the cake.</look>
+      </object>
+    </object>
+  </object>
+  <object name="Back Room">
+    <inherit name="editor_room" />
+    <description><![CDATA[You walk into the backroom and you immeditally freeze cause only a couple of feet in front of you is a pedistal with a litte disc in the middle of it. <br/><br/>It looked to be sunken in in the middle like a bowl with 7 indents en-circling it kinda like it was some complicated lock for something in the room. <br/><br/>As you continue to look around you see that it's just an empty back room it has one light hanging down from the ceiling wood paneling on all of the walls and directly in front of you there's ripples in the wood. <br/><br/>]]></description>
+    <exit alias="west" to="Living room">
+      <inherit name="westdirection" />
+    </exit>
+    <exit name="Portal" alias="east" to="Pony Portal Limbo">
+      <inherit name="eastdirection" />
+      <locked />
+      <lockmessage>This Portal is locked maybe you need to gather some item's to open it??</lockmessage>
+      <lookonly type="boolean">false</lookonly>
+      <script type="script">
+        MoveObject (player, P Back Room)
+      </script>
+      <attr name="White Sphere" type="script">
+        if (Got(White Sphere)) {
+          SetObjectFlagOn (White Sphere, "")
+          msg ("The portal turned from a clear film to a milky white as the orb dissolved.")
+          RemoveObject (White Sphere)
+        }
+      </attr>
+    </exit>
+    <object name="portal">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <alias>Pedistal</alias>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>use</value>
+      </displayverbs>
+      <alt type="stringlist">
+        <value>pedistal</value>
+      </alt>
+      <listchildren type="boolean">false</listchildren>
+      <hidechildren />
+      <look type="script">
+        if (GetBoolean(portal, "white")) {
+          msg ("The portal is swirling with a milky white light but it still won't let you through.")
+        }
+        else if (GetBoolean(portal, "light blue")) {
+          msg ("The portal is a light blue like the sky.")
+        }
+        else if (GetBoolean(portal, "orange")) {
+          msg ("The portal is a darkish orange and it's making the room smell like apple's and it's making you hungry.")
+        }
+        else if (GetBoolean(portal, "pink")) {
+          msg ("The portal was a bright neon pink that by just looking at it made you want to smile and start laughing.")
+        }
+        else if (GetBoolean(portal, "yellow")) {
+          msg ("The portal was a light canary yellow that made you mellow and happy.")
+        }
+        else if (GetBoolean(portal, "purple")) {
+          msg ("The portal is a deep royal purple and the hair on the back of your neck rises as you feel the electricty of the magic of the portal flowing around the room and in the floor and you can tell that it's almost ready to open.")
+        }
+        else if (GetBoolean(portal, "purple and green")) {
+          msg ("The portal is a deep royal purple but when you look into it you can't see through it anymore and all you see is the purple of the portal.")
+        }
+        else {
+          msg ("You could see little ripples on the wall of the room kinda like it was made of some kind of liquad or those waves you see on top of something really hot.")
+        }
+      </look>
+      <use type="script">
+        if (GetBoolean(portal, "green and purple")) {
+          UnlockExit (Portal)
+        }
+        else {
+          msg ("Nothing happens and you don't feel any diffrent.")
+        }
+      </use>
+      <useon type="scriptdictionary">
+        <item key="White Sphere">
+          msg ("The orb dissolves and it turn's from clear to milky white.")
+          SetObjectFlagOn (portal, "white")
+          RemoveObject (White Sphere)
+        </item>
+        <item key="Light Blue Sphere">
+          SetObjectFlagOff (portal, "white")
+          SetObjectFlagOn (portal, "light blue")
+          msg ("The portal turns from White to Light blue as the sphere dissolves.")
+        </item>
+        <item key="Purple Sphere">
+          SetObjectFlagOff (portal, "yellow")
+          SetObjectFlagOn (portal, "purple")
+          msg ("The portal turned from a yellow swirl to a deep royal purple.")
+        </item>
+        <item key="Green Purple sphere">
+          SetObjectFlagOff (portal, "purple")
+          SetObjectFlagOn (portal, "green and purple")
+          msg ("This time the portal stayed the same color but you felt something happen in the room kinda like the air pressure changed and you could no longer see the back of the wall now you were staring at a deep purpe abyss begging you to jump in.")
+        </item>
+        <item key="Pink Sphere">
+          SetObjectFlagOff (portal, "orange")
+          SetObjectFlagOn (portal, "pink")
+          msg ("The portal turns from orange to pink. And from somewhere you hear a snorty giggle but it didn't scare you it made you want to smile.")
+        </item>
+        <item key="Orange Sphere">
+          SetObjectFlagOff (portal, "light blue")
+          SetObjectFlagOn (portal, "orange")
+          msg ("The portal looks like it was having a hard time changing from light blue to orange like they were having some kind of compitition on which color was the best one but the orange one won out and now there was a sceant of apples floating around the room and it was making you hungry.")
+        </item>
+        <item key="Yellow Sphere">
+          SetObjectFlagOff (portal, "pink")
+          SetObjectFlagOn (portal, "yellow")
+          msg ("The pnk in the portal spontanisously dissappered and it was clear again but on the very edge you could see a little color but it seemed to be scared and when you look at it it dissapperes and then comes back and slowly starts to fill out the color so it was a soft canary yellow now.")
+        </item>
+      </useon>
+      <give type="scriptdictionary">
+        <item key="book6">
+          AddToInventory (Green Purple sphere)
+          msg ("As you place the book onto the pedistal it burst into flames. And not just regular flames these were green flames. And what was left behind wasn't ashes but a purple and green sphere sitting on the pedistal.")
+          RemoveObject (book6)
+        </item>
+      </give>
+    </object>
+  </object>
+  <object name="P Back Room">
+    <inherit name="editor_room" />
+    <description><![CDATA[You tripped on the lip of the portal and it caused you to fall foward out of it. <br/><br/>When you looked around the room minding the fact that you felt a little dizzy from going through a mystirious portal it looked to be the same as the room you just came in making you think that it was just a lighting effect and you had hit your head on the wall behind the portal except that this room didn't have a large pedistal in the middle of it and this one also had a full length mirror on the wall oppisite the portal.<br/><br/>You also feel a wierdness with your body almost like the way you felt when you woke up in the basment. Since you're a little disorianted you should look into the mirror to make sure you didn't lose any bodies parts when you went through that portal.<br/><br/><br/><br/>                                                         ]]></description>
+    <enter type="script">
+    </enter>
+    <exit alias="west" to="Back Room">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="Mirror">
+      <inherit name="editor_object" />
+      <look>It's just a round full body mirror that kinda looked like the ones that you'd see in fairy tails.</look>
+      <lookinto type="script"><![CDATA[
+        if (GetBoolean(player, "Unicorn")) {
+          msg ("You're the color of autumn leaves a deep brownish orange and your mane is even browner then that like a chestnutty brown. Your eyes are a dark red so you kinda look like the ponified version of the season of Fall! Your tail is the same color as your hair and your horn is sticking out and looking nice. You feel like you're a nice height for a pony though since you've never met one you don't know what the average height of a pony is and you also look a little lean though a closer observation you're a little pudgy.")
+        }
+        else if (GetBoolean(player, "Earth Pony")) {
+          msg ("Your fur is the color of tree leaves at the height of summer a dark green that makes you blend into bushes when you're standing still but your mane gives it away since it's the color of straw but it's softer. The color of your eyes are a lighter shade of green kinda like a ripe lime that you just picked off a tree. You can see that you're a little tall for a pony though since you've never seen one you don't know how tall you should be but you fell tall and you can see that you're also a little bulky in a good way.")
+        }
+        else if (GetBoolean(player, "Pegasus")) {
+          msg ("Your fur is a darkish pink like bubblegum before you chew it and your mane is a lighter shade of red so your mane and your fur color match together. Your eyes are another shade of pink like is someone made sime strawberry flavored milk. You can also see that you're a little tiny of a pony almost like a filly or colt that has gotten a little bigger then normal. You also see that you have wings which you didnt have as a human you also feel lighter and your hooves are a lot thinner then a horses would be proabably to make sure you can stay up in the air.")
+        }
+        SetTimeout (15) {
+          msg ("After you have a look into the mirror and the shock of realizing that you weren't even a human anymore goes through your little pony head. You hear something moving around on the other side of the door and you also hear some voices.<br/><br/><br/>\"Did you hear that?\" It sounded like a female voice and it sounded kinda worried.<br/>\"Yes I did it came from the portal room...\" This one was a male voice and it sounded like they were both coming closer to the door.<br/><br/>Since you had no idea if you were the only pony here and the portal had turned you into some kind of monster you didnt want whoever was going to come through the door to find you but there really wasn't anywhere to hide in this room and to be honest you didn't even want to move around in this wierd body and it's four legs. <br/><br/>\"Time...i don't hear anything anymore do you think it was just something hitting the house?\" Female Voice again.<br/>\"No if it was it wouldn't have been so loud...\" The male must be called Time then.<br/>\"Do you think Christain Lily and Maddie came through then?\" <br/>\"No they said that they would be sealing it off cause of that wierd experiment that Christian wanted to do...\" They were both right behind the door now and you could see a greenish glow surronding the doorknob on the doorway. <br/><br/>")
+        }
+      ]]></lookinto>
+    </object>
+  </object>
+  <verb>
+    <property>jumpinto</property>
+    <pattern>jump into</pattern>
+    <defaultexpression>"You can't jump into " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>lookinto</property>
+    <pattern>look into</pattern>
+    <defaultexpression>"You can't look into " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>sleep</property>
+    <pattern>sleep</pattern>
+    <defaultexpression>"You can't sleep " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>layon</property>
+    <pattern>lay on</pattern>
+    <defaultexpression>"You can't lay on " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>lookthrough</property>
+    <pattern>look through</pattern>
+    <defaultexpression>"You can't look through " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Broom Closet">
+    <inherit name="editor_room" />
+    <description type="script">
+      if (IsSwitchedOn(Hanging Light)) {
+        msg ("There were a row of shelves lining all three of the closet's wall's that had cleaning supplies, dish rags, Party supplies, and hiding underneath a sheet a large chest of some kind. There was a broom leaning against the corner right next to you and there was a box of soap next to the party supplies.")
+      }
+      else {
+        msg ("It's too dark too see anything!")
+      }
+    </description>
+    <exit alias="south" to="Upstairs">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="Hanging Light">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <switchonmsg>You pull the cord and light brightens up the room.</switchonmsg>
+      <switchoffmsg>You pull the cord again and the room is plunged into darkness.</switchoffmsg>
+      <switchedondesc>The light bulb is giving off white light and is brigtening up everything</switchedondesc>
+      <switchedoffdesc>You couldn't even see the lightbulb and you can barley see the cord to turn it on.</switchedoffdesc>
+      <look>It's one of those little lightbulbs on a cord that in scary movies start to blink and sway back and forth though this one was just there not moving at all.</look>
+    </object>
+    <object name="Windex">
+      <inherit name="editor_object" />
+      <look>It's a normal bottle of window cleaning fluid that you can use to clean windows. Maybe there's some windows out there that need some cleaning? Right...</look>
+      <take />
+      <takemsg>This can be used to clean windows though you'll need something else to wipe all the gunk off.</takemsg>
+      <usedefaultprefix />
+      <alias>Bottle of Windex</alias>
+    </object>
+    <object name="Party Balloon bag">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <inherit name="container_open" />
+      <look><![CDATA[There were 3 ballons 2 blue ones and a yellow one and they almost seemed like they wanted you to blow them up. It was a little plastic balloon bag that looekd like there used to be alot moe balloons in ti but it seems that this bag has been used before since there seemed to be only 3 left it showed a certain pink party pony prancing around pratically peppy! <br/>]]></look>
+      <isopen />
+      <transparent type="boolean">false</transparent>
+      <listchildren />
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <blowup type="script">
+        msg ("As you start to blow up the party balloons you start to get giggly almost to the point that it was getting hard to blow into the balloons casue you were laughing so hard. You manage to blow them all up and they all pop but before they do something pink falls out of the party balloon bag and bounces a little on the floor to get your attention.")
+        MoveObject (Pink Sphere, Broom Closet)
+      </blowup>
+      <onopen type="script">
+      </onopen>
+      <onclose type="script">
+      </onclose>
+      <object name="Yellow party Balloon">
+        <inherit name="editor_object" />
+        <look>It was a simple Canary Yellow Latex balloon that was begging for someone to put thier lips on it and blow it up so it could be a real balloon.</look>
+        <alt type="stringlist">
+          <value>Yellow Balloon</value>
+        </alt>
+        <take />
+        <takemsg>You grab the yellow balloon and it almost feels like it's trying to make you blow it up.</takemsg>
+        <blowup type="script">
+          msg ("You put your lips to the balloon and blow into it so that it'll grow once it gets big enough you tie the end up and it's now a big balloon. Just as you were about to put the balloon away you feel the balloon get heavyer somehow and if you put the balloon up to the light you can see something inside it")
+        </blowup>
+        <pop type="script">
+          if (Got(needle)) {
+            msg ("You bring the needle up to the ballon and poke it making a loud noise and causing the balloon to explode and shred itself, something other then the yellow balloon shreds fell to the ground it was a pink sphere. Somehow before you could pick it up it bounced all by itself into your pocket for safe keeping.")
+            RemoveObject (Yellow party Balloon)
+            AddToInventory (Yellow Balloon Shreds)
+            AddToInventory (Pink Sphere)
+          }
+          else {
+            msg ("You don't have anything to pop the ballon with find something sharp and pointy to pop it and get whatever is inside the balloon.")
+          }
+        </pop>
+        <selfuseon type="scriptdictionary">
+          <item key="Hanging Light">
+            msg ("When you put the balloon up to the light you can see...something moving around inside the balloon...how it got there you don't know but it's sphereical shaped and it might be something important you should pop the balloon.")
+          </item>
+        </selfuseon>
+      </object>
+      <object name="Blue party balloon 1">
+        <inherit name="editor_object" />
+        <look>This balloon looked like the other the only diffrence is this one was blue.</look>
+        <alias>Blue Party Balloon</alias>
+        <blowup>You blow up the balloon but as soon as you stop all the air just leaves the balloon there's a hole in it.</blowup>
+      </object>
+      <object name="Blue party balloon 2">
+        <inherit name="editor_object" />
+        <alias>Blue Balloon</alias>
+        <blowup>You blow up the balloon and all of the air immediatly escaped cause this one had a hole in it.</blowup>
+        <look>It was just a small blue balloon that you can proabably blow up.</look>
+      </object>
+    </object>
+    <object name="Streamers">
+      <inherit name="editor_object" />
+      <look>It's a large roll of pink streamer! Looking at it it looks to be leftover from a party some time ago but maybe you can use it for another party later?</look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+    </object>
+    <object name="Paper Towels">
+      <inherit name="editor_object" />
+      <look>Just three rolls of paper towels in thier plastic bag waiting for the time when their needed to clean up the mess... OF EVIL!!!</look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alias>Rolls of Paper Towels</alias>
+    </object>
+    <object name="Broom">
+      <inherit name="editor_object" />
+      <look>A wooden broom just laying agaisnt the wall used for cleaning up dust and dirt and maybe even spider webs if you couldn't reach them.</look>
+    </object>
+    <object name="Plastic Gloves">
+      <inherit name="editor_object" />
+      <look>It's a box of Gloves for when you need to clean stuff you wouldn't want  your skin touching. Like under your bed after a few months of not cleaning.</look>
+      <alias>Box of Plastic Gloves</alias>
+    </object>
+    <object name="Soap">
+      <inherit name="editor_object" />
+      <inherit name="container_limited" />
+      <alias>Box of Soap</alias>
+      <look>It's a small box of soap with one of the bars missing you could use it to wash your hands...or do something with it might have to figure that out yourself.</look>
+      <maxobjects type="int">2</maxobjects>
+      <containermaxobjects>Can't fit anymore bars of soap in here.</containermaxobjects>
+      <maxvolume type="int">8</maxvolume>
+      <listchildren />
+      <isopen type="boolean">false</isopen>
+      <openmsg>You pull the flap open.</openmsg>
+      <closemsg>You push the flap down.</closemsg>
+      <object name="Bar of Soap">
+        <inherit name="editor_object" />
+        <look>It's a purple bar of soap you can use to wash your hands or clean dishes or your clothes...or for special other things.</look>
+        <take />
+        <volume type="int">4</volume>
+        <dropmsg>You let go of the soap.</dropmsg>
+        <takemsg>You take the soap and put it in your bag.</takemsg>
+      </object>
+    </object>
+    <object name="Chest">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <autounlock type="boolean">false</autounlock>
+      <key type="object">Broom Closet Chest Key</key>
+      <look type="script">
+        if (GetBoolean(, "Sheet")) {
+          msg ("It was a large chest that was covered in a sheet...you'd probably be able to open and look insdie when you take the sheet off.")
+        }
+        else {
+          msg ("It was an ornate chest kinda like the ones that you would proabably fnd in an old wizard tower in the attic or basment. It had some stuff carved into it but it also had a really large padlock on it that didn't look as old as the chest did but if you were going to open it and look inside you'll have to find the large key to unlock the chest.")
+        }
+      </look>
+    </object>
+    <object name="Sheet">
+      <inherit name="editor_object" />
+      <look>It's a white bed sheet that proabably fell off one of the shelves and unfolded covering the chest. Maybe if you pull it off you can open up the chest and look inside.</look>
+      <pull type="script">
+        msg ("You tug the sheet and the rest of it falls off the shelf and onto the floor letting you get a closer look at the chest.")
+      </pull>
+    </object>
+    <object name="Dish Rags">
+      <inherit name="editor_object" />
+      <look>It's a couple of folded little dishrags that are just sitting on the shelf you could use them to clean some stuff...but that's all.</look>
+    </object>
+  </object>
+  <verb>
+    <property>stare</property>
+    <pattern>stare</pattern>
+    <defaultexpression>"You can't stare " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>lookunder</property>
+    <pattern>look under</pattern>
+    <defaultexpression>"You can't look under " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Lilys closet">
+    <inherit name="editor_room" />
+    <description><![CDATA[It was a normal looking closet but for some reason the clothes that were inside the room were also covered in dust but they didn't seem like the kind of clothes an 18 year old were wear since they were 4 sizes too small and looked like an 8 year old would wear. There was also the sound of the chittering again but this time it sounded louder closer and a little more frightened. <br/><br/>There was nothing else there except the chittering whatever it was and the small clothes.]]></description>
+    <exit name="Closet" alias="east" to="Lily Room">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="hanging light 1">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <switchonmsg>You pull the cord and the light shows everything thats in the closet.</switchonmsg>
+      <switchoffmsg>The closet goes dark as you pull the cord.</switchoffmsg>
+      <look>It's a small light that was hanging on a cord from the cieling just like all of the other lights this one had a cord that you could use to turn it on.</look>
+    </object>
+    <object name="Small clothes">
+      <inherit name="editor_object" />
+      <look>They were all coered in dust like they hadnt been touched in years. They also looked to be the clothes of a small little 10 year old girl. The fact that she had them in here and they haven't been touched must mean that she should have  clothes somewhere else wonder why she still has these in here...</look>
+    </object>
+    <object name="Black outline">
+      <inherit name="editor_object" />
+      <look>Its just a black outline of something but you could see that it's shivering and every so often you see it moving.</look>
+      <scenery type="boolean">false</scenery>
+      <lookcloserat>As you lean toward it there was a squeak and the black outline curled up and got smaller and was shaking more.</lookcloserat>
+      <touchthe>You move your hand toward it and it flinces but doens't move and as you touch it you could feel that it was moving warm and fuzzy and soft.</touchthe>
+      <touch>You move your hand toward it and it flinces but doens't move and as you touch it you could feel that it was moving warm and fuzzy and soft.</touch>
+      <grabthe type="script">
+        msg ("As your hand closes in on the soft warm thing it starts to struggle and it scratchs you in the hand but you were able to grab ahold of it without letting it go and you come to find out that it's a bouncing baby bunny!")
+        AddToInventory (Bouncing baby bunny)
+        RemoveObject (Black outline)
+      </grabthe>
+      <grab type="script">
+        msg ("As your hand closes in on the soft warm thing it starts to struggle and it scratchs you in the hand but you were able to grab ahold of it without letting it go and you come to find out that it's a bouncing baby bunny!")
+        AddToInventory (Bouncing baby bunny)
+        RemoveObject (Black outline)
+      </grab>
+    </object>
+  </object>
+  <verb>
+    <property>swipeat</property>
+    <pattern>swipe at</pattern>
+    <defaultexpression>"You can't swipe at " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>blowatthe</property>
+    <pattern>blow at the</pattern>
+    <defaultexpression>"You can't blow at the " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>tap</property>
+    <pattern>tap</pattern>
+    <defaultexpression>"You can't tap " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>t</property>
+    <pattern>t</pattern>
+    <defaultexpression>"You can't t " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>tapthe</property>
+    <pattern>tap the</pattern>
+    <defaultexpression>"You can't tap the " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>touchthe</property>
+    <pattern>touch the</pattern>
+    <defaultexpression>"You can't touch the " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>flip</property>
+    <pattern>flip</pattern>
+    <defaultexpression>"You can't flip " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>fliptopage</property>
+    <pattern>flip to page</pattern>
+    <defaultexpression>"You can't flip to page " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Green Potion">
+    <inherit name="editor_object" />
+    <look>The potion is the shape of a test tube and it has a green liquad in the inside there is a rubber stopper on the top keeping the liquad from leaking out of the test tube. It almost looked like green colored water since there wasn't anything inside floating around.</look>
+    <smell>You pull the stopper open and sniff the mysterious green liquad and you can smell fresh cut grass and pineneedles,</smell>
+    <taste>You stick your pinkie finger inside the green liquad and touch it to your tounge and the taste of mint exploded in your mouth.</taste>
+    <dropmsg>You drop the potion onto the ground but the glass was strong so it didn't shatter.</dropmsg>
+    <take />
+    <takemsg>You grab the potion back up and wipe off the dust.</takemsg>
+    <drink type="script">
+      msg ("You pull the stopper open and down the green potion and right after all of it was gone you started to feel dizzy and a little hazy.")
+      SetObjectFlagOff (player, "normal")
+      SetObjectFlagOn (player, "plant")
+    </drink>
+  </object>
+  <object name="note">
+    <inherit name="editor_object" />
+    <look>It seemed to be a little tiny scroll the size of a little book and it had something written on it.</look>
+    <read type="script"><![CDATA[
+      PrintCentered ("<b> DEAR READER </b>")
+      msg ("If you are reading this note then it means that you have opened up the package and discovered this withen along with a green vial of liquad.<br/><br/>Let me assure you that this liuad will not harm you in any way unless you do not drink it all.<br/><br/>Once you drink it you must be somewhere close to the sun...or you'll feel really bad and sick ")
+    ]]></read>
+  </object>
+  <object name="hands">
+    <inherit name="editor_object" />
+    <scenery />
+    <look>They were normal human hands and they didn't look like you were some kind of animal or alien since they had all 10 fingers and human colors.</look>
+  </object>
+  <object name="Front of gate">
+    <inherit name="editor_room" />
+    <description><![CDATA[As you open the gate and hear it squeak you feel a little tug in your gut almost like there was something inside it that was pointing behind you toward the house. <br/><br/>It doesn't go away unless you walk back over to the inside of the lawn. So i guess it's some kind of internal compass in your body. Maybe the fact that you woke up in the chair downstairs meant that you're connected to the house in some way... It's not a painful feeling more like a continual tug that if you leave the front lawn and not know where you are you'll always know the direction of the house so you wont get lost.<br/><br/>You can see everywhere the path takes you, you can go left to the forest or you can go to the right so you can walk behind the house.<br/>]]></description>
+    <exit alias="south" to="Front of house">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="west" to="Front of Forest">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="Front of Forest">
+    <inherit name="editor_room" />
+    <description><![CDATA[As you walk on the path you can see that it leads into the darkened forest and you couldn't see that far in front of you. <br/><br/>Most of the trees were packed close together so any light that tried to get in was being sucked up by the leaves and it made the inside of the forest look dizzying as you see light then shadow light then shadow. <br/><br/>You could see sqaurialls and birds in the tree's bugs flying around an occasional deer running through the tree's and bushs's rustleing inside telling you that there were other things in the forest that were small enough to hide. <br/><br/>But right underneath one of the large tree's making up the entrence into the forest there was a hole and every so often you could see something move on the inside. And then you could see bunnies lots of bunnies running around the hole and into the forest and through the tree's carrying plants and food and things into the hole and out again. <br/><br/>But there was a family of black bunnies not doing what the other's were doing they were sitting on the outside of the whole looking around for something and making noises like it were looking for something.]]></description>
+    <exit alias="east" to="Front of gate">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="west" to="Inside forest 1">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="Bunny burrow">
+      <inherit name="editor_object" />
+      <look>It was a largish hole in the ground that was covered by the large roots in the tree that it was under and the biggest hole was the size of a small house cat.</look>
+    </object>
+    <object name="Black bunny family">
+      <inherit name="editor_object" />
+      <look>There were about 2 large black bunnies surronded by almost dozens of little small bunnies most black but there was a white one in there and even some brown ones. And they looked to be gathering food for winter.</look>
+      <give type="scriptdictionary" />
+    </object>
+    <object name="Large tree">
+      <inherit name="editor_object" />
+      <look>This tree was a little buit bigger then the rest around it and it was special cause this is where the burrow for the family of bunnies were living inside it's roots.</look>
+    </object>
+  </object>
+  <object name="Inside forest 1">
+    <inherit name="editor_room" />
+    <description><![CDATA[You walk into the forest ignoring the fact that it was a little dark and a little scary but the dark doesn't scare you! Or ...maybe it does but you dont remember if it did so it's alright.<br/> <br/>There's nothing really here but dark trees and dark leaves even though it's the middle of the day it looked like it was about to be night time in the forest since the trees have grown so close together.<br/><br/>The path that you were walking on was covered in dead leaves and twigs and other little foresty things so everytime you took a step there was a crack and pop of the twigs and dead leaves under your shoes. <br/><br/>The path was leading you stright ahead and there wasn't really any other paths to your left or right you could go into the dense part of the forest but you'll likly get lost so you should't really go that way just keep going striaght there must be something out there if theres a clear path going this way right?]]></description>
+    <exit alias="east" to="Front of Forest">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="west" to="Inside forest 2">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="Inside forest 2">
+    <inherit name="editor_room" />
+    <description><![CDATA[You've been walking in the forest for a while and there's been sounds of all kinds of animals mostly birds that fly around above your head through the trees. <br/><br/>You have no idea how far you've walked since this stretch of forest looked exactly like the all the other stretchs of forest you've been through though you can tell that you're coming to the end of the forest or to this stretch of forest because the trees were starting to thin out a little and you could see light coming through the top of the forest.<br/><br/>There was nothing really here so you should just go forward and continue on your way you can see something diffrent up ahead of you.]]></description>
+    <exit alias="east" to="Inside forest 1">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="west" to="Crossroads">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="Crossroads">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      firsttime {
+        msg ("You walk through the last of the trees and you end up on a crossroads. There are three ways to go from here left right and stright ahead.<br/> <br/>There's some torches surronding the roads so if it was nighttime there is a way to see where you're going.<br/><br/>You can't see where any of the roads lead too since they all bend into the trees so you can only see a few yards into it.<br/><br/>When you walk into the middle of the crossroads you feel like something is pushing you to the right road for some reason when you turn to look to the left you cant stand to stare in that direction for long before you start getting irrational fears of animals and monsters coming from the trees to eat you and they only dissapper when you look away.<br/><br/>As for the road ahead of you you dont feel any bad things but the closer you get you can see that the forest in that direction is so super dark you wouldn't be able to see where you're going and you might get lost forever or end up running into a tree and then just passing out and noone will find you before the wild animals will eat you...you better go to the right...the only way to go.")
+      }
+      otherwise {
+        msg ("You can see the three roads the scary one the gives you those nightmares. The dark one that if you walk down it you'll get lost forever. And the road to the right that nothing bad will happen if you can take it you can even see a little bit of light come through the trees in that direction.<br/><br/>You can even see the torches that light up the area around this stretch of forest in the dark since there's an opening in the trees above you.")
+      }
+    ]]></description>
+    <exit alias="east" to="Inside forest 2">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="north" to="Front of Cabin">
+      <inherit name="northdirection" />
+    </exit>
+    <exit name="Dark Road" alias="west" to="TEST ROOM">
+      <inherit name="westdirection" />
+      <locked />
+      <scenery type="boolean">false</scenery>
+      <lockmessage>The road is to dark! You'll get lost forever or run into a tree and then get eaten by something dangerous.</lockmessage>
+      <look>You can't see where the road leads to but when you get closer to it you can see that deeper down the road it gets so dark you wouldn't be able to see your hand in front of your face. You might get hurt if you go down there.</look>
+    </exit>
+    <exit name="Scary Road" alias="south" to="TEST ROOM">
+      <inherit name="southdirection" />
+      <locked />
+      <runscript type="boolean">false</runscript>
+      <lockmessage>The closer you get the stronger the fears get where your legs don't even want to move anymore and your brain is telling you just to run in the oppisite direction. RUNNNN!!!!</lockmessage>
+      <look>You can't look in this direction for long without getting some irrational fears pop up into your brain that you're about to be tackled by a large bear or eaten by a wolf.</look>
+    </exit>
+    <object name="Torch 1">
+      <inherit name="editor_object" />
+      <look>It looked like a thin tiki torch that was burning and the fire looked a little strange like it wasn't natrual.</look>
+      <alias>Tiki Torch</alias>
+    </object>
+    <object name="Torch 2">
+      <inherit name="editor_object" />
+      <alias>Tiki Torch</alias>
+      <look>This one is like the other's it's a tiki torch and the fire on the top looked like it wasn't natraul it looked more orange the a real fire would.</look>
+    </object>
+    <object name="Torch 3">
+      <inherit name="editor_object" />
+      <alias>Askew Torch</alias>
+      <look>This torch looked to be a little neglected it was a askew a little bit and it wasn't burning like the rest of them...</look>
+    </object>
+    <object name="Torch 4">
+      <inherit name="editor_object" />
+      <alias>Red Tiki Torch</alias>
+      <look>This torch is exactly like the others it's a tiki torch but unlike the others this fire was a deep red...almost like an apple and it had no orange anywhere.</look>
+    </object>
+  </object>
+  <object name="Front of Cabin">
+    <inherit name="editor_room" />
+    <description><![CDATA[ As you finally come to a clearing in the forest you start to walk on a gravely path and you see a cabin just sitting there all by itself.<br/><br/>It looked old and like noone has lived in it for a long time. The outside was covered in moss and vines  and the back of it as kinda slack like it was about to fall over though the front looked perfectly fine the windwos were covered in dust and spiderwebs so you had to get really close to look through them.<br/><br/>There was an overgrown garden in the front with a bunch of dryed dirt and weeds...there might be stuff growing there still but you'll need some special things to check them out.<br/><br/>The door was little broken and it looked like you could just push it open to get inside the cabin. ]]></description>
+    <exit alias="south" to="Crossroads">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="north" to="Inside Cabin">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="Window 1">
+      <inherit name="editor_object" />
+      <alias>Dust Covered Window</alias>
+      <look><![CDATA[You put your hands on around your face and look into the winodw but you couldn't really see anything since it was so caked in dust and dirt from years of not being clean or dusted. <br/><br/>The only thing you can see if anything are dark outlines and shapes though nothing is moving in the inside so it could be safe to go inside.]]></look>
+    </object>
+    <object name="Window 2">
+      <inherit name="editor_object" />
+      <look>This window much like the other one was caked in dirt and dust and covered in a bunch of old spider webs and dead spiders. This window had a large crack right down the diaganol and it was a jagged one not a stirhgt cut one like someone had thrown a rock or something hard at it and it didnt shatter the glass. But it was just as dusty as the other window so the crack must have happened along time ago when the cabin was still liveable.</look>
+      <alias>Cracked Window</alias>
+    </object>
+  </object>
+  <object name="Inside Cabin">
+    <inherit name="editor_room" />
+    <description><![CDATA[As you open the element beaten door to the cabin in the woods you smell the smell of rotten wood and the smell of animals. There was a table in the middle of the room like some kind of dining room table all of the chairs that should have been there are either burnt in the broken fireplace in the corner or broken up in burnable pieces near it to be burned. <br/><br/>Nothing in the cabin looked useable there were rusted tools some broken nets. There even seemed to be a chandiler that had fallen off the cieling and layed abandoned on the floor the glass broken and the wires frayed and chewed on. <br/><br/>The only thing in the room that looked out of place was there was a relitialy new looking basket ontop of the table and it was the kind of basket's made of wood that farmers use to gather up fruit from the tree's it didn't look full but if you looked into it maybe there was something on the inside. <br/><br/>Other then all that there were vines and little plants growing out of the wood and it looked like this cabin wouldn't last a few more years so don't hit anything. <br/><br/>]]></description>
+    <exit alias="south" to="Front of Cabin">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="Dining table">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <hidechildren />
+      <listchildren />
+      <look><![CDATA[The table was covered in dust just like everything else in here and it seemed to be waiting for something to be placed on top of it and break. You could see that one of the legs of the table was warped and bowed a little evidence of getting wet repeatily and then drying. <br/><br/>There was only the basket ontop of it and that was carfully placed to make sure the table wouldn't collapse. ]]></look>
+      <object name="Basket">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <listchildren />
+        <hidechildren type="boolean">false</hidechildren>
+        <close type="boolean">false</close>
+        <open type="boolean">false</open>
+        <look>It was the only thing in the cabin that didnt look like it was going to disentigrate if you picked it up. It was a wicker basket that farmers use to carry out thier apples in thier orchirds</look>
+        <object name="Apple">
+          <inherit name="editor_object" />
+          <inherit name="container_closed" />
+          <take />
+          <bite>As your mouth touchs the skin of the apple you hear a clink and you just notice that the apple isn't even a real apple its made of some wierd plastic.</bite>
+          <listchildren />
+          <openmsg>As you open it the apple falls apart and dissappers only leaving what was inside the fake apple.</openmsg>
+          <close type="boolean">false</close>
+          <look>It was a perfectly red delicious apple and I know that getting it out of an empty basket with worms and a rotten fruit and this one was untouched and who knows how long it's been here is suspicious but it's just an apple don't worry.</look>
+          <takemsg>You grab the apple and it feels cool and firm almost like it's been waiting in a fridge for you.</takemsg>
+          <dropmsg>As you leave the apple alone it makes a wierd noise that an apple should't make almost like it's metal.</dropmsg>
+          <shake>You gave it a large shake and when you did there was a rattling on the inside of it so you know that it's openable.</shake>
+          <onopen type="script">
+            AddToInventory (Orange Sphere)
+            RemoveObject (Apple)
+          </onopen>
+          <object name="Orange Sphere">
+            <inherit name="editor_object" />
+            <take />
+            <takemsg>You pick up the sphere and it makes you hungry for apples.</takemsg>
+            <dropmsg>As you drop the sphere it hits you in the foot and it hurt alot more then it should have.</dropmsg>
+            <look>The orange sphere was the same size and shape as the others but this one was a deep orange color and had a picture of three red delicious apples on the front of it.</look>
+          </object>
+        </object>
+        <object name="Rotten apple">
+          <inherit name="editor_object" />
+          <look><![CDATA[It was black and oozy and there were some worms and little maggots getting into it making squishy noises and one of them popped a bubble and a fermented disgusting smell that makes you want to leave.
+<br/><br/>                                                                                                                                                                                                                                                                                                                                                                         ]]></look>
+          <take />
+          <takemsg>You take it and you squeeze it a little to much and the rotten apple juices go all over your fingers.</takemsg>
+          <dropmsg>You let it go and it makes a gross splorch sound as it pops against the ground.</dropmsg>
+        </object>
+        <object name="pear">
+          <inherit name="editor_object" />
+          <look>It was green but brown at the same time almost like it was about to rot but it hand't gotten there yet. </look>
+        </object>
+        <object name="worms">
+          <inherit name="editor_object" />
+          <inherit name="plural" />
+          <look>They were wriggling around and going through the rotten apple and starting to head toward the pear. </look>
+        </object>
+      </object>
+      <object name="rusty tools">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <look>It was a hammer some nails and a screwdriver and they were all rusted. Seems that this cabin retains water and they've been here for a while and you couldn't really use these anymore unless you needed a weapon for something.</look>
+      </object>
+    </object>
+    <object name="wall plants">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>Just a bunch of vines that have decided to make the wall of this wooden Cabin thier home. They were bright green that made them look healthy and it looked like thier mission was to get the whole house covered.</look>
+    </object>
+    <object name="wall">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>It was covered in Vines and plants and there were holes so that you could see out into the forest beyond.</look>
+    </object>
+    <object name="fire place">
+      <inherit name="editor_object" />
+      <look>the bricks looked old and weathered mostly cause the part of the shack that it was sticking out of was missing so when it rained the water hit the stones of the fireplace.  The Long piece that was supposed to let the smoke out of the house was broken and it's bricks were </look>
+      <lookinside>There was the pieces of charred chair and some other kind of ashes that meant this fireplace had been used before.</lookinside>
+    </object>
+    <object name="burnt chair">
+      <inherit name="editor_object" />
+      <look>It was one of the chairs that should have been on the table in the middle of the room but someone cut it up and placed it in the fireplace and tried to make a fire but something must have stopped them since it wasn't all the way burnt it was just kinda charred.</look>
+    </object>
+    <object name="broken chair">
+      <inherit name="editor_object" />
+      <look>It was a pile of 2 chairs that were broken up into chunks like someone had thrown the chairs agaisnt the wall or onto the floor so that they would be in smaller pieces to break. Someone must have done it recently cause they didn't have any dirt on them or dust.</look>
+    </object>
+  </object>
+  <verb>
+    <property>bite</property>
+    <pattern>bite</pattern>
+    <defaultexpression>"You can't bite " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>blowup</property>
+    <pattern>blow up</pattern>
+    <defaultexpression>"You can't blow up " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Pink Sphere">
+    <inherit name="editor_object" />
+    <take />
+    <takemsg>As you pick up the sphere you get the giggles again and you have to fight to keep from laughing,</takemsg>
+    <dropmsg>As you drop the sphere you start to feel really depressed and it makes you sad leaving it behind.</dropmsg>
+    <look>This sphere was the same size and shape as the other sphere and was a darkish bubblegum pink and had 2 blue balloons and a yellow one on the front of it.</look>
+  </object>
+  <object name="Light Blue Sphere">
+    <inherit name="editor_object" />
+    <take />
+    <takemsg>You pick up the sphere and it makes you feel like you want to sleep.</takemsg>
+    <look>The sphere was just like the white sphere but this one was the color of the sky and had a white cloud with a bolt of lightning coming out of with but it was tri-colored Red Blue and Yellow.</look>
+    <dropmsg>You let go of the sphere and it falls to the ground almost in the blink of an eye.</dropmsg>
+  </object>
+  <object name="Green Purple sphere">
+    <inherit name="editor_object" />
+    <alias>Green and Purple Sphere</alias>
+    <scenery type="boolean">false</scenery>
+    <take />
+    <takemsg>As you pick it up you feel a feeling in your gut almost like heartburn and it feels warm.</takemsg>
+    <dropmsg>When you drop the sphere smoke comes off of it and keeps smoking for a few minutes after.</dropmsg>
+    <look>The green and purple one was the same shape and size as the other spheres but this one was two colors a lightish purple and green in the shape of a ying yang side on it but this one didn't have a picture on the front of it.</look>
+  </object>
+  <verb>
+    <property>lookcloser</property>
+    <pattern>look closer</pattern>
+    <defaultexpression>"You can't look closer " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>lookcloserat</property>
+    <pattern>look closer at </pattern>
+    <defaultexpression>"You can't look closer at  " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>grab</property>
+    <pattern>grab</pattern>
+    <defaultexpression>"You can't grab " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>grabthe</property>
+    <pattern>grab the</pattern>
+    <defaultexpression>"You can't grab the " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Bouncing baby bunny">
+    <inherit name="editor_object" />
+    <look>You had it in your pocket and it seemed very very scared of you but it was so small and scared that it couldn't get anywhere and it just layed there in your pocket looking at you with so much fear in it's eyes. It was a black bunny so thats why it was so hard to figure out what it was in the closet in lily's room. I wonder what you need to do with it...don't you remember seeing bunnies somewhere else before?</look>
+    <alias>Baby Bunny</alias>
+    <alt type="stringlist">
+      <value>baby bunny</value>
+      <value>black bunny</value>
+      <value>Bunny</value>
+    </alt>
+    <take type="boolean">false</take>
+    <drop type="boolean">false</drop>
+    <pet>You lightly rub your hand on the bunny and at first it flinches but after a while it rubs it's head agaisnt your hand.</pet>
+    <squeeze>You roughly grab the bunny and tightly sueeze it as it trys to flee or bite you but before it ran out of air you let go and it shakes in your pocket.</squeeze>
+    <giveto type="scriptdictionary">
+      <item key="Black bunny family"><![CDATA[
+        msg ("As you hand over the bunny it jumped from your hand and rubbed agasint the big black bunny and against the others. As they were running a medium sized bunny was looking at you the whole time and it looked like it was crying. Which was wierd since bunnies can't cry...can they? After the baby bunny stopped rubbing agaisnt the other's it looked at you.<br/><br/>It seemed to be thanking you cause it was waving it's paws like it wanted you to wait. It ran off and ran into the burrow almost head first into anotehr bunny hugging a potatoe just as you were about to leave the bunny came running back rolling a yellow sphere on it's noise toward you and it rolled over and stopped in front of you.  <br/>")
+        MoveObject (Yellow Sphere, Front of Forest)
+        SetTimeout (20) {
+          msg ("The bunnie's looked at you one last time as they left down into the burrow. Maybe you'll see them again someday...")
+          RemoveObject (Black bunny family)
+        }
+      ]]></item>
+    </giveto>
+  </object>
+  <verb>
+    <property>pet</property>
+    <pattern>pet</pattern>
+    <defaultexpression>"You can't pet " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>squeeze</property>
+    <pattern>squeeze</pattern>
+    <defaultexpression>"You can't squeeze " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Yellow Sphere">
+    <inherit name="editor_object" />
+    <look>This sphere was a light canary yellow and had three pink butterflies in the shape of a tirangle on the front of the sphere.</look>
+  </object>
+  <object name="TEST ROOM">
+    <inherit name="editor_room" />
+    <object name="Maddie">
+      <inherit name="editor_object" />
+      <inherit name="female" />
+      <touch>she looked at you. "Yes? Did you want something?"</touch>
+      <flirt>She giggles and goes a little red. "S-sorry...you're not really my type..."</flirt>
+      <look type="script">
+        msg ("She was a cute 16 or 17 year old girl with light blondish brown hair the color of caramel that went down to her shoulders. She had blue eyes that when they looked at you you could tell that they've seen things that a 16 year old shoudn't' see.")
+      </look>
+      <ask type="scriptdictionary">
+        <item key="Christian">
+          msg ("\"He's one of my oldest friends and i used to have a crush on him but i grew out of it\"")
+        </item>
+        <item key="Lily">
+          msg ("\"She's my best friend\"")
+        </item>
+        <item key="necklace">
+          msg ("Oh it has a charm on it so if you happen to drink a potion and you want to change back to your normal form all you have to do is wear it and you change back.")
+        </item>
+        <item key="fox plushie">
+          msg ("*blushs* oh...uhh...you found that did you...um...would you mind giving that back to me please... *reachs for it*")
+          RemoveObject (Stuffed foc)
+          msg ("Thanks...it's something i made cause i can't find him anymore will you tell me if you see him... his name's Mr. Fox")
+        </item>
+        <item key="Mr. Fox">
+          msg ("Hes's my friend he found me when i was first turned into a bunny and one of my other friends that isn't Lily or Christian. And don't make fun of me!")
+        </item>
+        <item key="yourself">
+          msg ("Oh Christian summoned you with magic you'll have to ask him if you have any questions about yourself. Personally i think he shouldn't have done it you might have been someone important...or someone might be missing you i dont know but we won't hurt you.")
+        </item>
+      </ask>
+      <tell type="scriptdictionary">
+        <item key="baby bunny">
+          msg ("*she squeals a little* Where where? Where is it! Show me Show me!! Please!!")
+        </item>
+      </tell>
+    </object>
+    <object name="Christmas Tree">
+      <inherit name="editor_object" />
+      <smell>You move your face near the tree and sniff and the smell of pine needles assults your nose but in a good way!</smell>
+      <look type="script">
+        if (GetBoolean(Christmas Tree, "Naked")) {
+          msg ("It was a 6 and a half foot tree but it wasn't covered in anything no garter no tinsle and ")
+        }
+        else {
+        }
+      </look>
+    </object>
+    <object name="Cake Batter">
+      <inherit name="editor_object" />
+      <look>It was the same metal bowl that you used to make all of the batter all you have to do now is put it in the pan and then put that in the oven! </look>
+    </object>
+    <object name="Cake Batter 2">
+      <inherit name="editor_object" />
+      <look>This is the batter that you put inside the cake pan so you can put in the oven so you make a cake.</look>
+      <take />
+      <takemsg>You take the cake batter so you can put it in the oven right?</takemsg>
+    </object>
+    <object name="Watch">
+      <inherit name="editor_object" />
+      <look type="script">
+      </look>
+    </object>
+  </object>
+  <object name="Potions room">
+    <inherit name="editor_room" />
+    <description>This is just a room where i can keep the potions untill i need them and have them situated around the room when i need to.</description>
+  </object>
+  <object name="Cathrine">
+    <inherit name="editor_object" />
+    <inherit name="female" />
+    <look><![CDATA[As you look at you have no idea who you're looking at since you've been here you've only seen 3 people. And only 2 of them are girls and she is niether of them. <br/><br/>She had brownish hair the color of Maddie's Desk and Crystal Blue eyes but the Deep blueness of them made you think that thier probably not real. She seemed to be the same Hieght as lily or a little shorter but 1 or 2 inchs and she also seemed older then her as you could tell by the "shape" of her body, that she was more mature then lily and a lot more then Maddie. <br/><br/>And the more you look at her the more she looks at you and it's a "what are you looking at" look on her face and she's crossing her arms. <br/><br/>That feeling you got when you first walked up to Christan was there when you looked at her too. That gut pulling feeling like you were being drawn to him like some kind of GPS inside of you.  
+<br/><br/>With chiristian it was a wierd feeling almost like he was the reason you have the feeling in the first place. But with her it felt natarual like you were supposed to feel this way about her and it was a good thing.                                                                                                    ]]></look>
+    <ask type="scriptdictionary">
+      <item key="Who are you">
+        msg ("My name is Catharine nice to meet you.")
+      </item>
+      <item key="Christian">
+        msg ("Christian...sorry i dont know who you're talking about ask someone else. ")
+      </item>
+      <item key="Lily">
+        msg ("Lily? She's my best friend in the whole world!")
+      </item>
+      <item key="Maddie">
+        msg ("Maddie? She's my friend too I guess but I think of her more as a little sister then a friend.")
+      </item>
+      <item key="House">
+        msg ("This is my house too...I just....um i live here every other week so you won't see me all of the time...")
+      </item>
+      <item key="yourself">
+        msg ("I'm sorry I don't know where you came from noone's told me anything about you but *smiles* But it's nice to have someone new walking around here.")
+      </item>
+    </ask>
+  </object>
+  <verb>
+    <property>slep</property>
+    <pattern>slep</pattern>
+    <defaultexpression>"You can't slep " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>nap</property>
+    <pattern>nap</pattern>
+    <defaultexpression>"You can't nap " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>pop</property>
+    <pattern>pop</pattern>
+    <defaultexpression>"You can't pop " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Yellow Balloon Shreds">
+    <inherit name="editor_object" />
+    <look>This is all that remains of that happy yellow balloon that you blew up...i hope you're happy!!</look>
+  </object>
+  <verb>
+    <property>bakeacake</property>
+    <pattern>bake a cake</pattern>
+    <defaultexpression>"You can't bake a cake " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>checkdateoncalander</property>
+    <pattern>check date on calander</pattern>
+    <defaultexpression>"You can't check date on calander " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>watch</property>
+    <pattern>watch</pattern>
+    <defaultexpression>"You can't watch " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>playmovie</property>
+    <pattern>play movie</pattern>
+    <defaultexpression>"You can't play movie " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>squeezethrough</property>
+    <pattern>squeeze through</pattern>
+    <defaultexpression>"You can't squeeze through " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>look</property>
+    <pattern>look</pattern>
+    <defaultexpression>"You can't look " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>shake</property>
+    <pattern>shake</pattern>
+    <defaultexpression>"You can't shake " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Pony Portal Limbo">
+    <inherit name="editor_room" />
+    <description type="string"></description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>Inside the Portal</alias>
+    <beforeenter type="script">
+      menulist = NewStringList()
+      list add (menulist, "Earth Pony")
+      list add (menulist, "Pegasus")
+      list add (menulist, "Unicorn")
+      ShowMenu ("What kind of Pony are you?", menulist, false) {
+        msg ("--"+ result + "--")
+        if (result = "Unicorn") {
+          msg ("You're no longer human! You've somehow turned into a pony and not just a regular pony you've grown a horn on your head and you've been turned into a unicorn. ")
+          SetObjectFlagOn (player, "Unicorn")
+          MoveObject (player, P Back Room)
+        }
+        else if (result = "Pegasus") {
+          msg ("You're no longer human! You've somehow turned into a pony and not just any pony you've grown wings and you feel lighter on your feet you've been turned into a Pegasis.")
+          SetObjectFlagOn (player, "Pegasus")
+          MoveObject (player, P Back Room)
+        }
+        else if (result = "Earth Pony") {
+          msg ("You're no longer human! You've somehow turned into a pony. With hooves a tail and a Mane! But you can feel the strength inside your hooves like you could run for miles without getting tired because you've been turned into an Earth Pony.")
+          SetObjectFlagOn (player, "Earth Pony")
+          MoveObject (player, P Back Room)
+        }
+      }
+    </beforeenter>
+  </object>
+  <verb>
+    <property>lookinside</property>
+    <pattern>look inside</pattern>
+    <defaultexpression>"You can't look inside " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="In the Void">
+    <inherit name="editor_room" />
+    <description><![CDATA[You can feel yourself floating around somewhere.  There's nothing around you to see, touch, or hear. But for somereason you can taste vanilla and mint and you could smell chocolate and creme just floating around you and it calms you down.<br/><br/>It's almost like your mind and your body was serperated from each other which is probably why you can see hear or touch things but slowly the smells and tastes were dissappering too and the calmness you felt was starting to dissapate as well cause you can start feeling a tingling inside you that was slowly starting to get painful.<br/><br/>You needed something to get your mind off of the uncomfterble feeling of the tingles so you ask yourself a question.<br/><br/>]]></description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <beforeenter type="script">
+    </beforeenter>
+    <enter type="script">
+      Gender = NewStringList()
+      list add (Gender, "Male")
+      list add (Gender, "Female")
+      ShowMenu ("What is your gender?", Gender, false) {
+        if (result = "Male") {
+          msg ("You kinda remember in all of the hazyness that you're a guy. You still don't remember your name or what you look like but you're a guy.")
+          SetObjectFlagOn (player, "Male")
+          MoveObject (player, Waking up)
+        }
+        else if (result = "Female") {
+          msg ("You kinda remember in all of the hazyness that you're a girl. You still don't remember your name or what you look like but you're a girl. ")
+          SetObjectFlagOn (player, "Female")
+          MoveObject (player, Waking up)
+        }
+      }
+    </enter>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <inherit name="editor_player" />
+      <containerfullmessage>You can't seem to find room to carry this you must get rid of something in order to fit more stuff.</containerfullmessage>
+      <pinch>Ouch! This isn't a dream and now you're left with a red mark where you pinched yourself.</pinch>
+      <turns type="int">0</turns>
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>turns</key>
+          <value></value>
+        </item>
+        <item>
+          <key>days</key>
+          <value></value>
+        </item>
+      </statusattributes>
+      <days type="int">1</days>
+      <alt type="stringlist">
+        <value>me</value>
+        <value>myself</value>
+      </alt>
+      <drop type="boolean">false</drop>
+      <maxvolume type="int">150</maxvolume>
+      <pov_alt type="stringlist">
+        <value>myself</value>
+        <value>self</value>
+        <value>me</value>
+      </pov_alt>
+      <attr name="pov_look" type="script">
+        if (GetBoolean(player, "MaleNormal")) {
+          msg ("You look down at yourself and you're wearing some kind of robe made out of some silvery material but you could tell that you were naked as the day you were born under this robe.")
+        }
+        else if (GetBoolean(player, "FemaleNormal")) {
+          msg ("You look down at yourself and you're wearing some kind of robe made out of some gold leafy material but you could tell that you were naked as the day you were born under this robe.")
+        }
+        else if (GetBoolean(player, "Male")) {
+          msg ("You look down at yourself and you see that you're wearing the clothes that maddie said were in your closet.  You don't know if this is what you really used ot look like since you don't remember anything before coming to this house but you're good looking nonetheless.Your skin isn't ugly theres no like scars or cuts and you're not even overly hairy and you even have some muscle town as evidence from when you put on the shirt your arms had a little trouble sliding into the sleeves.")
+        }
+        else if (GetBoolean(player, "Female")) {
+          msg ("You look dow at yourself and at the clothes that you put on that maddie told you about. You don't know if this is was you really used to loook like since you don't remember anything from before coming out of the basment but you're good looking nonetheless. Your skin is silky smooth and a creamy complection. And as for your feminine qualitys well your blouse feels a little tight in the chest area even though its the size that fits you perfectly. ")
+        }
+      </attr>
+    </object>
+  </object>
+  <object name="Clothes">
+    <inherit name="editor_object" />
+    <take />
+    <takemsg>You pick up the clothes.</takemsg>
+    <puton type="string"></puton>
+    <look type="script">
+      if (GetBoolean(player, "MaleNormal")) {
+        msg ("It's just a simple outfit of a grey cotten tshirt and blue jeans. And the basic under stuff like underwear and socks and it makes you happy seeing it for some reason. Maybe when you still rmemebered who you were you never had stuff like this. So now you want to really put it on.")
+      }
+      else if (GetBoolean(player, "FemaleNormal")) {
+        msg ("It was a well not overly girly outfit but it was a light grey buttoned up blouse and a grey frilled skirt and all the undergarments you'd need along with your socks and new shoes. For some reason you really loved them and you wanted to put them on as soon as possible.")
+      }
+    </look>
+    <changeinto type="script">
+      if () {
+      }
+    </changeinto>
+  </object>
+  <verb>
+    <property>changeinto</property>
+    <pattern>change into</pattern>
+    <defaultexpression>"You can't change into " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>puton</property>
+    <pattern>put on</pattern>
+    <defaultexpression>"You can't put on " + object.article + "."</defaultexpression>
+  </verb>
+  <walkthrough name="Open Pony Portal">
+    <steps type="simplestringlist">
+      open eyes
+      up
+      west
+      look at Nightstand
+      take Grey Key
+      unlock Grey Door
+      north
+      take backpack
+      open backpack
+      read Note
+      south
+      south
+      west
+      take Jewlery Box Key
+      look at dresser
+      unlock Jewlery Box
+      open Jewlery Box
+      take White Sphere
+      north
+      south
+      look at floor
+      take Royal Purple Book
+      west
+      grab Black outline
+      east
+      look at desk
+      take Damaged Brown book
+      open royal purple book
+      drop Royal Purple Book
+      north
+      north
+      east
+      north
+      blow up Yellow party Balloon
+      take Yellow party Balloon
+    </steps>
+  </walkthrough>
+  <timer name="Baby bunny">
+    <interval>12</interval>
+    <script>
+      msg ("You hear a soft chittering noise and it almost sounded scared if only you could figure out where it was coming from...")
+    </script>
+  </timer>
+</asl>

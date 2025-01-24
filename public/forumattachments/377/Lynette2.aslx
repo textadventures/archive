@@ -1,0 +1,751 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="Espanol.aslx" />
+  <include ref="Core.aslx" />
+  <include ref="Clock_Lib.aslx" />
+  <include ref="Journal_lib.aslx" />
+  <include ref="AskTellLib.aslx" />
+  <include ref="wearables(1).aslx" />
+  <template name="DefaultMultiObjectVerb">Eso no funciona.</template>
+  <template name="MultiObjectVerbMenu">¿Con qué objeto?</template>
+  <template name="UseOnMenu">¿En qué objeto?</template>
+  <template name="GiveToMenu">¿A qué objeto?</template>
+  <template name="NoObjectsAvailable">No tienes ningún objeto adecuado para eso.</template>
+  <template name="EditorVerbDefaultExpression">"No puedes #verb# " + object.article + "."</template>
+  <template name="DefaultSelfDescription">No es necesaria una descripción para esto. Es lo que es.</template>
+  <template name="UnrecognisedCommand">No entiendo tu orden.</template>
+  <template name="NeutralPluralGender">ellos</template>
+  <template name="MalePluralGender">ellos</template>
+  <template name="FemalePluralGender">ellas</template>
+  <dynamictemplate name="WearSuccessful">"Te pones " + object.article + "."</dynamictemplate>
+  <dynamictemplate name="WearUnsuccessful">"No puedes llevar " + object.article + "."</dynamictemplate>
+  <dynamictemplate name="AlreadyWearing">"Ya estás llevando" + object.article + "."</dynamictemplate>
+  <dynamictemplate name="CannotWearOver">"No puedes llevarlo encima de " + object.display + "."</dynamictemplate>
+  <dynamictemplate name="CannotWearWith">"No puedes llevarlo mientras lleves " + object.display + "."</dynamictemplate>
+  <dynamictemplate name="RemoveSuccessful">"Te quitas " + object.article + "."</dynamictemplate>
+  <dynamictemplate name="RemoveUnsuccessful">"No puedes quitarte " + object.article + "."</dynamictemplate>
+  <dynamictemplate name="RemoveFirst">"No puedes quitártelo mientras lleves "+object.display+"."</dynamictemplate>
+  <game name="Game1">
+    <gameid>c94a70cd-4d5a-4dea-8517-8f7410f2b409</gameid>
+    <version>1.0</version>
+    <start type="script"><![CDATA[
+      msg ("<br/><br/><br/>Hey, first of all, thanks for your help<br/>The game is in Spanish, so I'm going to guide you to the error<br/>examine hombres muertos<br/>wear tunica<br/>go out<br/>walk through the forest 5 times<br/>press any key<br/>enter the inn<br/>- The error is here -<br/>The innkeeper, Nina, gives you dry clothes \"ropa común\"<br/>The idea is that you must remove your actual clothing and put on the new one to progress<br/>remove tunica<br/>wear ropa<br/><br/><br/>")
+    ]]></start>
+  </game>
+  <turnscript>
+    <enabled />
+    <script>
+      if (game_clock.oldroom =player.parent) {
+        IncTime (1)
+      }
+      else {
+        IncTime (1)
+        game_clock.oldroom = player.parent
+      }
+    </script>
+  </turnscript>
+  <command name="anotar">
+    <pattern>note; anotar</pattern>
+    <script>
+      msg (Template("WriteInJournal"))
+      s = GetInput()
+      UserAddToJournal (s)
+      msg (s)
+    </script>
+  </command>
+  <command name="clock">
+    <pattern>clock; hora</pattern>
+    <script>
+      msg ("Miras el reloj: Son las " + TimeAsString())
+    </script>
+  </command>
+  <command name="lookat">
+    <pattern>look at #object#; x #object#; examine #object#; exam #object#; ex #object#; examinar #object#; x #object#; examinar #object#; exam #object#; ex #object#; mirar a #object#; observar #object#</pattern>
+    <script>
+      if (GetBoolean(object, "hidechildren")) {
+        object.hidechildren = false
+      }
+      if (TypeOf(object, "look") = "script") {
+        do (object, "look")
+      }
+      else {
+        lookdesc = ""
+        if (HasString(object, "look")) {
+          lookdesc = object.look
+        }
+        if (LengthOf(lookdesc) = 0) {
+          lookdesc = Template("DefaultObjectDescription")
+        }
+        if (GetBoolean(object, "switchedon")) {
+          if (HasString(object, "switchedondesc")) {
+            lookdesc = lookdesc + " " + object.switchedondesc
+          }
+        }
+        else {
+          if (HasString(object, "switchedoffdesc")) {
+            lookdesc = lookdesc + " " + object.switchedoffdesc
+          }
+        }
+        msg (lookdesc)
+      }
+      ListObjectContents (object)
+    </script>
+  </command>
+  <command name="drop">
+    <pattern>drop #object#; dejar #object#; tirar #object#</pattern>
+    <multiple>
+      return (ScopeInventory())
+    </multiple>
+    <script>
+      foreach (obj, object) {
+        DoDrop (obj, multiple)
+      }
+    </script>
+  </command>
+  <verb name="hit">
+    <property>hit</property>
+    <pattern>hit #object#; pegar a #object#; golpear a #object#; golpear #object#</pattern>
+    <defaulttemplate>DefaultHit</defaulttemplate>
+  </verb>
+  <verb name="kill">
+    <property>kill</property>
+    <pattern>kill #object#; matar #object#; matar a #object#</pattern>
+    <defaulttemplate>DefaultKill</defaulttemplate>
+  </verb>
+  <verb name="kiss">
+    <property>kiss</property>
+    <pattern>kiss #object#; besar #object#; besar a #object#</pattern>
+    <defaulttemplate>DefaultKiss</defaulttemplate>
+  </verb>
+  <verb name="knock">
+    <property>knock</property>
+    <pattern>knock #object#; tocar #object#; llamar a #object#</pattern>
+    <defaulttemplate>DefaultKnock</defaulttemplate>
+  </verb>
+  <verb name="lick">
+    <property>lick</property>
+    <pattern>lick #object#; lamer a #object#; lamer #object#</pattern>
+    <defaulttemplate>DefaultLick</defaulttemplate>
+  </verb>
+  <verb name="lieon">
+    <property>lie</property>
+    <pattern>lie on #object#; lie upon #object#; lie down on #object#; lie down upon #object#; acostarse #object#; echarse #object#; descansar en #object#; descansar sobre #object#; tumbarse en #object#</pattern>
+    <defaulttemplate>DefaultLie</defaulttemplate>
+  </verb>
+  <verb name="lock">
+    <property>lock</property>
+    <pattern>lock #object#; cerrar con llave #object#; cerrar #object#</pattern>
+    <defaulttemplate>DefaultLock</defaulttemplate>
+  </verb>
+  <verb name="search">
+    <property>search</property>
+    <pattern>search #object#; buscar #object#; buscar a #object#</pattern>
+    <defaulttemplate>DefaultSearch</defaulttemplate>
+  </verb>
+  <verb name="show">
+    <property>show</property>
+    <pattern>show #object#; mostrar #object#; enseñar #object#</pattern>
+    <defaulttemplate>DefaultShow</defaulttemplate>
+  </verb>
+  <verb name="smell">
+    <property>smell</property>
+    <pattern>smell #object#; sniff #object#; oler #object#; olisquear #object#; oler a #object#</pattern>
+    <defaulttemplate>DefaultSmell</defaulttemplate>
+  </verb>
+  <verb name="tie">
+    <property>tie</property>
+    <pattern>tie #object#; atar #object#; atar a #object#</pattern>
+    <defaulttemplate>DefaultTie</defaulttemplate>
+  </verb>
+  <verb name="touch">
+    <property>touch</property>
+    <pattern>touch #object#; tocar #object#; tocar a #object#</pattern>
+    <defaulttemplate>DefaultTouch</defaulttemplate>
+  </verb>
+  <verb name="turnoff">
+    <property>turnoff</property>
+    <pattern>turn off #object#; turn #object# off; switch off #object#; switch #object# off; apagar #object#</pattern>
+    <defaulttemplate>DefaultTurnOff</defaulttemplate>
+  </verb>
+  <verb name="unlock">
+    <property>unlock</property>
+    <pattern>unlock #object#; abrir con llave #object#; abrir #object#</pattern>
+    <defaulttemplate>DefaultUnlock</defaulttemplate>
+  </verb>
+  <verb name="untie">
+    <property>untie</property>
+    <pattern>untie #object#; desatar #object#; desatar a #object#</pattern>
+    <defaulttemplate>DefaultUntie</defaulttemplate>
+  </verb>
+  <command name="wear">
+    <pattern>wear #object#; vestir #object#; wear #object#; put on #object#; poner #object#</pattern>
+    <multiple>
+      return (ScopeInventory())
+    </multiple>
+    <script>
+      foreach (obj, object) {
+        DoWear (obj)
+      }
+    </script>
+  </command>
+  <command name="remove">
+    <pattern>remove #object#; take off #object#; quitar #object#</pattern>
+    <multiple>
+      return (ScopeInventory())
+    </multiple>
+    <script>
+      foreach (obj, object) {
+        DoRemove (obj)
+      }
+    </script>
+  </command>
+  <object name="mazmorra desconocida">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>una</prefix>
+    <description>Es una habitación sin iluminación de ningún tipo ni ventanas, probablemente está bajo tierra. Tiene forma de L, en el lado largo de la habitación hay un altar de mármol en el fondo. La habitación es pobre en decoración, salvo el altar, no hay nada más que una endeble escalera que conduce a una trampilla que esperas que conduzca al exterior. Hay cuatro cadáveres tendidos en el suelo, vestidos con extrañas ropas y completamente pálidos.</description>
+    <onexit type="script">
+      msg ("Te alegras de haber dejado atras esa inmunda mazmorra, pero te sientes perdida aqui fuera.")
+    </onexit>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <clock type="string"></clock>
+      <statusattributes type="stringdictionary">clock = Hora: !;destreza = Destreza: !;fuerza = Fuerza: !;inteligencia = Inteligencia: !;carisma = Carisma: !;suerte = Suerte: !;dinero = Dinero: !</statusattributes>
+      <alt>yo misma</alt>
+      <fuerza type="int">5</fuerza>
+      <destreza type="int">5</destreza>
+      <inteligencia type="int">5</inteligencia>
+      <carisma type="int">5</carisma>
+      <suerte type="int">2</suerte>
+      <dinero type="int">0</dinero>
+      <darvueltas type="int">0</darvueltas>
+    </object>
+    <object name="hombres muertos">
+      <inherit name="editor_object" />
+      <gender>los</gender>
+      <article>los</article>
+      <displayverbs>Examinar</displayverbs>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>unos</prefix>
+      <look type="script">
+        firsttime {
+          msg ("No tienen nada de especial, salvo su ropa. Examinar a los que están cerca de ti, pero no llevan nada de utilidad. Te acercas al que está apoyado en la pared y descubres que este no tiene rastro alguno de sangre. Con sumo cuidado, abres la túnica y le despojas de ella. Después de todo, él no la va a necesitar más. Te ves obligada a mover sus brazos, proceso en el cual, el libro que sujeta cae al suelo con un pesado golpe. Cuando has terminado tu maniobra, ves un colgante plateado en su cuello. Vuelves a recordar la voz de tu cabeza y lo tomas también. ")
+          MakeObjectVisible (Libro1)
+          AddToInventory (túnica púrpura)
+          AddToInventory (colgante místico)
+        }
+        otherwise {
+          msg ("No tienen nada de especial, salvo su ropa. El que está recostado contra la pared ha sido despojado de todas sus pertenencias, salvo un paño de lino que hace las veces de ropa interior. Pobre diablo.")
+        }
+      </look>
+    </object>
+    <object name="Libro1">
+      <inherit name="editor_object" />
+      <look>En apariencia, es un libro normal y corriente, pero algo te dice que es más que eso.</look>
+      <inventoryverbs>Examinar; Leer</inventoryverbs>
+      <take />
+      <takemsg>Coges el pesado libro con curiosidad.</takemsg>
+      <visible type="boolean">false</visible>
+      <alias>Libro antiguo</alias>
+      <read type="script">
+        if (not Got(colgante místico)) {
+          msg ("Es un galimatías incomprensible. Está lleno de runas por todas partes y no entiendes nada.")
+        }
+        else if (Got(colgante místico)) {
+          firsttime {
+            libro1menu = NewStringList()
+            list add (libro1menu, "Guerreros")
+            list add (libro1menu, "Ladrones")
+            list add (libro1menu, "Magos")
+            list add (libro1menu, "Reyes")
+            list add (libro1menu, "Comerciantes")
+            show menu ("¿Qué eran tus antepasados?", libro1menu, false) {
+              if (result="Guerreros") {
+                player.fuerza = player.fuerza + 5
+              }
+              else if (result="Ladrones") {
+                player.destreza = player.destreza + 5
+              }
+              else if (result="Magos") {
+                player.inteligencia = player.inteligencia + 5
+              }
+              else if (result="Reyes") {
+                player.carisma = player.carisma + 5
+              }
+              else if (result="Comerciantes") {
+                player.dinero = player.dinero + 300
+              }
+            }
+          }
+          otherwise {
+            msg ("No pasa nada. Parece ser que ha perdido sus poderes o que no quiere concederte más gracias.")
+            RemoveObject (Libro1)
+          }
+        }
+      </read>
+    </object>
+    <exit name="trampillabosque" alias="arriba" to="bosque">
+      <inherit name="updirection" />
+      <locked type="boolean">false</locked>
+      <lockmessage>Deberías revisar todo antes de irte.</lockmessage>
+      <lookonly type="boolean">false</lookonly>
+    </exit>
+  </object>
+  <command>
+    <pattern>mirarme; examinarme</pattern>
+  </command>
+  <object name="habitación mágica de objetos">
+    <inherit name="editor_room" />
+    <object name="colgante místico">
+      <inherit name="editor_object" />
+      <inherit name="wearable" />
+      <look>Es un colgante plateado que consta de una cadena de la que cuelga un ojo que tiene por pupila una extraña piedra negra.</look>
+      <inventoryverbs>Examinar; Usar; Poner</inventoryverbs>
+      <displayverbs>Examinar</displayverbs>
+      <drop type="boolean">false</drop>
+      <removeable type="boolean">false</removeable>
+      <wear_slots type="list">Cuello</wear_slots>
+      <wear_layer type="int">0</wear_layer>
+      <wearmsg>Sientes un inmenso poder llenándote</wearmsg>
+      <removemsg>No puedes quitártelo por las buenas</removemsg>
+    </object>
+    <object name="túnica púrpura">
+      <inherit name="editor_object" />
+      <inherit name="wearable" />
+      <gender>la</gender>
+      <article>la</article>
+      <look>Es una túnica que se abotona por delante, de color púrpura. Tiene una capucha picuda que oculta la cara de quien la lleva. </look>
+      <wear_slots type="list">Tronco; Piernas</wear_slots>
+      <wear_layer type="int">1</wear_layer>
+      <wearmsg>Te pones la túnica y la abotonas.</wearmsg>
+      <inventoryverbs>Examinar; Poner; Quitar</inventoryverbs>
+      <displayverbs>Examinar</displayverbs>
+      <removemsg>Te quitas la túnica.</removemsg>
+      <worn type="boolean">false</worn>
+      <alt>tunica</alt>
+      <onafterwear type="script">
+        SetObjectFlagOn (player, "túnica")
+      </onafterwear>
+      <onafterremove type="script">
+        SetObjectFlagOff (player, "túnica")
+      </onafterremove>
+    </object>
+    <object name="PosLlave1">
+      <inherit name="editor_object" />
+      <alias>Llave rústica</alias>
+      <gender>la</gender>
+      <article>la</article>
+      <look>Una típica llave de tres pistones laterales, de hierro que ya ha empezado a oxidarse. Abre la habitación número 1 de la posada.</look>
+      <inventoryverbs>Examinar; Usar</inventoryverbs>
+    </object>
+    <object name="ropa común">
+      <inherit name="editor_object" />
+      <inherit name="wearable" />
+      <wear_layer type="int">1</wear_layer>
+      <wear_slots type="list">Tronco; Piernas</wear_slots>
+      <alt>ropa</alt>
+      <onafterwear type="script">
+        SetObjectFlagOn (player, "ropa")
+      </onafterwear>
+      <onafterremove type="script">
+        SetObjectFlagOff (player, "ropa")
+      </onafterremove>
+    </object>
+  </object>
+  <object name="bosque tot">
+    <inherit name="editor_room" />
+    <object name="bosque">
+      <inherit name="editor_room" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <description>Es un bosque oscuro y tétrico. No ves nada a causa de la niebla y estás preocupada de que en las sombras se oculte algún tipo de peligro invisible.</description>
+      <alias>bosque</alias>
+      <enter type="script"><![CDATA[
+        if (player.darvueltas = 1) {
+          msg ("<br/><br/><color color=\"orange\">No me gustaría encontrarme en esta situación otra vez, debo apresurarme.</color>")
+        }
+        else if (player.darvueltas = 2) {
+          msg ("<br/><br/><color color=\"orange\">Estoy cansada, no se si voy a poder continuar mucho más</color>")
+        }
+        else if (player.darvueltas = 3) {
+          msg ("<br/><br/><color color=\"orange\">Me duelen los pies, he empezado a correr por ahi completamente descalza</color>")
+        }
+        else if (player.darvueltas = 4) {
+          msg ("<br/><br/><color color=\"orange\">No lo voy a conseguir, todos los árboles son iguales y no logro diferenciar nada. Voy a desfallecer.</color>")
+        }
+        else if (player.darvueltas = 5) {
+          msg ("<br/><br/><color color=\"orange\">No puedo más, esto es imposible. Me rindo a morir a la intemperie.</color><br/><br/>Con este último pensamiento, cierras los ojos por última vez. Al menos, eso crees tú...")
+          wait {
+            ClearScreen
+            SetFontSize (20)
+            PrintCentered ("<color color=\"brown\">\"¡DESPIERTA!\"</color>")
+            SetFontSize (12)
+            msg ("<br/><br/><color color=\"brown\">Vaya, vaya, mi pequeña niña. Parece que eres aficionada a dormir en lugares poco apropiados. Por una vez, deberías probar a hacerlo en una cama.</color>")
+            msg ("<br/>Cuando te despiertas estás en un vestíbulo de madera envejecida. Te levantas con cuidado y te pones en pie. Como si las burlas de la diosa que hay en ti no fueran suficientes, cada vez que hace algo con tu cuerpo acabas con un dolor horrible de cabeza.<br/>")
+            MoveObject (player, PosVest)
+          }
+        }
+      ]]></enter>
+      <onexit type="script">
+        player.darvueltas = player.darvueltas + 1
+      </onexit>
+      <exit alias="abajo" to="mazmorra desconocida">
+        <inherit name="downdirection" />
+        <locked />
+        <lockmessage>No quieres volver ahi abajo.</lockmessage>
+      </exit>
+      <exit alias="este" to="bosque1">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="oeste" to="bosque2">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="norte" to="bosque3">
+        <inherit name="northdirection" />
+      </exit>
+    </object>
+    <object name="bosque2">
+      <inherit name="editor_room" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alias>bosque</alias>
+      <description>Es un bosque oscuro y tétrico. No ves nada a causa de la niebla y estás preocupada de que en las sombras se oculte algún tipo de peligro invisible.</description>
+      <enter type="script"><![CDATA[
+        if (player.darvueltas = 1) {
+          msg ("<br/><br/><color color=\"orange\">No me gustaría encontrarme en esta situación otra vez, debo apresurarme.</color>")
+        }
+        else if (player.darvueltas = 2) {
+          msg ("<br/><br/><color color=\"orange\">Estoy cansada, no se si voy a poder continuar mucho más</color>")
+        }
+        else if (player.darvueltas = 3) {
+          msg ("<br/><br/><color color=\"orange\">Me duelen los pies, he empezado a correr por ahi completamente descalza</color>")
+        }
+        else if (player.darvueltas = 4) {
+          msg ("<br/><br/><color color=\"orange\">No lo voy a conseguir, todos los árboles son iguales y no logro diferenciar nada. Voy a desfallecer.</color>")
+        }
+        else if (player.darvueltas = 5) {
+          msg ("<br/><br/><color color=\"orange\">No puedo más, esto es imposible. Me rindo a morir a la intemperie.</color><br/><br/>Con este último pensamiento, cierras los ojos por última vez. Al menos, eso crees tú...")
+          wait {
+            ClearScreen
+            SetFontSize (20)
+            PrintCentered ("<color color=\"brown\">\"¡DESPIERTA!\"</color>")
+            SetFontSize (12)
+            msg ("<br/><br/><color color=\"brown\">Vaya, vaya, mi pequeña niña. Parece que eres aficionada a dormir en lugares poco apropiados. Por una vez, deberías probar a hacerlo en una cama.</color>")
+            msg ("<br/>Cuando te despiertas estás en un vestíbulo de madera envejecida. Te levantas con cuidado y te pones en pie. Como si las burlas de la diosa que hay en ti no fueran suficientes, cada vez que hace algo con tu cuerpo acabas con un dolor horrible de cabeza.<br/>")
+            MoveObject (player, PosVest)
+          }
+        }
+      ]]></enter>
+      <onexit type="script">
+        player.darvueltas = player.darvueltas + 1
+      </onexit>
+      <exit alias="este" to="bosque">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="norte" to="bosque4">
+        <inherit name="northdirection" />
+      </exit>
+    </object>
+    <object name="bosque1">
+      <inherit name="editor_room" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alias>bosque</alias>
+      <description>Es un bosque oscuro y tétrico. No ves nada a causa de la niebla y estás preocupada de que en las sombras se oculte algún tipo de peligro invisible.</description>
+      <enter type="script"><![CDATA[
+        if (player.darvueltas = 1) {
+          msg ("<br/><br/><color color=\"orange\">No me gustaría encontrarme en esta situación otra vez, debo apresurarme.</color>")
+        }
+        else if (player.darvueltas = 2) {
+          msg ("<br/><br/><color color=\"orange\">Estoy cansada, no se si voy a poder continuar mucho más</color>")
+        }
+        else if (player.darvueltas = 3) {
+          msg ("<br/><br/><color color=\"orange\">Me duelen los pies, he empezado a correr por ahi completamente descalza</color>")
+        }
+        else if (player.darvueltas = 4) {
+          msg ("<br/><br/><color color=\"orange\">No lo voy a conseguir, todos los árboles son iguales y no logro diferenciar nada. Voy a desfallecer.</color>")
+        }
+        else if (player.darvueltas = 5) {
+          msg ("<br/><br/><color color=\"orange\">No puedo más, esto es imposible. Me rindo a morir a la intemperie.</color><br/><br/>Con este último pensamiento, cierras los ojos por última vez. Al menos, eso crees tú...")
+          wait {
+            ClearScreen
+            SetFontSize (20)
+            PrintCentered ("<color color=\"brown\">\"¡DESPIERTA!\"</color>")
+            SetFontSize (12)
+            msg ("<br/><br/><color color=\"brown\">Vaya, vaya, mi pequeña niña. Parece que eres aficionada a dormir en lugares poco apropiados. Por una vez, deberías probar a hacerlo en una cama.</color>")
+            msg ("<br/>Cuando te despiertas estás en un vestíbulo de madera envejecida. Te levantas con cuidado y te pones en pie. Como si las burlas de la diosa que hay en ti no fueran suficientes, cada vez que hace algo con tu cuerpo acabas con un dolor horrible de cabeza.<br/>")
+            MoveObject (player, PosVest)
+          }
+        }
+      ]]></enter>
+      <onexit type="script">
+        player.darvueltas = player.darvueltas + 1
+      </onexit>
+      <exit alias="oeste" to="bosque">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="norte" to="bosque5">
+        <inherit name="northdirection" />
+      </exit>
+    </object>
+    <object name="bosque3">
+      <inherit name="editor_room" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alias>bosque</alias>
+      <description>Es un bosque oscuro y tétrico. No ves nada a causa de la niebla y estás preocupada de que en las sombras se oculte algún tipo de peligro invisible.</description>
+      <enter type="script"><![CDATA[
+        if (player.darvueltas = 1) {
+          msg ("<br/><br/><color color=\"orange\">No me gustaría encontrarme en esta situación otra vez, debo apresurarme.</color>")
+        }
+        else if (player.darvueltas = 2) {
+          msg ("<br/><br/><color color=\"orange\">Estoy cansada, no se si voy a poder continuar mucho más</color>")
+        }
+        else if (player.darvueltas = 3) {
+          msg ("<br/><br/><color color=\"orange\">Me duelen los pies, he empezado a correr por ahi completamente descalza</color>")
+        }
+        else if (player.darvueltas = 4) {
+          msg ("<br/><br/><color color=\"orange\">No lo voy a conseguir, todos los árboles son iguales y no logro diferenciar nada. Voy a desfallecer.</color>")
+        }
+        else if (player.darvueltas = 5) {
+          msg ("<br/><br/><color color=\"orange\">No puedo más, esto es imposible. Me rindo a morir a la intemperie.</color><br/><br/>Con este último pensamiento, cierras los ojos por última vez. Al menos, eso crees tú...")
+          wait {
+            ClearScreen
+            SetFontSize (20)
+            PrintCentered ("<color color=\"brown\">\"¡DESPIERTA!\"</color>")
+            SetFontSize (12)
+            msg ("<br/><br/><color color=\"brown\">Vaya, vaya, mi pequeña niña. Parece que eres aficionada a dormir en lugares poco apropiados. Por una vez, deberías probar a hacerlo en una cama.</color>")
+            msg ("<br/>Cuando te despiertas estás en un vestíbulo de madera envejecida. Te levantas con cuidado y te pones en pie. Como si las burlas de la diosa que hay en ti no fueran suficientes, cada vez que hace algo con tu cuerpo acabas con un dolor horrible de cabeza.<br/>")
+            MoveObject (player, PosVest)
+          }
+        }
+      ]]></enter>
+      <onexit type="script">
+        player.darvueltas = player.darvueltas + 1
+      </onexit>
+      <exit alias="sur" to="bosque">
+        <inherit name="southdirection" />
+      </exit>
+      <exit alias="oeste" to="bosque4">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="este" to="bosque5">
+        <inherit name="eastdirection" />
+      </exit>
+    </object>
+    <object name="bosque4">
+      <inherit name="editor_room" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alias>bosque</alias>
+      <description>Es un bosque oscuro y tétrico. No ves nada a causa de la niebla y estás preocupada de que en las sombras se oculte algún tipo de peligro invisible.</description>
+      <enter type="script"><![CDATA[
+        if (player.darvueltas = 1) {
+          msg ("<br/><br/><color color=\"orange\">No me gustaría encontrarme en esta situación otra vez, debo apresurarme.</color>")
+        }
+        else if (player.darvueltas = 2) {
+          msg ("<br/><br/><color color=\"orange\">Estoy cansada, no se si voy a poder continuar mucho más</color>")
+        }
+        else if (player.darvueltas = 3) {
+          msg ("<br/><br/><color color=\"orange\">Me duelen los pies, he empezado a correr por ahi completamente descalza</color>")
+        }
+        else if (player.darvueltas = 4) {
+          msg ("<br/><br/><color color=\"orange\">No lo voy a conseguir, todos los árboles son iguales y no logro diferenciar nada. Voy a desfallecer.</color>")
+        }
+        else if (player.darvueltas = 5) {
+          msg ("<br/><br/><color color=\"orange\">No puedo más, esto es imposible. Me rindo a morir a la intemperie.</color><br/><br/>Con este último pensamiento, cierras los ojos por última vez. Al menos, eso crees tú...")
+          wait {
+            ClearScreen
+            SetFontSize (20)
+            PrintCentered ("<color color=\"brown\">\"¡DESPIERTA!\"</color>")
+            SetFontSize (12)
+            msg ("<br/><br/><color color=\"brown\">Vaya, vaya, mi pequeña niña. Parece que eres aficionada a dormir en lugares poco apropiados. Por una vez, deberías probar a hacerlo en una cama.</color>")
+            msg ("<br/>Cuando te despiertas estás en un vestíbulo de madera envejecida. Te levantas con cuidado y te pones en pie. Como si las burlas de la diosa que hay en ti no fueran suficientes, cada vez que hace algo con tu cuerpo acabas con un dolor horrible de cabeza.<br/>")
+            MoveObject (player, PosVest)
+          }
+        }
+      ]]></enter>
+      <onexit type="script">
+        player.darvueltas = player.darvueltas + 1
+      </onexit>
+      <exit alias="este" to="bosque3">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="sur" to="bosque2">
+        <inherit name="southdirection" />
+      </exit>
+    </object>
+    <object name="bosque5">
+      <inherit name="editor_room" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alias>bosque</alias>
+      <description>Es un bosque oscuro y tétrico. No ves nada a causa de la niebla y estás preocupada de que en las sombras se oculte algún tipo de peligro invisible.</description>
+      <enter type="script"><![CDATA[
+        if (player.darvueltas = 1) {
+          msg ("<br/><br/><color color=\"orange\">No me gustaría encontrarme en esta situación otra vez, debo apresurarme.</color>")
+        }
+        else if (player.darvueltas = 2) {
+          msg ("<br/><br/><color color=\"orange\">Estoy cansada, no se si voy a poder continuar mucho más</color>")
+        }
+        else if (player.darvueltas = 3) {
+          msg ("<br/><br/><color color=\"orange\">Me duelen los pies, he empezado a correr por ahi completamente descalza</color>")
+        }
+        else if (player.darvueltas = 4) {
+          msg ("<br/><br/><color color=\"orange\">No lo voy a conseguir, todos los árboles son iguales y no logro diferenciar nada. Voy a desfallecer.</color>")
+        }
+        else if (player.darvueltas = 5) {
+          msg ("<br/><br/><color color=\"orange\">No puedo más, esto es imposible. Me rindo a morir a la intemperie.</color><br/><br/>Con este último pensamiento, cierras los ojos por última vez. Al menos, eso crees tú...")
+          wait {
+            ClearScreen
+            SetFontSize (20)
+            PrintCentered ("<color color=\"brown\">\"¡DESPIERTA!\"</color>")
+            SetFontSize (12)
+            msg ("<br/><br/><color color=\"brown\">Vaya, vaya, mi pequeña niña. Parece que eres aficionada a dormir en lugares poco apropiados. Por una vez, deberías probar a hacerlo en una cama.</color>")
+            msg ("<br/>Cuando te despiertas estás en un vestíbulo de madera envejecida. Te levantas con cuidado y te pones en pie. Como si las burlas de la diosa que hay en ti no fueran suficientes, cada vez que hace algo con tu cuerpo acabas con un dolor horrible de cabeza.<br/>")
+            MoveObject (player, PosVest)
+          }
+        }
+      ]]></enter>
+      <onexit type="script">
+        player.darvueltas = player.darvueltas + 1
+      </onexit>
+      <exit alias="oeste" to="bosque3">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="sur" to="bosque1">
+        <inherit name="southdirection" />
+      </exit>
+    </object>
+  </object>
+  <object name="Posada">
+    <inherit name="editor_room" />
+    <object name="PosVest">
+      <inherit name="editor_room" />
+      <alias>vestíbulo</alias>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>un</prefix>
+      <description>El vestíbulo está bastante bien iluminado. Hay una alfombrilla para limpiarse los zapatos y la puerta hacia el interior del edificio es de una madera clara, muy distinta a la del resto de la habitación; parece que no fueron hechas al mismo tiempo.</description>
+      <exit alias="norte" to="PosPlanBaj">
+        <inherit name="northdirection" />
+      </exit>
+    </object>
+    <object name="PosPlanBaj">
+      <inherit name="editor_room" />
+      <alias>planta baja de la posada</alias>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>la</prefix>
+      <description>Es una habitación muy bien iluminada, una mesa larga de madera se presenta ante ti. En ella hay un libro, al igual que una gran cantidad de papeles y una campanilla. En una esquina ruge tímidamente un fuego contenido por una chimenea de piedra. Las mesas y sillas tienen tapetes de ganchillo para evitar su deterioro prematuro por el uso. A mano derecha vemos una puerta cerrada que de seguro conducirá a las dependencias privadas de la posada, mientras que las escaleras conducirán a las habitaciones disponibles.</description>
+      <firstenter type="script"><![CDATA[
+        msg ("Abres la puerta, muerta de frio y tiritando, esperando que haya un alma amable y comprensiva al otro lado de la estancia. Abres la puerta y oyes el dulce tintineo de una campana. En un primer vistazo, ves una habitación mediana, con una mesa grande rodeada de sillas, al amor de la lumbre y con una puerta cerrada a la derecha, al igual que unas escaleras cerca del mostrador. Este se encuentra vacio, con gran cantidad de papeles encima. En ese momento, ves que la puerta se abre repentinamente y sale de ella una mujer que debe haber cumplido los cuarenta no hace mucho, que te mira de arriba abajo con una sonrisa y se acerca a ti.<br/><br/><color color=\"pink\">¡Hija! ¿Qué te ha pasado? Hay un viento horrible ahi fuera y el frio corta como un cuchillo, ¿cómo te presentas asi por las buenas; y descalza nada menos?</color><br/><br/>Atropellada por la rapidez con la que la mujer habla, intentas responder a todo a la vez, pero tu y tus labios tembláis como un flan.<br/><br/><color color=\"pink\">¡Madre mía, si apenas puedes sostenerte! Ven, anda, apoyate en mi.</color><br/><br/>Con sumo cuidado, te lleva a una de las sillas que más cerca está de la chimenea, para que entres en calor. Ella se mueve rápidamente hacia la puerta y la cierra, tan solo para volver y sentarse enfrente de ti, dispuesta a oir tu historia.<br/><br/><color color=\"orange\">Si he de decirle la verdad, no sé cómo he llegado aqui, pero más importante, no se quien soy ni de dónde vengo. Me desperté en una cueva cubierta tan solo con estas extrañas ropas y hui de ella sin pensarlo. Salí del bosque y creí haber perdido el conocimiento, pero para mi sorpresa, aparecí en la puerta de esta posada.</color><br/><br/><color color=\"pink\">¡Oh, mi pobre niña! Has tenido que pasar un infierno para llegar hasta aqui. No te preocupes, yo te ayudaré hasta que te recuperes. Por cierto, me llamo Nina y soy la dueña de esta posada. De momento, quítate esa ropa toda húmeda y fría, te dejaré algo de ropa vieja y te daré un té para que te calientes. Puedes ocupar una de las habitaciones de arriba, ahora mismo no hay nadie. Toma la llave de la primera.</color>")
+        AddToInventory (PosLlave1)
+        AddToInventory (ropa común)
+        MakeObjectInvisible (Nina)
+        msg ("<br/><color color=\"brown\">Deberías hacer lo que dice esa buena mujer. Quítate la ropa calada que llevas.</color><br/>")
+      ]]></firstenter>
+      <exit alias="sur" to="PosVest">
+        <inherit name="southdirection" />
+      </exit>
+      <object name="Nina">
+        <inherit name="editor_object" />
+        <inherit name="female" />
+        <displayverbs>Examinar; Hablar a</displayverbs>
+        <fe type="boolean">false</fe>
+      </object>
+      <exit alias="arriba" to="PosPasArr">
+        <inherit name="updirection" />
+      </exit>
+    </object>
+    <object name="PosPasArr">
+      <inherit name="editor_room" />
+      <exit alias="abajo" to="PosPlanBaj">
+        <inherit name="downdirection" />
+      </exit>
+      <exit name="PosHabPuerta1" alias="suroeste" to="PosHab1">
+        <inherit name="southwestdirection" />
+        <locked />
+        <lockmessage>Tienes una llave. Úsala.</lockmessage>
+      </exit>
+    </object>
+    <object name="PosHab1">
+      <inherit name="editor_room" />
+      <exit alias="noreste" to="PosPasArr">
+        <inherit name="northeastdirection" />
+      </exit>
+    </object>
+  </object>
+  <function name="TimeAsString" type="string"><![CDATA[
+    minutes = game_clock.time % 60
+    hours24 = (game_clock.time / 60) % 24
+    hours = hours24 % 12
+    if (hours = 0) {
+      hours = 12
+    }
+    days = game_clock.time / (60 * 24) + 1
+    if (minutes < 10) {
+      s = "Día " + days + ", " + hours + ":0" + minutes
+    }
+    else {
+      s = "Día " + days + ", " + hours + ":" + minutes
+    }
+    if (hours24 < 12) {
+      return (s + " am")
+    }
+    else {
+      return (s + " pm")
+    }
+  ]]></function>
+  <function name="DoWear" parameters="object"><![CDATA[
+    if (not HasAttribute(object,"worn")) {
+      msg (DynamicTemplate("WearUnsuccessful", object))
+    }
+    else if (object.parent = player and object.worn = true) {
+      msg (DynamicTemplate("AlreadyWearing", object))
+    }
+    else if (not ListContains(ScopeInventory(), object)) {
+      msg (DynamicTemplate("WearUnsuccessful", object))
+    }
+    else {
+      isLayerProblem = false
+      conflictedItem = null
+      if (HasAttribute(object,"wear_slots")) {
+        foreach (item, ScopeReachableInventory()) {
+          if (item.worn = true and HasAttribute(item,"wear_slots")) {
+            foreach (itemSlot, item.wear_slots) {
+              if (ListContains(object.wear_slots,itemSlot)) {
+                if (object.wear_layer < item.wear_layer) {
+                  conflictedItem = item
+                  isLayerProblem = true
+                }
+                else if (object.wear_layer = item.wear_layer) {
+                  conflictedItem = item
+                }
+              }
+            }
+          }
+        }
+      }
+      if (conflictedItem = null) {
+        object.worn = True
+        object.original_drop = object.drop
+        object.original_alias = object.alias
+        object.drop = false
+        object.display = GetDisplayName(object)
+        object.alias = GetDisplayAlias(object) + " (worn)"
+        if (object.wearmsg = null) {
+          msg (DynamicTemplate("WearSuccessful",object))
+        }
+        else {
+          msg (object.wearmsg)
+        }
+        //do after
+        if (HasScript(object, "onafterwear")) {
+          do (object, "onafterwear")
+        }
+        else if (HasString(object, "onafterwear")) {
+          msg (object.onafterwear)
+        }
+      }
+      else if (isLayerProblem = true) {
+        msg (DynamicTemplate("CannotWearOver",conflictedItem))
+      }
+      else {
+        msg (DynamicTemplate("CannotWearWith",conflictedItem))
+      }
+    }
+  ]]></function>
+</asl>

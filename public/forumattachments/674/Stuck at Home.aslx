@@ -1,0 +1,381 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Stuck at Home">
+    <gameid>dff2de3b-dfee-410d-a66f-9953bcce1112</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <subtitle>Make the Best of It</subtitle>
+    <author>Weezil</author>
+    <description>You're stuck at home for 24 hours. How will you spend your time? Will you go crazy? ...Probably not.</description>
+    <category>Simulation</category>
+    <difficulty>Easy</difficulty>
+    <cruelty>Merciful</cruelty>
+  </game>
+  <object name="rm_bedroom1">
+    <inherit name="editor_room" />
+    <alias>Bedroom</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <descprefix type="string"></descprefix>
+    <dark type="boolean">false</dark>
+    <description>Your {object:obj_bed1} is set lengthwise against the south wall of the room. On the west wall, you have a {object:obj_ctnr_desk1}</description>
+    <beforeenter type="script"><![CDATA[
+      firsttime {
+        msg ("You are woken up to the sound of the front door shutting. When you open your eyes, you see only pitch darkness. A few moments later, as your vision begins to adjust, you hear the start of a car engine. You then smile, as you understand that your parents have left to visit an old family friend. They had planned an out-of-state drive to visit your dear uncle Charlie. You know, the one arrested for molesting a table in public? And your parents made it very clear to you that they expected you to follow every rule they had set forth while they visit him in prison.<br/><br/>Your eyes have fully adjusted, and you take a gander at the alarm clock on your desk. It is exactly midnight. Unable to go back to sleep, you decide to flip on a light switch, and get out of bed.")
+        wait {
+          msg ("<br/>You have the house all to yourself for 24 hours. Make it last, it'll be over before you know it.<br/>")
+          wait {
+            HidePreviousTurnOutput
+          }
+        }
+      }
+      otherwise {
+        msg ("  ")
+      }
+    ]]></beforeenter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="obj_bed1">
+      <inherit name="editor_object" />
+      <alias>Bed</alias>
+      <look>This is your bed. You use it for sleeping, napping, resting- that sort of thing.</look>
+      <alt type="stringlist" />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <use type="script">
+        msg ("You've got 24 hours to do whatever you want, and you want to sleep it away? ...I knew you weren't the brightest, but honestly...")
+      </use>
+      <take type="script">
+        msg ("I'd like to see you try.")
+      </take>
+    </object>
+    <object name="obj_ctnr_dresser1">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <alias>Dresser</alias>
+      <hidechildren />
+      <listchildren />
+      <listchildrenprefix>The contents are as follows: </listchildrenprefix>
+      <openmsg>The dresser is now open.</openmsg>
+      <closemsg>The dresser is now closed.</closemsg>
+      <look type="script">
+        if (obj_ctnr_dresser1.isopen) {
+          msg ("An old, worn wooden stained dresser that comes up to your waist. It is currently open, and you can see a {object:item_helpjournal} amongst a pile of socks.")
+        }
+        else if (Got(item_helpjournal)) {
+          msg ("An old, worn wooden stained dresser that comes up to your waist. It is currently open, and you can see a pile of socks inside.")
+        }
+        else {
+          msg ("An old, worn wooden stained dresser that comes up to your waist. It is currently closed.")
+        }
+      </look>
+      <take type="script">
+        msg ("Yeah, good luck with that one.")
+      </take>
+      <object name="item_helpjournal">
+        <inherit name="editor_object" />
+        <alias>Journal</alias>
+        <look type="script">
+          firsttime {
+            msg ("An old journal with a red leather cover. The gold-print title along the spine reads \"My Diary.\" Oh for goodness' sake, you're a sissy. Real men keep journals. So now, the gold print reads \"My Journal.\"")
+          }
+          otherwise {
+            msg ("An old journal with a red leather cover. The gold-print title along the spine reads \"My Journal.\"")
+          }
+        </look>
+        <take type="script">
+          AddToInventory (item_helpjournal)
+          firsttime {
+            msg ("You've picked up the journal. I bet it's an interesting read.")
+          }
+          otherwise {
+            msg ("You've picked up the journal.")
+          }
+        </take>
+        <drop type="script">
+          firsttime {
+            msg ("Why on Earth would you wish to do that? This journal is essentially your \"Help Menu,\" and God knows you need all the help you can get.")
+          }
+          otherwise {
+            msg ("{random:Nope.:Nuh-uh.:We've been over this...:Stop it.:Now you're just being annoying.}")
+          }
+        </drop>
+        <read type="script"><![CDATA[
+          firsttime {
+            msg ("Welcome to your Journal. Here, you can keep track of the day's activities, view obtainable achievements, and get help when you need it.<br/><br/>The following commands can be used at any given time. Read the Journal again if you forget what one is.")
+            wait {
+              msg ("1) I need help: Pretty self-explanatory. Brings up a list of help topics.<br/>2) Show to-do list: Show achievements.<br/>3) I'm a filthy cheater: Shows cheats.")
+            }
+          }
+          otherwise {
+            msg ("Commands:<br/>1) I need help: Pretty self-explanatory. Brings up a list of help topics.<br/>2) Show to-do list: Show achievements.<br/>3) What have I done?: View your play history.")
+          }
+        ]]></read>
+      </object>
+      <object name="scenery_obj_ctnr_dresser1">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <alias>Socks</alias>
+        <scenery type="boolean">false</scenery>
+        <look>A bunch of socks.</look>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <take type="script"><![CDATA[
+          firsttime {
+            msg ("I'm sorry, but there are no uses for socks in this game. And before you say anything, while it is technically a valid use for them, <i>that</i> is not a performable action here... Pervert.")
+          }
+          otherwise {
+            msg ("{random:We've been over this already.:Stop wasting your time.:For every time you type \"Take Socks,\" you're that much closer to gaining Carpal Tunnel in your hands, and for what?:Stop that.:No.:You're annoying me.:Stop that.}")
+          }
+        ]]></take>
+      </object>
+    </object>
+    <object name="obj_television1">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <alias>TV</alias>
+      <switchonmsg>You've turned the TV on.</switchonmsg>
+      <switchoffmsg>You've turned the TV off.</switchoffmsg>
+      <lightsource />
+      <alt type="stringlist">
+        <value>Television</value>
+      </alt>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Switch on</value>
+        <value>Switch off</value>
+      </displayverbs>
+      <lightstrength>weak</lightstrength>
+      <look type="script">
+        if (IsSwitchedOn(obj_television1)) {
+          msg ("A small, 20-inch box TV set. It gets basic channels, and is currently playing a static-ridden rendition of a nature documentary.")
+        }
+        else {
+          msg ("A small, 20-inch box TV set. It gets basic channels, and is currently switched off.")
+        }
+      </look>
+      <take type="script">
+        msg ("The cord is rather short, so I wouldn't recommend lugging it around.")
+      </take>
+      <watch type="script">
+        if (IsSwitchedOn(obj_television1)) {
+          ShowYouTube ("")
+        }
+      </watch>
+    </object>
+    <object name="obj_ctnr_desk1">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <alias>Computer Desk</alias>
+      <contentsprefix>The items resting on the desk are as follows:</contentsprefix>
+      <hidechildren type="boolean">false</hidechildren>
+      <drop type="boolean">false</drop>
+      <look type="script">
+        if (obj_ctnr_sub_desk1_unlocked.isopen) {
+          msg ("An old wooden desk, with a  on the right side. The drawer is currently open.")
+        }
+        else if (Contains (obj_ctnr_desk1,key_obj_ctnr_sub_desk1)) {
+          msg ("An old wooden desk, with a drawer on the right side. There's a {object:key_obj_ctnr_sub_desk1} on the corner.")
+        }
+        else {
+          msg ("An old wooden desk, with a drawer on the right side. The drawer is currently closed.")
+        }
+      </look>
+      <take type="script">
+        msg ("Yes, I'm definitely going to put a 50-pound desk in your inventory for you.")
+      </take>
+      <object name="key_obj_ctnr_sub_desk1">
+        <inherit name="editor_object" />
+        <alias>Key</alias>
+        <scenery />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <take type="script">
+          AddToInventory (key_obj_ctnr_sub_desk1)
+          msg ("{object:key_obj_ctnr_sub_desk1} has been picked up. It might go to the drawer in the desk. Go ahead and try it out.")
+        </take>
+        <drop type="script">
+          msg ("Use it to drop it.")
+        </drop>
+        <selfuseanything type="script">
+          msg ("{random:That isn't going to work.:That key was clearly not meant for that object.:...Wait, are you serious?}")
+        </selfuseanything>
+        <look type="script">
+          firsttime {
+            msg ("The key came alive, and began humping the nearest keyhole... No, not really. It's just a key.")
+          }
+          otherwise {
+            msg ("It's just a key.")
+          }
+        </look>
+        <selfuseon type="scriptdictionary">
+          <item key="obj_ctnr_sub_desk1">
+            MoveObject (obj_ctnr_sub_desk1, rm_storage)
+            MoveObjectHere (obj_ctnr_sub_desk1_unlocked)
+            RemoveObject (key_obj_ctnr_sub_desk1)
+            msg ("{object:key_obj_ctnr_sub_desk1} was used on the drawer. {object:key_obj_ctnr_sub_desk1} removed from inventory.")
+          </item>
+        </selfuseon>
+      </object>
+      <object name="obj_dymc_alarmclock1">
+        <inherit name="editor_object" />
+        <alias>Alarm Clock</alias>
+        <alt type="stringlist">
+          <value>Clock</value>
+        </alt>
+        <look type="script">
+          SetTimerInterval (, 1)
+        </look>
+      </object>
+    </object>
+    <object name="obj_ctnr_sub_desk1">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <alias>Drawer</alias>
+      <alt type="stringlist" />
+      <scenery />
+      <drop type="boolean">false</drop>
+      <contentsprefix>Contents</contentsprefix>
+      <hidechildren />
+      <listchildren />
+      <listchildrenprefix>Contents:</listchildrenprefix>
+      <openmsg>The bottom drawer was opened.</openmsg>
+      <closemsg>The bottom drawer was closed.</closemsg>
+      <nokeymessage>The drawer is locked. Try using some sort of {object:key_obj_ctnr_sub_desk1} on it.</nokeymessage>
+      <unlockmessage>Drawer has been unlocked.</unlockmessage>
+      <displayverbs type="stringlist">
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+      <look>A simple drawer, currently locked.</look>
+      <take type="script">
+        msg ("Um... why..?")
+      </take>
+    </object>
+    <object name="scenery_obj_posters1">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <alias>posters</alias>
+      <scenery />
+      <look type="script">
+        firsttime {
+          msg ("The posters vary in content quite wildly, ranging from a gritty shooter game, to a cartoon about fluffy, cartoon ponies..?")
+          wait {
+            msg ("...What is the matter with you?")
+            wait {
+              msg ("...Sissy.")
+            }
+          }
+        }
+        otherwise {
+          msg ("There's a few other posters covering bands, TV shows and other games.")
+        }
+      </look>
+    </object>
+  </object>
+  <object name="rm_storage">
+    <inherit name="editor_room" />
+    <alias>rm_storage</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description><![CDATA[{once:<b><i>Achievement Unlocked!</i></b><br/><i>Hey, you're not supposed to be here!</i><br/><br/>Well, congratulations on breaking the game. I suppose it had to happen sometime. Well, here is where everything passes through to fit into my limited knowledge of the program. If I want to add an alternate version of an object, but I don't want you finding it until I swap it out, this is where it is. By reaching here, you've essentially ruined the game for yourself, as there is no way out of here. I hope you're proud of yourself.}]]></description>
+    <descprefix type="string"></descprefix>
+    <objectslistprefix type="string"></objectslistprefix>
+    <object name="obj_ctnr_sub_desk1_unlocked">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <scenery />
+      <alias>Drawer</alias>
+      <alt type="stringlist" />
+      <drop type="boolean">false</drop>
+      <hidechildren />
+      <listchildren />
+      <listchildrenprefix>Contents:</listchildrenprefix>
+      <contentsprefix>Contents:</contentsprefix>
+      <openmsg>The bottom drawer was opened.</openmsg>
+      <closemsg>The bottom drawer was closed.</closemsg>
+      <displayverbs type="stringlist">
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+      <take type="script">
+        msg ("Um... why..?")
+      </take>
+    </object>
+  </object>
+  <command name="cmd_help1">
+    <pattern>I need help</pattern>
+    <script><![CDATA[
+      firsttime {
+        msg ("Oh, I knew it would only be a matter of time before you finally came crawling to me for help. Well, being your generous and loving game companion, I am more than happy to help you.<br/><br/>Below are a series of questions that you can ask me, and I will answer to the best of my ability.")
+        wait {
+          msg ("1) Who the hell <i>are</i> you?!<br/>2) What is the point of this game?<br/>3) How do you win?<br/>4) What are some basic things I need to know?<br/>5) Are there any easter eggs?")
+          wait {
+            msg (" <br/> ")
+          }
+        }
+      }
+      otherwise {
+        msg ("1) Who the hell <i>are</i> you?!<br/>2) What is the point of this game?<br/>3) How do you win?<br/>4) What are some basic things I need to know?<br/>5) Are there any easter eggs?")
+      }
+    ]]></script>
+  </command>
+  <command name="cmd_help2">
+    <pattern>Show to-do list</pattern>
+    <script><![CDATA[
+      firsttime {
+        msg ("From here, you can view each and every achievement that is available in-game. However, take note that it isn't stated how to earn said achievements; that's for you to discover.<br/><br/>Below is a list of achievements and their point values.")
+        wait {
+          msg ("1) <b>Bowties are Cool</b> for 50 pts<br/>2) <b>Bowties are Meh</b> for 50 pts<br/>3) <b> Technically, it's Still My Property</b> for 50 pts<br/>4) <b>I Frickin' LOVE Burritos!</b> for 100 pts<br/>5) <b>If At First You Don't Succeed, Start Spamming</b> for 100 pts<br/>6) <b>How Does Chair..?</b> for 150 pts<br/>7) <b>Screw the Electric Bill!</b> for 200pts<br/>8) <b>Miniature Horses of Which I Am Entitled to</b> for 250 pts<br/>9) <b>Six Seconds I'll Never Get Back</b> for 250 pts<br/>10) <b>Chair-Mode Deactivate</b> for 300 pts<br/>11) <b>House Party</b> for 400 pts<br/>12) <b>The CORRECT Way to Facebook</b> for 500 pts<br/>13) <b>I Never Liked Them Anyway</b> for 500 pts<br/>14) <b>But There's No Forest Anywhere!</b> for 1000 pts<br/>15) <b>I Wouldn't Have Gotten Away with it Too, Regardless of You Meddling Kids...</b> for 1000 pts<br/>16) <b>THIS DOESN'T SEEM PHYSICALLY POSSIBLE!!!</b> for 1000 pts<br/>17) <b>Mystery Achievement</b> for 2000 pts<br/>18) <b>Mystery Achievement</b> for 2000 pts<br/>19) <b>Mystery Achievement</b> for 2000 pts<br/>20) <b>Mystery Achievement</b> for 2000 pts")
+        }
+      }
+      otherwise {
+        msg ("1) <b>Bowties are Cool</b> for 50 pts<br/>2) <b>Bowties are Meh</b> for 50 pts<br/>3) <b> Technically, it's Still My Property</b> for 50 pts<br/>4) <b>I Frickin' LOVE Burritos!</b> for 100 pts<br/>5) <b>If At First You Don't Succeed, Start Spamming</b> for 100 pts<br/>6) <b>How Does Chair..?</b> for 150 pts<br/>7) <b>Screw the Electric Bill!</b> for 200pts<br/>8) <b>Miniature Horses of Which I Am Entitled to</b> for 250 pts<br/>9) <b>Six Seconds I'll Never Get Back</b> for 250 pts<br/>10) <b>Chair-Mode Deactivate</b> for 300 pts<br/>11) <b>House Party</b> for 400 pts<br/>12) <b>The CORRECT Way to Facebook</b> for 500 pts<br/>13) <b>I Never Liked Them Anyway</b> for 500 pts<br/>14) <b>But There's No Forest Anywhere!</b> for 1000 pts<br/>15) <b>I Wouldn't Have Gotten Away with it Too, Regardless of You Meddling Kids...</b> for 1000 pts<br/>16) <b>THIS DOESN'T SEEM PHYSICALLY POSSIBLE!!!</b> for 1000 pts<br/>17) <b>Mystery Achievement</b> for 2000 pts<br/>18) <b>Mystery Achievement</b> for 2000 pts<br/>19) <b>Mystery Achievement</b> for 2000 pts<br/>20) <b>Mystery Achievement</b> for 2000 pts")
+      }
+    ]]></script>
+  </command>
+  <command name="cmd_help3">
+    <pattern>I'm a filthy cheater</pattern>
+    <script><![CDATA[
+      firsttime {
+        msg ("You disgust me... but yeah, there are some cheats. But...")
+        wait {
+          msg ("<b>I WON'T TELL YOU ANY!</b>")
+          wait {
+            msg ("The existing cheats can all be found throughout your home, and do different things. There is no noclip, there is no godmode, there's none of that ridiculousness. There are, however, a few rule-breakers, such as extending your time to play, or revealing a few easter eggs. I mean really, in a game like this, do you really want cheats anyway? It kind of breaks the experience, if you ask me.")
+          }
+        }
+      }
+      otherwise {
+        firsttime {
+          msg ("You heard me before. Go find them, you lazy bum.")
+        }
+        otherwise {
+          msg ("...")
+        }
+      }
+    ]]></script>
+  </command>
+  <command name="cmd_clear">
+    <pattern>clear</pattern>
+    <script>
+      ClearScreen
+    </script>
+  </command>
+  <verb>
+    <property>watch</property>
+    <pattern>watch</pattern>
+    <defaultexpression>"You can't watch " + object.article + "."</defaultexpression>
+  </verb>
+  <timer name="tmr_obj_dymc_alarmclock1">
+    <interval>10</interval>
+    <enabled />
+    <script>
+      firsttime {
+        IncreaseObjectCounter (, "")
+      }
+    </script>
+  </timer>
+</asl>

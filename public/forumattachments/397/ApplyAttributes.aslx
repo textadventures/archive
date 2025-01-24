@@ -1,0 +1,56 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="ApplyAttributes">
+    <gameid>e4c54dda-b7a0-470f-abbc-2d603f94a18e</gameid>
+    <version>1.0</version>
+    <start type="script">
+      choices = NewStringDictionary()
+      dictionary add (choices, game.HumanRace, "Human")
+      dictionary add (choices, game.CatRace, "Cat")
+      dictionary add (choices, game.DogRace, "Dog")
+      msg(" ")
+	  show menu ("What is your race?", choices, false) {
+	    // Copy all the attributes, using the "attributes" string list as key.
+	  	ApplyAttributes(player, result)
+
+	    msg("player.race = " + player.race)
+	    msg("player.maxhp = " + player.maxhp)
+	    msg("player.speed = " + player.speed)
+	    msg("player.stamina = " + player.stamina)
+	  }
+    </start>
+    <HumanRace>race=human, maxhp=50, speed=10, stamina=45</HumanRace>
+    <DogRace>race=dog, maxhp=15, speed=20, stamina=20</DogRace>
+    <CatRace>race=cat, maxhp=8, speed=15, stamina=18</CatRace>
+  </game>
+  <object name="room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+  </object>
+  <function name="ApplyAttributes" parameters="object, s"><![CDATA[
+    start = 1
+    len = LengthOf(s)
+    while (start <= len) {
+      // find the "="
+      end = Instr(start, s, "=")
+      attribute = Trim(Mid(s, start, end-start))
+      start = end+1
+      end = Instr(start, s, ",")
+      if (end = 0) {
+        end = len+1
+      }
+      value = Trim(Mid(s, start, end-start))
+      start = end+1
+      //msg ("attribute = " + attribute + ", value=" + value)
+      if (IsNumeric(value)) {
+      	set (object, attribute, ToInt(value))
+      } else {
+      	set (object, attribute, value)
+      }
+    }
+  ]]></function>
+</asl>

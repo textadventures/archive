@@ -1,0 +1,2229 @@
+﻿<!--Saved by Quest 5.6.5621.18142-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="hero_of_acromelia">
+    <gameid>ed3795a8-cbad-41f2-a27e-9c7ddd416f26</gameid>
+    <version>1.0</version>
+    <firstpublished>2014</firstpublished>
+    <underlinehyperlinks type="boolean">false</underlinehyperlinks>
+    <defaultfont>'Courier New', Courier, monospace</defaultfont>
+    <defaultbackground>DarkOliveGreen</defaultbackground>
+    <defaultforeground>White</defaultforeground>
+    <defaultlinkforeground>White</defaultlinkforeground>
+    <menufont>'Courier New', Courier, monospace</menufont>
+    <gridmap type="boolean">false</gridmap>
+  </game>
+  <object name="bedroom1">
+    <descprefix>You awake in</descprefix>
+    <alias>bed</alias>
+    <description type="script">
+      msg ("You are in a musty, old bedroom. There's a ruckus coming from below you, probably on the lower floor of the building. There's a door leading north, and a window off to the right.")
+    </description>
+    <enter type="script">
+    </enter>
+    <firstenter type="script">
+    </firstenter>
+    <object name="player">
+      <look type="string"></look>
+    </object>
+    <object name="wardrobe">
+      <inherit name="container_open" />
+      <look>It looks hand-carved. There is a great monster attacking a village depicted on the doors. It's made of rich mahogany.</look>
+      <hidechildren type="boolean">false</hidechildren>
+      <listchildren />
+      <openmsg>Moths fly out.</openmsg>
+      <isopen type="boolean">false</isopen>
+      <scenery type="boolean">false</scenery>
+      <take type="script">
+        msg ("It's too heavy, ya ding-dong. How the heck are you supposed to take it?")
+      </take>
+      <onopen type="script">
+        if (GetBoolean(candle, "lit")) {
+          msg ("This wardrobe is filled to the brim with useless junk. Among the scraps of cloth and knick-knacks you see your sword, a key, and a bowl of cheese.")
+        }
+        else {
+          msg ("It's too dark in this room to see inside the wardrobe. The only thing you can see is your tabard. Maybe if it were lighter, you could explore this wardrobe further.")
+        }
+      </onopen>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+      <object name="tabard">
+        <look>It's got your family crest, the majestic lion slaying a villainous serpent, on the front. You bear this emblem with pride.</look>
+        <visible />
+        <take />
+        <takemsg>As you take the tunic, the window bursts open and cold air sweeps across your naked body. The urge to clothe yourself is stronger than it has ever been before.</takemsg>
+        <alias>tunic</alias>
+        <wear type="script">
+          if (Got(tabard)) {
+            if (not GetBoolean(player, "clothed")) {
+              msg ("You throw the tunic on.")
+              SetObjectFlagOn (player, "clothed")
+              HelperOpenObject (window)
+            }
+            else {
+              msg ("You're already wearing it.")
+            }
+          }
+          else {
+            msg ("You're not carrying it.")
+          }
+        </wear>
+        <lick type="script">
+          finish
+        </lick>
+      </object>
+      <object name="sword">
+        <look>A warrior's soul.</look>
+        <take />
+        <visible type="boolean">false</visible>
+        <useanything type="script">
+        </useanything>
+        <selfuseanything type="script">
+          msg ("Why would you want to hack that up?")
+        </selfuseanything>
+        <selfuseon type="scriptdictionary">
+          <item key="door">
+            msg ("There are effective ways to vent one's frustration. Property damage is just not one of them.")
+          </item>
+        </selfuseon>
+      </object>
+      <object name="key">
+        <look>It's a rusty, old key. It should work, though.</look>
+        <alias>bedroom key</alias>
+        <take />
+        <takemsg>You pick up the key.</takemsg>
+        <visible type="boolean">false</visible>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <scenery type="boolean">false</scenery>
+        <selfuseanything type="script">
+          msg ("It doesn't have a keyhole.")
+        </selfuseanything>
+        <selfuseon type="scriptdictionary">
+          <item key="door">
+            msg ("The door is already unlocked. It won't budge, though.")
+          </item>
+        </selfuseon>
+      </object>
+      <object name="bowl of cheese">
+        <look>This must be breakfast. How long has it been here?</look>
+        <take />
+        <takemsg>You take the bowl of cheese.</takemsg>
+        <eat>No thanks. You're lactose intolerant. Plus, you don't know how long it's been there.</eat>
+        <visible type="boolean">false</visible>
+        <scenery type="boolean">false</scenery>
+        <alt type="stringlist">
+          <value>bowl</value>
+          <value>cheese</value>
+        </alt>
+        <smell>Stinky.</smell>
+        <selfuseanything type="script">
+          msg ("It isn't hungry.")
+        </selfuseanything>
+        <selfuseon type="scriptdictionary">
+          <item key="candle">
+            if (GetBoolean(candle, "lit")) {
+              msg ("You hold the bowl of cheese over the lit candle for a minute or two as the cheese slowly melts to form a sort of liquidy fondue.")
+              SetObjectFlagOn (bowl of cheese, "melted")
+            }
+            else {
+              msg ("You hold the bowl of cheese over the candle but nothing happens.")
+            }
+          </item>
+          <item key="door">
+            if (GetBoolean(bowl of cheese, "melted")) {
+              msg ("You spread the fondue on the edges of the door. With the cheese acting as a lubricant, you shove the door open with a mighty push.")
+              HelperOpenObject (door)
+              RemoveObject (bowl of cheese)
+            }
+            else {
+              msg ("Sorry, but the door isn't hungry.")
+            }
+          </item>
+        </selfuseon>
+      </object>
+      <object name="moths">
+        <scenery />
+        <look>They flew off somewhere; you can't seem them.</look>
+        <alt type="stringlist">
+          <value>moth</value>
+          <value>bugs</value>
+        </alt>
+      </object>
+    </object>
+    <object name="end table">
+      <inherit name="surface" />
+      <look>Just your typical end table. There's a candle and an old box on it.</look>
+      <take type="script">
+        msg ("As you reach to pick up the end table, a wave or remorse fills your mind as you think of the end table's true owner weeping in a corner over the loss of his/her favorite furniture item. You decide to leave it alone.")
+      </take>
+      <object name="candle">
+        <scenery type="boolean">false</scenery>
+        <take type="script">
+          msg ("You don't need it at the moment. Besides, it'll function perfectly well where it's standing.")
+        </take>
+        <look type="script">
+          if (GetBoolean(candle, "lit")) {
+            msg ("The candle blazes lowly, flooding the room with its dim luminessence.")
+          }
+          else {
+            msg ("Upon examining the wick, you notice that this candle has never been lit before.")
+          }
+        </look>
+        <light type="script">
+          if (Got(fire crystals)) {
+            if (GetBoolean(candle, "lit")) {
+              msg ("It's already lit. You don't need to light it again.")
+            }
+            else {
+              SetObjectFlagOn (candle, "lit")
+              msg ("You shake the fire crystals to activate them, and light the candle. The light reveals an envelope on the ground.")
+              MakeObjectVisible (envelope)
+              MakeObjectVisible (sword)
+              MakeObjectVisible (key)
+              MakeObjectVisible (bowl of cheese)
+            }
+          }
+          else {
+            msg ("You don't have anything to light it with.")
+          }
+        </light>
+      </object>
+      <object name="box">
+        <inherit name="container_closed" />
+        <hidechildren type="boolean">false</hidechildren>
+        <look>It's a musty, old cigar box. You shake the box and hear rattling inside.</look>
+        <listchildren />
+        <alias>old box</alias>
+        <alt type="stringlist" />
+        <onopen type="script">
+          msg ("Opening the tattered, old box reveals its contents. There are several glowing fire crystals inside.")
+        </onopen>
+        <onclose type="script">
+        </onclose>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>Take</value>
+          <value>Open</value>
+          <value>Close</value>
+        </displayverbs>
+        <object name="fire crystals">
+          <scenery />
+          <take />
+          <takemsg>You take some fire crystals, but leave a few for the next person who might need one.</takemsg>
+          <alt type="stringlist">
+            <value>crystals</value>
+          </alt>
+          <look>They're warm to the touch.</look>
+          <selfuseanything type="script">
+            msg ("You're pretty sure you'd be in trouble if you burned that.")
+          </selfuseanything>
+          <selfuseon type="scriptdictionary">
+            <item key="candle">
+              if (GetBoolean(candle, "lit")) {
+                msg ("It's already lit. You don't need to light it again.")
+              }
+              else {
+                SetObjectFlagOn (candle, "lit")
+                msg ("You shake the fire crystals to activate them, and light the candle. The light reveals an envelope on the ground.")
+                MakeObjectVisible (envelope)
+                MakeObjectVisible (sword)
+                MakeObjectVisible (key)
+                MakeObjectVisible (bowl of cheese)
+              }
+            </item>
+            <item key="bowl of cheese">
+              msg ("You hold the fire crystals to the bowl for a minute or two as the cheese slowly melts to form a sort of liquidy fondue.")
+              SetObjectFlagOn (bowl of cheese, "melted")
+            </item>
+            <item key="letter">
+              msg ("You burn the letter.")
+              RemoveObject (letter)
+            </item>
+            <item key="envelope">
+              msg ("You burn the envelope.")
+              RemoveObject (envelope)
+            </item>
+            <item key="tabard"><![CDATA[
+              if (GetBoolean(player, "clothed")) {
+                msg ("You burn yourself to death!<br/><br/>Game over, but what did you expect?")
+                finish
+              }
+              else {
+                msg ("You burn the tabard.")
+                RemoveObject (tabard)
+              }
+            ]]></item>
+          </selfuseon>
+        </object>
+      </object>
+    </object>
+    <object name="envelope">
+      <inherit name="container_closed" />
+      <scenery type="boolean">false</scenery>
+      <look>This is an otherworldly letter. The parchment doesn't even seem real.</look>
+      <visible type="boolean">false</visible>
+      <take />
+      <takemsg>As you pick up the envelope, your body feels as if it is being imbued with ethereal energy.</takemsg>
+      <hidechildren type="boolean">false</hidechildren>
+      <listchildren />
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+      <object name="letter">
+        <look>The writing is nothing you've ever seen. You can read it, but you don't know how, as it is a language you've never encountered in your lifetime.</look>
+        <read type="script">
+          if (Got(envelope)) {
+            msg ("It reads as follows, \"Hello! Thank you for playing my game! Have fun!\" How deranged. Clearly some drunken blowhard poet was in here.")
+          }
+        </read>
+      </object>
+    </object>
+    <exit name="bedroomdoor" alias="north" to="hallway">
+      <inherit name="northdirection" />
+      <locked type="boolean">false</locked>
+      <look>There's a large, wooden door leading out of the room.</look>
+      <runscript />
+      <lockmessage type="string"></lockmessage>
+      <script type="script">
+        if (door.isopen) {
+          MoveObject (player, hallway)
+        }
+        else {
+          msg ("The door won't open. You're no expert, but you feel it's a safe wager to assume that you need a key.")
+        }
+      </script>
+    </exit>
+    <object name="door">
+      <inherit name="container_closed" />
+      <look>It's a big ol' freakin' door. There's a tree carved on it.</look>
+      <scenery />
+      <stuck type="boolean">false</stuck>
+      <isopen type="boolean">false</isopen>
+      <listchildren type="boolean">false</listchildren>
+      <nokeymessage>You don't have the key.</nokeymessage>
+      <key type="object">key</key>
+      <openscript type="script">
+        msg ("No matter how hard you push or pull, the door won't budge.")
+      </openscript>
+      <take type="script">
+        msg ("You take the door. No, not really, but seriously, what did you expect by typing that?")
+      </take>
+      <lock type="script">
+        if (this.locked) {
+          msg (DynamicTemplate("AlreadyLocked", this))
+        }
+        else if (this.isopen and not this.canlockopen) {
+          msg (DynamicTemplate("CannotLockOpen", this))
+        }
+        else {
+          if (ListContains(ScopeInventory(), this.key)) {
+            msg (this.lockmessage)
+            this.locked = true
+          }
+          else {
+            msg (this.nokeymessage)
+          }
+        }
+      </lock>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+    </object>
+    <object name="window">
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <look>It seems like it's daytime, but there's a large tree blocking any form of sunlight.</look>
+      <autounlock />
+      <autoopen type="boolean">false</autoopen>
+      <nokeymessage>This window doesn't have a keyhole. It's jammed shut though.</nokeymessage>
+      <scenery />
+      <lookout>It seems like it's daytime, but there's a large tree blocking any form of sunlight.</lookout>
+      <locked />
+      <take type="boolean">false</take>
+      <key type="object">tabard</key>
+      <onclose type="script">
+        msg ("")
+      </onclose>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+    </object>
+    <object name="floor">
+      <look>It's definitely a floor. You won't get anywhere staring at the ground, though.</look>
+      <scenery />
+    </object>
+    <object name="ceiling">
+      <look>You look like a fool staring at the ceiling.</look>
+      <scenery />
+    </object>
+    <object name="bed">
+      <scenery />
+      <look>It was comfy while you were in it, but there's not time to be lounging around now.</look>
+      <lie>You're not tired. What kind of person sleeps even though they aren't tired?</lie>
+      <sleepin>You're not tired. What kind of person sleeps even though they aren't tired?</sleepin>
+      <take type="script">
+        msg ("Not surprisingly in the slightest, the bed is too heavy for you to take.")
+      </take>
+    </object>
+  </object>
+  <command>
+    <pattern>get down on it</pattern>
+    <script>
+      play sound ("2-07  Get down on it.mp3", false, false)
+    </script>
+  </command>
+  <command>
+    <pattern>stop music</pattern>
+    <script>
+      stop sound
+    </script>
+  </command>
+  <verb>
+    <property>lookout</property>
+    <pattern>look out</pattern>
+    <defaultexpression>"You can't look out " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>press</property>
+    <pattern>press</pattern>
+    <defaultexpression>"You can't press " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>light</property>
+    <pattern>light</pattern>
+    <defaultexpression>"You can't light " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>sleepin</property>
+    <pattern>sleep in; sleep on</pattern>
+    <defaultexpression>"You can't sleep in; sleep on " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="hallway">
+    <description>Your attention is drawn by the ruckus coming from downstairs. There's a really dusty carpet on the ground.</description>
+    <exit alias="south" to="bedroom1">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="potted plant">
+      <inherit name="surface" />
+      <contentsprefix>in which there is</contentsprefix>
+      <alt type="stringlist">
+        <value>fern</value>
+        <value>plant</value>
+      </alt>
+      <take type="boolean">false</take>
+      <look type="script">
+        if (Got(shiny rock)) {
+          msg ("It's a fern.")
+        }
+        else {
+          msg ("It's a fern. There's something peculiar about the dirt.")
+        }
+      </look>
+      <object name="dirt">
+        <inherit name="surface" />
+        <contentsprefix>partially buried in which there is</contentsprefix>
+        <hidechildren />
+        <listchildren />
+        <listchildrenprefix>Among the dirt, there lies</listchildrenprefix>
+        <alt type="stringlist">
+          <value>fern dirt</value>
+          <value>potted plant dirt</value>
+          <value>dirty dirt</value>
+        </alt>
+        <scenery />
+        <look type="script">
+          if (Got(shiny rock)) {
+            msg ("This dirt is dirty.")
+          }
+          else {
+            msg ("There's something shiny lying in between the dirt clods.")
+          }
+        </look>
+        <object name="shiny rock">
+          <look>It's a shiny rock. It seems pointless, but it sure is pretty.</look>
+          <contentsprefix type="string"></contentsprefix>
+          <hidechildren />
+          <listchildren />
+          <scenery />
+          <usedefaultprefix type="boolean">false</usedefaultprefix>
+          <prefix type="string"></prefix>
+          <alt type="stringlist">
+            <value>rock</value>
+            <value>shiny thing</value>
+          </alt>
+          <take />
+          <takemsg>You dig through the mulch and take out the shiny thing.</takemsg>
+        </object>
+      </object>
+    </object>
+    <object name="staircase">
+      <look>Light emanates from downstairs.</look>
+    </object>
+    <object name="painting">
+      <look>At first glance, it's the famed painter Regulio Pipitio's "Still Life of Spaghetti and a Meatball" but upon further inspection, you discover that it's a cheap fabrication.</look>
+    </object>
+    <object name="carpet">
+      <look>It's a musty carpet that desperately needs sweeping. There's a depiction in the weave but you can't make anything out due to the thick layer of dust and dirt.</look>
+      <scenery />
+      <sweep type="script">
+        if (Got(broom)) {
+          msg ("Sweeping the dirty carpet reveals an image woven into the fabric. It depicts a castle atop a mountain. The mountain is surrounded by a thick forest of dead trees.")
+          SetObjectFlagOn (bartender, "quest1")
+        }
+        else {
+          msg ("You've got nothing to sweep it with.")
+        }
+      </sweep>
+    </object>
+    <exit alias="down" to="Canteen">
+      <inherit name="downdirection" />
+    </exit>
+    <object name="stepladder">
+      <take />
+      <look>It's a short stepladder with two footholes in it. You could probably pick it up.</look>
+      <alt type="stringlist">
+        <value>ladder</value>
+        <value>footstool</value>
+      </alt>
+      <object name="foothole">
+        <alt type="stringlist">
+          <value>footholes</value>
+        </alt>
+        <look>It seems sturdy enough for you to stand on.</look>
+      </object>
+    </object>
+  </object>
+  <object name="Canteen">
+    <usedefaultprefix />
+    <alias>canteen</alias>
+    <description>It's definitely a raucous scene down here. There are about four men drinking and laughing about something or the other. Behind the bar is a lovely mistress who seems to be running the place. To your left is a door with a sign above that reads 'Broom Closet' while to the north there's an opening that leads to the kitchen.</description>
+    <exit alias="up" to="hallway">
+      <inherit name="updirection" />
+    </exit>
+    <object name="staircase1">
+      <alias>staircase</alias>
+      <look>It's letting some of the light from in here go to the next floor.</look>
+    </object>
+    <exit name="broom closet door1" alias="west" to="Broom Closet">
+      <inherit name="westdirection" />
+      <locked />
+      <runscript type="boolean">false</runscript>
+      <script type="script">
+      </script>
+    </exit>
+    <object name="bar">
+      <look>There are a plethora of different drinks behind the bartender.</look>
+    </object>
+    <object name="barstools">
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>some</prefix>
+      <look>They've seen a lot of rumps.</look>
+    </object>
+    <object name="bartender">
+      <inherit name="namedfemale" />
+      <look>She seems to be a veteran at ignoring the taunts and jeers of her patrons.</look>
+      <prefix>the</prefix>
+      <ask type="scriptdictionary">
+        <item key="identity">
+          msg ("\"Did you enjoy your sleep last night? You stumbled into my tavern blisteringly drunk last night and hopped into a bed without emptying up the coin. I assume you're ready to pay now, right? By the way, I'm Carmen. This is my inn.\"")
+        </item>
+        <item key="problems">
+          msg ("\"Aside from the usual amount of drunkards who loiter here, I've got no problems. You should really pay me sometime soon, though.\"")
+        </item>
+        <item key="suggestions">
+          msg ("\"I suggest you find your coffers, sir.\"")
+        </item>
+        <item key="quests"><![CDATA[
+          if (GetBoolean(bartender, "quest1")) {
+            if (GetBoolean(bartender, "quest2")) {
+              if (GetBoolean(bartender, "quest3")) {
+                SetObjectFlagOn (player, "paid")
+                msg ("\"Well, it seems you've completed all the tasks I assigned you. That should be good enough to pay off your stay. You're free to leave now. If you're looking for work, I don't have much else for you. You should go see the Duke. He's always looking for avid adventurers like yourself for his oddjobs and such, and he pays top dollar for fine work. Here, I'll unlock the exit for you.\" <br/><br/>She unlocks the south door.")
+                UnlockExit (Inn Door)
+              }
+              else {
+                msg ("\"Great. You've done two of the things I asked. Now you just have to get those potatoes from the garden.\"")
+              }
+            }
+            else if (GetBoolean(bartender, "quest3")) {
+              if (not GetBoolean(bartender, "quest2")) {
+                msg ("\"Great. You've done two of the things I asked. Now you just have to see what the chef wants.\"")
+              }
+            }
+            else {
+              if (not GetBoolean(bartender, "quest2")) {
+                if (not GetBoolean(bartender, "quest3")) {
+                  msg ("\"Good. You've swept the floors. Now you just need to see what the chef wants, and get those potatoes from the garden.\"")
+                }
+              }
+            }
+          }
+          else if (GetBoolean(bartender, "quest2")) {
+            if (GetBoolean(bartender, "quest3")) {
+              if (not GetBoolean(bartender, "quest1")) {
+                msg ("\"Great. You've done two of the things I asked. Now you just have to sweep the carpet upstairs.\"")
+              }
+            }
+            else if (not GetBoolean(bartender, "quest3")) {
+              if (not GetBoolean(bartender, "quest1")) {
+                msg ("\"Good. You've helped the chef. Now you just have to sweep the carpet upstairs and get me the potatoes from the garden.\"")
+              }
+            }
+          }
+          else if (GetBoolean(bartender, "quest3")) {
+            if (not GetBoolean(bartender, "quest1")) {
+              if (not GetBoolean(bartender, "quest2")) {
+                msg ("\"Good. You got me the potatoes. Now you just have to sweep the carpet upstairs and help the chef.\"")
+              }
+            }
+          }
+          else if (GetBoolean(player, "paid")) {
+            msg ("You're free to leave now. If you're looking for work, I don't have much else for you. You should go see the Duke. He's always looking for avid adventurers like yourself for his oddjobs and such, and he pays top dollar for fine work.\"")
+          }
+          else {
+            msg ("\"It appears to me that you don't have any money to pay for your stay last night.\" She sighs. \"It's alright. I have a few tasks that need doing, and I'm sure you would be more than delighted to earn your keep. Well, for starters, the floor upstairs needs sweeping, then the chef told me he's got a problem back in the kitchen, and you can finish up by hauling in that sack of potatoes from the garden.\"")
+          }
+        ]]></item>
+        <item key="spices">
+          if (GetBoolean(bartender, "spicequest")) {
+            msg ("\"Chef wants his spices, does he? Well, I don't see what the big fuss is about. I asked to borrow them about 2 hours ago. The dull bloke must've forgotten already! Ha! Anyways, here you go.\"")
+            MakeObjectVisible (spices)
+            AddToInventory (spices)
+            msg ("You take the spices from her.")
+          }
+          else {
+            msg ("She doesn't know much about that.")
+          }
+        </item>
+      </ask>
+      <object name="spices">
+        <visible type="boolean">false</visible>
+        <scenery />
+        <look>They belong to the Chef.</look>
+        <giveto type="scriptdictionary">
+          <item key="Chef">
+            msg ("\"Haha, good man! Thank you very much from bottom of Boris' heart!\"")
+            SetObjectFlagOn (bartender, "quest2")
+            RemoveObject (spices)
+          </item>
+        </giveto>
+      </object>
+    </object>
+    <object name="mug of ale">
+      <look>The grog is frothy.</look>
+      <takemsg>The bartender shoots you a glare. If you want something to drink, you're gonna have to pay for it.</takemsg>
+    </object>
+    <object name="old barfly">
+      <inherit name="namedmale" />
+      <look>He's spouting some nonsense about the good ol' days.</look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>an</prefix>
+      <alt type="stringlist">
+        <value>Smith</value>
+        <value>old man</value>
+      </alt>
+      <alias>old man</alias>
+      <askdefault type="script">
+        msg ("\"What are ya talkin' about, sonny? I cannae understand a word from ye!\"")
+      </askdefault>
+      <telldefault type="script">
+        msg ("He doesn't seem to be paying attention.")
+      </telldefault>
+      <ask type="scriptdictionary">
+        <item key="identity">
+          msg ("\"Why, the name's Smith, and I'm the owner o' this place.\" The bartender overhears and shoots the old codger a dirty look. \"Well, maybe not the owner... but I'll be damned if I don't know this tavern like the back o' me hand!\"")
+        </item>
+        <item key="problems">
+          msg ("\"At this age, there's not much a man can complain about, but thank ye, lad.\"")
+        </item>
+        <item key="suggestions">
+          msg ("\"If'n you want to know more 'bout the land, I'd recommend talkin' to Ben over thar. Fancies himself a bit o' cartography, he does. 'Course he's probably sleepin'. The poor bastard can't hold his liquor too well.\"")
+        </item>
+        <item key="quests">
+          msg ("\"Sorry, lad. Got nothin' for ya.\"")
+        </item>
+        <item key="spices">
+          if (GetBoolean(old barfly, "spicequest")) {
+            msg ("\"The chef thinks I took his spices? Sonny, I haven't taken a thing from that man. If you ask me, the shadiest one here is the one over there shoutin' his head off! Why don't ya ask him?\"")
+            SetObjectFlagOn (loud barfly, "spicequest")
+          }
+          else {
+            msg ("He doesn't know much about that.")
+          }
+        </item>
+      </ask>
+    </object>
+    <object name="dirty barfly">
+      <inherit name="namedmale" />
+      <look>He's stinkin' up the joint.</look>
+      <alt type="stringlist">
+        <value>dirty man</value>
+      </alt>
+      <prefix>a</prefix>
+      <alias>dirty man</alias>
+      <askdefault type="script">
+        msg ("\"Get out of my face with your gibberish!\"")
+      </askdefault>
+      <ask type="scriptdictionary">
+        <item key="identity">
+          msg ("\"Never you mind yourself about my name, young'n.\"")
+        </item>
+        <item key="problems">
+          msg ("\"The only problem I've got is some jumped up adventurer houndin' me right now!\"")
+        </item>
+        <item key="suggestions">
+          msg ("\"I suggest you go jump in a lake!\"")
+        </item>
+        <item key="quests">
+          msg ("\"Here's a quest for ya!\" The man farts and then laughs.")
+        </item>
+        <item key="spices">
+          if (GetBoolean(dirty barfly, "spicequest")) {
+            msg ("\"Get off my back, ya runt. I didn't take nothin'.\"")
+          }
+          else {
+            msg ("He doesn't know much about that.")
+          }
+        </item>
+      </ask>
+    </object>
+    <object name="sober man">
+      <inherit name="namedmale" />
+      <look>He seems to be having a rotten time compared to the others.</look>
+      <alt type="stringlist">
+        <value>newton</value>
+      </alt>
+      <prefix>a</prefix>
+      <askdefault type="script">
+        msg ("He doesn't know much about that.")
+      </askdefault>
+      <ask type="scriptdictionary">
+        <item key="identity">
+          msg ("\"Umm, hi. My name's Newton.\"")
+        </item>
+        <item key="problems">
+          msg ("\"I really can't complain aside from the fact that I'm the designated coachman so I have to stick with the berry juice tonight.\"")
+        </item>
+        <item key="suggestions">
+          msg ("\"I don't have much info for ya, but the bartender might know a thing or two.\"")
+        </item>
+        <item key="quests">
+          if (not GetBoolean(sober man, "quenched")) {
+            msg ("\"Hey, could you maybe get me some booze when the bartender's not looking? I don't have any money left and I'm sick of this berry juice.\"")
+            SetObjectFlagOn (sober man, "thirsty")
+          }
+          else {
+            msg ("\"Hey, buddy, I'm good for now. Thanks for the ale, though.\"")
+          }
+        </item>
+        <item key="spices">
+          if (GetBoolean(sober man, "spicequest")) {
+            msg ("\"I haven't taken anything! I've been sitting here all night! Ask anybody!\"")
+          }
+          else {
+            msg ("He doesn't know much about that.")
+          }
+        </item>
+      </ask>
+    </object>
+    <object name="drowsy man">
+      <inherit name="namedmale" />
+      <look>He appears to be passed-out drunk.</look>
+      <alt type="stringlist">
+        <value>sleeping man</value>
+        <value>Ben</value>
+      </alt>
+      <visible />
+      <usedefaultprefix />
+      <ask type="scriptdictionary">
+        <item key="identity">
+          if (GetBoolean(drowsy man, "awake")) {
+            msg ("\"My name's Franklin.\"")
+          }
+          else {
+            msg ("The man is asleep.")
+          }
+        </item>
+        <item key="problems">
+          if (GetBoolean(drowsy man, "awake")) {
+            msg ("\"Well, for starters you just poured a bucket of water on me. I've also got this splitting headache. Jeez, when's a coffee when ya need one.\"")
+          }
+          else {
+            msg ("The man is asleep.")
+          }
+        </item>
+        <item key="suggestions">
+          if (GetBoolean(drowsy man, "awake")) {
+            msg ("\"Here's a suggestion-- if you see a man sleeping, leave him be.\"")
+          }
+          else {
+            msg ("The man is asleep.")
+          }
+        </item>
+        <item key="quests">
+          if (GetBoolean(drowsy man, "awake")) {
+            msg ("\"You say you're in search of a quest, huh? Well I can't really help you much, but you can have this.\"")
+            msg ("The man hands you a map.")
+            AddToInventory (map)
+          }
+          else {
+            msg ("The man is asleep.")
+          }
+        </item>
+        <item key="spices">
+          if (GetBoolean(drowsy man, "awake")) {
+            if (GetBoolean(drowsy man, "spicequest")) {
+              msg ("\"Sorry, mate. I don't know anything about that.\"")
+            }
+            else {
+              msg ("He doesn't know much about that.")
+            }
+          }
+          else {
+            msg ("The man is asleep.")
+          }
+        </item>
+      </ask>
+      <object name="map">
+        <scenery type="boolean">false</scenery>
+        <take />
+        <drop type="boolean">false</drop>
+        <look type="script">
+          msg ("You whip out the map and take a look.")
+          picture ("what are you doing.PNG")
+        </look>
+      </object>
+    </object>
+    <object name="loud barfly">
+      <inherit name="namedmale" />
+      <look>He's yelling something about the bartender. She seems to be ignoring him.</look>
+      <alt type="stringlist">
+        <value>loud man</value>
+      </alt>
+      <prefix>a</prefix>
+      <alias>loud man</alias>
+      <ask type="scriptdictionary">
+        <item key="identity">
+          msg ("\"I'M CHUCK, BUT THAT'S NO CONCERN OF YOURS, IS IT *hic* WAIT, WHY DID I TELL YOU THAT?\"")
+        </item>
+        <item key="problems">
+          msg ("\"I NEED MORE GROG.\" He doesn't need more grog.")
+        </item>
+        <item key="suggestions">
+          msg ("\"GET OUTTA ME FACE, LAD.\"")
+        </item>
+        <item key="quests">
+          msg ("\"WHAT WOULD YOU WANT A *hic* TWIST FOR?\" There's obviously no reasoning with this man.")
+        </item>
+        <item key="spices">
+          if (GetBoolean(loud barfly, "spicequest")) {
+            msg ("\"WHAT? I DON'T HAVE ANY MICE. ASK SOMEONE ELSE.\"")
+            SetObjectFlagOn (sober man, "spicequest")
+            SetObjectFlagOn (drowsy man, "spicequest")
+            SetObjectFlagOn (dirty barfly, "spicequest")
+            SetObjectFlagOn (bartender, "spicequest")
+          }
+        </item>
+      </ask>
+    </object>
+    <exit alias="north" to="Kitchen">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="empty bucket">
+      <scenery />
+      <look>It's a rather pale pail.</look>
+      <visible type="boolean">false</visible>
+    </object>
+    <object name="broom closet key">
+      <alias>unmarked key</alias>
+      <scenery />
+      <visible type="boolean">false</visible>
+      <look>It's a cast iron key.</look>
+      <alt type="stringlist" />
+      <selfuseon type="scriptdictionary">
+        <item key="broom closet door">
+          UnlockExit (broom closet door1)
+          msg ("The door unlocks.")
+        </item>
+      </selfuseon>
+    </object>
+    <object name="broom closet door">
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <alias>door</alias>
+      <look>It's a wooden door. Above it, there's a sign that reads, 'Broom Closet.'</look>
+      <autounlock type="boolean">false</autounlock>
+      <autoopen type="boolean">false</autoopen>
+      <alt type="stringlist">
+        <value>broom closet</value>
+      </alt>
+      <unlockmessage>You unlock it.</unlockmessage>
+      <key type="object">broom closet key</key>
+      <onunlock type="script">
+        UnlockExit (broom closet door1)
+      </onunlock>
+      <onlock type="script">
+        LockExit (broom closet door1)
+      </onlock>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+    </object>
+    <exit name="Inn Door" alias="south" to="Crossroads">
+      <inherit name="southdirection" />
+      <locked />
+      <scenery />
+      <runscript type="boolean">false</runscript>
+      <script type="script">
+        if (GetBoolean(player, "paid")) {
+          MoveObject (player, Crossroads)
+        }
+        else {
+          msg ("The bartender says, \"You're not going anywhere until you've paid your dues, y'hear me?\"")
+        }
+      </script>
+      <look type="script">
+        if (GetBoolean(player, "paid")) {
+          msg ("It's the exit of the Inn.")
+        }
+        else {
+          msg ("It's the exit of the Inn. You can't leave until you pay your debts, though.")
+        }
+      </look>
+    </exit>
+  </object>
+  <object name="Kitchen">
+    <exit alias="south" to="Canteen">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="shelf">
+      <inherit name="surface" />
+      <look>It's pretty high up.</look>
+      <object name="bucket of water">
+        <look>Nobody is using it right now, but you assume this is for mopping.</look>
+        <take type="script">
+          if (Got(stepladder)) {
+            AddToInventory (bucket of water)
+            msg ("You place the stepladder on the ground and subsequently climb up to grab the bucket of water.")
+          }
+          else {
+            msg ("It's too high up. You need a stool or something.")
+          }
+        </take>
+        <selfuseon type="scriptdictionary">
+          <item key="drowsy man">
+            SetObjectFlagOn (drowsy man, "awake")
+            msg ("You dump the bucket of water onto the sleeping man, and he jolts up and starts gasping. He's awake now, but you're still a jerk.")
+            MakeObjectVisible (empty bucket)
+            AddToInventory (empty bucket)
+          </item>
+        </selfuseon>
+      </object>
+    </object>
+    <object name="bread bowl">
+      <inherit name="surface" />
+      <look>It contains bread.</look>
+      <contentsprefix>in which there is</contentsprefix>
+      <hidechildren />
+      <listchildren />
+      <listchildrenprefix>It contains</listchildrenprefix>
+      <take />
+      <takemsg>You take the bread bowl. It's only purpose was to hold the bread, but you decided to steal it anyway. You're kind of a kleptomaniac, aren't you?</takemsg>
+      <object name="loaf of bread">
+        <look>Quit loafing around!</look>
+        <alias>bread</alias>
+        <scenery />
+        <take />
+        <takemsg>You take it.</takemsg>
+      </object>
+    </object>
+    <object name="keg">
+      <look>It's a large, wooden barrel on its side with a spout on the front.</look>
+      <takemsg>It's too heavy to take.</takemsg>
+    </object>
+    <object name="Chef">
+      <inherit name="male" />
+      <look><![CDATA[A burly man of tall stock with a cleft chin. He seems harmless, though. After all, he's just a cook.<br/>He's wearing a brown apron with several stains, probably from the pot of stew broiling right in front of him.]]></look>
+      <alt type="stringlist">
+        <value>Boris</value>
+        <value>cook</value>
+      </alt>
+      <ask type="scriptdictionary">
+        <item key="identity">
+          msg ("\"Name Boris. Boris cook food here. Boris very good cook. You try Boris food?\"")
+        </item>
+        <item key="problems">
+          msg ("\"Boris fight in great war in homeland. Boris not troubled by much anymore.\"")
+        </item>
+        <item key="suggestions">
+          msg ("\"Try Boris soup? Is very good!\" You take a spoonful of the stew and sip. It's heavenly. The man may not have a way with words, but he sure can make a good broth.")
+        </item>
+        <item key="quests"><![CDATA[
+          msg ("\"You are working for Carmen? You and Boris both, hehe. Anyway, Boris think old man out at bar take his spice jar. Boris cannot finish stew without spices! Go and get back.\"<br/><br/>You've gained a new talking point. Try asking the patrons of the bar about 'spices'.")
+          SetObjectFlagOn (old barfly, "spicequest")
+          SetObjectFlagOn (loud barfly, "spicequest")
+          SetObjectFlagOn (sober man, "spicequest")
+          SetObjectFlagOn (dirty barfly, "spicequest")
+          SetObjectFlagOn (drowsy man, "spicequest")
+          SetObjectFlagOn (bartender, "spicequest")
+        ]]></item>
+        <item key="spices">
+          if (GetBoolean(bartender, "quest2")) {
+            msg ("\"Thanks much for helping Boris out!\"")
+          }
+          else {
+            msg ("\"Please go get Boris' spices! Boris is half a man without them!\"")
+          }
+        </item>
+      </ask>
+    </object>
+    <object name="cabinet">
+      <inherit name="container_open" />
+      <look>It's a pretty basic cabinet with various utensils and mugs and such inside.</look>
+      <isopen type="boolean">false</isopen>
+      <onopen type="script">
+        if (Contains (cabinet,tankard)) {
+          msg ("There's a tankard inside.")
+        }
+        else {
+          msg ("It's empty.")
+        }
+      </onopen>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+      <object name="tankard">
+        <look>Looks like a fine pewter flagon.</look>
+        <use />
+        <take />
+        <scenery />
+        <selfuseon type="scriptdictionary">
+          <item key="keg">
+            RemoveObject (tankard)
+            MakeObjectVisible (tankard of grog)
+            AddToInventory (tankard of grog)
+            msg ("You turn the nozzle and hold out the tankard as it fills with a yellowish liquid.")
+          </item>
+          <item key="spout">
+            RemoveObject (tankard)
+            MakeObjectVisible (tankard of grog)
+            AddToInventory (tankard of grog)
+            msg ("You turn the nozzle and hold out the tankard as it fills with a yellowish liquid.")
+          </item>
+        </selfuseon>
+        <useon type="scriptdictionary">
+          <item key="keg">
+            RemoveObject (tankard)
+            MakeObjectVisible (tankard of grog)
+            AddToInventory (tankard of grog)
+            msg ("You turn the nozzle and hold out the tankard as it fills with a yellowish liquid.")
+          </item>
+          <item key="spout">
+            RemoveObject (tankard)
+            MakeObjectVisible (tankard of grog)
+            AddToInventory (tankard of grog)
+            msg ("You turn the nozzle and hold out the tankard as it fills with a yellowish liquid.")
+          </item>
+        </useon>
+      </object>
+    </object>
+    <object name="pot of stew">
+      <look>You can see carrots, beef, and potatoes floating in the amber broth. The smell is so intoxicating, you start to drool.</look>
+      <takemsg>The chef is currently stirring that pot and if you think he's just gonna hand it over, you've got another thing coming.</takemsg>
+    </object>
+    <object name="tankard of grog">
+      <scenery />
+      <visible type="boolean">false</visible>
+      <look>Looks like a fine pewter flagon. It's filled with a brew of a yellowish hue.</look>
+      <giveto type="scriptdictionary">
+        <item key="sober man">
+          if (GetBoolean(sober man, "thirsty")) {
+            SetObjectFlagOff (sober man, "thirsty")
+            msg ("\"Hey, thanks buddy. Don't you worry about me driving though. I'll just hail a taxicoach or something. Here's something for your troubles.\" He hands you a key.")
+            MakeObjectVisible (broom closet key)
+            AddToInventory (broom closet key)
+            SetObjectFlagOn (sober man, "quenched")
+            RemoveObject (tankard of grog)
+          }
+          else {
+            msg ("He begrudgingly refuses.")
+          }
+        </item>
+      </giveto>
+    </object>
+    <object name="apron">
+      <look>It's covered in stains. Such is the wardrobe of a true culinary artisan.</look>
+      <scenery />
+      <ask type="scriptdictionary">
+        <item key="identity">
+          msg ("\"Name Boris. Boris from faraway land. Boris work make food here. You try Boris' food? Boris food good.\"")
+        </item>
+        <item key="problems">
+          msg ("\"Boris has killed many men in great war in Boris' homeland. After that, not much troubles Boris.\"")
+        </item>
+        <item key="suggestions">
+          msg ("\"Would you like to try Boris' food?\" He takes a spoon and scoops up some broth from his pot of stew. You take it and sip up the broth. Wow. Boris is killin' the soup game.")
+        </item>
+        <item key="quests">
+          msg ("\"Boris lose tin of spices. Tin given to Boris by Boris' mother. Boris think old man out at bar took it when Boris not looking. If Boris leave soup, soup will burn. Go get tin and Boris will reward you.\"")
+        </item>
+      </ask>
+    </object>
+    <object name="spout">
+      <look>It's a metal spout with a tiny nozzle on top.</look>
+      <scenery />
+    </object>
+    <object name="nozzle">
+      <look>It's so tiny. Hard to believe this thing controls the flow of all the mead in this keg.</look>
+      <scenery />
+      <use type="script">
+        if (Got(tankard)) {
+          msg ("You turn the nozzle and hold out the tankard as it fills with a yellowish liquid.")
+          RemoveObject (tankard)
+          MakeObjectVisible (tankard of grog)
+          AddToInventory (tankard of grog)
+        }
+        else {
+          msg ("You probably shouldn't start pouring grog if don't have anything to put it in.")
+        }
+      </use>
+    </object>
+    <exit alias="north" to="Garden">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="Garden">
+    <object name="carrot patch">
+      <look>There are plenty of carrots here.</look>
+    </object>
+    <object name="large doghouse">
+      <look type="script">
+        if (not ListContains(ScopeVisible(), bear)) {
+          msg ("There is a sack of potatoes being clutched by something with large, hairy arms. You begin to question whether this is actually a doghouse.")
+          MakeObjectVisible (sack of potatoes)
+        }
+        else {
+          msg ("There's a bear inside, but it's sound asleep inside.")
+        }
+      </look>
+    </object>
+    <exit alias="south" to="Kitchen">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="sack of potatoes">
+      <scenery />
+      <alt type="stringlist">
+        <value>sack</value>
+        <value>potatoes</value>
+        <value>taters</value>
+      </alt>
+      <visible type="boolean">false</visible>
+      <look type="script">
+        if (not ListContains(ScopeVisible(), bear)) {
+          msg ("That's the sack of potatoes the bartender wants. It's being held by something furry though.")
+        }
+        else {
+          msg ("Boil 'em, mash 'em, stick 'em in a stew.")
+        }
+      </look>
+      <take type="script">
+        msg ("You carefully slip the potatoes out of the furry thing's arms, and as you slip away you realize that the thing in question is actually a grizzly bear. Luckily, it's pretty sound asleep and it doesn't notice you.")
+        AddToInventory (sack of potatoes)
+        MakeObjectVisible (bear)
+      </take>
+      <giveto type="scriptdictionary">
+        <item key="bartender">
+          if (GetBoolean(bartender, "quest1")) {
+            if (GetBoolean(bartender, "quest2")) {
+              msg ("\"Great, that's all the work I've got for you.\"")
+              SetObjectFlagOn (bartender, "quest3")
+            }
+            else {
+              msg ("\"Good, these are the potatoes I wanted.\"")
+              SetObjectFlagOn (bartender, "quest3")
+            }
+          }
+          else if (GetBoolean(bartender, "quest2")) {
+            if (not GetBoolean(bartender, "quest1")) {
+              msg ("\"Good, these are the potatoes I wanted.\"")
+              SetObjectFlagOn (bartender, "quest3")
+            }
+          }
+          else {
+            msg ("\"Good, these are the potatoes I wanted.\"")
+            SetObjectFlagOn (bartender, "quest3")
+          }
+          RemoveObject (sack of potatoes)
+        </item>
+      </giveto>
+    </object>
+    <object name="bear">
+      <alt type="stringlist">
+        <value>bobo</value>
+        <value>grizzly bear</value>
+      </alt>
+      <visible type="boolean">false</visible>
+      <scenery />
+      <look>It's sound asleep. Not much would wake it at this point.</look>
+      <take type="script">
+        msg ("You try to hoist the bear above your shoulders, but it wakes up, and tears you to shreds. You die.")
+        finish
+      </take>
+      <useon type="scriptdictionary">
+        <item key="sword"><![CDATA[
+          msg ("You draw your sword and slash at the bear. It wakes up and brutally mauls you to death.<br/><br/>Game over, but what did you expect?")
+          finish
+        ]]></item>
+      </useon>
+    </object>
+    <object name="carrots">
+      <look>Their heads are sticking out of the ground.</look>
+      <scenery />
+      <take />
+      <takemsg>You take a couple carrots but leave most of them for the Chef. They are his after all.</takemsg>
+    </object>
+  </object>
+  <command>
+    <pattern>1337</pattern>
+    <script>
+      MoveObject (player, hallway)
+    </script>
+  </command>
+  <command>
+    <pattern>leethax</pattern>
+    <script>
+      MoveObject (player, Crossroads)
+      AddToInventory (grappling hook)
+      SetObjectFlagOn (player, "cheater")
+    </script>
+  </command>
+  <object name="Broom Closet">
+    <alias>broom closet</alias>
+    <description>Yes. This is a broom closet. The name does not disappoint. Brooms as far as the eye can see! You feel small in comparison to the glory that is this broom closet. Simply marvelous.</description>
+    <object name="broom">
+      <look>Hopefully this one doesn't belong to Merlin.</look>
+      <take />
+      <selfuseon type="scriptdictionary">
+        <item key="carpet">
+          msg ("Sweeping the dirty carpet reveals an image woven into the fabric. It depicts a castle atop a mountain. The mountain is surrounded by a thick forest of dead trees.")
+          SetObjectFlagOn (bartender, "quest1")
+        </item>
+      </selfuseon>
+    </object>
+    <exit alias="east" to="Canteen">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="Crossroads">
+    <alias>crossroads</alias>
+    <exit alias="north" to="Canteen">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="guard">
+      <inherit name="male" />
+      <look>It's a stoic man dressed in a suit of armor. His chestplate reads in large, obnoxious letters, "PROPERTY OF THE DUKE."</look>
+      <ask type="scriptdictionary">
+        <item key="identity"><![CDATA[
+          msg ("\"My name is Cedrick and I'm the official direction-giver of this area as commissioned by the Duke who rules over these lands. Just ask me for directions and you've got them, friend.\"<br/><br/>You've gained a new talking point. Any time you see a guard, ask him about 'directions'.")
+        ]]></item>
+        <item key="suggestions">
+          msg ("\"Might you be the new adventurer in town? The Duke heard of your arrival through the grapevine and was interested in your possible services. You should go see what he wants.\"")
+        </item>
+        <item key="problems">
+          msg ("\"I've got no problems on this fine day.\"")
+        </item>
+        <item key="quests">
+          msg ("\"I have no quests for you, my good man.\"")
+        </item>
+        <item key="directions">
+          msg ("\"To the North is the Inn. To the South is the Swamp. To the West is the three-way fork leading to the Duke's castle. To the East is the Mystic Garden. All areas are available to visit, but beware of the Swamp, for in it lies many traps and dangers that could potentially harm an unprepared adventurer like yourself. That area is the only zone in this land not under the jurisdiction of the Duke.\"")
+        </item>
+      </ask>
+    </object>
+    <exit alias="east" to="Mystic Garden">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="south" to="Swamp Entrance">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="west" to="threeway fork">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="Mystic Garden">
+    <description>It takes a second to adjust your eyes to the blinding radiance of this place. All around you are flora and fauna living in harmony. In the center of this place is a fountain with crystal clear, undisturbed waters. You can hear birds chirping and the wind blowing.</description>
+    <exit alias="west" to="Crossroads">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="Swamp Entrance">
+    <description>You are in a clearing right outside the Swamp. You fear the worst if you tread further inside this menacing place.</description>
+    <exit alias="north" to="Crossroads">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="wooden sign">
+      <look>It's pegged into the ground and covered in moss, but you can still make out the inscription on it.</look>
+      <read>"MESSAGE FROM THE DUKE: All citizens are strongly advised not to go into this swamp. The consequences of entering this swamp are death or worse. Seriously, don't do it, man."</read>
+    </object>
+    <exit alias="south" to="swamp_chasm">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="threeway fork">
+    <alias>three-way fork in the road</alias>
+    <exit alias="east" to="Crossroads">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="west" to="Castle">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="northwest" to="marthahouse">
+      <inherit name="northwestdirection" />
+    </exit>
+    <exit alias="southwest" to="Town">
+      <inherit name="southwestdirection" />
+    </exit>
+    <object name="guard1">
+      <inherit name="male" />
+      <alias>guard</alias>
+      <look>It's a man in a suit who looks pretty bored.</look>
+      <ask type="scriptdictionary">
+        <item key="identity">
+          msg ("\"I'm Shmedrick. You might know the other guard off at the crossroads. He's my twin brother.\"")
+        </item>
+        <item key="suggestions">
+          msg ("He stares at you blankly. You notice dried drool on the man's lower lip.")
+        </item>
+        <item key="problems">
+          msg ("\"I'm hungry.\"")
+        </item>
+        <item key="quests">
+          msg ("\"Hey, buddy, my stomach is givin' me the rumblies. Do you have anything I could eat?\"")
+          SetObjectFlagOn (guard1, "hungry")
+        </item>
+        <item key="directions">
+          msg ("\"Well, to the West is the Duke's castle. It's real big; you can't miss it. To the Northwest is some house I think, and to the Southwest is a village or something. Oh, and of course to the East is the Crossroads where you came from.\"")
+        </item>
+      </ask>
+      <give type="scriptdictionary">
+        <item key="loaf of bread">
+          msg ("\"Bread? Are you for cereal right now? This stuff is too dry! I'm lookin' for something hearty!\"")
+        </item>
+        <item key="carrots">
+          msg ("\"Carrots?! When I said food, I didn't mean freakin' vegetables! C'mon, man, bring me some real food!\"")
+        </item>
+      </give>
+    </object>
+  </object>
+  <object name="Castle">
+    <alias>a courtyard in front of the Duke's castle</alias>
+    <description>It's more of a villa, really. You don't know why people keep calling it a castle. The courtyard is pretty minimalist, the only centerpiece being a small pear tree in the middle. The huge, iron doors are guarded by a man in an iron suit.</description>
+    <exit alias="east" to="threeway fork">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="west" to="Lounge">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="guard2">
+      <alias>guard</alias>
+      <alt type="stringlist">
+        <value>man</value>
+        <value>man in iron suit</value>
+        <value>man in an iron suit</value>
+      </alt>
+      <gender>he</gender>
+      <article>he</article>
+      <look type="script">
+        if (GetBoolean(guard2, "itchy")) {
+          msg ("He's slouching a bit but you can tell he's no longer fidgety.")
+        }
+        else {
+          msg ("You can see he's trying to stand still but he can't help fidgeting.")
+        }
+      </look>
+      <ask type="scriptdictionary">
+        <item key="identity">
+          msg ("\"Uh, hey. I'm Gregory. I work for the Duke.\"")
+        </item>
+        <item key="suggestions">
+          msg ("\"The Duke is in his study right now. If you want to see him, go on in.\"")
+        </item>
+        <item key="problems">
+          if (GetBoolean(guard2, "itchy")) {
+            msg ("\"I have to fart, but I'm holding it in. The Duke doesn't like farts.\"")
+          }
+          else {
+            msg ("\"I have a really bad itch on my back but since the Duke makes me wear this freakin' suit of armor, I can't scratch it.\"")
+          }
+        </item>
+        <item key="quests"><![CDATA[
+          if (GetBoolean(guard2, "itchy")) {
+            msg ("\"Oh, thank goodness.\"<br/><br/>He takes off his chestpiece and vigorously scratches his back.")
+          }
+          else {
+            msg ("\"If you're going to see the Duke, would you mind asking him if I could temporarily take off my breastplate so I could scratch my back?\"<br/><br/>New talking point added: Ask the Duke about the \"guard\".")
+          }
+        ]]></item>
+        <item key="directions">
+          msg ("\"You just came from the three-way fork, which is East of here. Right inside is the Duke's castle.\"")
+        </item>
+      </ask>
+    </object>
+    <object name="pear tree">
+      <alt type="stringlist">
+        <value>tree</value>
+      </alt>
+      <look>Pity there isn't a partridge around.</look>
+    </object>
+    <object name="goat2">
+      <visible />
+      <scenery />
+      <look>There's a goat in the tree? How did it even get up there?</look>
+      <alias>goat</alias>
+    </object>
+  </object>
+  <object name="marthahouse">
+    <alias>Martha's House</alias>
+    <description>You enter a small cottage. It's dimly lit, and the only light there is emanates from the fireplace. You can hear the soft crackle of the dying fire.</description>
+    <exit alias="southeast" to="threeway fork">
+      <inherit name="southeastdirection" />
+    </exit>
+    <object name="Martha">
+      <inherit name="female" />
+      <look>She's sitting motionless in a chair.</look>
+      <alias>woman</alias>
+      <ask type="scriptdictionary">
+        <item key="identity">
+          msg ("She doesn't respond.")
+        </item>
+        <item key="suggestions">
+          msg ("She doesn't respond.")
+        </item>
+        <item key="problems">
+          msg ("She doesn't respond.")
+        </item>
+        <item key="quests">
+          msg ("She doesn't respond.")
+        </item>
+        <item key="duty"><![CDATA[
+          msg ("She doesn't respond.<br/><br/>Just then, you see a faint glimmer coming from Martha's chest. You examine her to find that a knife is lodged firmly in her stomach! Her pulse reveals that she has, in fact, died, but her warmth reveals that she's been slain recently.")
+        ]]></item>
+      </ask>
+    </object>
+    <object name="fireplace">
+      <look>The fire inside is barely alive, and is crackling lowly.</look>
+    </object>
+    <object name="table">
+      <inherit name="surface" />
+      <listchildren />
+      <takemsg>It's too big.</takemsg>
+      <look>It's pretty flimsy. The legs don't look sturdy at all.</look>
+      <object name="plate">
+        <inherit name="surface" />
+        <listchildren />
+        <scenery type="boolean">false</scenery>
+        <take type="script">
+          msg ("You pick up the plate. You know, I gotta tell you, there's no shop or anything in this game, so picking up random bowls and such won't really help you. I won't stop you, though.")
+          if (not Got(grilled salmon)) {
+            AddToInventory (grilled salmon)
+            msg ("There was a slab of grilled salmon on the plate, so you take that as well.")
+          }
+        </take>
+        <look type="script">
+          if (Contains (plate,grilled salmon)) {
+            msg ("There's a piece of grilled salmon on it.")
+          }
+          else {
+            msg ("It's pretty greasy.")
+          }
+        </look>
+        <object name="grilled salmon">
+          <take />
+          <scenery />
+          <look>Something's fishy about this meal.</look>
+        </object>
+      </object>
+    </object>
+    <object name="chair">
+      <look>It's wooden, with a couple splotches of red paint here and there.</look>
+      <contentsprefix>in which there is</contentsprefix>
+      <scenery />
+      <takemsg>There's a woman sitting in it.</takemsg>
+    </object>
+    <object name="knife">
+      <look>It's a curved dagger. There's a note tied to the hilt.</look>
+      <scenery />
+      <take />
+      <takemsg>You carefully nudge the knife out of her gut, and using a nearby rag, wipe blood off the blade.</takemsg>
+      <drop />
+    </object>
+  </object>
+  <object name="Town">
+    <description>You are at the Town. It's pretty bustling around here, with plenty of people chatting and going about their daily lives.</description>
+    <exit alias="northeast" to="threeway fork">
+      <inherit name="northeastdirection" />
+    </exit>
+    <object name="log house">
+      <look>Appears to be a humble abode.</look>
+    </object>
+    <object name="brick house">
+      <look>A fine, strong foundation for a family to live.</look>
+    </object>
+    <object name="straw house">
+      <look>Doesn't look very sturdy.</look>
+    </object>
+    <object name="farmer">
+      <inherit name="female" />
+      <look>She is a gruff, dirt-covered yeoman with a few missing teeth. Her kid is following her around like a lost puppy.</look>
+      <ask type="scriptdictionary">
+        <item key="identity">
+          msg ("\"My name is Bunt. I'm the Duke's personal farmer and I also provide the food for pretty much everyone in town. Yes, my name is Bunt.\"")
+        </item>
+        <item key="suggestions">
+          msg ("\"We could always use a hand around the flour mill if you're willing to spare a moment.\"")
+        </item>
+        <item key="problems">
+          msg ("\"It's milkin' time and I can't find my goats. There are 4 of them and they always feckin' run away around milkin' time. My husband tells me it's because I got man-hands but I think he's just pickin' on me.\"")
+        </item>
+        <item key="quests">
+          msg ("\"Please find my four goats! I'm pretty sure there should be one around here but God knows where the other ones went. You might want to ask around to see if anyone else has seen the goats. By the way, these are trained goats and they won't respond to just normal goat calling. You have to do the goat dance to make they come to you.\"")
+        </item>
+      </ask>
+    </object>
+    <object name="blacksmith">
+      <inherit name="male" />
+      <look>The man is busy submerging various farm tools into pools of water. Every time he does this a cloud of steam billows from the waters, shrouding him.</look>
+      <ask type="scriptdictionary">
+        <item key="identity">
+          msg ("\"I'm Scruffy, the jani--- I mean blacksmith.\"")
+        </item>
+        <item key="suggestions">
+          msg ("\"You might want to take a couple steps away from that furnace there. I braised my buncheeks that way once.\"")
+        </item>
+        <item key="problems">
+          msg ("\"I don't get paid enough for this.\"")
+        </item>
+        <item key="quests">
+          msg ("\"No quests today, noble adventurer.\"")
+        </item>
+      </ask>
+    </object>
+    <object name="mother">
+      <inherit name="female" />
+      <look>You can tell from her hips that she's popped out more than her fair share of kids.</look>
+      <alias>woman</alias>
+    </object>
+    <object name="goose">
+      <look>Honk honk honk honk honk honk honk honk honk honk honk honk</look>
+    </object>
+    <object name="salesman">
+      <look>A small crowd of people have gathered around a skeevy looking salesman whose bombastic voice contradicts with his appearance. He's waving his arms around and yelling about something or the other while standing on a wooden platform covered in multi-colored peacock feathers, pendants, and large signs.</look>
+      <alias>flamboyantly dressed man</alias>
+      <ask type="scriptdictionary">
+        <item key="identity">
+          if (Got(pamphlet)) {
+            msg ("\"They call me 'Charlie, The Honest Salesman' and I'm here to open your eyes to a golden opportunity that you may not have known before. Would you like a pamphlet? Oh, you've already got on.\"")
+          }
+          else {
+            msg ("\"They call me 'Charlie, The Honest Salesman' and I'm here to open your eyes to a golden opportunity that you may not have known before. Would you like a pamphlet?\"")
+            MakeObjectVisible (pamphlet)
+            msg ("He hands you a pamphlet.")
+            AddToInventory (pamphlet)
+          }
+        </item>
+        <item key="suggestions">
+          msg ("\"Hey there, fella. Have you heard the news? You can buy a time-share condo for only a mere fraction of the price as the property is worth!\"")
+        </item>
+        <item key="problems">
+          msg ("\"As long as I'm putting a strong, smart-lookin' man like yourself in one o' these condos, I don't have a problem in the world.\"")
+        </item>
+        <item key="quests">
+          msg ("\"Aah, a quester! Why, I do have a quest for you! If you purchase a time-share in one of these beautiful beachside condominiums, I'll throw in a free dinner at Honest Charlie's Discount Mutton Buffet! Who could pass up such an offer?! It's CRAZY! Wait, you don't have any cash? Well, don't waste my time, bub.\"")
+        </item>
+      </ask>
+    </object>
+    <object name="goat">
+      <look>This goat is simulating a goat.</look>
+      <takemsg>You try to grab the goat but it becomes enraged and runs away.</takemsg>
+      <take type="script">
+        msg ("You try to grab the goat but it becomes filled with goat rage and runs away.")
+      </take>
+    </object>
+    <object name="crowd">
+      <look>They are enamored by whatever the salesman is saying. Every time he jumps or yells or waves his arms they react with surprise.</look>
+      <alias>people</alias>
+      <scenery />
+    </object>
+    <object name="kid">
+      <scenery />
+      <look>She's clinging to her mother as if the umbilical chord were still attached.</look>
+    </object>
+    <object name="pamphlet">
+      <alt type="stringlist">
+        <value>leaflet</value>
+      </alt>
+      <visible type="boolean">false</visible>
+      <scenery />
+      <look>It's a pamphlet that details all the benefits of owning a time-share condominium.</look>
+    </object>
+  </object>
+  <object name="Library">
+    <description>There are shelves upon shelves of encyclopedias and tomes all over the room. The room is dimly lit aside from an oil lamp sitting on the Duke's desk.</description>
+    <exit alias="north" to="Lounge">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="Duke">
+      <inherit name="male" />
+      <look>The Duke is a man of short stature. He has a pencil thin mustache, and his eyebrows are just as thin. He adorns a silver crown with a single sapphire on the front and a heavy aquamarine cloak covering his silk tunic.</look>
+      <scenery type="boolean">false</scenery>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>the</prefix>
+      <ask type="scriptdictionary">
+        <item key="identity">
+          if (GetBoolean(Duke, "quenched")) {
+            msg ("\"Ah, yes. I am Wilfred Scarborough, the Duke of this fair land. To what do I owe the pleasure?\"")
+          }
+          else {
+            msg ("\"Spare me your jabbers until I've had a drink, boy.\"")
+            if (not Got(tiny key)) {
+              MakeObjectVisible (tiny key)
+              AddToInventory (tiny key)
+              msg ("He hands you a tiny key.")
+            }
+          }
+        </item>
+        <item key="suggestions">
+          if (GetBoolean(Duke, "quenched")) {
+            msg ("\"Have you seen the Mystic Garden? That place was here when the settlers arrived and built this town, and its origins are unknown. Some say that if you are truly blessed by God then you will gain divine powers when you drink from the fountain, but I've done it and felt nothing! A bunch of hogwash, if you ask me.\"")
+          }
+          else {
+            msg ("\"Spare me your jabbers until I've had a drink, boy.\"")
+            if (not Got(tiny key)) {
+              MakeObjectVisible (tiny key)
+              AddToInventory (tiny key)
+              msg ("He hands you a tiny key.")
+            }
+          }
+        </item>
+        <item key="problems">
+          if (GetBoolean(Duke, "quenched")) {
+            msg ("\"All is peaceful under my domain; a Duke could not be happier.\"")
+          }
+          else {
+            msg ("\"Spare me your jabbers until I've had a drink, boy.\"")
+            if (not Got(tiny key)) {
+              MakeObjectVisible (tiny key)
+              AddToInventory (tiny key)
+              msg ("He hands you a tiny key.")
+            }
+          }
+        </item>
+        <item key="quests"><![CDATA[
+          if (GetBoolean(Duke, "quenched")) {
+            msg ("\"Actually, adventurer, if you've got some time on your hands, I do have a problem needs solving. My head housemaid, Martha, has not shown up for duty today. If you're willing, go to her house and get that old hag off her lazy rear end, pardon my French. She lives in the small house right outside the castle.\"<br/><br/>New talking point added: ask Martha about \"duty\".")
+            SetObjectFlagOn (Duke, "marthaquest")
+          }
+          else {
+            msg ("\"Spare me your jabbers until I've had a drink, boy.\"")
+            if (not Got(tiny key)) {
+              MakeObjectVisible (tiny key)
+              AddToInventory (tiny key)
+              msg ("He hands you a tiny key.")
+            }
+          }
+        ]]></item>
+        <item key="guard"><![CDATA[
+          if (GetBoolean(Duke, "quenched")) {
+            msg ("You tell the Duke about his guard's problem.<br/><br/>\"It's a pretty nice day. I don't see a problem with him taking off his chestpiece.\"")
+            SetObjectFlagOn (guard2, "itchy")
+          }
+          else {
+            msg ("\"Spare me your jabbers until I've had a drink, boy.\"")
+            if (not Got(tiny key)) {
+              MakeObjectVisible (tiny key)
+              AddToInventory (tiny key)
+              msg ("He hands you a tiny key.")
+            }
+          }
+        ]]></item>
+      </ask>
+      <give type="scriptdictionary">
+        <item key="scotch">
+          msg ("\"No, no, no! This isn't my special blend! Go to the kitchen and tell Alberto to make me my blend!\"")
+        </item>
+        <item key="cognac">
+          msg ("\"No, no, no! This isn't my special blend! Go to the kitchen and tell Alberto to make me my blend!\"")
+        </item>
+        <item key="knife"><![CDATA[
+          msg ("He takes the dagger and you explain to him your findings.<br/><br/>\"You say you found her dead in her house, and that this blade is the killer?\"<br/><br/>He sits in his chair solemnly for a few seconds holding the dagger, and sheds a single tear.")
+          SetTimeout (5) {
+            msg ("\"I would never say this to her face, but that woman was the most loyal and caring of any of my servants. I know I may figuratively crack the whip sometimes, but I would have given my life for hers when it comes right down to it. Such a thoughtless, cruel act-- it sullies even me.\"")
+          }
+          SetTimeout (10) {
+            msg ("He wipes away another tear.<br/><br/>\"Right, well there's no time to sit here and mourn when we've got a deranged killer on the loose. I hate to drag you along, adventurer, but I required your services again.\"<br/><br/>He examines the knife once more, and gets a funny look.")
+          }
+          SetTimeout (15) {
+            msg ("\"What's this?\"<br/><br/>He grabs a letter opener and cuts off a note attached to the hilt of the blade. Examining it quickly, he turns to you with a determined look on his face.<br/><br/>\"Adventurer, this note, can you read it?\"<br/><br/>He hands you the note.")
+          }
+          SetTimeout (20) {
+            picture ("place holder scroll.png")
+          }
+          SetTimeout (25) {
+            msg ("\"Just as I thought. I cannot read it either, but if I had to guess, this is Peyisque, the language of the Peyi. Peyi are creatures not unlike us humans. They can speak and walk just like us, but their skin is white and leathery, and they have fangs the size of which you'd never imagine. Believe it or not, these foul creatures used to be at peace with us, but that was before The Great Betrayal that caused a political schism in our kingdoms and insighted war between our people.\"<br/><br/>He contemplates for a while.")
+          }
+          SetTimeout (30) {
+            msg ("\"There's only one man I know who could translate this. His name is Salvator and he's probably the wisest man alive. Unfortunately, he lives in the swamp, which also happens to be where the Peyi make their residence. My personal guards are all deathly afraid of the swamp, which I am partially to blame for, as I started the rumors about how dangerous the swamp was. Don't get me wrong, it is dangerous, but it helps me out a lot if I just keep the citizens afraid of the hornet's nest instead of having them poke it to find out. Anyways, you seem undaunted by this whole situation, so I'll send you. But first, let me give you this. You might need it.\"<br/><br/>He reaches under his desk and pulls out a grappling hook, then hands it to you.")
+            if (GetBoolean(player, "cheater")) {
+            }
+            else {
+              AddToInventory (grappling hook)
+            }
+          }
+          SetObjectFlagOn (player, "swampquest")
+        ]]></item>
+        <item key="special blend">
+          msg ("He nabs it out of your hand and swigs the whole thing down.")
+          RemoveObject (special blend)
+          SetObjectFlagOn (Duke, "quenched")
+        </item>
+      </give>
+      <alt type="stringlist">
+        <value>Wilfred</value>
+        <value>Wilfred Scarborough</value>
+      </alt>
+    </object>
+    <object name="desk">
+      <look>It's not too organized, with papers and pens strewn about.</look>
+    </object>
+    <object name="oil lamp">
+      <look>It's seen some use, but it isn't lit right now.</look>
+    </object>
+    <object name="bookshelf">
+      <look>It's absolutely filled to the brim with tomes, encyclopedias, books, and assorted papers.</look>
+    </object>
+    <object name="ladder">
+      <climb>You climb the ladder. There are a couple books up here that look kind of interesting. There's a book with a red binding called, "The Adventures of Harold the Snail", a book with a blue binding called, "Select Poems from Jane Wigglesby: A Compilation", and a book with a brown binding called, "37 Surprising Ways to Trim Your Nosehair".</climb>
+      <look>It's railed to the top of the bookshelf and has wheels on the bottom.</look>
+    </object>
+    <object name="tiny key">
+      <look>Crafted by dwarves, no doubt. No human could forge something this small and precise.</look>
+      <scenery />
+      <visible type="boolean">false</visible>
+    </object>
+    <exit name="dukebedroom" alias="east" to="Bedroom">
+      <inherit name="eastdirection" />
+      <locked />
+      <lockmessage>That way is locked.</lockmessage>
+      <scenery type="boolean">false</scenery>
+    </exit>
+    <object name="red book">
+      <inherit name="container_closed" />
+      <look>"The Adventures of Harold the Snail" by Simon Flipnickity. You remember your dear mother reading this to you as a child, and she would lovingly gnash her teeth every time Harold the Snail would eat yet another blueberry.</look>
+      <take />
+      <scenery />
+      <visible />
+      <onopen type="script"><![CDATA[
+        msg ("It reads, \"Harold the Snail enjoyed berries very much. They were his favorite things to eat. Harold the Snail would sometimes eat up to 20 berries in a day! However, Harold the Snail was also very slow, and many times when he was able to get to where the berries grew, they had already been eaten by the mean old squirrel, Martin. Martin the Squirrel also loved berries, but he could eat them much faster then Harold could. So one day, Harold waited in the spot on the tree where the berries grew, and when Martin the Squirrel came down that morning, Harold knocked Martin the Squirrel off the tree into the pond! Then, Harold ate a blueberry. And then he ate another blueberry. And then he ate yet another blueberry. It was the happiest day in Harold the Snail's life.\"<br/><br/>Actually, come to think of it, this book is dumb.")
+      ]]></onopen>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+    </object>
+    <object name="blue book">
+      <inherit name="container_closed" />
+      <take />
+      <look>"Select Poems from Jane Wigglesby: A Compilation" compiled by Arthur Currington. This seems like an interesting one.</look>
+      <scenery />
+      <onopen type="script"><![CDATA[
+        msg ("You flip to a random page to find a poem titled, \"Meadow Grass,\" that reads as follows \"O, meadow grass. How I detest thee! Thine pigments doth activate mine allergies! Thine pollens doth stuffeth mine nose and maketh mine eyes itchy and red! And to thee, O sun! If theethinks I haveth not a bone to picketh with thee, ye wouldest be sorely mistaken! How darest ye shineth so brightly as to giveth mine skin a rash? Unto thee, I wisheth a pox!\"<br/><br/>Oh, man. That is one angry poet.")
+      ]]></onopen>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+    </object>
+    <object name="brown book">
+      <inherit name="container_closed" />
+      <look>"37 Surprising Ways to Trim Your Nosehair" by Scott Sterling is every nasal fluff enthusiast's staple guidebook.</look>
+      <scenery />
+      <onopen type="script">
+        msg ("You open the brown book only to find that the insides have been hollowed out and inside, there is a key. You take the key.")
+        AddToInventory (bedroomkey)
+      </onopen>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+      <object name="bedroomkey">
+        <look>It's an unmarked key. You found it inside a hollowed-out book.</look>
+        <scenery type="boolean">false</scenery>
+        <alias>key</alias>
+        <selfuseon type="scriptdictionary">
+          <item key="dukeb">
+            UnlockExit (dukebedroom)
+            msg ("The door unlocks.")
+          </item>
+        </selfuseon>
+      </object>
+    </object>
+    <object name="dukeb">
+      <scenery />
+      <alt type="stringlist">
+        <value>door</value>
+        <value>bedroom door</value>
+        <value>duke's bedroom door</value>
+        <value>the duke's bedroom door</value>
+      </alt>
+    </object>
+    <object name="grappling hook">
+      <look>It's an iron hook attached to a couple feet of sturdy rope. Seems pretty useful.</look>
+      <scenery />
+      <selfuseon type="scriptdictionary">
+        <item key="tree">
+          msg ("You throw the grappling hook onto the branch and use it to swing across the chasm.")
+          MoveObject (player, swamp_chasm1)
+        </item>
+        <item key="tree1">
+          msg ("You throw the grappling hook onto the branch and use it to swing across the chasm.")
+          MoveObject (player, swamp_chasm)
+        </item>
+        <item key="boat">
+          if (game.pov.parent = bog) {
+            msg ("You throw the grappling hook into the boat and drag it ashore. There are paddles lying inside, and you use those to row to the shack.")
+            MoveObject (player, shack)
+          }
+          else if (game.pov.parent = shack) {
+            msg ("You throw the grappling hook into the boat and drag it to the dock. There are paddles lying inside, and you use those to row to shore.")
+            MoveObject (player, bog)
+          }
+        </item>
+      </selfuseon>
+      <throw type="scriptdictionary">
+        <item key="tree">
+          msg ("You throw the grappling hook onto the branch and use it to swing across the chasm.")
+          MoveObject (player, chasm1)
+        </item>
+        <item key="boat">
+          msg ("You throw the grappling hook to the boat and drag it ashore. There are paddles lying inside.")
+          SetObjectFlagOn (boat, "shore")
+        </item>
+        <item key="tree1">
+          msg ("You throw the grappling hook onto the branch and use it to swing across the chasm.")
+          MoveObject (player, chasm)
+        </item>
+      </throw>
+    </object>
+  </object>
+  <object name="Lounge">
+    <description>The lounge is also fairly minimalist, the floor is covered in an interchanging black and white tile pattern while the walls seem to be covered in wooden panels. A chandelier hangs from the ceiling and dazzles light all around you.</description>
+    <exit alias="east" to="Castle">
+      <inherit name="eastdirection" />
+    </exit>
+    <object name="leather ottoman">
+      <look>It looks comfortable, almost as if it's inviting you to relax.</look>
+      <sit>The cushions surpress under your weight, and it feels as if you are floating on leathery clouds. But alas, you can't stay here forever, so you stand up.</sit>
+      <takemsg>It's too big.</takemsg>
+    </object>
+    <object name="chandelier">
+      <look>It's covered in twinkling jewels that refract light all over the lounge. The ceiling and floor seem to be covered in tiny crystals because of this.</look>
+      <takemsg>It's too high.</takemsg>
+    </object>
+    <object name="cabinet1">
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <alias>cabinet</alias>
+      <look>It's a wooden cabinet with a glass pane. Inside are various medicines, herbs, and of course, alcohol. The glass frame has a tiny lock.</look>
+      <takemsg>It's too big.</takemsg>
+      <key type="object">tiny key</key>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+      <object name="medicine">
+        <look>It's a tin half-filled with a creamy salve. </look>
+        <take />
+      </object>
+      <object name="herb">
+        <look>The herbs are in a small, clay jar.</look>
+        <take />
+      </object>
+      <object name="scotch">
+        <look>The bottle looks really fragile.</look>
+        <take />
+      </object>
+      <object name="cognac">
+        <look>Looks expensive. Like, really expensive.</look>
+        <take />
+      </object>
+      <object name="alcohol">
+        <look>There are several bottles of expensive liquor and spirits.</look>
+        <take type="script">
+          msg ("You rummage through the bottles and grab some expensive booze.")
+          AddToInventory (scotch)
+          AddToInventory (cognac)
+        </take>
+      </object>
+    </object>
+    <object name="weapon rack">
+      <look>It's laden with crooked halberds and lances.</look>
+      <takemsg>You can't just go lugging that thing around.</takemsg>
+    </object>
+    <exit alias="south" to="Library">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="north" to="Dining Room">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="halberd">
+      <look>The blade is one of the oddest shapes you've ever seen.</look>
+      <take type="boolean">false</take>
+      <takemsg>It's chained to the weapon rack. How impractical.</takemsg>
+    </object>
+    <object name="spear">
+      <look>The blade is in the shape of a crescent moon.</look>
+      <takemsg>It's chained to the weapon rack. How impractical.</takemsg>
+    </object>
+  </object>
+  <object name="Dining Room">
+    <description>There's a large wooden table that fills most of the room, surrounded by rows of chairs on all sides. There are a few small chandeliers suspender above the table, and dining sets with tableware and the like are all neatly places at every chair.</description>
+    <object name="dining table">
+      <look>It's large enough to serve 16 people. Clearly the Duke has had some swell dinners in here.</look>
+    </object>
+    <object name="chair1">
+      <alias>chair</alias>
+      <look>The legs are carved with floral patterns, and there are satin cushions on the seat of each chair.</look>
+      <sit>You briefly take your place at the head of the table. Honestly, it feels kind of powerful.</sit>
+    </object>
+    <object name="chandelier1">
+      <alias>chandelier</alias>
+      <look>They aren't as impressive as the one in the lounge, but they look nice all the same.</look>
+      <alt type="stringlist">
+        <value>chandeliers</value>
+      </alt>
+    </object>
+    <exit alias="south" to="Lounge">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="east" to="Kitchen1">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="Kitchen1">
+    <alias>Kitchen</alias>
+    <object name="Alberto">
+      <inherit name="male" />
+      <look>His apron is covered in stains, and he seems bored.</look>
+      <ask type="scriptdictionary">
+        <item key="identity">
+          msg ("\"Actually my name is Stanley but the Duke insists he calls me Alberto. I don't know why.\"")
+        </item>
+        <item key="suggestions">
+          msg ("\"Sometimes, when the Duke isn't around, I sneak into the library and read some of his books. There's some interesting stuff there.\"")
+        </item>
+        <item key="problems">
+          msg ("\"I wish I were a guard. They get it easy. Do you know what it's like to cook for 16 people at once? Madness!\"")
+        </item>
+        <item key="quests">
+          msg ("\"I don't have any quests for you. Sorry.\"")
+        </item>
+      </ask>
+      <give type="scriptdictionary">
+        <item key="scotch"><![CDATA[
+          if (GetBoolean(Alberto, "cognac")) {
+            msg ("He takes the scotch.<br/><br/>He pours both the scotch and the cognac into a bottle, shakes it up, then hands it to you.")
+            MakeObjectVisible (special blend)
+            AddToInventory (special blend)
+          }
+          else {
+            msg ("He takes the scotch.")
+            SetObjectFlagOn (Alberto, "scotch")
+          }
+          RemoveObject (scotch)
+        ]]></item>
+        <item key="cognac"><![CDATA[
+          if (GetBoolean(Alberto, "scotch")) {
+            msg ("He takes the cognac.<br/><br/>He pours both the scotch and the cognac into a bottle, shakes it up, then hands it to you.")
+            MakeObjectVisible (special blend)
+            AddToInventory (special blend)
+          }
+          else {
+            msg ("He takes the cognac.")
+            SetObjectFlagOn (Alberto, "cognac")
+          }
+          RemoveObject (cognac)
+        ]]></item>
+      </give>
+    </object>
+    <object name="stove">
+      <look type="script">
+        if (GetBoolean(stove, "lit")) {
+          msg ("It's a brick stove. Inside, the fire is burning brightly and smoke bellows into the tower.")
+        }
+        else {
+          msg ("It's a brick stove. Inside, there's a pile of coals, but there's no flame going.")
+        }
+      </look>
+      <useon type="scriptdictionary">
+        <item key="fire crystals">
+          msg ("You light the coals and smoke starts to bellow from inside.")
+          SetObjectFlagOn (stove, "lit")
+        </item>
+      </useon>
+    </object>
+    <object name="pots">
+      <look>It's a safe wager to assume these are used for cooking.</look>
+      <alias>pots and pans</alias>
+    </object>
+    <object name="special blend">
+      <scenery />
+      <visible type="boolean">false</visible>
+    </object>
+    <object name="coals">
+      <alt type="stringlist">
+        <value>coal</value>
+      </alt>
+      <scenery />
+      <look type="script">
+        if (GetBoolean(stove, "lit")) {
+          msg ("The coals are burning, and you can feel waves of heat emanating from the stove.")
+        }
+        else {
+          msg ("They are all piled up inside the stove.")
+        }
+      </look>
+      <useon type="scriptdictionary">
+        <item key="fire crystals">
+          SetObjectFlagOn (stove, "lit")
+          msg ("You light the coals and smoke starts to bellow from inside.")
+        </item>
+      </useon>
+    </object>
+    <exit alias="west" to="Dining Room">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="Bedroom">
+    <description>This is the Duke's bedroom. It's lavishly decorated. The bed is covered in silk sheets and satin pillows filled with goose down.</description>
+    <object name="armoire">
+      <inherit name="container_closed" />
+      <alt type="stringlist">
+        <value>wardrobe</value>
+        <value>closet</value>
+      </alt>
+      <look type="script">
+        if (armoire.isopen) {
+          msg ("There's nothing in there but a skeleton.")
+        }
+        else {
+          msg ("It's enormous. Why would the Duke need a wardrobe this large?")
+        }
+      </look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+      <object name="skeleton">
+        <look>Take what ye will, but don't rattle his bones.</look>
+        <scenery />
+      </object>
+    </object>
+    <object name="vanity">
+      <look>The wood is painted white, and there's a huge mirror in the middle. The stool in front of it, which is also painted white, has a tiny, red leather cushion on it.</look>
+    </object>
+    <object name="bed1">
+      <alias>bed</alias>
+      <look>Someone sleeps well.</look>
+    </object>
+    <object name="painting1">
+      <alias>painting</alias>
+      <look>Could it be? It is! An authentic painting  of "Still Life of Spaghetti and a Meatball" by Regulio Pipitio! The Duke is quite the art collector. Few men live to see the magnificence that is this painting, and you are proud to say that you are one of them.</look>
+    </object>
+    <object name="stool">
+      <look>It's small enough for a man like the Duke, but you're too big to sit on it.</look>
+      <sit type="script">
+        if (GetBoolean(mirror, "shattered")) {
+          msg ("You squat down onto the little stool and look at the broken shards of mirror.")
+        }
+        else {
+          msg ("You squat down onto the little stool and look into the vanity mirror. It shatters.")
+          SetObjectFlagOn (mirror, "shattered")
+        }
+      </sit>
+    </object>
+    <object name="mirror">
+      <look type="script">
+        if (GetBoolean(mirror, "shattered")) {
+          msg ("It's broken, and there are fragments of mirror glass scattered about.")
+        }
+        else {
+          msg ("You look into the mirror. It shatters.")
+          SetObjectFlagOn (mirror, "shattered")
+        }
+      </look>
+    </object>
+    <exit alias="west" to="Library">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="hairbrush">
+      <look>It's a sleek, wooden hairbrush with plenty of thistles.</look>
+      <take />
+    </object>
+  </object>
+  <verb>
+    <property>sweep</property>
+    <pattern>sweep</pattern>
+    <defaultexpression>"You can't sweep " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="swamp_chasm">
+    <alias>chasm</alias>
+    <description>It's too wide to leap across. The area is surrounded with trees with trunks and branches shooting in all directions.</description>
+    <usedefaultprefix />
+    <object name="chasm">
+      <look>It's a gaping maw in the earth. If you fell in, you'd probably never come out.</look>
+      <scenery />
+    </object>
+    <object name="tree">
+      <look>It's hanging over the middle of the chasm.</look>
+      <scenery />
+      <alias>branch</alias>
+      <alt type="stringlist">
+        <value>trunk</value>
+        <value>trunks</value>
+        <value>branches</value>
+        <value>trees</value>
+      </alt>
+    </object>
+    <exit alias="down" to="pit">
+      <inherit name="downdirection" />
+    </exit>
+    <exit alias="north" to="Swamp Entrance">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="swamp_chasm1">
+    <alias>other side</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>the</prefix>
+    <suffix>of the chasm</suffix>
+    <description>It's too wide to leap across. The area is surrounded with trees with trunks and branches shooting in all directions.</description>
+    <object name="chasm1">
+      <alias>chasm</alias>
+      <look>It's a gaping maw in the earth. If you fell in, you'd probably never come out.</look>
+      <scenery />
+    </object>
+    <object name="tree1">
+      <alias>tree</alias>
+      <look>It's hanging over the middle of the chasm.</look>
+      <alt type="stringlist">
+        <value>branch</value>
+        <value>trunk</value>
+        <value>trees</value>
+        <value>branches</value>
+        <value>trunks</value>
+      </alt>
+      <scenery />
+    </object>
+    <exit alias="down" to="pit">
+      <inherit name="downdirection" />
+    </exit>
+    <exit alias="south" to="swamp1">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="pit">
+    <description type="script"><![CDATA[
+      msg ("You fall to the bottom and are skewered by a stalagmite.<br/><br/>Game over, but what did you expect?")
+      finish
+    ]]></description>
+  </object>
+  <object name="swamp1">
+    <alias>clearing</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <suffix>in the swamp</suffix>
+    <description>There's a pit in the middle of this clearing which appears similarly as bottomless as the chasm, but doesn't block your way.</description>
+    <exit alias="north" to="swamp_chasm1">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="down" to="pit">
+      <inherit name="downdirection" />
+    </exit>
+    <exit alias="west" to="bog">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="bog">
+    <object name="lake">
+      <look>Wow. So many alligators. Just everywhere. You can't look at any part of this lake and not see an alligator, be it a snout or a tail or just a mossy log covered in gator babies.</look>
+    </object>
+    <object name="boat">
+      <look>It's drifted away from land, and is peacefully floating in the middle of the lake.</look>
+      <alias>skiff</alias>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <useon type="scriptdictionary" />
+    </object>
+    <object name="shack1">
+      <look>It's a small, beat-up cabin in the middle of the lake. There's a dock on the rear of the island the shack is on.</look>
+      <alias>shack</alias>
+      <scenery />
+    </object>
+    <exit alias="east" to="swamp1">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="shack">
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>at a</prefix>
+    <object name="boat1">
+      <alias>boat</alias>
+      <look>It's drifted away from land, and is peacefully floating in the middle of the lake.</look>
+    </object>
+  </object>
+  <command>
+    <pattern>Do the goat dance</pattern>
+    <script>
+      if (game.pov.parent = goat) {
+        msg ("The goat warmly cuddles up to you and you are able to capture it safely.")
+        AddToInventory (goat)
+      }
+      else if (game.pov.parent = goat2) {
+        msg ("The goat leaps out of the pear tree's foliage and into your arms.")
+        AddToInventory (goat2)
+      }
+      else {
+        msg ("Nothing happens.")
+      }
+    </script>
+  </command>
+
+</asl>

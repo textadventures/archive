@@ -1,0 +1,437 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="The Brujo's Curse">
+    <gameid>8cfad660-a066-48d4-b0f7-4d82983f3b3c</gameid>
+    <version>1.0</version>
+    <description type="string"></description>
+    <category>Fantasy</category>
+    <start type="script">
+      player.home = player.parent
+      game.turncount = 0
+      player.deathmark = 999999
+      game.AvailSpecList = NewStringList ()
+      list add (game.AvailSpecList, "human")
+    </start>
+  </game>
+  <object name="rocky path">
+    <inherit name="editor_room" />
+    <alias>rocky path</alias>
+    <description>A boulder strewn path winds through a forest of ancient ponderosa pines towering over dense shrubs.</description>
+    <descprefix>You are on</descprefix>
+    <enter type="script">
+      if (GetBoolean(player, "rockyfirst")) {
+        msg ("The man sits you down on the rocky path.  He stands up slowly, eyeing the wasp.  With lightning grace he snatches it out of the air  by the wings.  He holds the living insect out to you saying, 'You must eat this.  You must trust me, you are dying.'  The way the world seems to whirl around while your limbs turn cold makes you think maybe he is right.")
+        SetObjectFlagOff (player, "rockyfirst")
+        DisableTurnScript (buzz)
+      }
+    </enter>
+    <object name="player">
+      <inherit name="defaultplayer" />
+      <species>human</species>
+      <eat>Eating your own flesh would only strengthen the effects of the lycanthropy.</eat>
+      <maxobjects type="int">20</maxobjects>
+      <home type="object">rocky path</home>
+      <look type="script">
+        switch (player.species) {
+          case ("human") {
+            msg ("\"You are Pat Gibralter, a private contractor for the U.S. Forest Service.  You stand 5 feet 6\" (1.67m). and weigh 170 pounds (77kg.)\"")
+          }
+          case ("wasp") {
+            msg ("\"You perceive yourself through strange, multifaceted eyes that let you see in every direction.  You are an expressionless drone wasp arrmed with serrated mandibles and a sting that could stop the heart of a small dog.  You wear a garish exoskeleton of bright yellow and satin black.  You are nearly three centimeters long and weigh as much as half a feather.")
+          }
+          default {
+            msg ("You see that you are a " + player.species)
+          }
+        }
+      </look>
+    </object>
+    <object name="wasp">
+      <inherit name="editor_object" />
+      <take />
+      <eatmsg>As you crunch through the wasps exoskeleton, your mind reels with new perceptions and understanding.  One taste suddenly reveals to you the very genetic structure of the creature.</eatmsg>
+      <eathealth type="int">1</eathealth>
+      <alt>bee; hornet; yellowjacket</alt>
+      <eat type="script">
+        if (ListContains(ScopeReachable(), wasp)) {
+          if (GetBoolean(player, "lycanthropy")) {
+            msg ("As you crunch through the creatures exoskeleton, you are flooded with new perceptions.  Suddenly you can taste the very essence of the wasp and know what it is to be one.")
+            list add (game.AvailSpecList, "wasp")
+            RemoveObject (wasp)
+          }
+          else {
+            msg ("You are unable to catch the swift insect.")
+          }
+        }
+      </eat>
+      <ontake type="script">
+        if (ListContains(ScopeVisible(), Indian)) {
+          AddToInventory (wasp)
+          msg ("The Indian holds the wasp by the wings and thrusts it at you.  Gingerly, you take it from him.")
+        }
+        else {
+          msg ("You are unable to catch the swift insect.")
+        }
+      </ontake>
+    </object>
+    <exit alias="south" to="overlook">
+      <inherit name="southdirection" />
+    </exit>
+    <turnscript name="buzz">
+      <enabled />
+      <script>
+        if (wasp.parent = rocky path) {
+          msg ("There is a mean looking wasp buzzing about as it patrols the area.")
+        }
+      </script>
+    </turnscript>
+    <exit alias="north" to="dense forest">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="overlook">
+    <inherit name="editor_room" />
+    <description>The path emerges from the woods to run along the edge of a cliff. A railing of polished wooden poles divides the path from the dropoff. A simple wooden bench provides a resting place with a view of the ponderosa and jack pine forest. Sunlight glints off a river far to the east\ beyond which hills rise into the blue haze. The path heads back into the woods to the north and the southwest.</description>
+    <alias>overlook</alias>
+    <descprefix>You are on </descprefix>
+    <firstenter type="script">
+      msg ("You emerge from the pines onto the cliff overlook, one of your favorite spots on this trail.  You have walked this way countless times and have always considered yourself quite safe.  You would have to climb over a sturdy railing to fall off the cliff.  But today as you walk out onto this familiar overlook, you feel a rush of raw primal fear as you spy a five foot diamondback rattlesnake.  And strangely enough this rattlesnake is not rattling, it is simply slithering quickly and purposefully... towards you.")
+      SetObjectFlagOn (player, "snakefollow")
+    </firstenter>
+    <exit alias="north" to="rocky path">
+      <inherit name="northdirection" />
+      <script type="script">
+        if (GetBoolean(player, "snakefollow")) {
+          msg ("You attempt to escape to the north, but, in your hasty retreat, you trip over a large tree root sending you sprawling and knocking the wind out of you.  The monstrous rattler does not hesitate to sink its fangs into your leg.  You shriek and thrash about until the beast is dislodged.  ")
+          SetObjectFlagOff (player, "snakefollow")
+          SetObjectFlagOn (player, "snakebitten")
+          MoveObject (player, overlook)
+        }
+        else {
+          MoveObject (player, rocky path)
+        }
+      </script>
+    </exit>
+    <object name="rattlesnake">
+      <inherit name="editor_object" />
+      <look>A magnificent serpent, as thick as a man's arm, with an intense air of purpose and intelligence.</look>
+      <drop type="boolean">false</drop>
+      <alt>rattler; snake</alt>
+      <displayverbs>Look at; Take; attack</displayverbs>
+      <alias>rattlesnake</alias>
+      <take type="script">
+        msg ("Possessed by a kind of foolishness you have never known before you reach for the snake.  The sinewy diamondbank recoils and strikes faster than you can think and its fangs sink deep into your forearm.  You whip the rattler to and fro as you swing your arm in panic.  It releases you and drops to the ground as you stagger back in shock.")
+        SetObjectFlagOn (player, "snakebitten")
+        MoveObject (rattlesnake, overlook)
+        SetObjectFlagOff (player, "snakefollow")
+      </take>
+      <attack type="script">
+        SetObjectFlagOn (player, "snakebitten")
+        msg ("You try to blindside the rattler with a quick heel stomp to the head but it is much quicker  Fangs sink into your thigh.  You manage to pry the viper loose and toss it away but not before the venom enters your blood.")
+        SetObjectFlagOff (player, "snakefollow")
+      </attack>
+    </object>
+    <object name="bench">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <contentsprefix>on which sits </contentsprefix>
+      <listchildren />
+      <listchildrenprefix>On the bench you see </listchildrenprefix>
+      <alias>bench</alias>
+      <takemsg>It is too big to carry.</takemsg>
+      <drop type="boolean">false</drop>
+    </object>
+    <exit alias="southwest" to="clearing">
+      <inherit name="southwestdirection" />
+      <look>It looks like there is a clearing in that direction.</look>
+      <script type="script">
+        if (GetBoolean(player, "snakefollow")) {
+          msg ("Adrenaline coursing through you, you sprint straight at the rattlesnake and try to leap over it for an escape to the southeast.  You almost think you have cleard it when the fangs enter your calf.  You pull the reptile loose without thinking leaving a bleeding gash where the poison entered.")
+          SetObjectFlagOff (player, "snakefollow")
+          SetObjectFlagOn (player, "snakebitten")
+          MoveObject (player, overlook)
+        }
+        else {
+          MoveObject (player, clearing)
+        }
+      </script>
+    </exit>
+  </object>
+  <command name="locate">
+    <pattern>locate</pattern>
+    <script>
+      player.home = player.parent
+    </script>
+  </command>
+  <object name="clearing">
+    <inherit name="editor_room" />
+    <alias>clearing</alias>
+    <description>You have entered a wide, open area with few trees and sparse shrubs. Paths trod by man and beast lead to the southwest, the northeast, the west and the east.</description>
+    <exit alias="northeast" to="overlook">
+      <inherit name="northeastdirection" />
+      <look>To the northwest, a short path leads to the edge of a cliff.</look>
+    </exit>
+    <exit alias="southwest" to="overgrown path">
+      <inherit name="southwestdirection" />
+    </exit>
+    <exit alias="west" to="cave entrance">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="east" to="steep path">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="down" to="steep path">
+      <inherit name="downdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>attack</property>
+    <pattern>attack</pattern>
+    <defaultexpression>"You can't attack " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="overgrown path">
+    <inherit name="editor_room" />
+    <description>The path runs from the northeast into this overgrown area and becomes impassable. Laying in the dense undergrowth is a large hollow log.</description>
+    <exit alias="northeast" to="clearing">
+      <inherit name="northeastdirection" />
+    </exit>
+    <exit name="SmallEnough" alias="in" to="hollow log">
+      <inherit name="indirection" />
+      <locked type="boolean">false</locked>
+      <lockmessage type="string"></lockmessage>
+      <script type="script">
+        switch (player.species) {
+          case ("wasp") {
+            msg ("You land on the log and crawl in through a knothole.")
+            MoveObject (player, hollow log)
+          }
+          case ("human") {
+            msg ("The hollow log is pretty big, but not big enough for a human to enter.")
+          }
+          default {
+            msg ("You cannot enter the hollow log in your present form.")
+          }
+        }
+      </script>
+    </exit>
+  </object>
+  <object name="hollow log">
+    <inherit name="editor_room" />
+    <descprefix type="string"></descprefix>
+    <description>The insects have finished with this ancient ponderosa and left a dry cozy shelter.</description>
+    <exit alias="out" to="overgrown path">
+      <inherit name="outdirection" />
+    </exit>
+  </object>
+  <object name="cave entrance">
+    <inherit name="editor_room" />
+    <descprefix>You are at</descprefix>
+    <description>This is a wooded area with paths traveling east and northeast.  There is a great pit hit where the earth collapsed into a sinkhole created by a lava tube.  You could climb down the rubble into what looks like a small cave.</description>
+    <exit alias="east" to="clearing">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="down" to="cave">
+      <inherit name="downdirection" />
+    </exit>
+    <exit alias="in" to="cave">
+      <inherit name="indirection" />
+    </exit>
+    <exit alias="northeast" to="thin forest">
+      <inherit name="northeastdirection" />
+    </exit>
+  </object>
+  <object name="cave">
+    <inherit name="editor_room" />
+    <description>This dark, rocky cave smells of bats.</description>
+    <exit alias="up" to="cave entrance">
+      <inherit name="updirection" />
+    </exit>
+    <exit alias="out" to="cave entrance">
+      <inherit name="outdirection" />
+    </exit>
+  </object>
+  <object name="steep path">
+    <inherit name="editor_room" />
+    <description>You are on a steep forest path that climbs up to the west and plummets down to the east towards a river.</description>
+    <exit alias="west" to="clearing">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="up" to="clearing">
+      <inherit name="updirection" />
+    </exit>
+    <exit alias="down" to="river bank">
+      <inherit name="downdirection" />
+    </exit>
+    <exit alias="east" to="river bank">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="river bank">
+    <inherit name="editor_room" />
+    <descprefix>You are on</descprefix>
+    <description>The grassy bank of a swiftly flowing river. A steep path leads up and to the west. To the east is the river.</description>
+    <exit alias="up" to="steep path">
+      <inherit name="updirection" />
+    </exit>
+    <exit alias="west" to="steep path">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="thin forest">
+    <inherit name="editor_room" />
+    <description>Songbirds twitter among the sparse jack pines. Sagebrush lends its spicy aroma to the air. A dusty foot path leads to the north and the southwest.</description>
+    <exit alias="southwest" to="cave entrance">
+      <inherit name="southwestdirection" />
+    </exit>
+    <exit alias="north" to="roadside">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <turnscript name="bitecheck">
+    <enabled />
+    <script><![CDATA[
+      if (GetBoolean(player, "snakebitten")) {
+        msg ("The venom takes hold quickly as pain shoots through your limbs and breathing starts to seem very difficult.  You become weak and dizzy and you must be starting to hallucinate... because you see the rattlesnake that bit you writhing and bulging as it quickly grows and metamorphosises into a sturdy  Native American man.  The hallucination stands and walks towards you, fully human but still seeming, somehow, reptilian.  The apparition crouches over your prone, gasping body and you think you hear it speak.<br/> 'I am sorry forest walker.'  I was a snake for too long and forgot how to be a man.\"<br/>You pass out.  In your feverish dream there is red light everywhere an angry buzzing sound and someone shouting.<br/>'Forest Walker! you must awaken!'  You can live but you must do as I say!\"  <br/>It is still that naked snake dude talking to you, you think and try to go back to sleep but he keeps bothering you and in your current state you are highly suggestible.<br/>'Come with me' he says, trying to drag you north into the woods.")
+        RemoveObject (rattlesnake)
+        SetObjectFlagOff (player, "snakebitten")
+        create ("Indian")
+        SetObjectFlagOn (player, "lycanthropy")
+        player.deathmark = game.turncount  + 7
+        MoveObject (Indian, rocky path)
+        SetObjectFlagOn (player, "rockyfirst")
+      }
+    ]]></script>
+  </turnscript>
+  <turnscript name="turn count">
+    <enabled />
+    <script>
+      game.turncount = game.turncount + 1
+      msg (game.turncount)
+    </script>
+  </turnscript>
+  <object name="roadside">
+    <inherit name="editor_room" />
+    <description>A path runs from thinning jack pines to the south into dense old ponderosas and spruces to the northeast. For some time the path runs parallel to a narrow, paved highway winding through the trees to the west.</description>
+    <descprefix>You are on</descprefix>
+    <exit alias="south" to="thin forest">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="west" to="winding road">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="northeast" to="dense forest">
+      <inherit name="northeastdirection" />
+    </exit>
+  </object>
+  <object name="winding road">
+    <inherit name="editor_room" />
+    <description>A winding, paved road runs from the north to the southwest. To the east, a foot path runs parallel to the road.</description>
+    <exit alias="east" to="roadside">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="southwest" to="winding road west">
+      <inherit name="southwestdirection" />
+    </exit>
+    <exit alias="north" to="winding road north">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="winding road west">
+    <inherit name="editor_room" />
+    <description>A winding paved road that continues to the northeast and joins a major highway to the south.</description>
+    <exit alias="south" to="shady highway">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="northeast" to="winding road">
+      <inherit name="northeastdirection" />
+    </exit>
+  </object>
+  <object name="shady highway">
+    <inherit name="editor_room" />
+    <description>A long, straight stretch of asphalt running from north to south through a shady, dense forest.</description>
+    <exit alias="north" to="winding road west">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="winding road north">
+    <inherit name="editor_room" />
+    <description>This winding road through the forest continues to the south. As it winds to the northeast the pavement becomes gravel.</description>
+    <exit alias="south" to="winding road">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="Indian">
+    <inherit name="editor_object" />
+    <inherit name="male" />
+    <look>A stout, strong man in his forties. He walks quietly and speaks rarely. He seems to carry a heavy and unspeakable burden.</look>
+    <takemsg>You try to pick up the Indian and put him in your pocket but instead he flips deftly on your ass.</takemsg>
+    <ask type="scriptdictionary">
+      <item key="&quot;transform change lycanthropy switch wasp human cougar mosquito woodpecker become&quot;">
+        msg ("If you want to change into something else you must first taste its blood then simply say 'become' and the name of the animal you wish to become.  But beware, if you remain an animal too long, you may forget how to change back.")
+      </item>
+      <item key="&quot;forget remember bite&quot;">
+        msg ("If you forget how to become human, you must taste the blood of a human to remind you.  This is why I had to bite you.")
+      </item>
+    </ask>
+  </object>
+  <command name="become">
+    <pattern>become #text#</pattern>
+    <unresolved>You are not able to become that.</unresolved>
+    <script><![CDATA[
+      switch (text) {
+        case ("wasp") {
+          if (ListContains(game.AvailSpecList, "wasp")) {
+            player.species = "wasp"
+            DisableTurnScript (deathwatch)
+            player.deathdiff = player.deathmark - game.turncount
+            msg ("Your vision blurs and you have the sensation of falling.  When you can see again it is with the eyes of an insect.  The world around you is much larger.")
+            if (not GetBoolean(player, "already")) {
+              msg ("You are a bit confused as to whether you are still hallucinating because despite all the incredible events that seem to be happening, the dizzyness, pain and difficulty breathing have all gone away.  The snake venom no longer seems to be affecting you.<br/><br/>'You have done it!' says the now gigantic stranger with a note of relief.  'Let me explain...  It is not our way to involve outsiders in the secret medicine of our tribe.  I should not have done so.  Our magic allows us to become animals.  We must first taste the blood or the flesh of the animal we wish to become.  This power can only be given by a nagual - a shaman such as I.  There is a danger with having such a power.  If you stay in the form of an animal too long, you will forget how to become a man again.  This is what happened to me.  I was the rattlesnake for five days. I was thinking like a reptile.  There was only a spark of me left that reminded me that I must taste the blood of a human so that I could remember the way to become one again.  And then I saw you.  Once I had bitten you and become a man again, I remembered everything.  There was only one way to save you - I had to make you a nagual like me and help you become a wasp.  The wasp carries the same poison as the snake so in this form you are immune to the poison that is in you.'<br/><br/>All of this is sinking in slowly as you try out your new wings buzzing around the Indian's head.")
+              SetObjectFlagOn (player, "already")
+            }
+          }
+        }
+        case ("human") {
+          if (ListContains(game.AvailSpecList, "human")) {
+            player.species = "human"
+          }
+        }
+      }
+    ]]></script>
+  </command>
+  <turnscript name="deathwatch">
+    <enabled />
+    <script><![CDATA[
+      if (player.species  <> "wasp") {
+        if (game.turncount = player.deathmark - 1) {
+          msg ("You can feel the icy fingers of death closing on your heart.")
+        }
+        if (game.turncount >= player.deathmark) {
+          msg ("Blackness overtakes you as you succumb to the poison.")
+          finish
+        }
+      }
+    ]]></script>
+  </turnscript>
+  <object name="dense forest">
+    <inherit name="editor_room" />
+    <description>Your way is nearly lost in this thick, overgrown forest but forking deer paths can be traced to the south, southwest, the north and the east.</description>
+    <exit alias="south" to="rocky path">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="southwest" to="roadside">
+      <inherit name="southwestdirection" />
+    </exit>
+    <exit alias="north" to="camp">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="camp">
+    <inherit name="editor_room" />
+    <description>Hidden in a copse of pines is the modest encampment of a lone backpacker.  A tent, a fire pit and a stump to sit on.  By ducking under some low branches you can exit to the south.</description>
+    <exit alias="south" to="dense forest">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+</asl>

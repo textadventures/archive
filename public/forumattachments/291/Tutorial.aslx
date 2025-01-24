@@ -1,0 +1,166 @@
+<!--Saved by Quest 5.2.4515.34846-->
+<asl version="520">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Tutorial">
+    <gameid>ef014420-5216-4c3a-90d3-b56ddd075b21</gameid>
+    <version>1.0</version>
+  </game>
+  <object name="Lounge">
+    <inherit name="editor_room" />
+    <description>This is quite a plain lounge with an old beige carpet and peeling wallpaper.</description>
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+    <exit alias="south" to="Kitchen">
+      <inherit name="southdirection" />
+    </exit>
+    <object name="TV">
+      <inherit name="switchable" />
+      <alt>Television; Telly</alt>
+      <look>The TV is an old model, possibly 20 years old. </look>
+      <switchedoffdesc>It is currently turned off.</switchedoffdesc>
+      <switchedondesc>It is currently showing a western.</switchedondesc>
+      <watch type="script">
+        if (IsSwitchedOn(TV)) {
+          msg ("You watch for a few minutes. As your will to live slowly ebbs away, you remember that you’ve always hated watching westerns.")
+        }
+        else {
+        }
+        if (not IsSwitchedOn(TV)) {
+          msg ("You watch for a few minutes, thinking that the latest episode of ‘Big Brother’ is even more boring than usual. You then realise that the TV is in fact switched off.")
+        }
+      </watch>
+    </object>
+    <object name="Sofa">
+      <inherit name="editor_object" />
+      <look>it is a ordinary sofa.</look>
+      <sit>There’s no time for lounging about now.</sit>
+    </object>
+    <object name="Table">
+      <inherit name="editor_object" />
+      <look>The book is on the table...ta ta table... and everybody is on the table... tutururututururututu.</look>
+    </object>
+    <object name="Newspaper">
+      <inherit name="editor_object" />
+      <read>faggot. it says much about politics in this page you are reading, but you can't understand or care less.</read>
+      <look>America: reading is for faggots.</look>
+    </object>
+    <object name="Wallpaper">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>The horrible beige wallpaper hangs loosely on the walls.</look>
+    </object>
+    <object name="Carpet">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>Ugly, dusty, old, and unfashioned as this very room.</look>
+      <visible type="boolean">false</visible>
+    </object>
+    <object name="Bob">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <take />
+      <takemsg>You fold the newspaper and place it neatly under your arm.</takemsg>
+      <dropmsg>You drop the newspaper. Now you are a man, again.</dropmsg>
+      <look type="script">
+        if (GetBoolean(Bob, "Alive")) {
+          msg ("Bob is sitting up, appearing to feel somewhat under the weather")
+        }
+        else {
+        }
+        msg ("Bob is lying on the floor, a lot more still than usual.")
+        if (GetBoolean(Bob, "Alive")) {
+        }
+      </look>
+      <useanything type="script">
+        if (GetBoolean(Bob, "Alive")) {
+          msg ("no need to do it again.")
+        }
+      </useanything>
+      <useon type="scriptdictionary">
+        <item key="defibrillator">
+          msg ("Miraculously, the defibrillator lived up to its promise, and Bob is now alive again. He says his head feels kinda fuzzy.")
+          SetObjectFlagOn (Bob, "alive")
+        </item>
+      </useon>
+    </object>
+    <object name="Lamp">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <switchedon />
+      <switchedondesc>It is currently switched on.</switchedondesc>
+      <switchedoffdesc>it looks even uglyer in the darkness of the room.</switchedoffdesc>
+      <look>It has a weak shine, but is the only source of light aside from the television.</look>
+    </object>
+    <object name="defibrillator">
+      <inherit name="editor_object" />
+      <look>A heart defibrillator can magically revive a dead person, if all those hospital dramas are to be believed.</look>
+      <visible />
+      <take />
+    </object>
+  </object>
+  <object name="Kitchen">
+    <inherit name="editor_room" />
+    <description>The kitchen is cold and the stench of the overflowing bin makes you feel somewhat faint.</description>
+    <exit alias="north" to="Lounge">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="Bin">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>It's overflowing water.</look>
+      <visible type="boolean">false</visible>
+    </object>
+    <object name="flour">
+      <inherit name="editor_object" />
+      <weight type="int">500</weight>
+      <look type="script">
+        msg ("A packet of flour, weighing " + eggs.weight + " grams.")
+      </look>
+    </object>
+    <object name="eggs">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <weight type="int">250</weight>
+      <look type="script">
+        msg ("A box of eggs, weighing " + eggs.weight + " grams.")
+      </look>
+    </object>
+    <object name="sugar">
+      <inherit name="editor_object" />
+      <weight type="int">1000</weight>
+      <look type="script">
+        msg ("A sugar packet, weighing " + sugar.weight + " grams.")
+      </look>
+    </object>
+  </object>
+  <verb>
+    <property>watch</property>
+    <pattern>watch</pattern>
+    <defaultexpression>"You can't watch " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>sitonsofa</property>
+    <pattern>sit on sofa</pattern>
+    <defaultexpression>"You can't sit on sofa " + object.article + "."</defaultexpression>
+  </verb>
+  <command>
+    <pattern>say #text#; shout #text#; yell #text#</pattern>
+    <script>
+      msg ("You say '" + text + "', but nobody replies.")
+    </script>
+  </command>
+  <command name="weigh">
+    <pattern>weigh #object#</pattern>
+    <script>
+      if (HasAttribute(object, "weigh")) {
+        msg ("A box of eggs, weighing " + eggs.weight + " grams.")
+      }
+      else {
+      }
+      msg ("You can't weigh that.")
+    </script>
+  </command>
+</asl>

@@ -1,0 +1,393 @@
+<!--Saved by Quest 5.4.4873.16527-->
+<asl version="540">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="another z game">
+    <gameid>7bbac88f-66a1-42ad-8ab5-6ef501e27f25</gameid>
+    <version>1.0</version>
+    <firstpublished>2013</firstpublished>
+    <attr name="autodescription_description" type="int">2</attr>
+    <attr name="autodescription_youcansee" type="int">3</attr>
+    <attr name="autodescription_youcango" type="int">4</attr>
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+  </game>
+  <object name="ward 14">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description>Its a recovery medical room. Various medical equipment sits beside you, a newspaper sits on the the little end table by a chair as the sun shines on all of it through the window.</description>
+    <firstenter type="script">
+      msg ("You awaken mubbling about a distant memory, waiting for a reply you hear none and look around. Seeing your alone you panic a little and look at the clock on the wall, 2:34 it states on the motionless clock. \"Not working?\" You think to yourself looking at the room around you. You see dead flowers and unoperating machines. Panicing even more you yell \"NURSE....NURSE.\" more frightened by no response you roll out of the bed with a splitting migrane \"God im so thristy\" you think to yourself as you lick your dry cracked lips.")
+    </firstenter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="window">
+      <inherit name="editor_object" />
+      <scenery type="boolean">false</scenery>
+      <look>Its a long window with white shutters.</look>
+      <lookout>Looking out the window you see a mass of bodies, military cars and trucks though out the parking lot.</lookout>
+      <alt type="stringlist">
+        <value>glass</value>
+      </alt>
+    </object>
+    <object name="newspaper">
+      <inherit name="editor_object" />
+      <scenery type="boolean">false</scenery>
+      <alt type="stringlist">
+        <value>paper</value>
+      </alt>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+        <value>Read</value>
+      </displayverbs>
+      <take />
+      <look type="script">
+        msg ("Georgia Times")
+      </look>
+      <read type="script">
+        msg ("Wonder if I can find out any thing from this.")
+        SetTimeout (3) {
+          msg ("Headlines: MASSIVE VIRUS OUTBEAK SPREADS ALL AROUND THE WORLD!!")
+          SetTimeout (5) {
+            msg ("All around the world regions have be struck by a massive virus outbreak. No one can confirm where and how it started. Must regions have placed safe zones for area of quarintine, these regions include CHINA, RUSSIA, JAPAN, EUORPE, ITALY, CANADA, MEXICO AND THE U.S. ")
+            SetTimeout (6) {
+              msg ("Offical documents released these photo as the outbreak hit the U.S")
+              SetTimeout (3) {
+                picture ("zom pic.png")
+                SetTimeout (3) {
+                  msg ("The victom here is Mall of America which sadly we say there is no hope for. Major U.S cities have marked signs with this logo")
+                  SetTimeout (4) {
+                    picture ("quarintine.jpg")
+                    SetTimeout (3) {
+                      msg ("Follow these signs, this leads to safe zones this will be our last print its been a pleasure serving the American people for over 75 years may God have mercy on us all.")
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      </read>
+    </object>
+    <object name="medical equipment">
+      <inherit name="editor_object" />
+      <scenery type="boolean">false</scenery>
+      <look>no power nothing happens.</look>
+      <use>Doesn't do anything without power.</use>
+    </object>
+    <exit alias="east" to="bathroom">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="south" to="ward 14">
+      <inherit name="southdirection" />
+      <lookonly />
+      <look type="string"></look>
+    </exit>
+    <exit alias="out" to="hallway">
+      <inherit name="outdirection" />
+    </exit>
+    <object name="bottle">
+      <inherit name="editor_object" />
+      <inherit name="container_limited" />
+      <take />
+      <isopen type="boolean">false</isopen>
+      <transparent type="boolean">false</transparent>
+      <look>Aquafina</look>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+        <value>Open</value>
+        <value>Close</value>
+      </inventoryverbs>
+      <maxvolume type="int">1</maxvolume>
+      <containermaxobjects>Good that should hold me over for a while</containermaxobjects>
+      <containerfullmessage>Glad to see I have some water.</containerfullmessage>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Take</value>
+      </displayverbs>
+      <ontake type="script">
+        msg ("I should fill this up.")
+      </ontake>
+      <ondrop type="script">
+        msg ("I really should keep this.")
+      </ondrop>
+      <onopen type="script">
+      </onopen>
+      <selfuseon type="scriptdictionary">
+        <item key="water">
+          if (Got(bottle)) {
+            if (IsSwitchedOn(sink)) {
+              MoveObject (water, bottle)
+            }
+          }
+        </item>
+      </selfuseon>
+      <maxobjects type="int">1</maxobjects>
+      <listchildren />
+      <listchildrenprefix>Heres some good</listchildrenprefix>
+      <volume type="int">10</volume>
+    </object>
+  </object>
+  <object name="bathroom">
+    <inherit name="editor_room" />
+    <description>It a hospital bathroom with very white walls and a hadicap shower. A sink sits to the left with a toilet next to it.</description>
+    <exit alias="west" to="ward 14">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="sink">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <look>Looks like an ordinary sink.</look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>turn on </value>
+        <value>turn off</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+      <switchedondesc>Water runs clearly </switchedondesc>
+      <switchedoffdesc>works better on.</switchedoffdesc>
+      <take type="boolean">false</take>
+      <onswitchon type="script">
+        play sound ("Running Water-SoundBible.com-568417508.mp3", false, true)
+      </onswitchon>
+      <onswitchoff type="script">
+        stop sound
+      </onswitchoff>
+      <volume type="int">0</volume>
+    </object>
+    <object name="toliet">
+      <inherit name="editor_object" />
+      <scenery />
+      <flush type="script">
+        msg ("Toliet flushes, water still on.")
+      </flush>
+    </object>
+    <object name="shower">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <scenery />
+      <switchedondesc>No time for a shower.</switchedondesc>
+      <switchedoffdesc>Would be nice if I had the time.</switchedoffdesc>
+    </object>
+    <object name="water">
+      <inherit name="editor_object" />
+      <weight type="int">10</weight>
+      <close />
+      <open />
+      <maxvolume type="int">5</maxvolume>
+      <maxobjects type="boolean">false</maxobjects>
+      <use type="boolean">false</use>
+      <eatmsg>Ahhh deliosious</eatmsg>
+      <drink type="script">
+        if (IsSwitchedOn(sink)) {
+          msg ("Ohh that refreashing.")
+          play sound ("476735_SOUNDDOGS__dr.mp3", false, false)
+          if (Contains (bottle,water)) {
+          }
+        }
+        else if (bottle.isopen) {
+          msg ("mmmmm")
+          play sound ("332780_SOUNDDOGS__ca.mp3", true, false)
+        }
+        else if (water.weight = -2) {
+          if (not bottle.isopen) {
+            msg ("Works better when the bottles open.")
+          }
+        }
+      </drink>
+      <onswitchon type="script">
+        if (Contains (sink,water)) {
+        }
+      </onswitchon>
+      <take type="script">
+        if (Got(bottle)) {
+        }
+        else if (not Got(bottle)) {
+          msg ("I have nothing to carry water in, I need to find a bottle.")
+        }
+        else if (Got(bottle)) {
+          if (not IsSwitchedOn(sink)) {
+            msg ("Helps to turn on the sink first.")
+          }
+        }
+      </take>
+      <ontake type="script">
+      </ontake>
+      <volume type="script">
+        if (Contains (bottle,water)) {
+          DecreaseObjectCounter (water, "")
+        }
+      </volume>
+      <giveto type="scriptdictionary">
+        <item key="bottle">
+          if (IsSwitchedOn(sink)) {
+            MoveObject (water, bottle)
+          }
+        </item>
+      </giveto>
+      <look>Its water!</look>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <givetoanything type="script">
+      </givetoanything>
+    </object>
+  </object>
+  <object name="ward 15">
+    <inherit name="editor_room" />
+    <exit alias="south" to="hall1">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="ward 16">
+    <inherit name="editor_room" />
+    <dark />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <darkroomdescription type="script">
+      msg ("You don't see much of any thing very dark compared to the other rooms, I need to find a source of light. There could be usable matirial in here.")
+      if (IsSwitchedOn(matches)) {
+        MoveObject (bottle, ward 16)
+        msg ("Ohh now I can see ")
+      }
+    </darkroomdescription>
+    <description type="script">
+    </description>
+    <beforeenter type="script">
+    </beforeenter>
+    <enter type="script">
+    </enter>
+    <exit alias="north" to="hall1">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>lookout</property>
+    <pattern>look out</pattern>
+    <defaultexpression>"You can't look out " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>use</property>
+    <pattern>use </pattern>
+    <defaultexpression>"You can't use  " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>flush</property>
+    <pattern>flush</pattern>
+    <defaultexpression>"You can't flush " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="hallway">
+    <inherit name="editor_room" />
+    <description>Its a hallway with mangled bodies, blood, beds and chairs scattered throughout. </description>
+    <exit alias="in" to="ward 14">
+      <inherit name="indirection" />
+    </exit>
+    <exit alias="west" to="hall1">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="east" to="hall2">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="north" to="hallway">
+      <lookonly />
+      <look>The walls are covered in blood and bullet holes.</look>
+    </exit>
+    <object name="wall">
+      <inherit name="editor_object" />
+      <scenery />
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <look>blood and bullet holes cover the entire wall.</look>
+      <use type="boolean">false</use>
+    </object>
+  </object>
+  <object name="hall1">
+    <inherit name="editor_room" />
+    <exit alias="east" to="hallway">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="south" to="ward 16">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="north" to="ward 15">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="west" to="hall1">
+      <inherit name="westdirection" />
+      <lookonly />
+      <look>This way is blocked by piled debris and mangled bodies.</look>
+    </exit>
+  </object>
+  <object name="hall2">
+    <inherit name="editor_room" />
+    <description>There is a intake desk along with phone and papers scattered around.</description>
+    <firstenter type="script">
+      msg ("A object flashes past with the sound of clicking nails on the tiled floor tap.")
+    </firstenter>
+    <exit alias="west" to="hallway">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="intake desk">
+      <inherit name="editor_object" />
+      <alt type="stringlist">
+        <value>desk</value>
+      </alt>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+    </object>
+    <object name="matches">
+      <inherit name="editor_object" />
+      <inherit name="switchable" />
+      <take />
+      <takemsg>Now I'll be able to see in the dark.</takemsg>
+      <open type="boolean">false</open>
+      <close type="boolean">false</close>
+      <scenery type="boolean">false</scenery>
+      <dropmsg>I really shouldn't Ill need these.</dropmsg>
+      <lightsource />
+      <lightstrength>weak</lightstrength>
+      <switchonmsg>Matches reveal parts of your way</switchonmsg>
+      <switchoffmsg>Its total darkness, very eery!</switchoffmsg>
+      <onswitchon type="script">
+        if (IsSwitchedOn(matches)) {
+          if (game.pov.parent = ward 16) {
+            MoveObject (bottle, ward 16)
+          }
+        }
+      </onswitchon>
+      <onswitchoff type="script">
+      </onswitchoff>
+    </object>
+  </object>
+  <verb>
+    <property>light</property>
+    <pattern>light</pattern>
+    <defaultexpression>"You can't light " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="ward16a">
+    <inherit name="editor_room" />
+  </object>
+  <verb>
+    <property>drink1</property>
+    <pattern>drink1</pattern>
+    <defaultexpression>"You can't drink1 " + object.article + "."</defaultexpression>
+  </verb>
+  <timer name="newspaper timer">
+    <interval>3</interval>
+    <script>
+    </script>
+  </timer>
+</asl>
