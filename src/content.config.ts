@@ -16,7 +16,7 @@ const PostSchema = z.object({
     link: z.optional(z.string().nullable()),
 });
 
-const forum = defineCollection({
+const getForumCollection = (forumId: string) => defineCollection({
     loader: glob({
         pattern: "**/*.json",
         base: "./src/data/forums/quest",
@@ -31,9 +31,10 @@ const forum = defineCollection({
         }),
         Posts: z.array(PostSchema),
     }),
-
 });
 
-export const collections = { forum };
+const quest = getForumCollection("quest");
+
+export const collections = { quest };
 
 export type Post = z.infer<typeof PostSchema>;

@@ -1,14 +1,20 @@
 ---
-import type { Post } from "../../content.config";
-import Layout from "../../layouts/Layout.astro";
+import type { Post } from "../../../../content.config";
+import Layout from "../../../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
-    const posts = await getCollection("forum");
-    return posts.map((post) => ({
-        params: { id: post.id },
-        props: { post },
-    }));
+    const allForums = [ "quest" ];
+    const paths = [];
+
+    for (const forum of allForums) {
+        const posts = await getCollection(forum);
+        for (const post of posts) {
+            paths.push({ params: { forum, id: post.id }, props: { post } });
+        }
+    }
+
+    return paths;
 }
 
 const { post } = Astro.props;
