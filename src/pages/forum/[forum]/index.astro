@@ -1,69 +1,16 @@
 ---
 import { allForums } from '../../../content.config';
-import Layout from '../../../layouts/Layout.astro';
-import { getCollection, getEntry } from 'astro:content';
 
 export async function getStaticPaths() {
     const paths = [];
-
     for (const forum of allForums) {
-        const posts = await getCollection(forum);
-        paths.push({ params: { forum }, props: { forum, posts } });
+        paths.push({ params: { forum }, props: { forum } });
     }
 
     return paths;
 }
 
-const { forum, posts } =  Astro.props; 
+const { forum } =  Astro.props; 
 
-posts.sort((a, b) => {
-    const dateA = new Date(a.data.Posts[a.data.Posts.length - 1].PostDate).getTime();
-    const dateB = new Date(b.data.Posts[b.data.Posts.length - 1].PostDate).getTime();
-    return dateB - dateA;
-});
-
-const dateFormatter = new Intl.DateTimeFormat('en-GB', {
-  day: '2-digit',
-  month: 'short',
-  year: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-  hour12: false
-});
-
+return Astro.rewrite(`/forum/${forum}/1`);
 ---
-
-<style>
-    .topic-date {
-        white-space: nowrap;
-    }
-</style>
-
-<Layout>
-    <h1>Forums</h1>
-
-    <table class="table forum-topics">
-        <thead>
-            <tr>
-                <th class="col-xs-9">Topic</th>
-                <th class="col-xs-1">Replies</th>
-                <th class="col-xs-2">Last Post</th>
-            </tr>
-        </thead>
-        <tbody>
-            {posts.map((post) => (
-                <tr>
-                    <td>
-                        <a href={`/forum/${forum}/topic/${post.id}`}>{post.data.Topic.Title}</a>
-                    </td>
-                    <td>
-                        {post.data.Posts.length - 1}
-                    </td>
-                    <td class="topic-date">
-                        {dateFormatter.format(new Date(post.data.Posts[post.data.Posts.length - 1].PostDate))}
-                    </td>
-                </tr>
-            ))}
-        </tbody>
-    </table>
-</Layout>
