@@ -20,14 +20,14 @@ export async function getStaticPaths() {
         for (let page = 1; page <= pageCount; page++) {
             const posts = allPosts.slice((page - 1) * pageSize, page * pageSize);
 
-            paths.push({ params: { forum, page: page.toString() }, props: { forum, page, posts } });
+            paths.push({ params: { forum, page: page.toString() }, props: { forum, page, pageCount, posts } });
         }
     }
 
     return paths;
 }
 
-const { forum, posts } =  Astro.props; 
+const { forum, page, pageCount, posts } =  Astro.props; 
 
 const dateFormatter = new Intl.DateTimeFormat('en-GB', {
   day: '2-digit',
@@ -73,4 +73,26 @@ const dateFormatter = new Intl.DateTimeFormat('en-GB', {
             ))}
         </tbody>
     </table>
+
+
+    <ul class="pagination justify-content-center mt-4">
+        {page === 1 ? (
+            <li class="page-item disabled">
+                <a class="page-link btn disabled">Previous</a>
+            </li>
+        ) : (
+            <li class="page-item">
+                <a class="page-link btn" href={`/forum/${forum}/${page - 1}`}>Previous</a>
+            </li>
+        )}
+        {page === pageCount ? (
+            <li class="page-item disabled">
+                <a class="page-link btn disabled">Next</a>
+            </li>
+        ) : (
+            <li class="page-item">
+                <a class="page-link btn" href={`/forum/${forum}/${page + 1}`}>Next</a>
+            </li>
+        )}
+    </ul>
 </Layout>
