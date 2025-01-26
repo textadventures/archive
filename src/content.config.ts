@@ -19,7 +19,7 @@ const PostSchema = z.object({
 const getForumCollection = (forumId: string) => defineCollection({
     loader: glob({
         pattern: "**/*.json",
-        base: "./src/data/forums/quest",
+        base: `./src/data/forums/${forumId}`,
     }),
     schema: z.object({
         Topic: z.object({
@@ -33,8 +33,16 @@ const getForumCollection = (forumId: string) => defineCollection({
     }),
 });
 
+export const allForums = [ "design", "games", "general", "quest", "questkit", "samples", "site", "squiffy" ];
+const design = getForumCollection("design");
+const games = getForumCollection("games");
+const general = getForumCollection("general");
 const quest = getForumCollection("quest");
+const questkit = getForumCollection("questkit");
+const samples = getForumCollection("samples");
+const site = getForumCollection("site");
+const squiffy = getForumCollection("squiffy");
 
-export const collections = { quest };
+export const collections = { design, games, general, quest, questkit, samples, site, squiffy };
 
 export type Post = z.infer<typeof PostSchema>;
