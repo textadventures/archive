@@ -83,6 +83,34 @@ function getAvatarUrl(post: Post) {
     }
 </style>
 
+<script is:inline src="/Autolinker.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        for (const element of document.getElementsByClassName("content-container")) {
+            element.innerHTML = Autolinker.link(element.innerHTML, {
+                newWindow: false,
+                stripPrefix: false,
+                phone: false,
+                twitter: false,
+                urls: {
+                    schemeMatches: true,
+                    wwwMatches: false,
+                    tldMatches: false,
+                },
+                replaceFn: function (autolinker, match) {
+                    if (match.getType() == "url") {
+                        if (match.matchedText.indexOf("http://") == -1
+                            && match.matchedText.indexOf("https://") == -1) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            });
+        }
+    });
+</script>
+
 <Layout title={post.data.Topic.Title}>
     <h2>{post.data.Topic.Title}</h2>
 
