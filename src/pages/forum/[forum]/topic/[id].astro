@@ -1,5 +1,5 @@
 ---
-import { allForums, type Post } from "../../../../content.config";
+import { allForums, forumDetails, type Post } from "../../../../content.config";
 import Layout from "../../../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 
@@ -9,14 +9,14 @@ export async function getStaticPaths() {
     for (const forum of allForums) {
         const posts = await getCollection(forum);
         for (const post of posts) {
-            paths.push({ params: { forum, id: post.id }, props: { post } });
+            paths.push({ params: { forum, id: post.id }, props: { forum, post } });
         }
     }
 
     return paths;
 }
 
-const { post } = Astro.props;
+const { forum, post } = Astro.props;
 
 const dateFormatter = new Intl.DateTimeFormat("en-GB", {
     day: "2-digit",
@@ -112,6 +112,15 @@ function getAvatarUrl(post: Post) {
 </script>
 
 <Layout title={post.data.Topic.Title}>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Archive</a></li>
+          <li class="breadcrumb-item"><a href="/forum/">Forums</a></li>
+          <li class="breadcrumb-item"><a href={`/forum/${forum}/`}>{ forumDetails[forum].title }</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{ post.data.Topic.Title }</li>
+        </ol>
+    </nav>
+
     <h2>{post.data.Topic.Title}</h2>
 
     <div class="container my-4">
