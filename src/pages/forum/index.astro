@@ -1,0 +1,39 @@
+---
+import { allForums, forumDetails } from "../../content.config";
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+const topicCounts: Record<string, number> = {};
+for (const forum of allForums) {
+    topicCounts[forum] = (await getCollection(forum)).length;
+}
+
+---
+
+<Layout title="Forums">
+    <h2>New Forums</h2>
+
+    <p>The current forums (from 2024 onwards) are at GitHub Discussions:</p>
+
+    <ul>
+        <li><a href="https://github.com/textadventures/quest/discussions">Quest discussions</a></li>
+        <li><a href="https://github.com/textadventures/squiffy/discussions">Squiffy discussions</a></li>
+        <li><a href="https://github.com/orgs/textadventures/discussions">textadventures.co.uk discussions</a> (for discussions about the website itself)</li>
+    </ul>
+
+    <h2>Old Forums</h2>
+
+    <p>These are the archived textadventures.co.uk forums from 2003 - 2024.</p>
+
+    <ul>
+        {allForums.map((forum) => (
+            <li>
+                <a href={`/forum/${forum}`}>{forumDetails[forum].title}</a> ({topicCounts[forum]} topics)
+            </li>
+        ))}
+    </ul>
+
+    <h2>Older Forums</h2>
+
+    <p>Archived forum posts from 2000 - 2003 can be found at the <a href="https://www.axeuk.com/ubb/">Axe Software Forums Archive</a>.</p>
+</Layout>
