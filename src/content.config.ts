@@ -78,6 +78,14 @@ const samples = getForumCollection("samples");
 const site = getForumCollection("site");
 const squiffy = getForumCollection("squiffy");
 
-export const collections = { design, games, general, quest, questkit, samples, site, squiffy };
+const blog = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/blog" }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+  }).passthrough(), // allows extra fields like categories
+});
+
+export const collections = { design, games, general, quest, questkit, samples, site, squiffy, blog };
 
 export type Post = z.infer<typeof PostSchema>;

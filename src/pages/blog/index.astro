@@ -1,0 +1,27 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+const posts = await getCollection('blog');
+
+---
+
+<Layout title="Blog">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Archive</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Blog</li>
+        </ol>
+    </nav>
+
+    <h2>Blog</h2>
+
+    
+    <ul>
+        {posts.map((post) => (
+            <li>
+                <a href={`/blog/${post.slug}`}>{post.data.title}</a> - <time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+            </li>
+        ))}
+    </ul>
+</Layout>
