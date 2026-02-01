@@ -27,9 +27,17 @@ const dateFormatter = new Intl.DateTimeFormat("en-GB", {
     hour12: false,
 });
 
+function rewriteImgurUrl(url: string) {
+    const match = url.match(/^https?:\/\/i\.imgur\.com\/([^\/]+)$/i);
+    if (match) {
+        return `https://media.textadventures.co.uk/avatars/i/${match[1]}`;
+    }
+    return url;
+}
+
 function getAvatarUrl(post: Post) {
     if (post.AvatarUrl) {
-        return post.AvatarUrl.replace("http://", "https://");
+        return rewriteImgurUrl(post.AvatarUrl.replace("http://", "https://"));
     }
     if (post.UserAvatar) {
         return `/forumattachments/avatars/${post.UserAvatar}`;
