@@ -89,6 +89,21 @@ function getAvatarUrl(post: Post) {
         font-weight: bold;
         margin-bottom: 4px;
     }
+    .post-link {
+        color: inherit;
+        text-decoration: none;
+    }
+    .post-link:hover {
+        color: inherit;
+        text-decoration: underline;
+    }
+    .post-row:target {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 0.25rem;
+        padding: 0.5rem;
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+    }
 </style>
 
 <script is:inline src="/Autolinker.min.js"></script>
@@ -134,7 +149,7 @@ function getAvatarUrl(post: Post) {
     <div class="container my-4">
         <div class="forum-topic">
             {post.data.Posts.map((post) => (
-                <div class="post-row mb-3">
+                <div class="post-row mb-3" id={`post-${post.PostId}`}>
                     <div class="avatar-column me-3">
                         <img
                             src={getAvatarUrl(post)}
@@ -144,9 +159,11 @@ function getAvatarUrl(post: Post) {
                     <div class="content-column">
                         <div class="d-flex justify-content-between">
                             <h6 class="mb-0"><b>{post.Username}</b></h6>
-                            <small class="text-muted">{dateFormatter.format(
-                                new Date(post.PostDate),
-                            )}</small>
+                            <small class="text-muted">
+                                <a href={`#post-${post.PostId}`} class="post-link" title="Link to this post">{dateFormatter.format(
+                                    new Date(post.PostDate),
+                                )}</a>
+                            </small>
                         </div>
                         <div class="content-container mt-2" set:html={post.HTML.replaceAll("{SMILIES_PATH}", "/phpbb-smilies") } />
                     </div>
