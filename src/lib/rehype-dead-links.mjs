@@ -21,31 +21,25 @@ function isDead(href) {
 
 export default function rehypeDeadLinks() {
     return (tree) => {
-        visit(tree, 'element', (node) => {
-            if (node.tagName !== 'a' || !node.properties?.href) return;
+        visit(tree, 'element', (node, index, parent) => {
+            if (node.tagName !== 'a' || !node.properties?.href || !parent || index == null) return;
             const href = String(node.properties.href);
             if (!isDead(href)) return;
 
-            let hostname = href;
-            try {
-                hostname = new URL(href).hostname.replace(/^www\./, '');
-            } catch {}
-
-            const originalChildren = node.children;
             node.tagName = 'span';
             node.properties = {
                 className: ['dead-link'],
                 title: `This link no longer works. It originally pointed to: ${href}`,
             };
-            node.children = [
-                ...originalChildren,
-                {
-                    type: 'element',
-                    tagName: 'small',
-                    properties: { className: ['dead-link-domain'] },
-                    children: [{ type: 'text', value: ` (dead link: ${hostname})` }],
-                },
-            ];
+
+            const marker = {
+                type: 'element',
+                tagName: 'small',
+                properties: { className: ['dead-link-marker'] },
+                children: [{ type: 'text', value: ' (dead link)' }],
+            };
+
+            parent.children.splice(index + 1, 0, marker);
         });
     };
 }
