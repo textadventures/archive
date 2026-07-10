@@ -30,7 +30,7 @@ In 1994, at the age of 12 I started secondary school. The IT lab there was open 
 
 After my schoolfriend Martyn moved house and went to a different school, we kept in touch by writing letters to each other - this being a time before either of us had an email address. We would enclose 3.5" floppy disks to share our latest programming efforts. It was in fact in Martyn's first letter, around January 1995, that he sent me a game he'd written called "_Sid Snibble and the Curse of the Curry Stain_".
 
-I still have a copy, in a heavily nested folder full of archives of archives, and I can still run it today using [QB64](http://www.qb64.net/). It looks like this:
+I still have a copy, in a heavily nested folder full of archives of archives, and I can still run it today using [QB64](https://www.qb64.com/). It looks like this:
 
 [![Sid Snibble and the Curse of the Curry Stain](/blogimages/2013/11/quest-is-15/images/sid.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/10/sid.png)
 
