@@ -14,13 +14,13 @@ I've redesigned the [Quest page](http://www.textadventures.co.uk/quest/ "Quest")
 
 I don't expect the desktop software to be disappearing any time soon, but with the increasing popularity of always-connected devices such as tablets, it's clear that any popular software will really need to be available as a web app.
 
-Quest was the first system to allow people to play text adventure games online (as far as I can tell - Quest has had this since [February 2007](http://www.textadventures.co.uk/blog/2007/02/02/quest-games-online-beta/), and I can't find any references to Parchment before 2008), and now it's the first _full_ text adventure editor to appear on the web (i.e. it's much more than a big text box!). Currently, about 10 times as many people play games through the web than download them to play offline, and I'm hoping that the new web-based editor will similarly increase the reach of Quest. It's not just about extending the editor to Mac, Linux, iPad, etc. - many people simply can't (or won't) install software even on Windows PCs.
+Quest was the first system to allow people to play text adventure games online (as far as I can tell - Quest has had this since [February 2007](/blog/2007/02/quest-games-online-beta), and I can't find any references to Parchment before 2008), and now it's the first _full_ text adventure editor to appear on the web (i.e. it's much more than a big text box!). Currently, about 10 times as many people play games through the web than download them to play offline, and I'm hoping that the new web-based editor will similarly increase the reach of Quest. It's not just about extending the editor to Mac, Linux, iPad, etc. - many people simply can't (or won't) install software even on Windows PCs.
 
 But it's also more than just making the software easier to access on any device - it opens up new possibilities too. For the first time, you can start editing a Quest game at home on your PC, continue it on your iPad in the bedroom, and pick it up again during your lunch hour at work. If you've got good mobile coverage, and even better eyesight, you can continue on the bus home!
 
 It also means collaborative game editing will become possible, and this is something I plan to look into soon. I'm keen to hear any more suggestions, so please add your comments below or [drop me an email](http://www.textadventures.co.uk/help/contact-us/ "Contact us").
 
-You can find out more about the web version in the [original announcement](http://www.textadventures.co.uk/blog/2012/02/16/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/ "Introducing Quest WebEditor – create text adventures online in your browser"), but why not [sign in and start using it now](http://www.textadventures.co.uk/create/)?
+You can find out more about the web version in the [original announcement](/blog/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser "Introducing Quest WebEditor – create text adventures online in your browser"), but why not [sign in and start using it now](http://www.textadventures.co.uk/create/)?
 
 **What's not implemented**
 

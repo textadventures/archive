@@ -8,7 +8,7 @@ categories:
 
 Quest 5.4 has now been released, and you can [download it now](http://www.textadventures.co.uk/quest/download/) or [use it in your browser](http://www.textadventures.co.uk/create/).
 
-The major new features in this version are the [text processor](http://textadventuresblog.wordpress.com/2013/02/27/quest-5-4-text-processor-easier-adaptive-text-and-links/), [gamebook scripts](http://textadventuresblog.wordpress.com/2013/02/27/bringing-more-power-to-gamebook-mode-in-quest-5-4/) and [script editor code view](http://textadventuresblog.wordpress.com/2013/02/25/quest-5-4-script-editor-showing-you-teh-codez/). For a full list, see last month's [beta announcement](http://textadventuresblog.wordpress.com/2013/02/28/quest-5-4-beta-is-out-now/).
+The major new features in this version are the [text processor](/blog/2013/02/quest-5-4-text-processor-easier-adaptive-text-and-links), [gamebook scripts](/blog/2013/02/bringing-more-power-to-gamebook-mode-in-quest-5-4) and [script editor code view](/blog/2013/02/quest-5-4-script-editor-showing-you-teh-codez). For a full list, see last month's [beta announcement](/blog/2013/02/quest-5-4-beta-is-out-now).
 
 Since the beta there have been a few minor enhancements, most notably to the gamebook scripts. There is a new "Text + Script" page type which lets you run a script before displaying the normal gamebook text and options, so you're not forced to display text and options manually. There are new functions for moving the player between pages, and for adding and removing links.
 

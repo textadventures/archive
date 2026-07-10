@@ -10,11 +10,11 @@ Quest 5.4 is now in beta. You can download the Windows version from the [Quest d
 
 Here's a quick overview of what's new:
 
-- the new [text processor](http://textadventuresblog.wordpress.com/2013/02/27/quest-5-4-text-processor-easier-adaptive-text-and-links/ "Quest 5.4 Text Processor – easier adaptive text and links") makes it much easier to create dynamic text and links
-- gamebooks [can now use scripts](http://textadventuresblog.wordpress.com/2013/02/27/bringing-more-power-to-gamebook-mode-in-quest-5-4/ "Bringing more power to gamebook mode in Quest 5.4")
-- the script editor now [has a code view](http://textadventuresblog.wordpress.com/2013/02/25/quest-5-4-script-editor-showing-you-teh-codez/ "Quest 5.4 Script Editor – showing you teh codez")
-- menus are now shown [within the game text](http://textadventuresblog.wordpress.com/2013/02/28/slicker-hyperlinks-in-quest-5-4/ "Slicker hyperlinks in Quest 5.4")
-- object and exit hyperlinks [activate and deactivate](http://textadventuresblog.wordpress.com/2013/02/28/slicker-hyperlinks-in-quest-5-4/ "Slicker hyperlinks in Quest 5.4") according to what's in the current visible scope
+- the new [text processor](/blog/2013/02/quest-5-4-text-processor-easier-adaptive-text-and-links "Quest 5.4 Text Processor – easier adaptive text and links") makes it much easier to create dynamic text and links
+- gamebooks [can now use scripts](/blog/2013/02/bringing-more-power-to-gamebook-mode-in-quest-5-4 "Bringing more power to gamebook mode in Quest 5.4")
+- the script editor now [has a code view](/blog/2013/02/quest-5-4-script-editor-showing-you-teh-codez "Quest 5.4 Script Editor – showing you teh codez")
+- menus are now shown [within the game text](/blog/2013/02/slicker-hyperlinks-in-quest-5-4 "Slicker hyperlinks in Quest 5.4")
+- object and exit hyperlinks [activate and deactivate](/blog/2013/02/slicker-hyperlinks-in-quest-5-4 "Slicker hyperlinks in Quest 5.4") according to what's in the current visible scope
 - list and dictionary attribute types can now hold any type of attribute value, so you can now create lists of lists, dictionaries of dictionaries, and all kinds of combinations
 - there's a simpler syntax for calling JavaScript within your ASL - instead of using the RunScript request, you can now use a more natural-looking syntax with "JS." followed by your function call. For example, JS.alert("Hello world")
 - new Portuguese (Brazilian) translation, contributed by Ramon Dellaqia

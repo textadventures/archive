@@ -14,7 +14,7 @@ I am back.
 
 I am Alex Warren, the original creator of the textadventures.co.uk site, and the Quest 5 and Squiffy text adventure systems.
 
-I [handed over](https://textadventuresblog.wordpress.com/2017/01/11/meet-the-new-textadventures-co-uk-team/) all of these in 2017, and I am very grateful to Luis and Andy for keeping things running for the last few years.
+I [handed over](/blog/2017/01/meet-the-new-textadventures-co-uk-team) all of these in 2017, and I am very grateful to Luis and Andy for keeping things running for the last few years.
 
 Recently I noticed that a few things around the site had stopped working, so I quietly dropped in to [fix a few issues with Squiffy](https://textadventures.co.uk/forum/squiffy/topic/zefgfs4lqkq3arknwjhqkg/various-squiffy-issues-are-now-fixed).
 

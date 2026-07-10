@@ -28,11 +28,11 @@ Furthermore, the desktop version of Quest is no longer dependent on the version 
 
 *Chrome Developer Tools in Quest*
 
-Quest 5.3 starts us down the road towards doing more innovative and exciting things within a predominately text-based medium. Of course we're not fully where I want to be yet, and one of my focuses for Quest 5.4 is to extend the customisability of the UI even more, to make it even easier to try out interesting ideas. Keep on eye on [the blog](http://www.textadventures.co.uk/blog/), as I'll be documenting any experiments there, and please do [contact me](http://www.textadventures.co.uk/help/contact-us/ "Contact us") if you have any ideas!
+Quest 5.3 starts us down the road towards doing more innovative and exciting things within a predominately text-based medium. Of course we're not fully where I want to be yet, and one of my focuses for Quest 5.4 is to extend the customisability of the UI even more, to make it even easier to try out interesting ideas. Keep on eye on [the blog](/blog/), as I'll be documenting any experiments there, and please do [contact me](http://www.textadventures.co.uk/help/contact-us/ "Contact us") if you have any ideas!
 
 Other new improvements to look and feel include:
 
-- **Grid-based map** (sponsored by Phillip Zolla) - as detailed in [this separate blog post](http://www.textadventures.co.uk/blog/2012/07/22/automatic-mapping-in-quest-5-3/ "Automatic mapping in Quest 5.3"). This is an initial release of mapping functionality, so it's fairly basic at the moment. Future releases will add support for images in the map, and a visual map editor.
+- **Grid-based map** (sponsored by Phillip Zolla) - as detailed in [this separate blog post](/blog/2012/07/automatic-mapping-in-quest-5-3 "Automatic mapping in Quest 5.3"). This is an initial release of mapping functionality, so it's fairly basic at the moment. Future releases will add support for images in the map, and a visual map editor.
 
 ![](/blogimages/2012/12/quest-5-3-beta-is-now-available/images/grid2.png "Grid map - castle")
 
@@ -57,7 +57,7 @@ Other new improvements to look and feel include:
 
 ## Game behaviour - new things
 
-- **Changable POV** (sponsored by Phillip Zolla) - as detailed in [this separate blog post](http://www.textadventures.co.uk/blog/2012/09/19/pov-support-multiple-player-objects-in-quest-5-3/ "POV support – multiple player objects in Quest 5.3"). I'm looking forward to some interesting games where you can take control of multiple player characters over the course of a game.
+- **Changable POV** (sponsored by Phillip Zolla) - as detailed in [this separate blog post](/blog/2012/09/pov-support-multiple-player-objects-in-quest-5-3 "POV support – multiple player objects in Quest 5.3"). I'm looking forward to some interesting games where you can take control of multiple player characters over the course of a game.
 - **Light and dark rooms, light sources** (by Pertex). Rooms can now be dark, and lit up by a light source object.
 - **Scenery/Invisible exits** (by Pertex). It's now easier to make exits appear or disappear using a script command, and you can also have a "scenery" exit which exists but is not displayed in a room description.
 

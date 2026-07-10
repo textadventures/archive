@@ -18,7 +18,7 @@ With this release, you now have three options for using Squiffy:
 - [Download](http://textadventures.co.uk/squiffy) the app for Windows, OS X or Linux
 - Use a text editor with the [command-line version](http://docs.textadventures.co.uk/squiffy/cli.html)
 
-The new desktop version of the Squiffy editor takes the web-based editor (created for [Squiffy 3](http://textadventuresblog.wordpress.com/2015/04/25/squiffy-3-a-new-web-based-editor-for-interactive-fiction/)) and wraps it up using [Electron](http://electron.atom.io/). It's exactly [the same code](https://github.com/textadventures/squiffy-editor), so all future improvements will be available in both the web and desktop versions.
+The new desktop version of the Squiffy editor takes the web-based editor (created for [Squiffy 3](/blog/2015/04/squiffy-3-a-new-web-based-editor-for-interactive-fiction)) and wraps it up using [Electron](http://electron.atom.io/). It's exactly [the same code](https://github.com/textadventures/squiffy-editor), so all future improvements will be available in both the web and desktop versions.
 
 What sort of future improvements? Well, we're nearly at the end of my [Squiffy Roadmap](http://docs.textadventures.co.uk/squiffy/roadmap.html) now, but this is just the beginning. Now we have a fairly simple editor across all platforms for what is still a fairly simple system, we can start to flesh out the features a bit. I'd like to add a graphical view showing how a game's sections and passages connect to each other, and I've got various ideas for how the editor could assist you with building a game - making it a one-click operation to add new sections and passages, showing you which sections and passages are empty or missing, etc.
 

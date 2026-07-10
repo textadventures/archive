@@ -10,7 +10,7 @@ tags:
 
 This weekend's second Quest release is the test version of our next upgrade, Quest 4.1 Beta.
 
-I've [already blogged about this release here](http://www.axeuk.com/blog/2009/02/13/quest-41-is-coming-soon/), and you can now download it for testing:
+I've [already blogged about this release here](/blog/2009/02/quest-41-is-coming-soon), and you can now download it for testing:
 
 - **Quest Pro users** can download it from the [My Downloads](http://www.axeuk.com/mydownloads) area
 - If you're **not a Quest Pro user**, you can [download the trial version by clicking here](http://www.axeuk.com/quest/quest410beta.exe)

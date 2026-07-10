@@ -10,7 +10,7 @@ tags:
 
 It's been another busy month of Quest development, and I've just released Beta 2.
 
-The main change in this release is a substantial redevelopment of the Editor UI - it is now written in WPF, which has made laying out dynamically sized controls much easier. In particular, this is what has enabled me to implement the new-look Script Editor, as described in [last week's blog post](http://www.textadventures.co.uk/blog/2011/06/13/programming-visually-the-script-editor-in-quest-5-0-beta-2/ "Programming visually – the Script Editor in Quest 5.0 Beta 2").
+The main change in this release is a substantial redevelopment of the Editor UI - it is now written in WPF, which has made laying out dynamically sized controls much easier. In particular, this is what has enabled me to implement the new-look Script Editor, as described in [last week's blog post](/blog/2011/06/programming-visually-the-script-editor-in-quest-5-0-beta-2 "Programming visually – the Script Editor in Quest 5.0 Beta 2").
 
 Aside from that, all bugs that were logged against Beta 1 have now been fixed, and I have also implemented a few other features:
 
@@ -28,7 +28,7 @@ Turn Scripts are analogous to timers, but instead of running a script at speci
 
 **Random Numbers and Expression Templates**
 
-I've added functions to generate an integer in a range (say, from 1 to 10) and to generate a random floating point number (between 0.0 and 1.0). With the new Expression Templates (covered in the [previous blog](http://www.textadventures.co.uk/blog/2011/06/13/programming-visually-the-script-editor-in-quest-5-0-beta-2/ "Programming visually – the Script Editor in Quest 5.0 Beta 2")), I was able to easily add some nice templates to the editor:
+I've added functions to generate an integer in a range (say, from 1 to 10) and to generate a random floating point number (between 0.0 and 1.0). With the new Expression Templates (covered in the [previous blog](/blog/2011/06/programming-visually-the-script-editor-in-quest-5-0-beta-2 "Programming visually – the Script Editor in Quest 5.0 Beta 2")), I was able to easily add some nice templates to the editor:
 
 - When adding an "if" script, you can choose "random chance" from the dropdown. You can then enter a percentage between 0 and 100, and that script will then have X% chance of running.
 

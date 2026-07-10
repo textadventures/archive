@@ -8,7 +8,7 @@ A year ago, I released my first work of interactive fiction "[Moquette](http://t
 
 Today, I'm releasing the source code for it: [https://github.com/alexwarren/moquette](https://github.com/alexwarren/moquette)
 
-It might be useful if you're interested in implementing similar text effects in your own Quest game - if so, [this blog post](http://textadventuresblog.wordpress.com/2013/11/26/building-moquette-simulating-the-london-underground-and-doing-pretty-things-with-text/ "Building Moquette – Simulating the London Underground and Doing Pretty Things With Text") may also help.
+It might be useful if you're interested in implementing similar text effects in your own Quest game - if so, [this blog post](/blog/2013/11/building-moquette-simulating-the-london-underground-and-doing-pretty-things-with-text "Building Moquette – Simulating the London Underground and Doing Pretty Things With Text") may also help.
 
 Or who knows, maybe you'd like to adapt it - fix up the writing, change the ending, whatever... you can now fork it and do what you like with it.
 

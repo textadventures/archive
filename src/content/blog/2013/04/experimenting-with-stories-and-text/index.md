@@ -6,7 +6,7 @@ categories:
   - "text-adventures"
 ---
 
-Continuing the theme of [text adventure games are still new](http://textadventuresblog.wordpress.com/2013/01/29/text-adventure-games-are-still-new/ "Text adventure games are still new"), a couple of excellent thought-provoking blog posts from the last week:
+Continuing the theme of [text adventure games are still new](/blog/2013/01/text-adventure-games-are-still-new "Text adventure games are still new"), a couple of excellent thought-provoking blog posts from the last week:
 
 First, [Jimmy Maher's look at Infocom's 1983 game _Infidel_](http://www.filfre.net/2013/04/infidel/) raises questions which are very much still relevant today:
 

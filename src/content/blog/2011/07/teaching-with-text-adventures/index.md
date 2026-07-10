@@ -21,7 +21,7 @@ There are educational uses for Quest, both in getting students to play text adve
 - For teaching creative writing, Quest makes the author think of multiple points of view - the "reader" will be interacting with the game world.
 - Teaching foreign languages - getting students to play a game in a language that is not their mother tongue challenges them in both reading and writing, and it ensures comprehension, as they can't progress in the game unless they can read and write sentences correctly.
 
-To children, text adventures are not old-fashioned - they'll likely have never played anything like them before, so it will be new to them. This could be a challenge, in that they'll be unaware of the conventions around the kinds of things they can type - but I think that Quest's [hyperlink support](http://www.textadventures.co.uk/blog/2011/07/11/eliminating-guess-the-verb/ "Eliminating “Guess the Verb”") can help them to get the idea quickly.
+To children, text adventures are not old-fashioned - they'll likely have never played anything like them before, so it will be new to them. This could be a challenge, in that they'll be unaware of the conventions around the kinds of things they can type - but I think that Quest's [hyperlink support](/blog/2011/07/eliminating-guess-the-verb "Eliminating “Guess the Verb”") can help them to get the idea quickly.
 
 ### Current users
 

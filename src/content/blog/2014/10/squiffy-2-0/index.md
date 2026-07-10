@@ -22,4 +22,4 @@ That's it!
 
 Everything else is the same as before, with the possible exception of there being a different set of bugs now. If you spot any, please [log them on GitHub](https://github.com/textadventures/squiffy/issues).
 
-You can find out how to use Squiffy by looking at [the documentation](http://docs.textadventures.co.uk/squiffy/), and the [Squiffy 1.0 blog post's overview](http://textadventuresblog.wordpress.com/2014/07/27/squiffy-1-0/ "Squiffy 1.0") is still up-to-date except for the reference to Python.
+You can find out how to use Squiffy by looking at [the documentation](http://docs.textadventures.co.uk/squiffy/), and the [Squiffy 1.0 blog post's overview](/blog/2014/07/squiffy-1-0 "Squiffy 1.0") is still up-to-date except for the reference to Python.

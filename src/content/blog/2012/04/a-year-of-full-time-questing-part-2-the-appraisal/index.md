@@ -6,7 +6,7 @@ categories:
   - "quest"
 ---
 
-In [Part 1 of this blog](http://www.textadventures.co.uk/blog/2012/04/03/a-year-of-full-time-questing-part-1/ "A year of full-time Questing – Part 1"), I looked back over the last year of working on Quest full-time. That covers the "what", and for this second part, I want to take a look at "how well". What have been the good and bad parts, and what are my aims for Quest in the future?
+In [Part 1 of this blog](/blog/2012/04/a-year-of-full-time-questing-part-1 "A year of full-time Questing – Part 1"), I looked back over the last year of working on Quest full-time. That covers the "what", and for this second part, I want to take a look at "how well". What have been the good and bad parts, and what are my aims for Quest in the future?
 
 I'm interested to hear your own views on this too, so please add your thoughts to the comments!
 
@@ -84,9 +84,9 @@ Accessibility is more of a pain than it really ought to be. [JAWS](http://www.fr
 
 **Things That Changed**
 
-Windows Forms was a bad choice for the initial Editor implementation, and as I wrote [yesterday](http://www.textadventures.co.uk/blog/2012/04/03/a-year-of-full-time-questing-part-1/ "A year of full-time Questing – Part 1") it took a few weeks to redo this, but it was well worth it.
+Windows Forms was a bad choice for the initial Editor implementation, and as I wrote [yesterday](/blog/2012/04/a-year-of-full-time-questing-part-1 "A year of full-time Questing – Part 1") it took a few weeks to redo this, but it was well worth it.
 
-In implementing the JavaScript converter to allow games to made into apps, a load of synchronous (i.e. thread-blocking) functions had to be deprecated. This was a pain, in particular because I had to substantially re-engineer the parser - I [wrote more on this at the time](http://www.textadventures.co.uk/blog/2011/11/29/the-things-that-go-bump-in-the-night-coming-to-iphone-and-android/). Could this have been foreseen earlier? Possibly - suspending a thread in the background while awaiting on user input wasn't ideal for the "play online" server for example, although it had never been a problem.
+In implementing the JavaScript converter to allow games to made into apps, a load of synchronous (i.e. thread-blocking) functions had to be deprecated. This was a pain, in particular because I had to substantially re-engineer the parser - I [wrote more on this at the time](/blog/2011/11/the-things-that-go-bump-in-the-night-coming-to-iphone-and-android). Could this have been foreseen earlier? Possibly - suspending a thread in the background while awaiting on user input wasn't ideal for the "play online" server for example, although it had never been a problem.
 
 My initial implementation of "static picture frame" attempted to demonstrate that the player UI could be completely customised with HTML and JS, without the underlying Quest code knowing anything about it. However this didn't work very well as the resulting HTML/JS made assumptions about the rest of the Player HTML, so when this changed, the implementation broke. This was bad because this "detached" implementation was then wrapped up in games packaged with version 5.0. It required adding some Quest code to detect this and replace it with the new implementation. In hindsight, a static frame is such a standard thing that this should have just been "baked in" to the Player from the outset.
 
@@ -96,7 +96,7 @@ For version control, using SVN on [CodePlex](http://codeplex.com) was possibly t
 
 I've been pleased at the number of people willing to help out by creating [Quest translations](http://quest5.net/wiki/Translating_Quest). Weirdly this hasn't resulted in many non-English games yet though. Also, I was hopeful that more people would join in and contribute to the [C#/VB.net code](http://quest.codeplex.com) - there have been a few contributors, but generally it seems people are far happier to use open source software than contribute to developing it! This is probably an absolutely typical experience though. CodePlex has a system where you can advertise your project as [requiring help](http://www.codeplex.com/site/search/openings) - I was blown away by the number of volunteers who signed up, but _none_ of them subsequently did anything. It is probably a backwards approach to recruiting developers - it's probably the case that existing users who can code are much more likely to help out than people browsing CodePlex for projects that need assistance.
 
-I'm really happy with how well Quest is working in classrooms. It has been something at the back of my mind for a long time, the thought that schools could make use of Quest, and finally [it's happening](http://www.textadventures.co.uk/blog/2012/02/24/text-adventures-in-the-classroom-quest-day-at-perins-school/ "Text adventures in the classroom – Quest day at Perins School"). It seems like the time is right for it, as over the last year it seems everybody has woken up to the fact that we need to teach kids how to code, and we especially need to encourage the girls. There is a lot more work to be done in this area especially.
+I'm really happy with how well Quest is working in classrooms. It has been something at the back of my mind for a long time, the thought that schools could make use of Quest, and finally [it's happening](/blog/2012/02/text-adventures-in-the-classroom-quest-day-at-perins-school "Text adventures in the classroom – Quest day at Perins School"). It seems like the time is right for it, as over the last year it seems everybody has woken up to the fact that we need to teach kids how to code, and we especially need to encourage the girls. There is a lot more work to be done in this area especially.
 
 **Some Numbers**
 

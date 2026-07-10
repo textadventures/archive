@@ -8,7 +8,7 @@ tags:
   - "history"
 ---
 
-This is part 2 of a look back at 15 years of Quest - [part 1 is here](http://textadventuresblog.wordpress.com/2013/11/07/quest-is-15/ "Quest is 15").
+This is part 2 of a look back at 15 years of Quest - [part 1 is here](/blog/2013/11/quest-is-15 "Quest is 15").
 
 Immediately after releasing Quest 1.0, in November 1998, I got started working on Quest 2.0 - the first alpha version was released only a month later, in December 1998. This version incorporated the early feedback I'd received from v1.0 - making room descriptions more customisable, adding functions, numeric variables and "for" loops, improving the in-game debugging information, and fixing various bugs.
 

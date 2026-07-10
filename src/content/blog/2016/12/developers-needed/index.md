@@ -8,7 +8,7 @@ categories:
   - "textadventures-co-uk-website"
 ---
 
-This is a follow up to [Looking for a new owner for textadventures.co.uk and Quest](http://textadventuresblog.wordpress.com/2016/12/07/looking-for-a-new-owner-for-textadventures-co-uk-and-quest/).
+This is a follow up to [Looking for a new owner for textadventures.co.uk and Quest](/blog/2016/12/looking-for-a-new-owner-for-textadventures-co-uk-and-quest).
 
 Thanks to all of you who have got in touch so far. A lot of people have asked about what would be involved in taking over and running textadventures.co.uk and/or Quest, so this post is to go into a bit more detail about how things are set up and how the work might be split up across different people.
 

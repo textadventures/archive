@@ -6,7 +6,7 @@ categories:
   - "textadventures-co-uk-website"
 ---
 
-A couple of months ago, we started accepting more game listings on [textadventures.co.uk](http://textadventures.co.uk), opening the site up to allow [all kinds of web-browser games](http://textadventuresblog.wordpress.com/2013/06/11/now-accepting-all-kinds-of-web-based-text-adventure-games/ "Now accepting all kinds of web-based text adventure games"), such as those created using Twine, Inform or Undum.
+A couple of months ago, we started accepting more game listings on [textadventures.co.uk](http://textadventures.co.uk), opening the site up to allow [all kinds of web-browser games](/blog/2013/06/now-accepting-all-kinds-of-web-based-text-adventure-games "Now accepting all kinds of web-based text adventure games"), such as those created using Twine, Inform or Undum.
 
 We've now opened up listings even more - with new links to off-site games, all of which can be played in a web-browser, and/or downloaded as an app.
 

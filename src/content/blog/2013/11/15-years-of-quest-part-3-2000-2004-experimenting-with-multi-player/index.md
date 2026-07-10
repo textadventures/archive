@@ -8,7 +8,7 @@ tags:
   - "history"
 ---
 
-This is part 3 of a look back at 15 years of Quest. Here are links to the previous posts: [part 1](http://textadventuresblog.wordpress.com/2013/11/07/quest-is-15/ "Quest is 15"), [part 2](http://textadventuresblog.wordpress.com/2013/11/26/15-years-of-quest-part-2-1999-2000/ "15 years of Quest, part 2: 1999-2000").
+This is part 3 of a look back at 15 years of Quest. Here are links to the previous posts: [part 1](/blog/2013/11/quest-is-15 "Quest is 15"), [part 2](/blog/2013/11/15-years-of-quest-part-2-1999-2000 "15 years of Quest, part 2: 1999-2000").
 
 The first alpha build Quest 3.0 was released in March 2000, and fixed one of the weird design flaws of previous versions by unifying "items" and "objects". Objects now had to have unique names, but they could have aliases, which would be displayed to the player instead of the code name. This version also introduced a disambiguation menu to allow the player to distinguishing between different objects which had same the alias. This is fundamentally the same approach to object handling that Quest still uses today.
 

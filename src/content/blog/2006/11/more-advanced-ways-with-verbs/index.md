@@ -6,7 +6,7 @@ categories:
   - "quest"
 ---
 
-I wrote the other day [about verbs](http://www.axeuk.com/blog/2006/11/02/verbs-an-easier-way-to-add-commands-in-quest-40/), and how they provide you with a much easier way of creating commands in Quest 4.0. I thought I would tell you a little bit more about how they work.
+I wrote the other day [about verbs](/blog/2006/11/verbs-an-easier-way-to-add-commands-in-quest-40), and how they provide you with a much easier way of creating commands in Quest 4.0. I thought I would tell you a little bit more about how they work.
 
 **How an object's verbs are stored**
 

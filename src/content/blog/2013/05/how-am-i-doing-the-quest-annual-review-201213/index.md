@@ -6,7 +6,7 @@ categories:
   - "quest"
 ---
 
-In April 2012 I marked a year of working on Quest full-time by conducting my own "Annual Review" ([Part 1](http://textadventuresblog.wordpress.com/2012/04/03/a-year-of-full-time-questing-part-1/), [Part 2](http://textadventuresblog.wordpress.com/2012/04/04/a-year-of-full-time-questing-part-2-the-appraisal/)). Well, er, 13 months have elapsed since then, which makes it the perfect time to do it all again.
+In April 2012 I marked a year of working on Quest full-time by conducting my own "Annual Review" ([Part 1](/blog/2012/04/a-year-of-full-time-questing-part-1), [Part 2](/blog/2012/04/a-year-of-full-time-questing-part-2-the-appraisal)). Well, er, 13 months have elapsed since then, which makes it the perfect time to do it all again.
 
 So, what have I been doing for the last 1.0833 years? What's going well, what's going badly, and where is all this going?
 
@@ -14,16 +14,16 @@ So, what have I been doing for the last 1.0833 years? What's going well, what's 
 
 Unlike last time, I've not actually been working on Quest 100% full-time. For the last 5 months I have, but between May and November 2012 it was relegated to spare time, and the occasional day off, as I took up some contract C# developer work to top up my bank balance.
 
-- May saw the release of [Quest 5.2](http://textadventuresblog.wordpress.com/2012/05/12/quest-5-2-is-out-now/), which featured the new gamebook mode
+- May saw the release of [Quest 5.2](/blog/2012/05/quest-5-2-is-out-now), which featured the new gamebook mode
 - In June I presented Quest at the [CAS Conference](http://www.computingatschool.org.uk/index.php?id=conf2012)
-- In July I ran [Quest workshops at Games Britannia](http://textadventuresblog.wordpress.com/2012/07/04/quest-at-games-britannia/)
-- In September I chatted to Rob Pratten about Quest on the [Transmedia Podcast](http://textadventuresblog.wordpress.com/2012/09/25/talking-about-quest-and-text-adventure-games-on-the-transmedia-podcast/)
-- In October I presented Quest at the [South West Learning Technologies conference](http://textadventuresblog.wordpress.com/2012/09/17/quest-at-south-west-learning-technologies-conference/), and ran [workshops at](http://textadventuresblog.wordpress.com/2012/10/15/quest-workshops-at-gamecity-7/) [GameCity](http://textadventuresblog.wordpress.com/2012/10/15/quest-workshops-at-gamecity-7/)
-- In December I [spoke at AdventureX](http://screen7.co.uk/adventurex/2012/schedule.html) (the video of this is [now online](http://youtu.be/lQQbKt4_cKk)) and released the second Quest-powered smartphone and tablet app, [Escape from Byron Bay](http://textadventuresblog.wordpress.com/2012/12/05/escape-from-byron-bay-now-available-for-iphone-and-ipad/)
-- January 2013 saw the [release of Quest 5.3](http://textadventuresblog.wordpress.com/2013/01/14/quest-5-3-is-released/), featuring a new map view, support for web fonts, and cover art. I also applied for some [funding from Nesta](http://www.nesta.org.uk/home1/assets/features/digital_makers_open_call_for_ideas) (which we didn't get)
-- In February I presented Quest at the [Story Sharing Web Conference](http://www.britishcouncil.org/turkey-english-teaching-stories-for-schools-story-sharing-conference.htm) and released the third app - [Aventura Pirata](http://textadventuresblog.wordpress.com/2013/02/06/spanish-adaptation-of-scott-adams-text-adventure-for-iphone-ipad-android/)
-- March saw the [release of](http://textadventuresblog.wordpress.com/2013/03/28/quest-5-4-released/) [Quest 5.4](http://textadventuresblog.wordpress.com/2013/03/28/quest-5-4-released/), bringing enhancements to gamebook mode and the new text processor making it easier to embed links and images within text. There was also the [launch of QuestComp](http://textadventuresblog.wordpress.com/2013/03/13/questcomp-2013/) and the release of the fourth app, [First Times](http://textadventuresblog.wordpress.com/2013/03/13/first-times-a-horror-text-adventure-for-iphone-ipad-android/)
-- In April I launched the [revamped website](http://textadventuresblog.wordpress.com/2013/04/20/the-new-textadventures-co-uk/) and a [game about the elections in Pakistan](http://textadventures.co.uk/games/view/44yzyx1xykcy0sv4ycz9cg/its-election-time-in-pakistan-go-rich-boy-go) became a surprise hit
+- In July I ran [Quest workshops at Games Britannia](/blog/2012/07/quest-at-games-britannia)
+- In September I chatted to Rob Pratten about Quest on the [Transmedia Podcast](/blog/2012/09/talking-about-quest-and-text-adventure-games-on-the-transmedia-podcast)
+- In October I presented Quest at the [South West Learning Technologies conference](/blog/2012/09/quest-at-south-west-learning-technologies-conference), and ran [workshops at](/blog/2012/10/quest-workshops-at-gamecity-7) [GameCity](/blog/2012/10/quest-workshops-at-gamecity-7)
+- In December I [spoke at AdventureX](http://screen7.co.uk/adventurex/2012/schedule.html) (the video of this is [now online](http://youtu.be/lQQbKt4_cKk)) and released the second Quest-powered smartphone and tablet app, [Escape from Byron Bay](/blog/2012/12/escape-from-byron-bay-now-available-for-iphone-and-ipad)
+- January 2013 saw the [release of Quest 5.3](/blog/2013/01/quest-5-3-is-released), featuring a new map view, support for web fonts, and cover art. I also applied for some [funding from Nesta](http://www.nesta.org.uk/home1/assets/features/digital_makers_open_call_for_ideas) (which we didn't get)
+- In February I presented Quest at the [Story Sharing Web Conference](http://www.britishcouncil.org/turkey-english-teaching-stories-for-schools-story-sharing-conference.htm) and released the third app - [Aventura Pirata](/blog/2013/02/spanish-adaptation-of-scott-adams-text-adventure-for-iphone-ipad-android)
+- March saw the [release of](/blog/2013/03/quest-5-4-released) [Quest 5.4](/blog/2013/03/quest-5-4-released), bringing enhancements to gamebook mode and the new text processor making it easier to embed links and images within text. There was also the [launch of QuestComp](/blog/2013/03/questcomp-2013) and the release of the fourth app, [First Times](/blog/2013/03/first-times-a-horror-text-adventure-for-iphone-ipad-android)
+- In April I launched the [revamped website](/blog/2013/04/the-new-textadventures-co-uk) and a [game about the elections in Pakistan](http://textadventures.co.uk/games/view/44yzyx1xykcy0sv4ycz9cg/its-election-time-in-pakistan-go-rich-boy-go) became a surprise hit
 
 **Some numbers**
 
@@ -34,7 +34,7 @@ Usage of the site has increased over the last 13 months:
 
 So, a nice bit of growth there but nothing explosive. What has truly gone up hugely though is the number of games on the website. 13 months ago, we had 380 games on the website, of which 76 had been added in the previous year. Now we have 980 games on the website in total - so **600 games have been added** in the last 13 months. Pro-rated to a 12 month figure of 553, that's an **increase of 628% in game submissions**.
 
-Note that in April 2012, I added the ability to [publish games privately](http://textadventuresblog.wordpress.com/2012/04/12/3-improvements-to-publishing-games/), which means not all of these 600 games are public. In fact, 297 of these are private ("unlisted"). But even if we only count public games, that's still a big increase - 303 public games in 13 months, which if pro-rated to a 12 month figure of 280 is still a 268% increase.
+Note that in April 2012, I added the ability to [publish games privately](/blog/2012/04/3-improvements-to-publishing-games), which means not all of these 600 games are public. In fact, 297 of these are private ("unlisted"). But even if we only count public games, that's still a big increase - 303 public games in 13 months, which if pro-rated to a 12 month figure of 280 is still a 268% increase.
 
 The [web version of Quest](http://textadventures.co.uk/create) is being well used, with 7300 games started since it was launched in March 2012. 331 of these have been published. This is slightly over half the total number of games published on this site in the time it has been available, so it shows that it's about equally as popular as the [desktop version](http://textadventures.co.uk/quest/desktop).
 
@@ -142,6 +142,6 @@ I'm still funding Quest almost entirely out of my own pocket, and I have spent m
 
 Another way I plan to fund Quest is by selling additional services, and right now I'm working on some extra functionality to help schools and groups using Quest - take a look at [ActiveLit](http://activelit.com/) for more details, and expect to hear more about that soon.
 
-My other project for the next few months is to finally build my own game. Yes, it's been 15 years since I started working on Quest, so it's probably about time. Although I've been collecting various thoughts about storytelling on this blog over the last year (see [here](http://textadventuresblog.wordpress.com/2012/12/19/thoughts-on-interactive-storytelling-and-the-hobbit/), [here](http://textadventuresblog.wordpress.com/2013/01/29/text-adventure-games-are-still-new/) and [here](http://textadventuresblog.wordpress.com/2013/04/07/experimenting-with-stories-and-text/)), I've come to the realisation that it's probably better to stop talking hypothetically about the kind of stuff you could do in Quest - I should show some of my ideas in an actual game instead.
+My other project for the next few months is to finally build my own game. Yes, it's been 15 years since I started working on Quest, so it's probably about time. Although I've been collecting various thoughts about storytelling on this blog over the last year (see [here](/blog/2012/12/thoughts-on-interactive-storytelling-and-the-hobbit), [here](/blog/2013/01/text-adventure-games-are-still-new) and [here](/blog/2013/04/experimenting-with-stories-and-text)), I've come to the realisation that it's probably better to stop talking hypothetically about the kind of stuff you could do in Quest - I should show some of my ideas in an actual game instead.
 
 I am especially looking forward to davidw's review of it.

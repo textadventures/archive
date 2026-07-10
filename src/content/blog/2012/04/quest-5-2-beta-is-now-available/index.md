@@ -8,15 +8,15 @@ categories:
 
 Quest 5.2 Beta is now available. You can [download the Windows version](http://www.textadventures.co.uk/quest/download/ "Download Quest"), or you can [use it in your web browser](http://www.textadventures.co.uk/create/ "Create a text adventure game").
 
-The main focus for this release was adding that second option - Quest 5.1 was Windows-only, and the main new feature of Quest 5.2 is that it is now available [everywhere](http://www.textadventures.co.uk/blog/2012/02/16/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/ "Introducing Quest WebEditor – create text adventures online in your browser").
+The main focus for this release was adding that second option - Quest 5.1 was Windows-only, and the main new feature of Quest 5.2 is that it is now available [everywhere](/blog/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser "Introducing Quest WebEditor – create text adventures online in your browser").
 
 But I, and a couple of contributors, did find some time to add some other new features to Quest too:
 
-**Gamebook mode**. This lets you create "Choose Your Own Adventure"-style games in Quest, in addition to text adventure games. There is more information in the [announcement blog post](http://www.textadventures.co.uk/blog/2012/01/16/gamebook-mode-choose-your-own-adventure-in-quest-5-2/ "Gamebook mode (“Choose Your Own Adventure”) in Quest 5.2"). I've added a couple of small features since that post - you can now easily add YouTube videos into a gamebook, and you can also incorporate links to external websites.
+**Gamebook mode**. This lets you create "Choose Your Own Adventure"-style games in Quest, in addition to text adventure games. There is more information in the [announcement blog post](/blog/2012/01/gamebook-mode-choose-your-own-adventure-in-quest-5-2 "Gamebook mode (“Choose Your Own Adventure”) in Quest 5.2"). I've added a couple of small features since that post - you can now easily add YouTube videos into a gamebook, and you can also incorporate links to external websites.
 
 ![](/blogimages/2012/04/quest-5-2-beta-is-now-available/images/gamebook-options.png "New Gamebook page types")
 
-**Two-object verbs**. It's now much easier to set up commands like "hit nail with hammer" or "light candle with match", using [two-object verbs](http://www.textadventures.co.uk/blog/2012/03/20/shoot-monster-with-ray-gun-burn-corpse-with-incinerator-two-object-verbs-in-quest-5-2/ "Shoot monster with ray gun, burn corpse with incinerator – two-object verbs in Quest 5.2").
+**Two-object verbs**. It's now much easier to set up commands like "hit nail with hammer" or "light candle with match", using [two-object verbs](/blog/2012/03/shoot-monster-with-ray-gun-burn-corpse-with-incinerator-two-object-verbs-in-quest-5-2 "Shoot monster with ray gun, burn corpse with incinerator – two-object verbs in Quest 5.2").
 
 **Inventory and container limits** (contributed by Pertex). The concept of a "limited container" has been extended, so you can now limit by volume of objects as well as number. For example, a bag might be able to hold 20 apples but only one bowling ball, and it's now easy to set that up. When an object is a limited container, you can specify the maximum volume that a container can hold. For objects that you might put inside a limited container, on the Inventory tab you can specify their volume.
 

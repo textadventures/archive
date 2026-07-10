@@ -9,10 +9,10 @@ categories:
 
 I've done an "annual review" at around this time of year for the last few years, so it feels like a good idea to do it again, one last time. For reference:
 
-- [Review for 2012/13](http://textadventuresblog.wordpress.com/2013/05/07/how-am-i-doing-the-quest-annual-review-201213/)
-- Review for 2011/12, [part 1](http://textadventuresblog.wordpress.com/2012/04/03/a-year-of-full-time-questing-part-1/) and [part 2](http://textadventuresblog.wordpress.com/2012/04/04/a-year-of-full-time-questing-part-2-the-appraisal/)
+- [Review for 2012/13](/blog/2013/05/how-am-i-doing-the-quest-annual-review-201213)
+- Review for 2011/12, [part 1](/blog/2012/04/a-year-of-full-time-questing-part-1) and [part 2](/blog/2012/04/a-year-of-full-time-questing-part-2-the-appraisal)
 
-This is the last time I'll do an annual review because I am [no longer](http://textadventuresblog.wordpress.com/2013/12/16/starting-a-new-chapter/) working on Quest and textadventures.co.uk full-time. The good news is I've just started an absolutely awesome job at [Stack Exchange](http://stackexchange.com/about/team), and for pretty much the first time ever I am thoroughly enjoying being employed.
+This is the last time I'll do an annual review because I am [no longer](/blog/2013/12/starting-a-new-chapter) working on Quest and textadventures.co.uk full-time. The good news is I've just started an absolutely awesome job at [Stack Exchange](http://stackexchange.com/about/team), and for pretty much the first time ever I am thoroughly enjoying being employed.
 
 **Some stats**
 
@@ -21,33 +21,33 @@ This is the last time I'll do an annual review because I am [no longer](http://t
 - It currently averages around 1500 unique visitors per day, up from about 800 a year ago.
 - Over the last week, there were on average 2150 game sessions per day, which is up from 480 per day. (That figure was the average over 2012/13, so is not exactly equivalent - the site grew over 2012/13 too, so the daily average by the end of 2012/13 would probably have been a bit higher).
 - There are currently 3693 games listed on the site, up from 980. Of these, 2536 are publicly available (the rest are private "unlisted" games only available to those who have been given the link).
-- Of the games on the site, 2752 are Quest games, of which 1671 are public. So, there are 941 non-Quest games - which is up from zero a year ago, as during this year [support was added](http://textadventuresblog.wordpress.com/2013/08/21/more-game-listings-and-an-interactive-fiction-calendar/ "More game listings, and an interactive fiction calendar") for all kinds of web-playable text games. 503 of these non-Quest games have been imported from [IFDB](http://ifdb.tads.org/) (more will be added soon).
+- Of the games on the site, 2752 are Quest games, of which 1671 are public. So, there are 941 non-Quest games - which is up from zero a year ago, as during this year [support was added](/blog/2013/08/more-game-listings-and-an-interactive-fiction-calendar "More game listings, and an interactive fiction calendar") for all kinds of web-playable text games. 503 of these non-Quest games have been imported from [IFDB](http://ifdb.tads.org/) (more will be added soon).
 - 24,548 games have now been created using the [web version of the Quest editor](http://textadventures.co.uk/create) since it was launched, up from 7300 last year. 1766 of these have been published, up from 331.
 - Of the 1751 Quest games added since 1st April 2013, 1334 were created with the web version of Quest - 76%. Last year it was more like 50%.
 
 **Some things that happened since the previous annual review**
 
-May 2013: Released [Filbert and the Broccoli Escape](http://textadventuresblog.wordpress.com/2013/05/19/filbert-and-the-broccoli-escape-an-interactive-childrens-book-for-ipad/) - an interactive children's book for iPad, and the [beta of ActiveLit](http://textadventuresblog.wordpress.com/2013/05/15/making-it-easier-to-use-text-adventures-and-quest-in-the-classroom-activelit/). I also spoke a bit about text adventures at [GameCamp](http://gamecamp.org.uk/).
+May 2013: Released [Filbert and the Broccoli Escape](/blog/2013/05/filbert-and-the-broccoli-escape-an-interactive-childrens-book-for-ipad) - an interactive children's book for iPad, and the [beta of ActiveLit](/blog/2013/05/making-it-easier-to-use-text-adventures-and-quest-in-the-classroom-activelit). I also spoke a bit about text adventures at [GameCamp](http://gamecamp.org.uk/).
 
-June 2013: Wrote up some [thoughts from the Futurebook Innovation Workshop](http://textadventuresblog.wordpress.com/2013/06/03/the-future-of-digital-stories-thoughts-from-the-futurebook-innovation-workshop-2013/), and started [accepting games built with Twine, Undum, Parchment etc](http://textadventuresblog.wordpress.com/2013/06/11/now-accepting-all-kinds-of-web-based-text-adventure-games/).
+June 2013: Wrote up some [thoughts from the Futurebook Innovation Workshop](/blog/2013/06/the-future-of-digital-stories-thoughts-from-the-futurebook-innovation-workshop-2013), and started [accepting games built with Twine, Undum, Parchment etc](/blog/2013/06/now-accepting-all-kinds-of-web-based-text-adventure-games).
 
-July 2013: The first [QuestComp](http://textadventuresblog.wordpress.com/2013/07/15/questcomp-2013-the-results/) competition finished. Open-sourced [QuestJS](https://github.com/textadventures/quest), the Quest-to-JavaScript converter. Wrote up [some initial thoughts about Quest 6](http://forum.textadventures.co.uk/viewtopic.php?f=15&t=3816), although my thinking has changed somewhat since then - carry on reading this post for my current thoughts.
+July 2013: The first [QuestComp](/blog/2013/07/questcomp-2013-the-results) competition finished. Open-sourced [QuestJS](https://github.com/textadventures/quest), the Quest-to-JavaScript converter. Wrote up [some initial thoughts about Quest 6](http://forum.textadventures.co.uk/viewtopic.php?f=15&t=3816), although my thinking has changed somewhat since then - carry on reading this post for my current thoughts.
 
-August 2013: Added more games to the site by [accepting external listings](http://textadventuresblog.wordpress.com/2013/08/21/more-game-listings-and-an-interactive-fiction-calendar/) for web-playable text games.
+August 2013: Added more games to the site by [accepting external listings](/blog/2013/08/more-game-listings-and-an-interactive-fiction-calendar) for web-playable text games.
 
-September 2013: Wrote up some notes from the [Publish 2013 conference](http://textadventuresblog.wordpress.com/2013/09/30/notes-from-publish-2013-new-adventures-in-innovation/). The [IFComp](http://www.ifcomp.org/) games were released, including my very own first work of interactive fiction - a story set on the London Underground called [Moquette](http://textadventures.co.uk/games/view/zbzfpcnknu_vdjog-cbihw/moquette).
+September 2013: Wrote up some notes from the [Publish 2013 conference](/blog/2013/09/notes-from-publish-2013-new-adventures-in-innovation). The [IFComp](http://www.ifcomp.org/) games were released, including my very own first work of interactive fiction - a story set on the London Underground called [Moquette](http://textadventures.co.uk/games/view/zbzfpcnknu_vdjog-cbihw/moquette).
 
 October 2013: Enrolled on the 3-month [Story Innovation Programme](http://www.stellarnetwork.com/development-programme/), experimenting with stories and technology with a whole bunch of interesting people.
 
-November 2013: The IFComp results were in, and I wrote a two-part analysis of Moquette - [part 1](http://textadventuresblog.wordpress.com/2013/11/19/moquette-in-the-ifcomp-post-mortem-and-review-roundup/) and [part 2](http://textadventuresblog.wordpress.com/2013/11/26/building-moquette-simulating-the-london-underground-and-doing-pretty-things-with-text/). I also wrote a three-part series of blog posts looking back at 15 years of Quest - [part 1](http://textadventuresblog.wordpress.com/2013/11/07/quest-is-15/), [part 2](http://textadventuresblog.wordpress.com/2013/11/26/15-years-of-quest-part-2-1999-2000/), [part 3](http://textadventuresblog.wordpress.com/2013/11/27/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/). Meanwhile, as part of the Story Innovation Programme, I started work on an experimental interactive fiction project as part of a brief we had been given by book publisher [4th Estate](http://www.4thestate.co.uk/), to come up with something to promote the forthcoming "Annihilation" by Jeff VanderMeer.
+November 2013: The IFComp results were in, and I wrote a two-part analysis of Moquette - [part 1](/blog/2013/11/moquette-in-the-ifcomp-post-mortem-and-review-roundup) and [part 2](/blog/2013/11/building-moquette-simulating-the-london-underground-and-doing-pretty-things-with-text). I also wrote a three-part series of blog posts looking back at 15 years of Quest - [part 1](/blog/2013/11/quest-is-15), [part 2](/blog/2013/11/15-years-of-quest-part-2-1999-2000), [part 3](/blog/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player). Meanwhile, as part of the Story Innovation Programme, I started work on an experimental interactive fiction project as part of a brief we had been given by book publisher [4th Estate](http://www.4thestate.co.uk/), to come up with something to promote the forthcoming "Annihilation" by Jeff VanderMeer.
 
-December 2013: After failing to get funding to continue with Quest and textadventures.co.uk full-time, it was time to start thinking about [moving on](http://textadventuresblog.wordpress.com/2013/12/16/starting-a-new-chapter/). I didn't let the knock-back stop me from released [Quest 5.5 Beta](http://textadventuresblog.wordpress.com/2013/12/19/quest-5-5-beta-is-now-available/) though. The Story Innovation Programme came to an end, and we demonstrated our prototype to 4th Estate, who liked it enough to want to see it turned into an actual thing.
+December 2013: After failing to get funding to continue with Quest and textadventures.co.uk full-time, it was time to start thinking about [moving on](/blog/2013/12/starting-a-new-chapter). I didn't let the knock-back stop me from released [Quest 5.5 Beta](/blog/2013/12/quest-5-5-beta-is-now-available) though. The Story Innovation Programme came to an end, and we demonstrated our prototype to 4th Estate, who liked it enough to want to see it turned into an actual thing.
 
 January 2014: Mostly job-hunting, really.
 
 February 2014: After finally getting the go-ahead from 4th Estate, I spent most of the month working with Caroline Moran, Simon Mercer, Martha Henson and Sam Howey-Nunn to build our interactive experience [Join The Southern Reach](http://join.thesouthernreach.com), which [launched](http://www.stellarnetwork.com/project/join-the-southern-reach-stellar-networks-interactive-fiction-for-harper-collins4th-estate/) at the end of the month.
 
-March: Released [Quest 5.5](http://textadventuresblog.wordpress.com/2014/03/01/quest-5-5-is-now-available/) and started [my new job](http://stackexchange.com/).
+March: Released [Quest 5.5](/blog/2014/03/quest-5-5-is-now-available) and started [my new job](http://stackexchange.com/).
 
 **Good, but not good enough**
 

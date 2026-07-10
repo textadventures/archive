@@ -10,7 +10,7 @@ tags:
 
 _The Cloak of Darkness is a specification for an adventure game that has been created in numerous systems, with the purpose of giving prospective authors some idea of what is involved in each system._
 
-That is how I started [my last post](http://textadventuresblog.wordpress.com/2018/09/10/the-cloak-of-darkness/) on this blog. It describes how Quest 5 was used to create an adventure game according to that specification.
+That is how I started [my last post](/blog/2018/09/the-cloak-of-darkness) on this blog. It describes how Quest 5 was used to create an adventure game according to that specification.
 
 Now here I am nearly two years later, and I have a new version. This was written in Quest 6.
 

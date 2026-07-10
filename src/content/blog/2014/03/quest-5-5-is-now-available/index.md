@@ -11,7 +11,7 @@ Quest 5.5 is now out of beta:
 - [Download Quest 5.5](http://textadventures.co.uk/quest/desktop) for Windows
 - or run Quest 5.5 [in your web browser](http://textadventures.co.uk/create)
 
-For details on what's new in Quest 5.5, see the [beta announcement blog post](http://textadventuresblog.wordpress.com/2013/12/19/quest-5-5-beta-is-now-available/ "Quest 5.5 Beta is now available").
+For details on what's new in Quest 5.5, see the [beta announcement blog post](/blog/2013/12/quest-5-5-beta-is-now-available "Quest 5.5 Beta is now available").
 
 Changes since the beta:
 

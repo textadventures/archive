@@ -18,6 +18,6 @@ The need to migrate data from the old site to the new site means there will be s
 
 **Saturday 20th April**, 10.00 British Time (09.00 UTC/GMT, 05.00 EST): Site offline for data migration. This should hopefully be completed within a few hours, and then the new site will be available. You will then be able to create new user accounts and use all site functionality.
 
-During the migration, the [blog](http://blog.textadventures.co.uk) and [forums](http://forum.textadventures.co.uk) will continue to be available, and you'll still be able to download the Windows desktop version of Quest via this direct link: [http://files.textadventures.co.uk/quest540.exe](http://files.textadventures.co.uk/quest540.exe)
+During the migration, the [blog](/blog/) and [forums](http://forum.textadventures.co.uk) will continue to be available, and you'll still be able to download the Windows desktop version of Quest via this direct link: [http://files.textadventures.co.uk/quest540.exe](http://files.textadventures.co.uk/quest540.exe)
 
 Any questions or concerns then please let me know - [alex@textadventures.co.uk](mailto:alex@textadventures.co.uk).

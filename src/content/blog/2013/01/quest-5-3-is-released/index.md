@@ -21,7 +21,7 @@ A quick recap of what's new:
 - new UI for Windows player (identical to the web-based version)
 - Windows player UI is now powered by Chromium
 
-For full details on all of these, see the [beta announcement](http://www.textadventures.co.uk/blog/2012/12/03/quest-5-3-beta-is-now-available/ "Quest 5.3 Beta is now available") which goes into more depth.
+For full details on all of these, see the [beta announcement](/blog/2012/12/quest-5-3-beta-is-now-available "Quest 5.3 Beta is now available") which goes into more depth.
 
 Many thanks once again to Phillip Zolla, Pertex, James Gregory, Aleksandar Hummel and Jay Nabonne for code and contributions towards this release.
 

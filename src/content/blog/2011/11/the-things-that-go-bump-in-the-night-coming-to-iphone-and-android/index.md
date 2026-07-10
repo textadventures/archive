@@ -13,7 +13,7 @@ The first Quest-powered smartphone app will be released soon. It is an updated v
 
 [![bump-300x194](/blogimages/2011/11/the-things-that-go-bump-in-the-night-coming-to-iphone-and-android/images/bump-300x194.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/12/bump-300x194.png)
 
-This is the first time that a Quest game has been converted into a native application. As I've explained in a [previous blog post](http://www.textadventures.co.uk/blog/2011/09/30/using-quest-to-create-text-adventures-for-iphone-ipad-android/ "Using Quest to create text adventures for iPhone, iPad, Android"), the way it works is by using a tool which I've built to convert Quest games into pure Javascript. Using [Phonegap](http://www.phonegap.com), this HTML/JS is then wrapped into a cross-platform app.
+This is the first time that a Quest game has been converted into a native application. As I've explained in a [previous blog post](/blog/2011/09/using-quest-to-create-text-adventures-for-iphone-ipad-android "Using Quest to create text adventures for iPhone, iPad, Android"), the way it works is by using a tool which I've built to convert Quest games into pure Javascript. Using [Phonegap](http://www.phonegap.com), this HTML/JS is then wrapped into a cross-platform app.
 
 That's the theory, but it has taken a bit longer than I initially expected to get this first app ready for release, for reasons which I'll go into below. The good news is that subsequent conversions should now be much quicker and easier.
 
@@ -23,7 +23,7 @@ The first step was actually a pre-conversion - the app converter works with game
 
 I wrote a converter application which converts most of a game correctly, although there were still a few manual tweaks to do - even some Quest 4 bugs to emulate! What really helped was to have a complete walkthrough for the game - Quest 4 has a "transcript" feature which is similar to Quest 5's [walkthrough](http://quest5.net/wiki/Using_walkthroughs) feature. This meant I could have Quest 4 and 5 automatically play the game through to completion, and compare the output, fixing things as I went along.
 
-I then sent Tim the converted Quest 5 game, and he made a few more tweaks and corrections. He also adapted the game to make better use of [hyperlinks](http://www.textadventures.co.uk/blog/2011/07/11/eliminating-guess-the-verb/ "Eliminating “Guess the Verb”") - something which is really important for the smartphone version of the game. Tim's enhancements mean it is possible to play the game through in its entirety, without having to type anything.
+I then sent Tim the converted Quest 5 game, and he made a few more tweaks and corrections. He also adapted the game to make better use of [hyperlinks](/blog/2011/07/eliminating-guess-the-verb "Eliminating “Guess the Verb”") - something which is really important for the smartphone version of the game. Tim's enhancements mean it is possible to play the game through in its entirety, without having to type anything.
 
 By the way, now that I have an internal Quest 4 to Quest 5 conversion tool, please [get in touch](http://www.textadventures.co.uk/help/contact-us/ "Contact us") if you have an old game you'd like to convert. The conversion isn't perfect (which is why this won't become part of Quest itself), but it can get you most of the way.
 

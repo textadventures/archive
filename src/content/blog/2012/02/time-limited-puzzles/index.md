@@ -8,7 +8,7 @@ tags:
   - "tips"
 ---
 
-When I was at Perins School [last week](http://www.textadventures.co.uk/blog/2012/02/24/text-adventures-in-the-classroom-quest-day-at-perins-school/ "Text adventures in the classroom – Quest day at Perins School"), I was asked about puzzles with a time limit. For example, the player opens a cupboard, inside which is a hungry alien. How do you give the player 10 seconds to kill the alien, before the alien kills them instead?
+When I was at Perins School [last week](/blog/2012/02/text-adventures-in-the-classroom-quest-day-at-perins-school "Text adventures in the classroom – Quest day at Perins School"), I was asked about puzzles with a time limit. For example, the player opens a cupboard, inside which is a hungry alien. How do you give the player 10 seconds to kill the alien, before the alien kills them instead?
 
 This is pretty straightforward to handle, because in Quest you can run scripts after a certain number of seconds. Here's a quick how-to:
 

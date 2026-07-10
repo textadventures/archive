@@ -6,7 +6,7 @@ categories:
   - "quest"
 ---
 
-Following on from the previous blog post ([Moquette Post-Mortem and Review Roundup](http://textadventuresblog.wordpress.com/2013/11/19/moquette-in-the-ifcomp-post-mortem-and-review-roundup/ "Moquette in the IFComp – Post-Mortem and Review Roundup")), here's a look at how some of it was implemented.
+Following on from the previous blog post ([Moquette Post-Mortem and Review Roundup](/blog/2013/11/moquette-in-the-ifcomp-post-mortem-and-review-roundup "Moquette in the IFComp – Post-Mortem and Review Roundup")), here's a look at how some of it was implemented.
 
 [Moquette](http://textadventures.co.uk/games/view/zbzfpcnknu_vdjog-cbihw/moquette) was entered into the [IFComp](http://ifcomp.org/) not under the Quest category, but as a web-based game only. Why? Because I used my latest development version - [Quest 5.5](https://quest.codeplex.com/releases/view/99971), which is currently available only as an unsupported pre-beta "nightly" build. A downloadable .quest file was submitted to the IFComp for archive purposes, and will be made available from the [Moquette page on textadventures.co.uk](http://textadventures.co.uk/games/view/zbzfpcnknu_vdjog-cbihw/moquette) when a beta version of Quest 5.5 is ready - which should be in the next month or two.
 

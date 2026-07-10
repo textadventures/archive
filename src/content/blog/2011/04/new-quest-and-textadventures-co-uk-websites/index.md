@@ -10,6 +10,6 @@ I have reworked the [textadventures.co.uk](http://www.textadventures.co.uk/) we
 
 I've also moved the Quest pages over to [http://www.textadventures.co.uk/quest/](http://www.textadventures.co.uk/quest/) - I've set up redirects so all the old links should continue to work.
 
-The blog has also been moved to [http://www.textadventures.co.uk/blog/](http://www.textadventures.co.uk/blog/)
+The blog has also been moved to [http://www.textadventures.co.uk/blog/](/blog/)
 
 There's nothing much new yet, but now the site is fully powered by WordPress it will be much easier for me to expand and update, as we add new sections for Quest 5 etc. Exciting times ahead!
