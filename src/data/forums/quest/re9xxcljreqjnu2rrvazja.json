@@ -1,0 +1,109 @@
+{
+  "Topic": {
+    "TopicId": "re9xxcljreqjnu2rrvazja",
+    "ForumId": "10",
+    "Title": "Help Needed",
+    "LastUpdated": "2020-09-05T21:46:54.1633328Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "28ff2524-087b-40a4-8b9e-ee3ca64ae9df",
+      "UserId": 499219,
+      "Username": "NeilBerry",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/8e8d560e17d0c6c23a51a2934126831f?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I want to build a game that mimics point and click games - commands being entered by the player using the display verb drop down or by the command pane.\r\n\r\nthere are currently two problems I'm struggling with:\r\n\r\n1) I only want the Room description, object list, exit list and the last command response visible. I've tried using HidePreviousTurnOutput but this makes the room description disappear. I've tried using StartNewOutputSection and  HideOutputSection but can only make that work with 'wait' however that ignores the next command chosen. \r\n\r\n2) I want to move the Command Pane to the bottom of the screen under both the room description and the command response.\r\n\r\nany help would be appreciated. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I want to build a game that mimics point and click games - commands being entered by the player using the display verb drop down or by the command pane.</p>\n<p>there are currently two problems I'm struggling with:</p>\n<ol>\n<li>\n<p>I only want the Room description, object list, exit list and the last command response visible. I've tried using HidePreviousTurnOutput but this makes the room description disappear. I've tried using StartNewOutputSection and  HideOutputSection but can only make that work with 'wait' however that ignores the next command chosen.</p>\n</li>\n<li>\n<p>I want to move the Command Pane to the bottom of the screen under both the room description and the command response.</p>\n</li>\n</ol>\n<p>any help would be appreciated.</p>\n\n",
+      "PostDate": "2020-09-05T21:46:54.1633328Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "c784a6f0-e816-4a3f-9f9b-99af3925f526",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hmm… that's an interesting one. I think it would require some messing around with javascript, in any case.\r\n\r\nIt would probably be easier by modifying some of the core functions. For example, at the end of the funcion `ResolveNextName` you could find the lines:\r\n```\r\n        // This is the bit that actually runs the commands\r\n        do (game.pov.currentcommandpattern, \"script\", game.pov.currentcommandresolvedelements)\r\n```\r\nand change that to:\r\n```\r\n        ClearScreen()\r\n        ShowRoomDescription()\r\n        do (game.pov.currentcommandpattern, \"script\", game.pov.currentcommandresolvedelements)\r\n```\r\n\r\n<hr>\r\n\r\n**Or…** if you want it to do the same thing even if you mistype a command, you could modify `HandleCommand`, and add two lines at the beginning:\r\n```\r\n        ClearScreen()\r\n        ShowRoomDescription()\r\n```\r\n\r\nHandleCommand is run immediately whenever the user hits enter on a command or clicks a command link or button; so clearing the screen and outputting the room description then would ensure that it's always at the top of the display.\r\n\r\n<hr />\r\n\r\nThe disadvantage of both of the methods above is that the description is shown before running the command. This means that if the command is \"go north\", the display will then contain nothing but two room descriptions.\r\n\r\nSo, how do we deal with that? It seems like it would make sense to display the room description *after* running the command, and then move it to the top of the display.\r\n\r\nYou'd want to set the attribute `game.showdescriptiononenter` to false (\"Show room description when entering a room\" in the editor), so that moving doesn't cause the description of the new room to be displayed twice.\r\n\r\nThen we can use `outputData` (an invisible page element that contains some information useful when saving a game) to mark a position in the output.\r\nAdd a turnscript (or add to the end of the function `FinishTurn` if you're using the desktop editor) a little script:\r\n```\r\n// Remove everything *before* outputData (the previous turn's output).\r\nJS.eval(\"$('#outputData').prevAll().remove();\")\r\n\r\n// Move outputData to put it after this turn's output\r\nJS.eval(\"$('#outputData').appendTo('#divOutput');\")\r\n\r\n// Create a new div and put the current room description in it\r\n//   setting the alignment forces the creation of a new div, to make sure we don't pick up any of the other output by mistake,\r\nSetAlignment(\"left\")\r\nShowRoomDescription()\r\n\r\n// Move everything after divOutput (the description we just generated) to before the current turn's output\r\nJS.eval(\"$('#outputData').nextAll().prependTo('#divOutput');\")\r\n\r\n// And ensure we've got a new div to hold the next turn's output:\r\nSetAlignment(\"left\")\r\n```\r\n\r\nWhen I used something like this on my game 'circus', I made the room description 'sticky' rather than clearing previous turns' output. This means that the room description sticks to the top of the screen and cannot scroll off the top, so it remains visible, but you can still scroll back if you want to. Unfortunately that approach didn't work so well, because the offline player uses a very old version of Chromium which doesn't support sticky.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hmm… that's an interesting one. I think it would require some messing around with javascript, in any case.</p>\n<p>It would probably be easier by modifying some of the core functions. For example, at the end of the funcion <code>ResolveNextName</code> you could find the lines:</p>\n<pre><code>        // This is the bit that actually runs the commands\n        do (game.pov.currentcommandpattern, \"script\", game.pov.currentcommandresolvedelements)\n</code></pre>\n<p>and change that to:</p>\n<pre><code>        ClearScreen()\n        ShowRoomDescription()\n        do (game.pov.currentcommandpattern, \"script\", game.pov.currentcommandresolvedelements)\n</code></pre>\n<hr>\n<p><strong>Or…</strong> if you want it to do the same thing even if you mistype a command, you could modify <code>HandleCommand</code>, and add two lines at the beginning:</p>\n<pre><code>        ClearScreen()\n        ShowRoomDescription()\n</code></pre>\n<p>HandleCommand is run immediately whenever the user hits enter on a command or clicks a command link or button; so clearing the screen and outputting the room description then would ensure that it's always at the top of the display.</p>\n<hr>\n<p>The disadvantage of both of the methods above is that the description is shown before running the command. This means that if the command is \"go north\", the display will then contain nothing but two room descriptions.</p>\n<p>So, how do we deal with that? It seems like it would make sense to display the room description <em>after</em> running the command, and then move it to the top of the display.</p>\n<p>You'd want to set the attribute <code>game.showdescriptiononenter</code> to false (\"Show room description when entering a room\" in the editor), so that moving doesn't cause the description of the new room to be displayed twice.</p>\n<p>Then we can use <code>outputData</code> (an invisible page element that contains some information useful when saving a game) to mark a position in the output.<br>\nAdd a turnscript (or add to the end of the function <code>FinishTurn</code> if you're using the desktop editor) a little script:</p>\n<pre><code>// Remove everything *before* outputData (the previous turn's output).\nJS.eval(\"$('#outputData').prevAll().remove();\")\n\n// Move outputData to put it after this turn's output\nJS.eval(\"$('#outputData').appendTo('#divOutput');\")\n\n// Create a new div and put the current room description in it\n//   setting the alignment forces the creation of a new div, to make sure we don't pick up any of the other output by mistake,\nSetAlignment(\"left\")\nShowRoomDescription()\n\n// Move everything after divOutput (the description we just generated) to before the current turn's output\nJS.eval(\"$('#outputData').nextAll().prependTo('#divOutput');\")\n\n// And ensure we've got a new div to hold the next turn's output:\nSetAlignment(\"left\")\n</code></pre>\n<p>When I used something like this on my game 'circus', I made the room description 'sticky' rather than clearing previous turns' output. This means that the room description sticks to the top of the screen and cannot scroll off the top, so it remains visible, but you can still scroll back if you want to. Unfortunately that approach didn't work so well, because the offline player uses a very old version of Chromium which doesn't support sticky.</p>\n\n",
+      "PostDate": "2020-09-06T13:55:48.0788556Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "3b2653b3-9bef-45b6-b8cc-3449cb93d0b5",
+      "UserId": 499219,
+      "Username": "NeilBerry",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/8e8d560e17d0c6c23a51a2934126831f?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "That solves question 1). \r\n\r\nI've created a turn script:\r\n\r\n    ClearScreen\r\n    ShowRoomDescription\r\n    do (game.pov.currentcommandpattern, \"script\", game.pov.currentcommandresolvedelements)\r\n\r\nrather than mess around with the core functions.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>That solves question 1).</p>\n<p>I've created a turn script:</p>\n<pre><code>ClearScreen\nShowRoomDescription\ndo (game.pov.currentcommandpattern, \"script\", game.pov.currentcommandresolvedelements)\n</code></pre>\n<p>rather than mess around with the core functions.</p>\n\n",
+      "PostDate": "2020-09-06T16:45:21.8525804Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "9d0aba91-a648-40da-94fa-35f76b04d216",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I don't think that will work like you intended.\r\n\r\nThat will do the player's action, clear the screen, show the room description, and then do their action again.\r\n\r\nThis might not be obvious, but it could cause odd behaviour for some things. For example, when the player tries to pick up an item, it will pick it up the first time. So the message the player sees will always be \"You are already carrying it.\" even if they weren't. This will cause more problems if your command involves `ShowMenu`, as it will try to display the men twice and that causes an error.\r\n\r\nMy third option addresses this by displaying the room description after the player's action, and then rearranging the elements on the screen. I haven't tested it, but I think this should work. It's probably the only reliable way to do this without modifying the core functions.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I don't think that will work like you intended.</p>\n<p>That will do the player's action, clear the screen, show the room description, and then do their action again.</p>\n<p>This might not be obvious, but it could cause odd behaviour for some things. For example, when the player tries to pick up an item, it will pick it up the first time. So the message the player sees will always be \"You are already carrying it.\" even if they weren't. This will cause more problems if your command involves <code>ShowMenu</code>, as it will try to display the men twice and that causes an error.</p>\n<p>My third option addresses this by displaying the room description after the player's action, and then rearranging the elements on the screen. I haven't tested it, but I think this should work. It's probably the only reliable way to do this without modifying the core functions.</p>\n\n",
+      "PostDate": "2020-09-06T18:56:53.0114698Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "5895e17c-17f2-4ae1-a8b6-375bbb681afd",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> I want to move the Command Pane to the bottom of the screen under both the room description and the command response.\r\n\r\nHmm… something like this?\r\n```\r\nJS.eval(\"$('#commandPane').insertAfter('#divOutput').css({width: 680});\")\r\n```\r\nTop of my head answer there, probably needs some tweaking.\r\n\r\n(stuff like this would go in the \"UI Initialisation Script\" on the Advanced Scripts tab of the game; which you might need to enable on the \"Features\" tab first)",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>I want to move the Command Pane to the bottom of the screen under both the room description and the command response.</p>\n</blockquote>\n<p>Hmm… something like this?</p>\n<pre><code>JS.eval(\"$('#commandPane').insertAfter('#divOutput').css({width: 680});\")\n</code></pre>\n<p>Top of my head answer there, probably needs some tweaking.</p>\n<p>(stuff like this would go in the \"UI Initialisation Script\" on the Advanced Scripts tab of the game; which you might need to enable on the \"Features\" tab first)</p>\n\n",
+      "PostDate": "2020-09-06T19:40:34.2373592Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "fbc1bded-768d-4a38-9ce3-a499cd25123b",
+      "UserId": 499219,
+      "Username": "NeilBerry",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/8e8d560e17d0c6c23a51a2934126831f?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I think I've solved it!\r\n\r\nI tried method 3 but that behaved oddly (Sometimes showing the room description twice but not always - yes, I had automatically generate room descriptions to false)\r\n\r\nSo I went back to basics and set a variable game.response to store the the output; for example the object description is set to run script with the script being:\r\n\r\n    game.response = \"Something\"\r\n\r\nand the turn script being:\r\n\r\n    ClearScreen\r\n    ShowRoomDescription\r\n    msg (game.response)\r\n\r\nI can use the run a script option on exits to do the same.\r\n\r\n----\r\n\r\n    JS.eval(\"$('#commandPane').insertAfter('#divOutput').css({width: 680});\")\r\n\r\nThat worked perfectly.\r\n\r\nThank you for your help.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I think I've solved it!</p>\n<p>I tried method 3 but that behaved oddly (Sometimes showing the room description twice but not always - yes, I had automatically generate room descriptions to false)</p>\n<p>So I went back to basics and set a variable game.response to store the the output; for example the object description is set to run script with the script being:</p>\n<pre><code>game.response = \"Something\"\n</code></pre>\n<p>and the turn script being:</p>\n<pre><code>ClearScreen\nShowRoomDescription\nmsg (game.response)\n</code></pre>\n<p>I can use the run a script option on exits to do the same.</p>\n<hr>\n<pre><code>JS.eval(\"$('#commandPane').insertAfter('#divOutput').css({width: 680});\")\n</code></pre>\n<p>That worked perfectly.</p>\n<p>Thank you for your help.</p>\n\n",
+      "PostDate": "2020-09-07T18:35:50.3969673Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "eca555ad-839e-4b94-b7cb-c9d4e68a9324",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> yes, I had automatically generate room descriptions to false\r\n\r\nYou mean \"Show room description when entering a room\"?\r\n\r\n\"automatically generate room descriptions\" just turns off the \"You can see\" and \"You can go\" lines.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>yes, I had automatically generate room descriptions to false</p>\n</blockquote>\n<p>You mean \"Show room description when entering a room\"?</p>\n<p>\"automatically generate room descriptions\" just turns off the \"You can see\" and \"You can go\" lines.</p>\n\n",
+      "PostDate": "2020-09-07T18:45:25.5234225Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

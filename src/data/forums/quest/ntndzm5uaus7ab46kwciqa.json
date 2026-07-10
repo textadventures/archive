@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "ntndzm5uaus7ab46kwciqa",
+    "ForumId": "10",
+    "Title": "RPG Battle Log (display battle messages with delay between lines)",
+    "LastUpdated": "2018-07-02T09:41:09.8685232Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "b62d6a6e-ff25-45e9-832e-61addcbbf709",
+      "UserId": 28419,
+      "Username": "pascal.marchese",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a0ab02717f4df07b322761fc1d51dda6?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi, here's my code for displaying the battle log (RPG style game: https://textadventures.co.uk/forum/samples/topic/5976/rpg-style-combat-library-2-0)  .\r\nAlso, check forum topic \"Print Out List With A Delay Between Items\" for reference.\r\nI had to do some tricks because It's impossible to use the SetTimeout function inside a foreach loop.\r\nThe concept is simple:\r\nYou must add a stringlist attribute to the game object, I call it \"battleLog\".\r\nEvery turn the \"attacktheplayer\" turnscript runs, (I am referring to the code of the RPG Combat library) you must add the message (\"You hit ...\", \"you miss...\", \"the enemy hits you...\" etc. ) in this stringlist.\r\nAfter every turn, there's a timer (you must create it) that reads and prints every line from the **battleLog**  stringlist.\r\nOnce this is done, (at the end of every turn) EMPTY the stringlist, ready for the next turn.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi, here's my code for displaying the battle log (RPG style game: https://textadventures.co.uk/forum/samples/topic/5976/rpg-style-combat-library-2-0)  .<br>\nAlso, check forum topic \"Print Out List With A Delay Between Items\" for reference.<br>\nI had to do some tricks because It's impossible to use the SetTimeout function inside a foreach loop.<br>\nThe concept is simple:<br>\nYou must add a stringlist attribute to the game object, I call it \"battleLog\".<br>\nEvery turn the \"attacktheplayer\" turnscript runs, (I am referring to the code of the RPG Combat library) you must add the message (\"You hit ...\", \"you miss...\", \"the enemy hits you...\" etc. ) in this stringlist.<br>\nAfter every turn, there's a timer (you must create it) that reads and prints every line from the <strong>battleLog</strong>  stringlist.<br>\nOnce this is done, (at the end of every turn) EMPTY the stringlist, ready for the next turn.</p>\n\n",
+      "PostDate": "2018-07-02T09:41:09.8685232Z",
+      "LastEditDate": "2018-07-08T21:14:16.4688512Z",
+      "link": null
+    },
+    {
+      "PostId": "defdd02c-c2e6-4a8e-af76-fdc0d0a7c8b7",
+      "UserId": 28419,
+      "Username": "pascal.marchese",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a0ab02717f4df07b322761fc1d51dda6?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "SO, THIS IS IT:\r\n\r\n1) add a stringlist attribute to the game object, call it \"battleLog\". This will be the data storage for all the messages that will be to printed.\r\n\r\n2) store every message of the \"attacktheplayer\" turnscript (\"you miss...\", \"the enemy hits...\", etc.) in the stringlist with this code:\r\nsee http://docs.textadventures.co.uk/quest/using_lists.html for reference.\r\n```\r\nadd (game.battleLog, message)\r\n```\r\n3) In the \"attacktheplayer\" turnscript (from RPG combat lib) , paste this code at the end (it shoul be at the end of every cycle of the turnscript):\r\n```\r\n    foreach(entry, game.battleLog) {\r\n         request(Hide, \"Command\") // this is for hiding the command bar while while the timer display the logs.\r\n         EnableTimer (displayBattleLog)\r\n    }\r\n```\r\n 4) create a Timer (I call it \"displayBattleLog\"), paste this code:\r\n```\r\n<timer name=\"displayBattleLog\">\r\n\t<interval>4</interval>\r\n\t<script><![CDATA[\r\n\t\t\tmessage= StringListItem (game.battleLog, 0)\r\n\t\t\tmsg (\"<br>\" + message)   // this prints the message\r\n\t\t\tJS.scrollToEnd ()   // this scrolls the text to the bottom of the GUI\r\n\t\t\tlist remove (game.battleLog, message)     //this removes the message from the list after it is displayed.\r\n\t\t\t// Now checks if the list is empty. \r\n                       // If it is, the TIMER stops the the command bar is dislayed, as normal.\r\n\r\n\t\t\tif(ListCount(game.battleLog) = 0){     \r\n\t\t\t\tDisableTimer (displayBattleLog)\t\r\n\t\t\t\trequest(Show, \"Command\")\t\t\t\t\t\r\n\t\t\t}\t\r\n\t\t]]>\t\t\t\t\r\n\t</script>\t\r\n</timer>\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>SO, THIS IS IT:</p>\n<ol>\n<li>\n<p>add a stringlist attribute to the game object, call it \"battleLog\". This will be the data storage for all the messages that will be to printed.</p>\n</li>\n<li>\n<p>store every message of the \"attacktheplayer\" turnscript (\"you miss...\", \"the enemy hits...\", etc.) in the stringlist with this code:<br>\nsee http://docs.textadventures.co.uk/quest/using_lists.html for reference.</p>\n</li>\n</ol>\n<pre><code>add (game.battleLog, message)\n</code></pre>\n<ol start=\"3\">\n<li>In the \"attacktheplayer\" turnscript (from RPG combat lib) , paste this code at the end (it shoul be at the end of every cycle of the turnscript):</li>\n</ol>\n<pre><code>    foreach(entry, game.battleLog) {\n         request(Hide, \"Command\") // this is for hiding the command bar while while the timer display the logs.\n         EnableTimer (displayBattleLog)\n    }\n</code></pre>\n<ol start=\"4\">\n<li>create a Timer (I call it \"displayBattleLog\"), paste this code:</li>\n</ol>\n<pre><code>&lt;timer name=\"displayBattleLog\"&gt;\n\t&lt;interval&gt;4&lt;/interval&gt;\n\t&lt;script&gt;&lt;![CDATA[\n\t\t\tmessage= StringListItem (game.battleLog, 0)\n\t\t\tmsg (\"&lt;br&gt;\" + message)   // this prints the message\n\t\t\tJS.scrollToEnd ()   // this scrolls the text to the bottom of the GUI\n\t\t\tlist remove (game.battleLog, message)     //this removes the message from the list after it is displayed.\n\t\t\t// Now checks if the list is empty. \n                       // If it is, the TIMER stops the the command bar is dislayed, as normal.\n\n\t\t\tif(ListCount(game.battleLog) = 0){     \n\t\t\t\tDisableTimer (displayBattleLog)\t\n\t\t\t\trequest(Show, \"Command\")\t\t\t\t\t\n\t\t\t}\t\n\t\t]]&gt;\t\t\t\t\n\t&lt;/script&gt;\t\n&lt;/timer&gt;\n</code></pre>\n\n",
+      "PostDate": "2018-07-02T13:35:39.472221Z",
+      "LastEditDate": "2018-07-08T21:05:50.251459Z",
+      "link": null
+    },
+    {
+      "PostId": "7ae2dfb8-2672-4fdc-989d-4d0817b3bc73",
+      "UserId": 260569,
+      "Username": "DarkLizerd",
+      "AvatarUrl": "https://i.imgur.com/vjdH3t6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "So, does this run the entire battle, win or loose? Or it is turned based?\r\nDoes it display:\r\nYou hit it.\r\n(pause)\r\nIt missed you.\r\n(pause)\r\nYou hit it.\r\n(pause)\r\nIt hit you.\r\n(pause)\r\nYou hit it, and killed it.\r\n(battle over.)\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>So, does this run the entire battle, win or loose? Or it is turned based?<br>\nDoes it display:<br>\nYou hit it.<br>\n(pause)<br>\nIt missed you.<br>\n(pause)<br>\nYou hit it.<br>\n(pause)<br>\nIt hit you.<br>\n(pause)<br>\nYou hit it, and killed it.<br>\n(battle over.)</p>\n\n",
+      "PostDate": "2018-07-03T02:45:32.4322926Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "2b9378e1-979b-49b2-9d2d-0230e14b4e70",
+      "UserId": 28419,
+      "Username": "pascal.marchese",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a0ab02717f4df07b322761fc1d51dda6?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "It is turn based, this runs every turn. It you have a party with multiple attacks this could be very useful. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>It is turn based, this runs every turn. It you have a party with multiple attacks this could be very useful.</p>\n\n",
+      "PostDate": "2018-07-08T20:56:42.6075809Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

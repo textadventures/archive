@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "8k0vlivo-0qaxvoctq9lca",
+    "ForumId": "18",
+    "Title": "Custom Library: How to AUTOMATICALLY add object types to game object?",
+    "LastUpdated": "2019-09-25T07:41:45.573526Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "be656149-bb66-46a7-be01-e51ce88d747e",
+      "UserId": 335979,
+      "Username": "LeFibS",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello! I'm working on a comprehensive library thingy. (The Quest Solaer Library / QSL)\r\n\r\nI want to put _some_ effort into making it compatible with other libraries, and one facet of doing that is to avoid overriding default Quest functions and object types if at all feasible.\r\n\r\nHowever, just as the vanilla Quest libraries have to use the game object to store default values and feature toggles that can be changed in the editor, so does QSL.\r\n\r\nThe two ways I know of to do that are:\r\n1. Redefine the defaultgame object type (which I don't like at all)\r\n2. Create a solaergame object type, but game authors must manually add it to the game object (which is suboptimal)\r\n\r\nSo my question is:  Is it possible for a library to tell Quest to _automatically_ add an object type to the game object in addition to defaultgame, so that I can avoid overriding defaultgame _and_ authors using my library will not need to add the object type manually for every game?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello! I'm working on a comprehensive library thingy. (The Quest Solaer Library / QSL)</p>\n<p>I want to put <em>some</em> effort into making it compatible with other libraries, and one facet of doing that is to avoid overriding default Quest functions and object types if at all feasible.</p>\n<p>However, just as the vanilla Quest libraries have to use the game object to store default values and feature toggles that can be changed in the editor, so does QSL.</p>\n<p>The two ways I know of to do that are:</p>\n<ol>\n<li>Redefine the defaultgame object type (which I don't like at all)</li>\n<li>Create a solaergame object type, but game authors must manually add it to the game object (which is suboptimal)</li>\n</ol>\n<p>So my question is:  Is it possible for a library to tell Quest to <em>automatically</em> add an object type to the game object in addition to defaultgame, so that I can avoid overriding defaultgame <em>and</em> authors using my library will not need to add the object type manually for every game?</p>\n\n",
+      "PostDate": "2019-09-25T07:41:45.573526Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "50728812-350d-4e0b-a6ee-c53bd2a431fe",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I don't think there's a neat way to do it.\r\n\r\nWhen I was looking into making a library that would require something similar, my solution was to make it an object. You could have a `solaergame` object, and your library's code looks for its attributes there rather than on the game object. The main problem with this would be that it would be in the list returned by `AllObjects()`, which could possibly confuse other libraries that use that for something.\r\n\r\nOne possible solution would be to create an object and give it a script:\r\n```\r\n<attr name=\"_initialise_\" type=\"script\">\r\n  foreach (attr, ListExclude(GetAttributeNames (this, false), Split(\"name;_initialise_\"))) {\r\n    if (not HasAttribute (game, attr)) {\r\n      set (game, attr, GetAttribute (this, attr))\r\n    }\r\n  }\r\n  destroy (this.name)\r\n</attr>\r\n```\r\n\r\nBasically forcing an object to act like a type, copying all its attributes [aside from the initialise script itself and its name] onto the game element at startup.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I don't think there's a neat way to do it.</p>\n<p>When I was looking into making a library that would require something similar, my solution was to make it an object. You could have a <code>solaergame</code> object, and your library's code looks for its attributes there rather than on the game object. The main problem with this would be that it would be in the list returned by <code>AllObjects()</code>, which could possibly confuse other libraries that use that for something.</p>\n<p>One possible solution would be to create an object and give it a script:</p>\n<pre><code>&lt;attr name=\"_initialise_\" type=\"script\"&gt;\n  foreach (attr, ListExclude(GetAttributeNames (this, false), Split(\"name;_initialise_\"))) {\n    if (not HasAttribute (game, attr)) {\n      set (game, attr, GetAttribute (this, attr))\n    }\n  }\n  destroy (this.name)\n&lt;/attr&gt;\n</code></pre>\n<p>Basically forcing an object to act like a type, copying all its attributes [aside from the initialise script itself and its name] onto the game element at startup.</p>\n\n",
+      "PostDate": "2019-09-25T09:33:04.0822465Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "199f0d4f-08c8-4c76-a4fe-ec8f7956aa0d",
+      "UserId": 335979,
+      "Username": "LeFibS",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "While I myself might be able to work with that, that solution will not permit authors to reconfigure QSL through the Quest editor; for instance, my time system defaults to 24 hours in a day etc., but the author should be able to change that in the editor just as easily as they can change the game name or subtitle, etc.\r\n\r\nFor the time being, I think I'll have to settle for instructing authors to manually add the solaergame object type. I think this will be the least destructive solution, and the most intuitive one available without source code edits to Quest itself. x(",
+      "EditableFormat": "markdown",
+      "HTML": "<p>While I myself might be able to work with that, that solution will not permit authors to reconfigure QSL through the Quest editor; for instance, my time system defaults to 24 hours in a day etc., but the author should be able to change that in the editor just as easily as they can change the game name or subtitle, etc.</p>\n<p>For the time being, I think I'll have to settle for instructing authors to manually add the solaergame object type. I think this will be the least destructive solution, and the most intuitive one available without source code edits to Quest itself. x(</p>\n\n",
+      "PostDate": "2019-09-25T15:41:20.3893697Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

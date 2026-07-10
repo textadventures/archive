@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "g19oq4ciyugapbe-szuecw",
+    "ForumId": "10",
+    "Title": "Trying to use the hasnotmoved attribute",
+    "LastUpdated": "2020-02-25T01:30:09.2674913Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "52e56e4c-b2f7-4bc1-b36b-f6080cf9a731",
+      "UserId": 454326,
+      "Username": "Brian5757",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/411c3e8cd4782d4a996f292940a61069?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "In the games room there is an in-room description for the toy bear \"A toy bear is in the corner\". If I pick up the bear and drop it in the current room or another room then I don't want the same in-room description.\r\n\r\nI tried this:\r\n{if not (Toy Bear.hasbeenmoved:A Big Toy Bear is in the corner}\r\n\r\nAfter the bear has been picked up and dropped I still get the same in-room description that the bear is in the corner\r\nand I get \"you can see a toy bear\" after I have dropped a bear (with the Scenery box ticked for the bear). This could be due to no in-room description replacement text if the hasbeenmoved condition passes.\r\nI could write  script to be activated when the bear is picked up but I don't know if/how you change the in-room description in the script.\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>In the games room there is an in-room description for the toy bear \"A toy bear is in the corner\". If I pick up the bear and drop it in the current room or another room then I don't want the same in-room description.</p>\n<p>I tried this:<br>\n{if not (Toy Bear.hasbeenmoved:A Big Toy Bear is in the corner}</p>\n<p>After the bear has been picked up and dropped I still get the same in-room description that the bear is in the corner<br>\nand I get \"you can see a toy bear\" after I have dropped a bear (with the Scenery box ticked for the bear). This could be due to no in-room description replacement text if the hasbeenmoved condition passes.<br>\nI could write  script to be activated when the bear is picked up but I don't know if/how you change the in-room description in the script.</p>\n\n",
+      "PostDate": "2020-02-25T01:30:09.2674913Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "6279079d-42e6-42a7-aa80-2abf0cbbb9e1",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> <code style=\"color:inherit\">{if not <b style=\"border: 1px solid red\">(</b>Toy Bear.hasbeenmoved:A Big Toy Bear is in the corner}</code>\r\n\r\nI think you've got an extra bracket there. If there isn't an object named `(Toy Bear`, then `{if` treats all of its attributes as false.\r\n\r\n> and I get \"you can see a toy bear\" after I have dropped a bear (with the Scenery box ticked for the bear)\r\n\r\nThe \"take\" command removes the scenery flag from objects that are taken.\r\n\r\nYou probably want to give it a \"when dropped\" script, something like:\r\n```\r\nthis.parent = destination\r\nthis.scenery = true\r\n```\r\nor add `this.scenery = true` to its `changedparent` script attribute.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p><code style=\"color: inherit\">{if not <b style=\"border: 1px solid red\">(</b>Toy Bear.hasbeenmoved:A Big Toy Bear is in the corner}</code></p>\n</blockquote>\n<p>I think you've got an extra bracket there. If there isn't an object named <code>(Toy Bear</code>, then <code>{if</code> treats all of its attributes as false.</p>\n<blockquote>\n<p>and I get \"you can see a toy bear\" after I have dropped a bear (with the Scenery box ticked for the bear)</p>\n</blockquote>\n<p>The \"take\" command removes the scenery flag from objects that are taken.</p>\n<p>You probably want to give it a \"when dropped\" script, something like:</p>\n<pre><code>this.parent = destination\nthis.scenery = true\n</code></pre>\n<p>or add <code>this.scenery = true</code> to its <code>changedparent</code> script attribute.</p>\n\n",
+      "PostDate": "2020-02-25T02:20:03.8633149Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "57ce39cc-d23c-43ef-963b-367c6cab6dc1",
+      "UserId": 454326,
+      "Username": "Brian5757",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/411c3e8cd4782d4a996f292940a61069?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi arangel.\r\n\r\nI get this error:\r\nError running script: Error compiling expression 'destination': Unknown object or variable 'destination'\r\nwhen adding:\r\nthis.parent = destination\r\nthis.scenery = true\r\n\r\nHowever if I just use \"this.scenery = true\"  I have no problems \r\nSo I'm wondering \"if this.parent = destination\" is needed",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi arangel.</p>\n<p>I get this error:<br>\nError running script: Error compiling expression 'destination': Unknown object or variable 'destination'<br>\nwhen adding:<br>\nthis.parent = destination<br>\nthis.scenery = true</p>\n<p>However if I just use \"this.scenery = true\"  I have no problems<br>\nSo I'm wondering \"if this.parent = destination\" is needed</p>\n\n",
+      "PostDate": "2020-02-25T02:56:19.1442974Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "95c646c0-c678-48ea-8a81-1d1658813c1e",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Ah, my mistake.\r\n\r\nIn the `drop` script, setting the destination is necessary. In the `ondrop` script (which I'd forgotten about), it is done for you.\r\n\r\nNote that if the player puts the bear in a container, the \"drop\" script is run but not the \"ondrop\"; so it will still be scenery (this might be the behaviour you want; if not, you'd probably have to use either the \"drop\" or \"changedparent\" scripts - and maybe use those scripts to change the in-room description as well)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Ah, my mistake.</p>\n<p>In the <code>drop</code> script, setting the destination is necessary. In the <code>ondrop</code> script (which I'd forgotten about), it is done for you.</p>\n<p>Note that if the player puts the bear in a container, the \"drop\" script is run but not the \"ondrop\"; so it will still be scenery (this might be the behaviour you want; if not, you'd probably have to use either the \"drop\" or \"changedparent\" scripts - and maybe use those scripts to change the in-room description as well)</p>\n\n",
+      "PostDate": "2020-02-25T08:52:50.2213462Z",
+      "LastEditDate": "2020-02-25T09:08:40.4245813Z",
+      "link": null
+    }
+  ]
+}

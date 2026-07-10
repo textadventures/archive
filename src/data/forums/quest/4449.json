@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "4449",
+    "ForumId": "10",
+    "Title": "ShowMenu cannot access local variables or \"this\"",
+    "LastUpdated": "2014-07-06T14:08:22+01:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "29320",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Is this known about? Here is a very small example so you can see for yourself. The error generated is this:\n\n[i:2mglat3s]Error running script&#058; Error compiling expression 'o.name': Unknown object or variable 'o'[/i:2mglat3s]\n\nIf you use show menu, rather than ShowMenu, it works fine.\n\n[code:2mglat3s]&lt;!--Saved by Quest 5&#46;5&#46;5173&#46;27901--&gt;\n&lt;asl version=&quot;550&quot;&gt;\n  &lt;include ref=&quot;English&#46;aslx&quot; /&gt;\n  &lt;include ref=&quot;Core&#46;aslx&quot; /&gt;\n  &lt;game name=&quot;showmenu&quot;&gt;\n    &lt;gameid&gt;2d3a8cc1-9900-4c3d-81af-6d07710109b7&lt;/gameid&gt;\n    &lt;version&gt;1&#46;0&lt;/version&gt;\n    &lt;firstpublished&gt;2014&lt;/firstpublished&gt;\n    &lt;start type=&quot;script&quot;&gt;\n      opts = Split(&quot;one|two|three&quot;, &quot;|&quot;)\n      o = room\n      ShowMenu (&quot;Test&quot;, opts, true) {\n        msg (o&#46;name)\n      }\n    &lt;/start&gt;\n  &lt;/game&gt;\n  &lt;object name=&quot;room&quot;&gt;\n    &lt;inherit name=&quot;editor_room&quot; /&gt;\n    &lt;object name=&quot;player&quot;&gt;\n      &lt;inherit name=&quot;editor_object&quot; /&gt;\n      &lt;inherit name=&quot;editor_player&quot; /&gt;\n    &lt;/object&gt;\n  &lt;/object&gt;\n&lt;/asl&gt;[/code:2mglat3s]",
+      "EditableFormat": "bbcode",
+      "HTML": "Is this known about? Here is a very small example so you can see for yourself. The error generated is this:<br/><br/><span style=\"font-style:italic;\">Error running script&#058; Error compiling expression 'o.name': Unknown object or variable 'o'</span><br/><br/>If you use show menu, rather than ShowMenu, it works fine.<br/><br/><pre><code>&lt;!--Saved by Quest 5&#46;5&#46;5173&#46;27901--&gt;<br/>&lt;asl version=&quot;550&quot;&gt;<br/>  &lt;include ref=&quot;English&#46;aslx&quot; /&gt;<br/>  &lt;include ref=&quot;Core&#46;aslx&quot; /&gt;<br/>  &lt;game name=&quot;showmenu&quot;&gt;<br/>    &lt;gameid&gt;2d3a8cc1-9900-4c3d-81af-6d07710109b7&lt;/gameid&gt;<br/>    &lt;version&gt;1&#46;0&lt;/version&gt;<br/>    &lt;firstpublished&gt;2014&lt;/firstpublished&gt;<br/>    &lt;start type=&quot;script&quot;&gt;<br/>      opts = Split(&quot;one|two|three&quot;, &quot;|&quot;)<br/>      o = room<br/>      ShowMenu (&quot;Test&quot;, opts, true) {<br/>        msg (o&#46;name)<br/>      }<br/>    &lt;/start&gt;<br/>  &lt;/game&gt;<br/>  &lt;object name=&quot;room&quot;&gt;<br/>    &lt;inherit name=&quot;editor_room&quot; /&gt;<br/>    &lt;object name=&quot;player&quot;&gt;<br/>      &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>      &lt;inherit name=&quot;editor_player&quot; /&gt;<br/>    &lt;/object&gt;<br/>  &lt;/object&gt;<br/>&lt;/asl&gt;</code></pre>",
+      "PostDate": "2014-07-04T14:14:41+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "29321",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Yes. ShowMenu is implemented as a standard function, and standard functions don't have access to the scope of the calling function when invoking the passed script. (In other words, there is no closure on the calling context.)",
+      "EditableFormat": "bbcode",
+      "HTML": "Yes. ShowMenu is implemented as a standard function, and standard functions don't have access to the scope of the calling function when invoking the passed script. (In other words, there is no closure on the calling context.)",
+      "PostDate": "2014-07-04T21:08:01+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "29347",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "So how is a block of code passed to a function, as is done with ShowMenu? Or is something else happening? Having lookeding at how ShowMenu is coded, I see there is some JavaScript trickery there to hide the options, but what else is going on?",
+      "EditableFormat": "bbcode",
+      "HTML": "So how is a block of code passed to a function, as is done with ShowMenu? Or is something else happening? Having lookeding at how ShowMenu is coded, I see there is some JavaScript trickery there to hide the options, but what else is going on?",
+      "PostDate": "2014-07-06T12:23:01+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "29351",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "It's passed as a script parameter. The ShowMenu function takes four parameters, the last of which is the callback script. You *could*, in theory, pass an actual script variable as that parameter. For example, if you have a script attribute on your game object called &quot;menuhandler&quot;, you could call ShowMenu with:\n\n[code:1weajwl8]ShowMenu(&quot;Some menu&quot;, options, false, game&#46;menuhandler)[/code:1weajwl8]\nBut when it's the last parameter, the script can be directly inlined:\n\n[code:1weajwl8]ShowMenu(&quot;Some menu&quot;, options, false) {\n// inline script commands\n}[/code:1weajwl8]\nAt the point an option is chosen, the script is simply invoked with Invoke, passing the &quot;result&quot; as a parameter. No other parameters as passed, and all the variables set at the time ShowMenu is called are no longer valid. So you just get the result.\n\nI wrote a simple closure library that allows you to specify variables to be active when a callback is made. I've occasionally thought whenever these ShowMenu questions come up of making a ShowMenu that takes a closure instead of a callback script. Then you could have any variables you wanted passed through. It's more work to set up, but it would be more flexible. (It would be great if all the Quest functions could take a closure instead of a callback! You can't even call an object method with the current scheme, which means you can't pass any state whatsoever without storing it globally. ShowMenu does that itself to hold onto the menu context.)",
+      "EditableFormat": "bbcode",
+      "HTML": "It's passed as a script parameter. The ShowMenu function takes four parameters, the last of which is the callback script. You *could*, in theory, pass an actual script variable as that parameter. For example, if you have a script attribute on your game object called &quot;menuhandler&quot;, you could call ShowMenu with:<br/><br/><pre><code>ShowMenu(&quot;Some menu&quot;, options, false, game&#46;menuhandler)</code></pre><br/>But when it's the last parameter, the script can be directly inlined:<br/><br/><pre><code>ShowMenu(&quot;Some menu&quot;, options, false) {<br/>// inline script commands<br/>}</code></pre><br/>At the point an option is chosen, the script is simply invoked with Invoke, passing the &quot;result&quot; as a parameter. No other parameters as passed, and all the variables set at the time ShowMenu is called are no longer valid. So you just get the result.<br/><br/>I wrote a simple closure library that allows you to specify variables to be active when a callback is made. I've occasionally thought whenever these ShowMenu questions come up of making a ShowMenu that takes a closure instead of a callback script. Then you could have any variables you wanted passed through. It's more work to set up, but it would be more flexible. (It would be great if all the Quest functions could take a closure instead of a callback! You can't even call an object method with the current scheme, which means you can't pass any state whatsoever without storing it globally. ShowMenu does that itself to hold onto the menu context.)",
+      "PostDate": "2014-07-06T14:08:22+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

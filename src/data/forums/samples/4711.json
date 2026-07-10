@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "4711",
+    "ForumId": "18",
+    "Title": "Standing on stuff",
+    "LastUpdated": "2014-11-03T00:14:48+00:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "31013",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Here is a demo game showing one way to handle standing on objects. The cunning part is it has an exit that it adds to a room when the player stands on a chair, so the player can type DOWN to get off the chair.\n\nObjects that can be stood on need to be of the &quot;standonobject&quot; type. you also need to have a script to run when the player leaves a room with a stand on object in it (if the object can be moved, you might want to think about changing the &quot;go&quot; command to handle it).\n\nCan anyone think of any synonyms I should add for STAND ON and GET OFF? I drew a blank.\n\n[code:1qjp7o12]&lt;!--Saved by Quest 5&#46;5&#46;5328&#46;26617--&gt;\n&lt;asl version=&quot;550&quot;&gt;\n  &lt;include ref=&quot;English&#46;aslx&quot; /&gt;\n  &lt;include ref=&quot;Core&#46;aslx&quot; /&gt;\n  &lt;game name=&quot;stand_on_demo&quot;&gt;\n    &lt;gameid&gt;34dfa40d-a2c5-4436-a313-85beb595fe57&lt;/gameid&gt;\n    &lt;version&gt;1&#46;0&lt;/version&gt;\n    &lt;firstpublished&gt;2014&lt;/firstpublished&gt;\n  &lt;/game&gt;\n  &lt;verb&gt;\n    &lt;property&gt;standon&lt;/property&gt;\n    &lt;pattern&gt;stand on;climb on;get on&lt;/pattern&gt;\n    &lt;defaultexpression&gt;&quot;You can't stand on &quot; + object&#46;article + &quot;&#46;&quot;&lt;/defaultexpression&gt;\n  &lt;/verb&gt;\n  &lt;verb&gt;\n    &lt;property&gt;getoff&lt;/property&gt;\n    &lt;pattern&gt;get off;climb off;get down&lt;/pattern&gt;\n    &lt;defaultexpression&gt;&quot;You can't get off &quot; + object&#46;article + &quot;&#46;&quot;&lt;/defaultexpression&gt;\n  &lt;/verb&gt;\n  &lt;object name=&quot;room&quot;&gt;\n    &lt;inherit name=&quot;editor_room&quot; /&gt;\n    &lt;onexit type=&quot;script&quot;&gt;\n      if (not player&#46;stoodon = null) {\n        do (exit_get_down_from_chair, &quot;script&quot;)\n      }\n    &lt;/onexit&gt;\n    &lt;object name=&quot;player&quot;&gt;\n      &lt;inherit name=&quot;editor_object&quot; /&gt;\n      &lt;inherit name=&quot;editor_player&quot; /&gt;\n    &lt;/object&gt;\n    &lt;object name=&quot;chair&quot;&gt;\n      &lt;inherit name=&quot;editor_object&quot; /&gt;\n      &lt;inherit name=&quot;standonobject&quot; /&gt;\n      &lt;alias&gt;chair&lt;/alias&gt;\n    &lt;/object&gt;\n    &lt;object name=&quot;table&quot;&gt;\n      &lt;inherit name=&quot;editor_object&quot; /&gt;\n      &lt;inherit name=&quot;standonobject&quot; /&gt;\n      &lt;alias&gt;table&lt;/alias&gt;\n    &lt;/object&gt;\n    &lt;exit alias=&quot;east&quot; to=&quot;room2&quot;&gt;\n      &lt;inherit name=&quot;eastdirection&quot; /&gt;\n    &lt;/exit&gt;\n    &lt;object name=&quot;teapot&quot;&gt;\n      &lt;inherit name=&quot;editor_object&quot; /&gt;\n      &lt;take /&gt;\n    &lt;/object&gt;\n  &lt;/object&gt;\n  &lt;object name=&quot;room2&quot;&gt;\n    &lt;inherit name=&quot;editor_room&quot; /&gt;\n    &lt;exit alias=&quot;west&quot; to=&quot;room&quot;&gt;\n      &lt;inherit name=&quot;westdirection&quot; /&gt;\n    &lt;/exit&gt;\n  &lt;/object&gt;\n  &lt;object name=&quot;nowhere&quot;&gt;\n    &lt;inherit name=&quot;editor_room&quot; /&gt;\n    &lt;exit name=&quot;exit_get_down_from_chair&quot; alias=&quot;down&quot;&gt;\n      &lt;inherit name=&quot;downdirection&quot; /&gt;\n      &lt;runscript /&gt;\n      &lt;script type=&quot;script&quot;&gt;\n        msg (&quot;You get down from the &quot; + player&#46;stoodon&#46;alias + &quot;&#46;&quot;)\n        this&#46;parent = nowhere\n        player&#46;stoodon = null\n      &lt;/script&gt;\n    &lt;/exit&gt;\n  &lt;/object&gt;\n  &lt;type name=&quot;standonobject&quot;&gt;\n    &lt;displayverbs type=&quot;stringlist&quot;&gt;\n      &lt;value&gt;Look at&lt;/value&gt;\n      &lt;value&gt;Take&lt;/value&gt;\n      &lt;value&gt;Stand on&lt;/value&gt;\n      &lt;value&gt;Get off&lt;/value&gt;\n    &lt;/displayverbs&gt;\n    &lt;standon type=&quot;script&quot;&gt;\n      player&#46;stoodon = this\n      msg (&quot;You stand on the &quot; + this&#46;alias + &quot;, perhaps you can see the ceiling better from up here&#46;&quot;)\n      exit_get_down_from_chair&#46;parent = player&#46;parent\n      exit_get_down_from_chair&#46;to = player&#46;parent\n    &lt;/standon&gt;\n    &lt;getoff type=&quot;script&quot;&gt;\n      do (exit_get_down_from_chair, &quot;script&quot;)\n    &lt;/getoff&gt;\n  &lt;/type&gt;\n&lt;/asl&gt;[/code:1qjp7o12]",
+      "EditableFormat": "bbcode",
+      "HTML": "Here is a demo game showing one way to handle standing on objects. The cunning part is it has an exit that it adds to a room when the player stands on a chair, so the player can type DOWN to get off the chair.<br/><br/>Objects that can be stood on need to be of the &quot;standonobject&quot; type. you also need to have a script to run when the player leaves a room with a stand on object in it (if the object can be moved, you might want to think about changing the &quot;go&quot; command to handle it).<br/><br/>Can anyone think of any synonyms I should add for STAND ON and GET OFF? I drew a blank.<br/><br/><pre><code>&lt;!--Saved by Quest 5&#46;5&#46;5328&#46;26617--&gt;<br/>&lt;asl version=&quot;550&quot;&gt;<br/>  &lt;include ref=&quot;English&#46;aslx&quot; /&gt;<br/>  &lt;include ref=&quot;Core&#46;aslx&quot; /&gt;<br/>  &lt;game name=&quot;stand_on_demo&quot;&gt;<br/>    &lt;gameid&gt;34dfa40d-a2c5-4436-a313-85beb595fe57&lt;/gameid&gt;<br/>    &lt;version&gt;1&#46;0&lt;/version&gt;<br/>    &lt;firstpublished&gt;2014&lt;/firstpublished&gt;<br/>  &lt;/game&gt;<br/>  &lt;verb&gt;<br/>    &lt;property&gt;standon&lt;/property&gt;<br/>    &lt;pattern&gt;stand on;climb on;get on&lt;/pattern&gt;<br/>    &lt;defaultexpression&gt;&quot;You can't stand on &quot; + object&#46;article + &quot;&#46;&quot;&lt;/defaultexpression&gt;<br/>  &lt;/verb&gt;<br/>  &lt;verb&gt;<br/>    &lt;property&gt;getoff&lt;/property&gt;<br/>    &lt;pattern&gt;get off;climb off;get down&lt;/pattern&gt;<br/>    &lt;defaultexpression&gt;&quot;You can't get off &quot; + object&#46;article + &quot;&#46;&quot;&lt;/defaultexpression&gt;<br/>  &lt;/verb&gt;<br/>  &lt;object name=&quot;room&quot;&gt;<br/>    &lt;inherit name=&quot;editor_room&quot; /&gt;<br/>    &lt;onexit type=&quot;script&quot;&gt;<br/>      if (not player&#46;stoodon = null) {<br/>        do (exit_get_down_from_chair, &quot;script&quot;)<br/>      }<br/>    &lt;/onexit&gt;<br/>    &lt;object name=&quot;player&quot;&gt;<br/>      &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>      &lt;inherit name=&quot;editor_player&quot; /&gt;<br/>    &lt;/object&gt;<br/>    &lt;object name=&quot;chair&quot;&gt;<br/>      &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>      &lt;inherit name=&quot;standonobject&quot; /&gt;<br/>      &lt;alias&gt;chair&lt;/alias&gt;<br/>    &lt;/object&gt;<br/>    &lt;object name=&quot;table&quot;&gt;<br/>      &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>      &lt;inherit name=&quot;standonobject&quot; /&gt;<br/>      &lt;alias&gt;table&lt;/alias&gt;<br/>    &lt;/object&gt;<br/>    &lt;exit alias=&quot;east&quot; to=&quot;room2&quot;&gt;<br/>      &lt;inherit name=&quot;eastdirection&quot; /&gt;<br/>    &lt;/exit&gt;<br/>    &lt;object name=&quot;teapot&quot;&gt;<br/>      &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>      &lt;take /&gt;<br/>    &lt;/object&gt;<br/>  &lt;/object&gt;<br/>  &lt;object name=&quot;room2&quot;&gt;<br/>    &lt;inherit name=&quot;editor_room&quot; /&gt;<br/>    &lt;exit alias=&quot;west&quot; to=&quot;room&quot;&gt;<br/>      &lt;inherit name=&quot;westdirection&quot; /&gt;<br/>    &lt;/exit&gt;<br/>  &lt;/object&gt;<br/>  &lt;object name=&quot;nowhere&quot;&gt;<br/>    &lt;inherit name=&quot;editor_room&quot; /&gt;<br/>    &lt;exit name=&quot;exit_get_down_from_chair&quot; alias=&quot;down&quot;&gt;<br/>      &lt;inherit name=&quot;downdirection&quot; /&gt;<br/>      &lt;runscript /&gt;<br/>      &lt;script type=&quot;script&quot;&gt;<br/>        msg (&quot;You get down from the &quot; + player&#46;stoodon&#46;alias + &quot;&#46;&quot;)<br/>        this&#46;parent = nowhere<br/>        player&#46;stoodon = null<br/>      &lt;/script&gt;<br/>    &lt;/exit&gt;<br/>  &lt;/object&gt;<br/>  &lt;type name=&quot;standonobject&quot;&gt;<br/>    &lt;displayverbs type=&quot;stringlist&quot;&gt;<br/>      &lt;value&gt;Look at&lt;/value&gt;<br/>      &lt;value&gt;Take&lt;/value&gt;<br/>      &lt;value&gt;Stand on&lt;/value&gt;<br/>      &lt;value&gt;Get off&lt;/value&gt;<br/>    &lt;/displayverbs&gt;<br/>    &lt;standon type=&quot;script&quot;&gt;<br/>      player&#46;stoodon = this<br/>      msg (&quot;You stand on the &quot; + this&#46;alias + &quot;, perhaps you can see the ceiling better from up here&#46;&quot;)<br/>      exit_get_down_from_chair&#46;parent = player&#46;parent<br/>      exit_get_down_from_chair&#46;to = player&#46;parent<br/>    &lt;/standon&gt;<br/>    &lt;getoff type=&quot;script&quot;&gt;<br/>      do (exit_get_down_from_chair, &quot;script&quot;)<br/>    &lt;/getoff&gt;<br/>  &lt;/type&gt;<br/>&lt;/asl&gt;</code></pre>",
+      "PostDate": "2014-11-02T09:40:03+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "31014",
+      "UserId": 0,
+      "Username": "Silver",
+      "UserAvatar": null,
+      "UserGravatar": "13024be5ccbb463906b024d5bd3cb5e8",
+      "EditableText": "get on, climb on.\n\nclimb down, get down.\n\n'get' might be a tricky one as it's already used in IF as a synonym of take isn't it?",
+      "EditableFormat": "bbcode",
+      "HTML": "get on, climb on.<br/><br/>climb down, get down.<br/><br/>'get' might be a tricky one as it's already used in IF as a synonym of take isn't it?",
+      "PostDate": "2014-11-02T12:36:09+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "31015",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Thanks, I have updated it to include those. Seems to work out which get is which okay.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks, I have updated it to include those. Seems to work out which get is which okay.",
+      "PostDate": "2014-11-02T14:56:38+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "31018",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "for us computer or horse people: mount~dismount\n\nascend~descend, scale (he scaled up~down the wall, not sure of an antonym though), withdraw~remove (not sure of an antonym though), jump~hop up~down, scrambled~clambered off~down~on~up, stepped up~down on~off,",
+      "EditableFormat": "bbcode",
+      "HTML": "for us computer or horse people: mount~dismount<br/><br/>ascend~descend, scale (he scaled up~down the wall, not sure of an antonym though), withdraw~remove (not sure of an antonym though), jump~hop up~down, scrambled~clambered off~down~on~up, stepped up~down on~off,",
+      "PostDate": "2014-11-03T00:14:48+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

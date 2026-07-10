@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "jsuhjz66kk_2nlbudy2kmg",
+    "ForumId": "10",
+    "Title": "Undoonetransaction - stop it showing text Undo:... in the UI!",
+    "LastUpdated": "2023-04-15T14:01:41.4083005Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "9e2fc26c-e1ce-435c-bfe9-2078b346fe5c",
+      "UserId": 600018,
+      "Username": "Laxon",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/b8846d6baeb82d3d861dd43a2066b67f?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "It's very very long and complicated, but essentially I have a function which will be triggered in a very specific scenario which will undo the last turn.\r\n\r\nThe problem is, I don't want it to be obvious to the player that the \"undo transaction\" has been run. Unfortunately, because it's an editor script, I can't even look at what it's doing to rebuild the whole script myself (and exclude that Undo:... text).\r\n\r\nSo can someone tell me how to set up my own \"undoonetransaction\" which is effectively the same as the editorscript (EditorScriptsGameStateUndoonetransaction) but without that text? Because I can muddle along when I can _see_ the script (I appreciate I can't edit an editorscript but I can't even _see_ what it's doing which is super-frustrating.\r\n\r\nCheers!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>It's very very long and complicated, but essentially I have a function which will be triggered in a very specific scenario which will undo the last turn.</p>\n<p>The problem is, I don't want it to be obvious to the player that the \"undo transaction\" has been run. Unfortunately, because it's an editor script, I can't even look at what it's doing to rebuild the whole script myself (and exclude that Undo:... text).</p>\n<p>So can someone tell me how to set up my own \"undoonetransaction\" which is effectively the same as the editorscript (EditorScriptsGameStateUndoonetransaction) but without that text? Because I can muddle along when I can <em>see</em> the script (I appreciate I can't edit an editorscript but I can't even <em>see</em> what it's doing which is super-frustrating.</p>\n<p>Cheers!</p>\n\n",
+      "PostDate": "2023-04-15T14:01:41.4083005Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "8d0cf6e2-255d-4f37-bd05-1d740ecd2e7c",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I don't think you can access the internal undo buffer directly. If you want to do an undo without the output, I'd suggest suppressing the output. Off the top of my head, you could do something like this:\r\n```\r\nJS.eval (\"$(function () {var r = window.addText; window.addText = function(){}; window.resumeText = function() {window.addText = r;}});\")\r\nundo\r\nJS.resumeText ()\r\n```\r\n\r\nThe (rather awkward) eval line basically removes the javascript function `addText`, which is used for all Quest functions which display text to the screen. This prevents any text being output at all until the corresponding `JS.resumeText()` is reached.\r\n\r\nAlternatively, you could do it the same way menus are handled:\r\n```\r\nsection = StartNewOutputSection()\r\nundo\r\nEndOutputSection (section)\r\nHideOutputSection (section)\r\n```\r\nthis looks a bit simpler; it just starts a new output section, and then hides that section using the same code that is used to hide menu options after one has been selected.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I don't think you can access the internal undo buffer directly. If you want to do an undo without the output, I'd suggest suppressing the output. Off the top of my head, you could do something like this:</p>\n<pre><code>JS.eval (\"$(function () {var r = window.addText; window.addText = function(){}; window.resumeText = function() {window.addText = r;}});\")\nundo\nJS.resumeText ()\n</code></pre>\n<p>The (rather awkward) eval line basically removes the javascript function <code>addText</code>, which is used for all Quest functions which display text to the screen. This prevents any text being output at all until the corresponding <code>JS.resumeText()</code> is reached.</p>\n<p>Alternatively, you could do it the same way menus are handled:</p>\n<pre><code>section = StartNewOutputSection()\nundo\nEndOutputSection (section)\nHideOutputSection (section)\n</code></pre>\n<p>this looks a bit simpler; it just starts a new output section, and then hides that section using the same code that is used to hide menu options after one has been selected.</p>\n\n",
+      "PostDate": "2023-04-15T16:00:07.4158062Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "500510e2-8c82-40d5-ac64-7deacc8eed3b",
+      "UserId": 600018,
+      "Username": "Laxon",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/b8846d6baeb82d3d861dd43a2066b67f?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "ooooh these are some great ideas... I don't know enough javascript unfortunately, but I'm learning, slowly! I'll give this a try and let you know what I think!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>ooooh these are some great ideas... I don't know enough javascript unfortunately, but I'm learning, slowly! I'll give this a try and let you know what I think!</p>\n\n",
+      "PostDate": "2023-04-16T12:52:55.381366Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "75550220-93da-4678-8ac8-22ec5df1a39d",
+      "UserId": 600018,
+      "Username": "Laxon",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/b8846d6baeb82d3d861dd43a2066b67f?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "So, it works! The message does flash up for a split second, but then gets cleared. So I can live with that! (I used the second option just because of my unfamiliarity with javascript... but might come back to that (if it has any differences in behaviour).\r\n\r\nThanks again for the quick response. This has saved me a really long (and convoluted) workaround, so I hugely appreciate it.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>So, it works! The message does flash up for a split second, but then gets cleared. So I can live with that! (I used the second option just because of my unfamiliarity with javascript... but might come back to that (if it has any differences in behaviour).</p>\n<p>Thanks again for the quick response. This has saved me a really long (and convoluted) workaround, so I hugely appreciate it.</p>\n\n",
+      "PostDate": "2023-04-16T13:37:13.6763356Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "6a583f4a-03c6-41f1-b567-edf2e9abd58a",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "If you're doing this a lot, it might be more efficient to set up some functions. You could put something like this in the UI Initialisation script (On the game's \"Advanced Scripts\" tab):\r\n```\r\nJS.eval (\"$(function () {var r = addText; var d; window.addText = function(t) {d || r(t)}; window.disableOutput = function() {d = 1}; window.enableOutput = function() {d = 0};});\")\r\n```\r\n\r\nOnce that's set up, you could just use the JS functions it creates:\r\n```\r\nJS.disableOutput()\r\n```\r\nand\r\n```\r\nJS.enableOutput()\r\n```\r\nThese will let you suppress any output whenever you want.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>If you're doing this a lot, it might be more efficient to set up some functions. You could put something like this in the UI Initialisation script (On the game's \"Advanced Scripts\" tab):</p>\n<pre><code>JS.eval (\"$(function () {var r = addText; var d; window.addText = function(t) {d || r(t)}; window.disableOutput = function() {d = 1}; window.enableOutput = function() {d = 0};});\")\n</code></pre>\n<p>Once that's set up, you could just use the JS functions it creates:</p>\n<pre><code>JS.disableOutput()\n</code></pre>\n<p>and</p>\n<pre><code>JS.enableOutput()\n</code></pre>\n<p>These will let you suppress any output whenever you want.</p>\n\n",
+      "PostDate": "2023-04-16T14:54:49.1975099Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

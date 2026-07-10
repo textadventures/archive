@@ -1,0 +1,39 @@
+{
+  "Topic": {
+    "TopicId": "lyc6yh8sr0wzcfhu-0tklq",
+    "ForumId": "10",
+    "Title": "Map Question",
+    "LastUpdated": "2024-11-13T19:44:04.0871848Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "bf390a77-52a2-43a1-a43b-60929602e02d",
+      "UserId": 507391,
+      "Username": "SummaCivis",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/2a9dbe4ab6b396c3048db6be8d746e16?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Is there a way to show all the rooms on the map without the player entering the room?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Is there a way to show all the rooms on the map without the player entering the room?</p>\n\n",
+      "PostDate": "2024-11-13T19:44:04.0871848Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "0a8be164-dfdd-4e1f-bddc-20d493c31bb2",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Yes. I think there's a script somewhere which simulates walking the player around the map to calculate the coordinates of all the rooms. I can't find it in the documentation at present, but it shouldn't be too hard to come up with something similar.\r\n\r\nOff the top of my head:\r\n```\r\nrooms_to_process = NewObjectList()\r\nlist add (rooms_to_process, game.pov.parent)\r\nwhile (ListCount (rooms_to_process) > 0) {\r\n  // draw the rooms which aren't drawn, and calculate coordinates for their neighbours\r\n  foreach (room, rooms_to_process) {\r\n    Grid_CalculateMapCoordinates (room, game.pov)\r\n    Grid_DrawRoom (room, false, game.pov)\r\n  }\r\n\r\n  // Get a dictionary of room coordinates, and check if any of the rooms in it aren't drawn yet\r\n  rooms_to_process = NewObjectList()\r\n  known_coordinates = Grid_GetPlayerCoordinateDictionary (game.pov)\r\n  foreach (roomname, known_coordinates) {\r\n    room = GetObject (roomname)\r\n    if (not Grid_GetRoomBooleanForPlayer (game.pov, room, \"grid_isdrawn\")) {\r\n      list add (rooms_to_process, room)\r\n    }\r\n  }\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Yes. I think there's a script somewhere which simulates walking the player around the map to calculate the coordinates of all the rooms. I can't find it in the documentation at present, but it shouldn't be too hard to come up with something similar.</p>\n<p>Off the top of my head:</p>\n<pre><code>rooms_to_process = NewObjectList()\nlist add (rooms_to_process, game.pov.parent)\nwhile (ListCount (rooms_to_process) &gt; 0) {\n  // draw the rooms which aren't drawn, and calculate coordinates for their neighbours\n  foreach (room, rooms_to_process) {\n    Grid_CalculateMapCoordinates (room, game.pov)\n    Grid_DrawRoom (room, false, game.pov)\n  }\n\n  // Get a dictionary of room coordinates, and check if any of the rooms in it aren't drawn yet\n  rooms_to_process = NewObjectList()\n  known_coordinates = Grid_GetPlayerCoordinateDictionary (game.pov)\n  foreach (roomname, known_coordinates) {\n    room = GetObject (roomname)\n    if (not Grid_GetRoomBooleanForPlayer (game.pov, room, \"grid_isdrawn\")) {\n      list add (rooms_to_process, room)\n    }\n  }\n}\n</code></pre>\n\n",
+      "PostDate": "2024-11-13T21:40:25.9777219Z",
+      "LastEditDate": "2024-11-13T21:42:35.0137883Z",
+      "link": null
+    }
+  ]
+}

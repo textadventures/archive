@@ -1,0 +1,109 @@
+{
+  "Topic": {
+    "TopicId": "so3aroqkw0udwvs6km9-5w",
+    "ForumId": "10",
+    "Title": "One target spell",
+    "LastUpdated": "2018-09-20T00:38:00.2079053Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "42a48d89-3a9e-4966-b87a-23e7d5db41ab",
+      "UserId": 142763,
+      "Username": "Forgewright",
+      "AvatarUrl": "http://i.imgur.com/Ea6HecZb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "After several years working with Quest, I have been using Pixie's combat lib and decided it was time to figure out a one target attack spell. Now when the player 'Learns'...let's say a fire spell, I added some lines to the end of the 'Learn' script for that spell.\r\n```\r\nif (this.parent = spells_known) {\r\n  msg (\"<br>Er, you already know that one!\")\r\n}\r\nelse if ((game.pov.intelligence + game.pov.magicbonus) < this.level) {\r\n  msg (\"<br>That spell is way out of your league. Perhaps if you were more intelligent...\")\r\n}\r\nelse if (OkayToLearn(this)) {\r\n  do (this, \"dolearn\")\r\n  SetInventory2 (GetDirectChildren (spells_known))\r\n  foreach (object, AllObjects ()) {\r\n      if (DoesInherit(object, \"monster\")) {\r\n        object.displayverbs = Split(\"Look at;Attack;Cast Ignis\", \";\")\r\n    }\r\n  }\r\n}\r\n```\r\n \r\nThe last part of the code will add 'Cast Ignis'(which is Latin for fire and the alias for my fire_ball spell) to the drop down display verbs for all monsters in the game. \r\n\r\nI thought this was the best way to do a one target spell. Player clicks on which ever target they want and since the spell is learned they simply select the verb from the drop down hyper link verbs. If they learn more attack spells they will be added also. There should only be a few so it won't get too cluttered.\r\n\r\nNow that it is added to each monster I can write a function or command to do the damage (haven't yet).\r\n\r\nAny ideas on this or comments welcome! Any code examples will help to because my pain meds make it tougher to focus anymore.\r\n\r\nI know this is small potatoes for most coders on here but it's big ta do'ins for me.\r\n\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>After several years working with Quest, I have been using Pixie's combat lib and decided it was time to figure out a one target attack spell. Now when the player 'Learns'...let's say a fire spell, I added some lines to the end of the 'Learn' script for that spell.</p>\n<pre><code>if (this.parent = spells_known) {\n  msg (\"&lt;br&gt;Er, you already know that one!\")\n}\nelse if ((game.pov.intelligence + game.pov.magicbonus) &lt; this.level) {\n  msg (\"&lt;br&gt;That spell is way out of your league. Perhaps if you were more intelligent...\")\n}\nelse if (OkayToLearn(this)) {\n  do (this, \"dolearn\")\n  SetInventory2 (GetDirectChildren (spells_known))\n  foreach (object, AllObjects ()) {\n      if (DoesInherit(object, \"monster\")) {\n        object.displayverbs = Split(\"Look at;Attack;Cast Ignis\", \";\")\n    }\n  }\n}\n</code></pre>\n<p>The last part of the code will add 'Cast Ignis'(which is Latin for fire and the alias for my fire_ball spell) to the drop down display verbs for all monsters in the game.</p>\n<p>I thought this was the best way to do a one target spell. Player clicks on which ever target they want and since the spell is learned they simply select the verb from the drop down hyper link verbs. If they learn more attack spells they will be added also. There should only be a few so it won't get too cluttered.</p>\n<p>Now that it is added to each monster I can write a function or command to do the damage (haven't yet).</p>\n<p>Any ideas on this or comments welcome! Any code examples will help to because my pain meds make it tougher to focus anymore.</p>\n<p>I know this is small potatoes for most coders on here but it's big ta do'ins for me.</p>\n\n",
+      "PostDate": "2018-09-20T00:38:00.2079053Z",
+      "LastEditDate": "2018-09-20T01:28:00.3915405Z",
+      "link": null
+    },
+    {
+      "PostId": "7ed3adc8-9ae0-4807-ac0b-754ba3aec40a",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "its a good start for what you're doing: practicing the basics of spell/magic/casting coding\r\n\r\n(if you were to have lots of spells... you wouldn't want a verb button for every one of them, you just want a 'cast' verb, and let its scripting do all of the handling it)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>its a good start for what you're doing: practicing the basics of spell/magic/casting coding</p>\n<p>(if you were to have lots of spells... you wouldn't want a verb button for every one of them, you just want a 'cast' verb, and let its scripting do all of the handling it)</p>\n\n",
+      "PostDate": "2018-09-20T14:01:57.1729419Z",
+      "LastEditDate": "2018-09-20T14:02:34.5887776Z",
+      "link": null
+    },
+    {
+      "PostId": "d370f855-97ef-40b2-9a08-c2b8ffd2185e",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The verb for every spell will work better for hyperlinks than the panes on the right, which will look a bit poor when you have a dozen spells.\r\n\r\nThere is an issue with the code; if the player has already learnt a spell, that verb will already be added. When you add this verb, you will lose the earlier one. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The verb for every spell will work better for hyperlinks than the panes on the right, which will look a bit poor when you have a dozen spells.</p>\n<p>There is an issue with the code; if the player has already learnt a spell, that verb will already be added. When you add this verb, you will lose the earlier one.</p>\n\n",
+      "PostDate": "2018-09-20T14:54:59.706614Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "2f43a63c-be51-421a-aa48-8c2eca220fcc",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> There is an issue with the code; if the player has already learnt a spell, that verb will already be added. When you add this verb, you will lose the earlier one.\r\n\r\nI was going to comment on that.\r\n\r\nInstead of:\r\n`object.displayverbs = Split(\"Look at;Attack;Cast Ignis\", \";\")`\r\nI think you want\r\n`object.displayverbs = ListCombine(object.displayverbs, Split(\"Cast Ignis\"))`",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>There is an issue with the code; if the player has already learnt a spell, that verb will already be added. When you add this verb, you will lose the earlier one.</p>\n</blockquote>\n<p>I was going to comment on that.</p>\n<p>Instead of:<br>\n<code>object.displayverbs = Split(\"Look at;Attack;Cast Ignis\", \";\")</code><br>\nI think you want<br>\n<code>object.displayverbs = ListCombine(object.displayverbs, Split(\"Cast Ignis\"))</code></p>\n\n",
+      "PostDate": "2018-09-20T15:11:23.115086Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "83408592-d05e-4dc7-9f24-acebcf4848d9",
+      "UserId": 142763,
+      "Username": "Forgewright",
+      "AvatarUrl": "http://i.imgur.com/Ea6HecZb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The verb being added by a script is good. However I found that it will only work if the monster has 'Cast Ignis' as a verb. I am stumped on the coding to add the verb to each monster as I did the display verb. If that makes sense.\r\n\r\nI can manually add it to each monster with a flag check as to whether the spell is learned or not, to stop the player from typing it in, but I was hoping to add to the learn verb so it adds the 'Cast Ignis' verb automatically.\r\n\r\nI can't figure out if I can use a command in the display verbs drop down instead of a verb. It is beyond me.\r\n\r\nIt's a forum search and piece together for me. I am not seeing that anyone has tried to do this.\r\nWould a global verb 'cast ignis be feasable or does each monster need to have it. I'm good with commands but haven't got the verb thing figured out completely. I see them in the commands.xml from combatlib but they a something completely different.\r\n\r\nThanks for the coding and advice!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The verb being added by a script is good. However I found that it will only work if the monster has 'Cast Ignis' as a verb. I am stumped on the coding to add the verb to each monster as I did the display verb. If that makes sense.</p>\n<p>I can manually add it to each monster with a flag check as to whether the spell is learned or not, to stop the player from typing it in, but I was hoping to add to the learn verb so it adds the 'Cast Ignis' verb automatically.</p>\n<p>I can't figure out if I can use a command in the display verbs drop down instead of a verb. It is beyond me.</p>\n<p>It's a forum search and piece together for me. I am not seeing that anyone has tried to do this.<br>\nWould a global verb 'cast ignis be feasable or does each monster need to have it. I'm good with commands but haven't got the verb thing figured out completely. I see them in the commands.xml from combatlib but they a something completely different.</p>\n<p>Thanks for the coding and advice!</p>\n\n",
+      "PostDate": "2018-09-20T16:51:26.0028992Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "f79414ae-5953-4da1-94b5-680e2b559b1c",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> However I found that it will only work if the monster has 'Cast Ignis' as a verb. \r\n\r\nVerbs are for an action which does something different depending which object you use  it on.\r\n\r\nI'm thinking that Ignis will cause damage, basically doing the same for any monster. In this case you probably want a *command*, which allows you to have one piece of code that can be used for any object.\r\n\r\n'displayverbs' only controls what appears on the menu; when you click them, the command is sent to Quest just like the player typed it. They don't have to be verbs. ",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>However I found that it will only work if the monster has 'Cast Ignis' as a verb.</p>\n</blockquote>\n<p>Verbs are for an action which does something different depending which object you use  it on.</p>\n<p>I'm thinking that Ignis will cause damage, basically doing the same for any monster. In this case you probably want a <em>command</em>, which allows you to have one piece of code that can be used for any object.</p>\n<p>'displayverbs' only controls what appears on the menu; when you click them, the command is sent to Quest just like the player typed it. They don't have to be verbs.</p>\n\n",
+      "PostDate": "2018-09-20T18:17:42.6655407Z",
+      "LastEditDate": "2018-09-20T18:20:34.8216128Z",
+      "link": null
+    },
+    {
+      "PostId": "fd46410f-96c9-4c6f-8f3a-0a0c65465bdd",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "A Verb is actually just a Script Attribute with extra code fluff to give it: its verb button (in the panes on the right side) and hyperlink (in the big text box on the left side) functionality, and also its functionality as a special sub Command\r\n\r\nA Verb is also a special sub Command:\r\n\r\nits just like a Command, except it automatically passes its parent Object to the internal Command handling of/for it, and also its scripting is dependent upon each Object (as a Verb is a Script Attribute), meaning that for each Object that has the Verb (the Script Attribute), you can give it, its own unique scripting, unlike a (normal) Command.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>A Verb is actually just a Script Attribute with extra code fluff to give it: its verb button (in the panes on the right side) and hyperlink (in the big text box on the left side) functionality, and also its functionality as a special sub Command</p>\n<p>A Verb is also a special sub Command:</p>\n<p>its just like a Command, except it automatically passes its parent Object to the internal Command handling of/for it, and also its scripting is dependent upon each Object (as a Verb is a Script Attribute), meaning that for each Object that has the Verb (the Script Attribute), you can give it, its own unique scripting, unlike a (normal) Command.</p>\n\n",
+      "PostDate": "2018-09-21T01:36:40.0201948Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

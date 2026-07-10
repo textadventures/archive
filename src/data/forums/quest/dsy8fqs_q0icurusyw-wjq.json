@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "dsy8fqs_q0icurusyw-wjq",
+    "ForumId": "10",
+    "Title": "Bug in german version of Game...",
+    "LastUpdated": "2021-09-28T00:51:33.1998021Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "9ce020e1-eece-449c-ab78-c65a5c8c6f8b",
+      "UserId": 561136,
+      "Username": "Horz",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4c2ab49fe869e0e9152998df04fc4eaf?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi,\r\nmaking my first textadventure in german.\r\n\r\nWhen i ask my Objekt about something, with \"Ask Goblin about Door\" - but in german \"Frage Goblin nach Tuer\" or asking any other Objekt something with \"nach/about\" i get following error-code\r\n\r\nError running script: Unhandled command variable 'Objekt' - command variable names must begin with 'object', 'exit' or 'text'\r\n\r\nIs there a translation-error? Cause the script needs an \"object\" and no \"Objekt\" - seems the german expression for \"object\" makes problems\r\n\r\nI downloaded Quest two days ago - think its the actual version.\r\n\r\nAny ideas?\r\n\r\nEdit: The error is there even if i have no ask/tell activated.\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi,<br>\nmaking my first textadventure in german.</p>\n<p>When i ask my Objekt about something, with \"Ask Goblin about Door\" - but in german \"Frage Goblin nach Tuer\" or asking any other Objekt something with \"nach/about\" i get following error-code</p>\n<p>Error running script: Unhandled command variable 'Objekt' - command variable names must begin with 'object', 'exit' or 'text'</p>\n<p>Is there a translation-error? Cause the script needs an \"object\" and no \"Objekt\" - seems the german expression for \"object\" makes problems</p>\n<p>I downloaded Quest two days ago - think its the actual version.</p>\n<p>Any ideas?</p>\n<p>Edit: The error is there even if i have no ask/tell activated.</p>\n\n",
+      "PostDate": "2021-09-28T00:51:33.1998021Z",
+      "LastEditDate": "2021-09-28T08:53:31.6564466Z",
+      "link": null
+    },
+    {
+      "PostId": "e08bd52f-ce89-41e5-bbfc-1b1026c9788b",
+      "UserId": 561136,
+      "Username": "Horz",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4c2ab49fe869e0e9152998df04fc4eaf?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Ok, seems to be a Bug in the german Version of the Game.\r\n\r\nTried following: \r\nCreated a brand new **german** game, 1 Room, player and 1 Objekt... asked objekt about something - Bug!\r\nCreated a brand new **english** game, 1 Room, player and 1 Objekt ... asked objekt about something - correct response\r\n\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Ok, seems to be a Bug in the german Version of the Game.</p>\n<p>Tried following:<br>\nCreated a brand new <strong>german</strong> game, 1 Room, player and 1 Objekt... asked objekt about something - Bug!<br>\nCreated a brand new <strong>english</strong> game, 1 Room, player and 1 Objekt ... asked objekt about something - correct response</p>\n\n",
+      "PostDate": "2021-09-28T08:49:04.7673274Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "bc0be297-07f0-4897-b44a-f1ec1f8dc712",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Does indeed appear to be an error.\r\n\r\nIn `Deutsch.aslx`, lines 209 and 210 are:\r\n<pre><code>  &lt;template templatetype=\"command\" name=\"tellto\">&lt;![CDATA[^(erzähle|frage) (?&lt;<b style=\"color: red\">Objekt</b>>.*) (von|nach) (?&lt;<b style=\"color: red\">Text</b>>.*)$]]>&lt;/template>\r\n  &lt;template templatetype=\"command\" name=\"alttellto\">&lt;![CDATA[^(?&lt;<b style=\"color: red\">Objekt</b>>.*), (?&lt;<b style=\"color: red\">Text</b>>.*)$]]>&lt;/template>  &lt;template templatetype=\"command\" name=\"go\">&lt;![CDATA[^gehe nach (?&lt;exit>.*)$|^gehe (?&lt;exit>.*)$|^nach (?&lt;exit>.*)$|^(?&lt;exit>norden|osten|süden|westen|nordosten|nordwesten|südosten|südwesten|raus|hoch|runter|rein|raus|n|o|s|w|no|nw|so|sw|h|r)$]]>&lt;/template></code></pre>\r\n\r\nFor the parser to work correctly, group names in regular expressions **must** start with either `object`, `text`, or `exit`, which tells Quest what type of value it should be matched against.\r\n\r\nI also notice that we have two templates on one line, which isn't an error but does make the code ugly.\r\n\r\nThose lines need to be replaced with:\r\n```\r\n  <template templatetype=\"command\" name=\"tellto\"><![CDATA[^(erzähle|frage) (?<object>.*) (von|nach) (?<text>.*)$]]></template>\r\n  <template templatetype=\"command\" name=\"alttellto\"><![CDATA[^(?<object>.*), (?<text>.*)$]]></template>\r\n  <template templatetype=\"command\" name=\"go\"><![CDATA[^gehe nach (?<exit>.*)$|^gehe (?<exit>.*)$|^nach (?<exit>.*)$|^(?<exit>norden|osten|süden|westen|nordosten|nordwesten|südosten|südwesten|raus|hoch|runter|rein|raus|n|o|s|w|no|nw|so|sw|h|r)$]]></template>\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Does indeed appear to be an error.</p>\n<p>In <code>Deutsch.aslx</code>, lines 209 and 210 are:</p>\n<pre><code>  &lt;template templatetype=\"command\" name=\"tellto\"&gt;&lt;![CDATA[^(erzähle|frage) (?&lt;<b style=\"color: red\">Objekt</b>&gt;.*) (von|nach) (?&lt;<b style=\"color: red\">Text</b>&gt;.*)$]]&gt;&lt;/template&gt;\n  &lt;template templatetype=\"command\" name=\"alttellto\"&gt;&lt;![CDATA[^(?&lt;<b style=\"color: red\">Objekt</b>&gt;.*), (?&lt;<b style=\"color: red\">Text</b>&gt;.*)$]]&gt;&lt;/template&gt;  &lt;template templatetype=\"command\" name=\"go\"&gt;&lt;![CDATA[^gehe nach (?&lt;exit&gt;.*)$|^gehe (?&lt;exit&gt;.*)$|^nach (?&lt;exit&gt;.*)$|^(?&lt;exit&gt;norden|osten|süden|westen|nordosten|nordwesten|südosten|südwesten|raus|hoch|runter|rein|raus|n|o|s|w|no|nw|so|sw|h|r)$]]&gt;&lt;/template&gt;</code></pre>\n<p>For the parser to work correctly, group names in regular expressions <strong>must</strong> start with either <code>object</code>, <code>text</code>, or <code>exit</code>, which tells Quest what type of value it should be matched against.</p>\n<p>I also notice that we have two templates on one line, which isn't an error but does make the code ugly.</p>\n<p>Those lines need to be replaced with:</p>\n<pre><code>  &lt;template templatetype=\"command\" name=\"tellto\"&gt;&lt;![CDATA[^(erzähle|frage) (?&lt;object&gt;.*) (von|nach) (?&lt;text&gt;.*)$]]&gt;&lt;/template&gt;\n  &lt;template templatetype=\"command\" name=\"alttellto\"&gt;&lt;![CDATA[^(?&lt;object&gt;.*), (?&lt;text&gt;.*)$]]&gt;&lt;/template&gt;\n  &lt;template templatetype=\"command\" name=\"go\"&gt;&lt;![CDATA[^gehe nach (?&lt;exit&gt;.*)$|^gehe (?&lt;exit&gt;.*)$|^nach (?&lt;exit&gt;.*)$|^(?&lt;exit&gt;norden|osten|süden|westen|nordosten|nordwesten|südosten|südwesten|raus|hoch|runter|rein|raus|n|o|s|w|no|nw|so|sw|h|r)$]]&gt;&lt;/template&gt;\n</code></pre>\n\n",
+      "PostDate": "2021-09-28T15:34:33.7376771Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "bff2f7af-eeb0-460e-8ccb-e8da5e93aabb",
+      "UserId": 561136,
+      "Username": "Horz",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4c2ab49fe869e0e9152998df04fc4eaf?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks, this fixed the error-msg, but if i ask now an object, the answer is alway \"Es do nichts\" - that makes not much sence.\r\n\r\nI tried to ask an object without askfor-keys as well with askfor-keys... the answer is always \"Er/sie/es do nichts\". No failure-message, but also not the correct conversation .\r\n\r\nEdit: Ok, looked in the Deutsch.aslx and there where some templates with ask and tell later in the code - so i disabled the 2 lines above and tested it ... and it works\r\n\r\nEverything fine now, there were just 2 old templates in the code.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks, this fixed the error-msg, but if i ask now an object, the answer is alway \"Es do nichts\" - that makes not much sence.</p>\n<p>I tried to ask an object without askfor-keys as well with askfor-keys... the answer is always \"Er/sie/es do nichts\". No failure-message, but also not the correct conversation .</p>\n<p>Edit: Ok, looked in the Deutsch.aslx and there where some templates with ask and tell later in the code - so i disabled the 2 lines above and tested it ... and it works</p>\n<p>Everything fine now, there were just 2 old templates in the code.</p>\n\n",
+      "PostDate": "2021-09-28T17:06:46.1201825Z",
+      "LastEditDate": "2021-09-28T17:23:55.3326482Z",
+      "link": null
+    },
+    {
+      "PostId": "29e5e0c9-ee5f-43d3-90de-35f15c4edd67",
+      "UserId": 924,
+      "Username": "Pertex",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4cc1e52f99452e841ecf4cbee9eadde9?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I think the template tellto was translated incorrectly in German. And the defaulttemplate is quite wrong, that's why it came to the wrong answer",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I think the template tellto was translated incorrectly in German. And the defaulttemplate is quite wrong, that's why it came to the wrong answer</p>\n\n",
+      "PostDate": "2021-09-30T11:43:34.8141092Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

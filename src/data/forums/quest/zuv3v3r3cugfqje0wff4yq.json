@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "zuv3v3r3cugfqje0wff4yq",
+    "ForumId": "10",
+    "Title": "Help with terrain attributes",
+    "LastUpdated": "2024-11-13T00:43:36.6982522Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "3f830b2d-c65e-49a8-b524-a31755518389",
+      "UserId": 507391,
+      "Username": "SummaCivis",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/2a9dbe4ab6b396c3048db6be8d746e16?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi,\r\n\r\nI have 650 rooms interconnected like a map. I want to be able to set a terrain attribute for a room so that it has specific properties, water, mountain, desert, forest, ect. I want to be able to change the grid_fill to a specific color water= blue, forest = green, ect. How do i set a \"terrain\" attribute and have it communicate with the specific room i want?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi,</p>\n<p>I have 650 rooms interconnected like a map. I want to be able to set a terrain attribute for a room so that it has specific properties, water, mountain, desert, forest, ect. I want to be able to change the grid_fill to a specific color water= blue, forest = green, ect. How do i set a \"terrain\" attribute and have it communicate with the specific room i want?</p>\n\n",
+      "PostDate": "2024-11-13T00:43:36.6982522Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "14db1615-0af6-48e1-8be0-c58235c72017",
+      "UserId": 31991,
+      "Username": "daeun",
+      "AvatarUrl": "https://i.imgur.com/Xvt8zzBb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "0. At game object, interface tab, tick `map and drawing grid`\r\n1. Create room2\r\n2. Link room and room2 together so player can move\r\n3. at room2, attributes tab, add an attribute 'terrain', give it a string value `water`\r\n4. add a turn script, name it `communicator`, tick enabled when game begins\r\n5. enter code view of `communicator` and paste this\r\n```\r\nif (game.pov.parent.terrain= \"water\") {\r\n  game.pov.parent.grid_fill = \"blue\"\r\n}\r\n```\r\n6. Go to bottom left corner, click filter, tick show library elements, search `redraw`\r\n7. Click copy for `Grid_Redraw` function\r\n8. Click filter, untick show library elements\r\n9. enter code view of `communicator` and upgrade it\r\n```\r\nif (game.pov.parent.terrain= \"water\") {\r\n  game.pov.parent.grid_fill = \"blue\"\r\n}\r\nGrid_Redraw\r\n```\r\n10. Create object `magicalseed`, go to inventory tab, tick `object can be taken`\r\n11. Go to features tab of `magicalseed`, tick `use`, go to use tab, at `use on its own`,\r\nchange action to `run script`, enter code view and type in\r\n```\r\ngame.pov.parent.terrain = \"forest\"\r\n```\r\n12. Go back to `communicator` and upgrade it again\r\n```\r\nif (game.pov.parent.terrain= \"water\") {\r\n  game.pov.parent.grid_fill = \"blue\"\r\n}\r\nif (game.pov.parent.terrain= \"forest\") {\r\n  game.pov.parent.grid_fill = \"green\"\r\n}\r\nGrid_Redraw\r\n```\r\n13. Playtest it, we gave room2 water terrain, so it should be blue automatically,\r\nwhen we `use` the magicalseed, whichever the player is in, that room becomes forest immediately and the room becomes green respectively\r\n\r\n_____________________________________________________\r\n\r\nQuick demo/ Sample code (Customize according to what you need)\r\nTo paste the code\r\n1. Startup your quest gamebook/textadventure, on the right side of the big play button, you can see a code view button\r\n2. Copy my code to replace the code in the text box, click code view button again.\r\n3. Viola, it is done, press play button to test out the game and modify the code to your preference.\r\n\r\n<details>\r\n\r\n```\r\n<!--Saved by Quest 5.8.6836.13983-->\r\n<asl version=\"580\">\r\n  <include ref=\"English.aslx\" />\r\n  <include ref=\"Core.aslx\" />\r\n  <game name=\"test14\">\r\n    <gameid>3e197e1d-2fc8-4d76-8ce4-d74c8ce580c5</gameid>\r\n    <version>1.0</version>\r\n    <firstpublished>2024</firstpublished>\r\n    <gridmap />\r\n  </game>\r\n  <object name=\"room\">\r\n    <inherit name=\"editor_room\" />\r\n    <isroom />\r\n    <object name=\"player\">\r\n      <inherit name=\"editor_object\" />\r\n      <inherit name=\"editor_player\" />\r\n    </object>\r\n    <exit alias=\"north\" to=\"room2\">\r\n      <inherit name=\"northdirection\" />\r\n    </exit>\r\n    <object name=\"magicalseed\">\r\n      <inherit name=\"editor_object\" />\r\n      <take />\r\n      <feature_usegive />\r\n      <use type=\"script\">\r\n        game.pov.parent.terrain = \"forest\"\r\n      </use>\r\n    </object>\r\n  </object>\r\n  <object name=\"room2\">\r\n    <inherit name=\"editor_room\" />\r\n    <terrain>water</terrain>\r\n    <exit alias=\"south\" to=\"room\">\r\n      <inherit name=\"southdirection\" />\r\n    </exit>\r\n  </object>\r\n  <turnscript name=\"communicator\">\r\n    <enabled />\r\n    <script>\r\n      if (game.pov.parent.terrain= \"water\") {\r\n        game.pov.parent.grid_fill = \"blue\"\r\n      }\r\n      if (game.pov.parent.terrain= \"forest\") {\r\n        game.pov.parent.grid_fill = \"green\"\r\n      }\r\n      Grid_Redraw\r\n    </script>\r\n  </turnscript>\r\n  <function name=\"Grid_Redraw\">\r\n    foreach (object, AllObjects()) {\r\n      if (Grid_GetRoomBooleanForPlayer(game.pov, object, \"grid_isdrawn\")) {\r\n        Grid_DrawRoom (object, true, game.pov)\r\n      }\r\n    }\r\n  </function>\r\n</asl>\r\n```\r\n</details>",
+      "EditableFormat": "markdown",
+      "HTML": "<ol start=\"0\">\n<li>At game object, interface tab, tick <code>map and drawing grid</code></li>\n<li>Create room2</li>\n<li>Link room and room2 together so player can move</li>\n<li>at room2, attributes tab, add an attribute 'terrain', give it a string value <code>water</code></li>\n<li>add a turn script, name it <code>communicator</code>, tick enabled when game begins</li>\n<li>enter code view of <code>communicator</code> and paste this</li>\n</ol>\n<pre><code>if (game.pov.parent.terrain= \"water\") {\n  game.pov.parent.grid_fill = \"blue\"\n}\n</code></pre>\n<ol start=\"6\">\n<li>Go to bottom left corner, click filter, tick show library elements, search <code>redraw</code></li>\n<li>Click copy for <code>Grid_Redraw</code> function</li>\n<li>Click filter, untick show library elements</li>\n<li>enter code view of <code>communicator</code> and upgrade it</li>\n</ol>\n<pre><code>if (game.pov.parent.terrain= \"water\") {\n  game.pov.parent.grid_fill = \"blue\"\n}\nGrid_Redraw\n</code></pre>\n<ol start=\"10\">\n<li>Create object <code>magicalseed</code>, go to inventory tab, tick <code>object can be taken</code></li>\n<li>Go to features tab of <code>magicalseed</code>, tick <code>use</code>, go to use tab, at <code>use on its own</code>,<br>\nchange action to <code>run script</code>, enter code view and type in</li>\n</ol>\n<pre><code>game.pov.parent.terrain = \"forest\"\n</code></pre>\n<ol start=\"12\">\n<li>Go back to <code>communicator</code> and upgrade it again</li>\n</ol>\n<pre><code>if (game.pov.parent.terrain= \"water\") {\n  game.pov.parent.grid_fill = \"blue\"\n}\nif (game.pov.parent.terrain= \"forest\") {\n  game.pov.parent.grid_fill = \"green\"\n}\nGrid_Redraw\n</code></pre>\n<ol start=\"13\">\n<li>Playtest it, we gave room2 water terrain, so it should be blue automatically,<br>\nwhen we <code>use</code> the magicalseed, whichever the player is in, that room becomes forest immediately and the room becomes green respectively</li>\n</ol>\n<hr>\n<p>Quick demo/ Sample code (Customize according to what you need)<br>\nTo paste the code</p>\n<ol>\n<li>Startup your quest gamebook/textadventure, on the right side of the big play button, you can see a code view button</li>\n<li>Copy my code to replace the code in the text box, click code view button again.</li>\n<li>Viola, it is done, press play button to test out the game and modify the code to your preference.</li>\n</ol>\n<details>\n<pre><code>&lt;!--Saved by Quest 5.8.6836.13983--&gt;\n&lt;asl version=\"580\"&gt;\n  &lt;include ref=\"English.aslx\" /&gt;\n  &lt;include ref=\"Core.aslx\" /&gt;\n  &lt;game name=\"test14\"&gt;\n    &lt;gameid&gt;3e197e1d-2fc8-4d76-8ce4-d74c8ce580c5&lt;/gameid&gt;\n    &lt;version&gt;1.0&lt;/version&gt;\n    &lt;firstpublished&gt;2024&lt;/firstpublished&gt;\n    &lt;gridmap /&gt;\n  &lt;/game&gt;\n  &lt;object name=\"room\"&gt;\n    &lt;inherit name=\"editor_room\" /&gt;\n    &lt;isroom /&gt;\n    &lt;object name=\"player\"&gt;\n      &lt;inherit name=\"editor_object\" /&gt;\n      &lt;inherit name=\"editor_player\" /&gt;\n    &lt;/object&gt;\n    &lt;exit alias=\"north\" to=\"room2\"&gt;\n      &lt;inherit name=\"northdirection\" /&gt;\n    &lt;/exit&gt;\n    &lt;object name=\"magicalseed\"&gt;\n      &lt;inherit name=\"editor_object\" /&gt;\n      &lt;take /&gt;\n      &lt;feature_usegive /&gt;\n      &lt;use type=\"script\"&gt;\n        game.pov.parent.terrain = \"forest\"\n      &lt;/use&gt;\n    &lt;/object&gt;\n  &lt;/object&gt;\n  &lt;object name=\"room2\"&gt;\n    &lt;inherit name=\"editor_room\" /&gt;\n    &lt;terrain&gt;water&lt;/terrain&gt;\n    &lt;exit alias=\"south\" to=\"room\"&gt;\n      &lt;inherit name=\"southdirection\" /&gt;\n    &lt;/exit&gt;\n  &lt;/object&gt;\n  &lt;turnscript name=\"communicator\"&gt;\n    &lt;enabled /&gt;\n    &lt;script&gt;\n      if (game.pov.parent.terrain= \"water\") {\n        game.pov.parent.grid_fill = \"blue\"\n      }\n      if (game.pov.parent.terrain= \"forest\") {\n        game.pov.parent.grid_fill = \"green\"\n      }\n      Grid_Redraw\n    &lt;/script&gt;\n  &lt;/turnscript&gt;\n  &lt;function name=\"Grid_Redraw\"&gt;\n    foreach (object, AllObjects()) {\n      if (Grid_GetRoomBooleanForPlayer(game.pov, object, \"grid_isdrawn\")) {\n        Grid_DrawRoom (object, true, game.pov)\n      }\n    }\n  &lt;/function&gt;\n&lt;/asl&gt;\n</code></pre>\n</details>\n\n",
+      "PostDate": "2024-11-15T16:47:30.6673955Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "99effa6f-7c65-4e5d-a6a0-472228b8963e",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> I have 650 rooms interconnected like a map. I want to be able to set a terrain attribute for a room so that it has specific properties, water, mountain, desert, forest, ect. I want to be able to change the grid_fill to a specific color water= blue, forest = green, ect. How do i set a \"terrain\" attribute and have it communicate with the specific room i want?\r\n\r\nIf you want this to change when you change the terrain, the simplest way would be to use a change script. This changes the colour every time the terrain changes.\r\n\r\nA script like this in your start script would set the initial colour for all rooms, and then set them up to change automatically if the terrain changes.\r\n```\r\nforeach (room, AllRooms ()) {\r\n  room.changedterrain => {\r\n    terrains = Split(\"water;forest;desert\")\r\n    colours = Split (\"blue;green;yellow\")\r\n    if (ListContains (terrains, this.terrain)) {\r\n      i = IndexOf (terrains, this.terrain)\r\n      this.grid_fill = ListItem (colours, i)\r\n    }\r\n  }\r\n  room.changedgrid_fill => {\r\n    if (room.grid_render) {\r\n      Grid_Redraw ()\r\n      Grid_DrawPlayerInRoom (game.pov.parent)\r\n    }\r\n  }\r\n  if (HasString (room, \"terrain\")) {\r\n    do (room, \"changedterrain\")\r\n  }\r\n}\r\n```\r\nThen you can set the room's terrain like any other attribute.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>I have 650 rooms interconnected like a map. I want to be able to set a terrain attribute for a room so that it has specific properties, water, mountain, desert, forest, ect. I want to be able to change the grid_fill to a specific color water= blue, forest = green, ect. How do i set a \"terrain\" attribute and have it communicate with the specific room i want?</p>\n</blockquote>\n<p>If you want this to change when you change the terrain, the simplest way would be to use a change script. This changes the colour every time the terrain changes.</p>\n<p>A script like this in your start script would set the initial colour for all rooms, and then set them up to change automatically if the terrain changes.</p>\n<pre><code>foreach (room, AllRooms ()) {\n  room.changedterrain =&gt; {\n    terrains = Split(\"water;forest;desert\")\n    colours = Split (\"blue;green;yellow\")\n    if (ListContains (terrains, this.terrain)) {\n      i = IndexOf (terrains, this.terrain)\n      this.grid_fill = ListItem (colours, i)\n    }\n  }\n  room.changedgrid_fill =&gt; {\n    if (room.grid_render) {\n      Grid_Redraw ()\n      Grid_DrawPlayerInRoom (game.pov.parent)\n    }\n  }\n  if (HasString (room, \"terrain\")) {\n    do (room, \"changedterrain\")\n  }\n}\n</code></pre>\n<p>Then you can set the room's terrain like any other attribute.</p>\n\n",
+      "PostDate": "2024-11-17T10:32:01.8087885Z",
+      "LastEditDate": "2024-11-25T14:49:44.4681245Z",
+      "link": null
+    },
+    {
+      "PostId": "dda659eb-93dd-40e5-8303-5a54ece5abeb",
+      "UserId": 507391,
+      "Username": "SummaCivis",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/2a9dbe4ab6b396c3048db6be8d746e16?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm not sure what I'm doing wrong. I placed the code in the game start script and then created the attribute \"terrain\" in the room attribute's tab.  I set the terrain value to string and input the variable \"water\". When I run the game, there appears to be no change.  Did i forget something?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm not sure what I'm doing wrong. I placed the code in the game start script and then created the attribute \"terrain\" in the room attribute's tab.  I set the terrain value to string and input the variable \"water\". When I run the game, there appears to be no change.  Did i forget something?</p>\n\n",
+      "PostDate": "2024-11-25T00:57:33.5472212Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "d59661a6-5d6d-4104-8c11-9315bce1efb4",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hmm… I've not used the grid system much. Let me try this out to see what the issue might be…\r\n\r\nAh, I was mixing up details of Quest's map system with a different engine. `grid_render` records whether a room is currently drawn, not whether it should be hidden from the map. So my script was only setting up the script for rooms which are already drawn.\r\n\r\nI'll edit the script above, so that it will work correctly.\r\n\r\n(edited now… I don't really understand why it's necessary to redraw the whole grid, but apparently telling it to just redraw one room doesn't work. I need to understand Paper.js better if I'm going to do more with the map)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hmm… I've not used the grid system much. Let me try this out to see what the issue might be…</p>\n<p>Ah, I was mixing up details of Quest's map system with a different engine. <code>grid_render</code> records whether a room is currently drawn, not whether it should be hidden from the map. So my script was only setting up the script for rooms which are already drawn.</p>\n<p>I'll edit the script above, so that it will work correctly.</p>\n<p>(edited now… I don't really understand why it's necessary to redraw the whole grid, but apparently telling it to just redraw one room doesn't work. I need to understand Paper.js better if I'm going to do more with the map)</p>\n\n",
+      "PostDate": "2024-11-25T14:47:23.192603Z",
+      "LastEditDate": "2024-11-25T19:42:04.5800797Z",
+      "link": null
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "zrudznjvvu6pj9rqqwyhhw",
+    "ForumId": "10",
+    "Title": "Command problem with #objects# ",
+    "LastUpdated": "2018-05-05T17:10:58.1671515Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "456cf9c0-1630-40c7-998e-6b178b19a4f8",
+      "UserId": 227864,
+      "Username": "Talon",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3b6191c9adc337e83fec8e293e3fc584?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "\r\nOkay,  the game of today is something like a godzilia game where you play the giant monster, (if people are old enough the concept is alot like the old Lionhead game black and white) )\r\n\r\nThe basic logic of the command , player uses stomp and gets a choice to be either playful or mean\r\nUsing Hell as a holding place for any victim destroyed throughout the game\r\n\r\n\r\n\r\nThe error that comes back  is when you stomp meanly\r\nError running script: Error compiling expression 'object': Unknown object or variable 'object'\r\n\r\nCommand  :  Stomp #object#\r\n```\r\nif (HasAttribute(object, \"stompable\")) {\r\n  msg (\"This is a placeholder for items\")\r\n}\r\nelse if (GetBoolean(object, \"shrunk\")) {\r\n  if (object.NPC = \"victim\") {\r\n    Ask (\"Do you wish to stomp for play? \") {\r\n      if (result) {\r\n        msg (\"The stompie takes no damage\")\r\n      }\r\n      else {\r\n        MoveObject (object, Hell)\r\n        msg (\"stompie is crushed flat\")\r\n      }\r\n    }\r\n  }\r\n}\r\n```\r\nHave a very similar sort of command that seems to work fine, even used it for a base for this but for some reason the \"Mean\" stomp throws up the flag\r\n\r\nIm kinda perplexed that this code throws up an error seems simple, and obviously ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Okay,  the game of today is something like a godzilia game where you play the giant monster, (if people are old enough the concept is alot like the old Lionhead game black and white) )</p>\n<p>The basic logic of the command , player uses stomp and gets a choice to be either playful or mean<br>\nUsing Hell as a holding place for any victim destroyed throughout the game</p>\n<p>The error that comes back  is when you stomp meanly<br>\nError running script: Error compiling expression 'object': Unknown object or variable 'object'</p>\n<p>Command  :  Stomp #object#</p>\n<pre><code>if (HasAttribute(object, \"stompable\")) {\n  msg (\"This is a placeholder for items\")\n}\nelse if (GetBoolean(object, \"shrunk\")) {\n  if (object.NPC = \"victim\") {\n    Ask (\"Do you wish to stomp for play? \") {\n      if (result) {\n        msg (\"The stompie takes no damage\")\n      }\n      else {\n        MoveObject (object, Hell)\n        msg (\"stompie is crushed flat\")\n      }\n    }\n  }\n}\n</code></pre>\n<p>Have a very similar sort of command that seems to work fine, even used it for a base for this but for some reason the \"Mean\" stomp throws up the flag</p>\n<p>Im kinda perplexed that this code throws up an error seems simple, and obviously</p>\n\n",
+      "PostDate": "2018-05-05T17:10:58.1671515Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "17872133-deda-402b-aab1-75b4f940d5ac",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "`object` only exists while the command script is being run.\r\n\r\nThe `Ask` function basically tells Quest \"Display a question to the player, and save this script to run next turn when they've answered\".\r\nAs soon as the question is displayed on the screen, the command script is finished, and `object` goes away.\r\n\r\nNext turn, they click \"Yes\" or \"No\", and Quest tries to run the saved script. Which generates an error because it uses a variable that no longer exists.\r\n\r\nYou need to save the object somewhere. Maybe like this:\r\n\r\n```\r\nif (HasAttribute(object, \"stompable\")) {\r\n  msg (\"This is a placeholder for items\")\r\n}\r\nelse if (GetBoolean(object, \"shrunk\")) {\r\n  if (object.NPC = \"victim\") {\r\n    this.current_victim = object\r\n    Ask (\"Do you wish to stomp for play? \") {\r\n      if (result) {\r\n        msg (\"The stompie takes no damage\")\r\n      }\r\n      else {\r\n        MoveObject (stomp.current_victim, Hell)\r\n        msg (\"stompie is crushed flat\")\r\n      }\r\n    }\r\n  }\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p><code>object</code> only exists while the command script is being run.</p>\n<p>The <code>Ask</code> function basically tells Quest \"Display a question to the player, and save this script to run next turn when they've answered\".<br>\nAs soon as the question is displayed on the screen, the command script is finished, and <code>object</code> goes away.</p>\n<p>Next turn, they click \"Yes\" or \"No\", and Quest tries to run the saved script. Which generates an error because it uses a variable that no longer exists.</p>\n<p>You need to save the object somewhere. Maybe like this:</p>\n<pre><code>if (HasAttribute(object, \"stompable\")) {\n  msg (\"This is a placeholder for items\")\n}\nelse if (GetBoolean(object, \"shrunk\")) {\n  if (object.NPC = \"victim\") {\n    this.current_victim = object\n    Ask (\"Do you wish to stomp for play? \") {\n      if (result) {\n        msg (\"The stompie takes no damage\")\n      }\n      else {\n        MoveObject (stomp.current_victim, Hell)\n        msg (\"stompie is crushed flat\")\n      }\n    }\n  }\n}\n</code></pre>\n\n",
+      "PostDate": "2018-05-05T17:34:40.4457038Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "84a9236c-b242-4cb5-9d93-113dd90e3c84",
+      "UserId": 227864,
+      "Username": "Talon",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3b6191c9adc337e83fec8e293e3fc584?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Ahh, that explains alot of things, I've sorta come to use various items as holding places for various attributes on objects(alias and such) when coding more complex things, now I know why I had to rather than it just worked sometimes..",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Ahh, that explains alot of things, I've sorta come to use various items as holding places for various attributes on objects(alias and such) when coding more complex things, now I know why I had to rather than it just worked sometimes..</p>\n\n",
+      "PostDate": "2018-05-05T17:57:42.2696833Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "505e9e95-5438-4ef0-959b-bec7d1d08e49",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "quest has three types of VARIABLES (keeping this simple):\r\n\r\nVARIABLES:\r\n1. 'Variable' VARIABLES\r\n2. 'Attribute' VARIABLES\r\n3. 'Argument/Parameter' VARIABLES: deals with Commands, Functions, and Script_Attributes+Delegates+Objects\r\n\r\n-----------\r\n\r\na 'Variable' VARIABLE is \"local\" and \"temporary\", meaning that it is (1) destroyed upon its parent scripting finishing, and (2) only exists (usable) within its parent scripting (you can't use it any where else)\r\n\r\nexamples:\r\n\r\ngeneric syntax example: NAME_OF_Variable = VALUE_OR_EXPRESSION\r\n\r\nstring_variable = \"hk\"\r\n\r\nboolean_variable = true\r\n// or: boolean_variable = false\r\n\r\ninteger_variable = 9\r\n\r\ndouble_variable = 1.2345\r\n\r\nobject_variable = player\r\n\r\nstringlist_variable = Split (\"red;blue;yellow\", \";\")\r\n\r\nscript_variable => { msg (\"hi\") }\r\n\r\nresult = \"yes\"\r\n\r\nhandled = true\r\n// or: handled = false\r\n\r\ncount = 0\r\n\r\nnotice how none of them have an attached Object\r\n\r\n----------------\r\n\r\n'Attribute' VARIABLES are global and \"permanent\" (so long as its containing/parent Object exists / still exists), meaning that they can be used anywhere\r\n\r\nexamples:\r\n\r\ngeneric syntax example: NAME_OF_OBJECT.NAME_OF_ATTRIBUTE = VALUE_OR_EXPRESSION\r\n\r\nplayer.alias = \"HK\"\r\nplayer.strength = 100\r\n\r\n// create (\"orc\")\r\norc.dead = false\r\n\r\ngame.state = 0\r\n\r\ngame.introduction = \"welcome to my game, muwhahaha!\"\r\n\r\n// create (\"katana\")\r\nkatana.damage = 56.29145\r\nplayer.weapon = katana\r\n\r\n// create (\"human_object\")\r\nhuman_object.human_race_stringlist_attribute = Split (\"european;african;asian;arabian;american;australian\", \";\")\r\n\r\n// create (\"example_object\")\r\nexample_object.example_string_attribute = \"hi\"\r\nexample_object.example_boolean_attribute = false\r\nexample_object.example_integer_attribute = 3\r\nexample_object.example_double_attribute = 6.666\r\nexample_object.example_object_attribute = player\r\nexample_object.example_stringlist_attribute = Split (\"red;blue;yellow\", \";\")\r\nexample_object.example_script_attribute => { msg (\"hi\") }\r\n\r\nnotice how they all got an attached Object\r\n\r\n---------------\r\n\r\ntoo lazy/tired at the moment to give an example game of local ('Variable') VARIABLES vs global ('Attribute') VARIABLES\r\n(sometime later... I'll write/post it up, but not now)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>quest has three types of VARIABLES (keeping this simple):</p>\n<p>VARIABLES:</p>\n<ol>\n<li>'Variable' VARIABLES</li>\n<li>'Attribute' VARIABLES</li>\n<li>'Argument/Parameter' VARIABLES: deals with Commands, Functions, and Script_Attributes+Delegates+Objects</li>\n</ol>\n<hr>\n<p>a 'Variable' VARIABLE is \"local\" and \"temporary\", meaning that it is (1) destroyed upon its parent scripting finishing, and (2) only exists (usable) within its parent scripting (you can't use it any where else)</p>\n<p>examples:</p>\n<p>generic syntax example: NAME_OF_Variable = VALUE_OR_EXPRESSION</p>\n<p>string_variable = \"hk\"</p>\n<p>boolean_variable = true<br>\n// or: boolean_variable = false</p>\n<p>integer_variable = 9</p>\n<p>double_variable = 1.2345</p>\n<p>object_variable = player</p>\n<p>stringlist_variable = Split (\"red;blue;yellow\", \";\")</p>\n<p>script_variable =&gt; { msg (\"hi\") }</p>\n<p>result = \"yes\"</p>\n<p>handled = true<br>\n// or: handled = false</p>\n<p>count = 0</p>\n<p>notice how none of them have an attached Object</p>\n<hr>\n<p>'Attribute' VARIABLES are global and \"permanent\" (so long as its containing/parent Object exists / still exists), meaning that they can be used anywhere</p>\n<p>examples:</p>\n<p>generic syntax example: NAME_OF_OBJECT.NAME_OF_ATTRIBUTE = VALUE_OR_EXPRESSION</p>\n<p>player.alias = \"HK\"<br>\nplayer.strength = 100</p>\n<p>// create (\"orc\")<br>\norc.dead = false</p>\n<p>game.state = 0</p>\n<p>game.introduction = \"welcome to my game, muwhahaha!\"</p>\n<p>// create (\"katana\")<br>\nkatana.damage = 56.29145<br>\nplayer.weapon = katana</p>\n<p>// create (\"human_object\")<br>\nhuman_object.human_race_stringlist_attribute = Split (\"european;african;asian;arabian;american;australian\", \";\")</p>\n<p>// create (\"example_object\")<br>\nexample_object.example_string_attribute = \"hi\"<br>\nexample_object.example_boolean_attribute = false<br>\nexample_object.example_integer_attribute = 3<br>\nexample_object.example_double_attribute = 6.666<br>\nexample_object.example_object_attribute = player<br>\nexample_object.example_stringlist_attribute = Split (\"red;blue;yellow\", \";\")<br>\nexample_object.example_script_attribute =&gt; { msg (\"hi\") }</p>\n<p>notice how they all got an attached Object</p>\n<hr>\n<p>too lazy/tired at the moment to give an example game of local ('Variable') VARIABLES vs global ('Attribute') VARIABLES<br>\n(sometime later... I'll write/post it up, but not now)</p>\n\n",
+      "PostDate": "2018-05-05T23:36:07.0334821Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

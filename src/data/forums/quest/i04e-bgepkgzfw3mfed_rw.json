@@ -1,0 +1,123 @@
+{
+  "Topic": {
+    "TopicId": "i04e-bgepkgzfw3mfed_rw",
+    "ForumId": "10",
+    "Title": "Help with stacking objects",
+    "LastUpdated": "2023-10-15T04:42:22.7184905Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "0c3abb26-93e8-45f6-b251-fe0d5b77bd7c",
+      "UserId": 607234,
+      "Username": "Summa_Civis",
+      "AvatarUrl": "https://i.imgur.com/Gj269XFb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I am really lost on this one. Here's what I did so far.\r\n\r\nCreate an object called vitamin.\r\nGave vitamin an attribute called \"quantity.\"\r\nCreated a spawn function that generates object when entering a room.\r\n\r\n\r\nWhere I'm having issue is with the TAKE and DROP actions. Once I TAKE the item twice, Quest is asking the player to select which vitamin from a numbered list.\r\n\r\nWhich \"vitamin\"?\r\n1. vitamin\r\n2. vitamin\r\n\r\n\r\nI really only want this to be a single category and to be able to display the quantity of the object (in this case, the vitamin) into a integer.\r\n\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I am really lost on this one. Here's what I did so far.</p>\n<p>Create an object called vitamin.<br>\nGave vitamin an attribute called \"quantity.\"<br>\nCreated a spawn function that generates object when entering a room.</p>\n<p>Where I'm having issue is with the TAKE and DROP actions. Once I TAKE the item twice, Quest is asking the player to select which vitamin from a numbered list.</p>\n<p>Which \"vitamin\"?</p>\n<ol>\n<li>vitamin</li>\n<li>vitamin</li>\n</ol>\n<p>I really only want this to be a single category and to be able to display the quantity of the object (in this case, the vitamin) into a integer.</p>\n\n",
+      "PostDate": "2023-10-15T04:42:22.7184905Z",
+      "LastEditDate": "2023-10-15T04:53:42.7253151Z",
+      "link": null
+    },
+    {
+      "PostId": "c5b939e3-730a-4387-b994-1044090fbab8",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "There are many ways to do stacking. If you already have a \"quantity\" attribute, I'd recommend destroying any duplicates.\r\n\r\nIf you're creating your stackable object using `CloneObject` and similar functions (not `create` or `clone`), it will already have a `prototype` attribute pointing to the original. You can use this attribute to check if any other clones of the same object are in the same location.\r\n\r\nSo your code would look something like:\r\n* whenever this object is moved:\r\n     * search for other clones in the same place\r\n     * if you find another one:\r\n          * add the two quantities together\r\n          * destroy the spare object\r\n\r\nFor the \"when this object is moved\" function, I would suggest using the script attribute `changedparent`, which is run automatically whenever an object is moved. This covers the case of picking up an object you already have one of, and dropping one where another is already there.\r\n\r\nThe `changedparent` function could look like:\r\n```\r\nif (HasObject (this, \"parent\")) {\r\n  clones = FilterByAttribute (GetDirectChildren (this.parent), \"prototype\", this.prototype)\r\n  if (ListCount (clones) > 1) {\r\n    first = ListItem (clones, 0)\r\n    second = ListItem (clones, 1)\r\n    first.quantity = first.quantity + second.quantity\r\n    second.quantity = 0\r\n  }\r\n}\r\n```\r\nThis means that a stack of 5 and a stack of 3 will turn into a stack of 8 and a stack of 0.\r\n\r\nThen you can use a script attribute named `changedquantity` to remove the 0 and make it easy to see how many you have:\r\n```\r\nif (this.quantity = 0) {\r\n  destroy (this.name)\r\n}\r\nelse if (this.quantity = 1) {\r\n  this.alias = \"vitamin\"\r\n  this.listalias = \"vitamin\"\r\n}\r\nelse {\r\n  this.alias = this.quantity + \" vitamins\"\r\n  this.listalias = this.quantity + \" vitamins\"\r\n}\r\n```\r\n\r\nChangescripts (script attributes starting with `changed`) are run by the engine automatically whenever the corresponding attribute changes, so they're good for stuff like this. When the player uses a vitamin, the use script can just reduce its quantity, and trust the changescript to destroy it if that was the last one.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>There are many ways to do stacking. If you already have a \"quantity\" attribute, I'd recommend destroying any duplicates.</p>\n<p>If you're creating your stackable object using <code>CloneObject</code> and similar functions (not <code>create</code> or <code>clone</code>), it will already have a <code>prototype</code> attribute pointing to the original. You can use this attribute to check if any other clones of the same object are in the same location.</p>\n<p>So your code would look something like:</p>\n<ul>\n<li>whenever this object is moved:\n<ul>\n<li>search for other clones in the same place</li>\n<li>if you find another one:\n<ul>\n<li>add the two quantities together</li>\n<li>destroy the spare object</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n<p>For the \"when this object is moved\" function, I would suggest using the script attribute <code>changedparent</code>, which is run automatically whenever an object is moved. This covers the case of picking up an object you already have one of, and dropping one where another is already there.</p>\n<p>The <code>changedparent</code> function could look like:</p>\n<pre><code>if (HasObject (this, \"parent\")) {\n  clones = FilterByAttribute (GetDirectChildren (this.parent), \"prototype\", this.prototype)\n  if (ListCount (clones) &gt; 1) {\n    first = ListItem (clones, 0)\n    second = ListItem (clones, 1)\n    first.quantity = first.quantity + second.quantity\n    second.quantity = 0\n  }\n}\n</code></pre>\n<p>This means that a stack of 5 and a stack of 3 will turn into a stack of 8 and a stack of 0.</p>\n<p>Then you can use a script attribute named <code>changedquantity</code> to remove the 0 and make it easy to see how many you have:</p>\n<pre><code>if (this.quantity = 0) {\n  destroy (this.name)\n}\nelse if (this.quantity = 1) {\n  this.alias = \"vitamin\"\n  this.listalias = \"vitamin\"\n}\nelse {\n  this.alias = this.quantity + \" vitamins\"\n  this.listalias = this.quantity + \" vitamins\"\n}\n</code></pre>\n<p>Changescripts (script attributes starting with <code>changed</code>) are run by the engine automatically whenever the corresponding attribute changes, so they're good for stuff like this. When the player uses a vitamin, the use script can just reduce its quantity, and trust the changescript to destroy it if that was the last one.</p>\n\n",
+      "PostDate": "2023-10-15T12:55:41.3133219Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "71268e35-8ed0-4632-9a04-ce752d8c7408",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "It may also be worth noting that there's sometimes problems with using `destroy`, so most people use `RemoveObject` instead. But RemoveObject just moves objects outside of any room, so they'll still be there taking up memory and bloating the save file, which can be a problem if you're spawning a lot of these objects. So if `destroy` doesn't behave, it might be better to work around it by delaying the destruction of unwanted objects until the end of the turn. Like this:\r\n```\r\nif (this.quantity <= 0) {\r\n  if (HasAttribute (game, \"objects_to_destroy\")) {\r\n    list add (game.objects_to_destroy, this.name)\r\n  }\r\n  else {\r\n    game.objects_to_destroy = Split (this.name)\r\n    SetTurnTimeout (0) {\r\n      if (HasAttribute (game, \"objects_to_destroy\")) {\r\n        foreach (objname, ListCompact (game.objects_to_destroy)) {\r\n          destroy (objname)\r\n        }\r\n        game.objects_to_destroy = null\r\n      }\r\n    }\r\n  }\r\n}\r\nelse if (this.quantity = 1) {\r\n  this.alias = \"vitamin\"\r\n  this.listalias = \"vitamin\"\r\n}\r\nelse {\r\n  this.alias = this.quantity + \" vitamins\"\r\n  this.listalias = this.quantity + \" vitamins\"\r\n}\r\n```\r\n\r\n(I used \"vitamins\" as the object name because that's the example you gave. If you have lots of stackable objects, it might be easier to have attributes for the singular and plural aliases, so you can use the same scripts for all of them, or make it a function)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>It may also be worth noting that there's sometimes problems with using <code>destroy</code>, so most people use <code>RemoveObject</code> instead. But RemoveObject just moves objects outside of any room, so they'll still be there taking up memory and bloating the save file, which can be a problem if you're spawning a lot of these objects. So if <code>destroy</code> doesn't behave, it might be better to work around it by delaying the destruction of unwanted objects until the end of the turn. Like this:</p>\n<pre><code>if (this.quantity &lt;= 0) {\n  if (HasAttribute (game, \"objects_to_destroy\")) {\n    list add (game.objects_to_destroy, this.name)\n  }\n  else {\n    game.objects_to_destroy = Split (this.name)\n    SetTurnTimeout (0) {\n      if (HasAttribute (game, \"objects_to_destroy\")) {\n        foreach (objname, ListCompact (game.objects_to_destroy)) {\n          destroy (objname)\n        }\n        game.objects_to_destroy = null\n      }\n    }\n  }\n}\nelse if (this.quantity = 1) {\n  this.alias = \"vitamin\"\n  this.listalias = \"vitamin\"\n}\nelse {\n  this.alias = this.quantity + \" vitamins\"\n  this.listalias = this.quantity + \" vitamins\"\n}\n</code></pre>\n<p>(I used \"vitamins\" as the object name because that's the example you gave. If you have lots of stackable objects, it might be easier to have attributes for the singular and plural aliases, so you can use the same scripts for all of them, or make it a function)</p>\n\n",
+      "PostDate": "2023-10-15T14:55:12.3881614Z",
+      "LastEditDate": "2023-10-16T14:10:10.8094043Z",
+      "link": null
+    },
+    {
+      "PostId": "c30b145c-9e7a-4068-9280-f01b8a7185bc",
+      "UserId": 643545,
+      "Username": "Ip Man",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3ca198fe75de39041c2e4cd0a8852e3c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The Pixie also created a library for stacking objects if you want to browse/use that system.  https://github.com/ThePix/quest/wiki/Library:-Stackable-items\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The Pixie also created a library for stacking objects if you want to browse/use that system.  https://github.com/ThePix/quest/wiki/Library:-Stackable-items</p>\n\n",
+      "PostDate": "2023-10-16T02:38:18.1289409Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "258cf930-7065-4b0f-8af8-1d2ecabce2d8",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "(My favourite method of stacking is not to use a quantity; instead, the stacked objects are placed inside the first one. So you have an object named \"four vitamins\" which contains objects named \"three vitamins\", \"two vitamins\", and \"vitamin\". Then you can mess around with the background scope script to make the inside objects accessible for commands without them showing up separately on the inventory; so that \"drop vitamin\" and \"drop two vitamins\" all work how you would expect; but \"drop vitamins\" causes the disambiguation menu to ask how many you want to drop. This can be a bit of a pain to implement, but I think it's worth it if you can get your head around the code)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>(My favourite method of stacking is not to use a quantity; instead, the stacked objects are placed inside the first one. So you have an object named \"four vitamins\" which contains objects named \"three vitamins\", \"two vitamins\", and \"vitamin\". Then you can mess around with the background scope script to make the inside objects accessible for commands without them showing up separately on the inventory; so that \"drop vitamin\" and \"drop two vitamins\" all work how you would expect; but \"drop vitamins\" causes the disambiguation menu to ask how many you want to drop. This can be a bit of a pain to implement, but I think it's worth it if you can get your head around the code)</p>\n\n",
+      "PostDate": "2023-10-17T09:31:59.3344468Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "8289539c-af54-47ea-88e4-fb03ea46c408",
+      "UserId": 643545,
+      "Username": "Ip Man",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3ca198fe75de39041c2e4cd0a8852e3c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "fascinating idea MrAngel!\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>fascinating idea MrAngel!</p>\n\n",
+      "PostDate": "2023-10-22T01:30:02.1954391Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "2b88b75c-6d05-4a5a-b55a-59c630c0a8c9",
+      "UserId": 579655,
+      "Username": "Jennifer Wren",
+      "AvatarUrl": "https://i.imgur.com/t1XUS1Kb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Mrangel, how do you drop two vitamins, without having still four vitamins in inventory? ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Mrangel, how do you drop two vitamins, without having still four vitamins in inventory?</p>\n\n",
+      "PostDate": "2023-10-28T15:41:34.3615266Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "181b3fb6-1dc7-4d03-81b1-8631411809a6",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> Mrangel, how do you drop two vitamins, without having still four vitamins in inventory?\r\n\r\nIn this example, you would have the changedparent script do something like (pseudocode):\r\n* If the old parent is an object with the same prototype\r\n     * do its chsngedparent script too\r\n* if there is an object of the same type in the same location\r\n     * move one object inside the other\r\n* else\r\n     * count how many identical objects are inside this one, and add one\r\n     * change the alias of this object accordingly\r\n     * if the new parent is an object with the same prototype\r\n          * do its changedparent script\r\n\r\nDoing the changedparent scripts of both stacks ensures that the numbers are always right.\r\n\r\n[Think that's right off the top of my head]",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>Mrangel, how do you drop two vitamins, without having still four vitamins in inventory?</p>\n</blockquote>\n<p>In this example, you would have the changedparent script do something like (pseudocode):</p>\n<ul>\n<li>If the old parent is an object with the same prototype\n<ul>\n<li>do its chsngedparent script too</li>\n</ul>\n</li>\n<li>if there is an object of the same type in the same location\n<ul>\n<li>move one object inside the other</li>\n</ul>\n</li>\n<li>else\n<ul>\n<li>count how many identical objects are inside this one, and add one</li>\n<li>change the alias of this object accordingly</li>\n<li>if the new parent is an object with the same prototype\n<ul>\n<li>do its changedparent script</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n<p>Doing the changedparent scripts of both stacks ensures that the numbers are always right.</p>\n<p>[Think that's right off the top of my head]</p>\n\n",
+      "PostDate": "2023-10-28T23:59:58.6552506Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

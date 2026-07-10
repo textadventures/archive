@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "3m4xlv5s-uy7-jfu4s35cw",
+    "ForumId": "10",
+    "Title": "Can't buy \"wearable objects\"",
+    "LastUpdated": "2018-10-15T21:43:10.6785727Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "37ede34e-c4ca-4c4f-8d44-5d65bc81ee89",
+      "UserId": 372959,
+      "Username": "MrNichols",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/1d69c314d414d9a6e7562bb6cd36a91d?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I set up a shop using the following tutorial.  (http://docs.textadventures.co.uk/quest/shop.html).  I can buy and sell objects; however, if the object is a wearable object (i.e. helmet).  I get the following message:  \"Error running script: Unrecognised list type\".  Any idea where to look to fix this? ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I set up a shop using the following tutorial.  (http://docs.textadventures.co.uk/quest/shop.html).  I can buy and sell objects; however, if the object is a wearable object (i.e. helmet).  I get the following message:  \"Error running script: Unrecognised list type\".  Any idea where to look to fix this?</p>\n\n",
+      "PostDate": "2018-10-15T21:43:10.6785727Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "f18340c5-a427-4ddd-b5c9-6a91411869b5",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I can't see how that problem could happen; but I can think of a few questions that might help to narrow it down.\r\n\r\nDoes the error appear when you enter the shop, or when you try to buy a wearable item?\r\n\r\nOnce you add the helmet to the stock, do other items in the shop still buy/sell normally?\r\n\r\nAfter the error message has appeared, does the item still appear? Can you then buy other items normally?\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I can't see how that problem could happen; but I can think of a few questions that might help to narrow it down.</p>\n<p>Does the error appear when you enter the shop, or when you try to buy a wearable item?</p>\n<p>Once you add the helmet to the stock, do other items in the shop still buy/sell normally?</p>\n<p>After the error message has appeared, does the item still appear? Can you then buy other items normally?</p>\n\n",
+      "PostDate": "2018-10-15T23:03:14.1909377Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "0d35621e-4ad6-4c01-a093-6c3de78689c5",
+      "UserId": 372959,
+      "Username": "MrNichols",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/1d69c314d414d9a6e7562bb6cd36a91d?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The error does not appear when you enter the shop.  \r\nI am able to buy a non wearable item from the shop. \r\nOnce I buy a wearable item, the item appears in my inventory, but the message appears. \r\nI am able to buy non wearable items after the error message.\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The error does not appear when you enter the shop.<br>\nI am able to buy a non wearable item from the shop.<br>\nOnce I buy a wearable item, the item appears in my inventory, but the message appears.<br>\nI am able to buy non wearable items after the error message.</p>\n\n",
+      "PostDate": "2018-10-15T23:52:31.594513Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "b101ddf1-5020-4e46-a427-08e24745514d",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Ah, got it.\r\nIn the \"buy\" function, there is a line:\r\n```\r\n list remove (obj.generatedverbslist, \"Buy\")\r\n```\r\n\r\nBut it looks like the wearable type prevents the generatedverbslist from being generated. So you'll need to change that to:\r\n```\r\nif (HasAttribute (obj, \"generatedverbslist\")) {\r\n  list remove (obj.generatedverbslist, \"Buy\")\r\n}\r\n```\r\n\r\nI think I've found that issue before, but I'd forgotten it.\r\n\r\nActually, there are cases where the other two might not exist either. So it's probably best to replace:\r\n```\r\n  list remove (obj.generatedverbslist, \"Buy\")\r\n  list remove (obj.displayverbs, \"Buy\")\r\n  list remove (obj.inventoryverbs, \"Buy\")\r\n```\r\nwith:\r\n```\r\nforeach (attr, Split(\"generatedverbslist;displayverbs;inventoryverbs\")) {\r\n  list = GetAttribute (obj, attr)\r\n  if (EndsWith (TypeOf (list), \"list\")) {\r\n    if (ListContains (list, \"Buy\")) {\r\n      list remove (list, \"Buy\")\r\n      set (obj, attr, list)\r\n    }\r\n  }\r\n}\r\n```\r\nA bit over-complicated, but should prevent it causing problems if any other library has played with the verbs lists.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Ah, got it.<br>\nIn the \"buy\" function, there is a line:</p>\n<pre><code> list remove (obj.generatedverbslist, \"Buy\")\n</code></pre>\n<p>But it looks like the wearable type prevents the generatedverbslist from being generated. So you'll need to change that to:</p>\n<pre><code>if (HasAttribute (obj, \"generatedverbslist\")) {\n  list remove (obj.generatedverbslist, \"Buy\")\n}\n</code></pre>\n<p>I think I've found that issue before, but I'd forgotten it.</p>\n<p>Actually, there are cases where the other two might not exist either. So it's probably best to replace:</p>\n<pre><code>  list remove (obj.generatedverbslist, \"Buy\")\n  list remove (obj.displayverbs, \"Buy\")\n  list remove (obj.inventoryverbs, \"Buy\")\n</code></pre>\n<p>with:</p>\n<pre><code>foreach (attr, Split(\"generatedverbslist;displayverbs;inventoryverbs\")) {\n  list = GetAttribute (obj, attr)\n  if (EndsWith (TypeOf (list), \"list\")) {\n    if (ListContains (list, \"Buy\")) {\n      list remove (list, \"Buy\")\n      set (obj, attr, list)\n    }\n  }\n}\n</code></pre>\n<p>A bit over-complicated, but should prevent it causing problems if any other library has played with the verbs lists.</p>\n\n",
+      "PostDate": "2018-10-16T01:14:21.3373403Z",
+      "LastEditDate": "2018-10-16T01:20:34.6229366Z",
+      "link": null
+    },
+    {
+      "PostId": "71f957c7-272a-49ac-aa68-0000197c1354",
+      "UserId": 372959,
+      "Username": "MrNichols",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/1d69c314d414d9a6e7562bb6cd36a91d?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thank you, that solved it. \r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thank you, that solved it.</p>\n\n",
+      "PostDate": "2018-10-16T01:49:36.3389704Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

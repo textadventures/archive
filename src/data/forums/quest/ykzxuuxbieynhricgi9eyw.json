@@ -1,0 +1,89 @@
+{
+  "Topic": {
+    "TopicId": "ykzxuuxbieynhricgi9eyw",
+    "ForumId": "10",
+    "Title": "non-directional exit issue",
+    "LastUpdated": "2017-01-24T03:36:35.295774Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "32157a38-da08-4701-83d0-8477c1e077dd",
+      "UserId": 288307,
+      "Username": "crystalwizard",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/6ea66c3566e5688ecd2f5da936a37e82?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm using the desktop editor.\r\n\r\nI can create a non-directional exit, and the hyper link moves the players between rooms just fine. But trying to use the aliases just returns the error \"I don't understand your command.\"\r\n\r\nAny suggestions as to how to fix this so players can type in the alias instead of having to click on the hyperlink would be appreciated.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm using the desktop editor.</p>\n<p>I can create a non-directional exit, and the hyper link moves the players between rooms just fine. But trying to use the aliases just returns the error \"I don't understand your command.\"</p>\n<p>Any suggestions as to how to fix this so players can type in the alias instead of having to click on the hyperlink would be appreciated.</p>\n\n",
+      "PostDate": "2017-01-24T03:36:35.295774Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "ac486ee7-5711-473b-aef0-13c26ded4a23",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Try doing it as a command like this:\r\n```\r\nYou can go to the {command:go kitchen:kitchen}.\r\n```\r\nThe \"go kitchen\" bit is the command that Quest will use, whilst \"kitchen\" after that is what is displayed.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Try doing it as a command like this:</p>\n<pre><code>You can go to the {command:go kitchen:kitchen}.\n</code></pre>\n<p>The \"go kitchen\" bit is the command that Quest will use, whilst \"kitchen\" after that is what is displayed.</p>\n\n",
+      "PostDate": "2017-01-24T08:26:22.4081654Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "1834adb2-bede-49f3-bf51-9d211becc701",
+      "UserId": 924,
+      "Username": "Pertex",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4cc1e52f99452e841ecf4cbee9eadde9?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "If you have a non-directional exit with the alias \"house\" you can type \"go house\". Just typing \"house\" is not possible.\r\n\r\nBut you could do something like this. Import the core function HandleSingleCommand and add this code at the beginning: \r\n```\r\n\tforeach (exit, ScopeExits()) {\r\n\t\tif (GetAttribute(exit, \"alt\") = null){\r\n\t\t\tif (exit.alias = command){\r\n\t\t\t\tHandleSingleCommand (\"go \" + command)\r\n\t\t\t\treturn (null)\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n```\r\n\r\nThe method should look like this then:\r\n```\r\n <function name=\"HandleSingleCommand\" parameters=\"command\">\r\n    <![CDATA[\r\n\tforeach (exit, ScopeExits()) {\r\n\t\tif (GetAttribute(exit, \"alt\") = null){\r\n\t\t\tif (exit.alias = command){\r\n\t\t\t\tHandleSingleCommand (\"go \" + command)\r\n\t\t\t\treturn (null)\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\t\r\n    candidates = NewObjectList()\r\n    foreach (cmd, ScopeCommands()) {\r\n      if (IsRegexMatch(cmd.pattern, command, cmd.name)) {\r\n        list add (candidates, cmd)\r\n      }\r\n    }\r\n    \r\n    maxstrength = -1\r\n    thiscommand = null\r\n...\r\n```\r\n\r\nA question to the Quest chiefs:\r\nShould something like this added to the Quest core?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>If you have a non-directional exit with the alias \"house\" you can type \"go house\". Just typing \"house\" is not possible.</p>\n<p>But you could do something like this. Import the core function HandleSingleCommand and add this code at the beginning:</p>\n<pre><code>\tforeach (exit, ScopeExits()) {\n\t\tif (GetAttribute(exit, \"alt\") = null){\n\t\t\tif (exit.alias = command){\n\t\t\t\tHandleSingleCommand (\"go \" + command)\n\t\t\t\treturn (null)\n\t\t\t}\n\t\t}\n\t}\n</code></pre>\n<p>The method should look like this then:</p>\n<pre><code> &lt;function name=\"HandleSingleCommand\" parameters=\"command\"&gt;\n    &lt;![CDATA[\n\tforeach (exit, ScopeExits()) {\n\t\tif (GetAttribute(exit, \"alt\") = null){\n\t\t\tif (exit.alias = command){\n\t\t\t\tHandleSingleCommand (\"go \" + command)\n\t\t\t\treturn (null)\n\t\t\t}\n\t\t}\n\t}\n\t\n    candidates = NewObjectList()\n    foreach (cmd, ScopeCommands()) {\n      if (IsRegexMatch(cmd.pattern, command, cmd.name)) {\n        list add (candidates, cmd)\n      }\n    }\n    \n    maxstrength = -1\n    thiscommand = null\n...\n</code></pre>\n<p>A question to the Quest chiefs:<br>\nShould something like this added to the Quest core?</p>\n\n",
+      "PostDate": "2017-01-24T13:00:43.4129744Z",
+      "LastEditDate": "2017-01-24T14:01:48.306479Z"
+    },
+    {
+      "PostId": "121e1d98-7831-4401-9c8a-718adf339c16",
+      "UserId": 288307,
+      "Username": "crystalwizard",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/6ea66c3566e5688ecd2f5da936a37e82?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Okay, next question. For certain types of aliases i'd like to have a speciall command, but not in the entire game. \r\nSo, for example, i have a room with a stream and a path. I'd like the player to be able to type\r\n\r\nfollow stream\r\nor\r\nfollow path\r\n\r\nand have them each both move the player to the correct room. I can't just put a follow command into the game, because in most cases I don't want it to work. And I can't even put it in the room because I don't want the player to be able to type\r\n\r\nFollow north\r\n\r\nand have that work (that's silly).\r\n\r\nIs there a way to do this in the exit itself?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Okay, next question. For certain types of aliases i'd like to have a speciall command, but not in the entire game.<br>\nSo, for example, i have a room with a stream and a path. I'd like the player to be able to type</p>\n<p>follow stream<br>\nor<br>\nfollow path</p>\n<p>and have them each both move the player to the correct room. I can't just put a follow command into the game, because in most cases I don't want it to work. And I can't even put it in the room because I don't want the player to be able to type</p>\n<p>Follow north</p>\n<p>and have that work (that's silly).</p>\n<p>Is there a way to do this in the exit itself?</p>\n\n",
+      "PostDate": "2017-01-24T15:58:19.4228487Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "952a4b3f-f4a7-4bbb-bf51-26231b4d8aa2",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I don't think this is what you're asking for, but it's a way of doing what you want, I think...\r\n\r\nObject parent-child heirarchy / containment (and thus in-game location), is actually controlled by the built-in 'parent' Object Attribute, so you can use this instead of Exits and/or along with Exits (editing the Exit scripting and putting in the desired 'parent' code line, or however else related to Exits' usage) too.\r\n\r\nplayer.parent = room // the 'player' Player Object is now in the 'room' Room Object\r\n// which is the same as:\r\nMoveObject (player, room)\r\n// which is the same as using Exits to do the same thing\r\n// which is the same as doing it in the GUI/Editor (though GUI/Editor is for/at compile-time only):\r\n```\r\n<object name=\"room\">\r\n  <object name=\"player\">\r\n  </object>\r\n</object>\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I don't think this is what you're asking for, but it's a way of doing what you want, I think...</p>\n<p>Object parent-child heirarchy / containment (and thus in-game location), is actually controlled by the built-in 'parent' Object Attribute, so you can use this instead of Exits and/or along with Exits (editing the Exit scripting and putting in the desired 'parent' code line, or however else related to Exits' usage) too.</p>\n<p>player.parent = room // the 'player' Player Object is now in the 'room' Room Object<br>\n// which is the same as:<br>\nMoveObject (player, room)<br>\n// which is the same as using Exits to do the same thing<br>\n// which is the same as doing it in the GUI/Editor (though GUI/Editor is for/at compile-time only):</p>\n<pre><code>&lt;object name=\"room\"&gt;\n  &lt;object name=\"player\"&gt;\n  &lt;/object&gt;\n&lt;/object&gt;\n</code></pre>\n\n",
+      "PostDate": "2017-01-24T21:11:20.0008363Z",
+      "LastEditDate": "2017-01-24T21:14:10.8492006Z"
+    },
+    {
+      "PostId": "acdfd337-036c-4544-811d-b1b5d9a98e5f",
+      "UserId": 924,
+      "Username": "Pertex",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4cc1e52f99452e841ecf4cbee9eadde9?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You can create a local command that only works in one room. Right click on a room and choose \"Add Command\"",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You can create a local command that only works in one room. Right click on a room and choose \"Add Command\"</p>\n\n",
+      "PostDate": "2017-01-25T06:53:11.9128846Z",
+      "LastEditDate": null
+    }
+  ]
+}

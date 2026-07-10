@@ -1,0 +1,39 @@
+{
+  "Topic": {
+    "TopicId": "kssezjduf0itx-yr-no82a",
+    "ForumId": "10",
+    "Title": "Polymorph Commands (2)",
+    "LastUpdated": "2018-05-26T17:44:00.9814495Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "079c8ffc-4300-4730-a449-a773328baf1b",
+      "UserId": 339977,
+      "Username": "thanos",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/9c35eed21321227222cd2ae31913ba08?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "So in our [previous post](http://textadventures.co.uk/forum/quest/topic/l2kguxg7ne_bpmdxks4zdq/polymorph-commands-i-e-one-word-two-separate-commands) we figured out how to do polymorph \"open\" for Greek, which doubles for \"switch on\":\r\n\r\n    <command name=\"anoikse\">\r\n\t<pattern><![CDATA[^άνοιξε (?<object>.*)$]]></pattern>\r\n\t<script type=\"script\">\r\n\t\tif (HasScript (object, \"turnon\")) {\r\n\t\t\tdo (object, \"turnon\")\r\n\t\t}\r\n\t\telse {\r\n\t\tTryOpenClose (true, object)\r\n\t\t}\r\n\t</script>\r\n\t</command>\r\n\r\n\t<command name=\"klise\">\r\n\t<pattern><![CDATA[^κλείσε (?<object>.*)$]]></pattern>\r\n\t<script type=\"script\">\r\n\t\tif (HasScript (object, \"turnoff\")) {\r\n\t\t\tdo (object, \"turnoff\")\r\n\t\t}\r\n\t\telse {\r\n\t\t\tTryOpenClose (false, object)\r\n\t\t}\r\n\t</script>\r\n\t</command>\r\n\t\r\n\t<template name=\"Open\">Άνοιξε</template>\r\n\t<template name=\"Close\">Κλείσε</template>\r\n\t<template name=\"SwitchOn\">Άνοιξε</template>\r\n\t<template name=\"SwitchOff\">Κλείσε</template>\r\n\r\n\r\nNow I want to implement some more things:\r\n\r\n1) polymorph \"hit\", doubles as \"knock\":\r\nI guess I just need to remove \"knock\", and handle \"hit door\" as I would \"knock door\" in game?\r\n\r\n2) polymorph \"put\", doubles as \"wear\". \r\nHow do I go about it? Is there a HasScript(object, \"wear\") function?\r\n\r\n3) \"drop\" and \"throw\" are used interchangeably in Greek (verb is \"paeta\"). \r\n I propose using syntax to differentiate, i.e. \"paeta stone to vase\" will be _throw_, while \"paeta stone\" will be _drop_. How do I implement that?\r\n\r\nHelp will be appreciated!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>So in our <a href=\"http://textadventures.co.uk/forum/quest/topic/l2kguxg7ne_bpmdxks4zdq/polymorph-commands-i-e-one-word-two-separate-commands\">previous post</a> we figured out how to do polymorph \"open\" for Greek, which doubles for \"switch on\":</p>\n<pre><code>&lt;command name=\"anoikse\"&gt;\n&lt;pattern&gt;&lt;![CDATA[^άνοιξε (?&lt;object&gt;.*)$]]&gt;&lt;/pattern&gt;\n&lt;script type=\"script\"&gt;\n\tif (HasScript (object, \"turnon\")) {\n\t\tdo (object, \"turnon\")\n\t}\n\telse {\n\tTryOpenClose (true, object)\n\t}\n&lt;/script&gt;\n&lt;/command&gt;\n\n&lt;command name=\"klise\"&gt;\n&lt;pattern&gt;&lt;![CDATA[^κλείσε (?&lt;object&gt;.*)$]]&gt;&lt;/pattern&gt;\n&lt;script type=\"script\"&gt;\n\tif (HasScript (object, \"turnoff\")) {\n\t\tdo (object, \"turnoff\")\n\t}\n\telse {\n\t\tTryOpenClose (false, object)\n\t}\n&lt;/script&gt;\n&lt;/command&gt;\n\n&lt;template name=\"Open\"&gt;Άνοιξε&lt;/template&gt;\n&lt;template name=\"Close\"&gt;Κλείσε&lt;/template&gt;\n&lt;template name=\"SwitchOn\"&gt;Άνοιξε&lt;/template&gt;\n&lt;template name=\"SwitchOff\"&gt;Κλείσε&lt;/template&gt;\n</code></pre>\n<p>Now I want to implement some more things:</p>\n<ol>\n<li>\n<p>polymorph \"hit\", doubles as \"knock\":<br>\nI guess I just need to remove \"knock\", and handle \"hit door\" as I would \"knock door\" in game?</p>\n</li>\n<li>\n<p>polymorph \"put\", doubles as \"wear\".<br>\nHow do I go about it? Is there a HasScript(object, \"wear\") function?</p>\n</li>\n<li>\n<p>\"drop\" and \"throw\" are used interchangeably in Greek (verb is \"paeta\").<br>\nI propose using syntax to differentiate, i.e. \"paeta stone to vase\" will be <em>throw</em>, while \"paeta stone\" will be <em>drop</em>. How do I implement that?</p>\n</li>\n</ol>\n<p>Help will be appreciated!</p>\n\n",
+      "PostDate": "2018-05-26T17:44:00.9814495Z",
+      "LastEditDate": "2018-05-26T17:46:22.1115127Z",
+      "link": null
+    },
+    {
+      "PostId": "14dcaad6-fcb4-480e-8643-dcfce761d35f",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "In the case of put/wear, I think it's the same as in English. \"put on shirt\" or \"put shoes on\" are synonyms for wear. If I wanted to use \"put\", I'd be saying something like \"put apple on table\". So you could have a wear command with the pattern \"put on #object#;put #object# on\" and a put command with the pattern \"put #object1# on #object2#;put #object1# in #object2#\".\r\n\r\n(Haven't tried that in Quest, but it looks like it should work without any special code)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>In the case of put/wear, I think it's the same as in English. \"put on shirt\" or \"put shoes on\" are synonyms for wear. If I wanted to use \"put\", I'd be saying something like \"put apple on table\". So you could have a wear command with the pattern \"put on #object#;put #object# on\" and a put command with the pattern \"put #object1# on #object2#;put #object1# in #object2#\".</p>\n<p>(Haven't tried that in Quest, but it looks like it should work without any special code)</p>\n\n",
+      "PostDate": "2018-05-26T18:22:41.7423686Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

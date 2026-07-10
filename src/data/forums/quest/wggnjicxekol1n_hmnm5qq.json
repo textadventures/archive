@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "wggnjicxekol1n_hmnm5qq",
+    "ForumId": "10",
+    "Title": "Check inventory of an item",
+    "LastUpdated": "2019-04-15T02:45:10.5257562Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "03dfc474-7ea4-4807-99ec-78baba2e8ed6",
+      "UserId": 260569,
+      "Username": "DarkLizerd",
+      "AvatarUrl": "https://i.imgur.com/vjdH3t6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "In my game, the player could have item: club, item:club1 or item:club2...\r\nHow would I check to see if the player has one of these clubs???\r\nI found Got(item)\r\nbut does that check for the item.name or item.alias??\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>In my game, the player could have item: club, item:club1 or item:club2...<br>\nHow would I check to see if the player has one of these clubs???<br>\nI found Got(item)<br>\nbut does that check for the item.name or item.alias??</p>\n\n",
+      "PostDate": "2019-04-15T02:45:10.5257562Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "6141a48e-1f77-49d0-a6e4-d4b963df32b6",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Got checks for a particular item.\r\n\r\nIf you want to filter by alias you could use something like:\r\n\r\n<pre><code style=\"color: green\">if (ListCount (FilterByAttribute (ScopeInventory(), \"alias\", \"club\")) &gt; 0) {</code></pre>\r\n\r\n(Though it's probably better to use `prototype` if you want to search for clones of a particular item)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Got checks for a particular item.</p>\n<p>If you want to filter by alias you could use something like:</p>\n<pre><code style=\"color: green\">if (ListCount (FilterByAttribute (ScopeInventory(), \"alias\", \"club\")) &gt; 0) {</code></pre>\n<p>(Though it's probably better to use <code>prototype</code> if you want to search for clones of a particular item)</p>\n\n",
+      "PostDate": "2019-04-15T08:15:06.6205699Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "12dda3fa-be52-4721-9a8f-3c2a84f6fc11",
+      "UserId": 260569,
+      "Username": "DarkLizerd",
+      "AvatarUrl": "https://i.imgur.com/vjdH3t6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Gota love the long structure of Quest commands!!!\r\nso, to break this down:\r\nif (ListCount = the count of the select item\r\n(FilterByAttribute = look at \"alias\" for \"club\"\r\n(ScopeInventory(), = and this is the list of what's in the player's inventory.\r\n \"alias\", \"club\")) > 0) {\r\nRight?\r\nOK, so how does prototype work?\r\nI've got the downloaded Quest docs, but it's not listed.\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Gota love the long structure of Quest commands!!!<br>\nso, to break this down:<br>\nif (ListCount = the count of the select item<br>\n(FilterByAttribute = look at \"alias\" for \"club\"<br>\n(ScopeInventory(), = and this is the list of what's in the player's inventory.<br>\n\"alias\", \"club\")) &gt; 0) {<br>\nRight?<br>\nOK, so how does prototype work?<br>\nI've got the downloaded Quest docs, but it's not listed.</p>\n\n",
+      "PostDate": "2019-04-15T17:01:53.1894406Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "033c819b-8582-43d0-a44c-e698ea4198b8",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I think you got it.\r\n\r\nI think it's easiest to understand long commands by working from the inside out. Like, you look at the innermost set of parens/brackets, work out what that does, and then look at what the function around it does with it.\r\n\r\nSo you could break that command down as:\r\n* <span style=\"border: solid red 1px\">`ScopeInventory()`</span> → contents of the player's inventory\r\n* <span style=\"border: solid red 1px\">`FilterByAttribute (`contents of the player's inventory`, \"alias\", \"club\")`</span> → items in the inventory whose \"alias\" attribute has the value \"club\" → list of clubs in the inventory\r\n* <span style=\"border: solid red 1px\">`ListCount (`list of clubs in the inventory`)`</span> → number of clubs in the inventory\r\n* <span style=\"border: solid red 1px\">`if (`number of clubs in the inventory` > 0) {`</span> → if player has more than zero clubs\r\n\r\n<hr />\r\n\r\n> OK, so how does prototype work?\r\n\r\n`prototype` is a recent addition, I think. When I started using Quest I added it to all my games myself using a 3-line start script, but it's now part of the core.\r\nThe `CloneObject()` function gives the clone an attribute `prototype` which contains a reference to the original object. So instead of <span style=\"border: solid red 1px\">`FilterByAttribute (`some list`, \"alias\", \"club\")`</span> you can make your code look more like <span style=\"border: solid green 1px\"><code style=\"color:green\">FilterByAttribute (</code>some list<code style=\"color:green\">, \"prototype\", club)</code></span>.\r\n\r\nComparing the object reference and the alias are pretty similar in efficiency. But there's a few reasons the alias of an object might change. For example, in my demo game for the crafting system I had \"boring book\", \"battered book\", \"old bible\", \"paperback novel\", etc… with aliases built out of a random list of adjectives and nouns. If you might at some point add any feature that changes the name of an object, it's easier to use the prototype to determine what kind of thing an object is.\r\n\r\nHope that makes some kind of sense. I'm kind of spaced out, having burned myself out over the last 2 days getting a book published.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I think you got it.</p>\n<p>I think it's easiest to understand long commands by working from the inside out. Like, you look at the innermost set of parens/brackets, work out what that does, and then look at what the function around it does with it.</p>\n<p>So you could break that command down as:</p>\n<ul>\n<li><span style=\"border: solid red 1px\"><code>ScopeInventory()</code></span> → contents of the player's inventory</li>\n<li><span style=\"border: solid red 1px\"><code>FilterByAttribute (</code>contents of the player's inventory<code>, \"alias\", \"club\")</code></span> → items in the inventory whose \"alias\" attribute has the value \"club\" → list of clubs in the inventory</li>\n<li><span style=\"border: solid red 1px\"><code>ListCount (</code>list of clubs in the inventory<code>)</code></span> → number of clubs in the inventory</li>\n<li><span style=\"border: solid red 1px\"><code>if (</code>number of clubs in the inventory<code>&gt; 0) {</code></span> → if player has more than zero clubs</li>\n</ul>\n<hr>\n<blockquote>\n<p>OK, so how does prototype work?</p>\n</blockquote>\n<p><code>prototype</code> is a recent addition, I think. When I started using Quest I added it to all my games myself using a 3-line start script, but it's now part of the core.<br>\nThe <code>CloneObject()</code> function gives the clone an attribute <code>prototype</code> which contains a reference to the original object. So instead of <span style=\"border: solid red 1px\"><code>FilterByAttribute (</code>some list<code>, \"alias\", \"club\")</code></span> you can make your code look more like <span style=\"border: solid green 1px\"><code style=\"color: green\">FilterByAttribute (</code>some list<code style=\"color: green\">, \"prototype\", club)</code></span>.</p>\n<p>Comparing the object reference and the alias are pretty similar in efficiency. But there's a few reasons the alias of an object might change. For example, in my demo game for the crafting system I had \"boring book\", \"battered book\", \"old bible\", \"paperback novel\", etc… with aliases built out of a random list of adjectives and nouns. If you might at some point add any feature that changes the name of an object, it's easier to use the prototype to determine what kind of thing an object is.</p>\n<p>Hope that makes some kind of sense. I'm kind of spaced out, having burned myself out over the last 2 days getting a book published.</p>\n\n",
+      "PostDate": "2019-04-15T18:58:13.4461301Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "iofdgllygkmhf8gvygr-iq",
+    "ForumId": "10",
+    "Title": "Cloned Object in inventory isn't detected by object.name (Solved)",
+    "LastUpdated": "2022-02-21T08:40:10.302495Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "e52d0a3c-35d0-4729-b54f-d2fb87b9ce8d",
+      "UserId": 580122,
+      "Username": "YiKwang",
+      "AvatarUrl": "https://i.imgur.com/wHILBBmb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I have a command for cooking fish, ' cook #object# ', which first determines whether the object is cookable, then if there is an active cooker in the room, then what the object is, and what it should be replaced with.\r\n\r\nie, Carp becomes Cooked Carp, Beef Becomes Steak, etc.\r\n\r\nHere is what I have:\r\n\r\n```\r\nif (not HasAttribute (object, \"ISaCOOKABLE\")) {\r\n  msg (\"You can't cook with this...\")\r\n}\r\nelse if (ListCount (FilterByAttribute (ScopeReachable(), \"ISaCOOKER\", true)) = 0) {\r\n  msg (\"There's nothing here for you to cook this with...\")\r\n}\r\n```\r\nThis all seems to work fine, but this next bit runs silent, apparently doing nothing, and the items in inventory do not change.\r\n```\r\nelse {\r\n  if (object.name = \"FISH_Carp\") {\r\n    RemoveObject (object)\r\n    CloneObjectAndMove (FISH_Cooked_Carp, game.pov)\r\n    msg (\"You cook the Carp.\")\r\n  }\r\n}\r\n```\r\n\r\nIm sure I have some little syntax error, but I do not know what it is... any ideas?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I have a command for cooking fish, ' cook #object# ', which first determines whether the object is cookable, then if there is an active cooker in the room, then what the object is, and what it should be replaced with.</p>\n<p>ie, Carp becomes Cooked Carp, Beef Becomes Steak, etc.</p>\n<p>Here is what I have:</p>\n<pre><code>if (not HasAttribute (object, \"ISaCOOKABLE\")) {\n  msg (\"You can't cook with this...\")\n}\nelse if (ListCount (FilterByAttribute (ScopeReachable(), \"ISaCOOKER\", true)) = 0) {\n  msg (\"There's nothing here for you to cook this with...\")\n}\n</code></pre>\n<p>This all seems to work fine, but this next bit runs silent, apparently doing nothing, and the items in inventory do not change.</p>\n<pre><code>else {\n  if (object.name = \"FISH_Carp\") {\n    RemoveObject (object)\n    CloneObjectAndMove (FISH_Cooked_Carp, game.pov)\n    msg (\"You cook the Carp.\")\n  }\n}\n</code></pre>\n<p>Im sure I have some little syntax error, but I do not know what it is... any ideas?</p>\n\n",
+      "PostDate": "2022-02-21T08:40:10.302495Z",
+      "LastEditDate": "2022-02-21T10:09:29.9662783Z",
+      "link": null
+    },
+    {
+      "PostId": "25d96b89-89d7-4290-a856-5db6d52708b2",
+      "UserId": 580122,
+      "Username": "YiKwang",
+      "AvatarUrl": "https://i.imgur.com/wHILBBmb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I managed to get it working by doing this:\r\n```\r\n  if (object.ISaCARP = true) {\r\n    RemoveObject (object)\r\n    CloneObjectAndMove (FISH_Cooked_Carp, game.pov)\r\n    msg (\"You cook the Carp.\")\r\n  }\r\n```\r\nUsing an Attribute 'ISaCARP' instead of the object's Name, but if anyone can tell me how to use the name I'd rather not have unnecessary unique Attributes on every food item...",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I managed to get it working by doing this:</p>\n<pre><code>  if (object.ISaCARP = true) {\n    RemoveObject (object)\n    CloneObjectAndMove (FISH_Cooked_Carp, game.pov)\n    msg (\"You cook the Carp.\")\n  }\n</code></pre>\n<p>Using an Attribute 'ISaCARP' instead of the object's Name, but if anyone can tell me how to use the name I'd rather not have unnecessary unique Attributes on every food item...</p>\n\n",
+      "PostDate": "2022-02-21T08:59:26.1113164Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "02fa6599-e404-4cd3-8a4a-ec185a0f7a9b",
+      "UserId": 580122,
+      "Username": "YiKwang",
+      "AvatarUrl": "https://i.imgur.com/wHILBBmb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I have figured it out, because the item in inventory was a clone, I needed the object prototype.\r\n\r\n```\r\nif (object.prototype = FISH_Carp) {\r\n  RemoveObject (object)\r\n  CloneObjectAndMove (FISH_Cooked_Carp, game.pov)\r\n  msg (\"You cook the Carp.\")\r\n}\r\n```\r\n\r\nthats what i needed!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I have figured it out, because the item in inventory was a clone, I needed the object prototype.</p>\n<pre><code>if (object.prototype = FISH_Carp) {\n  RemoveObject (object)\n  CloneObjectAndMove (FISH_Cooked_Carp, game.pov)\n  msg (\"You cook the Carp.\")\n}\n</code></pre>\n<p>thats what i needed!</p>\n\n",
+      "PostDate": "2022-02-21T10:08:42.0250888Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "6d33cd5f-83ab-47bb-9045-5448de93fdd3",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Yep :)\r\n\r\nNote that this only works if you use `CloneObject`, not the basic `clone` function; and the `prototype` attribute will disappear if the original object is destroyed.\r\n\r\n(Also, if you're working with multiple clones, it may be worth being aware of the difference between `RemoveObject` and `destroy`. `RemoveObject (object)` is the same as `MoveObject (object, null)` – it moves the object outside of all rooms, where the player can't see it. In large games with lots of clones, this may result in large save files because it's saving copies of all those objects. Whereas `destroy (object.name)` actually deletes the object, which is good for clones but may cause errors if you use it for any object whose name is mentioned in the code, or inside of a `foreach` loop. For clones, `destroy` is the more efficient option, but it can cause some weird and confusing bugs so might be reserved for more experienced programmers)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Yep :)</p>\n<p>Note that this only works if you use <code>CloneObject</code>, not the basic <code>clone</code> function; and the <code>prototype</code> attribute will disappear if the original object is destroyed.</p>\n<p>(Also, if you're working with multiple clones, it may be worth being aware of the difference between <code>RemoveObject</code> and <code>destroy</code>. <code>RemoveObject (object)</code> is the same as <code>MoveObject (object, null)</code> – it moves the object outside of all rooms, where the player can't see it. In large games with lots of clones, this may result in large save files because it's saving copies of all those objects. Whereas <code>destroy (object.name)</code> actually deletes the object, which is good for clones but may cause errors if you use it for any object whose name is mentioned in the code, or inside of a <code>foreach</code> loop. For clones, <code>destroy</code> is the more efficient option, but it can cause some weird and confusing bugs so might be reserved for more experienced programmers)</p>\n\n",
+      "PostDate": "2022-02-21T10:55:13.3370199Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

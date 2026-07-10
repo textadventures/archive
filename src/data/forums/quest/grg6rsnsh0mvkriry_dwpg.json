@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "grg6rsnsh0mvkriry_dwpg",
+    "ForumId": "10",
+    "Title": "[BUG REPORT] (I think) Interacting with npc that have 'with' in their name",
+    "LastUpdated": "2023-07-09T09:26:06.9499505Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "bdbc0758-60f4-4892-8ab5-8d85c4b5bd1e",
+      "UserId": 628893,
+      "Username": "Kazali",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/77d2993f2aa1bdcf158563680d55a8a1?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi there, I am still frankly new to the quest forums and apologies if my report is either at the wrong place or not written according some standards. I try to make it understandable with a screenshot.\r\n\r\nBackstory: I wanted to build a game that, if you enter a part of the game, like a forest, there is a 20% chance to spawn a monster. If said monster spawns, it has a chance to spawn as male, female or others. Imagine pokemon and spawning as either male or female. Basically the same deal.\r\n\r\nHere the thing, (I wont go too much into detail as the game goes into 18+ territory) but whenever it choses a gender it changes the gender, as well as the alias of the npc, so it displays at the Places and Objects accordingly.\r\nI also use a different approach in how I interact with people. Instead of directly using \"look at\" \"talk to\" and all that, all you see is \"interact with\" which THEN opens up a menu that has all the things you can do with said npc. I like it that way as it gives me the opportunity to change the menu list dynamically.\r\n\r\n[Problem] The problem is, as soon as the npc.alias has \"with\" in their name (example: guy with gun), and I click interact with, it thinks that I want to combine things with each other and therefor gives me the response \"That doesn't work.\" See attachment for screenshot.\r\n\r\nhttps://cdn.discordapp.com/attachments/1070011252912439347/1127529046000017488/image.png\r\n\r\n[Test NPC had a button that rerolled the other npc's gender. That is why you see 'use testNPC' multiple times.]\r\n\r\nNow to the question: Can you please either fix the bug so we can use 'with' and other words in alias or provide a workaround to be able to have 'with' in the name without breaking code?\r\n\r\nI hope this helped. Please write a comment if there is any questions.\r\n\r\n[EDIT] I see that I posted in Site Announcements and Feedback. My apologies. If possible to drag my post where it belongs, or inform me to delete this old post and repost to the right section. I'm sorry for the inconvinience",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi there, I am still frankly new to the quest forums and apologies if my report is either at the wrong place or not written according some standards. I try to make it understandable with a screenshot.</p>\n<p>Backstory: I wanted to build a game that, if you enter a part of the game, like a forest, there is a 20% chance to spawn a monster. If said monster spawns, it has a chance to spawn as male, female or others. Imagine pokemon and spawning as either male or female. Basically the same deal.</p>\n<p>Here the thing, (I wont go too much into detail as the game goes into 18+ territory) but whenever it choses a gender it changes the gender, as well as the alias of the npc, so it displays at the Places and Objects accordingly.<br>\nI also use a different approach in how I interact with people. Instead of directly using \"look at\" \"talk to\" and all that, all you see is \"interact with\" which THEN opens up a menu that has all the things you can do with said npc. I like it that way as it gives me the opportunity to change the menu list dynamically.</p>\n<p>[Problem] The problem is, as soon as the npc.alias has \"with\" in their name (example: guy with gun), and I click interact with, it thinks that I want to combine things with each other and therefor gives me the response \"That doesn't work.\" See attachment for screenshot.</p>\n<p>https://cdn.discordapp.com/attachments/1070011252912439347/1127529046000017488/image.png</p>\n<p>[Test NPC had a button that rerolled the other npc's gender. That is why you see 'use testNPC' multiple times.]</p>\n<p>Now to the question: Can you please either fix the bug so we can use 'with' and other words in alias or provide a workaround to be able to have 'with' in the name without breaking code?</p>\n<p>I hope this helped. Please write a comment if there is any questions.</p>\n<p>[EDIT] I see that I posted in Site Announcements and Feedback. My apologies. If possible to drag my post where it belongs, or inform me to delete this old post and repost to the right section. I'm sorry for the inconvinience</p>\n\n",
+      "PostDate": "2023-07-09T09:26:06.9499505Z",
+      "LastEditDate": "2023-07-09T09:45:39.6538987Z",
+      "link": null
+    },
+    {
+      "PostId": "5dd18ea5-710a-4e94-bc62-3abdb77fa452",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I would guess that your `interact` command has a pattern that allows both \"interact with #object#\" and \"interact with #object# with #object2#\" versions.\r\n\r\nIf this is just the default verb pattern, I would suggest changing the command's pattern. I believe you can edit verbs if you have the desktop version of the editor. If you're using the web editor, it's a little harder because for some reason verbs don't appear in the editor. In this case, you would need to work out of the name of the verb and include a change in your start script.\r\n\r\nI would suggest something like:\r\n```\r\ninteractwith.pattern = \"^interact with +(?<object>.+)$\"\r\n```\r\nor if you still want it to be a multiverb, just not using \"with\", you could do:\r\n```\r\ninteractwith.pattern = \"^interact with +(?<object>.+?)( using (?<object2>.+))?$\"\r\n```\r\n\r\n(This is assuming the verb is named `interactwith`; just change that to whatever its name is)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I would guess that your <code>interact</code> command has a pattern that allows both \"interact with #object#\" and \"interact with #object# with #object2#\" versions.</p>\n<p>If this is just the default verb pattern, I would suggest changing the command's pattern. I believe you can edit verbs if you have the desktop version of the editor. If you're using the web editor, it's a little harder because for some reason verbs don't appear in the editor. In this case, you would need to work out of the name of the verb and include a change in your start script.</p>\n<p>I would suggest something like:</p>\n<pre><code>interactwith.pattern = \"^interact with +(?&lt;object&gt;.+)$\"\n</code></pre>\n<p>or if you still want it to be a multiverb, just not using \"with\", you could do:</p>\n<pre><code>interactwith.pattern = \"^interact with +(?&lt;object&gt;.+?)( using (?&lt;object2&gt;.+))?$\"\n</code></pre>\n<p>(This is assuming the verb is named <code>interactwith</code>; just change that to whatever its name is)</p>\n\n",
+      "PostDate": "2023-07-10T06:44:23.0990177Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e0942e01-8a4b-4bcf-aaa0-41e68394d331",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "\"] I see that I posted in Site Announcements and Feedback. My apologies. If possible to drag my post where it belongs, or inform me to delete this old post and repost to the right section. I'm sorry for the inconvinience\"\r\n\r\nDone, somewhat belatedly.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>\"] I see that I posted in Site Announcements and Feedback. My apologies. If possible to drag my post where it belongs, or inform me to delete this old post and repost to the right section. I'm sorry for the inconvinience\"</p>\n<p>Done, somewhat belatedly.</p>\n\n",
+      "PostDate": "2023-07-17T19:37:33.5079895Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "991e5666-eb92-4b9a-b483-2811285cbd3d",
+      "UserId": 643545,
+      "Username": "Ip Man",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3ca198fe75de39041c2e4cd0a8852e3c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Would it be an easy fix to just have a convention of abbreviating \"with\" in the aliases?  \"Man w gun\" I don't know if an alias will accept a special character.  \"Man w/gun\".  Or even \"Man holding a gun\" \r\n\r\nIt sounds like an interesting system.  The menu for interacting with NPCs!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Would it be an easy fix to just have a convention of abbreviating \"with\" in the aliases?  \"Man w gun\" I don't know if an alias will accept a special character.  \"Man w/gun\".  Or even \"Man holding a gun\"</p>\n<p>It sounds like an interesting system.  The menu for interacting with NPCs!</p>\n\n",
+      "PostDate": "2023-07-27T03:07:24.9998688Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

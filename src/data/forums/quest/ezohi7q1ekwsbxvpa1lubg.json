@@ -1,0 +1,141 @@
+{
+  "Topic": {
+    "TopicId": "ezohi7q1ekwsbxvpa1lubg",
+    "ForumId": "10",
+    "Title": "More open / close problems",
+    "LastUpdated": "2016-12-19T00:23:10.8530036Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "3e8a1917-5792-4b8c-a332-51d8fc7c4d7d",
+      "UserId": 107651,
+      "Username": "OurJud",
+      "AvatarUrl": "http://i.imgur.com/wfM9qy6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Well I say more, but it's the same issue. I'm starting a new thread to try and keep things less cluttered.\r\n\r\nWith the doors I assumed I'd got to the bottom of this when Jay pointed out it was probably because I was using my own flags. With this new issue that's not the case, but the object is still closing itself automatically.\r\n\r\nThe object in this case is a music box which plays its tune when opened, and stops when closed.\r\n\r\nThis is my set up:\r\n\r\n• The object is called **music box**.\r\n• In the **object** tab I've given it **box** and **lid** as _other names_\r\n• In the **Features** tab I set it to **Container**, then in the **Container** tab make it **openable/closable**\r\n• I have both **Can be opened** and **Can be closed** ticked, and **Is open** unticked.\r\n• The script for **when container is opened** is:\r\n```\r\nmsg (\"You open the lid. It's a music box and it begins to tinkle out its little tune.\")\r\nplay sound (\"innmusicbox.mp3\", false, false)\r\n```\r\n• The script for when **container is closed** is:\r\n```\r\nmsg (\"You close the lid.\")\r\nstop sound\r\n```\r\nIn the verbs tab for the object I have: **lift lid; open lid; open box** (and the relevant scripts from above) and **shut lid; close lid; close box; shut box** (and the relevant scripts from above)\r\n\r\nDespite all this, when I run the game and lift the lid, the music starts as it should, but when I type **close lid** I get **It is already closed** and the music plays on.\r\n\r\nCan anyone see why this isn't working?\r\n\r\nI think it might be good old custom commands to the rescue here! It would be so much easier in fact.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Well I say more, but it's the same issue. I'm starting a new thread to try and keep things less cluttered.</p>\n<p>With the doors I assumed I'd got to the bottom of this when Jay pointed out it was probably because I was using my own flags. With this new issue that's not the case, but the object is still closing itself automatically.</p>\n<p>The object in this case is a music box which plays its tune when opened, and stops when closed.</p>\n<p>This is my set up:</p>\n<ul>\n<li>The object is called <strong>music box</strong>.</li>\n<li>In the <strong>object</strong> tab I've given it <strong>box</strong> and <strong>lid</strong> as <em>other names</em></li>\n<li>In the <strong>Features</strong> tab I set it to <strong>Container</strong>, then in the <strong>Container</strong> tab make it <strong>openable/closable</strong></li>\n<li>I have both <strong>Can be opened</strong> and <strong>Can be closed</strong> ticked, and <strong>Is open</strong> unticked.</li>\n<li>The script for <strong>when container is opened</strong> is:</li>\n</ul>\n<pre><code>msg (\"You open the lid. It's a music box and it begins to tinkle out its little tune.\")\nplay sound (\"innmusicbox.mp3\", false, false)\n</code></pre>\n<ul>\n<li>The script for when <strong>container is closed</strong> is:</li>\n</ul>\n<pre><code>msg (\"You close the lid.\")\nstop sound\n</code></pre>\n<p>In the verbs tab for the object I have: <strong>lift lid; open lid; open box</strong> (and the relevant scripts from above) and <strong>shut lid; close lid; close box; shut box</strong> (and the relevant scripts from above)</p>\n<p>Despite all this, when I run the game and lift the lid, the music starts as it should, but when I type <strong>close lid</strong> I get <strong>It is already closed</strong> and the music plays on.</p>\n<p>Can anyone see why this isn't working?</p>\n<p>I think it might be good old custom commands to the rescue here! It would be so much easier in fact.</p>\n\n",
+      "PostDate": "2016-12-19T00:23:10.8530036Z",
+      "LastEditDate": "2016-12-19T00:57:19.7020956Z"
+    },
+    {
+      "PostId": "ce67cbf5-9295-40dc-bb02-92e7e623fdcd",
+      "UserId": 56551,
+      "Username": "XanMag",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4b45a3afd18077f76f6569225c422bdb?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The code below works just fine for me.\r\n\r\nEDIT:  If I were to do this again, I would definitely choose a LIMITED container and set objects to zero!!  I just added a dog object.  Picked it up and put it in the music box.  So... unless there is a way around this that I am missing, I would choose limited container so some snarky asshat wouldn't stuff something like a dog into a music box.  In the container is full box, after you set limit to zero, you can handle all objects someone might toss in there as \"That's not possible, you snarky asshat.\"  =)\r\n```\r\n<asl version=\"550\">\r\n  <include ref=\"English.aslx\" />\r\n  <include ref=\"Core.aslx\" />\r\n  <game name=\"Music Box Test\">\r\n    <gameid>ddb1b1a6-52c6-433d-b976-6b994b1c3e91</gameid>\r\n    <version>1.0</version>\r\n    <firstpublished>2016</firstpublished>\r\n  </game>\r\n  <object name=\"room\">\r\n    <inherit name=\"editor_room\" />\r\n    <object name=\"player\">\r\n      <inherit name=\"editor_object\" />\r\n      <inherit name=\"editor_player\" />\r\n    </object>\r\n    <object name=\"music box\">\r\n      <inherit name=\"editor_object\" />\r\n      <inherit name=\"container_closed\" />\r\n      <alt type=\"stringlist\">\r\n        <value>lid</value>\r\n        <value>box</value>\r\n      </alt>\r\n      <look type=\"script\">\r\n        if (music box.isopen) {\r\n          msg (\"It's a music box.  It's open and currently playing music.\")\r\n        }\r\n        else {\r\n          msg (\"It's a closed music box.\")\r\n        }\r\n      </look>\r\n      <feature_container />\r\n      <openmsg>You open it and a lovely tune starts to play.</openmsg>\r\n      <closemsg>You close it and the music stops.</closemsg>\r\n      <lift type=\"script\">\r\n        HelperOpenObject (music box)\r\n        msg (\"You open it and a lovely tune starts to play.\")\r\n      </lift>\r\n      <shut type=\"script\">\r\n        msg (\"You close it and the music stops.\")\r\n        HelperCloseObject (music box)\r\n        stop sound\r\n      </shut>\r\n      <onopen type=\"script\"><![CDATA[\r\n        play sound (\"Tech N9ne - Strange Music Box (Feat. Krizz Kaliko & Brotha Lynch Hung).mp3\", false, true)\r\n      ]]></onopen>\r\n      <onclose type=\"script\">\r\n        stop sound\r\n      </onclose>\r\n    </object>\r\n  </object>\r\n  <verb>\r\n    <property>lift</property>\r\n    <pattern>lift</pattern>\r\n    <defaultexpression>\"You can't lift \" + object.article + \".\"</defaultexpression>\r\n  </verb>\r\n  <verb>\r\n    <property>shut</property>\r\n    <pattern>shut</pattern>\r\n    <defaultexpression>\"You can't shut \" + object.article + \".\"</defaultexpression>\r\n  </verb>\r\n</asl>\r\n```\r\nThe difference I think is:\r\n1.  I have it set as a closed container.\r\n2.  put lift and shut as different verbs under the music box object.  Do you have 'lift lid' as a verb or just 'lift'?\r\n3.  Do you have an 'open object' script under the verb lift?\r\n\r\nAlso, not sure if you did this or not, but if you put the scripts to play and stop the sound in ONLY the upon open and upon closing area under container tab, you only need to do this one time as long as you have your open/close object scripts under your verbs lift and shut.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The code below works just fine for me.</p>\n<p>EDIT:  If I were to do this again, I would definitely choose a LIMITED container and set objects to zero!!  I just added a dog object.  Picked it up and put it in the music box.  So... unless there is a way around this that I am missing, I would choose limited container so some snarky asshat wouldn't stuff something like a dog into a music box.  In the container is full box, after you set limit to zero, you can handle all objects someone might toss in there as \"That's not possible, you snarky asshat.\"  =)</p>\n<pre><code>&lt;asl version=\"550\"&gt;\n  &lt;include ref=\"English.aslx\" /&gt;\n  &lt;include ref=\"Core.aslx\" /&gt;\n  &lt;game name=\"Music Box Test\"&gt;\n    &lt;gameid&gt;ddb1b1a6-52c6-433d-b976-6b994b1c3e91&lt;/gameid&gt;\n    &lt;version&gt;1.0&lt;/version&gt;\n    &lt;firstpublished&gt;2016&lt;/firstpublished&gt;\n  &lt;/game&gt;\n  &lt;object name=\"room\"&gt;\n    &lt;inherit name=\"editor_room\" /&gt;\n    &lt;object name=\"player\"&gt;\n      &lt;inherit name=\"editor_object\" /&gt;\n      &lt;inherit name=\"editor_player\" /&gt;\n    &lt;/object&gt;\n    &lt;object name=\"music box\"&gt;\n      &lt;inherit name=\"editor_object\" /&gt;\n      &lt;inherit name=\"container_closed\" /&gt;\n      &lt;alt type=\"stringlist\"&gt;\n        &lt;value&gt;lid&lt;/value&gt;\n        &lt;value&gt;box&lt;/value&gt;\n      &lt;/alt&gt;\n      &lt;look type=\"script\"&gt;\n        if (music box.isopen) {\n          msg (\"It's a music box.  It's open and currently playing music.\")\n        }\n        else {\n          msg (\"It's a closed music box.\")\n        }\n      &lt;/look&gt;\n      &lt;feature_container /&gt;\n      &lt;openmsg&gt;You open it and a lovely tune starts to play.&lt;/openmsg&gt;\n      &lt;closemsg&gt;You close it and the music stops.&lt;/closemsg&gt;\n      &lt;lift type=\"script\"&gt;\n        HelperOpenObject (music box)\n        msg (\"You open it and a lovely tune starts to play.\")\n      &lt;/lift&gt;\n      &lt;shut type=\"script\"&gt;\n        msg (\"You close it and the music stops.\")\n        HelperCloseObject (music box)\n        stop sound\n      &lt;/shut&gt;\n      &lt;onopen type=\"script\"&gt;&lt;![CDATA[\n        play sound (\"Tech N9ne - Strange Music Box (Feat. Krizz Kaliko &amp; Brotha Lynch Hung).mp3\", false, true)\n      ]]&gt;&lt;/onopen&gt;\n      &lt;onclose type=\"script\"&gt;\n        stop sound\n      &lt;/onclose&gt;\n    &lt;/object&gt;\n  &lt;/object&gt;\n  &lt;verb&gt;\n    &lt;property&gt;lift&lt;/property&gt;\n    &lt;pattern&gt;lift&lt;/pattern&gt;\n    &lt;defaultexpression&gt;\"You can't lift \" + object.article + \".\"&lt;/defaultexpression&gt;\n  &lt;/verb&gt;\n  &lt;verb&gt;\n    &lt;property&gt;shut&lt;/property&gt;\n    &lt;pattern&gt;shut&lt;/pattern&gt;\n    &lt;defaultexpression&gt;\"You can't shut \" + object.article + \".\"&lt;/defaultexpression&gt;\n  &lt;/verb&gt;\n&lt;/asl&gt;\n</code></pre>\n<p>The difference I think is:</p>\n<ol>\n<li>I have it set as a closed container.</li>\n<li>put lift and shut as different verbs under the music box object.  Do you have 'lift lid' as a verb or just 'lift'?</li>\n<li>Do you have an 'open object' script under the verb lift?</li>\n</ol>\n<p>Also, not sure if you did this or not, but if you put the scripts to play and stop the sound in ONLY the upon open and upon closing area under container tab, you only need to do this one time as long as you have your open/close object scripts under your verbs lift and shut.</p>\n\n",
+      "PostDate": "2016-12-19T02:43:19.442684Z",
+      "LastEditDate": "2016-12-19T02:50:06.7275535Z"
+    },
+    {
+      "PostId": "87b09d73-7eea-4241-a48e-34d256e24144",
+      "UserId": 107651,
+      "Username": "OurJud",
+      "AvatarUrl": "http://i.imgur.com/wfM9qy6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Yes, I have 'lift lid' as the verb.\r\n\r\nI'm not sure about 3.\r\n\r\nBut just looking at all that for such a simple action makes me wonder why I don't just use custom commands for everything. All I need to do is create the object, fill out the 'look/x' description and leave everything else alone. Then all I need is two custom command patterns in the room; one that handles the opening and another for the closing.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Yes, I have 'lift lid' as the verb.</p>\n<p>I'm not sure about 3.</p>\n<p>But just looking at all that for such a simple action makes me wonder why I don't just use custom commands for everything. All I need to do is create the object, fill out the 'look/x' description and leave everything else alone. Then all I need is two custom command patterns in the room; one that handles the opening and another for the closing.</p>\n\n",
+      "PostDate": "2016-12-19T02:56:02.2566871Z",
+      "LastEditDate": "2016-12-19T03:12:55.7765294Z"
+    },
+    {
+      "PostId": "255c1e90-fa2d-4638-9aaa-9078ec3a3782",
+      "UserId": 56551,
+      "Username": "XanMag",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4b45a3afd18077f76f6569225c422bdb?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Can you take the music box?  If so, it will be a mess to put the custom command as universal.  What I did is very simple, it just looks a lot in code.\r\n\r\n1.  Create music box.  \r\n2.  Choose limited container.  Set limit to zero.  Type proper full container message.\r\n3.  In the when open box, play sound.\r\n4.  In the upon closing box, stop sound.\r\n5.  Add 'lift' verb to box.  Add 'open object music box' script.\r\n6.  Add 'shut' verb to box.  Add 'close object music box' script.\r\n7.  In the description box, add an 'if object music box is open' print message.  Else print message script.\r\n\r\nEDIT:  And why would you have 'lift lid' as the verb?  If you have lid added as another name for the music box, just 'lift' will do.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Can you take the music box?  If so, it will be a mess to put the custom command as universal.  What I did is very simple, it just looks a lot in code.</p>\n<ol>\n<li>Create music box.</li>\n<li>Choose limited container.  Set limit to zero.  Type proper full container message.</li>\n<li>In the when open box, play sound.</li>\n<li>In the upon closing box, stop sound.</li>\n<li>Add 'lift' verb to box.  Add 'open object music box' script.</li>\n<li>Add 'shut' verb to box.  Add 'close object music box' script.</li>\n<li>In the description box, add an 'if object music box is open' print message.  Else print message script.</li>\n</ol>\n<p>EDIT:  And why would you have 'lift lid' as the verb?  If you have lid added as another name for the music box, just 'lift' will do.</p>\n\n",
+      "PostDate": "2016-12-19T03:04:51.2403948Z",
+      "LastEditDate": "2016-12-19T03:06:07.0965742Z"
+    },
+    {
+      "PostId": "a8b6ba4f-5357-487e-9b2a-dd91e13e6710",
+      "UserId": 107651,
+      "Username": "OurJud",
+      "AvatarUrl": "http://i.imgur.com/wfM9qy6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Yeah, the lift lid was a mistake. In fact they all are. None of the verbs should have the object names afterwards (maybe that was the problem)??\r\n\r\nNo, you can't take the music box.\r\n\r\nAnyway I added the two custom command patterns to the room and it works perfectly. Custom commands are the best thing I was ever told about in Quest. They're the future! They handle practically anything and are a fraction as complex to set up as the purpose built functions.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Yeah, the lift lid was a mistake. In fact they all are. None of the verbs should have the object names afterwards (maybe that was the problem)??</p>\n<p>No, you can't take the music box.</p>\n<p>Anyway I added the two custom command patterns to the room and it works perfectly. Custom commands are the best thing I was ever told about in Quest. They're the future! They handle practically anything and are a fraction as complex to set up as the purpose built functions.</p>\n\n",
+      "PostDate": "2016-12-19T03:14:15.3755004Z",
+      "LastEditDate": "2016-12-19T03:23:45.4974361Z"
+    },
+    {
+      "PostId": "a4d793c4-f4fc-4a3b-9641-1974cda018d9",
+      "UserId": 56551,
+      "Username": "XanMag",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4b45a3afd18077f76f6569225c422bdb?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "So...\r\n1a.  You added a command like:\r\nopen box; open music box; open music; open lid\r\n1b.  You put the scripts to play the music under this command.\r\n1c.  You set a flag to identify the box is open.\r\n\r\n2a.  You added another command like:\r\nclose box; close music box; close music; close lid; shut lid; shut box; shut music box; shut music\r\n2b.  You put the scripts to stop the music under this command.\r\n2c.  You unset the flag from 1c to identify the box is closed.\r\n\r\nYou also added a If flag is set script on the music box under the look at description for the music box.\r\n\r\nRight?\r\n\r\nHow would you deal with someone, like me, who types 'open mus'?\r\nI know there are ways to creatively code for shut/close lid/box/music in one fancy regular command script like:\r\n^(open|lift|play|use) (the |)(music|music box|lid) but that is super confusing to me...\r\n\r\nTo each their own I guess, but your way seems more complicated with a higher risk of error.  lol  =P\r\n\r\nBest of luck!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>So...<br>\n1a.  You added a command like:<br>\nopen box; open music box; open music; open lid<br>\n1b.  You put the scripts to play the music under this command.<br>\n1c.  You set a flag to identify the box is open.</p>\n<p>2a.  You added another command like:<br>\nclose box; close music box; close music; close lid; shut lid; shut box; shut music box; shut music<br>\n2b.  You put the scripts to stop the music under this command.<br>\n2c.  You unset the flag from 1c to identify the box is closed.</p>\n<p>You also added a If flag is set script on the music box under the look at description for the music box.</p>\n<p>Right?</p>\n<p>How would you deal with someone, like me, who types 'open mus'?<br>\nI know there are ways to creatively code for shut/close lid/box/music in one fancy regular command script like:<br>\n^(open|lift|play|use) (the |)(music|music box|lid) but that is super confusing to me...</p>\n<p>To each their own I guess, but your way seems more complicated with a higher risk of error.  lol  =P</p>\n<p>Best of luck!</p>\n\n",
+      "PostDate": "2016-12-19T03:30:10.4764194Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27a2b8d4-3f25-4766-953e-2441cd05a98a",
+      "UserId": 107651,
+      "Username": "OurJud",
+      "AvatarUrl": "http://i.imgur.com/wfM9qy6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "But isn't your method just as lax at catering for the various commands that may be used? They both rely on the player typing the correct command, yes? And wouldn't your method of 'open mus' be handled by 'open music box', or does it have to be the exact wordage with commands?\r\n\r\nAs for setting an if flag on the look description, that's not necessary as I've made sure the look description is relevant whether the music box is open or closed. I haven't even used if flags on the open close because if they close it manually they will get a message saying so, and if they allow it to play out it should just be assumed they close it when it's finished. I know what you're saying - if they open it and then leave the room, it should still be open if they go back in, but I can live with that not being so. The game just assumes they closed it before leaving the room.\r\n\r\nSo, to answer your question, all I did was:\r\n1. Create the music box object and add a look description.\r\n2. Create a command pattern catering for all the possible 'open' commands (run a script to open and play music)\r\n3. Create a command pattern catering for all the possible 'close' commands (run a script to close and stop the music)\r\n\r\nThree simple steps.\r\n\r\nI think the reason yours looks so daunting is because you've pasted the entire test game code, rather than just the UI scripts.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>But isn't your method just as lax at catering for the various commands that may be used? They both rely on the player typing the correct command, yes? And wouldn't your method of 'open mus' be handled by 'open music box', or does it have to be the exact wordage with commands?</p>\n<p>As for setting an if flag on the look description, that's not necessary as I've made sure the look description is relevant whether the music box is open or closed. I haven't even used if flags on the open close because if they close it manually they will get a message saying so, and if they allow it to play out it should just be assumed they close it when it's finished. I know what you're saying - if they open it and then leave the room, it should still be open if they go back in, but I can live with that not being so. The game just assumes they closed it before leaving the room.</p>\n<p>So, to answer your question, all I did was:</p>\n<ol>\n<li>Create the music box object and add a look description.</li>\n<li>Create a command pattern catering for all the possible 'open' commands (run a script to open and play music)</li>\n<li>Create a command pattern catering for all the possible 'close' commands (run a script to close and stop the music)</li>\n</ol>\n<p>Three simple steps.</p>\n<p>I think the reason yours looks so daunting is because you've pasted the entire test game code, rather than just the UI scripts.</p>\n\n",
+      "PostDate": "2016-12-19T18:04:52.5727995Z",
+      "LastEditDate": "2016-12-19T18:07:00.288327Z"
+    },
+    {
+      "PostId": "99108102-dd04-42d8-bb24-032a964a7f76",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The problem in the original post is, I think, that you need to set the `isopen` attribute to true when the box is opened, and false when closed. Quest will do that for you if you have no script, but if you add your own script, you need to do it yourself (this would allow you to only open it if the player has the key, say).",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The problem in the original post is, I think, that you need to set the <code>isopen</code> attribute to true when the box is opened, and false when closed. Quest will do that for you if you have no script, but if you add your own script, you need to do it yourself (this would allow you to only open it if the player has the key, say).</p>\n\n",
+      "PostDate": "2016-12-20T13:16:28.7177722Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "b7c1db61-a483-45bc-aa9e-7b2f08335ed2",
+      "UserId": 56551,
+      "Username": "XanMag",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4b45a3afd18077f76f6569225c422bdb?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "\"Open  mus\" will not be accounted for with commands although there is a way to create a regular expression command to handle that but I don't know it.  \r\nSo, if they look at an open music box vs a closed one, they get the same description?  I'm incredibly obsessed with this minutia so I almost always put an if script in look at description for ANYTHING that can open, play sound, be turned on or off, or just change appearance for whatever reason.  All my NPCs have if scripts in their descriptions. \r\nI've used your method before but I tend to get muddled by commands - either forgetting obvious ones, doubling already typed ones, etc.  I reserve commands for simple, one-direction type processes only.  I guess I just need more practice with them!  :)\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>\"Open  mus\" will not be accounted for with commands although there is a way to create a regular expression command to handle that but I don't know it.<br>\nSo, if they look at an open music box vs a closed one, they get the same description?  I'm incredibly obsessed with this minutia so I almost always put an if script in look at description for ANYTHING that can open, play sound, be turned on or off, or just change appearance for whatever reason.  All my NPCs have if scripts in their descriptions.<br>\nI've used your method before but I tend to get muddled by commands - either forgetting obvious ones, doubling already typed ones, etc.  I reserve commands for simple, one-direction type processes only.  I guess I just need more practice with them!  :)</p>\n\n",
+      "PostDate": "2016-12-20T17:15:52.9300479Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "5ae7cbe7-1ede-4384-9044-286868a6ad22",
+      "UserId": 107651,
+      "Username": "OurJud",
+      "AvatarUrl": "http://i.imgur.com/wfM9qy6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks, TP, I didn't know this.\r\n\r\nXan, I double up my commands all the time - something I always have to watch for - so you're not alone there.\r\n\r\nI know exactly where you're coming from in regards to the current 'state' of objects, but I suspect I'm either getting lazy or just over-coming my obsession to cater for this attention to detail.\r\n\r\nMy 'look' description for the music box just refers to its approx dimensions, decorative painting and a lid which is hinged at the back. This means that the only time this description wouldn't make sense, is if the player typed **> open music box** and then immediately followed it up with **> x music box** - even then it still kind of makes sense anyway. Add to this the fact that when it's open it will be playing music, so do they really need telling it's open?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks, TP, I didn't know this.</p>\n<p>Xan, I double up my commands all the time - something I always have to watch for - so you're not alone there.</p>\n<p>I know exactly where you're coming from in regards to the current 'state' of objects, but I suspect I'm either getting lazy or just over-coming my obsession to cater for this attention to detail.</p>\n<p>My 'look' description for the music box just refers to its approx dimensions, decorative painting and a lid which is hinged at the back. This means that the only time this description wouldn't make sense, is if the player typed <strong>&gt; open music box</strong> and then immediately followed it up with <strong>&gt; x music box</strong> - even then it still kind of makes sense anyway. Add to this the fact that when it's open it will be playing music, so do they really need telling it's open?</p>\n\n",
+      "PostDate": "2016-12-21T13:53:49.1081667Z",
+      "LastEditDate": "2016-12-21T13:58:12.3106508Z"
+    }
+  ]
+}

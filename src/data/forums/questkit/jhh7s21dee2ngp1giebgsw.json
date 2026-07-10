@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "jhh7s21dee2ngp1giebgsw",
+    "ForumId": "15",
+    "Title": "[Solved] Quest 6 - \"can't access property \"onCreation\", hash is undefined\"",
+    "LastUpdated": "2021-01-02T00:26:51.1559353Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "6f8ac1e1-6fb4-4a3b-be04-331109b873e7",
+      "UserId": 522424,
+      "Username": "HBaguette",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/2257a281d8ef730cbd20da909f108ae3?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi,\r\n\r\nI'm getting the error mentioned in the title whenever I try adding a custom template to my game (and adding an object that uses that template). I'm not entirely sure how to fix it, so here's what I've tried so far:\r\n\r\nThe original code:\r\n```\r\nconst CYBERDECK = function(procslots, memslots, driveslots, jackslots) {\r\n\tconst res = $.extend({}, TAKEABLE_DICTIONARY);\r\n\tres.procslots = procslots;\r\n\tres.memslots = memslots;\r\n\tres.driveslots = driveslots;\r\n\tres.jackslots = jackslots;\r\n\t\r\n}\r\n\r\ncreateItem(\"cyberdeck\", TAKEABLE(), CYBERDECK(1,1,1,1), {\r\n\tloc:\"coffee_table\",\r\n\texamine: \"Your cyberdeck. It has slots for one processor, one stick of RAM, an internal drive, and, of course, a neural jack.\",\r\n})\r\n```\r\n\r\nAnd the code after I tried to fix it myself:\r\n```\r\nconst CYBERDECK = function(procslots, memslots, driveslots, jackslots) {\r\n\tconst res = $.extend({}, TAKEABLE_DICTIONARY);\r\n\tres.procslots = procslots;\r\n\tres.memslots = memslots;\r\n\tres.driveslots = driveslots;\r\n\tres.jackslots = jackslots;\r\n\t\r\n\tres.onCreation = function(o) {\r\n\t\tif (!o.isAtLoc(game.player.name)) {\r\n\t\t\tlist.push(\"Take\")\r\n\t\t}\r\n\t\telse {\r\n\t\t\tlist.push(\"Drop\")\r\n\t\t}\r\n\t}\r\n}\r\n\r\ncreateItem(\"cyberdeck\", TAKEABLE(), CYBERDECK(1,1,1,1), {\r\n\tloc:\"coffee_table\",\r\n\texamine: \"Your cyberdeck. It has slots for one processor, one stick of RAM, an internal drive, and, of course, a neural jack.\",\r\n})\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi,</p>\n<p>I'm getting the error mentioned in the title whenever I try adding a custom template to my game (and adding an object that uses that template). I'm not entirely sure how to fix it, so here's what I've tried so far:</p>\n<p>The original code:</p>\n<pre><code>const CYBERDECK = function(procslots, memslots, driveslots, jackslots) {\n\tconst res = $.extend({}, TAKEABLE_DICTIONARY);\n\tres.procslots = procslots;\n\tres.memslots = memslots;\n\tres.driveslots = driveslots;\n\tres.jackslots = jackslots;\n\t\n}\n\ncreateItem(\"cyberdeck\", TAKEABLE(), CYBERDECK(1,1,1,1), {\n\tloc:\"coffee_table\",\n\texamine: \"Your cyberdeck. It has slots for one processor, one stick of RAM, an internal drive, and, of course, a neural jack.\",\n})\n</code></pre>\n<p>And the code after I tried to fix it myself:</p>\n<pre><code>const CYBERDECK = function(procslots, memslots, driveslots, jackslots) {\n\tconst res = $.extend({}, TAKEABLE_DICTIONARY);\n\tres.procslots = procslots;\n\tres.memslots = memslots;\n\tres.driveslots = driveslots;\n\tres.jackslots = jackslots;\n\t\n\tres.onCreation = function(o) {\n\t\tif (!o.isAtLoc(game.player.name)) {\n\t\t\tlist.push(\"Take\")\n\t\t}\n\t\telse {\n\t\t\tlist.push(\"Drop\")\n\t\t}\n\t}\n}\n\ncreateItem(\"cyberdeck\", TAKEABLE(), CYBERDECK(1,1,1,1), {\n\tloc:\"coffee_table\",\n\texamine: \"Your cyberdeck. It has slots for one processor, one stick of RAM, an internal drive, and, of course, a neural jack.\",\n})\n</code></pre>\n\n",
+      "PostDate": "2021-01-02T00:26:51.1559353Z",
+      "LastEditDate": "2021-01-02T04:33:18.6422278Z",
+      "link": null
+    },
+    {
+      "PostId": "cc943990-9796-46c8-8d9b-36b8854f0c49",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello.\r\n\r\nYou're going to be mad . . .\r\n\r\nYou have to ```return res``` at the end of your function.  This works:\r\n\r\n```js\r\nconst CYBERDECK = function(procslots, memslots, driveslots, jackslots) {\r\n\tconst res = $.extend({}, TAKEABLE_DICTIONARY);\r\n\tres.procslots = procslots;\r\n\tres.memslots = memslots;\r\n\tres.driveslots = driveslots;\r\n\tres.jackslots = jackslots;\r\n\treturn res;\r\n}\r\n\r\ncreateItem(\"cyberdeck\", TAKEABLE(), CYBERDECK(1,1,1,1), {\r\n\tloc:\"coffee_table\",\r\n\texamine: \"Your cyberdeck. It has slots for one processor, one stick of RAM, an internal drive, and, of course, a neural jack.\",\r\n})\r\n```\r\n\r\n\r\n---\r\nBUT, since you extended the TAKEABLE dictionary in the template, you can leave the ```TAKEABLE()``` out of ```createItem```, like so:\r\n\r\n```js\r\ncreateItem(\"cyberdeck\", CYBERDECK(1,1,1,1), {\r\n\tloc:\"coffee_table\",\r\n\texamine: \"Your cyberdeck. It has slots for one processor, one stick of RAM, an internal drive, and, of course, a neural jack.\",\r\n})\r\n```\r\n\r\n---\r\n![image](https://user-images.githubusercontent.com/30656341/103450176-12cad000-4c78-11eb-8c57-66f1eee8a95d.png)\r\n\r\n---\r\nREFERENCE\r\n\r\nhttps://github.com/ThePix/QuestJS/wiki/Custom-Templates",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello.</p>\n<p>You're going to be mad . . .</p>\n<p>You have to <code>return res</code> at the end of your function.  This works:</p>\n<pre><code>const CYBERDECK = function(procslots, memslots, driveslots, jackslots) {\n\tconst res = $.extend({}, TAKEABLE_DICTIONARY);\n\tres.procslots = procslots;\n\tres.memslots = memslots;\n\tres.driveslots = driveslots;\n\tres.jackslots = jackslots;\n\treturn res;\n}\n\ncreateItem(\"cyberdeck\", TAKEABLE(), CYBERDECK(1,1,1,1), {\n\tloc:\"coffee_table\",\n\texamine: \"Your cyberdeck. It has slots for one processor, one stick of RAM, an internal drive, and, of course, a neural jack.\",\n})\n</code></pre>\n<hr>\n<p>BUT, since you extended the TAKEABLE dictionary in the template, you can leave the <code>TAKEABLE()</code> out of <code>createItem</code>, like so:</p>\n<pre><code>createItem(\"cyberdeck\", CYBERDECK(1,1,1,1), {\n\tloc:\"coffee_table\",\n\texamine: \"Your cyberdeck. It has slots for one processor, one stick of RAM, an internal drive, and, of course, a neural jack.\",\n})\n</code></pre>\n<hr>\n<p><img src=\"https://user-images.githubusercontent.com/30656341/103450176-12cad000-4c78-11eb-8c57-66f1eee8a95d.png\" alt=\"image\"></p>\n<hr>\n<p>REFERENCE</p>\n<p>https://github.com/ThePix/QuestJS/wiki/Custom-Templates</p>\n\n",
+      "PostDate": "2021-01-02T03:27:38.543642Z",
+      "LastEditDate": "2021-01-02T03:29:44.0585386Z",
+      "link": null
+    },
+    {
+      "PostId": "1df57772-601e-4cff-b05a-6f4a427ef853",
+      "UserId": 522424,
+      "Username": "HBaguette",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/2257a281d8ef730cbd20da909f108ae3?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Ah, right. Thanks!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Ah, right. Thanks!</p>\n\n",
+      "PostDate": "2021-01-02T04:32:50.0527032Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "a01c30cf-7128-446f-b6d5-44e4cbaa973b",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I would have suggested the same; it seemed odd to declare a local variable `res` and then discard it. But haven't seen the docs on this and wasn't sure how Quest 6 handles it.\r\n\r\nNow I look at it, that seems an overly verbose way to create a template. To me, this seems both simpler and more intuitive:\r\n```\r\nconst CYBERDECK = (procslots, memslots, driveslots, jackslots) => $.extend({},\r\n\tTAKEABLE_DICTIONARY, {\r\n\t\tprocslots: procslots,\r\n\t\tmemslots: memslots,\r\n\t\tdriveslots: driveslots,\r\n\t\tjackslots: jackslots\r\n\t}\r\n)\r\n```\r\nor even\r\n```\r\nconst CYBERDECK = (procslots, memslots, driveslots, jackslots) => $.extend({\r\n\tprocslots: procslots,\r\n\tmemslots: memslots,\r\n\tdriveslots: driveslots,\r\n\tjackslots: jackslots\r\n}, TAKEABLE_DICTIONARY)\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I would have suggested the same; it seemed odd to declare a local variable <code>res</code> and then discard it. But haven't seen the docs on this and wasn't sure how Quest 6 handles it.</p>\n<p>Now I look at it, that seems an overly verbose way to create a template. To me, this seems both simpler and more intuitive:</p>\n<pre><code>const CYBERDECK = (procslots, memslots, driveslots, jackslots) =&gt; $.extend({},\n\tTAKEABLE_DICTIONARY, {\n\t\tprocslots: procslots,\n\t\tmemslots: memslots,\n\t\tdriveslots: driveslots,\n\t\tjackslots: jackslots\n\t}\n)\n</code></pre>\n<p>or even</p>\n<pre><code>const CYBERDECK = (procslots, memslots, driveslots, jackslots) =&gt; $.extend({\n\tprocslots: procslots,\n\tmemslots: memslots,\n\tdriveslots: driveslots,\n\tjackslots: jackslots\n}, TAKEABLE_DICTIONARY)\n</code></pre>\n\n",
+      "PostDate": "2021-01-02T11:36:18.3950465Z",
+      "LastEditDate": "2021-01-02T11:39:59.9844567Z",
+      "link": null
+    }
+  ]
+}

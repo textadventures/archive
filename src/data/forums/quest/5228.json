@@ -1,0 +1,131 @@
+{
+  "Topic": {
+    "TopicId": "5228",
+    "ForumId": "10",
+    "Title": "Quest Engine Question",
+    "LastUpdated": "2015-05-18T12:43:40+01:00",
+    "ReplyCount": 9
+  },
+  "Posts": [
+    {
+      "PostId": "36052",
+      "UserId": 0,
+      "Username": "jjaquinta",
+      "UserAvatar": "7726_1431789559.jpg",
+      "UserGravatar": "cfa2339be79adffd784f5cef1a55fe0a",
+      "EditableText": "I have a question about the Quest Engine itself. I.e. the code used to run quests. Not sure this is the right forum, but none other seemed to suit it better.\n\nIs the quest engine alone available in library form? I.e. some sort of API, free of any GUI that can be programmatically called. Say, for example, I wanted to implement a REST service interface to a quest or an old school telnet interface. That's the level of API I am looking for.\nI read in the documentation that it's organized into layers and modules. If someone can point me further at the specific layer or module that will meet this need that would be great.\n\nThanks,\n\nJo",
+      "EditableFormat": "bbcode",
+      "HTML": "I have a question about the Quest Engine itself. I.e. the code used to run quests. Not sure this is the right forum, but none other seemed to suit it better.<br/><br/>Is the quest engine alone available in library form? I.e. some sort of API, free of any GUI that can be programmatically called. Say, for example, I wanted to implement a REST service interface to a quest or an old school telnet interface. That's the level of API I am looking for.<br/>I read in the documentation that it's organized into layers and modules. If someone can point me further at the specific layer or module that will meet this need that would be great.<br/><br/>Thanks,<br/><br/>Jo",
+      "PostDate": "2015-05-16T16:13:42+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36053",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "All the source is available here:\n\n<!-- m --><a class=\"postlink\" href=\"https://github.com/textadventures/quest\">https://github.com/textadventures/quest</a><!-- m -->\n\nThat should give you a good idea of how the source is structured, and it would be the best place to start if you wanted to extract some of the code out into something you could call.",
+      "EditableFormat": "bbcode",
+      "HTML": "All the source is available here:<br/><br/><!-- m --><a class=\"postlink\" href=\"https://github.com/textadventures/quest\">https://github.com/textadventures/quest</a><!-- m --><br/><br/>That should give you a good idea of how the source is structured, and it would be the best place to start if you wanted to extract some of the code out into something you could call.",
+      "PostDate": "2015-05-16T16:58:01+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36055",
+      "UserId": 0,
+      "Username": "jjaquinta",
+      "UserAvatar": "7726_1431789559.jpg",
+      "UserGravatar": "cfa2339be79adffd784f5cef1a55fe0a",
+      "EditableText": "OK. I take it, then, the answer is &quot;no&quot;, there isn't a API to the quest engine.\n\nNext question. I'd also like to instrument the source so that, for any state in game play, you can interrogate it and find out the span of possible answers. I.e. anything someone could say to the engine that it would parse and act upon successfully. Another feature that might overlap with that, is to be able to give it some text input, and for it to say if it would do something. Not to actual do it, just to say if it is something that parses correctly and results in an action.\nIs there someone familiar with the source code who can give a rough estimate on the level of effort necessary to add that to the code?\n\nCheers,\n\nJo",
+      "EditableFormat": "bbcode",
+      "HTML": "OK. I take it, then, the answer is &quot;no&quot;, there isn't a API to the quest engine.<br/><br/>Next question. I'd also like to instrument the source so that, for any state in game play, you can interrogate it and find out the span of possible answers. I.e. anything someone could say to the engine that it would parse and act upon successfully. Another feature that might overlap with that, is to be able to give it some text input, and for it to say if it would do something. Not to actual do it, just to say if it is something that parses correctly and results in an action.<br/>Is there someone familiar with the source code who can give a rough estimate on the level of effort necessary to add that to the code?<br/><br/>Cheers,<br/><br/>Jo",
+      "PostDate": "2015-05-16T17:41:23+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36057",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "I suppose it depends on your definitions of things like &quot;successfully&quot; and &quot;results in an action&quot; (for your two questions, respectively). \n\nFor the first, you can query all the currently available commands and verbs. For each, you could probably generate strings as the inverse of the regular expressions, combined with knowledge of which objects and exits are currently available. For the verbs, you can then look to each object and see if it supports that verb. That would give you a list of all possible syntactically valid commands at that point.\n\nBut then... take a command like &quot;take&quot;. There is additional logic within the &quot;take&quot; command once it executes which looks at things like if the object can be taken, whether it already has been taken, whether it exceeds the weight limits, etc. So if your definition of &quot;act upon successfully&quot; is that the command input actually passes all internal checks and moves forward to change the game state, then you would need to write parallel code for all the commands, so that once you have determined they're syntactically valid (i.e. valid command/object combination), you could then determine whether all the various logic paths through the commands themselves result in something you consider successful.\n\nI would not consider that a trivial task.\n\nIf you definition of &quot;successful&quot; simply means (as you say) that the input &quot;parses correctly and results in an action&quot;, then you could skip the command-logic part. Running the input would parse successfully, match and execute a command, and possibly then have the action of printing &quot;You can't take that.&quot;\n\nThe same problems exist if you're attacking it the other way (e.g. given a string, will it...?). Again, if you just want to know if it parses, you could run it through the Quest parse code and see if you end up with a valid command and resolved objects. But if your criteria is beyond &quot;is it a valid command&quot; and is looking more toward &quot;does this do something (useful) when run&quot;, where &quot;(useful)&quot; is something you're defining, then you'd have to look, again, at all the code paths through the various commands and see if the input would result in what you're looking for.\n\nI hope I'm not being either too vague or seem too picky. The problem is that I *think* I know what you might be doing but I'm not sure (perhaps instead of using the parser, you want to give the player a list of all possible command? Or perhaps allow some sort of auto-completion as they type? Or... I could probably think of other options.) \n\nSo to sum up: if you just want to know if a command parses successfully and would result in a command being called with parameters, then that's straightforward to do. If you want to know, beyond that, whether a command with those parameters &quot;succeeds&quot; according to some criteria, then you'd have to write code that matches the criteria you desire.",
+      "EditableFormat": "bbcode",
+      "HTML": "I suppose it depends on your definitions of things like &quot;successfully&quot; and &quot;results in an action&quot; (for your two questions, respectively). <br/><br/>For the first, you can query all the currently available commands and verbs. For each, you could probably generate strings as the inverse of the regular expressions, combined with knowledge of which objects and exits are currently available. For the verbs, you can then look to each object and see if it supports that verb. That would give you a list of all possible syntactically valid commands at that point.<br/><br/>But then... take a command like &quot;take&quot;. There is additional logic within the &quot;take&quot; command once it executes which looks at things like if the object can be taken, whether it already has been taken, whether it exceeds the weight limits, etc. So if your definition of &quot;act upon successfully&quot; is that the command input actually passes all internal checks and moves forward to change the game state, then you would need to write parallel code for all the commands, so that once you have determined they're syntactically valid (i.e. valid command/object combination), you could then determine whether all the various logic paths through the commands themselves result in something you consider successful.<br/><br/>I would not consider that a trivial task.<br/><br/>If you definition of &quot;successful&quot; simply means (as you say) that the input &quot;parses correctly and results in an action&quot;, then you could skip the command-logic part. Running the input would parse successfully, match and execute a command, and possibly then have the action of printing &quot;You can't take that.&quot;<br/><br/>The same problems exist if you're attacking it the other way (e.g. given a string, will it...?). Again, if you just want to know if it parses, you could run it through the Quest parse code and see if you end up with a valid command and resolved objects. But if your criteria is beyond &quot;is it a valid command&quot; and is looking more toward &quot;does this do something (useful) when run&quot;, where &quot;(useful)&quot; is something you're defining, then you'd have to look, again, at all the code paths through the various commands and see if the input would result in what you're looking for.<br/><br/>I hope I'm not being either too vague or seem too picky. The problem is that I *think* I know what you might be doing but I'm not sure (perhaps instead of using the parser, you want to give the player a list of all possible command? Or perhaps allow some sort of auto-completion as they type? Or... I could probably think of other options.) <br/><br/>So to sum up: if you just want to know if a command parses successfully and would result in a command being called with parameters, then that's straightforward to do. If you want to know, beyond that, whether a command with those parameters &quot;succeeds&quot; according to some criteria, then you'd have to write code that matches the criteria you desire.",
+      "PostDate": "2015-05-16T18:22:01+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36058",
+      "UserId": 0,
+      "Username": "jjaquinta",
+      "UserAvatar": "7726_1431789559.jpg",
+      "UserGravatar": "cfa2339be79adffd784f5cef1a55fe0a",
+      "EditableText": "That's perfect. I'm just looking for a general level of effort. That answers my question.\nI'm trying to gauge the difficulty in font-ending a question with a speech to text service. \nIf you happen to know ahead of time the [i:6se22qan]exact[/i:6se22qan] bounds of the grammar being recognized, then you can substantially improve the STT quality. So if, for a given game-state, I know ALL possible legal commands, I can do that and give a high quality of service.\nAs a fallback, once the STT service parses some audio, it can give multiple results, each with a certain level of confidence. If I can &quot;try them out&quot; against the engine without actually executing the command, then I have the chance to further filter the list by valid and invalid options. Once more, increasing the quality of service.\nSounds like the minimum viable proof of concept would be to separate out the non-GUI core engine code and create a service level API. Then see if I can isolate out the parsing element of that and expose it separately. That, and, learn C#.  <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> I don't suppose someone has done a Java version?\n\nThanks,\n\nJo",
+      "EditableFormat": "bbcode",
+      "HTML": "That's perfect. I'm just looking for a general level of effort. That answers my question.<br/>I'm trying to gauge the difficulty in font-ending a question with a speech to text service. <br/>If you happen to know ahead of time the <span style=\"font-style:italic;\">exact</span> bounds of the grammar being recognized, then you can substantially improve the STT quality. So if, for a given game-state, I know ALL possible legal commands, I can do that and give a high quality of service.<br/>As a fallback, once the STT service parses some audio, it can give multiple results, each with a certain level of confidence. If I can &quot;try them out&quot; against the engine without actually executing the command, then I have the chance to further filter the list by valid and invalid options. Once more, increasing the quality of service.<br/>Sounds like the minimum viable proof of concept would be to separate out the non-GUI core engine code and create a service level API. Then see if I can isolate out the parsing element of that and expose it separately. That, and, learn C#.  <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> I don't suppose someone has done a Java version?<br/><br/>Thanks,<br/><br/>Jo",
+      "PostDate": "2015-05-16T20:20:30+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36059",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Not of Quest, no. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> But there may be another IF engine written in Java.",
+      "EditableFormat": "bbcode",
+      "HTML": "Not of Quest, no. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> But there may be another IF engine written in Java.",
+      "PostDate": "2015-05-16T21:36:40+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36061",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "I do not think there is a mainsteam IF engine in Java, which is kind of odd given its ubiquity. C# is based on Java, which might help.\n[quote:1ekz3kcc]If you happen to know ahead of time the exact bounds of the grammar being recognized, then you can substantially improve the STT quality. So if, for a given game-state, I know ALL possible legal commands, I can do that and give a high quality of service.\nAs a fallback, once the STT service parses some audio, it can give multiple results, each with a certain level of confidence. If I can &quot;try them out&quot; against the engine without actually executing the command, then I have the chance to further filter the list by valid and invalid options. Once more, increasing the quality of service.[/quote:1ekz3kcc]\nI am not sure if I understand you completely, but I think Quest does this to some degree anyway. The game-state includes what items are present and what room you are in, and Quest does filter commands on that basis (especially the former).",
+      "EditableFormat": "bbcode",
+      "HTML": "I do not think there is a mainsteam IF engine in Java, which is kind of odd given its ubiquity. C# is based on Java, which might help.<br/><blockquote><p>If you happen to know ahead of time the exact bounds of the grammar being recognized, then you can substantially improve the STT quality. So if, for a given game-state, I know ALL possible legal commands, I can do that and give a high quality of service.<br/>As a fallback, once the STT service parses some audio, it can give multiple results, each with a certain level of confidence. If I can &quot;try them out&quot; against the engine without actually executing the command, then I have the chance to further filter the list by valid and invalid options. Once more, increasing the quality of service.</p></blockquote><br/>I am not sure if I understand you completely, but I think Quest does this to some degree anyway. The game-state includes what items are present and what room you are in, and Quest does filter commands on that basis (especially the former).",
+      "PostDate": "2015-05-16T22:32:24+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36083",
+      "UserId": 0,
+      "Username": "george",
+      "UserAvatar": null,
+      "UserGravatar": "dc6fe8e6172303d85249a13c9a49c1ff",
+      "EditableText": "[quote=&quot;jaynabonne&quot;:ai0gzjbm]Not of Quest, no. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> But there may be another IF engine written in Java.[/quote:ai0gzjbm]\n\n<!-- m --><a class=\"postlink\" href=\"https://github.com/komoku/aetheria\">https://github.com/komoku/aetheria</a><!-- m --> <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>jaynabonne wrote:</cite>Not of Quest, no. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> But there may be another IF engine written in Java.</blockquote><br/><br/><!-- m --><a class=\"postlink\" href=\"https://github.com/komoku/aetheria\">https://github.com/komoku/aetheria</a><!-- m --> <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2015-05-18T04:16:01+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36084",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "[quote=&quot;jjaquinta&quot;:3dl2csma]I'm trying to gauge the difficulty in font-ending a question with a speech to text service. \nIf you happen to know ahead of time the [i:3dl2csma]exact[/i:3dl2csma] bounds of the grammar being recognized, then you can substantially improve the STT quality. So if, for a given game-state, I know ALL possible legal commands, I can do that and give a high quality of service.\nAs a fallback, once the STT service parses some audio, it can give multiple results, each with a certain level of confidence. If I can &quot;try them out&quot; against the engine without actually executing the command, then I have the chance to further filter the list by valid and invalid options. Once more, increasing the quality of service.[/quote:3dl2csma]\nA good place to start might be the language files:\nC:\\Program Files (x86)\\Quest 5\\Core\\Languages\\English.aslx\n\nThat defines everything the basic Quest engine expects.",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>jjaquinta wrote:</cite>I'm trying to gauge the difficulty in font-ending a question with a speech to text service. <br/>If you happen to know ahead of time the <span style=\"font-style:italic;\">exact</span> bounds of the grammar being recognized, then you can substantially improve the STT quality. So if, for a given game-state, I know ALL possible legal commands, I can do that and give a high quality of service.<br/>As a fallback, once the STT service parses some audio, it can give multiple results, each with a certain level of confidence. If I can &quot;try them out&quot; against the engine without actually executing the command, then I have the chance to further filter the list by valid and invalid options. Once more, increasing the quality of service.</blockquote><br/>A good place to start might be the language files:<br/>C:\\Program Files (x86)\\Quest 5\\Core\\Languages\\English.aslx<br/><br/>That defines everything the basic Quest engine expects.",
+      "PostDate": "2015-05-18T08:22:23+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36085",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Another consideration is that game authors can create their own verbs and commands with their own semantic definition of &quot;success&quot; (e.g. &quot;open door&quot;). It would not be possible to anticipate and account for those kinds of commands, which would probably leave you only able to tell if something is at least parseable (without knowing if it's possible - sorry, couldn't resist).",
+      "EditableFormat": "bbcode",
+      "HTML": "Another consideration is that game authors can create their own verbs and commands with their own semantic definition of &quot;success&quot; (e.g. &quot;open door&quot;). It would not be possible to anticipate and account for those kinds of commands, which would probably leave you only able to tell if something is at least parseable (without knowing if it's possible - sorry, couldn't resist).",
+      "PostDate": "2015-05-18T12:43:40+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

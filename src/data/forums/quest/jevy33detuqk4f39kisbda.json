@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "jevy33detuqk4f39kisbda",
+    "ForumId": "10",
+    "Title": "Question about editing the changedparent script",
+    "LastUpdated": "2021-11-21T15:48:42.4250591Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "e6f7c393-1fd3-402c-9eaf-b2f134b8d85f",
+      "UserId": 326173,
+      "Username": "Curt A. P.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/bc1d5d57408cf4d13f9d9f23c1e3dc56?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I remember from when I had access to the desktop version of Quest there was a built-in changedparent attribute on the player object. Just want to ask what the built-in script is because I want to overwrite it (if it's even possible in the web editor).\r\nIf I remember correctly every object had the same changedparent script, but I am not sure if there is more to the player object. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I remember from when I had access to the desktop version of Quest there was a built-in changedparent attribute on the player object. Just want to ask what the built-in script is because I want to overwrite it (if it's even possible in the web editor).<br>\nIf I remember correctly every object had the same changedparent script, but I am not sure if there is more to the player object.</p>\n\n",
+      "PostDate": "2021-11-21T15:48:42.4250591Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "a962a7b3-660f-4a48-820d-7d19f9a79311",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> If I remember correctly every object had the same changedparent script, but I am not sure if there is more to the player object.\r\n\r\nEvery object has the same changedparent script, which is inherited from the `defaultobject` type. For most objects this is irrelevant; it's only there in case they become the player.\r\n\r\nThe default script is:\r\n```\r\n      if (game.pov = this) {\r\n        if (IsDefined(\"oldvalue\")) {\r\n          OnEnterRoom(oldvalue)\r\n        }\r\n        else {\r\n          OnEnterRoom(null)\r\n        }\r\n        if (game.gridmap) {\r\n          MergePOVCoordinates\r\n        }\r\n      }\r\n      this.hasbeenmoved = true\r\n```\r\n\r\n> I want to overwrite it (if it's even possible in the web editor).\r\n\r\nYou can't directly override attributes in the web editor; the nearest you can get is giving the object an initialisation script something like:\r\n```\r\nthis.changedparent => {\r\n  // whatever you want the script to be goes here\r\n}\r\n```\r\n\r\nNote that if you are including a new changedparent for an object that the player might control, you need to make sure you're not missing out any of the important bits. In particular, `MergePOVCoordinates` must be run whenever the player moves in order for the map to work correctly; and `OnEnterRoom` is responsible for most of the stuff that happens when the player moves to another room, including showing the description, clearing the screen between rooms (if enabled), and checking whether it needs to run any room enter/exit scripts.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>If I remember correctly every object had the same changedparent script, but I am not sure if there is more to the player object.</p>\n</blockquote>\n<p>Every object has the same changedparent script, which is inherited from the <code>defaultobject</code> type. For most objects this is irrelevant; it's only there in case they become the player.</p>\n<p>The default script is:</p>\n<pre><code>      if (game.pov = this) {\n        if (IsDefined(\"oldvalue\")) {\n          OnEnterRoom(oldvalue)\n        }\n        else {\n          OnEnterRoom(null)\n        }\n        if (game.gridmap) {\n          MergePOVCoordinates\n        }\n      }\n      this.hasbeenmoved = true\n</code></pre>\n<blockquote>\n<p>I want to overwrite it (if it's even possible in the web editor).</p>\n</blockquote>\n<p>You can't directly override attributes in the web editor; the nearest you can get is giving the object an initialisation script something like:</p>\n<pre><code>this.changedparent =&gt; {\n  // whatever you want the script to be goes here\n}\n</code></pre>\n<p>Note that if you are including a new changedparent for an object that the player might control, you need to make sure you're not missing out any of the important bits. In particular, <code>MergePOVCoordinates</code> must be run whenever the player moves in order for the map to work correctly; and <code>OnEnterRoom</code> is responsible for most of the stuff that happens when the player moves to another room, including showing the description, clearing the screen between rooms (if enabled), and checking whether it needs to run any room enter/exit scripts.</p>\n\n",
+      "PostDate": "2021-11-22T00:29:47.8826076Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e3780da9-8621-4687-8727-0948156abeac",
+      "UserId": 326173,
+      "Username": "Curt A. P.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/bc1d5d57408cf4d13f9d9f23c1e3dc56?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> Note that if you are including a new changedparent for an object that the player might control, you need to make sure you're not missing out any of the important bits. In particular, MergePOVCoordinates must be run whenever the player moves in order for the map to work correctly; and OnEnterRoom is responsible for most of the stuff that happens when the player moves to another room, including showing the description, clearing the screen between rooms (if enabled), and checking whether it needs to run any room enter/exit scripts.\r\n\r\nThanks, that's quite important to know.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>Note that if you are including a new changedparent for an object that the player might control, you need to make sure you're not missing out any of the important bits. In particular, MergePOVCoordinates must be run whenever the player moves in order for the map to work correctly; and OnEnterRoom is responsible for most of the stuff that happens when the player moves to another room, including showing the description, clearing the screen between rooms (if enabled), and checking whether it needs to run any room enter/exit scripts.</p>\n</blockquote>\n<p>Thanks, that's quite important to know.</p>\n\n",
+      "PostDate": "2021-11-23T12:21:07.1716839Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

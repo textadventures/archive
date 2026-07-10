@@ -1,0 +1,39 @@
+{
+  "Topic": {
+    "TopicId": "eutxffsneko73cl6hzecbg",
+    "ForumId": "10",
+    "Title": "Containers Help",
+    "LastUpdated": "2020-06-29T21:55:50.5996799Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "58a3918b-2ab4-4a8d-92be-a2c40b4f4496",
+      "UserId": 384051,
+      "Username": "Zoe Strope",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4ec96ce85bba8eadad50daf916d037ca?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "There are two things I’d like to learn how to achieve. I’d like to have an object tha can only hold one specific object, and I’d also like to make containers that can only contain certain types of objects.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>There are two things I’d like to learn how to achieve. I’d like to have an object tha can only hold one specific object, and I’d also like to make containers that can only contain certain types of objects.</p>\n\n",
+      "PostDate": "2020-06-29T21:55:50.5996799Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "84b926ee-1f32-4858-b884-5dc5280106cd",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "There's a space on the containers tab for a script that runs when the player attempts to put an object in a container.\r\n\r\nIf you want to only allow a certain object to put in there, you'd make it something like:\r\n<pre><code>if (object = <em style=\"color:blue\">red ball</em>) {\r\n  msg (\"You put it in.\")\r\n  MoveObject (object, destination)\r\n}\r\nelse {\r\n  msg (\"That object won't fit.\")\r\n}</code></pre>\r\n(obviously, changing `red ball` to the name of the object that will go in there,  and changing the messages as appropriate)\r\n\r\nFor multiple objects that can go in, there are two common methods.\r\nFirst, giving the object an attribute. For example, a mailbox might have:\r\n```\r\nif (GetBoolean (object, \"has_stamp\")) {\r\n  msg (\"You post the \" + GetDisplayAlias (object) + \".\")\r\n  MoveObject (object, destination)\r\n}\r\nelse {\r\n  msg (\"You should put a stamp on the \" + GetDisplayAlias (object) + \" before you put it in the mailbox.\")\r\n}\r\n```\r\nYou can use whatever attribute you want. Within the add script, `object` will be the object and `destination` will be the container.\r\n\r\nThe other method would be having a specific list of objects:\r\n```\r\nswitch (object) {\r\n  case (thimble, needle, spool, toy soldier, dice, dice2, dormouse) {\r\n    msg (\"You put it in.\")\r\n    MoveObject (object, destination)\r\n  }\r\n  default {\r\n    msg (\"It won't fit.\")\r\n  }\r\n}\r\n```\r\n\r\nIf some of the objects have their own drop script (for example, a magic ring that disintegrates when you take it off), your script would be a little more complex. For example:\r\n```\r\nif (HasInt (object, \"size\")  and GetInt (object, \"size\") < 15) {\r\n  if (HasScript (object, \"drop\")) {\r\n    do (object, \"drop\", QuickParams (\"object\", object, \"destination\", destination))\r\n  }\r\n  else {\r\n    msg (\"You put the \" + GetDisplayAlias (object) + \" in the box.\")\r\n    MoveObject (object, destination)\r\n  }\r\n}\r\nelse {\r\n  msg (\"It won't fit.\")\r\n}\r\n```\r\n(note that if you are using containers, any drop scripts should always use the variable `destination` to determine where the player is trying to put the object. A lot of people seem to miss that detail, and you end up with the situation where the player does \"put ring in box\" and the ring ends up on the floor)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>There's a space on the containers tab for a script that runs when the player attempts to put an object in a container.</p>\n<p>If you want to only allow a certain object to put in there, you'd make it something like:</p>\n<pre><code>if (object = <em style=\"color: blue\">red ball</em>) {\n  msg (\"You put it in.\")\n  MoveObject (object, destination)\n}\nelse {\n  msg (\"That object won't fit.\")\n}</code></pre>\n<p>(obviously, changing <code>red ball</code> to the name of the object that will go in there,  and changing the messages as appropriate)</p>\n<p>For multiple objects that can go in, there are two common methods.<br>\nFirst, giving the object an attribute. For example, a mailbox might have:</p>\n<pre><code>if (GetBoolean (object, \"has_stamp\")) {\n  msg (\"You post the \" + GetDisplayAlias (object) + \".\")\n  MoveObject (object, destination)\n}\nelse {\n  msg (\"You should put a stamp on the \" + GetDisplayAlias (object) + \" before you put it in the mailbox.\")\n}\n</code></pre>\n<p>You can use whatever attribute you want. Within the add script, <code>object</code> will be the object and <code>destination</code> will be the container.</p>\n<p>The other method would be having a specific list of objects:</p>\n<pre><code>switch (object) {\n  case (thimble, needle, spool, toy soldier, dice, dice2, dormouse) {\n    msg (\"You put it in.\")\n    MoveObject (object, destination)\n  }\n  default {\n    msg (\"It won't fit.\")\n  }\n}\n</code></pre>\n<p>If some of the objects have their own drop script (for example, a magic ring that disintegrates when you take it off), your script would be a little more complex. For example:</p>\n<pre><code>if (HasInt (object, \"size\")  and GetInt (object, \"size\") &lt; 15) {\n  if (HasScript (object, \"drop\")) {\n    do (object, \"drop\", QuickParams (\"object\", object, \"destination\", destination))\n  }\n  else {\n    msg (\"You put the \" + GetDisplayAlias (object) + \" in the box.\")\n    MoveObject (object, destination)\n  }\n}\nelse {\n  msg (\"It won't fit.\")\n}\n</code></pre>\n<p>(note that if you are using containers, any drop scripts should always use the variable <code>destination</code> to determine where the player is trying to put the object. A lot of people seem to miss that detail, and you end up with the situation where the player does \"put ring in box\" and the ring ends up on the floor)</p>\n\n",
+      "PostDate": "2020-06-30T11:10:25.3966911Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

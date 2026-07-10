@@ -1,0 +1,109 @@
+{
+  "Topic": {
+    "TopicId": "uulklyrkhemcs1tyjca2og",
+    "ForumId": "10",
+    "Title": "Using put command for surface containers to trigger scripts",
+    "LastUpdated": "2017-06-21T20:23:26.9606529Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "205aa274-8dce-471a-88fc-44a6e3ead319",
+      "UserId": 227864,
+      "Username": "Talon",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3b6191c9adc337e83fec8e293e3fc584?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "\r\nI have a magical trophy that I intend to have show the history of various items when they are put inside the bowl at the top of it, a player brings an item, puts it in, gets the story, then can remove it and put in another. \r\n\r\nMy aim is to have a script fire(though currently just a list of strings) fire when certain items are put into the trophy, so if you put object A in it will tell you the story behind it, If you put B in you'd get something else..\r\n\r\n\r\nRight now I'm  thinking of doing it with a kind of change script on the trophy that checks what each item is with a If-else sort of script, would have a maximum of one item in it to keep things from conflicting\r\n\r\nWould modifying the Put command to first check for a object attribute be better?\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I have a magical trophy that I intend to have show the history of various items when they are put inside the bowl at the top of it, a player brings an item, puts it in, gets the story, then can remove it and put in another.</p>\n<p>My aim is to have a script fire(though currently just a list of strings) fire when certain items are put into the trophy, so if you put object A in it will tell you the story behind it, If you put B in you'd get something else..</p>\n<p>Right now I'm  thinking of doing it with a kind of change script on the trophy that checks what each item is with a If-else sort of script, would have a maximum of one item in it to keep things from conflicting</p>\n<p>Would modifying the Put command to first check for a object attribute be better?</p>\n\n",
+      "PostDate": "2017-06-21T20:23:26.9606529Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "59dd7a35-5381-424c-ab72-15a0f070227c",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "you can either:\r\n\r\n1. \"physically\" have Objects within your 'TROPHY/BOWL' Object\r\nor\r\n2. \"logically\" have Object references/pointers via within an Objectlist Attribute of your 'TROPHY/BOWL' Object\r\n\r\n-----------\r\n\r\nhttp://docs.textadventures.co.uk/quest/using_lists.html\r\nhttp://docs.textadventures.co.uk/quest/using_dictionaries.html\r\n\r\n-----------\r\n\r\n```\r\n// using the 'game' Game Settings Object as an example, but can add Dictionary Attributes to any Object:\r\n\r\n<game name=\"example_game\">\r\n  <attr name=\"example_scriptdictionary_attribute\" type=\"scriptdictionary\">\r\n    <item key=\"NAME_OF_OBJECT_1\">\r\n      msg (\"NAME_OF_OBJECT_1's history\")\r\n    </item>\r\n    <item key=\"NAME_OF_OBJECT_1\">\r\n      msg (\"NAME_OF_OBJECT_2's history\")\r\n    </item>\r\n  </attr>\r\n</game>\r\n\r\n// --------------------------\r\n\r\n// \"physically\"\r\n\r\n// NAME_OF_OBJECT.parent = TROPHY/BOWL // MoveObject (NAME_OF_OBJECT, TROPHY/BOWL)\r\nif (Contains (TROPHY/BOWL, NAME_OF_OBJECT)) {\r\n  msg (NAME_OF_OBJECT.alias + \" is in the TROPHY/BOWL\")\r\n  msg (\"NAME_OF_OBJECT's history\")\r\n}\r\n\r\n// and/or:\r\n\r\nforeach (object_variable, ScopeVisibleNotHeldForRoom (TROPHY/BOWL)) { // hopefully this works for an Object, otherwise, you'll have to make your 'TROPHY/BOWL' Object be a Room Object... meh... or we'd need to do additional code work...\r\n  // optionally: use 'if' block to check for specific items only: if (object_variable.name = \"NAME_OF_OBJECT_X\", (and have the 'invoke' line below, nested within it), otherwise, all items will be done:\r\n  invoke (ScriptDictionaryItem (game.example_scriptdictionary_attribute, object_variable.name))\r\n}\r\n\r\n// ------------------------------\r\n\r\n// \"logically\":\r\n\r\n// TROPHY/BOWL.example_objectlist_attribute = NewObjectList ()\r\n// list add (TROPHY/BOWL.example_objectlist_attribute, NAME_OF_OBJECT)\r\nif (ListContains (TROPHY/BOWL.example_objectlist_attribute, NAME_OF_OBJECT)) {\r\n  msg (NAME_OF_OBJECT.alias + \" is in the TROPHY/BOWL\")\r\n  msg (\"NAME_OF_OBJECT's history\")\r\n}\r\n\r\n// and/or:\r\n\r\nforeach (object_variable, TROPHY/BOWL.example_objectlist_attribute) {\r\n  // optionally: use 'if' block to check for specific items only: if (object_variable.name = \"NAME_OF_OBJECT_X\", (and have the 'invoke' line below, nested within it), otherwise, all items will be done:\r\n  invoke (ScriptDictionaryItem (game.example_scriptdictionary_attribute, object_variable.name))\r\n}\r\n```\r\n\r\n------------\r\n\r\nwhere/how/when (as Verbs: such as within the over-ridden/copied-modified built-in 'put' Verb, Commands, Functions, etc) you use these scripting, you can decide that, and if you need help, ask/let us know, and we'll help you with whatever you want to do.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>you can either:</p>\n<ol>\n<li>\"physically\" have Objects within your 'TROPHY/BOWL' Object<br>\nor</li>\n<li>\"logically\" have Object references/pointers via within an Objectlist Attribute of your 'TROPHY/BOWL' Object</li>\n</ol>\n<hr>\n<p>http://docs.textadventures.co.uk/quest/using_lists.html<br>\nhttp://docs.textadventures.co.uk/quest/using_dictionaries.html</p>\n<hr>\n<pre><code>// using the 'game' Game Settings Object as an example, but can add Dictionary Attributes to any Object:\n\n&lt;game name=\"example_game\"&gt;\n  &lt;attr name=\"example_scriptdictionary_attribute\" type=\"scriptdictionary\"&gt;\n    &lt;item key=\"NAME_OF_OBJECT_1\"&gt;\n      msg (\"NAME_OF_OBJECT_1's history\")\n    &lt;/item&gt;\n    &lt;item key=\"NAME_OF_OBJECT_1\"&gt;\n      msg (\"NAME_OF_OBJECT_2's history\")\n    &lt;/item&gt;\n  &lt;/attr&gt;\n&lt;/game&gt;\n\n// --------------------------\n\n// \"physically\"\n\n// NAME_OF_OBJECT.parent = TROPHY/BOWL // MoveObject (NAME_OF_OBJECT, TROPHY/BOWL)\nif (Contains (TROPHY/BOWL, NAME_OF_OBJECT)) {\n  msg (NAME_OF_OBJECT.alias + \" is in the TROPHY/BOWL\")\n  msg (\"NAME_OF_OBJECT's history\")\n}\n\n// and/or:\n\nforeach (object_variable, ScopeVisibleNotHeldForRoom (TROPHY/BOWL)) { // hopefully this works for an Object, otherwise, you'll have to make your 'TROPHY/BOWL' Object be a Room Object... meh... or we'd need to do additional code work...\n  // optionally: use 'if' block to check for specific items only: if (object_variable.name = \"NAME_OF_OBJECT_X\", (and have the 'invoke' line below, nested within it), otherwise, all items will be done:\n  invoke (ScriptDictionaryItem (game.example_scriptdictionary_attribute, object_variable.name))\n}\n\n// ------------------------------\n\n// \"logically\":\n\n// TROPHY/BOWL.example_objectlist_attribute = NewObjectList ()\n// list add (TROPHY/BOWL.example_objectlist_attribute, NAME_OF_OBJECT)\nif (ListContains (TROPHY/BOWL.example_objectlist_attribute, NAME_OF_OBJECT)) {\n  msg (NAME_OF_OBJECT.alias + \" is in the TROPHY/BOWL\")\n  msg (\"NAME_OF_OBJECT's history\")\n}\n\n// and/or:\n\nforeach (object_variable, TROPHY/BOWL.example_objectlist_attribute) {\n  // optionally: use 'if' block to check for specific items only: if (object_variable.name = \"NAME_OF_OBJECT_X\", (and have the 'invoke' line below, nested within it), otherwise, all items will be done:\n  invoke (ScriptDictionaryItem (game.example_scriptdictionary_attribute, object_variable.name))\n}\n</code></pre>\n<hr>\n<p>where/how/when (as Verbs: such as within the over-ridden/copied-modified built-in 'put' Verb, Commands, Functions, etc) you use these scripting, you can decide that, and if you need help, ask/let us know, and we'll help you with whatever you want to do.</p>\n\n",
+      "PostDate": "2017-06-22T00:51:16.1245147Z",
+      "LastEditDate": "2017-06-22T01:24:40.5814724Z",
+      "link": null
+    },
+    {
+      "PostId": "243322c9-3b63-4175-80f0-d80bfdb6aa86",
+      "UserId": 56551,
+      "Username": "XanMag",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4b45a3afd18077f76f6569225c422bdb?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "How many items are we talking about here?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>How many items are we talking about here?</p>\n\n",
+      "PostDate": "2017-06-22T04:53:11.0406475Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "8953d717-d161-4243-815c-bb3d1d04ceb7",
+      "UserId": 227864,
+      "Username": "Talon",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3b6191c9adc337e83fec8e293e3fc584?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Definitely feels better to have the items physically within the bowl,  will take a look through the text you've provided, have never dabbled with dictionaries thus far, mostly using tricks for lists and so on . Going to try to work on it in a couple days, minds utterly blitzed from this last week here.\r\n\r\n\r\nThinking in the range of a dozen or so various amulets and such",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Definitely feels better to have the items physically within the bowl,  will take a look through the text you've provided, have never dabbled with dictionaries thus far, mostly using tricks for lists and so on . Going to try to work on it in a couple days, minds utterly blitzed from this last week here.</p>\n<p>Thinking in the range of a dozen or so various amulets and such</p>\n\n",
+      "PostDate": "2017-06-25T04:51:56.1882722Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "43b177ae-2023-461c-8307-f24bcddccf33",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Does the script need to fire whern the object is put in the bowl? Sounds like it is only needs when the player examines the bowl, which would be much easier - you just need to add a script for that, and have that check what is in the bowl.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Does the script need to fire whern the object is put in the bowl? Sounds like it is only needs when the player examines the bowl, which would be much easier - you just need to add a script for that, and have that check what is in the bowl.</p>\n\n",
+      "PostDate": "2017-06-25T07:48:09.5400332Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "d923a57c-85b8-48d8-924c-bd34754ad4ee",
+      "UserId": 227864,
+      "Username": "Talon",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3b6191c9adc337e83fec8e293e3fc584?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thats a pretty good idea, see no problem logical(in game logic not scripting logic) of having the information portrayed when looking at the bowl.  So would probably do a long if/else script that returns whatever the proper string would be. Having just one item being place able would keep things from interfering with eachother right?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thats a pretty good idea, see no problem logical(in game logic not scripting logic) of having the information portrayed when looking at the bowl.  So would probably do a long if/else script that returns whatever the proper string would be. Having just one item being place able would keep things from interfering with eachother right?</p>\n\n",
+      "PostDate": "2017-06-26T02:24:32.7664716Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "07f3569f-e21f-4619-a536-04fd0bd85323",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> So would probably do a long if/else script that returns whatever the proper string would be.\r\n\r\nOr give each item an attribute, \"info\", and put the text there. When the player looks at the bowl, check if there is an item in it, then check if the item has that attribute. If it does, display the attribute.\r\n\r\nAll the data for each item is then kept with the item, and if you add a new one, you just set that up, without messing with the bowl at all.\r\n\r\n> Having just one item being place able would keep things from interfering with eachother right?\r\n\r\nYes.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>So would probably do a long if/else script that returns whatever the proper string would be.</p>\n</blockquote>\n<p>Or give each item an attribute, \"info\", and put the text there. When the player looks at the bowl, check if there is an item in it, then check if the item has that attribute. If it does, display the attribute.</p>\n<p>All the data for each item is then kept with the item, and if you add a new one, you just set that up, without messing with the bowl at all.</p>\n<blockquote>\n<p>Having just one item being place able would keep things from interfering with eachother right?</p>\n</blockquote>\n<p>Yes.</p>\n\n",
+      "PostDate": "2017-06-26T07:10:32.473701Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "nmzotnnthkgcgnc6_ryz5a",
+    "ForumId": "24",
+    "Title": "making checkpoints?",
+    "LastUpdated": "2022-01-16T23:52:12.2964709Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "2cb6431c-2fd8-440e-bd96-bd9eefb9903d",
+      "UserId": 423238,
+      "Username": "HCK Productions",
+      "AvatarUrl": "https://i.imgur.com/2d6PlQUb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "found a way to make a checkpoint however cant seem to revert any of the attributes the player recieved during the time, any way to do this?\r\n\r\nfor example:\r\n\r\n```\r\nstart\r\n[start](checkpoint 1)\r\n\r\n[checkpoint 1]: \r\n@set checkpoint = 1\r\ngain point\r\n\r\n[jump path A]\r\n[jump path B]\r\n\r\n[jump path A]:\r\n\r\ngain point\r\n\r\n[progress](checkpoint 2)\r\n\r\n[checkpoint 2]\r\n\r\n@set checkpoint = 2\r\n\r\n[boss]\r\n\r\n[jump path B]:\r\n\r\ngain more points\r\n\r\n[progress](no checkpoint)\r\n\r\n[no checkpoint]\r\n\r\ngain point\r\n\r\n[boss]\r\n\r\n[boss]:\r\n\r\nfight fight.. you find way to be defeated and now all your points you gathered it reset to to what ever checkpoint you passed...\r\n\r\n{if checkpoint=1:[Load checkpoint](checkpoint 1).}{else: if checkpoint=2:[load checkpoint](checkpoint 2)}\r\n```\r\n\r\nthe example is to allow the player to go one path or the other, the safer path has less points but has a checkpoint while the other path has more points with no checkpoint. the question is, how do you take away the points the player gained if they went the more risky route? it becomes more difficult if there is a lot of other random points before the checkpoint to so if you have paths upon paths , how do you take the points that the player gained after the checkpoint?\r\n\r\nthe alternite way is to code every path with \r\n\r\n```\r\n{if path101 = 1: you gain point}{else: you gain point @inc points}\r\n@set path101 = 1\r\n\r\n```\r\n\r\nthough am sure the 'if' command and '@' code work to well together as i seem to not be able to get it to work as it requires a new line and the if doesn't work if the end is on a new line for some reason (even if it should).\r\n\r\nso is there a way to do checkpoints without having the player get too much of a single point or an item by looping the same path due to the checkpoints. could also put checkpoint before the boss but also want to add earn with risk...",
+      "EditableFormat": "markdown",
+      "HTML": "<p>found a way to make a checkpoint however cant seem to revert any of the attributes the player recieved during the time, any way to do this?</p>\n<p>for example:</p>\n<pre><code>start\n[start](checkpoint 1)\n\n[checkpoint 1]: \n@set checkpoint = 1\ngain point\n\n[jump path A]\n[jump path B]\n\n[jump path A]:\n\ngain point\n\n[progress](checkpoint 2)\n\n[checkpoint 2]\n\n@set checkpoint = 2\n\n[boss]\n\n[jump path B]:\n\ngain more points\n\n[progress](no checkpoint)\n\n[no checkpoint]\n\ngain point\n\n[boss]\n\n[boss]:\n\nfight fight.. you find way to be defeated and now all your points you gathered it reset to to what ever checkpoint you passed...\n\n{if checkpoint=1:[Load checkpoint](checkpoint 1).}{else: if checkpoint=2:[load checkpoint](checkpoint 2)}\n</code></pre>\n<p>the example is to allow the player to go one path or the other, the safer path has less points but has a checkpoint while the other path has more points with no checkpoint. the question is, how do you take away the points the player gained if they went the more risky route? it becomes more difficult if there is a lot of other random points before the checkpoint to so if you have paths upon paths , how do you take the points that the player gained after the checkpoint?</p>\n<p>the alternite way is to code every path with</p>\n<pre><code>{if path101 = 1: you gain point}{else: you gain point @inc points}\n@set path101 = 1\n\n</code></pre>\n<p>though am sure the 'if' command and '@' code work to well together as i seem to not be able to get it to work as it requires a new line and the if doesn't work if the end is on a new line for some reason (even if it should).</p>\n<p>so is there a way to do checkpoints without having the player get too much of a single point or an item by looping the same path due to the checkpoints. could also put checkpoint before the boss but also want to add earn with risk...</p>\n\n",
+      "PostDate": "2022-01-16T23:52:12.2964709Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "4def889d-989b-478d-bb80-30416a0a81b0",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You can't use `@inc`  in the text section.\r\n\r\nA Squiffy section is divided up into 3 parts, which are treated in different ways and must come in the right order.\r\n\r\n* First is the script part. Every line starts with at least 4 spaces, and the instructions are javascript.\r\n* Then comes the assignment section, where every line starts with `@` and you can use directives like `@inc` and `@set`.\r\n* Then finally there is the text part, where the only interactive commands are the `{`text processor directives`}`. If you want to change a variable here (for example within an `{if`), you need to use the text processor version. For example, instead of `@inc points`, you write `{@points+1}`.\r\n\r\nYour checkpoints seem kind of weird. However, I think it might be possible to reset the points using interpolation. You could do:\r\n```\r\n@set checkpoint = 1\r\n@set points_at_checkpoint = @points\r\n```\r\nand when the player dies, you do:\r\n```\r\n@set points = @points_at_checkpoint\r\n```\r\nbefore the \"Load checkpoint\" link.\r\n\r\n(off the top of my head; I haven't done much with Squiffy functions because the Javascript ones are more flexible)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You can't use <code>@inc</code>  in the text section.</p>\n<p>A Squiffy section is divided up into 3 parts, which are treated in different ways and must come in the right order.</p>\n<ul>\n<li>First is the script part. Every line starts with at least 4 spaces, and the instructions are javascript.</li>\n<li>Then comes the assignment section, where every line starts with <code>@</code> and you can use directives like <code>@inc</code> and <code>@set</code>.</li>\n<li>Then finally there is the text part, where the only interactive commands are the <code>{</code>text processor directives<code>}</code>. If you want to change a variable here (for example within an <code>{if</code>), you need to use the text processor version. For example, instead of <code>@inc points</code>, you write <code>{@points+1}</code>.</li>\n</ul>\n<p>Your checkpoints seem kind of weird. However, I think it might be possible to reset the points using interpolation. You could do:</p>\n<pre><code>@set checkpoint = 1\n@set points_at_checkpoint = @points\n</code></pre>\n<p>and when the player dies, you do:</p>\n<pre><code>@set points = @points_at_checkpoint\n</code></pre>\n<p>before the \"Load checkpoint\" link.</p>\n<p>(off the top of my head; I haven't done much with Squiffy functions because the Javascript ones are more flexible)</p>\n\n",
+      "PostDate": "2022-01-17T01:35:23.6816225Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "bd725e36-843e-422f-84c8-06b68852b1df",
+      "UserId": 423238,
+      "Username": "HCK Productions",
+      "AvatarUrl": "https://i.imgur.com/2d6PlQUb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks, will give it a try, dont use it often but seems to be the easiest one to use when your time is limited to learn...\r\n\r\nDo you know if  the ```{if``` and ``` {@``` work for things like time and something like game experience?\r\n\r\nThanks again for the help, sorry for late response too, was pretty busy with things but this project lol",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks, will give it a try, dont use it often but seems to be the easiest one to use when your time is limited to learn...</p>\n<p>Do you know if  the <code>{if</code> and <code>{@</code> work for things like time and something like game experience?</p>\n<p>Thanks again for the help, sorry for late response too, was pretty busy with things but this project lol</p>\n\n",
+      "PostDate": "2022-01-27T20:14:48.8398642Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "51032085-f511-4b44-8a3b-6e42668d19ea",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> Do you know if the `{if` and `{@` work for things like time and something like game experience?\r\n\r\nSquiffy doesn't care what attributes mean; it treats them as numbers and text. You can use them for anything you want. Time and experience can easily be represented as numbers.\r\n\r\nIf you want to use real world time, you can fetch it using javascript and put it into an attribute. You could use any of:\r\n```\r\n    squiffy.set(\"year\", Date.now().getFullYear());\r\n    squiffy.set(\"month\", Date.now().getMonth() + 1);  // +1 because getMonth gives you a number from 0 to 11\r\n    squiffy.set(\"monthname\", \"Jan/Feb/Mar/Apr/May/Jun/Jul/Aug/Sep/Oct/Nov\".split(\"/\")[Date.now().getMonth()]);\r\n    squiffy.set(\"dayofmonth\", Date.now().getDate());\r\n    squiffy.set(\"dayofweek\", Date.now().getDay()); // 0 = Sunday, 1 = Monday, ... 6 = Saturday\r\n    squiffy.set(\"dayname\", \"Sun/Mon/Tue/Wed/Thur/Fri\".split(\"/\")[Date.now().getDay()]);\r\n    squiffy.set(\"militaryhours\", Date.now().getHours()); // hour (0 to 23)\r\n    squiffy.set(\"normalhours\", (Date.now().getHours()-1)%12 + 1); // hour (1 to 12)\r\n    squiffy.set(\"ampm\", (Date.now().getHours() >= 12) ? \"PM\" : \"AM\");\r\n    squiffy.set(\"minutes\", Date.now().getMinutes());\r\n    squiffy.set(\"seconds\", Date.now().getSeconds());\r\n    squiffy.set(\"milliseconds\", Date.now().getMilliseconds());\r\n```\r\nWhich will set the relevant attributes to different parts of the current time. Just use the ones that are useful to you :)",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>Do you know if the <code>{if</code> and <code>{@</code> work for things like time and something like game experience?</p>\n</blockquote>\n<p>Squiffy doesn't care what attributes mean; it treats them as numbers and text. You can use them for anything you want. Time and experience can easily be represented as numbers.</p>\n<p>If you want to use real world time, you can fetch it using javascript and put it into an attribute. You could use any of:</p>\n<pre><code>    squiffy.set(\"year\", Date.now().getFullYear());\n    squiffy.set(\"month\", Date.now().getMonth() + 1);  // +1 because getMonth gives you a number from 0 to 11\n    squiffy.set(\"monthname\", \"Jan/Feb/Mar/Apr/May/Jun/Jul/Aug/Sep/Oct/Nov\".split(\"/\")[Date.now().getMonth()]);\n    squiffy.set(\"dayofmonth\", Date.now().getDate());\n    squiffy.set(\"dayofweek\", Date.now().getDay()); // 0 = Sunday, 1 = Monday, ... 6 = Saturday\n    squiffy.set(\"dayname\", \"Sun/Mon/Tue/Wed/Thur/Fri\".split(\"/\")[Date.now().getDay()]);\n    squiffy.set(\"militaryhours\", Date.now().getHours()); // hour (0 to 23)\n    squiffy.set(\"normalhours\", (Date.now().getHours()-1)%12 + 1); // hour (1 to 12)\n    squiffy.set(\"ampm\", (Date.now().getHours() &gt;= 12) ? \"PM\" : \"AM\");\n    squiffy.set(\"minutes\", Date.now().getMinutes());\n    squiffy.set(\"seconds\", Date.now().getSeconds());\n    squiffy.set(\"milliseconds\", Date.now().getMilliseconds());\n</code></pre>\n<p>Which will set the relevant attributes to different parts of the current time. Just use the ones that are useful to you :)</p>\n\n",
+      "PostDate": "2022-01-28T15:18:20.9948646Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "a43e6602-3a1d-4bf5-840f-4f8aaab0c162",
+      "UserId": 423238,
+      "Username": "HCK Productions",
+      "AvatarUrl": "https://i.imgur.com/2d6PlQUb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "thanks though, seem the software dont really like it as all the code just shows as a text form, might be missing something but its sitting in the test section of the game so its not going to be used for now, need to find a way to advance time anyways so it will just sit there till something gets put in place lol\r\n\r\nthanks again XD\r\n\r\nEdit the ``` {@points+1}``` doesn't work, even tried ```{@points + 1}``` seems to be invalid and doesn't count anything up as had a path like this...\r\n\r\n```\r\n@set points  =  0\r\n\r\ncurrent points: {points}\r\n\r\n[plus 1] [plus 3] [plus 5] [[total]] \r\n\r\n\r\n[plus 1]:\r\n\r\nplus 1 points {@points+1}\r\n\r\n[plus 3]:\r\n\r\nplus 3 points {@points+3}\r\n\r\n[plus 5]:\r\n\r\nplus 5 points {@points+5}\r\n\r\n[[total]]: \r\n\r\ntotal points gain: {points}\r\n\r\n```\r\nthe only thing that shows up is 'null' or if set the ```@set points = 1``` then all it shows is '1' so it seems am missing something.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>thanks though, seem the software dont really like it as all the code just shows as a text form, might be missing something but its sitting in the test section of the game so its not going to be used for now, need to find a way to advance time anyways so it will just sit there till something gets put in place lol</p>\n<p>thanks again XD</p>\n<p>Edit the <code>{@points+1}</code> doesn't work, even tried <code>{@points + 1}</code> seems to be invalid and doesn't count anything up as had a path like this...</p>\n<pre><code>@set points  =  0\n\ncurrent points: {points}\n\n[plus 1] [plus 3] [plus 5] [[total]] \n\n\n[plus 1]:\n\nplus 1 points {@points+1}\n\n[plus 3]:\n\nplus 3 points {@points+3}\n\n[plus 5]:\n\nplus 5 points {@points+5}\n\n[[total]]: \n\ntotal points gain: {points}\n\n</code></pre>\n<p>the only thing that shows up is 'null' or if set the <code>@set points = 1</code> then all it shows is '1' so it seems am missing something.</p>\n\n",
+      "PostDate": "2022-01-28T21:54:34.9119092Z",
+      "LastEditDate": "2022-01-28T22:34:39.3957879Z",
+      "link": null
+    },
+    {
+      "PostId": "9ec1938d-9541-4062-a1a0-a3ef4d5dd653",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> Edit the `{@points+1}` doesn't work, even tried `{@points + 1}` seems to be invalid and doesn't count anything up as had a path like this...\r\n\r\nSorry, my bad. Think it should be `{@points+=1}`. ",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>Edit the <code>{@points+1}</code> doesn't work, even tried <code>{@points + 1}</code> seems to be invalid and doesn't count anything up as had a path like this...</p>\n</blockquote>\n<p>Sorry, my bad. Think it should be <code>{@points+=1}</code>.</p>\n\n",
+      "PostDate": "2022-01-29T00:28:31.8293285Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

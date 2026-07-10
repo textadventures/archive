@@ -1,0 +1,123 @@
+{
+  "Topic": {
+    "TopicId": "k0lwo92goucpyy89xjh6yg",
+    "ForumId": "10",
+    "Title": "What is Wrong with this Script?",
+    "LastUpdated": "2020-02-17T04:03:36.6431447Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "7acb01c1-2557-420d-99e3-be272e6848cf",
+      "UserId": 260969,
+      "Username": "Enpherdaen",
+      "AvatarUrl": "http://i.imgur.com/OSFSM1ab.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I made this script with this purpose of adding a stick clone with a random value (for quantity of sticks) into a room when the player enters it, but when I enter a room with a stick clone in it, I get an error message.\r\n\r\nHere is my script:\r\n\r\n```\r\nif (RandomChance(90)) {\r\n  game.sticks_clone = CloneObject (Sticks)\r\n  game.sticks_clone.parent = player.parent\r\n  while (RandomChance(50)) {\r\n    game.sticks_clone.quantity = game.sticks_clone.quantity + 1\r\n  }\r\n  msg (\"There are \" + game.sticks_clone.quantity + \" sticks here\")\r\n```\r\n\r\nHere is the error:\r\n```\r\nError running script: Error compiling expression 'game.sticks_clone.quantity + 1': ArithmeticElement: Operation 'Add' is not defined for types 'Object' and 'Int32'\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I made this script with this purpose of adding a stick clone with a random value (for quantity of sticks) into a room when the player enters it, but when I enter a room with a stick clone in it, I get an error message.</p>\n<p>Here is my script:</p>\n<pre><code>if (RandomChance(90)) {\n  game.sticks_clone = CloneObject (Sticks)\n  game.sticks_clone.parent = player.parent\n  while (RandomChance(50)) {\n    game.sticks_clone.quantity = game.sticks_clone.quantity + 1\n  }\n  msg (\"There are \" + game.sticks_clone.quantity + \" sticks here\")\n</code></pre>\n<p>Here is the error:</p>\n<pre><code>Error running script: Error compiling expression 'game.sticks_clone.quantity + 1': ArithmeticElement: Operation 'Add' is not defined for types 'Object' and 'Int32'\n</code></pre>\n\n",
+      "PostDate": "2020-02-17T04:03:36.6431447Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e97bd9ab-bc8c-453e-a511-efb5b636205f",
+      "UserId": 207026,
+      "Username": "Pykrete",
+      "AvatarUrl": "https://i.imgur.com/n9Ygszeb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm not familiar with 'while'? It might work, but I tend to just use 'else if' instead. so, else if (RandomChance(50)).\r\n\r\nYou need to add in a } between these two lines, like so;\r\n\r\n  game.sticks_clone.parent = player.parent\r\n}\r\n  while (RandomChance(50)) {\r\n\r\n, as currently your first if statement isn't being closed before it tries to begin a second one.\r\n\r\nPast that, is sticks_clone.quantity a numerical variable? Sometimes Quest can throw errors if you're trying to add numbers to, say, a word string. Go into the Sticks object, create an attribute called quantity, and set it to Integer. when you clone an object, you clone it's attributes, too.\r\n\r\nTry all this and see if it works.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm not familiar with 'while'? It might work, but I tend to just use 'else if' instead. so, else if (RandomChance(50)).</p>\n<p>You need to add in a } between these two lines, like so;</p>\n<p>game.sticks_clone.parent = player.parent<br>\n}<br>\nwhile (RandomChance(50)) {</p>\n<p>, as currently your first if statement isn't being closed before it tries to begin a second one.</p>\n<p>Past that, is sticks_clone.quantity a numerical variable? Sometimes Quest can throw errors if you're trying to add numbers to, say, a word string. Go into the Sticks object, create an attribute called quantity, and set it to Integer. when you clone an object, you clone it's attributes, too.</p>\n<p>Try all this and see if it works.</p>\n\n",
+      "PostDate": "2020-02-17T09:06:44.6030505Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "8dc0045b-6e8f-4972-a00f-27cf60a08a1d",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> You need to add in a } between these two lines,\r\n\r\nNo he doesn't. The indentation shows that there is another `}` at the end; presumably cut off when copying and pasting to the forum.\r\n\r\n> Past that, is sticks_clone.quantity a numerical variable?\r\n\r\nThe error message says it is an object; probably `null` (undefined).\r\n\r\nThe line <code style=\"color:blue\">game.sticks_clone.quantity = game.sticks_clone.quantity + 1</code> adds 1 to a numeric attribute. But you haven't set the initial value, so it's attempting to add 1 to an unknown value.\r\n\r\nYou probably want:\r\n<pre><code>if (RandomChance(90)) {\r\n  game.sticks_clone = CloneObject (Sticks)\r\n  game.sticks_clone.parent = player.parent\r\n  <b style=\"color:darkgreen\">game.sticks_clone.quantity = 1</b>\r\n  while (RandomChance(50)) {\r\n    game.sticks_clone.quantity = game.sticks_clone.quantity + 1\r\n  }\r\n  msg (\"There are \" + game.sticks_clone.quantity + \" sticks here\")\r\n}</code></pre>\r\n\r\n(Though I am curious why you use an attribute `game.sticks_clone` rather than a local variable <code style=\"color:green\">sticks_clone</code>. Is there somewhere later on that you want to refer to the last sticks_clone created?)",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>You need to add in a } between these two lines,</p>\n</blockquote>\n<p>No he doesn't. The indentation shows that there is another <code>}</code> at the end; presumably cut off when copying and pasting to the forum.</p>\n<blockquote>\n<p>Past that, is sticks_clone.quantity a numerical variable?</p>\n</blockquote>\n<p>The error message says it is an object; probably <code>null</code> (undefined).</p>\n<p>The line <code style=\"color: blue\">game.sticks_clone.quantity = game.sticks_clone.quantity + 1</code> adds 1 to a numeric attribute. But you haven't set the initial value, so it's attempting to add 1 to an unknown value.</p>\n<p>You probably want:</p>\n<pre><code>if (RandomChance(90)) {\n  game.sticks_clone = CloneObject (Sticks)\n  game.sticks_clone.parent = player.parent\n  <b style=\"color: darkgreen\">game.sticks_clone.quantity = 1</b>\n  while (RandomChance(50)) {\n    game.sticks_clone.quantity = game.sticks_clone.quantity + 1\n  }\n  msg (\"There are \" + game.sticks_clone.quantity + \" sticks here\")\n}</code></pre>\n<p>(Though I am curious why you use an attribute <code>game.sticks_clone</code> rather than a local variable <code style=\"color: green\">sticks_clone</code>. Is there somewhere later on that you want to refer to the last sticks_clone created?)</p>\n\n",
+      "PostDate": "2020-02-17T09:58:02.9153971Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "39f0e385-cf24-476d-9f37-239864ae6737",
+      "UserId": 207026,
+      "Username": "Pykrete",
+      "AvatarUrl": "https://i.imgur.com/n9Ygszeb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "-- Bah, just ran back upstairs after realizing I was completely wrong, my version would've made two separate checks while the OP wanted the 'while' to potentially activate if the first random chance was met. Disregard me, mrangel's got you.\r\n\r\nI was curious about the use of game.(object) too, but I've never used it myself, so I didn't want to fiddle with it.\r\n\r\ngame.sticks_clone.quantity = 1 will, if no attribute of that name already exists, create it on the fly instead. Either creating the attribute in the Sticks object beforehand or doing it this way should sort out the error message, as now the system has a number to add to a number, instead of a number to add to an undefined void.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>-- Bah, just ran back upstairs after realizing I was completely wrong, my version would've made two separate checks while the OP wanted the 'while' to potentially activate if the first random chance was met. Disregard me, mrangel's got you.</p>\n<p>I was curious about the use of game.(object) too, but I've never used it myself, so I didn't want to fiddle with it.</p>\n<p>game.sticks_clone.quantity = 1 will, if no attribute of that name already exists, create it on the fly instead. Either creating the attribute in the Sticks object beforehand or doing it this way should sort out the error message, as now the system has a number to add to a number, instead of a number to add to an undefined void.</p>\n\n",
+      "PostDate": "2020-02-17T10:31:15.8549695Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "7a7325bc-7f06-4ae8-9f3d-52747115e244",
+      "UserId": 260969,
+      "Username": "Enpherdaen",
+      "AvatarUrl": "http://i.imgur.com/OSFSM1ab.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Mrangel actually yes, I need to refer to that specific stick clone so that it will be unhidden and given a random value again after x amount of turns so that it appears the sticks have eventually respawned there.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Mrangel actually yes, I need to refer to that specific stick clone so that it will be unhidden and given a random value again after x amount of turns so that it appears the sticks have eventually respawned there.</p>\n\n",
+      "PostDate": "2020-02-17T18:58:15.7496838Z",
+      "LastEditDate": "2020-02-17T19:38:32.7111185Z",
+      "link": null
+    },
+    {
+      "PostId": "d4a31e6a-bedc-47ad-b5e6-c9deb5593ecb",
+      "UserId": 260969,
+      "Username": "Enpherdaen",
+      "AvatarUrl": "http://i.imgur.com/OSFSM1ab.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Alright, I fixed the error message, but now for some reason I get two seperate stick clones with two different values, as such:\r\n```\r\nThere are 6 sticks here\r\nThere are 17 sticks here\r\n```\r\n\r\nFurthermore, the stone values won't show up at all, even though the stones function has the exact same script as the stick one. It will only display \"stones\" in the list of objects visible to the player, as such:\r\n```\r\nYou can see: Sticks, Stones, a Boar, Trees and a Thorn Bush.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Alright, I fixed the error message, but now for some reason I get two seperate stick clones with two different values, as such:</p>\n<pre><code>There are 6 sticks here\nThere are 17 sticks here\n</code></pre>\n<p>Furthermore, the stone values won't show up at all, even though the stones function has the exact same script as the stick one. It will only display \"stones\" in the list of objects visible to the player, as such:</p>\n<pre><code>You can see: Sticks, Stones, a Boar, Trees and a Thorn Bush.\n</code></pre>\n\n",
+      "PostDate": "2020-02-17T19:37:05.8089521Z",
+      "LastEditDate": "2020-02-17T19:39:41.6912671Z",
+      "link": null
+    },
+    {
+      "PostId": "6d3a01be-6d0a-4950-9f74-f2a9a1da41fe",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I notice that in your \"You can see:\" line, it doesn't start with \"Sticks, Sticks, Stones\" … is this the case even in rooms where it displays the sticks twice?\r\n\r\nIf so, my first guess would be that your stones function with the exact same script might look like:\r\n<pre><code>if (RandomChance(90)) {\r\n  game.<b style=\"color:green\">stones</b>_clone = CloneObject (<b style=\"color:green\">Stones</b>)\r\n  game.<b style=\"color:green\">stones</b>_clone.parent = player.parent\r\n  game.<b style=\"color:green\">stones</b>_clone.quantity = 1\r\n  while (RandomChance(50)) {\r\n    game.<b style=\"color:green\">stones</b>_clone.quantity = game.<b style=\"color:green\">stones</b>_clone.quantity + 1\r\n  }\r\n  msg (\"There are \" + game.<b style=\"color:green\">stones</b>_clone.quantity + \" <b style=\"color:red\">sticks</b> here\")\r\n}</code></pre>\r\n\r\nAs this simple typo would cause both of the issues you describe.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I notice that in your \"You can see:\" line, it doesn't start with \"Sticks, Sticks, Stones\" … is this the case even in rooms where it displays the sticks twice?</p>\n<p>If so, my first guess would be that your stones function with the exact same script might look like:</p>\n<pre><code>if (RandomChance(90)) {\n  game.<b style=\"color: green\">stones</b>_clone = CloneObject (<b style=\"color: green\">Stones</b>)\n  game.<b style=\"color: green\">stones</b>_clone.parent = player.parent\n  game.<b style=\"color: green\">stones</b>_clone.quantity = 1\n  while (RandomChance(50)) {\n    game.<b style=\"color: green\">stones</b>_clone.quantity = game.<b style=\"color: green\">stones</b>_clone.quantity + 1\n  }\n  msg (\"There are \" + game.<b style=\"color: green\">stones</b>_clone.quantity + \" <b style=\"color: red\">sticks</b> here\")\n}</code></pre>\n<p>As this simple typo would cause both of the issues you describe.</p>\n\n",
+      "PostDate": "2020-02-17T23:03:41.8942963Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "5e00ec08-4be5-4f18-8859-2734bde0fe74",
+      "UserId": 260969,
+      "Username": "Enpherdaen",
+      "AvatarUrl": "http://i.imgur.com/OSFSM1ab.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Wow, you were right. That exact typo was there, and it fixed both issues.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Wow, you were right. That exact typo was there, and it fixed both issues.</p>\n\n",
+      "PostDate": "2020-02-18T03:51:42.5228373Z",
+      "LastEditDate": "2020-02-18T03:55:19.2384739Z",
+      "link": null
+    }
+  ]
+}

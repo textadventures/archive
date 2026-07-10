@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "iggripmbjk_xuiyaxa1wmq",
+    "ForumId": "10",
+    "Title": "Click-based events in a gamebook",
+    "LastUpdated": "2024-02-27T20:56:48.6475177Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "5fc20c3d-ec17-4255-96d9-e4d0d5577ad4",
+      "UserId": 321033,
+      "Username": "Kaitou Joker Scans",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm using the desktop version of Quest and am trying to implement two different types of click-based events.\r\n\r\n**1)** When certain coordinates of an image are clicked, the player is sent to a different page. (In other words, the player has to locate a hidden item in the image in order to move on.)\r\n<a href=\"https://textadventures.co.uk/forum/quest/topic/5859/picture-zoom\">This thread mentioning html imagemaps</a> is pretty close to what I'm trying to do. However, I'm having all kinds of errors trying to port this over. Is a script like this even possible to implement in a gamebook?\r\n\r\n**2)** When certain text is clicked 10 times, the player is sent to a different page.\r\n\r\nCurrent page script: \r\n    ```SetCounter (\"chargeup\", 0)```\r\n    ```if (GetInt(game, \"chargeup\") >= 10) {MovePlayer (Page24)}```\r\n\r\ndescription: \r\n   ``` <a class=\"cmdlink\"  onclick=\"ASLEvent('lasercharge','null')\">Charge up!</a><br>```\r\n\r\nfunctions:\r\n   ``` <function name=\"lasercharge\" type=\"int\">```\r\n    ```chargeup = chargeup + 1```\r\n    ```</function>```\r\n\r\nThe cmdlink displays, but the player doesn't move after repeated clicks, so assumedly there's something wrong with the counter (unsurprising, since I'm a code amateur). I'm starting to feel my brain numb from searching nonstop through the forums for hours, so some expert advice would be greatly appreciated.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm using the desktop version of Quest and am trying to implement two different types of click-based events.</p>\n<p><strong>1)</strong> When certain coordinates of an image are clicked, the player is sent to a different page. (In other words, the player has to locate a hidden item in the image in order to move on.)<br>\n<a href=\"https://textadventures.co.uk/forum/quest/topic/5859/picture-zoom\">This thread mentioning html imagemaps</a> is pretty close to what I'm trying to do. However, I'm having all kinds of errors trying to port this over. Is a script like this even possible to implement in a gamebook?</p>\n<p><strong>2)</strong> When certain text is clicked 10 times, the player is sent to a different page.</p>\n<p>Current page script:<br>\n<code>SetCounter (\"chargeup\", 0)</code><br>\n<code>if (GetInt(game, \"chargeup\") &gt;= 10) {MovePlayer (Page24)}</code></p>\n<p>description:<br>\n<code>&lt;a class=\"cmdlink\" onclick=\"ASLEvent('lasercharge','null')\"&gt;Charge up!&lt;/a&gt;&lt;br&gt;</code></p>\n<p>functions:<br>\n<code>&lt;function name=\"lasercharge\" type=\"int\"&gt;</code><br>\n<code>chargeup = chargeup + 1</code><br>\n<code>&lt;/function&gt;</code></p>\n<p>The cmdlink displays, but the player doesn't move after repeated clicks, so assumedly there's something wrong with the counter (unsurprising, since I'm a code amateur). I'm starting to feel my brain numb from searching nonstop through the forums for hours, so some expert advice would be greatly appreciated.</p>\n\n",
+      "PostDate": "2024-02-27T20:56:48.6475177Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "1ca2c5f3-36bf-4333-83e3-1180a531a937",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> `SetCounter (\"chargeup\", 0)`\r\n`if (GetInt(game, \"chargeup\") >= 10) MovePlayer (Page24)`\r\n\r\nSo you set the counter to 0, and then immediately check if it's 10 or higher. It's never going to be true at that point.\r\nYou've also got a function increasing a local variable, `chargeup`, which is discarded as soon as the function ends.\r\n\r\nI think what you want is:\r\nPage script:\r\n```\r\ngame.chargeup = 0\r\n```\r\nFunction:\r\n<pre><code>&lt;function name=\"lasercharge\" type=\"int\">\r\n  <b>game.</b>chargeup = <b>game.</b>chargeup + 1\r\n  if (game.chargeup >= 10) {\r\n    MovePlayer (Page24)\r\n  }\r\n&lt;/function></code></pre>\r\n\r\nSo it increases the same counter, and then checks if its value is 10 or higher every time it is increased, rather than once at the beginning.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p><code>SetCounter (\"chargeup\", 0)</code><br>\n<code>if (GetInt(game, \"chargeup\") &gt;= 10) MovePlayer (Page24)</code></p>\n</blockquote>\n<p>So you set the counter to 0, and then immediately check if it's 10 or higher. It's never going to be true at that point.<br>\nYou've also got a function increasing a local variable, <code>chargeup</code>, which is discarded as soon as the function ends.</p>\n<p>I think what you want is:<br>\nPage script:</p>\n<pre><code>game.chargeup = 0\n</code></pre>\n<p>Function:</p>\n<pre><code>&lt;function name=\"lasercharge\" type=\"int\"&gt;\n  <b>game.</b>chargeup = <b>game.</b>chargeup + 1\n  if (game.chargeup &gt;= 10) {\n    MovePlayer (Page24)\n  }\n&lt;/function&gt;</code></pre>\n<p>So it increases the same counter, and then checks if its value is 10 or higher every time it is increased, rather than once at the beginning.</p>\n\n",
+      "PostDate": "2024-02-28T11:27:26.0023475Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "00b6d298-62a7-418c-8a05-8f1b6b465426",
+      "UserId": 321033,
+      "Username": "Kaitou Joker Scans",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Ahh, no wonder it wasn't working. Your changes did the trick! The function started working once I entered in the parameters as well.\r\n\r\nAs for the first question, I finally got that one working too.\r\nI thought that since the sample in the linked thread at had the image set as an editor_object, it wouldn't work in a gamebook where that type doesn't exist. Turns out that just setting it to scripttext instead does work, once the javascript file is loaded in. After that, all the function has to do (for my purposes) is move the player.\r\n\r\nThanks so much for the help! It's a huge relief to move on from this.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Ahh, no wonder it wasn't working. Your changes did the trick! The function started working once I entered in the parameters as well.</p>\n<p>As for the first question, I finally got that one working too.<br>\nI thought that since the sample in the linked thread at had the image set as an editor_object, it wouldn't work in a gamebook where that type doesn't exist. Turns out that just setting it to scripttext instead does work, once the javascript file is loaded in. After that, all the function has to do (for my purposes) is move the player.</p>\n<p>Thanks so much for the help! It's a huge relief to move on from this.</p>\n\n",
+      "PostDate": "2024-02-28T22:15:34.5718612Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "bde630c3-8f89-46dd-9338-1ffb3b2cb73a",
+      "UserId": 321033,
+      "Username": "Kaitou Joker Scans",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Following up a month later:\r\nI've started testing my game in browsers and it's been working great, _except_ for the usemap. I was using ```quest://local/``` while testing in the Quest software, but that doesn't display in the browser.\r\nHowever, the alternative ```GetFileURL``` only seems to work in the script box--which requires some different formatting than the description box (what I was using before). I've tried both SVGs and usemaps to little avail.\r\n\r\nThings that don't work when entered into the **script** box:\r\n\r\n```s0 = \"<svg width=\\\"648\\\" height=\\\"3547\\\"> <img src=\\\"\" + GetFileURL(\"MyPage.jpg\") + \"\\\" width=\\\"648\\\" height=\\\"3547\\\" /><circle cx=\\\"450\\\" cy=\\\"3000\\\" r=\\\"20\\\" fill=\\\"red\\\" fill-opacity=\\\"0.8\\\" onmousedown=\\\"javascript:troom('null')\\\"></circle></svg>\"```\r\n```msg (s0)```\r\n (Stacks an empty svg on top of the inserted image and doesn't display the red circle.)\r\n\r\n```s0 = \"<img src=\\\"\" + GetFileURL(\"MyPage.jpg\") + \"\\\" usemap=\\\"#EasterEgg\\\"><map name=\\\"EasterEgg\\\"><area shape=\\\"rect\\\" coords=\\\"620,840,800,1020\\\" href=\\\"javascript:troom('null')\\\" alt=\\\"Found it!\\\" title=\\\"What's that?\\\"> </map0>\"```\r\n```msg (s0)```\r\n(Displays the image, but doesn't initialize the javascript.)\r\n\r\nThings that work when entered into the **description** box:\r\n\r\n```<svg width=\"648\" height=\"3547\"> <image xlink:href=\"(EXTERNAL LINK)\" width=\"648\" height=\"3547\" /> <circle cx=\"450\" cy=\"3000\" r=\"20\" fill=\"red\" fill-opacity=\"0.5\" onmousedown=\"javascript:troom('null')\"></circle></svg>```\r\n(The simple method of using an externally-hosted image has size/color display issues on some mobile devices.)\r\n\r\nI have a feeling I'm overlooking something incredibly fundamental here. How can I get my image to display correctly on all devices _and_ have a working page redirect when part of the image is clicked?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Following up a month later:<br>\nI've started testing my game in browsers and it's been working great, <em>except</em> for the usemap. I was using <code>quest://local/</code> while testing in the Quest software, but that doesn't display in the browser.<br>\nHowever, the alternative <code>GetFileURL</code> only seems to work in the script box--which requires some different formatting than the description box (what I was using before). I've tried both SVGs and usemaps to little avail.</p>\n<p>Things that don't work when entered into the <strong>script</strong> box:</p>\n<p><code>s0 = \"&lt;svg width=\\\"648\\\" height=\\\"3547\\\"&gt; &lt;img src=\\\"\" + GetFileURL(\"MyPage.jpg\") + \"\\\" width=\\\"648\\\" height=\\\"3547\\\" /&gt;&lt;circle cx=\\\"450\\\" cy=\\\"3000\\\" r=\\\"20\\\" fill=\\\"red\\\" fill-opacity=\\\"0.8\\\" onmousedown=\\\"javascript:troom('null')\\\"&gt;&lt;/circle&gt;&lt;/svg&gt;\"</code><br>\n<code>msg (s0)</code><br>\n(Stacks an empty svg on top of the inserted image and doesn't display the red circle.)</p>\n<p><code>s0 = \"&lt;img src=\\\"\" + GetFileURL(\"MyPage.jpg\") + \"\\\" usemap=\\\"#EasterEgg\\\"&gt;&lt;map name=\\\"EasterEgg\\\"&gt;&lt;area shape=\\\"rect\\\" coords=\\\"620,840,800,1020\\\" href=\\\"javascript:troom('null')\\\" alt=\\\"Found it!\\\" title=\\\"What's that?\\\"&gt; &lt;/map0&gt;\"</code><br>\n<code>msg (s0)</code><br>\n(Displays the image, but doesn't initialize the javascript.)</p>\n<p>Things that work when entered into the <strong>description</strong> box:</p>\n<p><code>&lt;svg width=\"648\" height=\"3547\"&gt; &lt;image xlink:href=\"(EXTERNAL LINK)\" width=\"648\" height=\"3547\" /&gt; &lt;circle cx=\"450\" cy=\"3000\" r=\"20\" fill=\"red\" fill-opacity=\"0.5\" onmousedown=\"javascript:troom('null')\"&gt;&lt;/circle&gt;&lt;/svg&gt;</code><br>\n(The simple method of using an externally-hosted image has size/color display issues on some mobile devices.)</p>\n<p>I have a feeling I'm overlooking something incredibly fundamental here. How can I get my image to display correctly on all devices <em>and</em> have a working page redirect when part of the image is clicked?</p>\n\n",
+      "PostDate": "2024-03-26T05:42:34.80396Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

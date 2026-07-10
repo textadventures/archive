@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "mwxgm11bc0oj19cf85udya",
+    "ForumId": "10",
+    "Title": "Creating verbs using Chinese characters.",
+    "LastUpdated": "2021-09-24T13:27:22.8369632Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "ad74a4cb-415a-48cb-802a-529ee6b6935c",
+      "UserId": 560904,
+      "Username": "Ragull",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/185b2a766e1bb739375f66ac59c9e1de?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm sorry if this has been asked before. I did a search and couldn't seem to find any answers. \r\n\r\nWhen I try to create a new verb using Chinese characters such as “看到” I get an error message saying that this is an invalid attibute name. However if I use English letter before such as \"kan4dao4看到\" it creates the verb. The issue is, I don't want English letters in my verb name. \r\n\r\nIn addition, I used Notepad++ to edit the English file to change the default verb names like you see below:\r\n\r\n< template name=\"YouAreIn\" >你在< /template >\r\n< template name=\"LookAt\" >看到< /template >\r\n< template name=\"Take\" >拿起< /template >\r\n\r\nI loaded this Chinese version into my game and I can see these verbs as Chinese characters but they don't work in game. For example, if I try to \"看到\" an object I get the \"UnrecognisedCommand\" response.\r\n\r\nHas anyone had a similar problem and is there a solution? Thanks so much for your responses.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm sorry if this has been asked before. I did a search and couldn't seem to find any answers.</p>\n<p>When I try to create a new verb using Chinese characters such as “看到” I get an error message saying that this is an invalid attibute name. However if I use English letter before such as \"kan4dao4看到\" it creates the verb. The issue is, I don't want English letters in my verb name.</p>\n<p>In addition, I used Notepad++ to edit the English file to change the default verb names like you see below:</p>\n<p>&lt; template name=\"YouAreIn\" &gt;你在&lt; /template &gt;<br>\n&lt; template name=\"LookAt\" &gt;看到&lt; /template &gt;<br>\n&lt; template name=\"Take\" &gt;拿起&lt; /template &gt;</p>\n<p>I loaded this Chinese version into my game and I can see these verbs as Chinese characters but they don't work in game. For example, if I try to \"看到\" an object I get the \"UnrecognisedCommand\" response.</p>\n<p>Has anyone had a similar problem and is there a solution? Thanks so much for your responses.</p>\n\n",
+      "PostDate": "2021-09-24T13:27:22.8369632Z",
+      "LastEditDate": "2021-09-24T13:28:49.115099Z",
+      "link": null
+    },
+    {
+      "PostId": "dfe6d503-769e-4087-9b84-bbefdf6d7d72",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "There are two issues here. The name of the verb is, I think, limited to what XML allows for attributes (and possibly a subset of that),  so for the attribute name, I think you are stuck.\r\n\r\nWith regards to the verb not getting recognised by the parser, I am not so sure. Is the word order the same? If the verb is \"get\", behind the scenes Quest will take that to be \"get #object#\", but you can override that by using \"#object# get\". Quest will then convert that into a regular expression, and use the regular expression to match against the input text.\r\n\r\nIf you are confident at coding, you could test that, using the IsRegexMatch function.\r\nhttp://docs.textadventures.co.uk/quest/functions/isregexmatch.html",
+      "EditableFormat": "markdown",
+      "HTML": "<p>There are two issues here. The name of the verb is, I think, limited to what XML allows for attributes (and possibly a subset of that),  so for the attribute name, I think you are stuck.</p>\n<p>With regards to the verb not getting recognised by the parser, I am not so sure. Is the word order the same? If the verb is \"get\", behind the scenes Quest will take that to be \"get #object#\", but you can override that by using \"#object# get\". Quest will then convert that into a regular expression, and use the regular expression to match against the input text.</p>\n<p>If you are confident at coding, you could test that, using the IsRegexMatch function.<br>\nhttp://docs.textadventures.co.uk/quest/functions/isregexmatch.html</p>\n\n",
+      "PostDate": "2021-09-24T17:28:58.0621072Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "c8c50cfe-8abc-4f93-885b-afc9c8a51819",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "There are multiple templates for these commands.\r\nThis one:\r\n```\r\n  <template name=\"Take\">Take</template>\r\n```\r\ncontrols the text that appears on the drop-down menu when you click an object, or the verb buttons in the sidebar.\r\n\r\nThese ones:\r\n```\r\n  <verbtemplate name=\"take\">take</verbtemplate>\r\n  <verbtemplate name=\"take\">get</verbtemplate>\r\n  <verbtemplate name=\"take\">pick up</verbtemplate>\r\n```\r\ncontrol what words the game will recognise when they are entered. In order for a translated command to work, you need to change both.\r\n\r\nI'm not sure if it might be better in this case to change the command to use an explicit regular expression; as I believe those verbpatterns will result in a regex like `^take (?<object>.*?)$|^get (?<object>.*?)$|^pick up (?<object>.*?)$`. And (although I haven't seen Chinese people playing text adventures), I suspect that the inclusion of an ASCII space in that pattern might be a problem for some players.\r\n\r\n(If I see people speaking Chinese languages on IRC, there is not always a space between words, and if there is it's likely to be U+3000 (Full width ideographic space) rather than the ASCII one. So it would probably be a good idea to change the spaces in the pattern to `\\s?`, which matches either nothing, or any character widely considered to be a space. Unfortunately you can only do this with RegEx type patterns)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>There are multiple templates for these commands.<br>\nThis one:</p>\n<pre><code>  &lt;template name=\"Take\"&gt;Take&lt;/template&gt;\n</code></pre>\n<p>controls the text that appears on the drop-down menu when you click an object, or the verb buttons in the sidebar.</p>\n<p>These ones:</p>\n<pre><code>  &lt;verbtemplate name=\"take\"&gt;take&lt;/verbtemplate&gt;\n  &lt;verbtemplate name=\"take\"&gt;get&lt;/verbtemplate&gt;\n  &lt;verbtemplate name=\"take\"&gt;pick up&lt;/verbtemplate&gt;\n</code></pre>\n<p>control what words the game will recognise when they are entered. In order for a translated command to work, you need to change both.</p>\n<p>I'm not sure if it might be better in this case to change the command to use an explicit regular expression; as I believe those verbpatterns will result in a regex like <code>^take (?&lt;object&gt;.*?)$|^get (?&lt;object&gt;.*?)$|^pick up (?&lt;object&gt;.*?)$</code>. And (although I haven't seen Chinese people playing text adventures), I suspect that the inclusion of an ASCII space in that pattern might be a problem for some players.</p>\n<p>(If I see people speaking Chinese languages on IRC, there is not always a space between words, and if there is it's likely to be U+3000 (Full width ideographic space) rather than the ASCII one. So it would probably be a good idea to change the spaces in the pattern to <code>\\s?</code>, which matches either nothing, or any character widely considered to be a space. Unfortunately you can only do this with RegEx type patterns)</p>\n\n",
+      "PostDate": "2021-09-24T20:14:29.9833037Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "33205ae3-b5fc-4583-abf9-7b8a74af9253",
+      "UserId": 560904,
+      "Username": "Ragull",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/185b2a766e1bb739375f66ac59c9e1de?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hey, thanks for the solution! I hadn't changed all of the templates for the commands and that was causing the errors. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hey, thanks for the solution! I hadn't changed all of the templates for the commands and that was causing the errors.</p>\n\n",
+      "PostDate": "2021-09-25T11:29:11.7111203Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

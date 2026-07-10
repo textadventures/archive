@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "kmudvtbmpuw6kslsmr0dxa",
+    "ForumId": "10",
+    "Title": "Moving player be function - Solved",
+    "LastUpdated": "2024-10-23T18:22:44.2928162Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "74c4c59b-9a08-4869-aed6-d4b515e41668",
+      "UserId": 304102,
+      "Username": "Doctor Agon",
+      "AvatarUrl": "http://i.imgur.com/Lzd3mOwb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi, \r\nAs part of my game, I want there to be several chapter or parts, which the adventurer will have to complete. \r\nThe game moves the player to a new room, once certain conditions have been met, the screen goes blank, and **Part 2**, or **Part 3**, is then displayed, along with the title of that segment of the game, the screen clears again and puts the player in the new room to start the next section.\r\nI've got the code running in the _before entering room_ script\r\n```\r\nHidePanes\r\nShowPanes (\"wait\", room1)\r\n```\r\nAnd then the **ShowPanes** function is as follows\r\n```\r\n<function name=\"ShowPanes\" parameters=\"con, newroom\"><![CDATA[\r\n    if (con = \"keypress\") {\r\n      msg (\"<br><br>{c:{b:{size:12:Press any key to continue}}}\")\r\n      wait {\r\n        ClearScreen\r\n        request (Show, \"Panes\")\r\n        request (Show, \"Location\")\r\n        request (Show, \"Command\")\r\n        game.autodescription_youarein = 1\r\n        MoveObject (player, newroom)\r\n      }\r\n    }\r\n    else if (con = \"wait\") {\r\n      msg (\"<br><br>{c:{b:{size:12:Please Wait. . .}}}\")\r\n      SetTimeout (5) {\r\n        ClearScreen\r\n        request (Show, \"Panes\")\r\n        request (Show, \"Location\")\r\n        request (Show, \"Command\")\r\n        game.autodescription_youarein = 1\r\n        MoveObject (player, newroom)\r\n      }\r\n    }\r\n  ]]></function>\r\n```\r\nAs you can see it takes two parameters, \r\n**con** which is either _\"keypress\"_ or _\"wait\"_\r\nand **newroom** which is the room the player moves to, to start the next section of the adventure.\r\n\r\nFor some reason, and there is probably a very simple solution, which I'm not seeing, the game is throwing an error message when I'm trying to move the player.\r\n\r\nAny help is greatly appreciated or any thoughts.\r\n(Oh, ignore **{c:** and **{size:12:**, these are custom text commands that centre the text and increase the font size)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi,<br>\nAs part of my game, I want there to be several chapter or parts, which the adventurer will have to complete.<br>\nThe game moves the player to a new room, once certain conditions have been met, the screen goes blank, and <strong>Part 2</strong>, or <strong>Part 3</strong>, is then displayed, along with the title of that segment of the game, the screen clears again and puts the player in the new room to start the next section.<br>\nI've got the code running in the <em>before entering room</em> script</p>\n<pre><code>HidePanes\nShowPanes (\"wait\", room1)\n</code></pre>\n<p>And then the <strong>ShowPanes</strong> function is as follows</p>\n<pre><code>&lt;function name=\"ShowPanes\" parameters=\"con, newroom\"&gt;&lt;![CDATA[\n    if (con = \"keypress\") {\n      msg (\"&lt;br&gt;&lt;br&gt;{c:{b:{size:12:Press any key to continue}}}\")\n      wait {\n        ClearScreen\n        request (Show, \"Panes\")\n        request (Show, \"Location\")\n        request (Show, \"Command\")\n        game.autodescription_youarein = 1\n        MoveObject (player, newroom)\n      }\n    }\n    else if (con = \"wait\") {\n      msg (\"&lt;br&gt;&lt;br&gt;{c:{b:{size:12:Please Wait. . .}}}\")\n      SetTimeout (5) {\n        ClearScreen\n        request (Show, \"Panes\")\n        request (Show, \"Location\")\n        request (Show, \"Command\")\n        game.autodescription_youarein = 1\n        MoveObject (player, newroom)\n      }\n    }\n  ]]&gt;&lt;/function&gt;\n</code></pre>\n<p>As you can see it takes two parameters,<br>\n<strong>con</strong> which is either <em>\"keypress\"</em> or <em>\"wait\"</em><br>\nand <strong>newroom</strong> which is the room the player moves to, to start the next section of the adventure.</p>\n<p>For some reason, and there is probably a very simple solution, which I'm not seeing, the game is throwing an error message when I'm trying to move the player.</p>\n<p>Any help is greatly appreciated or any thoughts.<br>\n(Oh, ignore <strong>{c:</strong> and <strong>{size:12:</strong>, these are custom text commands that centre the text and increase the font size)</p>\n\n",
+      "PostDate": "2024-10-23T18:22:44.2928162Z",
+      "LastEditDate": "2024-10-24T20:21:45.0589131Z",
+      "link": null
+    },
+    {
+      "PostId": "6b7d460f-4f4d-4c4d-936e-799d4cf041e0",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://i.imgur.com/Odr8Efkb.jpeg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello.\r\n\r\nI bet it's the `wait` and the `SetTimeout()`\r\n\r\nI'm guessing neither of them have the `newroom` variable defined.\r\n\r\nWhat is your error message?\r\n\r\n---\r\nRegardless of the error message, try this:\r\n\r\n```\r\n<function name=\"ShowPanes\" parameters=\"con, newroom\"><![CDATA[\r\n    game.temp_newroom = newroom\r\n    if (con = \"keypress\") {\r\n      msg (\"<br><br>{c:{b:{size:12:Press any key to continue}}}\")\r\n      wait {\r\n        ClearScreen\r\n        request (Show, \"Panes\")\r\n        request (Show, \"Location\")\r\n        request (Show, \"Command\")\r\n        game.autodescription_youarein = 1\r\n        MoveObject (player, game.temp_newroom)\r\n        game.temp_newroom = null\r\n      }\r\n    }\r\n    else if (con = \"wait\") {\r\n      msg (\"<br><br>{c:{b:{size:12:Please Wait. . .}}}\")\r\n      SetTimeout (5) {\r\n        ClearScreen\r\n        request (Show, \"Panes\")\r\n        request (Show, \"Location\")\r\n        request (Show, \"Command\")\r\n        game.autodescription_youarein = 1\r\n        MoveObject (player, game.temp_newroom)\r\n        game.temp_newroom = null\r\n      }\r\n    }\r\n  ]]></function>\r\n```\r\n\r\n---\r\nhttps://docs.textadventures.co.uk/quest/functions/corelibrary/settimeout.html\r\n\r\n> Note: This function is “non-blocking”, and its script has no access to local variables. \r\n\r\n---\r\n**Edit**\r\n\r\nI'm not sure if the `wait` script needs that change, but it should work this way regardless.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello.</p>\n<p>I bet it's the <code>wait</code> and the <code>SetTimeout()</code></p>\n<p>I'm guessing neither of them have the <code>newroom</code> variable defined.</p>\n<p>What is your error message?</p>\n<hr>\n<p>Regardless of the error message, try this:</p>\n<pre><code>&lt;function name=\"ShowPanes\" parameters=\"con, newroom\"&gt;&lt;![CDATA[\n    game.temp_newroom = newroom\n    if (con = \"keypress\") {\n      msg (\"&lt;br&gt;&lt;br&gt;{c:{b:{size:12:Press any key to continue}}}\")\n      wait {\n        ClearScreen\n        request (Show, \"Panes\")\n        request (Show, \"Location\")\n        request (Show, \"Command\")\n        game.autodescription_youarein = 1\n        MoveObject (player, game.temp_newroom)\n        game.temp_newroom = null\n      }\n    }\n    else if (con = \"wait\") {\n      msg (\"&lt;br&gt;&lt;br&gt;{c:{b:{size:12:Please Wait. . .}}}\")\n      SetTimeout (5) {\n        ClearScreen\n        request (Show, \"Panes\")\n        request (Show, \"Location\")\n        request (Show, \"Command\")\n        game.autodescription_youarein = 1\n        MoveObject (player, game.temp_newroom)\n        game.temp_newroom = null\n      }\n    }\n  ]]&gt;&lt;/function&gt;\n</code></pre>\n<hr>\n<p>https://docs.textadventures.co.uk/quest/functions/corelibrary/settimeout.html</p>\n<blockquote>\n<p>Note: This function is “non-blocking”, and its script has no access to local variables.</p>\n</blockquote>\n<hr>\n<p><strong>Edit</strong></p>\n<p>I'm not sure if the <code>wait</code> script needs that change, but it should work this way regardless.</p>\n\n",
+      "PostDate": "2024-10-23T20:10:59.0046679Z",
+      "LastEditDate": "2024-10-23T20:17:21.2197813Z",
+      "link": null
+    },
+    {
+      "PostId": "69ae03ff-5db6-4c0b-b55b-c07d21619798",
+      "UserId": 304102,
+      "Username": "Doctor Agon",
+      "AvatarUrl": "http://i.imgur.com/Lzd3mOwb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks as ever K.V.\r\nYour help is greatly appreciated",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks as ever K.V.<br>\nYour help is greatly appreciated</p>\n\n",
+      "PostDate": "2024-10-24T20:20:41.4852743Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "a9ed72a2-b92a-403f-842f-7f7f42b48e25",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://i.imgur.com/Odr8Efkb.jpeg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Always a pleasure, good sir.\r\n\r\n(Plus, it seems wise to stay on good terms with folks who have red dragons.)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Always a pleasure, good sir.</p>\n<p>(Plus, it seems wise to stay on good terms with folks who have red dragons.)</p>\n\n",
+      "PostDate": "2024-10-26T13:09:56.4336115Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

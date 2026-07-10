@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "99yvrkpkz0q96aec5slyfa",
+    "ForumId": "10",
+    "Title": "Having a problem with Loop Damage Calculation... (Solved)",
+    "LastUpdated": "2022-02-24T16:21:06.5488804Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "5e3d704a-336c-4136-a528-35fc5a1f28c8",
+      "UserId": 580122,
+      "Username": "YiKwang",
+      "AvatarUrl": "https://i.imgur.com/wHILBBmb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I have a Character and a Dagger with Attribute DAM_Fight\r\nCharacter DAM_Fight = 3\r\nDagger DAM_Fight = 2\r\n\r\nI have a turnscript to calculate how much damage the Character does:\r\n```\r\ngame.pov.DAM_ThatIDo = game.pov.DAM_Fight\r\nforeach (object, GetDirectChildren (game.pov)) {\r\n  if (HasInt (object, \"DAM_Fight\") and GetBoolean (object, \"visible\")) {\r\n    game.pov.DAM_ThatIDo = game.pov.DAM_ThatIDo + object.DAM_Fight\r\n  }\r\n}\r\n```\r\nI have a command 'harm #object#' which is supposed to deal this DAM_ThatIDo value, based on its own and the daggers DAM_Fight combined.\r\n```\r\nif (HasAttribute(object, \"LIFE_C\")) {\r\n  object.LIFE_C = object.LIFE_C - game.pov.DAM_ThatIDo\r\n  msg (\"You have ritually wounded \" + GetDefiniteName(object) + \".\")\r\n}\r\n```\r\nBut for some reason, instead of doing 5 Damage, it deals 12.\r\n\r\nI have another Character whose DAM_Fight = 1.\r\nHowever, when she wounds with a Dagger her 1+2 comes out as 10 Damage.\r\n\r\nAny idea what is going on?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I have a Character and a Dagger with Attribute DAM_Fight<br>\nCharacter DAM_Fight = 3<br>\nDagger DAM_Fight = 2</p>\n<p>I have a turnscript to calculate how much damage the Character does:</p>\n<pre><code>game.pov.DAM_ThatIDo = game.pov.DAM_Fight\nforeach (object, GetDirectChildren (game.pov)) {\n  if (HasInt (object, \"DAM_Fight\") and GetBoolean (object, \"visible\")) {\n    game.pov.DAM_ThatIDo = game.pov.DAM_ThatIDo + object.DAM_Fight\n  }\n}\n</code></pre>\n<p>I have a command 'harm #object#' which is supposed to deal this DAM_ThatIDo value, based on its own and the daggers DAM_Fight combined.</p>\n<pre><code>if (HasAttribute(object, \"LIFE_C\")) {\n  object.LIFE_C = object.LIFE_C - game.pov.DAM_ThatIDo\n  msg (\"You have ritually wounded \" + GetDefiniteName(object) + \".\")\n}\n</code></pre>\n<p>But for some reason, instead of doing 5 Damage, it deals 12.</p>\n<p>I have another Character whose DAM_Fight = 1.<br>\nHowever, when she wounds with a Dagger her 1+2 comes out as 10 Damage.</p>\n<p>Any idea what is going on?</p>\n\n",
+      "PostDate": "2022-02-24T16:21:06.5488804Z",
+      "LastEditDate": "2022-02-24T19:38:00.6191429Z",
+      "link": null
+    },
+    {
+      "PostId": "57bf22e3-f9f4-4844-8d23-d3a464136417",
+      "UserId": 580122,
+      "Username": "YiKwang",
+      "AvatarUrl": "https://i.imgur.com/wHILBBmb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I have set up a Status Panel item to show the DAM_ThatIDo value, and it shows an increase to 12 as soon as the Dagger is taken, so it is not a problem with the 'harm #object' command...",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I have set up a Status Panel item to show the DAM_ThatIDo value, and it shows an increase to 12 as soon as the Dagger is taken, so it is not a problem with the 'harm #object' command...</p>\n\n",
+      "PostDate": "2022-02-24T16:27:55.7069828Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "2afbc2b4-8c06-457f-bbf6-9b458e96b0f1",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Are there any other scripts modifying `DAM_ThatIDo`?\r\n\r\nAre you sure that `DAM_Fight` has the correct values?\r\n\r\nThose are the first things I would check in this situation. I don't see a problem with your code.\r\n\r\nI might also try adding \"breadcrumbs\"; temporarily changing the turnscript to something like:\r\n```\r\ngame.pov.DAM_ThatIDo = game.pov.DAM_Fight\r\nmsg (\"Calculating DAM_ThatIDo. Initial value: \" + game.pov.DAM_ThatIDo)\r\nforeach (object, GetDirectChildren (game.pov)) {\r\n  if (HasInt (object, \"DAM_Fight\") and GetBoolean (object, \"visible\")) {\r\n    game.pov.DAM_ThatIDo = game.pov.DAM_ThatIDo + object.DAM_Fight\r\n    msg (\" - Adding damage for \" + GetDisplayAlias(object) + \" (\" + object.DAM_Fight + \"), total now:\" + game.pov.DAM_ThatIDo)\r\n  }\r\n}\r\n```\r\nThat might seem like overkill, but trying the game with that running will give you a clear idea of exactly where in your code a problem is creeping in.\r\n\r\n(In my code, I use `JS.console.log` rather than `msg` for error messages; so the debugging is hidden until you press Ctrl+Alt+J to show it… but I'm not sure whether that will work with the desktop editor)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Are there any other scripts modifying <code>DAM_ThatIDo</code>?</p>\n<p>Are you sure that <code>DAM_Fight</code> has the correct values?</p>\n<p>Those are the first things I would check in this situation. I don't see a problem with your code.</p>\n<p>I might also try adding \"breadcrumbs\"; temporarily changing the turnscript to something like:</p>\n<pre><code>game.pov.DAM_ThatIDo = game.pov.DAM_Fight\nmsg (\"Calculating DAM_ThatIDo. Initial value: \" + game.pov.DAM_ThatIDo)\nforeach (object, GetDirectChildren (game.pov)) {\n  if (HasInt (object, \"DAM_Fight\") and GetBoolean (object, \"visible\")) {\n    game.pov.DAM_ThatIDo = game.pov.DAM_ThatIDo + object.DAM_Fight\n    msg (\" - Adding damage for \" + GetDisplayAlias(object) + \" (\" + object.DAM_Fight + \"), total now:\" + game.pov.DAM_ThatIDo)\n  }\n}\n</code></pre>\n<p>That might seem like overkill, but trying the game with that running will give you a clear idea of exactly where in your code a problem is creeping in.</p>\n<p>(In my code, I use <code>JS.console.log</code> rather than <code>msg</code> for error messages; so the debugging is hidden until you press Ctrl+Alt+J to show it… but I'm not sure whether that will work with the desktop editor)</p>\n\n",
+      "PostDate": "2022-02-24T17:12:55.5742977Z",
+      "LastEditDate": "2022-02-24T17:14:38.7268568Z",
+      "link": null
+    },
+    {
+      "PostId": "aa7e65d7-eb1f-46ec-a697-18805b9659aa",
+      "UserId": 580122,
+      "Username": "YiKwang",
+      "AvatarUrl": "https://i.imgur.com/wHILBBmb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "It was an incorrect DAM_Fight somewhere from testing health loss earlier xD",
+      "EditableFormat": "markdown",
+      "HTML": "<p>It was an incorrect DAM_Fight somewhere from testing health loss earlier xD</p>\n\n",
+      "PostDate": "2022-02-24T19:37:42.4101195Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "Topic": {
+    "TopicId": "3623",
+    "ForumId": "18",
+    "Title": "Delegates vs Functions",
+    "LastUpdated": "2013-04-20T01:26:58+01:00",
+    "ReplyCount": 14
+  },
+  "Posts": [
+    {
+      "PostId": "24085",
+      "UserId": 0,
+      "Username": "Sora574",
+      "UserAvatar": null,
+      "UserGravatar": "5691c27a3aa3e56e879a3f8545b28ef2",
+      "EditableText": "Hey, I have a question...\nWhat's the real difference between delegates and functions?\nI mean, as far as I can tell, you run delegates the exact same way as functions, except they're attached to objects...\n\nTo me, this seems really pointless. Instead of\n[code:31rrqbds]RunDelegateFunction (ball, &quot;throw&quot;, param1, param2, param3)[/code:31rrqbds]\nWhy not just use this?\n[code:31rrqbds]ThrowBall (param1, param2, param3)[/code:31rrqbds]\nThere must be something I'm missing here...",
+      "EditableFormat": "bbcode",
+      "HTML": "Hey, I have a question...<br/>What's the real difference between delegates and functions?<br/>I mean, as far as I can tell, you run delegates the exact same way as functions, except they're attached to objects...<br/><br/>To me, this seems really pointless. Instead of<br/><pre><code>RunDelegateFunction (ball, &quot;throw&quot;, param1, param2, param3)</code></pre><br/>Why not just use this?<br/><pre><code>ThrowBall (param1, param2, param3)</code></pre><br/>There must be something I'm missing here...",
+      "PostDate": "2013-04-16T22:43:51+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24090",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "I view it as:\n\n- You use functions when you always want the same functionality. You are always invoking the same piece of script.\n- You use script or delegate attributes when you have functionality that could vary per object. Having a script or delegate attribute makes it an indirect reference - you know you're going to invoke *something* attached to the object, but you don't know what it is. It all depends on what has been set, and what has been set can change dynamicaly.\n\nNow, in the realm of scripts and delegates, things are a bit ugly (in my opinion), but I view that as the evolution of Quest and (sadly) not going to change.\n\nFirst, you have scripts, which are invoked (optionally) with a dictionary of parameters and can't return a value. I tend to use scripts for simple things, ideally in cases where I have no parameters or return value! <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> It's just too awkward for the caller to have to go through the rigamarole of setting up the params for each call. I *will* use them with parameters for internal functions, where the pain of creating the parameter dictionary and populating is hidden below the covers. But I would not want to use them, with parameters, for a public interface. For that, I'd define a delegate.\n\nMoving on to delegates, you have to actually define the signature for it, so that it knows what the parameters mean. And you define the return value type as well. (An aside: I have come to be a bit confused about why functions and delegates need return types at all. Quest is so open-ended about types, that you'd think it would be fine just returning *anything* and not care. And a forced type means you couldn't, for example, implement something like GetAttribute, which can return different types from the same bit of code.)\n\nHaving defined a delegate, though, invoking them is not too bad - with one caveat. If you want to invoke a delegate without a return value, you use &quot;rundelegate&quot;. If you want to get a return value back, you have to use &quot;RunDelegateFunction&quot;. I haven't tried just always using RunDelegateFunction and ignoring the return value. Perhaps that works. It's one of those areas I've learned about the hard way (by trying to get a return value out of rundelegate) and haven't explored it fully. I think it has to do with the expression parser and what it can operate on. (For example, you can &quot;eval&quot; a function that returns a value, but you can't &quot;eval&quot; something like &quot;msg&quot; which doesn't.)\n\nOk, probably more than you wanted, but in case it's useful to anyone... <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "I view it as:<br/><br/>- You use functions when you always want the same functionality. You are always invoking the same piece of script.<br/>- You use script or delegate attributes when you have functionality that could vary per object. Having a script or delegate attribute makes it an indirect reference - you know you're going to invoke *something* attached to the object, but you don't know what it is. It all depends on what has been set, and what has been set can change dynamicaly.<br/><br/>Now, in the realm of scripts and delegates, things are a bit ugly (in my opinion), but I view that as the evolution of Quest and (sadly) not going to change.<br/><br/>First, you have scripts, which are invoked (optionally) with a dictionary of parameters and can't return a value. I tend to use scripts for simple things, ideally in cases where I have no parameters or return value! <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> It's just too awkward for the caller to have to go through the rigamarole of setting up the params for each call. I *will* use them with parameters for internal functions, where the pain of creating the parameter dictionary and populating is hidden below the covers. But I would not want to use them, with parameters, for a public interface. For that, I'd define a delegate.<br/><br/>Moving on to delegates, you have to actually define the signature for it, so that it knows what the parameters mean. And you define the return value type as well. (An aside: I have come to be a bit confused about why functions and delegates need return types at all. Quest is so open-ended about types, that you'd think it would be fine just returning *anything* and not care. And a forced type means you couldn't, for example, implement something like GetAttribute, which can return different types from the same bit of code.)<br/><br/>Having defined a delegate, though, invoking them is not too bad - with one caveat. If you want to invoke a delegate without a return value, you use &quot;rundelegate&quot;. If you want to get a return value back, you have to use &quot;RunDelegateFunction&quot;. I haven't tried just always using RunDelegateFunction and ignoring the return value. Perhaps that works. It's one of those areas I've learned about the hard way (by trying to get a return value out of rundelegate) and haven't explored it fully. I think it has to do with the expression parser and what it can operate on. (For example, you can &quot;eval&quot; a function that returns a value, but you can't &quot;eval&quot; something like &quot;msg&quot; which doesn't.)<br/><br/>Ok, probably more than you wanted, but in case it's useful to anyone... <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2013-04-17T09:43:23+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24091",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "[quote=&quot;jaynabonne&quot;:emo5pvfk](An aside: I have come to be a bit confused about why functions and delegates need return types at all. Quest is so open-ended about types, that you'd think it would be fine just returning *anything* and not care. And a forced type means you couldn't, for example, implement something like GetAttribute, which can return different types from the same bit of code.)[/quote:emo5pvfk]\n\nIt's an unfortunate implementation detail really - these functions are handled by Quest code, and FLEE needs to know what type they will return before it can compile the expression which will then evaluate them.",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>jaynabonne wrote:</cite>(An aside: I have come to be a bit confused about why functions and delegates need return types at all. Quest is so open-ended about types, that you'd think it would be fine just returning *anything* and not care. And a forced type means you couldn't, for example, implement something like GetAttribute, which can return different types from the same bit of code.)</blockquote><br/><br/>It's an unfortunate implementation detail really - these functions are handled by Quest code, and FLEE needs to know what type they will return before it can compile the expression which will then evaluate them.",
+      "PostDate": "2013-04-17T11:01:12+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24093",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "That makes sense. Thanks, Alex!",
+      "EditableFormat": "bbcode",
+      "HTML": "That makes sense. Thanks, Alex!",
+      "PostDate": "2013-04-17T11:11:54+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24098",
+      "UserId": 0,
+      "Username": "Sora574",
+      "UserAvatar": null,
+      "UserGravatar": "5691c27a3aa3e56e879a3f8545b28ef2",
+      "EditableText": "Wait...\nSo, technically, couldn't you just use a function with switches in it?\nThis would get the same results as a delegate, right? You could still include parameters and return values...",
+      "EditableFormat": "bbcode",
+      "HTML": "Wait...<br/>So, technically, couldn't you just use a function with switches in it?<br/>This would get the same results as a delegate, right? You could still include parameters and return values...",
+      "PostDate": "2013-04-17T21:20:30+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24101",
+      "UserId": 0,
+      "Username": "homeeman",
+      "UserAvatar": null,
+      "UserGravatar": "4c7b0e689de0b974bfe447478a40fb60",
+      "EditableText": "Delegates are also useful in that you can use the &quot;this&quot; pointer, which acts as a variable of type &quot;object&quot; that refers to the object the delegate is an attribute of.\n\nSo if I was cloning an object because players can generate as much of it as they want, or because it is generated randomly, I might use a delegate instead of a regular function because it is much simpler to use a delegate rather than a function with an extra parameter.\nYou can also include delegates in a type, which is useful for a lot of the same reasons.",
+      "EditableFormat": "bbcode",
+      "HTML": "Delegates are also useful in that you can use the &quot;this&quot; pointer, which acts as a variable of type &quot;object&quot; that refers to the object the delegate is an attribute of.<br/><br/>So if I was cloning an object because players can generate as much of it as they want, or because it is generated randomly, I might use a delegate instead of a regular function because it is much simpler to use a delegate rather than a function with an extra parameter.<br/>You can also include delegates in a type, which is useful for a lot of the same reasons.",
+      "PostDate": "2013-04-18T00:28:56+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24102",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Sora, for some specific stuations, that would work, and you could do that, especially if it's just something quick and dirty (aka, you can't be bothered to do it properly), you only have a few cases, and all the cases are known. But *even then*, I would still do it such that the functionality is grouped with the object (just as variables are) instead of spreading the logic around in the code.\n\nI had a long piece of text written in response to this (which I started and deleted multiple times), and we can discuss further if you want and I could get into it, but before we get into &quot;why modularization is good for your code&quot;, I thought I'd root out your interest. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->  (Remember that this is all a bit abstract - with writing code, as with many things in life, just because you can do something doesn't mean it's aesthetically pleasing or &quot;correct&quot; in the grander scheme of things... so it comes down to how much you care, really, in the end).\n\nBasically, it's a choice between grouping your code up based on objects vs grouping your code based on operation.\n\nLet's say you have four doors (A-D) and two operations, open and close. You need to write code to handle the product of that (open A, close A, open B, close B, etc). You can either group it by &quot;open&quot; and &quot;close&quot;, where you have a single function that handles all the &quot;open&quot; cases for all objects, etc - or you can group by object, where you put all the code for each object with that object. It ends up being the same code; it's just a question of how it's organized.\n\nProgramming design (and, let me tell you, my own experience) says that it makes more sense, makes better code, and makes a happier programmer if you have each object manage its own affairs rather than grouping things by operation. In other words, it's better to have each object decide how to open and close itself rather than have monolithic &quot;opener&quot; and &quot;closer&quot; functions that need to know about all relevant objects. For one thing, it makes adding and removing objects much easier (consider touching one place - the object - rather than all the scattered places where the individual pieces are). And if you want a library that works with arbitrary objects (e.g. something like Quest), then you simply can't do it with a switch, as it means that rather than just adding new objects and having the code talk to them, the new pieces of logic would need to go into your library, adding your object handling into all these various places, and the idea of a library is that you shouldn't have to do that.\n\nThe rule of thumb I have arrived at after (*cough* too many) years programming is this: if you want to operate uniformly across a range of objects, then if you have to know what type an object is when you're using it, something is wrong. It's one of those big red flags. The idea is: you shouldn't have to know what type an object is - you just need to know how to talk to it. The object should manage its own affairs. The object sets the policy. The object holds the implementation. If you want to know how an object's function is implemented, you look in the object, not in some function grouping all these various implementations into one place.\n\nAnother thought: since you're basically organizing little snippets of code (open A, close A, open B, etc), by having functions with switches, you're actually writing more code, since rather than just invoking the function on the object, you actually have to have all this logic (the switch) to route the request to the right code. It's like, instead of handing a message to your co-worker sitting next to you for him to handle, you take and hand it to someone else (e.g. the &quot;open function with switch) who reads it *on behalf of your co-worker*. And if you had a different message or request, you'd hand it to someone else again (e.g. the &quot;close function with switch) who would, again, handle it for your co-worker. That's not exactly parallel, but somehow feels relevant.\n\n\nThat's probably a bunch of babble, and I apologize. I hope some of it makes sense. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Sora, for some specific stuations, that would work, and you could do that, especially if it's just something quick and dirty (aka, you can't be bothered to do it properly), you only have a few cases, and all the cases are known. But *even then*, I would still do it such that the functionality is grouped with the object (just as variables are) instead of spreading the logic around in the code.<br/><br/>I had a long piece of text written in response to this (which I started and deleted multiple times), and we can discuss further if you want and I could get into it, but before we get into &quot;why modularization is good for your code&quot;, I thought I'd root out your interest. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->  (Remember that this is all a bit abstract - with writing code, as with many things in life, just because you can do something doesn't mean it's aesthetically pleasing or &quot;correct&quot; in the grander scheme of things... so it comes down to how much you care, really, in the end).<br/><br/>Basically, it's a choice between grouping your code up based on objects vs grouping your code based on operation.<br/><br/>Let's say you have four doors (A-D) and two operations, open and close. You need to write code to handle the product of that (open A, close A, open B, close B, etc). You can either group it by &quot;open&quot; and &quot;close&quot;, where you have a single function that handles all the &quot;open&quot; cases for all objects, etc - or you can group by object, where you put all the code for each object with that object. It ends up being the same code; it's just a question of how it's organized.<br/><br/>Programming design (and, let me tell you, my own experience) says that it makes more sense, makes better code, and makes a happier programmer if you have each object manage its own affairs rather than grouping things by operation. In other words, it's better to have each object decide how to open and close itself rather than have monolithic &quot;opener&quot; and &quot;closer&quot; functions that need to know about all relevant objects. For one thing, it makes adding and removing objects much easier (consider touching one place - the object - rather than all the scattered places where the individual pieces are). And if you want a library that works with arbitrary objects (e.g. something like Quest), then you simply can't do it with a switch, as it means that rather than just adding new objects and having the code talk to them, the new pieces of logic would need to go into your library, adding your object handling into all these various places, and the idea of a library is that you shouldn't have to do that.<br/><br/>The rule of thumb I have arrived at after (*cough* too many) years programming is this: if you want to operate uniformly across a range of objects, then if you have to know what type an object is when you're using it, something is wrong. It's one of those big red flags. The idea is: you shouldn't have to know what type an object is - you just need to know how to talk to it. The object should manage its own affairs. The object sets the policy. The object holds the implementation. If you want to know how an object's function is implemented, you look in the object, not in some function grouping all these various implementations into one place.<br/><br/>Another thought: since you're basically organizing little snippets of code (open A, close A, open B, etc), by having functions with switches, you're actually writing more code, since rather than just invoking the function on the object, you actually have to have all this logic (the switch) to route the request to the right code. It's like, instead of handing a message to your co-worker sitting next to you for him to handle, you take and hand it to someone else (e.g. the &quot;open function with switch) who reads it *on behalf of your co-worker*. And if you had a different message or request, you'd hand it to someone else again (e.g. the &quot;close function with switch) who would, again, handle it for your co-worker. That's not exactly parallel, but somehow feels relevant.<br/><br/><br/>That's probably a bunch of babble, and I apologize. I hope some of it makes sense. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2013-04-18T01:03:33+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24103",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Of course, as soon as I submitted and walked away, the proper term hit me: &quot;coupling&quot;. As much as you can keep your code &quot;loosely coupled&quot; (in other words, the less one piece of code has to know about another), the more general the code can be and the more applicable it can be to more situations.\n\nA switch statement based on (for example) object id would be tightly coupled. You'd have a single function that would bring together into one place handling for all these different objects instances. It binds together knowledge of all these disparate objects in one place. Basically, it's just not good. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->\n\nEdit: Here's an article that might be interesting: <!-- m --><a class=\"postlink\" href=\"http://msdn.microsoft.com/en-us/magazine/cc947917.aspx\">http://msdn.microsoft.com/en-us/magazine/cc947917.aspx</a><!-- m -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Of course, as soon as I submitted and walked away, the proper term hit me: &quot;coupling&quot;. As much as you can keep your code &quot;loosely coupled&quot; (in other words, the less one piece of code has to know about another), the more general the code can be and the more applicable it can be to more situations.<br/><br/>A switch statement based on (for example) object id would be tightly coupled. You'd have a single function that would bring together into one place handling for all these different objects instances. It binds together knowledge of all these disparate objects in one place. Basically, it's just not good. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --><br/><br/>Edit: Here's an article that might be interesting: <!-- m --><a class=\"postlink\" href=\"http://msdn.microsoft.com/en-us/magazine/cc947917.aspx\">http://msdn.microsoft.com/en-us/magazine/cc947917.aspx</a><!-- m -->",
+      "PostDate": "2013-04-18T01:28:10+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24123",
+      "UserId": 0,
+      "Username": "Sora574",
+      "UserAvatar": null,
+      "UserGravatar": "5691c27a3aa3e56e879a3f8545b28ef2",
+      "EditableText": "Hmm... That actually makes a lot of sense.\nThat article helped too, although I didn't understand any of the code in there. If I ever get around to making more than just the start screen for the game I'm making, I'll try to follow those guidelines.\n\nNow... How the heck do I implement delegates?\nAs far as this goes, it seems to be poorly documented...\nI found [url=http&#58;//quest5&#46;net/wiki/Using_Delegates:1hcpo709]this[/url:1hcpo709], but that says absolutely nothing about object side stuff. The links it provided don't say much either, except for the fact that delegates can be called with 'rundelegate' or 'RunDelegateFunction' pointing toward object scripts (I think it's supposed to be a script? It says &quot;Now you can simply use the delegate name as an attribute type name&quot; which doesn't make much sense...)",
+      "EditableFormat": "bbcode",
+      "HTML": "Hmm... That actually makes a lot of sense.<br/>That article helped too, although I didn't understand any of the code in there. If I ever get around to making more than just the start screen for the game I'm making, I'll try to follow those guidelines.<br/><br/>Now... How the heck do I implement delegates?<br/>As far as this goes, it seems to be poorly documented...<br/>I found <a href=\"http&#58;//quest5&#46;net/wiki/Using_Delegates\" rel=\"nofollow\">this</a>, but that says absolutely nothing about object side stuff. The links it provided don't say much either, except for the fact that delegates can be called with 'rundelegate' or 'RunDelegateFunction' pointing toward object scripts (I think it's supposed to be a script? It says &quot;Now you can simply use the delegate name as an attribute type name&quot; which doesn't make much sense...)",
+      "PostDate": "2013-04-19T01:22:44+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24125",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Here's an example:\n\n[code:19w73rka]&lt;delegate name=&quot;GetCombatTextType&quot; parameters=&quot;target, hits&quot; type=&quot;string&quot;/&gt;[/code:19w73rka]\nThis defines the delegate signature, what parameters it takes (if any) and the return type (if any), just like a function.\n\nIn an object, you'd then have:\n\n[code:19w73rka]&lt;object name=&quot;Creature_Gremlin&quot;&gt;\n  &lt;alias&gt;gremlin&lt;alias&gt;\n  &lt;GetText type=&quot;GetCombatTextType&quot;&gt;\n    return (&quot;The &quot; + this&#46;alias + &quot; hits &quot; + target + &quot; with its sword, for &quot; + hits + &quot; damage&#46;&quot;)\n  &lt;/GetText&gt;\n&lt;/object&gt;[/code:19w73rka]\nNote the parallel with a script - it's just a different type (your delegate type instead of &quot;script&quot;).\n\nAnd then you can call it with:\n\n[code:19w73rka]s = RunDelegateFunction(creature, &quot;GetText&quot;, &quot;you&quot;, 3)\nmsg(s)[/code:19w73rka]\n\nHope that helps!",
+      "EditableFormat": "bbcode",
+      "HTML": "Here's an example:<br/><br/><pre><code>&lt;delegate name=&quot;GetCombatTextType&quot; parameters=&quot;target, hits&quot; type=&quot;string&quot;/&gt;</code></pre><br/>This defines the delegate signature, what parameters it takes (if any) and the return type (if any), just like a function.<br/><br/>In an object, you'd then have:<br/><br/><pre><code>&lt;object name=&quot;Creature_Gremlin&quot;&gt;<br/>  &lt;alias&gt;gremlin&lt;alias&gt;<br/>  &lt;GetText type=&quot;GetCombatTextType&quot;&gt;<br/>    return (&quot;The &quot; + this&#46;alias + &quot; hits &quot; + target + &quot; with its sword, for &quot; + hits + &quot; damage&#46;&quot;)<br/>  &lt;/GetText&gt;<br/>&lt;/object&gt;</code></pre><br/>Note the parallel with a script - it's just a different type (your delegate type instead of &quot;script&quot;).<br/><br/>And then you can call it with:<br/><br/><pre><code>s = RunDelegateFunction(creature, &quot;GetText&quot;, &quot;you&quot;, 3)<br/>msg(s)</code></pre><br/><br/>Hope that helps!",
+      "PostDate": "2013-04-19T10:06:42+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24135",
+      "UserId": 0,
+      "Username": "Sora574",
+      "UserAvatar": null,
+      "UserGravatar": "5691c27a3aa3e56e879a3f8545b28ef2",
+      "EditableText": "Ohhh that helps...\nWhat's up with the 'properties' part of the wiki code then?",
+      "EditableFormat": "bbcode",
+      "HTML": "Ohhh that helps...<br/>What's up with the 'properties' part of the wiki code then?",
+      "PostDate": "2013-04-19T22:00:56+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24137",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Could you give a link? I'm not sure what you're referring to. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Could you give a link? I'm not sure what you're referring to. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2013-04-19T22:31:08+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24138",
+      "UserId": 0,
+      "Username": "Sora574",
+      "UserAvatar": null,
+      "UserGravatar": "5691c27a3aa3e56e879a3f8545b28ef2",
+      "EditableText": "Sorry, here:\n[url:3fa93lql]http&#58;//quest5&#46;net/wiki/Delegate_element[/url:3fa93lql]",
+      "EditableFormat": "bbcode",
+      "HTML": "Sorry, here:<br/><a href=\"http&#58;//quest5&#46;net/wiki/Delegate_element\" rel=\"nofollow\">http&#58;//quest5&#46;net/wiki/Delegate_element</a>",
+      "PostDate": "2013-04-19T22:34:54+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24140",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "I see. Yeah, it looks like a mistake. I can't figure out any way that &quot;properties&quot; would make sense there.",
+      "EditableFormat": "bbcode",
+      "HTML": "I see. Yeah, it looks like a mistake. I can't figure out any way that &quot;properties&quot; would make sense there.",
+      "PostDate": "2013-04-19T23:42:52+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "24141",
+      "UserId": 0,
+      "Username": "Sora574",
+      "UserAvatar": null,
+      "UserGravatar": "5691c27a3aa3e56e879a3f8545b28ef2",
+      "EditableText": "Hmm... Okay, well thank you for the answers!",
+      "EditableFormat": "bbcode",
+      "HTML": "Hmm... Okay, well thank you for the answers!",
+      "PostDate": "2013-04-20T01:26:58+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

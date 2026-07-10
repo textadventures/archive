@@ -1,0 +1,63 @@
+{
+  "Topic": {
+    "TopicId": "wfzjfe6feearrwl4qbve-a",
+    "ForumId": "10",
+    "Title": "Calling exits",
+    "LastUpdated": "2016-12-12T23:14:57.738745Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "cb865c39-12f9-4cfe-8a7c-a7e53504f2ab",
+      "UserId": 281496,
+      "Username": "Scrim",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/f24d40e37f733ee49032f5b04ca304fc?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm attempting to make a script so that the player can throw objects to rooms connected to the player's current room. Unfortunately I can't seem to figure out how to make the script determine if an exit is present in the requested direction, let alone if it's locked/closed. Any suggestions or a nudge in the right direction would be greatly appreciated.\r\n\r\nAdditionally, I'm running the browser version of Quest.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm attempting to make a script so that the player can throw objects to rooms connected to the player's current room. Unfortunately I can't seem to figure out how to make the script determine if an exit is present in the requested direction, let alone if it's locked/closed. Any suggestions or a nudge in the right direction would be greatly appreciated.</p>\n<p>Additionally, I'm running the browser version of Quest.</p>\n\n",
+      "PostDate": "2016-12-12T23:14:57.738745Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "a10abdf8-66ea-415f-b052-8244911f2595",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The `GetExitByName` function does just this (note that it gets the name of the exit, so use `GetObject` to get the exit from the name) (also, all exits have names, even if you do not give them names).\r\nhttp://docs.textadventures.co.uk/quest/functions/getexitbyname.html\r\n\r\nI would guess something like this:\r\n```\r\nexitname = GetExitByName(player.parent, \"north\")\r\nexit = GetObject(exitname)\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The <code>GetExitByName</code> function does just this (note that it gets the name of the exit, so use <code>GetObject</code> to get the exit from the name) (also, all exits have names, even if you do not give them names).<br>\nhttp://docs.textadventures.co.uk/quest/functions/getexitbyname.html</p>\n<p>I would guess something like this:</p>\n<pre><code>exitname = GetExitByName(player.parent, \"north\")\nexit = GetObject(exitname)\n</code></pre>\n\n",
+      "PostDate": "2016-12-13T08:24:06.0110857Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "17cadbbe-48a7-467a-a860-cf1120639c06",
+      "UserId": 281496,
+      "Username": "Scrim",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/f24d40e37f733ee49032f5b04ca304fc?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'll give that a shot and see what I can do. I also didn't realize there was a page devoted to the various functions, many thanks!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'll give that a shot and see what I can do. I also didn't realize there was a page devoted to the various functions, many thanks!</p>\n\n",
+      "PostDate": "2016-12-13T08:47:32.2735572Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "bad6af17-f923-4729-9a26-ee0fb75f9893",
+      "UserId": 281496,
+      "Username": "Scrim",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/f24d40e37f733ee49032f5b04ca304fc?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Managed to get a rough draft working with no problems that I can find.\r\n\r\nFor anyone interested:\r\n\r\n    if (Got(object)) {\r\n      msg (\"Which direction?\")\r\n      get input {\r\n        if (ListContains(Split (\"north;east;south;west;northeast;northwest;southeast;southwest;up;down;in;out\" , \";\"),(LCase(result)))) {\r\n          exitname = \"null\"\r\n          exitname = GetExitByName(player.parent, LCase(result))\r\n          if (exitname <> null) {\r\n            exit = GetObject(exitname)\r\n            msg ((\"You threw the \" + LCase(object.name) + \" to the \" + LCase(result) + \"!\"))\r\n            MoveObject (object, exit.to)\r\n          }\r\n          else {\r\n            msg ((\"Thud! You throw the \" + LCase(object.name) + \" \" + LCase(result) + \" only to hit a wall and promptly fall to the ground.\"))\r\n            MoveObjectHere (object)\r\n          }\r\n        }\r\n        else {\r\n          msg (\"You are not quite sure where that is.\")\r\n        }\r\n      }\r\n    }\r\n    else if (not Got(object)) {\r\n      msg (\"You have to pick it up first.\")\r\n    }",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Managed to get a rough draft working with no problems that I can find.</p>\n<p>For anyone interested:</p>\n<pre><code>if (Got(object)) {\n  msg (\"Which direction?\")\n  get input {\n    if (ListContains(Split (\"north;east;south;west;northeast;northwest;southeast;southwest;up;down;in;out\" , \";\"),(LCase(result)))) {\n      exitname = \"null\"\n      exitname = GetExitByName(player.parent, LCase(result))\n      if (exitname &lt;&gt; null) {\n        exit = GetObject(exitname)\n        msg ((\"You threw the \" + LCase(object.name) + \" to the \" + LCase(result) + \"!\"))\n        MoveObject (object, exit.to)\n      }\n      else {\n        msg ((\"Thud! You throw the \" + LCase(object.name) + \" \" + LCase(result) + \" only to hit a wall and promptly fall to the ground.\"))\n        MoveObjectHere (object)\n      }\n    }\n    else {\n      msg (\"You are not quite sure where that is.\")\n    }\n  }\n}\nelse if (not Got(object)) {\n  msg (\"You have to pick it up first.\")\n}\n</code></pre>\n\n",
+      "PostDate": "2016-12-15T03:32:10.6385255Z",
+      "LastEditDate": null
+    }
+  ]
+}

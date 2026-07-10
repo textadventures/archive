@@ -1,0 +1,109 @@
+{
+  "Topic": {
+    "TopicId": "7etzfip_luiedeb_cwz_dw",
+    "ForumId": "24",
+    "Title": "Sequential sounds",
+    "LastUpdated": "2021-01-25T03:25:17.1940663Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "06409ef3-6a41-48aa-992f-634bb8158f78",
+      "UserId": 251768,
+      "Username": "Bluevoss",
+      "AvatarUrl": "https://i.imgur.com/6mfIIbhb.gif",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "In my current effort, here's the sort of command I'm using to make sounds occur...\r\n\r\n```\r\n<audio src=\"sounds/button_booster.wav\" autoplay />\r\n```\r\nHowever, if there is ANOTHER sound following this, they play over each other. Is there a way I can get one sound to play and then another? And this has to be in the same section - no splitting across code areas.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>In my current effort, here's the sort of command I'm using to make sounds occur...</p>\n<pre><code>&lt;audio src=\"sounds/button_booster.wav\" autoplay /&gt;\n</code></pre>\n<p>However, if there is ANOTHER sound following this, they play over each other. Is there a way I can get one sound to play and then another? And this has to be in the same section - no splitting across code areas.</p>\n\n",
+      "PostDate": "2021-01-25T03:25:17.1940663Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "ef3832cf-1193-47c9-afb3-91a4b860cd5b",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Off the top of my head, how about something like…\r\n```\r\n<audio src=\"sounds/first_sound.wav\" autoplay onended=\"$('#secondsound').play()\" />\r\n<audio src=\"sounds/second_sound.wav\" id=\"secondsound\" />\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Off the top of my head, how about something like…</p>\n<pre><code>&lt;audio src=\"sounds/first_sound.wav\" autoplay onended=\"$('#secondsound').play()\" /&gt;\n&lt;audio src=\"sounds/second_sound.wav\" id=\"secondsound\" /&gt;\n</code></pre>\n\n",
+      "PostDate": "2021-01-25T09:38:16.6699802Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "3b0a29b1-4408-4967-a889-cd74fd8f57ab",
+      "UserId": 251768,
+      "Username": "Bluevoss",
+      "AvatarUrl": "https://i.imgur.com/6mfIIbhb.gif",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Well, the problem is I don't know which (if any) second sound will be played. Essentially this is for my spaceship game, and one example would be engines. If you apply thrust, you get the roar. But then, if you pass the mid-way fuel point, you should then hear \"Bingo fuel!\".\r\n\r\nOr maybe I'll have to check the fuel level before the engine sound.\r\n\r\nOf course, there might be a number of different sounds - proximity alerts, ship sightings, etc.\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Well, the problem is I don't know which (if any) second sound will be played. Essentially this is for my spaceship game, and one example would be engines. If you apply thrust, you get the roar. But then, if you pass the mid-way fuel point, you should then hear \"Bingo fuel!\".</p>\n<p>Or maybe I'll have to check the fuel level before the engine sound.</p>\n<p>Of course, there might be a number of different sounds - proximity alerts, ship sightings, etc.</p>\n\n",
+      "PostDate": "2021-01-25T13:59:59.6621483Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "d85207ed-dfeb-4a05-b46b-bc30437ea0ef",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "In that case, you could have something like…\r\n\r\n```\r\n    $(document).on('ended canplay', '.sfxqueue', () => $('.sfxqueue').each(\r\n      (i, element) => (element.ended ? $(element).remove() : (element.play() ? false : false))\r\n    ));\r\n```\r\nin your startup, and then output audio elements like:\r\n\r\n```\r\n<audio src=\"sounds/first_sound.wav\" class=\"sfxqueue\" />\r\n<audio src=\"sounds/second_sound.wav\" class=\"sfxqueue\" />\r\n```\r\n\r\nIt sets up an event handler which I think should be fired whenever an audio element with that class either ends, or has buffered enough audio that it can start playing. The event removes all the audio elements that have already finished, and then if there are any left, plays the first. If you're loading a second sound effect when the first is still playing, it will just tell the first to play again, which *should* have no effect; so the second one will be played when the first ends.\r\n\r\nEdit: Added the ugly \"false:false\" construct, in an attempt to ensure this will work properly on browsers regardless of whether they're using the old or new standard for `.play()`'s return value.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>In that case, you could have something like…</p>\n<pre><code>    $(document).on('ended canplay', '.sfxqueue', () =&gt; $('.sfxqueue').each(\n      (i, element) =&gt; (element.ended ? $(element).remove() : (element.play() ? false : false))\n    ));\n</code></pre>\n<p>in your startup, and then output audio elements like:</p>\n<pre><code>&lt;audio src=\"sounds/first_sound.wav\" class=\"sfxqueue\" /&gt;\n&lt;audio src=\"sounds/second_sound.wav\" class=\"sfxqueue\" /&gt;\n</code></pre>\n<p>It sets up an event handler which I think should be fired whenever an audio element with that class either ends, or has buffered enough audio that it can start playing. The event removes all the audio elements that have already finished, and then if there are any left, plays the first. If you're loading a second sound effect when the first is still playing, it will just tell the first to play again, which <em>should</em> have no effect; so the second one will be played when the first ends.</p>\n<p>Edit: Added the ugly \"false:false\" construct, in an attempt to ensure this will work properly on browsers regardless of whether they're using the old or new standard for <code>.play()</code>'s return value.</p>\n\n",
+      "PostDate": "2021-01-25T16:16:23.8992127Z",
+      "LastEditDate": "2021-01-25T16:22:01.5897105Z",
+      "link": null
+    },
+    {
+      "PostId": "47fe3dce-d792-4f76-9b1f-6595b3ab63d7",
+      "UserId": 251768,
+      "Username": "Bluevoss",
+      "AvatarUrl": "https://i.imgur.com/6mfIIbhb.gif",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I gave it a try but might be doing it wrong. It didn't seem to work. I even put a test sound in there to make sure it worked. The test sound worked but the sequential sounds don't.\r\n\r\n```\r\n[[Start]]:\r\n\r\n    $(document).on('ended canplay', '.sfxqueue', () => $('.sfxqueue').each(\r\n      (i, element) => (element.ended ? $(element).remove() : (element.play() ? false : false))\r\n    ));\r\n\r\n[[next]]\r\n\r\n[[next]]:\r\n\r\n<these sounds do not play>\r\n<audio src=\"sounds/button_view.wav\" class=\"sfxqueue\" />\r\n<audio src=\"sounds/button_solar.wav\" class=\"sfxqueue\" />\r\n\r\n<this one (old style) does>\r\n<audio src=\"sounds/button_booster.wav\" autoplay />\r\n\r\nDid sound play?\r\n```\r\nApologies if I'm adding this wrong. I'm not sure what I'm doing here.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I gave it a try but might be doing it wrong. It didn't seem to work. I even put a test sound in there to make sure it worked. The test sound worked but the sequential sounds don't.</p>\n<pre><code>[[Start]]:\n\n    $(document).on('ended canplay', '.sfxqueue', () =&gt; $('.sfxqueue').each(\n      (i, element) =&gt; (element.ended ? $(element).remove() : (element.play() ? false : false))\n    ));\n\n[[next]]\n\n[[next]]:\n\n&lt;these sounds do not play&gt;\n&lt;audio src=\"sounds/button_view.wav\" class=\"sfxqueue\" /&gt;\n&lt;audio src=\"sounds/button_solar.wav\" class=\"sfxqueue\" /&gt;\n\n&lt;this one (old style) does&gt;\n&lt;audio src=\"sounds/button_booster.wav\" autoplay /&gt;\n\nDid sound play?\n</code></pre>\n<p>Apologies if I'm adding this wrong. I'm not sure what I'm doing here.</p>\n\n",
+      "PostDate": "2021-01-25T21:02:27.9187031Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "06659aac-2ad8-4469-abba-1480b07f1936",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I was working from theory, so could be my mistake. Is there anything in the console?\r\n\r\nCould be worth adding breadcrumbs to display a message when the event is called, check that it's working.\r\nI'll try to find time to take a look tomorrow if I'm not behind on work again.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I was working from theory, so could be my mistake. Is there anything in the console?</p>\n<p>Could be worth adding breadcrumbs to display a message when the event is called, check that it's working.<br>\nI'll try to find time to take a look tomorrow if I'm not behind on work again.</p>\n\n",
+      "PostDate": "2021-01-25T21:05:06.5068753Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "1260f886-8a3a-4781-a697-a04a6f98a29b",
+      "UserId": 251768,
+      "Username": "Bluevoss",
+      "AvatarUrl": "https://i.imgur.com/6mfIIbhb.gif",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "It's not a big deal - nice to have. Either that or could you give me some sort of timer loop? Hows that work? (that would be the easiest way to gimic this up).",
+      "EditableFormat": "markdown",
+      "HTML": "<p>It's not a big deal - nice to have. Either that or could you give me some sort of timer loop? Hows that work? (that would be the easiest way to gimic this up).</p>\n\n",
+      "PostDate": "2021-01-27T04:43:17.9161009Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

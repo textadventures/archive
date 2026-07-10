@@ -1,0 +1,83 @@
+{
+  "Topic": {
+    "TopicId": "2842",
+    "ForumId": "10",
+    "Title": "Can this be done? Explanation inside...",
+    "LastUpdated": "2012-02-24T05:26:57+00:00",
+    "ReplyCount": 5
+  },
+  "Posts": [
+    {
+      "PostId": "19659",
+      "UserId": 0,
+      "Username": "AvecPardon",
+      "UserAvatar": null,
+      "UserGravatar": "1f021be8f7b3c6617fcd8a96e847c27d",
+      "EditableText": "Okay, so for the past week or so I've been kind of racking my brain over a script I've been trying to put together. The basics are I want to have the player character have a Health attribute and a Damage attribute that affect each other. If the player takes a certain amount of Health loss, in my case 50HP, he gains 1point of Damage. So in my head it works out to:\n\nFor every 50 or more HP lost, 1 point Damage added. If 100HP or more lost, 2 points Damage added. And so on.\n\nI've tried several methods of spaghetti coding to get this to work, but so far it either doesn't work at all or it works far too well and the poor robot's taking on 2-5 points of damage for every 10HP that gets knocked off. I'm almost at my wit's end trying to figure this out.\n\nCould anyone give me some pointers as to how this can be pulled off properly, if at all?\n\n[b:3on9hd42]Edit:[/b:3on9hd42]After some minor adjustments to label the attributes to match and alter my combat scripts, I've found that this function works beautifully. Thanks once again. Yes, it had slipped my mind to mention that this was going to be used via combat, so all is good.",
+      "EditableFormat": "bbcode",
+      "HTML": "Okay, so for the past week or so I've been kind of racking my brain over a script I've been trying to put together. The basics are I want to have the player character have a Health attribute and a Damage attribute that affect each other. If the player takes a certain amount of Health loss, in my case 50HP, he gains 1point of Damage. So in my head it works out to:<br/><br/>For every 50 or more HP lost, 1 point Damage added. If 100HP or more lost, 2 points Damage added. And so on.<br/><br/>I've tried several methods of spaghetti coding to get this to work, but so far it either doesn't work at all or it works far too well and the poor robot's taking on 2-5 points of damage for every 10HP that gets knocked off. I'm almost at my wit's end trying to figure this out.<br/><br/>Could anyone give me some pointers as to how this can be pulled off properly, if at all?<br/><br/><span style=\"font-weight:bold;\">Edit:</span>After some minor adjustments to label the attributes to match and alter my combat scripts, I've found that this function works beautifully. Thanks once again. Yes, it had slipped my mind to mention that this was going to be used via combat, so all is good.",
+      "PostDate": "2012-02-23T03:02:32+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "19660",
+      "UserId": 0,
+      "Username": "sgreig",
+      "UserAvatar": null,
+      "UserGravatar": "9117185af66d72729b195384e3a446f0",
+      "EditableText": "Almost anything can be done in Quest, it's just a matter of figuring out how to make it work. It doesn't sound like it would be too difficult to implement something like this, but you're a little light on the details. For example, is damage cumulative or fixed at 50hp every time the player is hit? Is this part of a combat mechanic? etc. However...\n\nThe easiest way I can think of to do this would be to have (in the case of cumulative damage) 3 attributes on the player object. One to keep track of the player's current HP (for example player.current_hp), the damage counter you want incremented (player.damage_counter) and a third stat that increments by however much damage there is and resets when it gets to 50, adding 1 point to the damage counter variable as well (call it player.hp_tally for sake of argument).\n\nI would then write a function that would be called whenever the player takes damage, passing it the amount of damage taken. The function would probably look something like this (assuming the amount of damage being dealt is stored in the variable damage_amount):\n\n[code:4j8z5qan]\n  &lt;function name=&quot;damage_player&quot; parameters=&quot;damage_amount&quot;&gt;&lt;!&#91;CDATA&#91;\n    player&#46;current_hp = player&#46;current_hp - damage_amount\n    player&#46;hp_tally = player&#46;hp_tally + damage_amount\n    if (player&#46;hp_tally &gt;= 50) {\n      player&#46;hp_tally = 0\n      player&#46;damage_counter = player&#46;damage_counter + 1\n    }\n  &#93;&#93;&gt;&lt;/function&gt;\n[/code:4j8z5qan]\n\nObviously, the only issue with this function and cumulative damage is that it doesn't store the remainder if the hp_tally goes over 50, but this should give you a good starting point anyway. It's untested though, so apologies if it doesn't work at all.",
+      "EditableFormat": "bbcode",
+      "HTML": "Almost anything can be done in Quest, it's just a matter of figuring out how to make it work. It doesn't sound like it would be too difficult to implement something like this, but you're a little light on the details. For example, is damage cumulative or fixed at 50hp every time the player is hit? Is this part of a combat mechanic? etc. However...<br/><br/>The easiest way I can think of to do this would be to have (in the case of cumulative damage) 3 attributes on the player object. One to keep track of the player's current HP (for example player.current_hp), the damage counter you want incremented (player.damage_counter) and a third stat that increments by however much damage there is and resets when it gets to 50, adding 1 point to the damage counter variable as well (call it player.hp_tally for sake of argument).<br/><br/>I would then write a function that would be called whenever the player takes damage, passing it the amount of damage taken. The function would probably look something like this (assuming the amount of damage being dealt is stored in the variable damage_amount):<br/><br/><pre><code><br/>  &lt;function name=&quot;damage_player&quot; parameters=&quot;damage_amount&quot;&gt;&lt;!&#91;CDATA&#91;<br/>    player&#46;current_hp = player&#46;current_hp - damage_amount<br/>    player&#46;hp_tally = player&#46;hp_tally + damage_amount<br/>    if (player&#46;hp_tally &gt;= 50) {<br/>      player&#46;hp_tally = 0<br/>      player&#46;damage_counter = player&#46;damage_counter + 1<br/>    }<br/>  &#93;&#93;&gt;&lt;/function&gt;<br/></code></pre><br/><br/>Obviously, the only issue with this function and cumulative damage is that it doesn't store the remainder if the hp_tally goes over 50, but this should give you a good starting point anyway. It's untested though, so apologies if it doesn't work at all.",
+      "PostDate": "2012-02-23T07:33:08+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "19661",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "[quote=&quot;sgreig&quot;:2bvvnf4q]\nObviously, the only issue with this function and cumulative damage is that it doesn't store the remainder if the hp_tally goes over 50, but this should give you a good starting point anyway. It's untested though, so apologies if it doesn't work at all.[/quote:2bvvnf4q]\n\nThis shouldnt be the problem \n\n[code:2bvvnf4q]\n  &lt;function name=&quot;damage_player&quot; parameters=&quot;damage_amount&quot;&gt;&lt;!&#91;CDATA&#91;\n    player&#46;current_hp = player&#46;current_hp - damage_amount\n    player&#46;hp_tally = player&#46;hp_tally + damage_amount\n    if (player&#46;hp_tally &gt;= 50) {\n      player&#46;damage_counter = player&#46;damage_counter + (player&#46;hp_tally / 50)\n      player&#46;hp_tally = 0\n    }\n  &#93;&#93;&gt;&lt;/function&gt;\n[/code:2bvvnf4q]",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>sgreig wrote:</cite><br/>Obviously, the only issue with this function and cumulative damage is that it doesn't store the remainder if the hp_tally goes over 50, but this should give you a good starting point anyway. It's untested though, so apologies if it doesn't work at all.</blockquote><br/><br/>This shouldnt be the problem <br/><br/><pre><code><br/>  &lt;function name=&quot;damage_player&quot; parameters=&quot;damage_amount&quot;&gt;&lt;!&#91;CDATA&#91;<br/>    player&#46;current_hp = player&#46;current_hp - damage_amount<br/>    player&#46;hp_tally = player&#46;hp_tally + damage_amount<br/>    if (player&#46;hp_tally &gt;= 50) {<br/>      player&#46;damage_counter = player&#46;damage_counter + (player&#46;hp_tally / 50)<br/>      player&#46;hp_tally = 0<br/>    }<br/>  &#93;&#93;&gt;&lt;/function&gt;<br/></code></pre>",
+      "PostDate": "2012-02-23T07:45:11+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "19663",
+      "UserId": 0,
+      "Username": "sgreig",
+      "UserAvatar": null,
+      "UserGravatar": "9117185af66d72729b195384e3a446f0",
+      "EditableText": "Thanks Pertex. I know it could be done, I was just too lazy to change it, as I didn't think about it until after I'd written it all out. Good to know I got the rest of it right though.  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks Pertex. I know it could be done, I was just too lazy to change it, as I didn't think about it until after I'd written it all out. Good to know I got the rest of it right though.  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "PostDate": "2012-02-23T07:53:30+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "19668",
+      "UserId": 0,
+      "Username": "AvecPardon",
+      "UserAvatar": null,
+      "UserGravatar": "1f021be8f7b3c6617fcd8a96e847c27d",
+      "EditableText": "And here I was struggling to do it using only TWO attributes! XD Using a third never occurred to me. I had a feeling it was meant to be a function, but every time I wrote it, it just gave me errors. Thanks much for the help. I'll use this as a base and tweak it if needed, but it looks like it'll be perfect as it is. You guys are the best.\n\nCheers!",
+      "EditableFormat": "bbcode",
+      "HTML": "And here I was struggling to do it using only TWO attributes! XD Using a third never occurred to me. I had a feeling it was meant to be a function, but every time I wrote it, it just gave me errors. Thanks much for the help. I'll use this as a base and tweak it if needed, but it looks like it'll be perfect as it is. You guys are the best.<br/><br/>Cheers!",
+      "PostDate": "2012-02-23T22:53:47+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "19669",
+      "UserId": 0,
+      "Username": "sgreig",
+      "UserAvatar": null,
+      "UserGravatar": "9117185af66d72729b195384e3a446f0",
+      "EditableText": "NP. Glad I could help.  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "EditableFormat": "bbcode",
+      "HTML": "NP. Glad I could help.  <!-- s:D --><img src=\"{SMILIES_PATH}/icon_biggrin.gif\" alt=\":D\" title=\"Very Happy\" /><!-- s:D -->",
+      "PostDate": "2012-02-24T05:26:57+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

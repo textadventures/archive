@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "1981",
+    "ForumId": "10",
+    "Title": "Var problem",
+    "LastUpdated": "2009-02-03T12:27:25+00:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "15851",
+      "UserId": 0,
+      "Username": "Misdemonar",
+      "UserAvatar": null,
+      "UserGravatar": "e1d60b489be2f5aca0d393ffccebde63",
+      "EditableText": "II have my var on my weapon, that when it's used on an object with the property &quot;enemy&quot; that it will decement the var &quot;ehp&quot; will decrease by the weapons &quot;dmg&quot;, but when II use the weapon on the enemy, ehp does not go down, why?",
+      "EditableFormat": "bbcode",
+      "HTML": "II have my var on my weapon, that when it's used on an object with the property &quot;enemy&quot; that it will decement the var &quot;ehp&quot; will decrease by the weapons &quot;dmg&quot;, but when II use the weapon on the enemy, ehp does not go down, why?",
+      "PostDate": "2009-02-02T19:08:06+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "15858",
+      "UserId": 0,
+      "Username": "Elexxorine",
+      "UserAvatar": null,
+      "UserGravatar": "a220ee44d8fe2f07029cf1f61b98bf40",
+      "EditableText": "You need to describe what you've done in much more detail. It would be helpful if you post the game's asl, open the .asl file with a text editor and post it here or attach it to a post by clicking the 'upload attachment' below the box for typing in text when posting.",
+      "EditableFormat": "bbcode",
+      "HTML": "You need to describe what you've done in much more detail. It would be helpful if you post the game's asl, open the .asl file with a text editor and post it here or attach it to a post by clicking the 'upload attachment' below the box for typing in text when posting.",
+      "PostDate": "2009-02-02T19:33:37+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "15879",
+      "UserId": 0,
+      "Username": "Misdemonar",
+      "UserAvatar": null,
+      "UserGravatar": "e1d60b489be2f5aca0d393ffccebde63",
+      "EditableText": "For the weapon:\n\tdefine object &lt;Dual Revolvers&gt;\n\t\tlook &lt;Two eight chamberd revolvers.&gt;\n\t\tdisplaytype &lt;Object&gt;\n\t\tarticle &lt;it&gt;\n\t\tgender &lt;it&gt;\n\t\tinvisible\n\t\tuse on anything {\n\t\t\tif property &lt;#quest.use.object.name#; zombie&gt; then {\n\t\t\t\tmsg &lt;You attack a #quest.use.object.name#  for %dmg%&gt;\n\t\t\t\tset numeric &lt;zhp; #(quest.use.object.name):hitpoints#&gt;\n\t\t\t\tset numeric &lt;zhp; %dmg%&gt; }\n\t\t}\n\t\tproperties &lt;enemy&gt;\n\t\taction &lt;equip&gt; {\n\t\t\tif flag &lt;go&gt; then msg &lt;You cannot equip two guns.&gt; else {\n\t\t\t\tmsg &lt;You put on the Dual Revolvers.&gt;\n\t\t\t\tset &lt;dmg; 2&gt; }\n\t\t\tflag on &lt;go&gt;\n\t\t}\n\tend define\n\nend define\n\n\n\nFor the combat system\ndefine room &lt;test desert&gt;\n\tplace &lt;Choose Class&gt;\n\tscript {\n\t\tflag on &lt;co&gt;\n\t\tset numeric &lt;zombies; 0&gt;\n\t\tif here &lt;zombie&gt; then inc &lt;zombies; 1&gt;\n\t\tif here &lt;zombie2&gt; then inc &lt;zombies; 1&gt;\n\t}\n\tafterturn {\n\t\tif flag &lt;co&gt; and ( %zombies% = 1 ) then {\n\t\t\tset &lt;zhp; 5&gt;\n\t\t\tset &lt;zdmg; 1&gt;\n\t\t\tmsg &lt;A zombie attacks you for %zdmg%&gt;\n\t\t\tdec &lt;hp; %zdmg%&gt;\n\t\t\tif ( %zhp% &lt;= 0 ) then {\n\t\t\t\tmsg &lt;A zombie dies.&gt;\n\t\t\t\tdec &lt;zombies; 1&gt; } } else {\n\t\t\t }\n\t\tif ( %zombies% = 2 ) then {\n\t\t\tset numeric &lt;zhp; 10&gt;\n\t\t\tset numeric &lt;zdmg; 2&gt;\n\t\t\tmsg &lt;2 Zombies attack you for %zdmg%&gt;\n\t\t\tdec &lt;hp; %zdmg%&gt;\n\t\t\tif ( %zhp% &lt;= 5 ) then {\n\t\t\t\tmsg &lt;A zombie dies.&gt;\n\t\t\t\tdec &lt;zombies; 1&gt; } } else {\n\t\t\t }\n\t\tif ( %zombies% &gt; 0 ) then msg &lt;|cr There are %zombies% zombies here.&gt;\n\t}\n\ttype &lt;new&gt;\n\n\tdefine object &lt;zombie&gt;\n\t\tdisplaytype &lt;Character&gt;\n\t\tarticle &lt;him&gt;\n\t\tgender &lt;he&gt;\n\t\tinvisible\n\t\ttype &lt;enemy&gt;\n\t\tproperties &lt;hitpoints=20; zombie&gt;\n\t\taction &lt;hostile&gt; \n\tend define\n\n\tdefine object &lt;zombie2&gt;\n\t\talias &lt;zombie2&gt;\n\t\tdisplaytype &lt;Character&gt;\n\t\tarticle &lt;him&gt;\n\t\tgender &lt;he&gt;\n\t\tinvisible\n\t\ttype &lt;enemy&gt;\n\t\tproperties &lt;hitpoints=20; enemy&gt;\n\tend define\n\nend define",
+      "EditableFormat": "bbcode",
+      "HTML": "For the weapon:<br/>\tdefine object &lt;Dual Revolvers&gt;<br/>\t\tlook &lt;Two eight chamberd revolvers.&gt;<br/>\t\tdisplaytype &lt;Object&gt;<br/>\t\tarticle &lt;it&gt;<br/>\t\tgender &lt;it&gt;<br/>\t\tinvisible<br/>\t\tuse on anything {<br/>\t\t\tif property &lt;#quest.use.object.name#; zombie&gt; then {<br/>\t\t\t\tmsg &lt;You attack a #quest.use.object.name#  for %dmg%&gt;<br/>\t\t\t\tset numeric &lt;zhp; #(quest.use.object.name):hitpoints#&gt;<br/>\t\t\t\tset numeric &lt;zhp; %dmg%&gt; }<br/>\t\t}<br/>\t\tproperties &lt;enemy&gt;<br/>\t\taction &lt;equip&gt; {<br/>\t\t\tif flag &lt;go&gt; then msg &lt;You cannot equip two guns.&gt; else {<br/>\t\t\t\tmsg &lt;You put on the Dual Revolvers.&gt;<br/>\t\t\t\tset &lt;dmg; 2&gt; }<br/>\t\t\tflag on &lt;go&gt;<br/>\t\t}<br/>\tend define<br/><br/>end define<br/><br/><br/><br/>For the combat system<br/>define room &lt;test desert&gt;<br/>\tplace &lt;Choose Class&gt;<br/>\tscript {<br/>\t\tflag on &lt;co&gt;<br/>\t\tset numeric &lt;zombies; 0&gt;<br/>\t\tif here &lt;zombie&gt; then inc &lt;zombies; 1&gt;<br/>\t\tif here &lt;zombie2&gt; then inc &lt;zombies; 1&gt;<br/>\t}<br/>\tafterturn {<br/>\t\tif flag &lt;co&gt; and ( %zombies% = 1 ) then {<br/>\t\t\tset &lt;zhp; 5&gt;<br/>\t\t\tset &lt;zdmg; 1&gt;<br/>\t\t\tmsg &lt;A zombie attacks you for %zdmg%&gt;<br/>\t\t\tdec &lt;hp; %zdmg%&gt;<br/>\t\t\tif ( %zhp% &lt;= 0 ) then {<br/>\t\t\t\tmsg &lt;A zombie dies.&gt;<br/>\t\t\t\tdec &lt;zombies; 1&gt; } } else {<br/>\t\t\t }<br/>\t\tif ( %zombies% = 2 ) then {<br/>\t\t\tset numeric &lt;zhp; 10&gt;<br/>\t\t\tset numeric &lt;zdmg; 2&gt;<br/>\t\t\tmsg &lt;2 Zombies attack you for %zdmg%&gt;<br/>\t\t\tdec &lt;hp; %zdmg%&gt;<br/>\t\t\tif ( %zhp% &lt;= 5 ) then {<br/>\t\t\t\tmsg &lt;A zombie dies.&gt;<br/>\t\t\t\tdec &lt;zombies; 1&gt; } } else {<br/>\t\t\t }<br/>\t\tif ( %zombies% &gt; 0 ) then msg &lt;|cr There are %zombies% zombies here.&gt;<br/>\t}<br/>\ttype &lt;new&gt;<br/><br/>\tdefine object &lt;zombie&gt;<br/>\t\tdisplaytype &lt;Character&gt;<br/>\t\tarticle &lt;him&gt;<br/>\t\tgender &lt;he&gt;<br/>\t\tinvisible<br/>\t\ttype &lt;enemy&gt;<br/>\t\tproperties &lt;hitpoints=20; zombie&gt;<br/>\t\taction &lt;hostile&gt; <br/>\tend define<br/><br/>\tdefine object &lt;zombie2&gt;<br/>\t\talias &lt;zombie2&gt;<br/>\t\tdisplaytype &lt;Character&gt;<br/>\t\tarticle &lt;him&gt;<br/>\t\tgender &lt;he&gt;<br/>\t\tinvisible<br/>\t\ttype &lt;enemy&gt;<br/>\t\tproperties &lt;hitpoints=20; enemy&gt;<br/>\tend define<br/><br/>end define",
+      "PostDate": "2009-02-02T23:12:43+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "15882",
+      "UserId": 0,
+      "Username": "Thanatos",
+      "UserAvatar": "2160_1332681621.jpg",
+      "UserGravatar": "c6621a24cf53876c4083bfb52afd2cc9",
+      "EditableText": "And by var I think he means Variable.",
+      "EditableFormat": "bbcode",
+      "HTML": "And by var I think he means Variable.",
+      "PostDate": "2009-02-03T06:21:39+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "15886",
+      "UserId": 0,
+      "Username": "Elexxorine",
+      "UserAvatar": null,
+      "UserGravatar": "a220ee44d8fe2f07029cf1f61b98bf40",
+      "EditableText": "[code:25xiqfnm]define object &lt;Dual Revolvers&gt;\n\tlook &lt;Two eight chamberd revolvers&#46;&gt;\n\tdisplaytype &lt;Object&gt;\n\tarticle &lt;it&gt;\n\tgender &lt;it&gt;\n\tinvisible\n\tuse on anything {\n\t\tif property &lt;#quest&#46;use&#46;object&#46;name#; enemy&gt; then {\n\t\t\tmsg &lt;You attack a #quest&#46;use&#46;object&#46;name# for %dmg%&gt;\n\t\t\tset numeric &lt;zhp; #(quest&#46;use&#46;object&#46;name)&#58;hitpoints#&gt;\n\t\t\tdec &lt;zhp; %dmg%&gt;\n\t\t\tproperty &lt;#quest&#46;use&#46;object&#46;name#; hitpoints=%zhp%&gt;\n\t\t}\n\t}\n\tproperties &lt;enemy&gt;\n\taction &lt;equip&gt; {\n\t\tif flag &lt;go&gt; then msg &lt;You cannot equip two guns&#46;&gt; else {\n\t\t\tmsg &lt;You put on the Dual Revolvers&#46;&gt;\n\t\t\tset &lt;dmg; 2&gt;\n\t\t}\n\t\tflag on &lt;go&gt;\n\t}\n\nend define[/code:25xiqfnm][code:25xiqfnm]define room &lt;test desert&gt;\n\tplace &lt;Choose Class&gt;\n\tafterturn {\n\t\tfor each object in &lt;#quest&#46;currentroom#&gt; {\n\t\t\tif property &lt;#quest&#46;thing#; enemy&gt; then {\n\t\t\t\tset numeric &lt;enemyhp; #(quest&#46;thing)&#58;hitpoints#&gt;\n\t\t\t\tif ( %enemyhp% &gt; 0 ) then {\n\t\t\t\t\tmsg &lt;$capfirst(#(quest&#46;thing)&#58;alias#)$ attacks you for #(quest&#46;thing)&#58;attack# damage&#46;&gt;\n\t\t\t\t\tdec &lt;hp; #(quest&#46;thing)&#58;attack#&gt;\n\t\t\t\t}\n\t\t\t\telse {\n\t\t\t\t\tmsg &lt;$capfirst(#(quest&#46;thing)&#58;alias#)$ dies&#46;&gt;\n\t\t\t\t\tmove &lt;#quest&#46;thing#; deadroom&gt;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n\ttype &lt;new&gt;\n\n\tdefine object &lt;zombie&gt;\n\t\tdisplaytype &lt;Character&gt;\n\t\tarticle &lt;him&gt;\n\t\tgender &lt;he&gt;\n\t\tinvisible\n\t\ttype &lt;enemy&gt;\n\t\tproperties &lt;hitpoints=20; enemy; attack=1&gt;\n\t\taction &lt;hostile&gt; \n\tend define\n\t\t\n\tdefine object &lt;zombie2&gt;\n\t\talias &lt;zombie&gt;\n\t\tdisplaytype &lt;Character&gt;\n\t\tarticle &lt;him&gt;\n\t\tgender &lt;he&gt;\n\t\tinvisible\n\t\ttype &lt;enemy&gt;\n\t\tproperties &lt;hitpoints=20; enemy; attack=1&gt;\n\tend define\n\nend define[/code:25xiqfnm]Here you go, cleaned it up, and made it work nice and smooth. Hope this helps, any more questions just ask.",
+      "EditableFormat": "bbcode",
+      "HTML": "<pre><code>define object &lt;Dual Revolvers&gt;<br/>\tlook &lt;Two eight chamberd revolvers&#46;&gt;<br/>\tdisplaytype &lt;Object&gt;<br/>\tarticle &lt;it&gt;<br/>\tgender &lt;it&gt;<br/>\tinvisible<br/>\tuse on anything {<br/>\t\tif property &lt;#quest&#46;use&#46;object&#46;name#; enemy&gt; then {<br/>\t\t\tmsg &lt;You attack a #quest&#46;use&#46;object&#46;name# for %dmg%&gt;<br/>\t\t\tset numeric &lt;zhp; #(quest&#46;use&#46;object&#46;name)&#58;hitpoints#&gt;<br/>\t\t\tdec &lt;zhp; %dmg%&gt;<br/>\t\t\tproperty &lt;#quest&#46;use&#46;object&#46;name#; hitpoints=%zhp%&gt;<br/>\t\t}<br/>\t}<br/>\tproperties &lt;enemy&gt;<br/>\taction &lt;equip&gt; {<br/>\t\tif flag &lt;go&gt; then msg &lt;You cannot equip two guns&#46;&gt; else {<br/>\t\t\tmsg &lt;You put on the Dual Revolvers&#46;&gt;<br/>\t\t\tset &lt;dmg; 2&gt;<br/>\t\t}<br/>\t\tflag on &lt;go&gt;<br/>\t}<br/><br/>end define</code></pre><pre><code>define room &lt;test desert&gt;<br/>\tplace &lt;Choose Class&gt;<br/>\tafterturn {<br/>\t\tfor each object in &lt;#quest&#46;currentroom#&gt; {<br/>\t\t\tif property &lt;#quest&#46;thing#; enemy&gt; then {<br/>\t\t\t\tset numeric &lt;enemyhp; #(quest&#46;thing)&#58;hitpoints#&gt;<br/>\t\t\t\tif ( %enemyhp% &gt; 0 ) then {<br/>\t\t\t\t\tmsg &lt;$capfirst(#(quest&#46;thing)&#58;alias#)$ attacks you for #(quest&#46;thing)&#58;attack# damage&#46;&gt;<br/>\t\t\t\t\tdec &lt;hp; #(quest&#46;thing)&#58;attack#&gt;<br/>\t\t\t\t}<br/>\t\t\t\telse {<br/>\t\t\t\t\tmsg &lt;$capfirst(#(quest&#46;thing)&#58;alias#)$ dies&#46;&gt;<br/>\t\t\t\t\tmove &lt;#quest&#46;thing#; deadroom&gt;<br/>\t\t\t\t}<br/>\t\t\t}<br/>\t\t}<br/>\t}<br/>\ttype &lt;new&gt;<br/><br/>\tdefine object &lt;zombie&gt;<br/>\t\tdisplaytype &lt;Character&gt;<br/>\t\tarticle &lt;him&gt;<br/>\t\tgender &lt;he&gt;<br/>\t\tinvisible<br/>\t\ttype &lt;enemy&gt;<br/>\t\tproperties &lt;hitpoints=20; enemy; attack=1&gt;<br/>\t\taction &lt;hostile&gt; <br/>\tend define<br/>\t\t<br/>\tdefine object &lt;zombie2&gt;<br/>\t\talias &lt;zombie&gt;<br/>\t\tdisplaytype &lt;Character&gt;<br/>\t\tarticle &lt;him&gt;<br/>\t\tgender &lt;he&gt;<br/>\t\tinvisible<br/>\t\ttype &lt;enemy&gt;<br/>\t\tproperties &lt;hitpoints=20; enemy; attack=1&gt;<br/>\tend define<br/><br/>end define</code></pre>Here you go, cleaned it up, and made it work nice and smooth. Hope this helps, any more questions just ask.",
+      "PostDate": "2009-02-03T12:27:25+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

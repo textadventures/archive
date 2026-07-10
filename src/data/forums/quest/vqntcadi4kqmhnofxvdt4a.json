@@ -1,0 +1,63 @@
+{
+  "Topic": {
+    "TopicId": "vqntcadi4kqmhnofxvdt4a",
+    "ForumId": "10",
+    "Title": "[Help] Using \"If\" to check contents of a String Value \"Result\"",
+    "LastUpdated": "2016-10-25T20:50:21.6168215Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "2ffea4bc-b3f7-4cf2-a23e-47c9af316096",
+      "UserId": 33643,
+      "Username": "Weezil",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5d4b46628646c6cad15ff71c6a128377?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "My game allows the player to input a name. However, I want to be able to keep the player from using names that I deem as unavailable or off limits. My hope is that there is a way for me to use Get Input, and then after receiving said input, be able to use an \"If\" script to check the contents of the string for an instance of letters \"wxyz\" in that order, unbroken, and perform an action based on whether or not this combination of letters was discovered in the string.\r\n\r\nIs this able to be done in the current program? Or will I need to find a workaround?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>My game allows the player to input a name. However, I want to be able to keep the player from using names that I deem as unavailable or off limits. My hope is that there is a way for me to use Get Input, and then after receiving said input, be able to use an \"If\" script to check the contents of the string for an instance of letters \"wxyz\" in that order, unbroken, and perform an action based on whether or not this combination of letters was discovered in the string.</p>\n<p>Is this able to be done in the current program? Or will I need to find a workaround?</p>\n\n",
+      "PostDate": "2016-10-25T20:50:21.6168215Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "2c77f685-fb1e-4b6d-bcb9-31e42d0e6dea",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "if you mean checking for this substring of \"wxyz\" (with no characters/symbols between them) at the start, mid, or end, then you can use these:\r\n\r\nhttp://docs.textadventures.co.uk/quest/functions/string/startswith.html\r\nhttp://docs.textadventures.co.uk/quest/functions/string/mid.html\r\nhttp://docs.textadventures.co.uk/quest/functions/string/endswith.html\r\n\r\n^^^^^^^^^^^^^^^^^^^^^^^\r\n\r\nhttp://docs.textadventures.co.uk/quest/functions/ (scroll down to the very bottom, to the 'String Functions' section/category, for String Manipulation Functions)\r\n\r\nan example below:\r\n\r\n```\r\n<function name=\"name_function\">\r\n  msg (\"Name?\")\r\n  get input {\r\n    if (StartsWith (result, \"wxyz\") or EndsWith (result, \"wxyz\")) { // using 'Mid' is a bit more complicated...\r\n      msg (\"unacceptable input, try again\")\r\n      wait {\r\n        ClearScreen\r\n        name_function\r\n      }\r\n    } else {\r\n      player.alias = result\r\n    }\r\n  }\r\n</function>\r\n```\r\n\r\n------------------------\r\n\r\notherwise, if you got characters/symbols between them... you'll need to use some somewhat fancy coding, using Stringlist Attributes so that you can do iteration\r\n\r\n----------------------\r\n\r\nif you want to see a ton of examples of this type of stuff:\r\n\r\nhttp://textadventures.co.uk/forum/samples/topic/4988/character-creation-crude-code-and-sample-game\r\n\r\nas if you got any questions",
+      "EditableFormat": "markdown",
+      "HTML": "<p>if you mean checking for this substring of \"wxyz\" (with no characters/symbols between them) at the start, mid, or end, then you can use these:</p>\n<p>http://docs.textadventures.co.uk/quest/functions/string/startswith.html<br>\nhttp://docs.textadventures.co.uk/quest/functions/string/mid.html<br>\nhttp://docs.textadventures.co.uk/quest/functions/string/endswith.html</p>\n<p>^^^^^^^^^^^^^^^^^^^^^^^</p>\n<p>http://docs.textadventures.co.uk/quest/functions/ (scroll down to the very bottom, to the 'String Functions' section/category, for String Manipulation Functions)</p>\n<p>an example below:</p>\n<pre><code>&lt;function name=\"name_function\"&gt;\n  msg (\"Name?\")\n  get input {\n    if (StartsWith (result, \"wxyz\") or EndsWith (result, \"wxyz\")) { // using 'Mid' is a bit more complicated...\n      msg (\"unacceptable input, try again\")\n      wait {\n        ClearScreen\n        name_function\n      }\n    } else {\n      player.alias = result\n    }\n  }\n&lt;/function&gt;\n</code></pre>\n<hr>\n<p>otherwise, if you got characters/symbols between them... you'll need to use some somewhat fancy coding, using Stringlist Attributes so that you can do iteration</p>\n<hr>\n<p>if you want to see a ton of examples of this type of stuff:</p>\n<p>http://textadventures.co.uk/forum/samples/topic/4988/character-creation-crude-code-and-sample-game</p>\n<p>as if you got any questions</p>\n\n",
+      "PostDate": "2016-10-25T21:40:27.2308856Z",
+      "LastEditDate": "2016-10-25T22:02:39.2365194Z"
+    },
+    {
+      "PostId": "38eaa05c-7ec7-4d9b-81d2-7eb1dc3768d5",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You could use a regex...\r\nhttps://github.com/ThePix/quest/wiki/Pattern-Matching-with-Regular-Expressions\r\n\r\nBut the easy way is with `Instr`, which will return zero if the substring is not found.\r\n```\r\nif (Instr(result, \"wxyz\") = 0) {\r\n  msg (\"Not there\")\r\n}\r\nelse {\r\n  msg (\"Found it!\")\r\n}\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You could use a regex...<br>\nhttps://github.com/ThePix/quest/wiki/Pattern-Matching-with-Regular-Expressions</p>\n<p>But the easy way is with <code>Instr</code>, which will return zero if the substring is not found.</p>\n<pre><code>if (Instr(result, \"wxyz\") = 0) {\n  msg (\"Not there\")\n}\nelse {\n  msg (\"Found it!\")\n}\n</code></pre>\n\n",
+      "PostDate": "2016-10-25T21:53:45.8192223Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26faca8e-2c9b-41f5-945c-e46402c1cb9b",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I guess I should've looked at 'instr', whoops. Didn't realize it had such a 'substring' Function, didn't recognize 'instr' as it.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I guess I should've looked at 'instr', whoops. Didn't realize it had such a 'substring' Function, didn't recognize 'instr' as it.</p>\n\n",
+      "PostDate": "2016-10-25T22:05:17.3461712Z",
+      "LastEditDate": null
+    }
+  ]
+}

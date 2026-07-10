@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "ffzxoh7beucvcy1bgd_quq",
+    "ForumId": "24",
+    "Title": "Mystery types in interacitons between squiffy and JS",
+    "LastUpdated": "2022-03-21T19:59:23.1962889Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "e7f2fc94-9086-42da-86e6-ade5083a3ac2",
+      "UserId": 251768,
+      "Username": "Bluevoss",
+      "AvatarUrl": "https://i.imgur.com/6mfIIbhb.gif",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Okay, I've got a bunch of functions running in my new game. However, once I got into my effort to round off things, darker issues were revealed, especially working with JS and squiffy in tandem.\r\n\r\nIf you had this code where the squiffy value of \"b\" was supposedly 5, you might see...\r\n```\r\n    var a=4;\r\n\r\n    a = a + get(\"b\");\r\n```\r\n\r\nusing window.alert fields, I've seen this value come up, not as 9, but as 45 (i.e. it treats the squiffy value as text and concatenates the two together). I don't know at what step along the way squiffy assumes its value is a string. What I'd like to do is force it  back to numeric for the arithmetic operations I must perform.\r\n\r\nIdeas?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Okay, I've got a bunch of functions running in my new game. However, once I got into my effort to round off things, darker issues were revealed, especially working with JS and squiffy in tandem.</p>\n<p>If you had this code where the squiffy value of \"b\" was supposedly 5, you might see...</p>\n<pre><code>    var a=4;\n\n    a = a + get(\"b\");\n</code></pre>\n<p>using window.alert fields, I've seen this value come up, not as 9, but as 45 (i.e. it treats the squiffy value as text and concatenates the two together). I don't know at what step along the way squiffy assumes its value is a string. What I'd like to do is force it  back to numeric for the arithmetic operations I must perform.</p>\n<p>Ideas?</p>\n\n",
+      "PostDate": "2022-03-21T19:59:23.1962889Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "fbed52c4-257d-488f-b30b-416784ee5f85",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "If you're setting it using `@set`, it will be set as a string. Squiffy just splits the line where the `=` is and assigns all the characters to the right of it to the attribute.\r\n\r\nYou can use the unary + operator to convert a value to a number. For example:\r\n```\r\n    var b = +get(\"b\")\r\n```\r\nThe `+` with no value to the left of it forces the number to the right of it to be treated as a number. But using this as part of an addition could get confusing to read. A more intuitive answer would be:\r\n```\r\n    a = a + Number(get(\"b\"))\r\n```\r\nor:\r\n```\r\n    a = a + parseInt(get(\"b\"))\r\n```\r\n\r\n(Note: if I remember correctly, `Number()` is actually the constructor for a Number object, rather than a native int. In 99% of cases this doesn't make any kind of difference; unless you want to do weird things like changing a numbers truthiness)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>If you're setting it using <code>@set</code>, it will be set as a string. Squiffy just splits the line where the <code>=</code> is and assigns all the characters to the right of it to the attribute.</p>\n<p>You can use the unary + operator to convert a value to a number. For example:</p>\n<pre><code>    var b = +get(\"b\")\n</code></pre>\n<p>The <code>+</code> with no value to the left of it forces the number to the right of it to be treated as a number. But using this as part of an addition could get confusing to read. A more intuitive answer would be:</p>\n<pre><code>    a = a + Number(get(\"b\"))\n</code></pre>\n<p>or:</p>\n<pre><code>    a = a + parseInt(get(\"b\"))\n</code></pre>\n<p>(Note: if I remember correctly, <code>Number()</code> is actually the constructor for a Number object, rather than a native int. In 99% of cases this doesn't make any kind of difference; unless you want to do weird things like changing a numbers truthiness)</p>\n\n",
+      "PostDate": "2022-03-21T21:24:21.1717497Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "659d315c-f5c7-4a48-965f-58bf4415c855",
+      "UserId": 251768,
+      "Username": "Bluevoss",
+      "AvatarUrl": "https://i.imgur.com/6mfIIbhb.gif",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I finally ran it down to the toFixed(1) command. I'd add a JS and a squiffy integer before using it and it would work fine. If I manipulated the value with toFixed, it would concatenate the JS and squiffy (and yes, that's what the JS manual said it would do).\r\n\r\nI don't use @set, and prefer {@var} assignments (mainly for reasons given on the other active thread - the @set command is spooky).\r\n\r\nOf course, I tried to prove this by duplicating the code in a test file and no, it wouldn't fail in the limited case. Right now, to handle roundoffs, I'm doing what I did 40 years ago in fortran - multiplying by 10, trunking, then dividing by 10. We'll see if that works.\r\n\r\nToday was a long day of frustration in squiffyLand.\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I finally ran it down to the toFixed(1) command. I'd add a JS and a squiffy integer before using it and it would work fine. If I manipulated the value with toFixed, it would concatenate the JS and squiffy (and yes, that's what the JS manual said it would do).</p>\n<p>I don't use @set, and prefer {@var} assignments (mainly for reasons given on the other active thread - the @set command is spooky).</p>\n<p>Of course, I tried to prove this by duplicating the code in a test file and no, it wouldn't fail in the limited case. Right now, to handle roundoffs, I'm doing what I did 40 years ago in fortran - multiplying by 10, trunking, then dividing by 10. We'll see if that works.</p>\n<p>Today was a long day of frustration in squiffyLand.</p>\n\n",
+      "PostDate": "2022-03-22T03:44:39.562565Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

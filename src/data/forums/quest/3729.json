@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "3729",
+    "ForumId": "10",
+    "Title": "kinda solved: How to make stairs map correctly",
+    "LastUpdated": "2013-07-03T10:50:02+01:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "25019",
+      "UserId": 0,
+      "Username": "shadowphile",
+      "UserAvatar": null,
+      "UserGravatar": "e3cc24e20c3199b383451c382c2c0b17",
+      "EditableText": "I see that the mapping can correctly map multiple levels so that overlapping nodes won't get visually confusing, using the 'up' or 'down' type.\nHowever, stairs always go sideways as well as down.  I figured out that I can add an offset in the attributes that allow me to go 'down' the stairs, draw the bottom of the stairs offset where it should be, and change the graphics to represent a different floor level.\nOnly thing I can't do is get it to draw a line between the top and bottom of the stairs.\nWhile we are at it, I'd like to make 'down' and 'east' synonymous so either command will go to the same place. Since both are already commands, that probably won't work.\n\nSo, that's TWO questions, heh.\n\n\nedit:  I did work out one unique way although it's a pain because you have to manually work out the coordinates for drawing a line.\nI use a script to draw a red line from the one node to the other.  Since it runs at a slope and is a different color it uniquely identifies the line as a stairs/ramp kinda path.  You have to draw it twice on each level otherwise it greys at on one of the levels.  Looks nice, clearly indicates what is going on, and lets you use 'up' or 'down' commands while clearly seeing which direction you are going. (which is a problem when only using text: going 'down the stairs' means what direction?  Can possibly lead to a disoriented player.)\n\nAnyway, I'm thinking there are other approaches, like going 'east' but changing the z-position in a script, although I haven't seen where to access variable.\nthanks",
+      "EditableFormat": "bbcode",
+      "HTML": "I see that the mapping can correctly map multiple levels so that overlapping nodes won't get visually confusing, using the 'up' or 'down' type.<br/>However, stairs always go sideways as well as down.  I figured out that I can add an offset in the attributes that allow me to go 'down' the stairs, draw the bottom of the stairs offset where it should be, and change the graphics to represent a different floor level.<br/>Only thing I can't do is get it to draw a line between the top and bottom of the stairs.<br/>While we are at it, I'd like to make 'down' and 'east' synonymous so either command will go to the same place. Since both are already commands, that probably won't work.<br/><br/>So, that's TWO questions, heh.<br/><br/><br/>edit:  I did work out one unique way although it's a pain because you have to manually work out the coordinates for drawing a line.<br/>I use a script to draw a red line from the one node to the other.  Since it runs at a slope and is a different color it uniquely identifies the line as a stairs/ramp kinda path.  You have to draw it twice on each level otherwise it greys at on one of the levels.  Looks nice, clearly indicates what is going on, and lets you use 'up' or 'down' commands while clearly seeing which direction you are going. (which is a problem when only using text: going 'down the stairs' means what direction?  Can possibly lead to a disoriented player.)<br/><br/>Anyway, I'm thinking there are other approaches, like going 'east' but changing the z-position in a script, although I haven't seen where to access variable.<br/>thanks",
+      "PostDate": "2013-06-10T04:57:55+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25024",
+      "UserId": 0,
+      "Username": "R2T1",
+      "UserAvatar": "6472_1452827095.jpg",
+      "UserGravatar": "56c07d47bfdd86fca900f3e8474ef80f",
+      "EditableText": "[quote:1lqaxnwx] I'd like to make 'down' and 'east' synonymous so either command will go to the same place.[/quote:1lqaxnwx]\nIf I understand you correctly, just set the exits for East &amp; Down to point to the same room. It will work in both directions too. ie. go East or Down to 'bottom of stairs' and go Up or West to the 'top of stairs'.\nSometimes the obvious works well. <!-- s:lol: --><img src=\"{SMILIES_PATH}/icon_lol.gif\" alt=\":lol:\" title=\"Laughing\" /><!-- s:lol: -->",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><p> I'd like to make 'down' and 'east' synonymous so either command will go to the same place.</p></blockquote><br/>If I understand you correctly, just set the exits for East &amp; Down to point to the same room. It will work in both directions too. ie. go East or Down to 'bottom of stairs' and go Up or West to the 'top of stairs'.<br/>Sometimes the obvious works well. <!-- s:lol: --><img src=\"{SMILIES_PATH}/icon_lol.gif\" alt=\":lol:\" title=\"Laughing\" /><!-- s:lol: -->",
+      "PostDate": "2013-06-10T10:15:51+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25048",
+      "UserId": 0,
+      "Username": "shadowphile",
+      "UserAvatar": null,
+      "UserGravatar": "e3cc24e20c3199b383451c382c2c0b17",
+      "EditableText": "Thanks R2T1\nWhat I was trying to avoid was having two different links show up going to the same place.\n\n[code:1tbfixqp]You are in a south room&#46;\nYou can go north or up&#46;[/code:1tbfixqp]\n\nIt works but I don't want north OR up, that sounds like two different choices.\nWhat I really want is to go north AND up, ie move up one level AND move over as well.  That's what stairways [i:1tbfixqp]do.[/i:1tbfixqp]\nBasically, Quest offers diagonal moves on the same level (NE,SE, etc) but you can't move on diagonals between levels.\nThe solution I posted is kind of a pain but it gives the result I'm looking for.\n\nI've tried non-directional exits but that REALLY doesn't work.\nAs a simple example,I've created three rooms: nor and south rooms are linked on the same level.  Nor and 'other' room are linked with a non-specific direction.  When I step from the north room to the 'other room', the mapping grid goes bonkers.\nLike this:\n\n[code:1tbfixqp]You are in a south room&#46;\nYou can go north&#46;\n\n&gt; go north\n\nYou are in a nor room&#46;\nYou can go south or bottom of stairs&#46;\n\n&gt; go to bottom of stairs\nError running script&#058; Error compiling expression 'room&#46;grid_x + exit&#46;grid_offset_x'&#58; ArithmeticElement&#58; Operation 'Add' is not defined for types 'Object' and 'Int32'\n\nYou are in an other room&#46;\nYou can go top of stairs or west&#46;[/code:1tbfixqp]",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks R2T1<br/>What I was trying to avoid was having two different links show up going to the same place.<br/><br/><pre><code>You are in a south room&#46;<br/>You can go north or up&#46;</code></pre><br/><br/>It works but I don't want north OR up, that sounds like two different choices.<br/>What I really want is to go north AND up, ie move up one level AND move over as well.  That's what stairways <span style=\"font-style:italic;\">do.</span><br/>Basically, Quest offers diagonal moves on the same level (NE,SE, etc) but you can't move on diagonals between levels.<br/>The solution I posted is kind of a pain but it gives the result I'm looking for.<br/><br/>I've tried non-directional exits but that REALLY doesn't work.<br/>As a simple example,I've created three rooms: nor and south rooms are linked on the same level.  Nor and 'other' room are linked with a non-specific direction.  When I step from the north room to the 'other room', the mapping grid goes bonkers.<br/>Like this:<br/><br/><pre><code>You are in a south room&#46;<br/>You can go north&#46;<br/><br/>&gt; go north<br/><br/>You are in a nor room&#46;<br/>You can go south or bottom of stairs&#46;<br/><br/>&gt; go to bottom of stairs<br/>Error running script&#058; Error compiling expression 'room&#46;grid_x + exit&#46;grid_offset_x'&#58; ArithmeticElement&#58; Operation 'Add' is not defined for types 'Object' and 'Int32'<br/><br/>You are in an other room&#46;<br/>You can go top of stairs or west&#46;</code></pre>",
+      "PostDate": "2013-06-12T05:07:11+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25051",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "not the best solution, but you could simply have a &quot;dummy~blank&quot; UP room, which then takes~moves you to your then (upper) east room.\n\nand I'm sure you could code, so that you can use that &quot;dummy~blank&quot; UP room if you need to (from other access points), while keeping the access point from the below room, &quot;skip&quot; (not show~reveal) anything in the UP room, taking you immediately to the east room.",
+      "EditableFormat": "bbcode",
+      "HTML": "not the best solution, but you could simply have a &quot;dummy~blank&quot; UP room, which then takes~moves you to your then (upper) east room.<br/><br/>and I'm sure you could code, so that you can use that &quot;dummy~blank&quot; UP room if you need to (from other access points), while keeping the access point from the below room, &quot;skip&quot; (not show~reveal) anything in the UP room, taking you immediately to the east room.",
+      "PostDate": "2013-06-12T07:22:57+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "25261",
+      "UserId": 0,
+      "Username": "Carrot",
+      "UserAvatar": null,
+      "UserGravatar": "12db43b39ade4bc3e479fc45c24e4f23",
+      "EditableText": "[quote=&quot;shadowphile&quot;:2aziq5fj]Thanks R2T1\nWhat I was trying to avoid was having two different links show up going to the same place.\n\n[snip][/quote:2aziq5fj]\n\nThats possible.\n\nCreate both exits, north and up, and point them at the same room.  Then you need to decide which exit (if any) you want to show to the player.  Once decided, in quest, select the exit of the room in the pane on the left, and it should bring up the exit details.  One of the options is a little check-box called Visible which shows or hides the exit to the player, without blocking it. For example, if you hide North:\n\n[code:2aziq5fj]You are in a south room, there is a flight of stairs to the north\nYou can go Up[/code:2aziq5fj]\n\nBut both the commands NORTH and UP would work.\n\nPersonally I would either hide both exits, or turn off the &quot;you can go&quot; text completely, leaving the room description to list the exits.",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>shadowphile wrote:</cite>Thanks R2T1<br/>What I was trying to avoid was having two different links show up going to the same place.<br/><br/>[snip]</blockquote><br/><br/>Thats possible.<br/><br/>Create both exits, north and up, and point them at the same room.  Then you need to decide which exit (if any) you want to show to the player.  Once decided, in quest, select the exit of the room in the pane on the left, and it should bring up the exit details.  One of the options is a little check-box called Visible which shows or hides the exit to the player, without blocking it. For example, if you hide North:<br/><br/><pre><code>You are in a south room, there is a flight of stairs to the north<br/>You can go Up</code></pre><br/><br/>But both the commands NORTH and UP would work.<br/><br/>Personally I would either hide both exits, or turn off the &quot;you can go&quot; text completely, leaving the room description to list the exits.",
+      "PostDate": "2013-07-03T10:50:02+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

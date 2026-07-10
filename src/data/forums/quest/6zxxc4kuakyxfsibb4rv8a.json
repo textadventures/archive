@@ -1,0 +1,123 @@
+{
+  "Topic": {
+    "TopicId": "6zxxc4kuakyxfsibb4rv8a",
+    "ForumId": "10",
+    "Title": "Strange Attribute?",
+    "LastUpdated": "2021-01-02T09:08:59.9377224Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "7684a4de-13a4-4cc9-9985-bd7be3361cfd",
+      "UserId": 277074,
+      "Username": "Dcoder",
+      "AvatarUrl": "https://i.imgur.com/O07mlRtb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "(Quest TA 5.8)\r\n\r\nWhat does the \"<b>Display hyperlinks in commands</b>\" checkbox under the \"Room Descriptions\" tab of the game object do?\r\n\r\nThis checkbox corresponds to the Boolean attribute ```game.echohyperlinks``` (default setting is ```true```).\r\n\r\nI couldn't find an answer on the forums (or barely a mention).  The reason I ask is that if I uncheck it (set to ```false```), some of the object aliases in my game (that use text processor directives) fail to display properly.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>(Quest TA 5.8)</p>\n<p>What does the \"<b>Display hyperlinks in commands</b>\" checkbox under the \"Room Descriptions\" tab of the game object do?</p>\n<p>This checkbox corresponds to the Boolean attribute <code>game.echohyperlinks</code> (default setting is <code>true</code>).</p>\n<p>I couldn't find an answer on the forums (or barely a mention).  The reason I ask is that if I uncheck it (set to <code>false</code>), some of the object aliases in my game (that use text processor directives) fail to display properly.</p>\n\n",
+      "PostDate": "2021-01-02T09:08:59.9377224Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e817eb5d-31de-48e7-bb53-c962433dff8f",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "```xml\r\n <function name=\"HandleCommand\" parameters=\"command, metadata\">\r\n```\r\n\r\nThis part:\r\n\r\n```\r\n        shownlink = false\r\n        if (game.echocommand) {\r\n          if (metadata <> null and game.enablehyperlinks and game.echohyperlinks) {\r\n            foreach (key, metadata) {\r\n              if (EndsWith(command, key)) {\r\n                objectname = StringDictionaryItem(metadata, key)\r\n                object = GetObject(objectname)\r\n                if (object <> null) {\r\n                  msg (\"\")\r\n                  msg (\"&gt; \" + Left(command, LengthOf(command) - LengthOf(key)) + \"{object:\" + object.name + \"}\" )\r\n                  shownlink = true\r\n                }\r\n              }\r\n            }\r\n          }\r\n          if (not shownlink) {\r\n            msg (\"\")\r\n            OutputTextRaw (\"&gt; \" + SafeXML(command))\r\n          }\r\n        }\r\n```\r\n\r\nhttps://github.com/textadventures/quest/blob/2e521f35b4e780ae440b0b43a34e20794e7c0adc/WorldModel/WorldModel/Core/CoreParser.aslx#L44\r\n\r\n---\r\nThis line: ``` OutputTextRaw (\"&gt; \" + SafeXML(command))```\r\n\r\nIt looks like it doesn't use the text processor when that is unchecked.\r\n\r\nYou could try changing it to  ``` msg(\"&gt; \" + SafeXML(command))```, but I did not test it.",
+      "EditableFormat": "markdown",
+      "HTML": "<pre><code> &lt;function name=\"HandleCommand\" parameters=\"command, metadata\"&gt;\n</code></pre>\n<p>This part:</p>\n<pre><code>        shownlink = false\n        if (game.echocommand) {\n          if (metadata &lt;&gt; null and game.enablehyperlinks and game.echohyperlinks) {\n            foreach (key, metadata) {\n              if (EndsWith(command, key)) {\n                objectname = StringDictionaryItem(metadata, key)\n                object = GetObject(objectname)\n                if (object &lt;&gt; null) {\n                  msg (\"\")\n                  msg (\"&amp;gt; \" + Left(command, LengthOf(command) - LengthOf(key)) + \"{object:\" + object.name + \"}\" )\n                  shownlink = true\n                }\n              }\n            }\n          }\n          if (not shownlink) {\n            msg (\"\")\n            OutputTextRaw (\"&amp;gt; \" + SafeXML(command))\n          }\n        }\n</code></pre>\n<p>https://github.com/textadventures/quest/blob/2e521f35b4e780ae440b0b43a34e20794e7c0adc/WorldModel/WorldModel/Core/CoreParser.aslx#L44</p>\n<hr>\n<p>This line: <code>OutputTextRaw (\"&amp;gt; \" + SafeXML(command))</code></p>\n<p>It looks like it doesn't use the text processor when that is unchecked.</p>\n<p>You could try changing it to  <code>msg(\"&amp;gt; \" + SafeXML(command))</code>, but I did not test it.</p>\n\n",
+      "PostDate": "2021-01-02T14:48:59.3319252Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "089f2bef-c462-4bdb-98e7-ec07ce9345a5",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "KV I don't think that should be the problem. Without hyperlinks, it's just printing the command the player typed; and that shouldn't contain text processor directives anyway.\r\n\r\nHowever, I do think that `\"{object:\" + object.name + \"}\"` should be `\"{object:\" + object.name + \":\" + key + \"}\"` in that code; if the player types an object's alternate alias, it should echo what they typed.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>KV I don't think that should be the problem. Without hyperlinks, it's just printing the command the player typed; and that shouldn't contain text processor directives anyway.</p>\n<p>However, I do think that <code>\"{object:\" + object.name + \"}\"</code> should be <code>\"{object:\" + object.name + \":\" + key + \"}\"</code> in that code; if the player types an object's alternate alias, it should echo what they typed.</p>\n\n",
+      "PostDate": "2021-01-02T19:18:56.8607516Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "3a36410e-01c9-4436-9df4-b6849e9ae563",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": ">  Without hyperlinks, it's just printing the command the player typed; and that shouldn't contain text processor directives anyway.\r\n\r\nOh, I see.  With hyperlinks, it's replacing ```key``` (which is the object's name as entered by the player) with the link.\r\n\r\nWhich means your \"however\" seems to be spot on.\r\n\r\n...except if the player entered the first few letters, wouldn't the link be just those first few letter?\r\n\r\n---\r\nAlso, I think Dcoder had issues with the text processor stuff in an object's name (or alias), and Quest maybe got updated to handle that in 5.8?  (If not, there's some modified code to handle it in his game, I think.)",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>Without hyperlinks, it's just printing the command the player typed; and that shouldn't contain text processor directives anyway.</p>\n</blockquote>\n<p>Oh, I see.  With hyperlinks, it's replacing <code>key</code> (which is the object's name as entered by the player) with the link.</p>\n<p>Which means your \"however\" seems to be spot on.</p>\n<p>...except if the player entered the first few letters, wouldn't the link be just those first few letter?</p>\n<hr>\n<p>Also, I think Dcoder had issues with the text processor stuff in an object's name (or alias), and Quest maybe got updated to handle that in 5.8?  (If not, there's some modified code to handle it in his game, I think.)</p>\n\n",
+      "PostDate": "2021-01-02T19:52:13.3693341Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "a3dcdeb2-e463-4991-9ca6-aa52729bb46f",
+      "UserId": 277074,
+      "Username": "Dcoder",
+      "AvatarUrl": "https://i.imgur.com/O07mlRtb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I was just curious to understand what that attribute did.  I was surprised that unchecking that box could break so much of my game so easily!\r\n\r\nIf I leave it checked (```game.echohyperlinks = true```), my aliases which contain text processor directives work fine.  If unchecked, the directive's literal text will be printed out instead of the interpreted result of that directive.  So I will leave it checked.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I was just curious to understand what that attribute did.  I was surprised that unchecking that box could break so much of my game so easily!</p>\n<p>If I leave it checked (<code>game.echohyperlinks = true</code>), my aliases which contain text processor directives work fine.  If unchecked, the directive's literal text will be printed out instead of the interpreted result of that directive.  So I will leave it checked.</p>\n\n",
+      "PostDate": "2021-01-03T03:47:00.0683049Z",
+      "LastEditDate": "2021-01-03T04:00:16.9454553Z",
+      "link": null
+    },
+    {
+      "PostId": "d8dad428-8781-4ea6-9d01-37f0d963304d",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": ">  If unchecked, the directive's literal text will be printed out instead of the interpreted result of that directive. So I will leave it checked.\r\n\r\nIf you get bored, uncheck it.\r\n\r\nEnter a command that returns the buggy text.  Open the debugger, look at ```player.currentcommand```.  See what the command is.  (If it's something interesting, come back with a screenshot!)",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>If unchecked, the directive's literal text will be printed out instead of the interpreted result of that directive. So I will leave it checked.</p>\n</blockquote>\n<p>If you get bored, uncheck it.</p>\n<p>Enter a command that returns the buggy text.  Open the debugger, look at <code>player.currentcommand</code>.  See what the command is.  (If it's something interesting, come back with a screenshot!)</p>\n\n",
+      "PostDate": "2021-01-03T22:39:52.9980079Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "2d962daa-40e4-4e04-9904-448fbcf32b77",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Oh!\r\nIt's when you click on an object link. Then, the command sent to the server will include the object's alias. As far as Quest is concerned, the player typed in a bunch of text processor commands and it's just echoing back what you typed.\r\n\r\nSo I guess KV was right the first time :)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Oh!<br>\nIt's when you click on an object link. Then, the command sent to the server will include the object's alias. As far as Quest is concerned, the player typed in a bunch of text processor commands and it's just echoing back what you typed.</p>\n<p>So I guess KV was right the first time :)</p>\n\n",
+      "PostDate": "2021-01-04T01:58:05.5204409Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "a3d91254-55c9-46f1-9488-bbe2c6e7b09f",
+      "UserId": 277074,
+      "Username": "Dcoder",
+      "AvatarUrl": "https://i.imgur.com/O07mlRtb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> Enter a command that returns the buggy text. Open the debugger, look at player.currentcommand. See what the command is.\r\n\r\nFor example, I have a \"trees\" object, the alias of which is a text processor directive ```{=game.SomeString}```.  ```game.SomeString``` contains an HTML image that displays instead of the regular text when you ```look at``` the \"trees\" object.\r\n\r\nSo when the box is checked by default, the command ```look at trees``` will be echoed, but with an image of trees instead of the alias \"trees\".\r\n\r\nHowever, if you uncheck the box, ```look at trees``` will echo```look at {=game.SomeString}```, or sometimes ```look at <span><img src=\"blahblahblah\"></span>``` (i.e., the contents of game.SomeString).\r\n\r\nThis is also what the debugger shows under ```player.currentcommand```.  So I am talking about the echoed command here, not the trees' \"look\" description.\r\n\r\nJust FYI, this isn't a problem that I need to solve, more like a curiosity.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>Enter a command that returns the buggy text. Open the debugger, look at player.currentcommand. See what the command is.</p>\n</blockquote>\n<p>For example, I have a \"trees\" object, the alias of which is a text processor directive <code>{=game.SomeString}</code>.  <code>game.SomeString</code> contains an HTML image that displays instead of the regular text when you <code>look at</code> the \"trees\" object.</p>\n<p>So when the box is checked by default, the command <code>look at trees</code> will be echoed, but with an image of trees instead of the alias \"trees\".</p>\n<p>However, if you uncheck the box, <code>look at trees</code> will echo<code>look at {=game.SomeString}</code>, or sometimes <code>look at &lt;span&gt;&lt;img src=\"blahblahblah\"&gt;&lt;/span&gt;</code> (i.e., the contents of game.SomeString).</p>\n<p>This is also what the debugger shows under <code>player.currentcommand</code>.  So I am talking about the echoed command here, not the trees' \"look\" description.</p>\n<p>Just FYI, this isn't a problem that I need to solve, more like a curiosity.</p>\n\n",
+      "PostDate": "2021-01-04T02:20:32.8840104Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

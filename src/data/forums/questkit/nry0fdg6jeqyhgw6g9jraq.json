@@ -1,0 +1,123 @@
+{
+  "Topic": {
+    "TopicId": "nry0fdg6jeqyhgw6g9jraq",
+    "ForumId": "15",
+    "Title": "Quest 6 - Multiple Mass Style Changes",
+    "LastUpdated": "2021-04-15T16:49:42.7049096Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "3a894f91-d82b-4d94-95c9-99e7afd65591",
+      "UserId": 8429,
+      "Username": "TriangleGames",
+      "AvatarUrl": "https://i.imgur.com/gL0gQHeb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I was trying to figure this out myself, and I thought it was going well, but... turns out not so much.  I feel like there's a clue for me involving \"dark-body,\" but my brain is not quite making the jump. Now, I'm afraid I'm just gonna make a mess if I don't ask.\r\n\r\nI want to change the entire color scheme of the UI on the fly, in response to a player's actions, with several color theme options.\r\nUltimately, I think what I'm going to want is a variety of room templates, where different types of rooms are different colors, and when the player enters each room, the UI changes to the corresponding color. Like so:\r\nIf you're in the woods, the screen is green themed.\r\nIf you're by a lake, the screen is blue themed.\r\nIf you're in the desert, the screen is amber themed.\r\nEtc., etc. ...\r\n\r\nI've got a reasonable looking green version WIP, but I've hit a snag on the part where it changes mid-game.\r\nWhere should I write up the various style listings? Can I give them each names and put them all in one \"MyStyles\" file together? Do they each need their own file? Is there a better file to put them in if I'm doing several of them?\r\n\r\nAlso, what is the best way to swap them out?\r\nI thought I could put each theme in a different css file and just change\r\nsettings.styleFile = \"_Color_-Theme\"\r\nduring play, but that did nothing. It didn't error, but nothing changed.\r\nWould that have worked if I followed it with some kind of \"screen refresh\" order?\r\n\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I was trying to figure this out myself, and I thought it was going well, but... turns out not so much.  I feel like there's a clue for me involving \"dark-body,\" but my brain is not quite making the jump. Now, I'm afraid I'm just gonna make a mess if I don't ask.</p>\n<p>I want to change the entire color scheme of the UI on the fly, in response to a player's actions, with several color theme options.<br>\nUltimately, I think what I'm going to want is a variety of room templates, where different types of rooms are different colors, and when the player enters each room, the UI changes to the corresponding color. Like so:<br>\nIf you're in the woods, the screen is green themed.<br>\nIf you're by a lake, the screen is blue themed.<br>\nIf you're in the desert, the screen is amber themed.<br>\nEtc., etc. ...</p>\n<p>I've got a reasonable looking green version WIP, but I've hit a snag on the part where it changes mid-game.<br>\nWhere should I write up the various style listings? Can I give them each names and put them all in one \"MyStyles\" file together? Do they each need their own file? Is there a better file to put them in if I'm doing several of them?</p>\n<p>Also, what is the best way to swap them out?<br>\nI thought I could put each theme in a different css file and just change<br>\nsettings.styleFile = \"<em>Color</em>-Theme\"<br>\nduring play, but that did nothing. It didn't error, but nothing changed.<br>\nWould that have worked if I followed it with some kind of \"screen refresh\" order?</p>\n\n",
+      "PostDate": "2021-04-15T16:49:42.7049096Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "1bba025c-8dbe-4d8d-b623-fa7bd7b5c741",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Are you just changing the colours in the alternate stylesheets? In that case, it might be easier to use CSS variables.\r\n\r\nYou would define variables for things like text colour, highlight colour, background colour, and so on. So your stylesheet would look like this:\r\n```\r\nbody {\r\n  background-color: var(--themebg, white);\r\n  color: var(--themetext, black);\r\n}\r\n\r\nem {\r\n  color: var(--themehilight, red);\r\n}\r\n```\r\n(the first parameter to `var` is the name of the variable, the second is the default)\r\n\r\nThen when the player gets to a place where you want to change the colour, you just define the variables by outputting a piece of HTML like:\r\n```\r\n<style>\r\n:root {\r\n  --themebg: darkgreen;\r\n  --themetext: green;\r\n  --themehilight: orange;\r\n}\r\n</style>\r\n```\r\nThis quickly changes all the colours that are defined using that variable, so that you don't need a whole separate copy of the stylesheet.\r\n\r\nYou could use script to append a `<style>` element with an ID to the `head`, and then use something like `$('style#colourtheme').text(\":root {new values go here}\")` to change it; or you could just print out a new `<style>` block along with your other output.\r\n\r\nThe main downside of this method is that it may be buggy for anyone who hasn't updated their browser since 2016; but I hope that's not many people now.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Are you just changing the colours in the alternate stylesheets? In that case, it might be easier to use CSS variables.</p>\n<p>You would define variables for things like text colour, highlight colour, background colour, and so on. So your stylesheet would look like this:</p>\n<pre><code>body {\n  background-color: var(--themebg, white);\n  color: var(--themetext, black);\n}\n\nem {\n  color: var(--themehilight, red);\n}\n</code></pre>\n<p>(the first parameter to <code>var</code> is the name of the variable, the second is the default)</p>\n<p>Then when the player gets to a place where you want to change the colour, you just define the variables by outputting a piece of HTML like:</p>\n<pre><code>&lt;style&gt;\n:root {\n  --themebg: darkgreen;\n  --themetext: green;\n  --themehilight: orange;\n}\n&lt;/style&gt;\n</code></pre>\n<p>This quickly changes all the colours that are defined using that variable, so that you don't need a whole separate copy of the stylesheet.</p>\n<p>You could use script to append a <code>&lt;style&gt;</code> element with an ID to the <code>head</code>, and then use something like <code>$('style#colourtheme').text(\":root {new values go here}\")</code> to change it; or you could just print out a new <code>&lt;style&gt;</code> block along with your other output.</p>\n<p>The main downside of this method is that it may be buggy for anyone who hasn't updated their browser since 2016; but I hope that's not many people now.</p>\n\n",
+      "PostDate": "2021-04-15T18:17:05.735706Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "1b3bd7a6-c628-4887-9701-b90452a79331",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "What I did to support dark mode is to use JavaScript to add a class to the body element, \"dark-body\", and have everything else hang off that.\r\n\r\n```\r\n  if (settings.darkModeActive) {\r\n    $('body').addClass(\"dark-body\")\r\n  }\r\n  else {\r\n    $('body').removeClass(\"dark-body\")\r\n  }\r\n```\r\n\r\nThe in the CSS file,  have that set the style for the whole page:\r\n\r\n```\r\n.dark-body {\r\n  background-color: #111;\r\n  color: #eee;\r\n}\r\n```\r\n\r\nAny individual element of class can also be set to change to, for example:\r\n\r\n```\r\n.dark-body   #textbox {\r\n  background-color: #111;\r\n  color: white;\r\n}\r\n```\r\n\r\nSo that will set the style for the element with the id \"textbox\", but only when a parent element has the \"dark-body\" class. So add that to the body element, and this will get applied, remove it and it will not.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>What I did to support dark mode is to use JavaScript to add a class to the body element, \"dark-body\", and have everything else hang off that.</p>\n<pre><code>  if (settings.darkModeActive) {\n    $('body').addClass(\"dark-body\")\n  }\n  else {\n    $('body').removeClass(\"dark-body\")\n  }\n</code></pre>\n<p>The in the CSS file,  have that set the style for the whole page:</p>\n<pre><code>.dark-body {\n  background-color: #111;\n  color: #eee;\n}\n</code></pre>\n<p>Any individual element of class can also be set to change to, for example:</p>\n<pre><code>.dark-body   #textbox {\n  background-color: #111;\n  color: white;\n}\n</code></pre>\n<p>So that will set the style for the element with the id \"textbox\", but only when a parent element has the \"dark-body\" class. So add that to the body element, and this will get applied, remove it and it will not.</p>\n\n",
+      "PostDate": "2021-04-16T07:43:03.2096516Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "342abf22-4054-43ae-87b4-43b696b7250a",
+      "UserId": 8429,
+      "Username": "TriangleGames",
+      "AvatarUrl": "https://i.imgur.com/gL0gQHeb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I've been playing with the first method, using css variables, since yesterday, and it works _almost_ perfectly. I am having two problems, though. I think either I'm implementing it wrong or quest just isn't set-up to do this, because I keep getting an error. The only way I got the html to work was by putting it in a msg, like so:\r\n```\r\ncreateRoom(\"lake\", {\r\n  beforeEnter:function() {\r\n    msg(\"<style>:root {--themeBack:#001433; --themeShdw:#002966; --themeBase:#0066ff; --themeBrit:#4d94ff;}</style>\");\r\n  },\r\n  desc:\"You are standing near a lake.\",\r\n})\r\n```\r\nbut that's what gives the error:\r\n```\r\nAttempting to use unknown text processor directive ' --themeBack' (<i><style>:root { --themeBack: #250033; --themeShdw: #4b0066; --themeBase: #bb00ff; --themeBrit: #dd80ff;}</style></i>)\r\n```\r\nApparently, the tp doesn't like css variables. These kinds of errors are always head-scratchers to me. I keep thinking, \"You _say_ it's an unknown directive, but you _just did_ what it said to do!\"\r\nThe other problem is, if I do clearScreen, it undoes all the changes (I was trying to hide the error from the player). Again, I imagine this is subject to my putting the html in a msg, so I'm hoping there's another way to do that which I'm just not aware of. \r\n\r\nI looked into more of the file references of how dark-body operates, and I see that involves the io, which feels \"above my paygrade\" to be messing with, but I think I get how it works. I think some of what's there is because that's a mode that the player can choose to turn on or off, and I'm hoping I wouldn't actually need some of it. If I did that, I'd be back to making separate css lists of everything that needs to be changed. If I did that, could I use a case switch, something like this? (presumably, in _io.js)\r\n```\r\nio.terrainMode = function(terrain) {\r\n  let t\r\n  t = terrain\r\n  switch (t) {\r\n    case (\"field\"):\r\n      $('body').removeClass(\"amber-body\")\r\n      $('body').removeClass(\"white-body\")\r\n      $('body').addClass(\"green-body\")\r\n      break\r\n    case (\"desert\"):\r\n      $('body').removeClass(\"green-body\")\r\n      $('body').removeClass(\"white-body\")\r\n      $('body').addClass(\"amber-body\")\r\n      break\r\n    case (\"graveyard\"):\r\n      $('body').removeClass(\"green-body\")\r\n      $('body').removeClass(\"amber-body\")\r\n      $('body').addClass(\"white-body\")\r\n      break\r\n    default:\r\n      $('body').removeClass(\"amber-body\")\r\n      $('body').removeClass(\"white-body\")\r\n      $('body').addClass(\"green-body\")\r\n  }\r\n  io.textColour = $(\".side-panes\").css(\"color\")\r\n  return world.SUCCESS_NO_TURNSCRIPTS\r\n}\r\n```\r\nand then format my room templates with:\r\n```\r\nconst FIELD = {\r\n  beforeEnter(\r\n    script:io.terrainMode(\"field\"),\r\n  ),\r\n}\r\n```\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I've been playing with the first method, using css variables, since yesterday, and it works <em>almost</em> perfectly. I am having two problems, though. I think either I'm implementing it wrong or quest just isn't set-up to do this, because I keep getting an error. The only way I got the html to work was by putting it in a msg, like so:</p>\n<pre><code>createRoom(\"lake\", {\n  beforeEnter:function() {\n    msg(\"&lt;style&gt;:root {--themeBack:#001433; --themeShdw:#002966; --themeBase:#0066ff; --themeBrit:#4d94ff;}&lt;/style&gt;\");\n  },\n  desc:\"You are standing near a lake.\",\n})\n</code></pre>\n<p>but that's what gives the error:</p>\n<pre><code>Attempting to use unknown text processor directive ' --themeBack' (&lt;i&gt;&lt;style&gt;:root { --themeBack: #250033; --themeShdw: #4b0066; --themeBase: #bb00ff; --themeBrit: #dd80ff;}&lt;/style&gt;&lt;/i&gt;)\n</code></pre>\n<p>Apparently, the tp doesn't like css variables. These kinds of errors are always head-scratchers to me. I keep thinking, \"You <em>say</em> it's an unknown directive, but you <em>just did</em> what it said to do!\"<br>\nThe other problem is, if I do clearScreen, it undoes all the changes (I was trying to hide the error from the player). Again, I imagine this is subject to my putting the html in a msg, so I'm hoping there's another way to do that which I'm just not aware of.</p>\n<p>I looked into more of the file references of how dark-body operates, and I see that involves the io, which feels \"above my paygrade\" to be messing with, but I think I get how it works. I think some of what's there is because that's a mode that the player can choose to turn on or off, and I'm hoping I wouldn't actually need some of it. If I did that, I'd be back to making separate css lists of everything that needs to be changed. If I did that, could I use a case switch, something like this? (presumably, in _io.js)</p>\n<pre><code>io.terrainMode = function(terrain) {\n  let t\n  t = terrain\n  switch (t) {\n    case (\"field\"):\n      $('body').removeClass(\"amber-body\")\n      $('body').removeClass(\"white-body\")\n      $('body').addClass(\"green-body\")\n      break\n    case (\"desert\"):\n      $('body').removeClass(\"green-body\")\n      $('body').removeClass(\"white-body\")\n      $('body').addClass(\"amber-body\")\n      break\n    case (\"graveyard\"):\n      $('body').removeClass(\"green-body\")\n      $('body').removeClass(\"amber-body\")\n      $('body').addClass(\"white-body\")\n      break\n    default:\n      $('body').removeClass(\"amber-body\")\n      $('body').removeClass(\"white-body\")\n      $('body').addClass(\"green-body\")\n  }\n  io.textColour = $(\".side-panes\").css(\"color\")\n  return world.SUCCESS_NO_TURNSCRIPTS\n}\n</code></pre>\n<p>and then format my room templates with:</p>\n<pre><code>const FIELD = {\n  beforeEnter(\n    script:io.terrainMode(\"field\"),\n  ),\n}\n</code></pre>\n\n",
+      "PostDate": "2021-04-16T16:13:36.5702011Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "b35c87f9-e636-44e3-a99a-5d8522248cbf",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Another alternative would be using attribute selectors. For example:\r\n```\r\nhtml[uitheme=green] {\r\n  color: darkgreen;\r\n}\r\nhtml[uitheme=green] body {\r\n  background-color: black;\r\n}\r\nhtml[uitheme=green] em,b {\r\n  color: green;\r\n}\r\n```\r\n\r\nThen you can change the theme by using `$('html').attr('uitheme', 'green')` rather than using a separate class for each option.\r\n\r\nTo make the files a little easier, you could use something like Less. Then you could make a stylesheet like:\r\n```\r\n@import \"default-style.css\";\r\nhtml[uitheme=dark] {\r\n  @import \"dark-style.css\";\r\n}\r\nhtml[uitheme=orange] {\r\n  @import \"orange-style.css\";\r\n}\r\nhtml[uitheme=green] {\r\n  @import \"green-style.css\";\r\n}\r\nhtml[uitheme=pink] {\r\n  @import \"pink-style.css\";\r\n}\r\n```\r\n(Note: The less compiler `lessc` compiles your .less stylesheets to .css; it's basically there to make the actual stylesheets more human-readable when you're editing them. For more info check out https://lesscss.org)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Another alternative would be using attribute selectors. For example:</p>\n<pre><code>html[uitheme=green] {\n  color: darkgreen;\n}\nhtml[uitheme=green] body {\n  background-color: black;\n}\nhtml[uitheme=green] em,b {\n  color: green;\n}\n</code></pre>\n<p>Then you can change the theme by using <code>$('html').attr('uitheme', 'green')</code> rather than using a separate class for each option.</p>\n<p>To make the files a little easier, you could use something like Less. Then you could make a stylesheet like:</p>\n<pre><code>@import \"default-style.css\";\nhtml[uitheme=dark] {\n  @import \"dark-style.css\";\n}\nhtml[uitheme=orange] {\n  @import \"orange-style.css\";\n}\nhtml[uitheme=green] {\n  @import \"green-style.css\";\n}\nhtml[uitheme=pink] {\n  @import \"pink-style.css\";\n}\n</code></pre>\n<p>(Note: The less compiler <code>lessc</code> compiles your .less stylesheets to .css; it's basically there to make the actual stylesheets more human-readable when you're editing them. For more info check out https://lesscss.org)</p>\n\n",
+      "PostDate": "2021-04-16T16:16:49.4234483Z",
+      "LastEditDate": "2021-04-16T17:22:24.2561116Z",
+      "link": null
+    },
+    {
+      "PostId": "9ee67c75-3bce-493f-8375-891460dfd656",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Ah, we were replying at the same time.\r\n\r\nThe text processor error is annoying. I guess it does that if you output any text that contains `{` and `}` that isn't intended to be handled by the text processor (where Quest5 would just ignore it).\r\n\r\nIs there a function equivalent to 'OutputTextRaw' that you can use to skip the text processor? I've not played with this version properly yet, so I'm answering from a straight JS perspective.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Ah, we were replying at the same time.</p>\n<p>The text processor error is annoying. I guess it does that if you output any text that contains <code>{</code> and <code>}</code> that isn't intended to be handled by the text processor (where Quest5 would just ignore it).</p>\n<p>Is there a function equivalent to 'OutputTextRaw' that you can use to skip the text processor? I've not played with this version properly yet, so I'm answering from a straight JS perspective.</p>\n\n",
+      "PostDate": "2021-04-16T16:20:15.9230397Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "fc72b2eb-c027-44f2-b70f-1431eb82b182",
+      "UserId": 8429,
+      "Username": "TriangleGames",
+      "AvatarUrl": "https://i.imgur.com/gL0gQHeb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I tried a few other things to get it to accept the css variables, but I couldn't get it going. So, I went with the dark-body style attributes. Fortunately, I thought up a way to make that go a little quicker. I now have a .txt dummy file with all and only the parts of the style sheet that affect colors, which look something like:\r\n\r\n.NAME-body .existingAttribute{\r\ncolor: THEME-MAIN\r\nbackground-color: THEME-BACK\r\nborder: THEME-SHADOW\r\nhover: THEME-BRIGHT\r\n}\r\n\r\nSo, I can just do 5 rounds of ctrl-h to replace all, and I've got another theme.\r\n\r\nThe case switch I made based on the existing darkMode function seems to be working. So, woo! It works! And as a nice bonus, I learned lots of stuff in the process, lol.\r\n\r\nThanks for the help!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I tried a few other things to get it to accept the css variables, but I couldn't get it going. So, I went with the dark-body style attributes. Fortunately, I thought up a way to make that go a little quicker. I now have a .txt dummy file with all and only the parts of the style sheet that affect colors, which look something like:</p>\n<p>.NAME-body .existingAttribute{<br>\ncolor: THEME-MAIN<br>\nbackground-color: THEME-BACK<br>\nborder: THEME-SHADOW<br>\nhover: THEME-BRIGHT<br>\n}</p>\n<p>So, I can just do 5 rounds of ctrl-h to replace all, and I've got another theme.</p>\n<p>The case switch I made based on the existing darkMode function seems to be working. So, woo! It works! And as a nice bonus, I learned lots of stuff in the process, lol.</p>\n<p>Thanks for the help!</p>\n\n",
+      "PostDate": "2021-04-17T02:40:14.6792066Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "b53ca23e-301c-4e6f-8661-e33cad5bf02c",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "There is a `rawPrint` function, but after reading the above, I realised it did not work properly, so you need the latest version of _io.js from Github.\r\n\r\nI have also added escape codes for { and }, like Quest 5 has, @@@lcurly@@@ and @@@rcurly@@@. They get swapped in `msg`so again in that same file.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>There is a <code>rawPrint</code> function, but after reading the above, I realised it did not work properly, so you need the latest version of _io.js from Github.</p>\n<p>I have also added escape codes for { and }, like Quest 5 has, @@@lcurly@@@ and @@@rcurly@@@. They get swapped in <code>msg</code>so again in that same file.</p>\n\n",
+      "PostDate": "2021-04-17T07:45:10.4911931Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "4090",
+    "ForumId": "10",
+    "Title": "Equip a weapon",
+    "LastUpdated": "2013-12-30T01:18:05+00:00",
+    "ReplyCount": 6
+  },
+  "Posts": [
+    {
+      "PostId": "27304",
+      "UserId": 0,
+      "Username": "Sazukan20",
+      "UserAvatar": null,
+      "UserGravatar": "b175cca8022e2a6312e92a89d60a02c4",
+      "EditableText": "i have been trying out Quest with the browser version as it would probably take hours to download it. but my dellema, before taking my new game idea to the idea of fighting an enemy, i need to equip a weapon, i have already made the object of which to equip. how can i make it so my character can equip the weapon?",
+      "EditableFormat": "bbcode",
+      "HTML": "i have been trying out Quest with the browser version as it would probably take hours to download it. but my dellema, before taking my new game idea to the idea of fighting an enemy, i need to equip a weapon, i have already made the object of which to equip. how can i make it so my character can equip the weapon?",
+      "PostDate": "2013-12-29T02:46:59+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27305",
+      "UserId": 0,
+      "Username": "TriangleGames",
+      "UserAvatar": null,
+      "UserGravatar": "134d9e995777da65c5cf8efda551d579",
+      "EditableText": "There's more than one way to do it, and I'm sure some others will make some suggestions or point you to the right topic (I did a search and quickly found there's a lot to dig through looking for a concise answer).\nThere are some [url=http&#58;//quest5&#46;net/wiki/Libraries:2z9agjce]libraries in the wiki[/url:2z9agjce] for &quot;wearing clothes&quot; that might be useful, but I haven't used them yet myself, and they may be more than you need. There are also some others in the [url=http&#58;//forum&#46;textadventures&#46;co&#46;uk/viewforum&#46;php?f=18:2z9agjce]libraries sub-forum[/url:2z9agjce] that may be useful, but again, they may do more than you want/need at the moment.\n\nI'll tell you two ways I've done it before. I'm giving full details since I'm not sure [i:2z9agjce]exactly[/i:2z9agjce] how familiar you are with Quest currently.\n[b:2z9agjce]EDIT[/b:2z9agjce]: It has just occurred to me that this will be harder in the browser version, because it does not have the same access to adding attributes to the player (currently). You could still do it, but you'd have to use scripts to create the attributes in game. Most likely by putting them in the game's start script. I don't know what kind of computer or internet connection you have, but if you're main concern about downloading the desktop version is time, it actually shouldn't take too long. I don't recall it taking more a minute or two. In the meantime, bare in mind that what I'm about to suggest will require using scripts to add these attributes to the player, and probably the weapon as well.\n\nMy currently preferred method is to create an [u:2z9agjce]object attribute[/u:2z9agjce] on the player that points to the currently equipped weapon. This way, all you need to do when the user equips a new weapon is set the attribute to equal the new weapon.\n\n• Step 1: make a base object for when the player has no weapon equipped (I call mine &quot;bare hands&quot;, more on that in a moment)\n• Step2: add an attribute to the player which will point to whatever object is equipped (let's call it &quot;equipped_weapon&quot;)\n• Step 3: set the attribute type to [b:2z9agjce]Object[/b:2z9agjce]\nNOTE: As far as I know, Quest will not let you set an attribute type to object, without selecting a specific object for the attribute. This is why you need to make the &quot;bare hands&quot; object first; the &quot;equipped_weapon&quot; attribute will need something to point to.\n• Step 4: Create an &quot;equip&quot; verb for the weapon, with a script that sets the &quot;equipped_weapon&quot; attribute to equal the &quot;sword&quot; object. In code this would look like:[code:2z9agjce]player&#46;equipped_weapon = sword\n\n//This is really the most important part, and in the online editor you may need to JUST use a script that does THIS&#46;\n//The gist of it is, set an attribute on the player that refers to an object (the weapon)&#46;[/code:2z9agjce]\nIn the gui, you would choose the script command called &quot;Set a variable or attribute&quot;,\nthen enter [i:2z9agjce]player.equipped_weapon[/i:2z9agjce] for &quot;set variable&quot;\nand sword for &quot;expression&quot;.\n\nThis way, anything you need to know about the currently equipped weapon can be accessed using the player attribute. So, for instance, if the &quot;sword&quot; object has an attribute called &quot;damage&quot; you can refer to it (once it is equipped) as &quot;player.equipped_weapon.damage&quot; just the same as &quot;sword.damage&quot;.\n\nThe other way I've used in the past basically involves creating matching attributes on the player and the weapon and making all of the player's attributes equal the weapons attributes.\n(starts like this)\nsword.damage = 5\nplayer.damage = 0\n(then do this)\nplayer.damage = sword.damage\n(and end up with this)\nsword.damage = 5\nplayer.damage = 5\n\nThis is okay for [i:2z9agjce]really simple[/i:2z9agjce] weapons, but if you want weapons with a variety of attributes, you'd have to set the matching player attribute for each one when they equip it.",
+      "EditableFormat": "bbcode",
+      "HTML": "There's more than one way to do it, and I'm sure some others will make some suggestions or point you to the right topic (I did a search and quickly found there's a lot to dig through looking for a concise answer).<br/>There are some <a href=\"http&#58;//quest5&#46;net/wiki/Libraries\" rel=\"nofollow\">libraries in the wiki</a> for &quot;wearing clothes&quot; that might be useful, but I haven't used them yet myself, and they may be more than you need. There are also some others in the <a href=\"http&#58;//forum&#46;textadventures&#46;co&#46;uk/viewforum&#46;php?f=18\" rel=\"nofollow\">libraries sub-forum</a> that may be useful, but again, they may do more than you want/need at the moment.<br/><br/>I'll tell you two ways I've done it before. I'm giving full details since I'm not sure <span style=\"font-style:italic;\">exactly</span> how familiar you are with Quest currently.<br/><span style=\"font-weight:bold;\">EDIT</span>: It has just occurred to me that this will be harder in the browser version, because it does not have the same access to adding attributes to the player (currently). You could still do it, but you'd have to use scripts to create the attributes in game. Most likely by putting them in the game's start script. I don't know what kind of computer or internet connection you have, but if you're main concern about downloading the desktop version is time, it actually shouldn't take too long. I don't recall it taking more a minute or two. In the meantime, bare in mind that what I'm about to suggest will require using scripts to add these attributes to the player, and probably the weapon as well.<br/><br/>My currently preferred method is to create an <span style=\"text-decoration:underline;\">object attribute</span> on the player that points to the currently equipped weapon. This way, all you need to do when the user equips a new weapon is set the attribute to equal the new weapon.<br/><br/>• Step 1: make a base object for when the player has no weapon equipped (I call mine &quot;bare hands&quot;, more on that in a moment)<br/>• Step2: add an attribute to the player which will point to whatever object is equipped (let's call it &quot;equipped_weapon&quot;)<br/>• Step 3: set the attribute type to <span style=\"font-weight:bold;\">Object</span><br/>NOTE: As far as I know, Quest will not let you set an attribute type to object, without selecting a specific object for the attribute. This is why you need to make the &quot;bare hands&quot; object first; the &quot;equipped_weapon&quot; attribute will need something to point to.<br/>• Step 4: Create an &quot;equip&quot; verb for the weapon, with a script that sets the &quot;equipped_weapon&quot; attribute to equal the &quot;sword&quot; object. In code this would look like:<pre><code>player&#46;equipped_weapon = sword<br/><br/>//This is really the most important part, and in the online editor you may need to JUST use a script that does THIS&#46;<br/>//The gist of it is, set an attribute on the player that refers to an object (the weapon)&#46;</code></pre><br/>In the gui, you would choose the script command called &quot;Set a variable or attribute&quot;,<br/>then enter <span style=\"font-style:italic;\">player.equipped_weapon</span> for &quot;set variable&quot;<br/>and sword for &quot;expression&quot;.<br/><br/>This way, anything you need to know about the currently equipped weapon can be accessed using the player attribute. So, for instance, if the &quot;sword&quot; object has an attribute called &quot;damage&quot; you can refer to it (once it is equipped) as &quot;player.equipped_weapon.damage&quot; just the same as &quot;sword.damage&quot;.<br/><br/>The other way I've used in the past basically involves creating matching attributes on the player and the weapon and making all of the player's attributes equal the weapons attributes.<br/>(starts like this)<br/>sword.damage = 5<br/>player.damage = 0<br/>(then do this)<br/>player.damage = sword.damage<br/>(and end up with this)<br/>sword.damage = 5<br/>player.damage = 5<br/><br/>This is okay for <span style=\"font-style:italic;\">really simple</span> weapons, but if you want weapons with a variety of attributes, you'd have to set the matching player attribute for each one when they equip it.",
+      "PostDate": "2013-12-29T06:16:50+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27311",
+      "UserId": 0,
+      "Username": "Avantar",
+      "UserAvatar": "7009_1418309433.jpg",
+      "UserGravatar": "86de2b95c147252a1c38b8d3996da855",
+      "EditableText": "Should you decide to download the desktop version, there is a big topic I have started for equipping and un-equipping weapons.\nThat was also my starting point for my game and one of my first questions.\n\nhere is the link:\n[url:27b8739x]http&#58;//forum&#46;textadventures&#46;co&#46;uk/viewtopic&#46;php?f=10&amp;t=3972&amp;p=26783&amp;hilit=equip+weapon#p26744[/url:27b8739x] \n\nI have pasted the basic scripts there and steps to take.\n\nHappy Questing!",
+      "EditableFormat": "bbcode",
+      "HTML": "Should you decide to download the desktop version, there is a big topic I have started for equipping and un-equipping weapons.<br/>That was also my starting point for my game and one of my first questions.<br/><br/>here is the link:<br/><a href=\"http&#58;//forum&#46;textadventures&#46;co&#46;uk/viewtopic&#46;php?f=10&amp;t=3972&amp;p=26783&amp;hilit=equip+weapon#p26744\" rel=\"nofollow\">http&#58;//forum&#46;textadventures&#46;co&#46;uk/viewtopic&#46;php?f=10&amp;t=3972&amp;p=26783&amp;hilit=equip+weapon#p26744</a> <br/><br/>I have pasted the basic scripts there and steps to take.<br/><br/>Happy Questing!",
+      "PostDate": "2013-12-29T16:09:02+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27314",
+      "UserId": 0,
+      "Username": "Sazukan20",
+      "UserAvatar": null,
+      "UserGravatar": "b175cca8022e2a6312e92a89d60a02c4",
+      "EditableText": "Okay, so from what i understand is that there are formulas involved correct? i never have made a text game and i never had any experience. im going to be posting the map, for the first part of the game when its descriptions are done,  feel free to check under my games later on it may have the map tester up and online to make sure it operatres.",
+      "EditableFormat": "bbcode",
+      "HTML": "Okay, so from what i understand is that there are formulas involved correct? i never have made a text game and i never had any experience. im going to be posting the map, for the first part of the game when its descriptions are done,  feel free to check under my games later on it may have the map tester up and online to make sure it operatres.",
+      "PostDate": "2013-12-29T20:46:40+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27316",
+      "UserId": 0,
+      "Username": "Sazukan20",
+      "UserAvatar": null,
+      "UserGravatar": "b175cca8022e2a6312e92a89d60a02c4",
+      "EditableText": "Okay so i have posted the map with a potion in it, (Yay i figured something out on my own!) but im trying to add a armour value to a shirt i just added to the game, would you know how to do that?",
+      "EditableFormat": "bbcode",
+      "HTML": "Okay so i have posted the map with a potion in it, (Yay i figured something out on my own!) but im trying to add a armour value to a shirt i just added to the game, would you know how to do that?",
+      "PostDate": "2013-12-29T21:51:36+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27317",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Posting is here: <!-- m --><a class=\"postlink\" href=\"http://textadventures.co.uk/games/view/ti7fszdxg0oeoqdwtyt7yw/fighting-out-of-hell-map-tester\">http://textadventures.co.uk/games/view/ ... map-tester</a><!-- m -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Posting is here: <!-- m --><a class=\"postlink\" href=\"http://textadventures.co.uk/games/view/ti7fszdxg0oeoqdwtyt7yw/fighting-out-of-hell-map-tester\">http://textadventures.co.uk/games/view/ ... map-tester</a><!-- m -->",
+      "PostDate": "2013-12-29T22:11:28+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "27321",
+      "UserId": 0,
+      "Username": "TriangleGames",
+      "UserAvatar": null,
+      "UserGravatar": "134d9e995777da65c5cf8efda551d579",
+      "EditableText": "[quote=&quot;Sazukan20&quot;:1ena7jbw]... it may have the map tester up and online to make sure it operatres.[/quote:1ena7jbw]\nWhat you've got so far appears to work as it should, except I don't see the map. I'm not sure if you meant &quot;map&quot; in terms of the layout of the rooms or the actual map screen which can be displayed. If you didn't know yet, there is an option under the display tab to show the player an actual map screen.\n\nAll objects in quest work on the same principles, so once you decide how to handle weapons, armor will be quite similar. You'll just need more variables/attributes with different names for armor vs weapons. If you definitely want to use combat, weapons, etc, you might want to make sure you can get it to work in the web editor before you get too far into the game. It's not easy to take the game from the web-version to the desktop version (you basically have to ask the developer to do it for you as a favor, as far as I know anyway).",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>Sazukan20 wrote:</cite>... it may have the map tester up and online to make sure it operatres.</blockquote><br/>What you've got so far appears to work as it should, except I don't see the map. I'm not sure if you meant &quot;map&quot; in terms of the layout of the rooms or the actual map screen which can be displayed. If you didn't know yet, there is an option under the display tab to show the player an actual map screen.<br/><br/>All objects in quest work on the same principles, so once you decide how to handle weapons, armor will be quite similar. You'll just need more variables/attributes with different names for armor vs weapons. If you definitely want to use combat, weapons, etc, you might want to make sure you can get it to work in the web editor before you get too far into the game. It's not easy to take the game from the web-version to the desktop version (you basically have to ask the developer to do it for you as a favor, as far as I know anyway).",
+      "PostDate": "2013-12-30T01:18:05+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

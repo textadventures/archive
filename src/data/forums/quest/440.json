@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "440",
+    "ForumId": "10",
+    "Title": "user command and build-in command. What if there is none ?",
+    "LastUpdated": "2004-07-31T09:02:38+01:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "2931",
+      "UserId": 0,
+      "Username": "Farvardin",
+      "UserAvatar": null,
+      "UserGravatar": "b6ea46e28b64e5f7c68f80468607f022",
+      "EditableText": "A few days ago I asked about how to override a global command (made by me).\nMaDbRiT kindly suggested to use the  \" exec &lt;#quest.originalcommand#;normal&gt; \" \ncommand. In the example it was for \"give\", which has a built in command. But the problem is many verbs don't have any built in command, so this code return an error (\"I don't understand your command\"...)\n\nIs there an easy way to :\n\n-&gt; define a global behavior / command \n    ex :\ncommand\t&lt;read #@thing#&gt; msg &lt;There is nothing written on #quest.error.gender# #thing#.&gt;\n\n-&gt; define a local command (inside a room / concerning an object)\n\n\tdefine object &lt;bed&gt;\n\t\tread &lt;There is something engraved on it : \"...etc.\".&gt;\n\tend define\n\n-&gt; if the player uses the command for something relevant then it will execute the local command, if not, there will be the global command instead.",
+      "EditableFormat": "bbcode",
+      "HTML": "A few days ago I asked about how to override a global command (made by me).<br/>MaDbRiT kindly suggested to use the  \" exec &lt;#quest.originalcommand#;normal&gt; \" <br/>command. In the example it was for \"give\", which has a built in command. But the problem is many verbs don't have any built in command, so this code return an error (\"I don't understand your command\"...)<br/><br/>Is there an easy way to :<br/><br/>-&gt; define a global behavior / command <br/>    ex :<br/>command\t&lt;read #@thing#&gt; msg &lt;There is nothing written on #quest.error.gender# #thing#.&gt;<br/><br/>-&gt; define a local command (inside a room / concerning an object)<br/><br/>\tdefine object &lt;bed&gt;<br/>\t\tread &lt;There is something engraved on it : \"...etc.\".&gt;<br/>\tend define<br/><br/>-&gt; if the player uses the command for something relevant then it will execute the local command, if not, there will be the global command instead.",
+      "PostDate": "2004-07-29T23:55:34+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "2932",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "You can just set the command up in that room. Quest looks for command definitions in the current room first, so if you have one set up there then it will override an equivalent one defined for the game.\n\nSo you could set up an \"eat\" command in the define game block (or Game Properties window) which just said \"You can't eat that\".\n\nThen in a room with an apple you could set up an \"eat\" command there to eat the apple. When the player is in this room, this form of the command will be executed instead of the global command.",
+      "EditableFormat": "bbcode",
+      "HTML": "You can just set the command up in that room. Quest looks for command definitions in the current room first, so if you have one set up there then it will override an equivalent one defined for the game.<br/><br/>So you could set up an \"eat\" command in the define game block (or Game Properties window) which just said \"You can't eat that\".<br/><br/>Then in a room with an apple you could set up an \"eat\" command there to eat the apple. When the player is in this room, this form of the command will be executed instead of the global command.",
+      "PostDate": "2004-07-30T00:28:20+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "2934",
+      "UserId": 0,
+      "Username": "Anonymous",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "ok...\n\nso it will need more coding if I want to have a command related to an object (NPC for ex.) that can move from one place to an other one...",
+      "EditableFormat": "bbcode",
+      "HTML": "ok...<br/><br/>so it will need more coding if I want to have a command related to an object (NPC for ex.) that can move from one place to an other one...",
+      "PostDate": "2004-07-30T11:22:23+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "2935",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "There are several other ways you could do it. You could just have your global command check for that object, e.g.\n\ncommand &lt;read #@thing#&gt; if (#thing#=book) then ... else msg &lt;You can't read that&gt;\n\nor use properties or actions e.g.\n\ncommand &lt;read #@thing#&gt; if action &lt;#thing#; read&gt; doaction &lt;#thing#; read&gt; else msg &lt;You can't read that.&gt;\n\nand then in your \"book\", \"magazine\" etc. definitions use\n\naction &lt;read&gt; msg &lt; ...... &gt;",
+      "EditableFormat": "bbcode",
+      "HTML": "There are several other ways you could do it. You could just have your global command check for that object, e.g.<br/><br/>command &lt;read #@thing#&gt; if (#thing#=book) then ... else msg &lt;You can't read that&gt;<br/><br/>or use properties or actions e.g.<br/><br/>command &lt;read #@thing#&gt; if action &lt;#thing#; read&gt; doaction &lt;#thing#; read&gt; else msg &lt;You can't read that.&gt;<br/><br/>and then in your \"book\", \"magazine\" etc. definitions use<br/><br/>action &lt;read&gt; msg &lt; ...... &gt;",
+      "PostDate": "2004-07-30T18:00:56+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "2936",
+      "UserId": 0,
+      "Username": "Farvardin",
+      "UserAvatar": null,
+      "UserGravatar": "b6ea46e28b64e5f7c68f80468607f022",
+      "EditableText": "It's working as expected now, thank you very much for explaining it to me. This way I could continue writing my library.\n\nbtw, the correct command should be :\n\n [code:739ff5o7]command &lt;read #@thing#&gt; if action &lt;#thing#; read&gt; then doaction &lt;#thing#; read&gt; else msg &lt;You can't read that&#46;&gt;[/code:739ff5o7]\n\n(the 'then' was missing)",
+      "EditableFormat": "bbcode",
+      "HTML": "It's working as expected now, thank you very much for explaining it to me. This way I could continue writing my library.<br/><br/>btw, the correct command should be :<br/><br/> <pre><code>command &lt;read #@thing#&gt; if action &lt;#thing#; read&gt; then doaction &lt;#thing#; read&gt; else msg &lt;You can't read that&#46;&gt;</code></pre><br/><br/>(the 'then' was missing)",
+      "PostDate": "2004-07-31T09:02:38+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

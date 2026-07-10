@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "gyqxjp-jekgmzesyy_auda",
+    "ForumId": "10",
+    "Title": "UNDO Revisited [Solved]",
+    "LastUpdated": "2023-04-25T21:05:44.4588219Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "32578323-21ab-482d-b2d4-1d25da315769",
+      "UserId": 199273,
+      "Username": "DavyB",
+      "AvatarUrl": "http://i.imgur.com/8BcaZCyb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "In discussion with mrangel a few years ago we seem to have 'fixed' known problems with the UNDO operation:\r\nhttp://textadventures.co.uk/forum/quest/topic/gxxws68qyko6hqwkf9q2ua/unexpected-undo-problem-resolved-again\r\n\r\nIn a recent case, however, there was a minor issue in undoing room changes where the background colours were different. Here is  simple example. The problem is the background colour of the command box is out of step with room changes. Any suggestions for a fix?\r\n```\r\n<!--Saved by Quest 5.8.6836.13983-->\r\n<asl version=\"580\">\r\n  <include ref=\"English.aslx\" />\r\n  <include ref=\"Core.aslx\" />\r\n  <game name=\"Undo Background Colours\">\r\n    <gameid>019c9494-8107-4d61-8e8a-993c91c41621</gameid>\r\n    <version>1.0</version>\r\n    <firstpublished>2023</firstpublished>\r\n    <feature_advancedscripts />\r\n    <inituserinterface type=\"script\">\r\n      game.restored = GetBoolean (game, \"hasacted\")\r\n      game.hasacted = false\r\n    </inituserinterface>\r\n  </game>\r\n  <turnscript name=\"clean_up\">\r\n    <enabled />\r\n    <script>\r\n      game.hasacted = true\r\n    </script>\r\n  </turnscript>\r\n  <command name=\"new_undo\">\r\n    <pattern>undo</pattern>\r\n    <isundo />\r\n    <script>\r\n      game.suppressturnscripts = true\r\n      if (not GetBoolean (game, \"hasacted\")) {\r\n        msg (\"There is nothing to undo!\")\r\n      }\r\n      else {\r\n        undo\r\n        game.suppressturnscripts = true\r\n        // Restore background colour if necessary\r\n        SetBackgroundColour (game.defaultbackground)\r\n        JS.updateLocation (CapFirst(GetDisplayName(game.pov.parent)))\r\n      }\r\n    </script>\r\n  </command>\r\n  <object name=\"Blue Room\">\r\n    <inherit name=\"editor_room\" />\r\n    <isroom />\r\n    <beforeenter type=\"script\">\r\n      SetBackgroundColour (\"LightBlue\")\r\n    </beforeenter>\r\n    <object name=\"player\">\r\n      <inherit name=\"editor_object\" />\r\n      <inherit name=\"editor_player\" />\r\n    </object>\r\n    <exit alias=\"south\" to=\"Green Room\">\r\n      <inherit name=\"southdirection\" />\r\n    </exit>\r\n  </object>\r\n  <object name=\"Green Room\">\r\n    <inherit name=\"editor_room\" />\r\n    <beforeenter type=\"script\">\r\n      SetBackgroundColour (\"LightGreen\")\r\n    </beforeenter>\r\n    <exit alias=\"north\" to=\"Blue Room\">\r\n      <inherit name=\"northdirection\" />\r\n    </exit>\r\n  </object>\r\n</asl>\r\n``` ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>In discussion with mrangel a few years ago we seem to have 'fixed' known problems with the UNDO operation:<br>\nhttp://textadventures.co.uk/forum/quest/topic/gxxws68qyko6hqwkf9q2ua/unexpected-undo-problem-resolved-again</p>\n<p>In a recent case, however, there was a minor issue in undoing room changes where the background colours were different. Here is  simple example. The problem is the background colour of the command box is out of step with room changes. Any suggestions for a fix?</p>\n<pre><code>&lt;!--Saved by Quest 5.8.6836.13983--&gt;\n&lt;asl version=\"580\"&gt;\n  &lt;include ref=\"English.aslx\" /&gt;\n  &lt;include ref=\"Core.aslx\" /&gt;\n  &lt;game name=\"Undo Background Colours\"&gt;\n    &lt;gameid&gt;019c9494-8107-4d61-8e8a-993c91c41621&lt;/gameid&gt;\n    &lt;version&gt;1.0&lt;/version&gt;\n    &lt;firstpublished&gt;2023&lt;/firstpublished&gt;\n    &lt;feature_advancedscripts /&gt;\n    &lt;inituserinterface type=\"script\"&gt;\n      game.restored = GetBoolean (game, \"hasacted\")\n      game.hasacted = false\n    &lt;/inituserinterface&gt;\n  &lt;/game&gt;\n  &lt;turnscript name=\"clean_up\"&gt;\n    &lt;enabled /&gt;\n    &lt;script&gt;\n      game.hasacted = true\n    &lt;/script&gt;\n  &lt;/turnscript&gt;\n  &lt;command name=\"new_undo\"&gt;\n    &lt;pattern&gt;undo&lt;/pattern&gt;\n    &lt;isundo /&gt;\n    &lt;script&gt;\n      game.suppressturnscripts = true\n      if (not GetBoolean (game, \"hasacted\")) {\n        msg (\"There is nothing to undo!\")\n      }\n      else {\n        undo\n        game.suppressturnscripts = true\n        // Restore background colour if necessary\n        SetBackgroundColour (game.defaultbackground)\n        JS.updateLocation (CapFirst(GetDisplayName(game.pov.parent)))\n      }\n    &lt;/script&gt;\n  &lt;/command&gt;\n  &lt;object name=\"Blue Room\"&gt;\n    &lt;inherit name=\"editor_room\" /&gt;\n    &lt;isroom /&gt;\n    &lt;beforeenter type=\"script\"&gt;\n      SetBackgroundColour (\"LightBlue\")\n    &lt;/beforeenter&gt;\n    &lt;object name=\"player\"&gt;\n      &lt;inherit name=\"editor_object\" /&gt;\n      &lt;inherit name=\"editor_player\" /&gt;\n    &lt;/object&gt;\n    &lt;exit alias=\"south\" to=\"Green Room\"&gt;\n      &lt;inherit name=\"southdirection\" /&gt;\n    &lt;/exit&gt;\n  &lt;/object&gt;\n  &lt;object name=\"Green Room\"&gt;\n    &lt;inherit name=\"editor_room\" /&gt;\n    &lt;beforeenter type=\"script\"&gt;\n      SetBackgroundColour (\"LightGreen\")\n    &lt;/beforeenter&gt;\n    &lt;exit alias=\"north\" to=\"Blue Room\"&gt;\n      &lt;inherit name=\"northdirection\" /&gt;\n    &lt;/exit&gt;\n  &lt;/object&gt;\n&lt;/asl&gt;\n</code></pre>\n\n",
+      "PostDate": "2023-04-25T21:05:44.4588219Z",
+      "LastEditDate": "2023-04-27T10:06:56.955772Z",
+      "link": null
+    },
+    {
+      "PostId": "a1ea2e17-33b6-4870-a757-c31077794ffd",
+      "UserId": 199273,
+      "Username": "DavyB",
+      "AvatarUrl": "http://i.imgur.com/8BcaZCyb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I see that one workaround is to insert ```msg (\"\")``` after the undo, though that creates an undesirable line feed. Still, it's a step in the right direction.\r\n\r\n...displaying the room description after an undo is another possibility! (```ShowRoomDescription ()```)\r\n\r\n...actually using both together works well, as it is useful to confirm the effect of an undo. Solved!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I see that one workaround is to insert <code>msg (\"\")</code> after the undo, though that creates an undesirable line feed. Still, it's a step in the right direction.</p>\n<p>...displaying the room description after an undo is another possibility! (<code>ShowRoomDescription ()</code>)</p>\n<p>...actually using both together works well, as it is useful to confirm the effect of an undo. Solved!</p>\n\n",
+      "PostDate": "2023-04-27T09:27:33.412392Z",
+      "LastEditDate": "2023-04-27T10:06:26.8524106Z",
+      "link": null
+    },
+    {
+      "PostId": "0fae82b7-2982-4322-9479-04e23bd564c1",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "When you call\r\n* `msg (\"\")`\r\nthe system redirects that down to:\r\n* `OutputText (\"\")`\r\nwhich calls:\r\n* `OutputTextRaw (ProcessText (\"\"))`\r\nwhich passes your processed text to `JS.addText` and then calls the function:\r\n* `ResetCommandBarFormat ()`\r\n\r\nWhich simply does:\r\n```\r\nJS.setCommandBarStyle(GetCurrentTextFormat(\"\") + \";background:\" + game.defaultbackground)\r\n```\r\nto make sure that the command bar has the correct style for the current attributes.\r\n\r\nSo you might be able to just call `ResetCommandBarFormat ()` after your undo.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>When you call</p>\n<ul>\n<li><code>msg (\"\")</code><br>\nthe system redirects that down to:</li>\n<li><code>OutputText (\"\")</code><br>\nwhich calls:</li>\n<li><code>OutputTextRaw (ProcessText (\"\"))</code><br>\nwhich passes your processed text to <code>JS.addText</code> and then calls the function:</li>\n<li><code>ResetCommandBarFormat ()</code></li>\n</ul>\n<p>Which simply does:</p>\n<pre><code>JS.setCommandBarStyle(GetCurrentTextFormat(\"\") + \";background:\" + game.defaultbackground)\n</code></pre>\n<p>to make sure that the command bar has the correct style for the current attributes.</p>\n<p>So you might be able to just call <code>ResetCommandBarFormat ()</code> after your undo.</p>\n\n",
+      "PostDate": "2023-04-27T19:57:11.2005539Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "182decee-d69b-4096-a411-dbd715c7c606",
+      "UserId": 199273,
+      "Username": "DavyB",
+      "AvatarUrl": "http://i.imgur.com/8BcaZCyb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "That works! Thanks mrangel, that is just what I was looking for.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>That works! Thanks mrangel, that is just what I was looking for.</p>\n\n",
+      "PostDate": "2023-04-28T10:35:05.8065592Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

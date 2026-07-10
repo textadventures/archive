@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "pgvxb7exs0aprf8qpqwoyg",
+    "ForumId": "18",
+    "Title": "JS `setCss` issue",
+    "LastUpdated": "2020-08-03T16:16:32.1734073Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "e62fa193-ca9f-4ead-b0ac-fdccc6b28cc7",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Recently noticed a bug in `JS.setCss`. The CSS values can't contain colons; which means you can't use it for setting `background-image` or similar properties.\r\n\r\nHere's a fixed version (also slightly more efficient, and sets all the properties at the same time rather than one by one which can make a difference in some edge cases):\r\n```\r\nfunction setCss(element, cssString) {\r\n  var style = {};\r\n  $.each(cssString.split(';'), function (index, rule) {\r\n    rule = rule.split(':');\r\n    var key = rule.splice(0,1)[0];\r\n    style[key] = rule.join(':');\r\n  });\r\n  $(element).css(style);\r\n}\r\n```\r\n\r\nIf you're using the web editor, you can apply the fix by adding a line to the UI Initialisation script:\r\n```\r\nJS.eval(\"setCss=function(s,i){var n={};$.each(i.split(';'),function(s,i){var c=(i=i.split(':')).splice(0,1)[0];n[c]=i.join(':')}),$(s).css(n)};\")\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Recently noticed a bug in <code>JS.setCss</code>. The CSS values can't contain colons; which means you can't use it for setting <code>background-image</code> or similar properties.</p>\n<p>Here's a fixed version (also slightly more efficient, and sets all the properties at the same time rather than one by one which can make a difference in some edge cases):</p>\n<pre><code>function setCss(element, cssString) {\n  var style = {};\n  $.each(cssString.split(';'), function (index, rule) {\n    rule = rule.split(':');\n    var key = rule.splice(0,1)[0];\n    style[key] = rule.join(':');\n  });\n  $(element).css(style);\n}\n</code></pre>\n<p>If you're using the web editor, you can apply the fix by adding a line to the UI Initialisation script:</p>\n<pre><code>JS.eval(\"setCss=function(s,i){var n={};$.each(i.split(';'),function(s,i){var c=(i=i.split(':')).splice(0,1)[0];n[c]=i.join(':')}),$(s).css(n)};\")\n</code></pre>\n\n",
+      "PostDate": "2020-08-03T16:16:32.1734073Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "02fc5b0e-ae94-40a0-acc9-e0ff25149f34",
+      "UserId": 207026,
+      "Username": "Pykrete",
+      "AvatarUrl": "https://i.imgur.com/n9Ygszeb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "(You can do the UI Initialisation script version if you're in the offline editor too, that's what I did! Which is obvious but just in case you're like me and need things spelled out!)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>(You can do the UI Initialisation script version if you're in the offline editor too, that's what I did! Which is obvious but just in case you're like me and need things spelled out!)</p>\n\n",
+      "PostDate": "2020-08-03T16:45:31.2092262Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "35d0e5f9-a8af-43e0-80d3-139f0ab6c829",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Update: could still be a little neater and more efficient:\r\n```\r\nfunction setCss(element, cssString) {\r\n  $(element).css(cssString.split(/;\\s*/).reduce(function (rule, obj) {\r\n    rule = rule.split(/:\\s*/);\r\n    obj[rule.splice(0,1)] = rule.join(\":\");\r\n    return obj;\r\n  }, {}));\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Update: could still be a little neater and more efficient:</p>\n<pre><code>function setCss(element, cssString) {\n  $(element).css(cssString.split(/;\\s*/).reduce(function (rule, obj) {\n    rule = rule.split(/:\\s*/);\n    obj[rule.splice(0,1)] = rule.join(\":\");\n    return obj;\n  }, {}));\n}\n</code></pre>\n\n",
+      "PostDate": "2020-08-04T13:28:04.0100286Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

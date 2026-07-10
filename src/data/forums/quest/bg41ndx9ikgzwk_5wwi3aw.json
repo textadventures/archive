@@ -1,0 +1,141 @@
+{
+  "Topic": {
+    "TopicId": "bg41ndx9ikgzwk_5wwi3aw",
+    "ForumId": "10",
+    "Title": "Basic time system?",
+    "LastUpdated": "2017-05-09T15:11:25.8211048Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "eb20e6db-13cc-4f80-bb19-a90a7ecf46e2",
+      "UserId": 305202,
+      "Username": "Palatheio",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5a61eeb5220f1e86863390ce9c5746fa?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello everyone! I was wondering if any of you could help me with a basic time system. I'm looking for four states of the day, morning, afternoon, evening, and night. Each one lasting 36 turns. After the four of them cycle through, I'd like it to repeat so that there is an indefinite amount of days. Ideally, there would also be ways to skip time forward by resting/sleeping. Is there any way to do this easily? As always, thank you for your help in advance. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello everyone! I was wondering if any of you could help me with a basic time system. I'm looking for four states of the day, morning, afternoon, evening, and night. Each one lasting 36 turns. After the four of them cycle through, I'd like it to repeat so that there is an indefinite amount of days. Ideally, there would also be ways to skip time forward by resting/sleeping. Is there any way to do this easily? As always, thank you for your help in advance.</p>\n\n",
+      "PostDate": "2017-05-09T15:11:25.8211048Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "56f29c36-37df-4a1e-b74a-b6b370895ed0",
+      "UserId": 56551,
+      "Username": "XanMag",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4b45a3afd18077f76f6569225c422bdb?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "This is pretty much exactly what I am doing in X3!  =)\r\nI made an object called twentyfourhours and added the attribute HoursCount to it.  I set this as an integer attribute equal to 0.\r\nUnder the script tab of the game element I added this under Run script after every turn in the game.\r\n```\r\ntwentyfourhours.HoursCount = twentyfourhours.HoursCount + 1\r\n```\r\nI added objects as children of my twentyfourhours representing each time of day.  In your case - day, morning, afternoon, evening, and night.  I added an object attribute to twentyfourhours and set it to object morning.\r\nI added a changed attribute script to object twentyfourhours.  Here I added a massive 'If' script.  On the first line If added this:\r\n```\r\nif (twentyfourhours.HoursCount = 1) {\r\n  twentyfourhours.currenttime = dawn\r\n```\r\nfollowed by whatever script I want to run.\r\nAlso in the changed attribute script... I added to the original If script an 'Else If' for each time of day.  I changed the \"1\" above to a \"36\" and the \"dawn\" to \"morning\".  72 and afternoon.  108 and noon.  Etc, etc...\r\nIn the 'thens' for each else if, you can run whatever scripts you want.  I had vendors arrive and depart, NPCs move around, messages indicating that the environment had changed,  messages about player state, etc.\r\n\r\nOn your last Else If (180 if my math is correct), I simply added this to the Then:\r\n```\r\ntwentyfourhours.HoursCount = 1\r\n```\r\nand this would reset the day and everything would start all over again.\r\n\r\nThe easiest way to add a wait command is to add a command under the game tab.  Leave as a command pattern and type something like the following in...\r\n```\r\nwait until midnight; wait for midnight; wait til midnight; wait till midnight\r\n```\r\nI had the following as my scripts:\r\n```\r\nmsg (\"<br/>You find the most comfortable place to nestle down and hope you make it until midnight.<br/>\")\r\nwait {\r\n  msg (\"<br/>You wake up and notice that your body is a bit achy from your uncomfortable rest, but it's not too bad.  It is now midnight.<br/>\")\r\n}\r\nDecreaseHealth (2)\r\nset (twentyfourhours, \"HoursCount\", 89)\r\n```\r\nwhere 89 is the turn count just before midnight started in my hourscount attribute.\r\n\r\nI did this for each time of day, just changing the time of day that I wanted to wait until and the number associated with the turn just before the new time of day was set to begin.\r\n\r\nHope this helps.  I can send you a working example if you would like.  Let me know.  Good luck!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>This is pretty much exactly what I am doing in X3!  =)<br>\nI made an object called twentyfourhours and added the attribute HoursCount to it.  I set this as an integer attribute equal to 0.<br>\nUnder the script tab of the game element I added this under Run script after every turn in the game.</p>\n<pre><code>twentyfourhours.HoursCount = twentyfourhours.HoursCount + 1\n</code></pre>\n<p>I added objects as children of my twentyfourhours representing each time of day.  In your case - day, morning, afternoon, evening, and night.  I added an object attribute to twentyfourhours and set it to object morning.<br>\nI added a changed attribute script to object twentyfourhours.  Here I added a massive 'If' script.  On the first line If added this:</p>\n<pre><code>if (twentyfourhours.HoursCount = 1) {\n  twentyfourhours.currenttime = dawn\n</code></pre>\n<p>followed by whatever script I want to run.<br>\nAlso in the changed attribute script... I added to the original If script an 'Else If' for each time of day.  I changed the \"1\" above to a \"36\" and the \"dawn\" to \"morning\".  72 and afternoon.  108 and noon.  Etc, etc...<br>\nIn the 'thens' for each else if, you can run whatever scripts you want.  I had vendors arrive and depart, NPCs move around, messages indicating that the environment had changed,  messages about player state, etc.</p>\n<p>On your last Else If (180 if my math is correct), I simply added this to the Then:</p>\n<pre><code>twentyfourhours.HoursCount = 1\n</code></pre>\n<p>and this would reset the day and everything would start all over again.</p>\n<p>The easiest way to add a wait command is to add a command under the game tab.  Leave as a command pattern and type something like the following in...</p>\n<pre><code>wait until midnight; wait for midnight; wait til midnight; wait till midnight\n</code></pre>\n<p>I had the following as my scripts:</p>\n<pre><code>msg (\"&lt;br/&gt;You find the most comfortable place to nestle down and hope you make it until midnight.&lt;br/&gt;\")\nwait {\n  msg (\"&lt;br/&gt;You wake up and notice that your body is a bit achy from your uncomfortable rest, but it's not too bad.  It is now midnight.&lt;br/&gt;\")\n}\nDecreaseHealth (2)\nset (twentyfourhours, \"HoursCount\", 89)\n</code></pre>\n<p>where 89 is the turn count just before midnight started in my hourscount attribute.</p>\n<p>I did this for each time of day, just changing the time of day that I wanted to wait until and the number associated with the turn just before the new time of day was set to begin.</p>\n<p>Hope this helps.  I can send you a working example if you would like.  Let me know.  Good luck!</p>\n\n",
+      "PostDate": "2017-05-09T15:44:57.3978172Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "7d0d07f9-1903-406f-a05f-a80ffb516a0f",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I have a tutorial on how to implement WAIT 10 minutes here:\r\nhttps://github.com/ThePix/quest/wiki/Enhanced-Waiting",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I have a tutorial on how to implement WAIT 10 minutes here:<br>\nhttps://github.com/ThePix/quest/wiki/Enhanced-Waiting</p>\n\n",
+      "PostDate": "2017-05-09T16:09:26.9454511Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "5f75fda0-c2ab-45bc-b8b0-e0ce4c89ce65",
+      "UserId": 305202,
+      "Username": "Palatheio",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5a61eeb5220f1e86863390ce9c5746fa?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thank you, both of you! This should help a lot!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thank you, both of you! This should help a lot!</p>\n\n",
+      "PostDate": "2017-05-09T16:44:24.3159625Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "3395a1fc-7c5e-4922-892e-52130580a501",
+      "UserId": 305202,
+      "Username": "Palatheio",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5a61eeb5220f1e86863390ce9c5746fa?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "@XanMag\r\n\r\nHello! I've followed your instructions but i'm being met with a strange error. It is as follows\r\n\r\nError running script: Error compiling expression 'twentyfourhours.HoursCount + 1': ArithmeticElement: Operation 'Add' is not defined for types 'Object' and 'Int32'\r\n\r\nDo you have any idea what this means or a potential fix?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>@XanMag</p>\n<p>Hello! I've followed your instructions but i'm being met with a strange error. It is as follows</p>\n<p>Error running script: Error compiling expression 'twentyfourhours.HoursCount + 1': ArithmeticElement: Operation 'Add' is not defined for types 'Object' and 'Int32'</p>\n<p>Do you have any idea what this means or a potential fix?</p>\n\n",
+      "PostDate": "2017-05-09T18:17:36.6246673Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "e83dfecc-11c5-4c20-a800-d2b380ecdd75",
+      "UserId": 56551,
+      "Username": "XanMag",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4b45a3afd18077f76f6569225c422bdb?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "If you want, start a new game.  Copy-paste the following code over everything in code view.  Top row of buttons, looks like a notecard).  This might be a simplified version of what I gave you.\r\n\r\nDoes that error pop-up when you make your first move/start the game?  Make sure everything is properly capitalized.  It gets a little finicky with capitalization.\r\n\r\nMake sure HoursCount is set as an integer attribute on the twentyfourhours object.\r\n```\r\n<asl version=\"550\">\r\n  <include ref=\"English.aslx\" />\r\n  <include ref=\"Core.aslx\" />\r\n  <game name=\"Cycling a Day\">\r\n    <gameid>d249f751-fa06-4277-875e-79e19b7166aa</gameid>\r\n    <version>1.0</version>\r\n    <firstpublished>2017</firstpublished>\r\n    <statusattributes type=\"stringdictionary\">\r\n      <item>\r\n        <key>TOD</key>\r\n        <value>Time of Day:</value>\r\n      </item>\r\n    </statusattributes>\r\n    <object name=\"TimeOfDay\">\r\n      <inherit name=\"editor_object\" />\r\n      <HoursCount type=\"int\">1</HoursCount>\r\n      <currentTOD type=\"object\">morning</currentTOD>\r\n      <changedHoursCount type=\"script\">\r\n        if (TimeOfDay.HoursCount = 1) {\r\n          TimeOfDay.currentTOD = morning\r\n          msg (\"It is now morning.\")\r\n        }\r\n        else if (TimeOfDay.HoursCount = 6) {\r\n          TimeOfDay.currentTOD = noon\r\n          msg (\"It is now noon.\")\r\n        }\r\n        else if (TimeOfDay.HoursCount = 11) {\r\n          TimeOfDay.currentTOD = evening\r\n          msg (\"It is now evening.\")\r\n        }\r\n        else if (TimeOfDay.HoursCount = 16) {\r\n          TimeOfDay.currentTOD = night\r\n          msg (\"It is now night time.\")\r\n        }\r\n        else if (TimeOfDay.HoursCount = 20) {\r\n          TimeOfDay.HoursCount = 0\r\n        }\r\n      </changedHoursCount>\r\n      <object name=\"night\">\r\n        <inherit name=\"editor_object\" />\r\n      </object>\r\n      <object name=\"evening\">\r\n        <inherit name=\"editor_object\" />\r\n      </object>\r\n      <object name=\"noon\">\r\n        <inherit name=\"editor_room\" />\r\n      </object>\r\n      <object name=\"morning\">\r\n        <inherit name=\"editor_object\" />\r\n      </object>\r\n    </object>\r\n  </game>\r\n  <object name=\"room\">\r\n    <inherit name=\"editor_room\" />\r\n    <object name=\"player\">\r\n      <inherit name=\"editor_object\" />\r\n      <inherit name=\"editor_player\" />\r\n    </object>\r\n    <exit alias=\"south\" to=\"room2\">\r\n      <inherit name=\"southdirection\" />\r\n    </exit>\r\n  </object>\r\n  <object name=\"room2\">\r\n    <inherit name=\"editor_room\" />\r\n    <exit alias=\"north\" to=\"room\">\r\n      <inherit name=\"northdirection\" />\r\n    </exit>\r\n    <exit alias=\"south\" to=\"room3\">\r\n      <inherit name=\"southdirection\" />\r\n    </exit>\r\n  </object>\r\n  <object name=\"room3\">\r\n    <inherit name=\"editor_room\" />\r\n    <exit alias=\"north\" to=\"room2\">\r\n      <inherit name=\"northdirection\" />\r\n    </exit>\r\n  </object>\r\n  <object name=\"Warehouse\">\r\n    <inherit name=\"editor_room\" />\r\n  </object>\r\n  <turnscript name=\"HoursCounter TS\">\r\n    <enabled />\r\n    <script>\r\n      TimeOfDay.HoursCount = TimeOfDay.HoursCount + 1\r\n    </script>\r\n  </turnscript>\r\n</asl>\r\n```\r\nIgnore the time of Day thing in the inventory bar.  I'm trying to figure out how to display the TOD there.   =)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>If you want, start a new game.  Copy-paste the following code over everything in code view.  Top row of buttons, looks like a notecard).  This might be a simplified version of what I gave you.</p>\n<p>Does that error pop-up when you make your first move/start the game?  Make sure everything is properly capitalized.  It gets a little finicky with capitalization.</p>\n<p>Make sure HoursCount is set as an integer attribute on the twentyfourhours object.</p>\n<pre><code>&lt;asl version=\"550\"&gt;\n  &lt;include ref=\"English.aslx\" /&gt;\n  &lt;include ref=\"Core.aslx\" /&gt;\n  &lt;game name=\"Cycling a Day\"&gt;\n    &lt;gameid&gt;d249f751-fa06-4277-875e-79e19b7166aa&lt;/gameid&gt;\n    &lt;version&gt;1.0&lt;/version&gt;\n    &lt;firstpublished&gt;2017&lt;/firstpublished&gt;\n    &lt;statusattributes type=\"stringdictionary\"&gt;\n      &lt;item&gt;\n        &lt;key&gt;TOD&lt;/key&gt;\n        &lt;value&gt;Time of Day:&lt;/value&gt;\n      &lt;/item&gt;\n    &lt;/statusattributes&gt;\n    &lt;object name=\"TimeOfDay\"&gt;\n      &lt;inherit name=\"editor_object\" /&gt;\n      &lt;HoursCount type=\"int\"&gt;1&lt;/HoursCount&gt;\n      &lt;currentTOD type=\"object\"&gt;morning&lt;/currentTOD&gt;\n      &lt;changedHoursCount type=\"script\"&gt;\n        if (TimeOfDay.HoursCount = 1) {\n          TimeOfDay.currentTOD = morning\n          msg (\"It is now morning.\")\n        }\n        else if (TimeOfDay.HoursCount = 6) {\n          TimeOfDay.currentTOD = noon\n          msg (\"It is now noon.\")\n        }\n        else if (TimeOfDay.HoursCount = 11) {\n          TimeOfDay.currentTOD = evening\n          msg (\"It is now evening.\")\n        }\n        else if (TimeOfDay.HoursCount = 16) {\n          TimeOfDay.currentTOD = night\n          msg (\"It is now night time.\")\n        }\n        else if (TimeOfDay.HoursCount = 20) {\n          TimeOfDay.HoursCount = 0\n        }\n      &lt;/changedHoursCount&gt;\n      &lt;object name=\"night\"&gt;\n        &lt;inherit name=\"editor_object\" /&gt;\n      &lt;/object&gt;\n      &lt;object name=\"evening\"&gt;\n        &lt;inherit name=\"editor_object\" /&gt;\n      &lt;/object&gt;\n      &lt;object name=\"noon\"&gt;\n        &lt;inherit name=\"editor_room\" /&gt;\n      &lt;/object&gt;\n      &lt;object name=\"morning\"&gt;\n        &lt;inherit name=\"editor_object\" /&gt;\n      &lt;/object&gt;\n    &lt;/object&gt;\n  &lt;/game&gt;\n  &lt;object name=\"room\"&gt;\n    &lt;inherit name=\"editor_room\" /&gt;\n    &lt;object name=\"player\"&gt;\n      &lt;inherit name=\"editor_object\" /&gt;\n      &lt;inherit name=\"editor_player\" /&gt;\n    &lt;/object&gt;\n    &lt;exit alias=\"south\" to=\"room2\"&gt;\n      &lt;inherit name=\"southdirection\" /&gt;\n    &lt;/exit&gt;\n  &lt;/object&gt;\n  &lt;object name=\"room2\"&gt;\n    &lt;inherit name=\"editor_room\" /&gt;\n    &lt;exit alias=\"north\" to=\"room\"&gt;\n      &lt;inherit name=\"northdirection\" /&gt;\n    &lt;/exit&gt;\n    &lt;exit alias=\"south\" to=\"room3\"&gt;\n      &lt;inherit name=\"southdirection\" /&gt;\n    &lt;/exit&gt;\n  &lt;/object&gt;\n  &lt;object name=\"room3\"&gt;\n    &lt;inherit name=\"editor_room\" /&gt;\n    &lt;exit alias=\"north\" to=\"room2\"&gt;\n      &lt;inherit name=\"northdirection\" /&gt;\n    &lt;/exit&gt;\n  &lt;/object&gt;\n  &lt;object name=\"Warehouse\"&gt;\n    &lt;inherit name=\"editor_room\" /&gt;\n  &lt;/object&gt;\n  &lt;turnscript name=\"HoursCounter TS\"&gt;\n    &lt;enabled /&gt;\n    &lt;script&gt;\n      TimeOfDay.HoursCount = TimeOfDay.HoursCount + 1\n    &lt;/script&gt;\n  &lt;/turnscript&gt;\n&lt;/asl&gt;\n</code></pre>\n<p>Ignore the time of Day thing in the inventory bar.  I'm trying to figure out how to display the TOD there.   =)</p>\n\n",
+      "PostDate": "2017-05-09T18:56:29.2712355Z",
+      "LastEditDate": "2017-05-09T19:03:00.6010612Z"
+    },
+    {
+      "PostId": "4255a662-2d00-41ed-8b3a-175d68807c94",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Palatheio, the error is because you have not set a starting value for twentyfourhours.HoursCount. You need to set it up on the attributes tab in the desktop version, or in the start script of the game object like this:\r\n```\r\ntwentyfourhours.HoursCount = 1",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Palatheio, the error is because you have not set a starting value for twentyfourhours.HoursCount. You need to set it up on the attributes tab in the desktop version, or in the start script of the game object like this:</p>\n<pre><code>twentyfourhours.HoursCount = 1\n</code></pre>\n\n",
+      "PostDate": "2017-05-09T20:36:40.5164141Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "e1e10a39-beb0-4126-91a8-48053d382c60",
+      "UserId": 305202,
+      "Username": "Palatheio",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5a61eeb5220f1e86863390ce9c5746fa?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thank you so much! I've managed to reverse engineer what you've pasted here, and after a significant amount of errors, everything seems to be working. Thank you so much!\r\n\r\nAlso thank you Pixie, not just for this, but for all of your libraries and help on other topics. I can't thank you two enough!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thank you so much! I've managed to reverse engineer what you've pasted here, and after a significant amount of errors, everything seems to be working. Thank you so much!</p>\n<p>Also thank you Pixie, not just for this, but for all of your libraries and help on other topics. I can't thank you two enough!</p>\n\n",
+      "PostDate": "2017-05-09T20:49:57.3530874Z",
+      "LastEditDate": "2017-05-09T20:51:00.4202474Z"
+    },
+    {
+      "PostId": "8ee8fc34-6ca9-4010-90b6-8b18fa8f21a0",
+      "UserId": 227864,
+      "Username": "Talon",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3b6191c9adc337e83fec8e293e3fc584?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Wow, XanMag, thats a  great way to work on a time of day, Think I'll use the ideas to rework the very basic weather /day and night functions i have in my game now..",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Wow, XanMag, thats a  great way to work on a time of day, Think I'll use the ideas to rework the very basic weather /day and night functions i have in my game now..</p>\n\n",
+      "PostDate": "2017-05-10T02:23:32.1735095Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "c3db7f39-05d3-49db-a597-d35a6a19d422",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "also, there's the modulus (%) operator/operation, which is division, but it gets the remainder, which has the applications of cyclic and/or factoring (odd/even, factors: divisible by X number), and cyclic is useful for time coding.\r\n\r\ngame.hour_count = 0\r\ngame.hour_count = game.hour_count + 1\r\n\r\n\r\ngame.military_hour_clock = game.hour_count % 24\r\ngame.civilian_hour_clock = game.hour_count % 12\r\n\r\ngame.hour_count = 0\r\nmilitary: 0\r\ncivilian: 0\r\n\r\ngame.hour_count = 1\r\nmilitary: 1\r\ncivilian: 1\r\n\r\ngame.hour_count = 11\r\nmilitary: 11\r\ncivilian: 11\r\n\r\ngame.hour_count = 12\r\nmilitary: 12\r\ncivilian: 0\r\n\r\ngame.hour_count = 13\r\nmilitary: 13\r\ncivilian: 1\r\n\r\ngame.hour_count = 23\r\nmilitary: 23\r\ncivilian: 11\r\n\r\ngame.hour_count = 24\r\nmilitary: 0\r\ncivilian: 0\r\n\r\ngame.hour_count = 25\r\nmilitary: 1\r\ncivilian: 1\r\n\r\ngame.hour_count = 35\r\nmilitary: 11\r\ncivilian: 11\r\n\r\ngame.hour_count = 36\r\nmilitary: 12\r\ncivilian: 0\r\n\r\ngame.hour_count = 37\r\nmilitary: 13\r\ncivilian: 1\r\n\r\ngame.hour_count = 47\r\nmilitary: 23\r\ncivilian: 11\r\n\r\ngame.hour_count = 48\r\nmilitary: 0\r\ncivilian: 0",
+      "EditableFormat": "markdown",
+      "HTML": "<p>also, there's the modulus (%) operator/operation, which is division, but it gets the remainder, which has the applications of cyclic and/or factoring (odd/even, factors: divisible by X number), and cyclic is useful for time coding.</p>\n<p>game.hour_count = 0<br>\ngame.hour_count = game.hour_count + 1</p>\n<p>game.military_hour_clock = game.hour_count % 24<br>\ngame.civilian_hour_clock = game.hour_count % 12</p>\n<p>game.hour_count = 0<br>\nmilitary: 0<br>\ncivilian: 0</p>\n<p>game.hour_count = 1<br>\nmilitary: 1<br>\ncivilian: 1</p>\n<p>game.hour_count = 11<br>\nmilitary: 11<br>\ncivilian: 11</p>\n<p>game.hour_count = 12<br>\nmilitary: 12<br>\ncivilian: 0</p>\n<p>game.hour_count = 13<br>\nmilitary: 13<br>\ncivilian: 1</p>\n<p>game.hour_count = 23<br>\nmilitary: 23<br>\ncivilian: 11</p>\n<p>game.hour_count = 24<br>\nmilitary: 0<br>\ncivilian: 0</p>\n<p>game.hour_count = 25<br>\nmilitary: 1<br>\ncivilian: 1</p>\n<p>game.hour_count = 35<br>\nmilitary: 11<br>\ncivilian: 11</p>\n<p>game.hour_count = 36<br>\nmilitary: 12<br>\ncivilian: 0</p>\n<p>game.hour_count = 37<br>\nmilitary: 13<br>\ncivilian: 1</p>\n<p>game.hour_count = 47<br>\nmilitary: 23<br>\ncivilian: 11</p>\n<p>game.hour_count = 48<br>\nmilitary: 0<br>\ncivilian: 0</p>\n\n",
+      "PostDate": "2017-05-10T05:36:26.7904017Z",
+      "LastEditDate": "2017-05-10T05:37:19.4718506Z"
+    }
+  ]
+}

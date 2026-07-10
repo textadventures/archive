@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "3042",
+    "ForumId": "10",
+    "Title": "Overriding exiting for ALL rooms",
+    "LastUpdated": "2012-06-11T09:42:36+01:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "20661",
+      "UserId": 0,
+      "Username": "duggold",
+      "UserAvatar": null,
+      "UserGravatar": "3f6c04ce315c448eac13aff762967ab2",
+      "EditableText": "I want to setup a system whereby any visible objects with a flag &quot;enemy&quot; set to 1 will have a chance of keeping you from leaving your current room. The idea being, if there are monsters in the room, you can't leave until they die. I may code a flee chance to let you have a chance of fleeing. In any event, I need a way to have code executed BEFORE the person leaves ANY Room that checks for enemies. IF flee chance isn't rolled, tell them they can't leave (in any direction). If the flee chance is rolled (or no monsters in room), continue doing the normal exiting stuff. I don't see where in the supplied aslx files the actual movement code is so I could change its behavior. I don't want to code stuff to lock/unlock exits as I think that's overkill and I want to allow locked exits on top of this system.",
+      "EditableFormat": "bbcode",
+      "HTML": "I want to setup a system whereby any visible objects with a flag &quot;enemy&quot; set to 1 will have a chance of keeping you from leaving your current room. The idea being, if there are monsters in the room, you can't leave until they die. I may code a flee chance to let you have a chance of fleeing. In any event, I need a way to have code executed BEFORE the person leaves ANY Room that checks for enemies. IF flee chance isn't rolled, tell them they can't leave (in any direction). If the flee chance is rolled (or no monsters in room), continue doing the normal exiting stuff. I don't see where in the supplied aslx files the actual movement code is so I could change its behavior. I don't want to code stuff to lock/unlock exits as I think that's overkill and I want to allow locked exits on top of this system.",
+      "PostDate": "2012-06-10T20:43:59+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "20662",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "Not that easy. I think you must lock all exits, something like \n\n[code:8kh59zoi]for each (exit, Allexits()) {\n   exit&#46;locked=true\n}[/code:8kh59zoi]",
+      "EditableFormat": "bbcode",
+      "HTML": "Not that easy. I think you must lock all exits, something like <br/><br/><pre><code>for each (exit, Allexits()) {<br/>   exit&#46;locked=true<br/>}</code></pre>",
+      "PostDate": "2012-06-10T21:12:42+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "20667",
+      "UserId": 0,
+      "Username": "duggold",
+      "UserAvatar": null,
+      "UserGravatar": "3f6c04ce315c448eac13aff762967ab2",
+      "EditableText": "How about a way to make the normal compass commands all issue a FLEE command (like Flee north). So when they click the compass it doesn't issue the normal move command but FLEE command instead? Then, when the monster dies, it reinstates the normal action from the compass clicks? Maybe a way on a per room basis to redirect the movement commands to my own scripts and then set the commands back again?\n\nWhat if I redefine the movement verbs for my game so my own scripts handle them. Then, I can call the built in commands if I allow the player to move? If my game has a verb defined (like move), won't my code get called before the normal Move function? And if so, how could I call the &quot;old&quot; built in move function to allow things to continue as they would normally go?",
+      "EditableFormat": "bbcode",
+      "HTML": "How about a way to make the normal compass commands all issue a FLEE command (like Flee north). So when they click the compass it doesn't issue the normal move command but FLEE command instead? Then, when the monster dies, it reinstates the normal action from the compass clicks? Maybe a way on a per room basis to redirect the movement commands to my own scripts and then set the commands back again?<br/><br/>What if I redefine the movement verbs for my game so my own scripts handle them. Then, I can call the built in commands if I allow the player to move? If my game has a verb defined (like move), won't my code get called before the normal Move function? And if so, how could I call the &quot;old&quot; built in move function to allow things to continue as they would normally go?",
+      "PostDate": "2012-06-10T23:11:35+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "20678",
+      "UserId": 0,
+      "Username": "duggold",
+      "UserAvatar": null,
+      "UserGravatar": "3f6c04ce315c448eac13aff762967ab2",
+      "EditableText": "I ended up getting this working by putting in my game my own default exit template (code below). I set objects with an enemy=1 attribute if they are combatants. If in a room with a combatant, it doesn't let you leave. It also respects the locked attribute of the exit so will never let you leave through a locked exit. Any feedback on this? Seem reliable? Any issues I need to be aware of?\n\n[code:26k3hv4o]&lt;type name=&quot;defaultexit&quot;&gt;\n    &lt;displayverbs type=&quot;list&quot;&gt;Go to&lt;/displayverbs&gt;\n    &lt;locked type=&quot;boolean&quot;&gt;false&lt;/locked&gt;\n    &lt;lockmessage&gt;That way is locked&#46;&lt;/lockmessage&gt;\n    &lt;lookonly type=&quot;boolean&quot;&gt;false&lt;/lookonly&gt;\n    &lt;script type=&quot;script&quot;&gt;\n      locked_out = 0\n      if (this&#46;locked) {\n        locked_out = 1\n        msg (this&#46;lockmessage)\n      }\n      if (locked_out = 0) {\n        found_one = 0\n        foreach (enemy, ScopeVisibleNotHeld()) {\n          if (HasAttribute(enemy,&quot;enemy&quot;)) {\n            if (enemy&#46;enemy = 1) {\n              found_one = 1\n            }\n          }\n        }\n        if (found_one = 0) {\n          MoveObject (player, this&#46;to)\n        }\n        else {\n          msg (&quot;You can't move while in combat&quot;)\n        }\n      }\n    &lt;/script&gt;[/code:26k3hv4o]",
+      "EditableFormat": "bbcode",
+      "HTML": "I ended up getting this working by putting in my game my own default exit template (code below). I set objects with an enemy=1 attribute if they are combatants. If in a room with a combatant, it doesn't let you leave. It also respects the locked attribute of the exit so will never let you leave through a locked exit. Any feedback on this? Seem reliable? Any issues I need to be aware of?<br/><br/><pre><code>&lt;type name=&quot;defaultexit&quot;&gt;<br/>    &lt;displayverbs type=&quot;list&quot;&gt;Go to&lt;/displayverbs&gt;<br/>    &lt;locked type=&quot;boolean&quot;&gt;false&lt;/locked&gt;<br/>    &lt;lockmessage&gt;That way is locked&#46;&lt;/lockmessage&gt;<br/>    &lt;lookonly type=&quot;boolean&quot;&gt;false&lt;/lookonly&gt;<br/>    &lt;script type=&quot;script&quot;&gt;<br/>      locked_out = 0<br/>      if (this&#46;locked) {<br/>        locked_out = 1<br/>        msg (this&#46;lockmessage)<br/>      }<br/>      if (locked_out = 0) {<br/>        found_one = 0<br/>        foreach (enemy, ScopeVisibleNotHeld()) {<br/>          if (HasAttribute(enemy,&quot;enemy&quot;)) {<br/>            if (enemy&#46;enemy = 1) {<br/>              found_one = 1<br/>            }<br/>          }<br/>        }<br/>        if (found_one = 0) {<br/>          MoveObject (player, this&#46;to)<br/>        }<br/>        else {<br/>          msg (&quot;You can't move while in combat&quot;)<br/>        }<br/>      }<br/>    &lt;/script&gt;</code></pre>",
+      "PostDate": "2012-06-11T04:05:36+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "20688",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "looks great",
+      "EditableFormat": "bbcode",
+      "HTML": "looks great",
+      "PostDate": "2012-06-11T09:42:36+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "Topic": {
+    "TopicId": "rt7-nilgduwsc4u-hajdhg",
+    "ForumId": "10",
+    "Title": "Getting All From Container",
+    "LastUpdated": "2017-12-31T20:11:28.5274271Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "7fc0e9ba-7f38-4fd7-9bb9-d9c4af11309e",
+      "UserId": 17092,
+      "Username": "GAGE HOLSTON",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/57b86a567d503acfa104a604accfa863?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "In my game, you use a locker room at one point. After changing, all your items are put in the locker.\r\nI was wondering if there was a shortcut I could use to get everything at once, so the player didn't have to pick their items back up one at a time.\r\n\r\nI tried using a command \"get all/get all from locker\" and the following script:\r\n\r\nif (Locker65.isopen) {\r\n  foreach (item, AllObjects(Locker65)) {\r\n    item.parent = player\r\n    msg (\"You take everything from the locker.\")\r\n  }\r\n}\r\nelse {\r\n  msg (\"The locker is closed.\")\r\n}\r\n\r\nHowever, I kept getting errors. Can I adjust this script to make it work, or is there a better way I could script this?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>In my game, you use a locker room at one point. After changing, all your items are put in the locker.<br>\nI was wondering if there was a shortcut I could use to get everything at once, so the player didn't have to pick their items back up one at a time.</p>\n<p>I tried using a command \"get all/get all from locker\" and the following script:</p>\n<p>if (Locker65.isopen) {<br>\nforeach (item, AllObjects(Locker65)) {<br>\nitem.parent = player<br>\nmsg (\"You take everything from the locker.\")<br>\n}<br>\n}<br>\nelse {<br>\nmsg (\"The locker is closed.\")<br>\n}</p>\n<p>However, I kept getting errors. Can I adjust this script to make it work, or is there a better way I could script this?</p>\n\n",
+      "PostDate": "2017-12-31T20:11:28.5274271Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "3bdc419f-9e0d-4c9c-9d86-3e17932a94f4",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "the 'AllObjects ()' has **NO** Parameter/Argument/Input, as it gets **ALL** the Objects in the **ENTIRE** game, and puts it into an Object List, which it then returns.\r\n\r\nso, that's why you're getting an error. Otherwise, your code is (nearly) perfect.\r\n\r\ntake a look at the 'scopes', here: http://docs.textadventures.co.uk/quest/functions/#scope\r\n\r\nyou'd probably want to use the 'GetDirectChildren (XXX)' scope:\r\n\r\n```\r\nif (Locker65.isopen) {\r\n  foreach (item, GetDirectChildren (Locker65)) {\r\n    item.parent = player\r\n  }\r\n  msg (\"You take everything from the locker.\") // you want this here, so it's only shown/displayed/outputted once. You had it within the 'foreach' which would show/display/output it multiple times (equal to the quantity of items in the locker)\r\n}\r\nelse {\r\n  msg (\"The locker is closed.\")\r\n}\r\n```\r\n\r\n---------------\r\n\r\nan example of how the 'AllObjects ()' could/would be used:\r\n\r\ncreates/displays a numbered list of every single Object in the entire game\r\n\r\nhttp://docs.textadventures.co.uk/quest/functions/corelibrary/displaylist.html (as an example within a Command)\r\n\r\n```\r\n<command name=\"example_command\">\r\n  <pattern>example</pattern>\r\n  <script>\r\n    DisplayList (AllObjects (), true)\r\n  </script>\r\n</command>\r\n```\r\n\r\nan example of manually coding in the same thing (just so you can see 'foreach' being used):\r\n\r\n```\r\n<command name=\"example_command\">\r\n  <pattern>example</pattern>\r\n  <script>\r\n    numbering_integer_variable = 0\r\n    foreach (object_variable, AllObjects ()) {\r\n      numbering_integer_variable = numbering_integer_variable + 1\r\n      msg (numbering_integer_variable + \". \" + object_variable.name)\r\n    }\r\n  </script>\r\n</command>\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>the 'AllObjects ()' has <strong>NO</strong> Parameter/Argument/Input, as it gets <strong>ALL</strong> the Objects in the <strong>ENTIRE</strong> game, and puts it into an Object List, which it then returns.</p>\n<p>so, that's why you're getting an error. Otherwise, your code is (nearly) perfect.</p>\n<p>take a look at the 'scopes', here: http://docs.textadventures.co.uk/quest/functions/#scope</p>\n<p>you'd probably want to use the 'GetDirectChildren (XXX)' scope:</p>\n<pre><code>if (Locker65.isopen) {\n  foreach (item, GetDirectChildren (Locker65)) {\n    item.parent = player\n  }\n  msg (\"You take everything from the locker.\") // you want this here, so it's only shown/displayed/outputted once. You had it within the 'foreach' which would show/display/output it multiple times (equal to the quantity of items in the locker)\n}\nelse {\n  msg (\"The locker is closed.\")\n}\n</code></pre>\n<hr>\n<p>an example of how the 'AllObjects ()' could/would be used:</p>\n<p>creates/displays a numbered list of every single Object in the entire game</p>\n<p>http://docs.textadventures.co.uk/quest/functions/corelibrary/displaylist.html (as an example within a Command)</p>\n<pre><code>&lt;command name=\"example_command\"&gt;\n  &lt;pattern&gt;example&lt;/pattern&gt;\n  &lt;script&gt;\n    DisplayList (AllObjects (), true)\n  &lt;/script&gt;\n&lt;/command&gt;\n</code></pre>\n<p>an example of manually coding in the same thing (just so you can see 'foreach' being used):</p>\n<pre><code>&lt;command name=\"example_command\"&gt;\n  &lt;pattern&gt;example&lt;/pattern&gt;\n  &lt;script&gt;\n    numbering_integer_variable = 0\n    foreach (object_variable, AllObjects ()) {\n      numbering_integer_variable = numbering_integer_variable + 1\n      msg (numbering_integer_variable + \". \" + object_variable.name)\n    }\n  &lt;/script&gt;\n&lt;/command&gt;\n</code></pre>\n\n",
+      "PostDate": "2017-12-31T20:23:54.1583342Z",
+      "LastEditDate": "2017-12-31T20:49:58.4376188Z",
+      "link": null
+    }
+  ]
+}

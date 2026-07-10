@@ -1,0 +1,39 @@
+{
+  "Topic": {
+    "TopicId": "5-iw5whf5kmpy1aqvcuttw",
+    "ForumId": "15",
+    "Title": "Q6: Timers and save/load",
+    "LastUpdated": "2021-05-23T00:31:35.8292181Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "d926a5a0-98a5-4858-841e-0c1ecec47f5c",
+      "UserId": 438905,
+      "Username": "Honoriam",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/b865620f96adee94a79fceb9f25fed3d?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Seeing as this seems to have become a bit of a de-facto forum for Q6... I was trying to figure out timed events and save/loading in Q6, and just want to make sure that what I'm doing isn't naive for a reason I'm not currently thinking of. \r\n\r\nCurrently, despite what is indicated in the wiki, the registerTimedEvents function cannot be called post game setup unless saving is disabled due to:\r\n```  registerTimedEvent:function(eventName, triggerTime, interval) {\r\nif (world.isCreated && !settings.saveDisabled) {\r\n  errormsg(\"Attempting to use registerTimedEvent after set up.\")\r\n  return\r\n}\r\n```\r\nRemoving this check leads to timed events functioning normally within one load instance, but the contents of game.eventFunctions are lost upon save/loading, so while the event still fires normally at the correct time following a load, it just errors out because the actual function call is no longer present. I fixed this by simply adding \"eventFunctions\" to saveLoadExcludedAtts. \r\n\r\nTo my understanding, that means that the eventFunctions are always created right upon navigation to the game page, and never touched by the save/load functions, so they should always be what they were upon game initialization. Or am I misunderstanding something?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Seeing as this seems to have become a bit of a de-facto forum for Q6... I was trying to figure out timed events and save/loading in Q6, and just want to make sure that what I'm doing isn't naive for a reason I'm not currently thinking of.</p>\n<p>Currently, despite what is indicated in the wiki, the registerTimedEvents function cannot be called post game setup unless saving is disabled due to:</p>\n<pre><code>if (world.isCreated &amp;&amp; !settings.saveDisabled) {\n  errormsg(\"Attempting to use registerTimedEvent after set up.\")\n  return\n}\n</code></pre>\n<p>Removing this check leads to timed events functioning normally within one load instance, but the contents of game.eventFunctions are lost upon save/loading, so while the event still fires normally at the correct time following a load, it just errors out because the actual function call is no longer present. I fixed this by simply adding \"eventFunctions\" to saveLoadExcludedAtts.</p>\n<p>To my understanding, that means that the eventFunctions are always created right upon navigation to the game page, and never touched by the save/load functions, so they should always be what they were upon game initialization. Or am I misunderstanding something?</p>\n\n",
+      "PostDate": "2021-05-23T00:31:35.8292181Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "888523a7-f129-4923-b2de-0e07d4268e1a",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks for highlighting. I have not used timers in anger, and they cannot be unit tested, so it is an area that is not so well covered.\r\n\r\nI think your method will work, because there is a special save/load bit to cover that. Quest will put the data in an array of dictionaries, which generally will not be saved, but should be in this case. The warning then is a bug.\r\n\r\nWhen written, the save/load would not save arrays of numbers. That is not now the case, so a better technique is possible, saving the data in multiple, simple arrays that will get saved. I have re-written it to do that, but it does change the whole system, and instead of registered your functions, you now create them in setting.js, and set them going with `util.registerTimerEvent` (though the functions you set up are the same, and the parameters to `util.registerTimerEvent` the same as before, so hopefully easy enough to change).\r\n\r\nNote that the functions are \"timer\" not \"timed\".\r\n\r\nThis is not in a release yet; you would need to get the latest files from Github. The updated files are _settings, _util and _world. The Wiki has been updated, so details there.\r\n\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks for highlighting. I have not used timers in anger, and they cannot be unit tested, so it is an area that is not so well covered.</p>\n<p>I think your method will work, because there is a special save/load bit to cover that. Quest will put the data in an array of dictionaries, which generally will not be saved, but should be in this case. The warning then is a bug.</p>\n<p>When written, the save/load would not save arrays of numbers. That is not now the case, so a better technique is possible, saving the data in multiple, simple arrays that will get saved. I have re-written it to do that, but it does change the whole system, and instead of registered your functions, you now create them in setting.js, and set them going with <code>util.registerTimerEvent</code> (though the functions you set up are the same, and the parameters to <code>util.registerTimerEvent</code> the same as before, so hopefully easy enough to change).</p>\n<p>Note that the functions are \"timer\" not \"timed\".</p>\n<p>This is not in a release yet; you would need to get the latest files from Github. The updated files are _settings, _util and _world. The Wiki has been updated, so details there.</p>\n\n",
+      "PostDate": "2021-05-23T09:01:55.1618844Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

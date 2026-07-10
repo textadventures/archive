@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "3rzwioryj02xqvf9_35ksa",
+    "ForumId": "10",
+    "Title": "Referencing Clones?",
+    "LastUpdated": "2019-01-26T23:19:02.2468329Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "9bdb28f3-ec69-42d7-8fa9-01f02f67947f",
+      "UserId": 187141,
+      "Username": "Shadecerule",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/c73b5bde1f86d7098461d3f9889a386f?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "How do you reference a specific clone you've created?\r\n\r\nFor instance, I want to create multiple copies of an item that is supposed to disappear after a number of turns:\r\n\r\n```\r\nSetTurnTimeout (15) {\r\n  RemoveObject ([clone])\r\n}\r\n```\r\n\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>How do you reference a specific clone you've created?</p>\n<p>For instance, I want to create multiple copies of an item that is supposed to disappear after a number of turns:</p>\n<pre><code>SetTurnTimeout (15) {\n  RemoveObject ([clone])\n}\n</code></pre>\n\n",
+      "PostDate": "2019-01-26T23:19:02.2468329Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "154d86b9-3de1-49dc-ad15-3036a015ec06",
+      "UserId": 282833,
+      "Username": "Io",
+      "AvatarUrl": "http://i.imgur.com/XVmdocTb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The code for this is a special variant of 'For Each'. Specifically, the format I use is:\r\n```\r\nforeach (TheActualClone, FilterByAttribute(GetDirectChildren(PlaceTheCloneIsIn), \"prototype\", WhateverOriginalObjectYouCloned)) {\r\n //Do stuff to clone TheActualClone\r\n}\r\n```\r\nWhat this does is look in an object/room for any clone of WhateverOriginalObjectYouCloned, and does something to each one in turn. So you could give the clones a 'TurnsLeft' attribute, and every turn you search for every clone and reduce TheActualClone.TurnsLeft by 1 and, at 0 or lower, get rid of it.\r\n\r\n**WARNING!** You don't want to use RemoveObject! I have a game that uses clones a lot too, and until recently I was doing this too. It leads to a memory leak; RemoveObject doesn't actually _get rid_ of the object. It merely sets its 'parent' to null. Basically the object in question gets punted into nowhere, but it's still there if you check the Debugger, taking up space. What you want is Destroy.\r\n\r\nDestroy, as far as I can tell, actually _destroys_ the object. The input has to be not an object, but an object's name. Not alias, the actual name in code. So it'd be:\r\n```\r\ndestroy (TheActualClone.name)\r\n```\r\nHope this helps!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The code for this is a special variant of 'For Each'. Specifically, the format I use is:</p>\n<pre><code>foreach (TheActualClone, FilterByAttribute(GetDirectChildren(PlaceTheCloneIsIn), \"prototype\", WhateverOriginalObjectYouCloned)) {\n //Do stuff to clone TheActualClone\n}\n</code></pre>\n<p>What this does is look in an object/room for any clone of WhateverOriginalObjectYouCloned, and does something to each one in turn. So you could give the clones a 'TurnsLeft' attribute, and every turn you search for every clone and reduce TheActualClone.TurnsLeft by 1 and, at 0 or lower, get rid of it.</p>\n<p><strong>WARNING!</strong> You don't want to use RemoveObject! I have a game that uses clones a lot too, and until recently I was doing this too. It leads to a memory leak; RemoveObject doesn't actually <em>get rid</em> of the object. It merely sets its 'parent' to null. Basically the object in question gets punted into nowhere, but it's still there if you check the Debugger, taking up space. What you want is Destroy.</p>\n<p>Destroy, as far as I can tell, actually <em>destroys</em> the object. The input has to be not an object, but an object's name. Not alias, the actual name in code. So it'd be:</p>\n<pre><code>destroy (TheActualClone.name)\n</code></pre>\n<p>Hope this helps!</p>\n\n",
+      "PostDate": "2019-01-27T00:27:19.9604602Z",
+      "LastEditDate": "2019-01-27T00:28:08.8689123Z",
+      "link": null
+    },
+    {
+      "PostId": "fcb38b75-aeef-48cf-839c-3bf7530e7971",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "When you create a clone, you probably have a variable referring to it (the clone returned by CloneObject or similar).\r\n\r\nYou'll want to put this in an attribute somewhere, so you know which object to destroy. However, if you're creating multiple clones, you'd need multiple attributes. Doing this with a turnscript for each is inefficient, but possible. Doing it with a TurnTimeout is not, because you can't pass data in to them.\r\n(I've previously posted a modified version of the SetTurnTimeout function that would allow you to do this, but in this example it isn't the best solution.\r\n\r\nInstead, you're probably better having a turnscript like this:\r\n```\r\nforeach (object, AllObjects()) {\r\n  if (HasInt (object, \"destroy_after_turns\")) {\r\n    if (object.destroy_after_turns = 0) {\r\n      object.destroy_after_turns = null\r\n      RemoveObject (object)\r\n    }\r\n    else {\r\n      object.destroy_after_turns = object.destroy_after_turns - 1\r\n    }\r\n  }\r\n}\r\n```\r\nThat means that the number of turns left until the object is destroyed is stored as an attribute of the object; and a single turnscript keeps count of all the objects with that attribute.\r\nSo when you create a clone, you'd just do:\r\n```\r\nmyClone = CloneObject (original object)\r\nmyClone.destroy_after_turns = 15\r\n```\r\n\r\n**PS:** `RemoveObject` throws an object into space, and leaves it floating around in a place the player can't reach. The object is removed from wherever it is, but it still exists. If you create a lot of clones, there will be an awful lot of defunct clones floating around in space, and this will make your save files huge. You're probably better using `destroy` for clones.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>When you create a clone, you probably have a variable referring to it (the clone returned by CloneObject or similar).</p>\n<p>You'll want to put this in an attribute somewhere, so you know which object to destroy. However, if you're creating multiple clones, you'd need multiple attributes. Doing this with a turnscript for each is inefficient, but possible. Doing it with a TurnTimeout is not, because you can't pass data in to them.<br>\n(I've previously posted a modified version of the SetTurnTimeout function that would allow you to do this, but in this example it isn't the best solution.</p>\n<p>Instead, you're probably better having a turnscript like this:</p>\n<pre><code>foreach (object, AllObjects()) {\n  if (HasInt (object, \"destroy_after_turns\")) {\n    if (object.destroy_after_turns = 0) {\n      object.destroy_after_turns = null\n      RemoveObject (object)\n    }\n    else {\n      object.destroy_after_turns = object.destroy_after_turns - 1\n    }\n  }\n}\n</code></pre>\n<p>That means that the number of turns left until the object is destroyed is stored as an attribute of the object; and a single turnscript keeps count of all the objects with that attribute.<br>\nSo when you create a clone, you'd just do:</p>\n<pre><code>myClone = CloneObject (original object)\nmyClone.destroy_after_turns = 15\n</code></pre>\n<p><strong>PS:</strong> <code>RemoveObject</code> throws an object into space, and leaves it floating around in a place the player can't reach. The object is removed from wherever it is, but it still exists. If you create a lot of clones, there will be an awful lot of defunct clones floating around in space, and this will make your save files huge. You're probably better using <code>destroy</code> for clones.</p>\n\n",
+      "PostDate": "2019-01-27T00:35:12.8733979Z",
+      "LastEditDate": "2019-01-27T00:38:51.3571776Z",
+      "link": null
+    },
+    {
+      "PostId": "bcb23308-58b1-428b-9248-3604e492c609",
+      "UserId": 187141,
+      "Username": "Shadecerule",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/c73b5bde1f86d7098461d3f9889a386f?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks! I think I've managed to figure out something that works. I also appreciate the tip about RemoveObject.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks! I think I've managed to figure out something that works. I also appreciate the tip about RemoveObject.</p>\n\n",
+      "PostDate": "2019-01-27T01:31:21.5938693Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "44f30930-c7c9-4c82-978b-f8b7be41d7b5",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "the 4 indicator/reference methods:\r\n\r\n-------\r\n\r\n1. storing within a VARIABLE (objectlist VARIABLE for multiple objects or an object reference/pointer VARIABLE for a single object), and then using the VARIABLE\r\n\r\n--------\r\n\r\n2. using its 'name' String Attribute and probably along with using the String Manipulation Functions/Scripts ( http://docs.textadventures.co.uk/quest/functions/#string )\r\n\r\n3. creating/adding some other (string, boolean, integer, double, script, list, or dictionary) Attribute (including the already built-in Attributes like the 'alias' String Attribute), and using that --- such as via the 'HasATTRIBUTE' or 'GetATTRIBUTE' Scripts/Functions, or if able to via direct comparison expressions: if (OBJECT.alias = \"potion\") { /* scripting */ } --- the 'HasATTRIBUTE' and 'GetATTRIBUTE' are nearly the same as the direct comparison expression, but has some differences in how to handle them with scripting properly\r\n\r\n4. creating/adding an Inherited Attribute (Object Type / Type), and using that (via with the 'DoesInherit' Function/Script: http://docs.textadventures.co.uk/quest/functions/doesinherit.html )",
+      "EditableFormat": "markdown",
+      "HTML": "<p>the 4 indicator/reference methods:</p>\n<hr>\n<ol>\n<li>storing within a VARIABLE (objectlist VARIABLE for multiple objects or an object reference/pointer VARIABLE for a single object), and then using the VARIABLE</li>\n</ol>\n<hr>\n<ol start=\"2\">\n<li>\n<p>using its 'name' String Attribute and probably along with using the String Manipulation Functions/Scripts ( http://docs.textadventures.co.uk/quest/functions/#string )</p>\n</li>\n<li>\n<p>creating/adding some other (string, boolean, integer, double, script, list, or dictionary) Attribute (including the already built-in Attributes like the 'alias' String Attribute), and using that --- such as via the 'HasATTRIBUTE' or 'GetATTRIBUTE' Scripts/Functions, or if able to via direct comparison expressions: if (OBJECT.alias = \"potion\") { /* scripting */ } --- the 'HasATTRIBUTE' and 'GetATTRIBUTE' are nearly the same as the direct comparison expression, but has some differences in how to handle them with scripting properly</p>\n</li>\n<li>\n<p>creating/adding an Inherited Attribute (Object Type / Type), and using that (via with the 'DoesInherit' Function/Script: http://docs.textadventures.co.uk/quest/functions/doesinherit.html )</p>\n</li>\n</ol>\n\n",
+      "PostDate": "2019-01-27T07:11:20.4710073Z",
+      "LastEditDate": "2019-01-27T07:20:03.0375916Z",
+      "link": null
+    },
+    {
+      "PostId": "f001d231-a534-4a58-8069-fa3c60afb13d",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Although it's not the most efficient way to do it, if you really wanted to make a script that looks like your original one, you could include this function:\r\n```\r\n  <function name=\"SetTurnTimeoutParams\" parameters=\"turncount, params, script\" type=\"object\">\r\n    turnscriptname = GetUniqueElementName(\"turnscript\")\r\n    create turnscript (turnscriptname)\r\n    turnscript = GetObject(turnscriptname)\r\n    turnscript.turncount = 0\r\n    turnscript.triggerturncount = turncount\r\n    turnscript.timeoutscript = script\r\n    turnscript.parameters = params\r\n    SetTurnScript(turnscript) {\r\n      this.turncount = this.turncount + 1\r\n      if (this.turncount >= this.triggerturncount) {\r\n        this.enabled = false\r\n        if (not EndsWith (TypeOf (this, \"parameters\"), \"dictionary\")) {\r\n          this.parameters = QuickParams (this, this.parameters)\r\n        }\r\n        invoke (this.timeoutscript, this.parameters)\r\n        destroy (this.name)\r\n      }\r\n    }\r\n    EnableTurnScript(turnscript)\r\n    return (turnscript)\r\n  </function>\r\n```\r\nI think I got that right off the top of my head.\r\nWith that script, you can do:\r\n```\r\nSetTurnTimeoutParams (15, myClone) {\r\n  RemoveObject (this)\r\n}\r\n```\r\n\r\nOr if you want to change an NPC's name after 5 turns (just as an example) you could do:\r\n```\r\nSetTurnTimeoutParams (5, QuickParams (\"npc\", myClone, \"newname\", \"George\")) {\r\n  npc.alias = newname\r\n}\r\n```\r\n\r\nThis method might work out easier if you have multiple scripts trying to the same thing to a clone repeatedly at different times; in which case the attributes would get quite complex to handle. It also returns the turnscript object, which you can keep in an attribute somewhere in case you want to pause it (with `DisableTurnScript` and `EnableTurnScript` functions) or cancel it (with `destroy`) later.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Although it's not the most efficient way to do it, if you really wanted to make a script that looks like your original one, you could include this function:</p>\n<pre><code>  &lt;function name=\"SetTurnTimeoutParams\" parameters=\"turncount, params, script\" type=\"object\"&gt;\n    turnscriptname = GetUniqueElementName(\"turnscript\")\n    create turnscript (turnscriptname)\n    turnscript = GetObject(turnscriptname)\n    turnscript.turncount = 0\n    turnscript.triggerturncount = turncount\n    turnscript.timeoutscript = script\n    turnscript.parameters = params\n    SetTurnScript(turnscript) {\n      this.turncount = this.turncount + 1\n      if (this.turncount &gt;= this.triggerturncount) {\n        this.enabled = false\n        if (not EndsWith (TypeOf (this, \"parameters\"), \"dictionary\")) {\n          this.parameters = QuickParams (this, this.parameters)\n        }\n        invoke (this.timeoutscript, this.parameters)\n        destroy (this.name)\n      }\n    }\n    EnableTurnScript(turnscript)\n    return (turnscript)\n  &lt;/function&gt;\n</code></pre>\n<p>I think I got that right off the top of my head.<br>\nWith that script, you can do:</p>\n<pre><code>SetTurnTimeoutParams (15, myClone) {\n  RemoveObject (this)\n}\n</code></pre>\n<p>Or if you want to change an NPC's name after 5 turns (just as an example) you could do:</p>\n<pre><code>SetTurnTimeoutParams (5, QuickParams (\"npc\", myClone, \"newname\", \"George\")) {\n  npc.alias = newname\n}\n</code></pre>\n<p>This method might work out easier if you have multiple scripts trying to the same thing to a clone repeatedly at different times; in which case the attributes would get quite complex to handle. It also returns the turnscript object, which you can keep in an attribute somewhere in case you want to pause it (with <code>DisableTurnScript</code> and <code>EnableTurnScript</code> functions) or cancel it (with <code>destroy</code>) later.</p>\n\n",
+      "PostDate": "2019-01-27T09:07:23.1009603Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

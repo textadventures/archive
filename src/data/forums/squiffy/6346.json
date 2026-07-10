@@ -1,0 +1,143 @@
+{
+  "Topic": {
+    "TopicId": "6346",
+    "ForumId": "24",
+    "Title": "Riddle me this - paths and setting variables",
+    "LastUpdated": "2016-05-18T22:21:17+01:00",
+    "ReplyCount": 10
+  },
+  "Posts": [
+    {
+      "PostId": "42914",
+      "UserId": 0,
+      "Username": "Bluevoss",
+      "UserAvatar": null,
+      "UserGravatar": "3162fe2e57e4cae90adf321de975a9da",
+      "EditableText": "Okay, I've only started playing with this. I've been going through the posts, C&amp;Ping every good example I see to understand it.\n\nOne area I'm interested in is using links that don't require player input. In other words, you could create a text flow without interaction. One useful thing this would allow is for you to describe different aspects or elements every time a game is played (i.e. a woman could be &quot;sexy&quot;, &quot;voluptuous&quot;, &quot;sinfully svelte&quot;, whatever). My goal is to make a game that you can play over and over, solving a logic puzzle that randomizes.\n\nAnywho, while trying to understand the flow and workings of Squiffy, I came on a strange thing. The code below is the example - just working on getting text, value setting, Booleans and such to work together.\n\nIn a nutshell, if you pick up the gun and work through an active you-gotta-click-it link, &quot;attack&quot; sets. If you don't pick up the gun and go through the indirect link, &quot;attack&quot; doesn't set. Can someone explain why this works as it does? It has something to do with the if-else statement - that's the real difference. \n====\n[[my game]]:\n\nYou see a gun sitting in the alley. Do you [[pick it up]] or [[leave it there]]...\n\n[[pick it up]]:\n\nYou pick up the gun. Good deal!\n@set guninhand\n\n[[Now walk out into the street]](street)\n\n[[leave it there]]:\n\nYou kick it under a dumpster. Nothing good comes from guns.\n@set not guninhand\n\n[[Now walk out into the street]](street)\n\n[[street]]:\n\nYou are now on the spaceport street.\n\n{if guninhand: [[hot]]}{else:{cold}}\n\n[[hot]]:\n\n@set attack = 6\n\n{battle}\n\n[[cold]]:\n\n@set attack = 3\n\n{battle}\n\n[[battle]]:\n\nYou go onto battle with a {attack} attack value.",
+      "EditableFormat": "bbcode",
+      "HTML": "Okay, I've only started playing with this. I've been going through the posts, C&amp;Ping every good example I see to understand it.<br/><br/>One area I'm interested in is using links that don't require player input. In other words, you could create a text flow without interaction. One useful thing this would allow is for you to describe different aspects or elements every time a game is played (i.e. a woman could be &quot;sexy&quot;, &quot;voluptuous&quot;, &quot;sinfully svelte&quot;, whatever). My goal is to make a game that you can play over and over, solving a logic puzzle that randomizes.<br/><br/>Anywho, while trying to understand the flow and workings of Squiffy, I came on a strange thing. The code below is the example - just working on getting text, value setting, Booleans and such to work together.<br/><br/>In a nutshell, if you pick up the gun and work through an active you-gotta-click-it link, &quot;attack&quot; sets. If you don't pick up the gun and go through the indirect link, &quot;attack&quot; doesn't set. Can someone explain why this works as it does? It has something to do with the if-else statement - that's the real difference. <br/>====<br/>[[my game]]:<br/><br/>You see a gun sitting in the alley. Do you [[pick it up]] or [[leave it there]]...<br/><br/>[[pick it up]]:<br/><br/>You pick up the gun. Good deal!<br/>@set guninhand<br/><br/>[[Now walk out into the street]](street)<br/><br/>[[leave it there]]:<br/><br/>You kick it under a dumpster. Nothing good comes from guns.<br/>@set not guninhand<br/><br/>[[Now walk out into the street]](street)<br/><br/>[[street]]:<br/><br/>You are now on the spaceport street.<br/><br/>{if guninhand: [[hot]]}{else:{cold}}<br/><br/>[[hot]]:<br/><br/>@set attack = 6<br/><br/>{battle}<br/><br/>[[cold]]:<br/><br/>@set attack = 3<br/><br/>{battle}<br/><br/>[[battle]]:<br/><br/>You go onto battle with a {attack} attack value.",
+      "PostDate": "2016-05-18T13:32:58+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42918",
+      "UserId": 0,
+      "Username": "Dennis Carlyle",
+      "UserAvatar": null,
+      "UserGravatar": "85ebb8105680cf9551a4943b3c2c28c8",
+      "EditableText": "Welcome.\n\nThat's a really interesting bit of code. Seems to show that Squiffy if/else is capable of doing more than I thought.\n\n-------------------------------------------\n{if guninhand: [[hot]]}\n------------------------------------------\n\nThis seems to directly route the script to the [[hot]] section if guninhand is true. (Which I didn't know it could do.)  Once there, it executes the command to set the 'attack' attribute, because your script is actually 'at' that section.  \n\n---------------\n{else:{cold}}\n---------------\nWhat I think is happening is . . . \nThe 'else' part is [b:15pfxix0]not[/b:15pfxix0] directly routing the script to the [[cold]] section.  It's trying to load/display/&quot;embed&quot; the (string) *contents* of that section, (which is what I would expect from reading the docs.) So, it ignores &quot;@set attack = 3&quot;.  But it displays the {battle} content correctly, because it's a string.  If you add . . .\n-------------------------\n@set defence = 5\n{defence}   \n-------------------------\n. . . to the [[battle]] section, you'll see the same thing happening. &quot;@set&quot; is ignored; so {defence} is displayed -- but has a 'null' value. (@set defence = strong) is null, too.\n\nSo . . . if you change the else part to {else:[[cold]]}, the code sample works as intended.",
+      "EditableFormat": "bbcode",
+      "HTML": "Welcome.<br/><br/>That's a really interesting bit of code. Seems to show that Squiffy if/else is capable of doing more than I thought.<br/><br/>-------------------------------------------<br/>{if guninhand: [[hot]]}<br/>------------------------------------------<br/><br/>This seems to directly route the script to the [[hot]] section if guninhand is true. (Which I didn't know it could do.)  Once there, it executes the command to set the 'attack' attribute, because your script is actually 'at' that section.  <br/><br/>---------------<br/>{else:{cold}}<br/>---------------<br/>What I think is happening is . . . <br/>The 'else' part is <span style=\"font-weight:bold;\">not</span> directly routing the script to the [[cold]] section.  It's trying to load/display/&quot;embed&quot; the (string) *contents* of that section, (which is what I would expect from reading the docs.) So, it ignores &quot;@set attack = 3&quot;.  But it displays the {battle} content correctly, because it's a string.  If you add . . .<br/>-------------------------<br/>@set defence = 5<br/>{defence}   <br/>-------------------------<br/>. . . to the [[battle]] section, you'll see the same thing happening. &quot;@set&quot; is ignored; so {defence} is displayed -- but has a 'null' value. (@set defence = strong) is null, too.<br/><br/>So . . . if you change the else part to {else:[[cold]]}, the code sample works as intended.",
+      "PostDate": "2016-05-18T15:09:52+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42923",
+      "UserId": 0,
+      "Username": "Bluevoss",
+      "UserAvatar": null,
+      "UserGravatar": "3162fe2e57e4cae90adf321de975a9da",
+      "EditableText": "Your response is interesting. How Squif works is not as straight forward as I imagined (and right now, I'm just trying to figure out how versatile it can be). On the earlier example, it's very curious when you rewrite the [i:yxv6d019]street[/i:yxv6d019] section as follows (see, I was playing more with if/elses and if you could overload them)...\n===\n[[street]]:\n\nYou are now on the spaceport street.\n\n{if guninhand: \n@set attack = 6\nYouve got gun.\n}\n{else:\n@set attack = 3\nYou don't have gun\n}\n\n{battle}\n===\n\nWhat is weird here is that the code WILL go down the correct path, mentioning the correct string. However, regardless of which path you take, you will get the correct text [i:yxv6d019][u:yxv6d019]but 'attack' will [b:yxv6d019]always[/b:yxv6d019]be set to 3![/u:yxv6d019][/i:yxv6d019] That's just strange - I could have accepted that it doesn't interpreted the set command correctly, but it seems to pick the wrong one when you multiline the command.\n\nI think I'm still looking at this with a more traditional coding POV. I'll have to start thinking Squiffy if I'm going to get anywhere.",
+      "EditableFormat": "bbcode",
+      "HTML": "Your response is interesting. How Squif works is not as straight forward as I imagined (and right now, I'm just trying to figure out how versatile it can be). On the earlier example, it's very curious when you rewrite the <span style=\"font-style:italic;\">street</span> section as follows (see, I was playing more with if/elses and if you could overload them)...<br/>===<br/>[[street]]:<br/><br/>You are now on the spaceport street.<br/><br/>{if guninhand: <br/>@set attack = 6<br/>Youve got gun.<br/>}<br/>{else:<br/>@set attack = 3<br/>You don't have gun<br/>}<br/><br/>{battle}<br/>===<br/><br/>What is weird here is that the code WILL go down the correct path, mentioning the correct string. However, regardless of which path you take, you will get the correct text <span style=\"font-style:italic;\"><span style=\"text-decoration:underline;\">but 'attack' will <span style=\"font-weight:bold;\">always</span>be set to 3!</span></span> That's just strange - I could have accepted that it doesn't interpreted the set command correctly, but it seems to pick the wrong one when you multiline the command.<br/><br/>I think I'm still looking at this with a more traditional coding POV. I'll have to start thinking Squiffy if I'm going to get anywhere.",
+      "PostDate": "2016-05-18T15:34:04+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42926",
+      "UserId": 0,
+      "Username": "Bluevoss",
+      "UserAvatar": null,
+      "UserGravatar": "3162fe2e57e4cae90adf321de975a9da",
+      "EditableText": "Post-thought - maybe Squiffy is interpreting handling the string printing within the coding modules, but handles setting variables at the end of the section, regardless of their placement in logic structures.",
+      "EditableFormat": "bbcode",
+      "HTML": "Post-thought - maybe Squiffy is interpreting handling the string printing within the coding modules, but handles setting variables at the end of the section, regardless of their placement in logic structures.",
+      "PostDate": "2016-05-18T15:36:48+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42931",
+      "UserId": 0,
+      "Username": "Dennis Carlyle",
+      "UserAvatar": null,
+      "UserGravatar": "85ebb8105680cf9551a4943b3c2c28c8",
+      "EditableText": "Yes. \nIf you remove the &quot;@set attack = 3&quot; statement, for example, you'll see that attack does get set to 6 first.  Then, (if attack = 3 statement is included), the value is being reset.  Both commands are being carried out, regardless of whether guninhand is true or false.",
+      "EditableFormat": "bbcode",
+      "HTML": "Yes. <br/>If you remove the &quot;@set attack = 3&quot; statement, for example, you'll see that attack does get set to 6 first.  Then, (if attack = 3 statement is included), the value is being reset.  Both commands are being carried out, regardless of whether guninhand is true or false.",
+      "PostDate": "2016-05-18T16:10:41+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42932",
+      "UserId": 0,
+      "Username": "bgbg",
+      "UserAvatar": null,
+      "UserGravatar": "4499e85f6b9744622fe437b185b6fba6",
+      "EditableText": "I'm pretty sure Squiffy runs through all the &quot;code&quot; stuff (setting variables and so on) in a section or passage all at once, and only once per turn. (And by turn I mean the time from one click to the next).",
+      "EditableFormat": "bbcode",
+      "HTML": "I'm pretty sure Squiffy runs through all the &quot;code&quot; stuff (setting variables and so on) in a section or passage all at once, and only once per turn. (And by turn I mean the time from one click to the next).",
+      "PostDate": "2016-05-18T16:38:25+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42934",
+      "UserId": 0,
+      "Username": "bgbg",
+      "UserAvatar": null,
+      "UserGravatar": "4499e85f6b9744622fe437b185b6fba6",
+      "EditableText": "If you're interested in seeing exactly how it works, the compiler source is [url=https&#58;//github&#46;com/textadventures/squiffy/blob/master/compiler&#46;js:sv08gnos]here[/url:sv08gnos].",
+      "EditableFormat": "bbcode",
+      "HTML": "If you're interested in seeing exactly how it works, the compiler source is <a href=\"https&#58;//github&#46;com/textadventures/squiffy/blob/master/compiler&#46;js\" rel=\"nofollow\">here</a>",
+      "PostDate": "2016-05-18T16:44:49+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42939",
+      "UserId": 0,
+      "Username": "Bluevoss",
+      "UserAvatar": null,
+      "UserGravatar": "3162fe2e57e4cae90adf321de975a9da",
+      "EditableText": "Ahh! Now it all makes sense <!-- s;) --><img src=\"{SMILIES_PATH}/icon_wink.gif\" alt=\";)\" title=\"Wink\" /><!-- s;) -->\n\nSeriously, it does. I found that {} jump and assumed that it was actually a clickless move to the next section. But no, having read what you said, I'll have to turn my brain around and look at this differently. I guess the {} jump really isn't a good idea. It isn't going there - it's inserting the section HERE.\n\nStill, I'll have to see if there is some use for this trick.",
+      "EditableFormat": "bbcode",
+      "HTML": "Ahh! Now it all makes sense <!-- s;) --><img src=\"{SMILIES_PATH}/icon_wink.gif\" alt=\";)\" title=\"Wink\" /><!-- s;) --><br/><br/>Seriously, it does. I found that {} jump and assumed that it was actually a clickless move to the next section. But no, having read what you said, I'll have to turn my brain around and look at this differently. I guess the {} jump really isn't a good idea. It isn't going there - it's inserting the section HERE.<br/><br/>Still, I'll have to see if there is some use for this trick.",
+      "PostDate": "2016-05-18T17:55:47+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42943",
+      "UserId": 0,
+      "Username": "Dennis Carlyle",
+      "UserAvatar": null,
+      "UserGravatar": "85ebb8105680cf9551a4943b3c2c28c8",
+      "EditableText": "[quote=&quot;Bluevoss&quot;:f138vnsd]Ahh! Now it all makes sense <!-- s;) --><img src=\"{SMILIES_PATH}/icon_wink.gif\" alt=\";)\" title=\"Wink\" /><!-- s;) -->\n\nSeriously, it does. I found that {} jump and assumed that it was actually a clickless move to the next section. But no, having read what you said, I'll have to turn my brain around and look at this differently. I guess the {} jump really isn't a good idea. It isn't going there - it's inserting the section HERE.\n\nStill, I'll have to see if there is some use for this trick.[/quote:f138vnsd]\n\nYa - I think this is more on-track. But . . . I'd rather say it inserts, not the section itself, but (whatever in the section IS NOT code) HERE.  If the section is all JS, or @ commands, nothing happens at all.  \n\nI don't know if this adds anything to the conversation, but for what it's worth:\n\n[code:f138vnsd]\n@start Begin\n\n&#91;&#91;Begin&#93;&#93;&#58;\nThis is the beginning&#46; Now, let's 'embed' the content of another section&#58; {Middle}  Did I just &quot;jump&quot; to another section?  No -- I just embeded the text content from the Middle section&#46; The Middle section embeds the text content from the End section, so embedding 'Middle' embeds 'End' here as well&#46;\n\nThat &quot;null&quot; you see above, is because Squiffy is trying to display an attribute (&quot;JTxt&quot;) value without the attribute having been set&#46; Jumping (by clicking) to the Middle section will set the value, and display a whole sentence instead of &quot;null&quot;&#46;\n\n&lt;b&gt;If the embed-text thingy had actually &quot;jumped&quot; to another section, the hyperlink for Middle (&quot;  jump  &quot; below) would be disabled&#46;&lt;/b&gt;\n\nNow -- let's &#91;&#91;&quot;  jump  &quot;&#93;&#93;(Middle) to the Middle section&#46;\n\n&#91;&#91;Middle&#93;&#93;&#58;\n    var jumpText = \n    &quot;&lt;p style='color&#58; blue';&gt;&lt;i&gt;&lt;b&gt;You jumped here ('Middle'), by clicking, so the JS code to set the value of the 'JTxt' attribute is recognized and activated, and you see this blue sentence&#46; You see the same thing from the End section, because the End is embedded, not 'jumped to' with a click, or JS 'story&#46;go' command&#46;&lt;/b&gt;&lt;/i&gt;&lt;/P&gt;&quot;\n    set(&quot;JTxt&quot;, jumpText);\n&lt;p style = &quot;color&#58;blue&quot;;&gt;\n{JTxt}\n&lt;/p&gt;\n\n&lt;p style=&quot;color&#58; chocolate&quot;&gt;&lt;b&gt;&lt;big&gt;\nThis is from the 'middle' section&#46;&lt;/big&gt;&lt;/b&gt;\n&lt;/p&gt;\n\n{End}\n\n&#91;&#91;End&#93;&#93;&#58;\n    set(&quot;Jtxt&quot;, &quot;JTxt is reset&quot;);\n\n@set JTxt = &quot;JTxt is reset&quot;\n\n&lt;p style = &quot;color&#58; red&quot;;&gt;\nThis is in the End section&#46;\n&lt;br&gt;\nThis End section includes both JS and Squiffy code to set the JTxt attribute to &quot;JTxt is reset&quot;&#46;\n&lt;/p&gt;\n\n{JTxt}\n\n[/code:f138vnsd]",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>Bluevoss wrote:</cite>Ahh! Now it all makes sense <!-- s;) --><img src=\"{SMILIES_PATH}/icon_wink.gif\" alt=\";)\" title=\"Wink\" /><!-- s;) --><br/><br/>Seriously, it does. I found that {} jump and assumed that it was actually a clickless move to the next section. But no, having read what you said, I'll have to turn my brain around and look at this differently. I guess the {} jump really isn't a good idea. It isn't going there - it's inserting the section HERE.<br/><br/>Still, I'll have to see if there is some use for this trick.</blockquote><br/><br/>Ya - I think this is more on-track. But . . . I'd rather say it inserts, not the section itself, but (whatever in the section IS NOT code) HERE.  If the section is all JS, or @ commands, nothing happens at all.  <br/><br/>I don't know if this adds anything to the conversation, but for what it's worth:<br/><br/><pre><code><br/>@start Begin<br/><br/>&#91;&#91;Begin&#93;&#93;&#58;<br/>This is the beginning&#46; Now, let's 'embed' the content of another section&#58; {Middle}  Did I just &quot;jump&quot; to another section?  No -- I just embeded the text content from the Middle section&#46; The Middle section embeds the text content from the End section, so embedding 'Middle' embeds 'End' here as well&#46;<br/><br/>That &quot;null&quot; you see above, is because Squiffy is trying to display an attribute (&quot;JTxt&quot;) value without the attribute having been set&#46; Jumping (by clicking) to the Middle section will set the value, and display a whole sentence instead of &quot;null&quot;&#46;<br/><br/>&lt;b&gt;If the embed-text thingy had actually &quot;jumped&quot; to another section, the hyperlink for Middle (&quot;  jump  &quot; below) would be disabled&#46;&lt;/b&gt;<br/><br/>Now -- let's &#91;&#91;&quot;  jump  &quot;&#93;&#93;(Middle) to the Middle section&#46;<br/><br/>&#91;&#91;Middle&#93;&#93;&#58;<br/>    var jumpText = <br/>    &quot;&lt;p style='color&#58; blue';&gt;&lt;i&gt;&lt;b&gt;You jumped here ('Middle'), by clicking, so the JS code to set the value of the 'JTxt' attribute is recognized and activated, and you see this blue sentence&#46; You see the same thing from the End section, because the End is embedded, not 'jumped to' with a click, or JS 'story&#46;go' command&#46;&lt;/b&gt;&lt;/i&gt;&lt;/P&gt;&quot;<br/>    set(&quot;JTxt&quot;, jumpText);<br/>&lt;p style = &quot;color&#58;blue&quot;;&gt;<br/>{JTxt}<br/>&lt;/p&gt;<br/><br/>&lt;p style=&quot;color&#58; chocolate&quot;&gt;&lt;b&gt;&lt;big&gt;<br/>This is from the 'middle' section&#46;&lt;/big&gt;&lt;/b&gt;<br/>&lt;/p&gt;<br/><br/>{End}<br/><br/>&#91;&#91;End&#93;&#93;&#58;<br/>    set(&quot;Jtxt&quot;, &quot;JTxt is reset&quot;);<br/><br/>@set JTxt = &quot;JTxt is reset&quot;<br/><br/>&lt;p style = &quot;color&#58; red&quot;;&gt;<br/>This is in the End section&#46;<br/>&lt;br&gt;<br/>This End section includes both JS and Squiffy code to set the JTxt attribute to &quot;JTxt is reset&quot;&#46;<br/>&lt;/p&gt;<br/><br/>{JTxt}<br/><br/></code></pre>",
+      "PostDate": "2016-05-18T19:08:44+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42944",
+      "UserId": 0,
+      "Username": "Bluevoss",
+      "UserAvatar": null,
+      "UserGravatar": "3162fe2e57e4cae90adf321de975a9da",
+      "EditableText": "Many thanks. I see what my misconception was. That's what I get for (a) tinkering and (b) assuming. \n\nThis reminds me of my first car. Nobody was hurt too badly...",
+      "EditableFormat": "bbcode",
+      "HTML": "Many thanks. I see what my misconception was. That's what I get for (a) tinkering and (b) assuming. <br/><br/>This reminds me of my first car. Nobody was hurt too badly...",
+      "PostDate": "2016-05-18T20:40:34+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "42948",
+      "UserId": 0,
+      "Username": "Dennis Carlyle",
+      "UserAvatar": null,
+      "UserGravatar": "85ebb8105680cf9551a4943b3c2c28c8",
+      "EditableText": "[quote=&quot;Bluevoss&quot;:22douc99]Many thanks. I see what my misconception was. That's what I get for (a) tinkering and (b) assuming. \n\nThis reminds me of my first car. Nobody was hurt too badly...[/quote:22douc99]\n\n <!-- s8) --><img src=\"{SMILIES_PATH}/icon_cool.gif\" alt=\"8)\" title=\"Cool\" /><!-- s8) --> \nSquiffy is pretty new, so I think all public 'tinkering' stands a good chance of helping us all get to know it better.",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>Bluevoss wrote:</cite>Many thanks. I see what my misconception was. That's what I get for (a) tinkering and (b) assuming. <br/><br/>This reminds me of my first car. Nobody was hurt too badly...</blockquote><br/><br/> <!-- s8) --><img src=\"{SMILIES_PATH}/icon_cool.gif\" alt=\"8)\" title=\"Cool\" /><!-- s8) --> <br/>Squiffy is pretty new, so I think all public 'tinkering' stands a good chance of helping us all get to know it better.",
+      "PostDate": "2016-05-18T22:21:17+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "k1mkx87pku2anjrgjfdd8a",
+    "ForumId": "10",
+    "Title": "Making objects work together.",
+    "LastUpdated": "2021-08-20T20:50:19.0372975Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "1337896b-9c21-4676-9279-f24dc77380ff",
+      "UserId": 556351,
+      "Username": "Matty2theMax",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I know this can be done because I've seen it done on someone else's game but I can't find any instructions on how to do it. Having spent a couple of hours looking I decided it best to ask you lovely, knowledgeable people.\r\n\r\nI have a dark basement and I want users to need to find a torch to go down there. However, I don't want to make it too easy. I want it so that the torch needs batteries which they will have to buy from the shop. So what I need to do is create a script where you can use the batteries once you have them in the torch and only then will it work on lighting the basement. \r\n\r\nDoes that make sense? \r\n\r\nI was playing a game and in theirs, if you mixed one chemical with another it created a third object and the two chemicals then disappeared from the inventory... how was that done?  \r\n\r\nAppreciate any suggestions. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I know this can be done because I've seen it done on someone else's game but I can't find any instructions on how to do it. Having spent a couple of hours looking I decided it best to ask you lovely, knowledgeable people.</p>\n<p>I have a dark basement and I want users to need to find a torch to go down there. However, I don't want to make it too easy. I want it so that the torch needs batteries which they will have to buy from the shop. So what I need to do is create a script where you can use the batteries once you have them in the torch and only then will it work on lighting the basement.</p>\n<p>Does that make sense?</p>\n<p>I was playing a game and in theirs, if you mixed one chemical with another it created a third object and the two chemicals then disappeared from the inventory... how was that done?</p>\n<p>Appreciate any suggestions.</p>\n\n",
+      "PostDate": "2021-08-20T20:50:19.0372975Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "17d4198b-30e2-4c9d-9d7b-a1e6d0942655",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "For the torch, I suspect the natural way to do it would be making the torch a *container*. Then the player can open and close it, and put the batteries in.\r\n\r\nHowever, you don't want the player to put some random object in there, so you use the `addscript` attribute (\"Script to run when trying to add an object:\" in the editor). You would set it to something like:\r\n```\r\nif (object = batteries) {\r\n  msg (\"You put the batteries in the torch.\")\r\n  MoveObject (batteries, this)\r\n  if (GetBoolean (this.switchedon)) {\r\n    msg (\"The torch lights up!\")\r\n    this.lightsource = true\r\n  }\r\n}\r\nelse {\r\n  msg (\"That won't fit in the battery compartment.\")\r\n}\r\n```\r\n\r\nThen you would modify the torch's switchable script so that it only works if the batteries are in place:\r\nScript for \"After switching on the object:\"\r\n```\r\nif (Contains (this, batteries)) {\r\n  msg (\"You switch it on and it lights up.\")\r\n  this.lightsource = true\r\n}\r\nelse {\r\n  msg (\"You press the button, but nothing happens. Maybe it needs vatteries.\")\r\n}\r\n```\r\nAnd \"After switching off the object:\"\r\n```\r\nif (this.lightsource) {\r\n  msg (\"You switch it off.\")\r\n  this.lightsource = false\r\n}\r\nelse {\r\n  msg (\"You press the button, but still nothing happens.\")\r\n}\r\n```\r\n\r\nYou'd also probably want the torch to go out if you remove the batteries. So you could modify the 'addscript' above like this:\r\n<pre><code>if (object = batteries) {\r\n  msg (\"You put the batteries in the torch.\")\r\n  MoveObject (batteries, this)\r\n  if (GetBoolean (this.switchedon)) {\r\n    msg (\"The torch lights up!\")\r\n    this.lightsource = true\r\n  }\r\n  <b>object.take => {\r\n    if (this.parent = torch) {\r\n      if (torch.lightsource) {\r\n        msg (\"As soon as you remove the batteries, the torch goes out.\")\r\n        torch.lightsource = false\r\n        this.take = true\r\n      }\r\n    }\r\n    AddToInventory (this)\r\n  }</b>\r\n}\r\nelse {\r\n  msg (\"That won't fit in the battery compartment.\")\r\n}</code></pre>\r\nThis adds a new 'take' script to the batteries, that checks if they're in the torch and if so makes it go dark.\r\n\r\n<hr/>\r\n\r\nAnother method would be making the object usable; but I think the player is more likely to guess \"put batteries in torch\" than \"use batteries on torch\".\r\n\r\nThere are a lot of different ways you can do this; it just depends how realistic you want to be. I think there's a lot of people who can help with the script part;  but first you should probably decide in more detail how you want the player to use it.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>For the torch, I suspect the natural way to do it would be making the torch a <em>container</em>. Then the player can open and close it, and put the batteries in.</p>\n<p>However, you don't want the player to put some random object in there, so you use the <code>addscript</code> attribute (\"Script to run when trying to add an object:\" in the editor). You would set it to something like:</p>\n<pre><code>if (object = batteries) {\n  msg (\"You put the batteries in the torch.\")\n  MoveObject (batteries, this)\n  if (GetBoolean (this.switchedon)) {\n    msg (\"The torch lights up!\")\n    this.lightsource = true\n  }\n}\nelse {\n  msg (\"That won't fit in the battery compartment.\")\n}\n</code></pre>\n<p>Then you would modify the torch's switchable script so that it only works if the batteries are in place:<br>\nScript for \"After switching on the object:\"</p>\n<pre><code>if (Contains (this, batteries)) {\n  msg (\"You switch it on and it lights up.\")\n  this.lightsource = true\n}\nelse {\n  msg (\"You press the button, but nothing happens. Maybe it needs vatteries.\")\n}\n</code></pre>\n<p>And \"After switching off the object:\"</p>\n<pre><code>if (this.lightsource) {\n  msg (\"You switch it off.\")\n  this.lightsource = false\n}\nelse {\n  msg (\"You press the button, but still nothing happens.\")\n}\n</code></pre>\n<p>You'd also probably want the torch to go out if you remove the batteries. So you could modify the 'addscript' above like this:</p>\n<pre><code>if (object = batteries) {\n  msg (\"You put the batteries in the torch.\")\n  MoveObject (batteries, this)\n  if (GetBoolean (this.switchedon)) {\n    msg (\"The torch lights up!\")\n    this.lightsource = true\n  }\n  <b>object.take =&gt; {\n    if (this.parent = torch) {\n      if (torch.lightsource) {\n        msg (\"As soon as you remove the batteries, the torch goes out.\")\n        torch.lightsource = false\n        this.take = true\n      }\n    }\n    AddToInventory (this)\n  }</b>\n}\nelse {\n  msg (\"That won't fit in the battery compartment.\")\n}</code></pre>\n<p>This adds a new 'take' script to the batteries, that checks if they're in the torch and if so makes it go dark.</p>\n<hr>\n<p>Another method would be making the object usable; but I think the player is more likely to guess \"put batteries in torch\" than \"use batteries on torch\".</p>\n<p>There are a lot of different ways you can do this; it just depends how realistic you want to be. I think there's a lot of people who can help with the script part;  but first you should probably decide in more detail how you want the player to use it.</p>\n\n",
+      "PostDate": "2021-08-21T16:03:59.3130538Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "bf59ac2a-ce9b-467c-aeb8-d563f7579ef0",
+      "UserId": 556351,
+      "Username": "Matty2theMax",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks mrangel. You're always there to come to the rescue on these sort of things. I have to say on first glance I'm pretty confused but, then again, that's my go-to default expression. \r\nI'll have a play with what you've sent me and try an implement it into my game. Hopefully once I start I'll get my head around it. \r\nYou're a star, thank you again. \r\n ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks mrangel. You're always there to come to the rescue on these sort of things. I have to say on first glance I'm pretty confused but, then again, that's my go-to default expression.<br>\nI'll have a play with what you've sent me and try an implement it into my game. Hopefully once I start I'll get my head around it.<br>\nYou're a star, thank you again.</p>\n\n",
+      "PostDate": "2021-08-22T08:27:17.2517301Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

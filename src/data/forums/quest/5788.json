@@ -1,0 +1,47 @@
+{
+  "Topic": {
+    "TopicId": "5788",
+    "ForumId": "10",
+    "Title": "HasDictionary??",
+    "LastUpdated": "2015-12-29T19:27:12+00:00",
+    "ReplyCount": 2
+  },
+  "Posts": [
+    {
+      "PostId": "40125",
+      "UserId": 0,
+      "Username": "jdpjdpjdp",
+      "UserAvatar": null,
+      "UserGravatar": "540c24bb58e5434b39c7bd72916f5510",
+      "EditableText": "It's often very useful to be able to write commands that check not only for the existence of an attribute, but also what type an attribute is before going further: &quot;HasString&quot; and &quot;HasScript&quot; being the prime examples. I know that there is no &quot;HasDictionary&quot;, but I was wondering if there were some equivalent way of checking if a given attribute is a script dictionary before proceeding? I've looked through the documentation and I can't find it, assuming it even exists. I'm not talking about checking the contents of a dictionary (I know how to do that), I want to simply check if the attribute exists and is of the type &quot;script dictionary&quot;.",
+      "EditableFormat": "bbcode",
+      "HTML": "It's often very useful to be able to write commands that check not only for the existence of an attribute, but also what type an attribute is before going further: &quot;HasString&quot; and &quot;HasScript&quot; being the prime examples. I know that there is no &quot;HasDictionary&quot;, but I was wondering if there were some equivalent way of checking if a given attribute is a script dictionary before proceeding? I've looked through the documentation and I can't find it, assuming it even exists. I'm not talking about checking the contents of a dictionary (I know how to do that), I want to simply check if the attribute exists and is of the type &quot;script dictionary&quot;.",
+      "PostDate": "2015-12-29T01:25:56+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40129",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Here's a function that should do it:\n\n[code:2pf4n7yv]  &lt;function name=&quot;HasDictionary&quot; parameters=&quot;object,attribute&quot; type=&quot;boolean&quot;&gt;\n  \tif (not HasAttribute(object, attribute)) {\n  \t\treturn (false)\n  \t}\n  \tvalue = GetAttribute(object, attribute)\n  \treturn(EndsWith(TypeOf(value), &quot;dictionary&quot;))\n  &lt;/function&gt;[/code:2pf4n7yv]\n\nIt should return true for an existing attribute whose type ends with &quot;dictionary&quot; (e.g. &quot;dictionary&quot;, &quot;stringdictionary&quot;, &quot;scriptdictionary&quot;).\n\nHere's a full example:\n\n[code:2pf4n7yv]&lt;!--Saved by Quest 5&#46;6&#46;5783&#46;24153--&gt;\n&lt;asl version=&quot;550&quot;&gt;\n  &lt;include ref=&quot;English&#46;aslx&quot; /&gt;\n  &lt;include ref=&quot;Core&#46;aslx&quot; /&gt;\n  &lt;game name=&quot;hasdict&quot;&gt;\n    &lt;gameid&gt;4264d739-8b26-423f-ac93-6e241c32d3d7&lt;/gameid&gt;\n    &lt;version&gt;1&#46;0&lt;/version&gt;\n    &lt;firstpublished&gt;2015&lt;/firstpublished&gt;\n    &lt;start type=&quot;script&quot;&gt;\n      msg (&quot;HasDictionary(foo)=&quot; + HasDictionary(player, &quot;foo&quot;))\n      msg (&quot;HasDictionary(dict)=&quot; + HasDictionary(player, &quot;dict&quot;))\n      msg (&quot;HasDictionary(name)=&quot; + HasDictionary(player, &quot;name&quot;))\n      msg (&quot;HasDictionary(stringdict)=&quot; + HasDictionary(player, &quot;stringdict&quot;))\n    &lt;/start&gt;\n  &lt;/game&gt;\n  &lt;object name=&quot;room&quot;&gt;\n    &lt;inherit name=&quot;editor_room&quot; /&gt;\n    &lt;object name=&quot;player&quot;&gt;\n      &lt;inherit name=&quot;editor_object&quot; /&gt;\n      &lt;inherit name=&quot;editor_player&quot; /&gt;\n      &lt;stringdict type=&quot;stringdictionary&quot; /&gt;\n      &lt;dict type=&quot;dictionary&quot; /&gt;\n      &lt;scriptdict type=&quot;scriptdictionary&quot; /&gt;\n    &lt;/object&gt;\n  &lt;/object&gt;\n  &lt;function name=&quot;HasDictionary&quot; parameters=&quot;object,attribute&quot; type=&quot;boolean&quot;&gt;\n  \tif (not HasAttribute(object, attribute)) {\n  \t\treturn (false)\n  \t}\n  \tvalue = GetAttribute(object, attribute)\n  \treturn(EndsWith(TypeOf(value), &quot;dictionary&quot;))\n  &lt;/function&gt;\n&lt;/asl&gt;[/code:2pf4n7yv]",
+      "EditableFormat": "bbcode",
+      "HTML": "Here's a function that should do it:<br/><br/><pre><code>  &lt;function name=&quot;HasDictionary&quot; parameters=&quot;object,attribute&quot; type=&quot;boolean&quot;&gt;<br/>  \tif (not HasAttribute(object, attribute)) {<br/>  \t\treturn (false)<br/>  \t}<br/>  \tvalue = GetAttribute(object, attribute)<br/>  \treturn(EndsWith(TypeOf(value), &quot;dictionary&quot;))<br/>  &lt;/function&gt;</code></pre><br/><br/>It should return true for an existing attribute whose type ends with &quot;dictionary&quot; (e.g. &quot;dictionary&quot;, &quot;stringdictionary&quot;, &quot;scriptdictionary&quot;).<br/><br/>Here's a full example:<br/><br/><pre><code>&lt;!--Saved by Quest 5&#46;6&#46;5783&#46;24153--&gt;<br/>&lt;asl version=&quot;550&quot;&gt;<br/>  &lt;include ref=&quot;English&#46;aslx&quot; /&gt;<br/>  &lt;include ref=&quot;Core&#46;aslx&quot; /&gt;<br/>  &lt;game name=&quot;hasdict&quot;&gt;<br/>    &lt;gameid&gt;4264d739-8b26-423f-ac93-6e241c32d3d7&lt;/gameid&gt;<br/>    &lt;version&gt;1&#46;0&lt;/version&gt;<br/>    &lt;firstpublished&gt;2015&lt;/firstpublished&gt;<br/>    &lt;start type=&quot;script&quot;&gt;<br/>      msg (&quot;HasDictionary(foo)=&quot; + HasDictionary(player, &quot;foo&quot;))<br/>      msg (&quot;HasDictionary(dict)=&quot; + HasDictionary(player, &quot;dict&quot;))<br/>      msg (&quot;HasDictionary(name)=&quot; + HasDictionary(player, &quot;name&quot;))<br/>      msg (&quot;HasDictionary(stringdict)=&quot; + HasDictionary(player, &quot;stringdict&quot;))<br/>    &lt;/start&gt;<br/>  &lt;/game&gt;<br/>  &lt;object name=&quot;room&quot;&gt;<br/>    &lt;inherit name=&quot;editor_room&quot; /&gt;<br/>    &lt;object name=&quot;player&quot;&gt;<br/>      &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>      &lt;inherit name=&quot;editor_player&quot; /&gt;<br/>      &lt;stringdict type=&quot;stringdictionary&quot; /&gt;<br/>      &lt;dict type=&quot;dictionary&quot; /&gt;<br/>      &lt;scriptdict type=&quot;scriptdictionary&quot; /&gt;<br/>    &lt;/object&gt;<br/>  &lt;/object&gt;<br/>  &lt;function name=&quot;HasDictionary&quot; parameters=&quot;object,attribute&quot; type=&quot;boolean&quot;&gt;<br/>  \tif (not HasAttribute(object, attribute)) {<br/>  \t\treturn (false)<br/>  \t}<br/>  \tvalue = GetAttribute(object, attribute)<br/>  \treturn(EndsWith(TypeOf(value), &quot;dictionary&quot;))<br/>  &lt;/function&gt;<br/>&lt;/asl&gt;</code></pre>",
+      "PostDate": "2015-12-29T10:27:46+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40136",
+      "UserId": 0,
+      "Username": "jdpjdpjdp",
+      "UserAvatar": null,
+      "UserGravatar": "540c24bb58e5434b39c7bd72916f5510",
+      "EditableText": "That looks to be exactly what I was looking for. Thank you! <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "That looks to be exactly what I was looking for. Thank you! <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2015-12-29T19:27:12+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

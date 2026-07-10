@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "zuwg4o2iqusmdf1k142m6q",
+    "ForumId": "24",
+    "Title": "Editing in HTML ruined save feature. Help!",
+    "LastUpdated": "2022-04-28T04:37:42.7992247Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "04fc57f2-86fa-4fce-b57a-39bc8bc3bb31",
+      "UserId": 312695,
+      "Username": "broadwaydude",
+      "AvatarUrl": "https://i.imgur.com/ZtaIo6Yb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I started making this game with squiffy, but I deleted a crap ton of progress after a terrible autosave accident. Luckily, I was able to salvage the html/css/js code from the previews of the game in my browser history. \r\n\r\nAnywho, the game is published. It's lovely. But I still don't understand what exactly happened to saving on your local storage (is that the thing that affects autosave?) because players can't restore progress in the game after they've exited out of it.\r\n\r\nCan someone help me out with this funk? Something in the metadata or js that I can implement or check for to get my autosave feature back? Thanks.\r\n\r\nDiego",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I started making this game with squiffy, but I deleted a crap ton of progress after a terrible autosave accident. Luckily, I was able to salvage the html/css/js code from the previews of the game in my browser history.</p>\n<p>Anywho, the game is published. It's lovely. But I still don't understand what exactly happened to saving on your local storage (is that the thing that affects autosave?) because players can't restore progress in the game after they've exited out of it.</p>\n<p>Can someone help me out with this funk? Something in the metadata or js that I can implement or check for to get my autosave feature back? Thanks.</p>\n<p>Diego</p>\n\n",
+      "PostDate": "2022-04-28T04:37:42.7992247Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "26dbd1de-07b5-411e-b59c-cb908b0c772b",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Do you mean that you've published the game from the preview?\r\nI'm not sure, but I think that uses a cut down version of the engine without the save feature. This sounds more like an issue in the common parts of the game code, rather than your source.\r\n\r\nThere's a recent topic where I linked to a utility that transforms a `story.js` file back into Squiffy source. Not sure if it would work in this case, but going back to Squiffy and recompiling the game might help.\r\n\r\nIf not, it might be worth letting someone familiar with the engine take a look at it. Can you give a link to the game in question?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Do you mean that you've published the game from the preview?<br>\nI'm not sure, but I think that uses a cut down version of the engine without the save feature. This sounds more like an issue in the common parts of the game code, rather than your source.</p>\n<p>There's a recent topic where I linked to a utility that transforms a <code>story.js</code> file back into Squiffy source. Not sure if it would work in this case, but going back to Squiffy and recompiling the game might help.</p>\n<p>If not, it might be worth letting someone familiar with the engine take a look at it. Can you give a link to the game in question?</p>\n\n",
+      "PostDate": "2022-04-28T08:18:21.4950035Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "fdaab317-64b8-4ad8-82dd-c102004523c0",
+      "UserId": 312695,
+      "Username": "broadwaydude",
+      "AvatarUrl": "https://i.imgur.com/ZtaIo6Yb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "https://textadventures.co.uk/games/view/pnmno4m7guu6zyjropbleg/the-world-ends-today-i-think",
+      "EditableFormat": "markdown",
+      "HTML": "<p>https://textadventures.co.uk/games/view/pnmno4m7guu6zyjropbleg/the-world-ends-today-i-think</p>\n\n",
+      "PostDate": "2022-04-28T15:22:16.4342383Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "c3e338cc-88e7-4b4e-89b3-aa14c04a5fad",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "OK… it looks like your file is missing a game ID, and has `persist` set to false.\r\n\r\nIt might help to find this part which disables saving in preview mode:\r\n```\r\n$('#squiffy').squiffy({\r\n\r\npersist: false\r\n\r\n});\r\n```\r\nI'm not sure if you need to change it to `true`, omit that line, or omit the whole section. I'm not too familiar with the code flow outside of `story.js`.\r\nThis might still break because of the lack of a story ID (resetting in this case could possibly corrupt a player's saves for other Squiffy and Quest6 games)\r\n\r\nIf that doesn't work, I've got a decompiler, but it's designed to take the `story.js` of a published game as its input, and this preview HTML is just different enough that it can't find the right parts.\r\nThen you'll have the Squiffy source you can paste back into the editor, so that you can compile/publish normally.\r\n\r\nEdit: I got it kind of working.\r\nIn your HTML file, look for the big script section, between `<script>` and `</script>` tags. There are several, but the one you want takes up 95% of the document and starts with `// Created with Squiffy 5.1.3`.\r\n\r\nThis is the part that would normally be in the file `story.js` for a published game.\r\nCopy this part of the file.\r\nWithin it, you will find the line:\r\n```\r\nvar squiffy = {};\r\n```\r\nRemove that line.\r\n\r\nTake the resulting file, and paste it into the left box on https://angelverse.mrangel.info/desquiff_noparse.html - Press go, and your Squiffy source should appear on the right. Sections might not be in a sensible order, but I *think* it should work. It does its best to turn the HTML from the final game's text parts back into the Squiffy code that would have generated it (such as removing automatically-inserted `<p>` and turning `<a data-section=\"whatever\">Some text</a>` back into `[[Some text]](whatever)`. But there might be some HTML left that's not tidied up.\r\n\r\nIf anything doesn't convert properly, please let me know. I'm interested in improving this system.\r\n\r\nBut in any case, once you have the Squiffy source back you can paste it into Squiffy and compile to get HTML/JS files which should have a game ID and save properly.\r\n\r\n(If anyone finds this post in future who has similar issues, if you have a `story.js` file you can just use https://angelverse.mrangel.info/desquiff.html and paste in the whole file rather than having to manually find bits first)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>OK… it looks like your file is missing a game ID, and has <code>persist</code> set to false.</p>\n<p>It might help to find this part which disables saving in preview mode:</p>\n<pre><code>$('#squiffy').squiffy({\n\npersist: false\n\n});\n</code></pre>\n<p>I'm not sure if you need to change it to <code>true</code>, omit that line, or omit the whole section. I'm not too familiar with the code flow outside of <code>story.js</code>.<br>\nThis might still break because of the lack of a story ID (resetting in this case could possibly corrupt a player's saves for other Squiffy and Quest6 games)</p>\n<p>If that doesn't work, I've got a decompiler, but it's designed to take the <code>story.js</code> of a published game as its input, and this preview HTML is just different enough that it can't find the right parts.<br>\nThen you'll have the Squiffy source you can paste back into the editor, so that you can compile/publish normally.</p>\n<p>Edit: I got it kind of working.<br>\nIn your HTML file, look for the big script section, between <code>&lt;script&gt;</code> and <code>&lt;/script&gt;</code> tags. There are several, but the one you want takes up 95% of the document and starts with <code>// Created with Squiffy 5.1.3</code>.</p>\n<p>This is the part that would normally be in the file <code>story.js</code> for a published game.<br>\nCopy this part of the file.<br>\nWithin it, you will find the line:</p>\n<pre><code>var squiffy = {};\n</code></pre>\n<p>Remove that line.</p>\n<p>Take the resulting file, and paste it into the left box on https://angelverse.mrangel.info/desquiff_noparse.html - Press go, and your Squiffy source should appear on the right. Sections might not be in a sensible order, but I <em>think</em> it should work. It does its best to turn the HTML from the final game's text parts back into the Squiffy code that would have generated it (such as removing automatically-inserted <code>&lt;p&gt;</code> and turning <code>&lt;a data-section=\"whatever\"&gt;Some text&lt;/a&gt;</code> back into <code>[[Some text]](whatever)</code>. But there might be some HTML left that's not tidied up.</p>\n<p>If anything doesn't convert properly, please let me know. I'm interested in improving this system.</p>\n<p>But in any case, once you have the Squiffy source back you can paste it into Squiffy and compile to get HTML/JS files which should have a game ID and save properly.</p>\n<p>(If anyone finds this post in future who has similar issues, if you have a <code>story.js</code> file you can just use https://angelverse.mrangel.info/desquiff.html and paste in the whole file rather than having to manually find bits first)</p>\n\n",
+      "PostDate": "2022-04-29T10:34:16.4230696Z",
+      "LastEditDate": "2022-05-08T16:50:43.7342737Z",
+      "link": null
+    },
+    {
+      "PostId": "a0fd282b-b351-4292-b909-b2c566c5d6d1",
+      "UserId": 312695,
+      "Username": "broadwaydude",
+      "AvatarUrl": "https://i.imgur.com/ZtaIo6Yb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Very nice! The only thing that I saw was that sections don't collapse properly and <p> is still on it. Other than that, the transfer was nice and smooth. Working on it right now!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Very nice! The only thing that I saw was that sections don't collapse properly and </p><p> is still on it. Other than that, the transfer was nice and smooth. Working on it right now!</p>\n\n",
+      "PostDate": "2022-05-04T13:29:13.3349845Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "9bf9220a-dbc9-478c-b7c9-89d11aa30f1e",
+      "UserId": 312695,
+      "Username": "broadwaydude",
+      "AvatarUrl": "https://i.imgur.com/ZtaIo6Yb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Haha! It works! I can save again! Thank you!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Haha! It works! I can save again! Thank you!</p>\n\n",
+      "PostDate": "2022-05-08T15:47:46.3051556Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

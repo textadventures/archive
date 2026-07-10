@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "ltwre7g-5kw4skvkidph3w",
+    "ForumId": "10",
+    "Title": "List of dictionaries",
+    "LastUpdated": "2018-09-12T09:15:56.6784665Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "639e3e30-04ce-437f-9561-47a934d077b4",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "OK, I've been playing around with a particularly confusing bug.\r\n\r\nI've got a list whose values are dictionaries. It seemed the most sensible way to organise things.\r\nAnd I've got a simple function, `DumpData()`, which gives me a nice visual output of lists and dictionaries.\r\n\r\nThe issue seems to be shown off by this piece of code:\r\n```\r\nmsg (\"==Before assignment==\")\r\nDumpData (myList)\r\nmsg (\"\")\r\ngame.someattribute = myList\r\nmsg (\"==After assignment==\")\r\nDumpData (myList)\r\n```\r\n\r\nThis gives me:\r\n<code>\r\n==Before Assignment==\r\n1. dictionary\r\n   * \"name\" (string): \"First dictionary\"\r\n   * \"value\" (int): 3\r\n   * \"script\" (script): \"{ msg (\"test\") }\"\r\n2. dictionary\r\n   * \"name\" (string): \"Second item\"\r\n   * \"arbitrary parameter with a silly name\" (string): \"foo\"\r\n   * \"nested list\" (stringlist):\r\n      1. (string) \"melons\"\r\n      2. (string) \"apples\"\r\n      3. (string) \"bananas\"\r\n\r\n==After Assignment==\r\n1. dictionary\r\n   * \"name\" (string): \"\"\r\n   * \"value\" (int): 3\r\n   * \"script\" (script): \"Script:\"\r\n2. dictionary\r\n   * \"name\" (string): \"\"\r\n   * \"arbitrary parameter with a silly name\" (string): \"\"\r\n   * \"nested list\" (stringlist):\r\n</code>\r\n\r\nOK ... so setting a game attribute to be equal to my list mangles the values in the list?\r\nBizarrely, it seems that when I retrieve a value using `DictionaryItem()`, I get a variable that maintains its `TypeOf()` result, but loses its value unless it's an int.\r\n\r\nIs this a bug in Quest, or is there something really dumb I'm overlooking?\r\n\r\nPlease tell me I don't have to create an object just to store a couple of values if I want to put it into a list?\r\n\r\nAlso, is this a new issue? I know I've used lists-of-lists and lists-of-dictionaries before without issues. Is this behaviour new with the new version of Quest? Or have I just not tried assigning these lists to an attribute before?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>OK, I've been playing around with a particularly confusing bug.</p>\n<p>I've got a list whose values are dictionaries. It seemed the most sensible way to organise things.<br>\nAnd I've got a simple function, <code>DumpData()</code>, which gives me a nice visual output of lists and dictionaries.</p>\n<p>The issue seems to be shown off by this piece of code:</p>\n<pre><code>msg (\"==Before assignment==\")\nDumpData (myList)\nmsg (\"\")\ngame.someattribute = myList\nmsg (\"==After assignment==\")\nDumpData (myList)\n</code></pre>\n<p>This gives me:<br>\n<code><br>\n==Before Assignment==</code></p><code>\n<ol>\n<li>dictionary\n<ul>\n<li>\"name\" (string): \"First dictionary\"</li>\n<li>\"value\" (int): 3</li>\n<li>\"script\" (script): \"{ msg (\"test\") }\"</li>\n</ul>\n</li>\n<li>dictionary\n<ul>\n<li>\"name\" (string): \"Second item\"</li>\n<li>\"arbitrary parameter with a silly name\" (string): \"foo\"</li>\n<li>\"nested list\" (stringlist):\n<ol>\n<li>(string) \"melons\"</li>\n<li>(string) \"apples\"</li>\n<li>(string) \"bananas\"</li>\n</ol>\n</li>\n</ul>\n</li>\n</ol>\n<p>==After Assignment==</p>\n<ol>\n<li>dictionary\n<ul>\n<li>\"name\" (string): \"\"</li>\n<li>\"value\" (int): 3</li>\n<li>\"script\" (script): \"Script:\"</li>\n</ul>\n</li>\n<li>dictionary\n<ul>\n<li>\"name\" (string): \"\"</li>\n<li>\"arbitrary parameter with a silly name\" (string): \"\"</li>\n<li>\"nested list\" (stringlist):</li>\n</ul>\n</li>\n</ol>\n</code>\n<p>OK ... so setting a game attribute to be equal to my list mangles the values in the list?<br>\nBizarrely, it seems that when I retrieve a value using <code>DictionaryItem()</code>, I get a variable that maintains its <code>TypeOf()</code> result, but loses its value unless it's an int.</p>\n<p>Is this a bug in Quest, or is there something really dumb I'm overlooking?</p>\n<p>Please tell me I don't have to create an object just to store a couple of values if I want to put it into a list?</p>\n<p>Also, is this a new issue? I know I've used lists-of-lists and lists-of-dictionaries before without issues. Is this behaviour new with the new version of Quest? Or have I just not tried assigning these lists to an attribute before?</p>\n\n",
+      "PostDate": "2018-09-12T09:15:56.6784665Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "7f59cbf7-daf2-4778-9e4e-705832089e93",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I had a look, and could not repeat it. This is my DumpData function:\r\n```\r\nforeach (el, list) {\r\n  msg (el)\r\n}\r\nd = ListItem(list, 0)\r\nel = DictionaryItem(d, \"script\")\r\nmsg (TypeOf(el))\r\n```\r\n\r\nAnd this sets it up:\r\n```\r\nscript => {\r\n  msg (\"test\")\r\n}\r\nd1 = QuickParams(\"name\", \"First dictionary\", \"value\", 3, \"script\", script)\r\nd2 = QuickParams(\"name\", \"Second item\", \"arbitrary parameter with a silly name\", \"foo\", \"nested list\", Split(\"melons;apples;bananas\"))\r\nmyList = NewList()\r\nlist add (myList, d1)\r\nlist add (myList, d2)\r\nmsg (\"==Before assignment==\")\r\nDumpData (myList)\r\nmsg (\"\")\r\ngame.someattribute = myList\r\nmsg (\"==After assignment==\")\r\nDumpData (myList)\r\n```\r\n\r\nIt displays the script differently, but still sees it as a script (which is why DumpData checks it):\r\n```\r\n==Before assignment==\r\nDictionary: name = First dictionary;value = 3;script = { msg (\"test\") }\r\nDictionary: name = Second item;arbitrary parameter with a silly name = foo;nested list = List: melons; apples; bananas; \r\nscript\r\n\r\n==After assignment==\r\nDictionary: name = First dictionary;value = 3;script = Script: msg (\"test\")\r\nDictionary: name = Second item;arbitrary parameter with a silly name = foo;nested list = List: melons; apples; bananas; \r\nscript",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I had a look, and could not repeat it. This is my DumpData function:</p>\n<pre><code>foreach (el, list) {\n  msg (el)\n}\nd = ListItem(list, 0)\nel = DictionaryItem(d, \"script\")\nmsg (TypeOf(el))\n</code></pre>\n<p>And this sets it up:</p>\n<pre><code>script =&gt; {\n  msg (\"test\")\n}\nd1 = QuickParams(\"name\", \"First dictionary\", \"value\", 3, \"script\", script)\nd2 = QuickParams(\"name\", \"Second item\", \"arbitrary parameter with a silly name\", \"foo\", \"nested list\", Split(\"melons;apples;bananas\"))\nmyList = NewList()\nlist add (myList, d1)\nlist add (myList, d2)\nmsg (\"==Before assignment==\")\nDumpData (myList)\nmsg (\"\")\ngame.someattribute = myList\nmsg (\"==After assignment==\")\nDumpData (myList)\n</code></pre>\n<p>It displays the script differently, but still sees it as a script (which is why DumpData checks it):</p>\n<pre><code>==Before assignment==\nDictionary: name = First dictionary;value = 3;script = { msg (\"test\") }\nDictionary: name = Second item;arbitrary parameter with a silly name = foo;nested list = List: melons; apples; bananas; \nscript\n\n==After assignment==\nDictionary: name = First dictionary;value = 3;script = Script: msg (\"test\")\nDictionary: name = Second item;arbitrary parameter with a silly name = foo;nested list = List: melons; apples; bananas; \nscript\n</code></pre>\n\n",
+      "PostDate": "2018-09-12T12:02:12.9333449Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "2f863f62-d363-436f-893c-02ff0d413032",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "OK, I'm getting really confused now.\r\nTried using your DumpData function with my test code, and my DumpData with your code. Both seem to work. But put the two pieces of my code together, and it fails in a bizarre way I just can't get my head around.\r\n\r\nAs I've had the same issue with actual game code, and this simple test written to create the problem, I think I must be missing something pretty fundamental. I'm going to start from scratch, and see if it happens again.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>OK, I'm getting really confused now.<br>\nTried using your DumpData function with my test code, and my DumpData with your code. Both seem to work. But put the two pieces of my code together, and it fails in a bizarre way I just can't get my head around.</p>\n<p>As I've had the same issue with actual game code, and this simple test written to create the problem, I think I must be missing something pretty fundamental. I'm going to start from scratch, and see if it happens again.</p>\n\n",
+      "PostDate": "2018-09-12T14:02:21.3913701Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "84c67a75-5c3f-4254-8f42-71abbe522ac3",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "... OK, got it working now.\r\nNot sure what's different.\r\n\r\nI've given up on trying to print debugging messages here, because I've found that in *some* circumstances (not always), I can get a variable `script` where `TypeOf(script)` returns `\"script\"`, `ToString(script)` returns `\"Script: \"` and nothing else, but `invoke (script)` works fine.\r\n\r\nSo… my current guess is that I don't understand how ToString() works on scripts; and this was actually unrelated to a separate issue that was causing `invoke()` to fail.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>... OK, got it working now.<br>\nNot sure what's different.</p>\n<p>I've given up on trying to print debugging messages here, because I've found that in <em>some</em> circumstances (not always), I can get a variable <code>script</code> where <code>TypeOf(script)</code> returns <code>\"script\"</code>, <code>ToString(script)</code> returns <code>\"Script: \"</code> and nothing else, but <code>invoke (script)</code> works fine.</p>\n<p>So… my current guess is that I don't understand how ToString() works on scripts; and this was actually unrelated to a separate issue that was causing <code>invoke()</code> to fail.</p>\n\n",
+      "PostDate": "2018-09-12T15:01:06.0148885Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

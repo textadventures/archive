@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "-o9xg96m6uurrtgkez5mdg",
+    "ForumId": "10",
+    "Title": "Text Processor (again)",
+    "LastUpdated": "2018-07-14T23:31:06.8286411Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "6364904d-309e-486e-970c-f7fdfdcf8f23",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I know I've commented previously on the structure of the text processor; and how it could be more extensible.\r\n\r\nBut I'm looking at it now, and I've got another issue I'm thinking is particularly bad. It occurs in quite a few of the functions, so here's an example from `ProcessTextCommand_either`.\r\n\r\nThe offending code:\r\n```\r\n    condition = Left(command, colon - 1)\r\n    if (not game.text_processor_this = null) condition = Replace(condition, \"this\", game.text_processor_this.name)\r\n    result = eval(condition)\r\n```\r\nSo ... it extracts the condition, then does a `Replace()` to turn `this` into the object stored in `game.text_processor_this`.\r\n\r\nThere is no check to make sure that the four letters \"this\" aren't a substring of an object name, attribute, or something else in a condition which is going to be passed to `eval`.\r\n\r\nIt would be much more sane (and not produce extremely-hard-to-debug errors) to replace those lines with:\r\n\r\n```\r\n    condition = Left(command, colon - 1)\r\n    params = NewDictionary()\r\n    if (not game.text_processor_this = null) {\r\n      dictionary add (params, \"this\", game.text_processor_this)\r\n    }\r\n    result = eval(condition, params)\r\n```\r\n\r\n(and at the same time, wouldn't it make sense to allow the user to set a dictionary like `game.text_processor_variables`? It could be passed to all the `eval()`s in the text processor, allowing users an easy way to let the text processor see any set of variables currently in scope)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I know I've commented previously on the structure of the text processor; and how it could be more extensible.</p>\n<p>But I'm looking at it now, and I've got another issue I'm thinking is particularly bad. It occurs in quite a few of the functions, so here's an example from <code>ProcessTextCommand_either</code>.</p>\n<p>The offending code:</p>\n<pre><code>    condition = Left(command, colon - 1)\n    if (not game.text_processor_this = null) condition = Replace(condition, \"this\", game.text_processor_this.name)\n    result = eval(condition)\n</code></pre>\n<p>So ... it extracts the condition, then does a <code>Replace()</code> to turn <code>this</code> into the object stored in <code>game.text_processor_this</code>.</p>\n<p>There is no check to make sure that the four letters \"this\" aren't a substring of an object name, attribute, or something else in a condition which is going to be passed to <code>eval</code>.</p>\n<p>It would be much more sane (and not produce extremely-hard-to-debug errors) to replace those lines with:</p>\n<pre><code>    condition = Left(command, colon - 1)\n    params = NewDictionary()\n    if (not game.text_processor_this = null) {\n      dictionary add (params, \"this\", game.text_processor_this)\n    }\n    result = eval(condition, params)\n</code></pre>\n<p>(and at the same time, wouldn't it make sense to allow the user to set a dictionary like <code>game.text_processor_variables</code>? It could be passed to all the <code>eval()</code>s in the text processor, allowing users an easy way to let the text processor see any set of variables currently in scope)</p>\n\n",
+      "PostDate": "2018-07-14T23:31:06.8286411Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "519e6c41-30ea-445c-b75c-b7ebf6a10159",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Another thought:\r\n\r\nThe `{random:}` command uses a function called `Tsplit` to split up its arguments, rather than `Split`. This means that, for example, in `{random:{b:bold}:{i:italic}:regular}`, it will pick one of `{b:bold}`, `{i:italic}`, or `regular` rather than choosing from `{b`, `bold}`, `{i`, `italic}`, or `regular`.\r\n\r\nWould it be reasonable to expand the use of this split function to other text processor functions? Notably, `{either` would be a lot more useful if it could be nested. I've been wondering about this for a while; but only just noticed that the function already exists.\r\n\r\n(It would also be nice if there was some form of escaping; though that would likely be more effort than it's worth)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Another thought:</p>\n<p>The <code>{random:}</code> command uses a function called <code>Tsplit</code> to split up its arguments, rather than <code>Split</code>. This means that, for example, in <code>{random:{b:bold}:{i:italic}:regular}</code>, it will pick one of <code>{b:bold}</code>, <code>{i:italic}</code>, or <code>regular</code> rather than choosing from <code>{b</code>, <code>bold}</code>, <code>{i</code>, <code>italic}</code>, or <code>regular</code>.</p>\n<p>Would it be reasonable to expand the use of this split function to other text processor functions? Notably, <code>{either</code> would be a lot more useful if it could be nested. I've been wondering about this for a while; but only just noticed that the function already exists.</p>\n<p>(It would also be nice if there was some form of escaping; though that would likely be more effort than it's worth)</p>\n\n",
+      "PostDate": "2018-07-17T09:31:59.9245224Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "8ceb155a-3fe1-4096-91c2-143c63235695",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "These are all good ideas, and will appear in Quest 5.8, which may be out at the weekend with luck. I had not noticed `Tsplit` myself; now applicable to both `either` and `select`.\r\n\r\nWith regards to escaping, you can already use `@@@open@@@` and `@@@close@@@` for `{` and `}`.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>These are all good ideas, and will appear in Quest 5.8, which may be out at the weekend with luck. I had not noticed <code>Tsplit</code> myself; now applicable to both <code>either</code> and <code>select</code>.</p>\n<p>With regards to escaping, you can already use <code>@@@open@@@</code> and <code>@@@close@@@</code> for <code>{</code> and <code>}</code>.</p>\n\n",
+      "PostDate": "2018-07-18T08:02:35.1582043Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "b4c218b2-940a-4f0e-bcd6-a3a6ee3b9541",
+      "UserId": 375170,
+      "Username": "adamd2",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/91f61e3680deb54907612093c09b043c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "i Like that",
+      "EditableFormat": "markdown",
+      "HTML": "<p>i Like that</p>\n\n",
+      "PostDate": "2018-09-07T23:14:45.3307547Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "108d2e49-e526-4135-944c-72785857040a",
+      "UserId": 142763,
+      "Username": "Forgewright",
+      "AvatarUrl": "http://i.imgur.com/Ea6HecZb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I use br and i with the<> in my randoms.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I use br and i with the&lt;&gt; in my randoms.</p>\n\n",
+      "PostDate": "2018-09-08T00:38:11.4717386Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

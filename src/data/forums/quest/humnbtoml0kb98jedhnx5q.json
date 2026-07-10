@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "humnbtoml0kb98jedhnx5q",
+    "ForumId": "10",
+    "Title": "[SOLVED!] IF statements in PRINT",
+    "LastUpdated": "2020-01-04T20:44:11.0007971Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "b11f8452-5767-494b-9bd5-617d055fb609",
+      "UserId": 247261,
+      "Username": "Motorzilla",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a849ad90d946ea28656aee85d3d07fca?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello all! I'm new to Quest, but not to light coding, so I'm a little slowed down by all the dropdowns. I did find the \"edit in code\" button, happily, but from the way it looks I'm wondering how to implement something.\r\n\r\nWhat I want to do is hide a message in a secret code and make the player look around for each letter substitution. For now, they're all just substituted with asterisks. Say that the player finds the code for the letter \"E\". I set a flag to the player object that they've learned that letter. I would then like the secret code to reflect these changes.\r\n\r\nHow I'd normally do this would be to run a print command of some sort, and then manually encode each letter/asterisk combo with an if statement. EG pre-front it with _msg: (\"_ and then per letter\r\n\r\n_if (player.learned-E==True):\r\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(\"e\")\r\nelse:\r\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"*\"_\r\n\r\nAnd sure, that would be a lot of work, but in my mind a good lot easier than selecting an if, then a print, then an else from drop-downs. In fact, I'm not even sure they would print all those messages in a single line, but on separate lines?\r\n\r\nDoes anyone have a suggestion on how to do this? :> In baby language, please, as I am in fact a Quest baby.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello all! I'm new to Quest, but not to light coding, so I'm a little slowed down by all the dropdowns. I did find the \"edit in code\" button, happily, but from the way it looks I'm wondering how to implement something.</p>\n<p>What I want to do is hide a message in a secret code and make the player look around for each letter substitution. For now, they're all just substituted with asterisks. Say that the player finds the code for the letter \"E\". I set a flag to the player object that they've learned that letter. I would then like the secret code to reflect these changes.</p>\n<p>How I'd normally do this would be to run a print command of some sort, and then manually encode each letter/asterisk combo with an if statement. EG pre-front it with <em>msg: (\"</em> and then per letter</p>\n<p><em>if (player.learned-E==True):<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(\"e\")<br>\nelse:<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"*\"</em></p>\n<p>And sure, that would be a lot of work, but in my mind a good lot easier than selecting an if, then a print, then an else from drop-downs. In fact, I'm not even sure they would print all those messages in a single line, but on separate lines?</p>\n<p>Does anyone have a suggestion on how to do this? :&gt; In baby language, please, as I am in fact a Quest baby.</p>\n\n",
+      "PostDate": "2020-01-04T20:44:11.0007971Z",
+      "LastEditDate": "2020-01-04T22:46:31.0485989Z",
+      "link": null
+    },
+    {
+      "PostId": "e87385ca-168d-40ba-82d2-b5853931f7ae",
+      "UserId": 282833,
+      "Username": "Io",
+      "AvatarUrl": "http://i.imgur.com/XVmdocTb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The way you do it (In code-view) is like this:\r\n\r\nmsg(\"{if player.learned-E=True:E}{if player.learned-E<>True:*}\")\r\n\r\nFrom my experience, if-statements actually IN a print statement can only be very simplistic, like above.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The way you do it (In code-view) is like this:</p>\n<p>msg(\"{if player.learned-E=True:E}{if player.learned-E&lt;&gt;True:*}\")</p>\n<p>From my experience, if-statements actually IN a print statement can only be very simplistic, like above.</p>\n\n",
+      "PostDate": "2020-01-04T21:05:09.9429417Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "ed8c6aa2-10ae-4cc6-a678-ebf2e71e01e8",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "In that case, you want to use `{either`, which is a text-processor directive like `{if` but it allows an else clause.\r\n\r\nI usually recommend using `{either` anyway, because it doesn't have all the restrictions that `{if` does.\r\n\r\nSo you could do:\r\n```\r\nmsg (\"{either player.learned-E:e:*}\")\r\n```\r\n\r\n<hr />\r\n\r\n**But** if you've got a lot of text like this, it would probably be faster to create your own text processor directive.\r\n\r\nTo create new text processor directives, you need to add an element to a script dictionary. Rather than messing about with core attributes, it's probably easier to put the following in your start script (or anywhere before the first time it is used):\r\n```\r\nsecretcode_directive => {\r\n  game.textprocessorcommandresult = \"\"\r\n  for (i, LengthOf(\"secretcode\")+2, LengthOf(section)) {\r\n    char = Mid (section, i, 1)\r\n    if (IsRegexMatch(\"\\\\w\", char) and not GetBoolean (game.pov, \"learned-\"+UCase(char))) {\r\n      char = \"*\"\r\n    }\r\n    game.textprocessorcommandresult = game.textprocessorcommandresult + char\r\n  }\r\n}\r\ngame.textprocessorcommands = game.textprocessorcommands\r\ndictionary add (game.textprocessorcommands, \"secretcode\", secretcode_directive)\r\n```\r\n\r\nThen you can do something like:\r\n```\r\nmsg (\"The coded message says: {secretcode:I bet you can't read this!}\")\r\n```\r\n\r\nThat will initially generate the output:\r\n>     The coded message says: * *** *** ***'* **** ****!\r\n\r\nbut once you set `player.learned-I` and `player.learned-T` to true, it will display\r\n>     The coded message says: I **t *** ***'t **** t*i*!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>In that case, you want to use <code>{either</code>, which is a text-processor directive like <code>{if</code> but it allows an else clause.</p>\n<p>I usually recommend using <code>{either</code> anyway, because it doesn't have all the restrictions that <code>{if</code> does.</p>\n<p>So you could do:</p>\n<pre><code>msg (\"{either player.learned-E:e:*}\")\n</code></pre>\n<hr>\n<p><strong>But</strong> if you've got a lot of text like this, it would probably be faster to create your own text processor directive.</p>\n<p>To create new text processor directives, you need to add an element to a script dictionary. Rather than messing about with core attributes, it's probably easier to put the following in your start script (or anywhere before the first time it is used):</p>\n<pre><code>secretcode_directive =&gt; {\n  game.textprocessorcommandresult = \"\"\n  for (i, LengthOf(\"secretcode\")+2, LengthOf(section)) {\n    char = Mid (section, i, 1)\n    if (IsRegexMatch(\"\\\\w\", char) and not GetBoolean (game.pov, \"learned-\"+UCase(char))) {\n      char = \"*\"\n    }\n    game.textprocessorcommandresult = game.textprocessorcommandresult + char\n  }\n}\ngame.textprocessorcommands = game.textprocessorcommands\ndictionary add (game.textprocessorcommands, \"secretcode\", secretcode_directive)\n</code></pre>\n<p>Then you can do something like:</p>\n<pre><code>msg (\"The coded message says: {secretcode:I bet you can't read this!}\")\n</code></pre>\n<p>That will initially generate the output:</p>\n<blockquote>\n<pre><code>The coded message says: * *** *** ***'* **** ****!\n</code></pre>\n</blockquote>\n<p>but once you set <code>player.learned-I</code> and <code>player.learned-T</code> to true, it will display</p>\n<blockquote>\n<pre><code>The coded message says: I **t *** ***'t **** t*i*!\n</code></pre>\n</blockquote>\n\n",
+      "PostDate": "2020-01-04T21:25:45.7209341Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "2f6d1406-f79f-4016-951a-57f4815c8852",
+      "UserId": 247261,
+      "Username": "Motorzilla",
+      "AvatarUrl": "https://i.imgur.com/x5RHXIlb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hey! Thank you both for your quick replies: all the solutions worked. \r\nBecause I do intend to drop quite a few of these missives, and it would be nice if they could be longer, I went ahead and used mrangel's tremendous init script. (With one modification; had to change regular hyphen to an underscore, or the variable names wouldn't work, but that's my mistake: I didn't know hyphens were a no-go.) It also made me look up where the start script is, so bonus learning.\r\n\r\nThank you so much!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hey! Thank you both for your quick replies: all the solutions worked.<br>\nBecause I do intend to drop quite a few of these missives, and it would be nice if they could be longer, I went ahead and used mrangel's tremendous init script. (With one modification; had to change regular hyphen to an underscore, or the variable names wouldn't work, but that's my mistake: I didn't know hyphens were a no-go.) It also made me look up where the start script is, so bonus learning.</p>\n<p>Thank you so much!</p>\n\n",
+      "PostDate": "2020-01-04T22:45:44.2759903Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "s6on-fjqdkmadopxrd-zma",
+    "ForumId": "10",
+    "Title": "Scripts and CDATA tags",
+    "LastUpdated": "2017-07-25T12:03:40.1747525Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "8b5edfda-f4c9-4788-b1b9-a879225988a7",
+      "UserId": 194873,
+      "Username": "ShadowsEdge19",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a24333a42009e96c558cb89dc0c26d30?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi, I've been working with Quest offline version for a few months now on a text adventure game and noticed that not all script sections include [[CDATA[ tags in and others do, is there a requirement to have them or is it optional?\r\nI mainly prefer working from a code view as I'm a programmer so I only use the interface for creating new objects or rooms.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi, I've been working with Quest offline version for a few months now on a text adventure game and noticed that not all script sections include [[CDATA[ tags in and others do, is there a requirement to have them or is it optional?<br>\nI mainly prefer working from a code view as I'm a programmer so I only use the interface for creating new objects or rooms.</p>\n\n",
+      "PostDate": "2017-07-25T12:03:40.1747525Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "01df6be7-af13-489a-acfb-8da0b7f5549a",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The CDATA tags are required when the text (whether a script or not) contains `<` or `>` (and possibly `&`) as these have special meaning in XML. If those characters are not present, the CDATA tag is optional. Quest is good at working out if it is needed.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The CDATA tags are required when the text (whether a script or not) contains <code>&lt;</code> or <code>&gt;</code> (and possibly <code>&amp;</code>) as these have special meaning in XML. If those characters are not present, the CDATA tag is optional. Quest is good at working out if it is needed.</p>\n\n",
+      "PostDate": "2017-07-25T12:33:02.128718Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "06ecf20d-efdc-4b59-9695-b2062ec9c418",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "(filler for getting edited post updated)\r\n\r\n----------------\r\n\r\nas Pixie already stated:\r\n\r\nif you're using the GUI/Editor, it handles it for you.\r\n\r\nbut, if you're writing in code directly (or also probably via the code-script window popups in the GUI/Editor too), you need to handle whether to add in the 'CDATA' tags or not.\r\n\r\nwhat the 'cdata' tag does is to tell quest that any '<' and '>' are to be seen as 'greater than' and 'lesser than' operators/operations, rather than as xml/aslx/html code tags. This is extremely important, as it'll shift your entire code making it incoherent/unreadable.\r\n\r\n```\r\n// as xml/html/aslx 'creation' code tags:\r\n\r\n<object name=\"test\">\r\n  <attr name=\"grade\" type=\"string\">unknown</attr>\r\n  <attr name=\"score\" type=\"int\">-1</attr>\r\n  <attr name=\"set_grade_script_attribute\" type=\"script\">\r\n    <![CDATA[\r\n      // scripting\r\n    ]]>\r\n  </attr>\r\n</object>\r\n\r\n// as 'greater/lesser than' operators/operations:\r\n\r\n<object name=\"test\">\r\n  <attr name=\"grade\" type=\"string\">unknown</attr>\r\n  <attr name=\"score\" type=\"int\">-1</attr>\r\n  <attr name=\"set_grade_script_attribute\" type=\"script\">\r\n    <![CDATA[\r\n      if (test.score > 89) {\r\n        test.grade = \"A\"\r\n      } else if (test.score > 79) {\r\n        test.grade = \"B\"\r\n      } else if (test.score > 69) {\r\n        test.grade = \"C\"\r\n      } else if (test.score > 59) {\r\n        test.grade = \"D\"\r\n      } else {\r\n        test.grade = \"F\"\r\n      }\r\n    ]]>\r\n  </attr>\r\n</object>\r\n\r\n// without the 'CDATA' tags, and the mayhem it causes:\r\n\r\n(due to not telling quest that some of the '<,>' are operators via the 'cdata' code tags, it causes the code to shift, and be completely error-filled (not able to even compile as can be seen by the below)\r\n\r\n<object name=\"test\">\r\n  <attr name=\"grade\" type=\"string\">unknown</attr>\r\n  <attr name=\"score\" type=\"int\">-1</attr>\r\n  <attr name=\"set_grade_script_attribute\" type=\"script\">\r\n\r\n      // now, these new/shifted lines/blocks are missing their beginning code tags (making it no longer able  to compile):\r\n\r\n      if (test.score >\r\n\r\n        89) {\r\n        test.grade = \"A\"\r\n      } else if (test.score >\r\n\r\n        79) {\r\n        test.grade = \"B\"\r\n      } else if (test.score >\r\n\r\n        69) {\r\n        test.grade = \"C\"\r\n      } else if (test.score >\r\n\r\n       // and this is just floating data/scripting, a big no-no:\r\n\r\n        59) {\r\n        test.grade = \"D\"\r\n      } else {\r\n        test.grade = \"F\"\r\n      }\r\n\r\n  </attr>\r\n</object>\r\n```\r\n\r\n----------------\r\n\r\n```\r\nand the 'cdata' tags are also used for telling quest that (for example) the html/xml: '<br>' (line break / carriage return), is to be seen as such, and not as quest's 'creation' code tags:\r\n\r\n<object name=\"example_object\">\r\n  <attr name=\"example_script_attribute\" type=\"script\">\r\n    <![CDATA[\r\n      msg (\"blah blah blah blah paragraph<br><br>blah blah blah blah paragraph\")\r\n    ]]>\r\n  </attr>\r\n</object>\r\n\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>(filler for getting edited post updated)</p>\n<hr>\n<p>as Pixie already stated:</p>\n<p>if you're using the GUI/Editor, it handles it for you.</p>\n<p>but, if you're writing in code directly (or also probably via the code-script window popups in the GUI/Editor too), you need to handle whether to add in the 'CDATA' tags or not.</p>\n<p>what the 'cdata' tag does is to tell quest that any '&lt;' and '&gt;' are to be seen as 'greater than' and 'lesser than' operators/operations, rather than as xml/aslx/html code tags. This is extremely important, as it'll shift your entire code making it incoherent/unreadable.</p>\n<pre><code>// as xml/html/aslx 'creation' code tags:\n\n&lt;object name=\"test\"&gt;\n  &lt;attr name=\"grade\" type=\"string\"&gt;unknown&lt;/attr&gt;\n  &lt;attr name=\"score\" type=\"int\"&gt;-1&lt;/attr&gt;\n  &lt;attr name=\"set_grade_script_attribute\" type=\"script\"&gt;\n    &lt;![CDATA[\n      // scripting\n    ]]&gt;\n  &lt;/attr&gt;\n&lt;/object&gt;\n\n// as 'greater/lesser than' operators/operations:\n\n&lt;object name=\"test\"&gt;\n  &lt;attr name=\"grade\" type=\"string\"&gt;unknown&lt;/attr&gt;\n  &lt;attr name=\"score\" type=\"int\"&gt;-1&lt;/attr&gt;\n  &lt;attr name=\"set_grade_script_attribute\" type=\"script\"&gt;\n    &lt;![CDATA[\n      if (test.score &gt; 89) {\n        test.grade = \"A\"\n      } else if (test.score &gt; 79) {\n        test.grade = \"B\"\n      } else if (test.score &gt; 69) {\n        test.grade = \"C\"\n      } else if (test.score &gt; 59) {\n        test.grade = \"D\"\n      } else {\n        test.grade = \"F\"\n      }\n    ]]&gt;\n  &lt;/attr&gt;\n&lt;/object&gt;\n\n// without the 'CDATA' tags, and the mayhem it causes:\n\n(due to not telling quest that some of the '&lt;,&gt;' are operators via the 'cdata' code tags, it causes the code to shift, and be completely error-filled (not able to even compile as can be seen by the below)\n\n&lt;object name=\"test\"&gt;\n  &lt;attr name=\"grade\" type=\"string\"&gt;unknown&lt;/attr&gt;\n  &lt;attr name=\"score\" type=\"int\"&gt;-1&lt;/attr&gt;\n  &lt;attr name=\"set_grade_script_attribute\" type=\"script\"&gt;\n\n      // now, these new/shifted lines/blocks are missing their beginning code tags (making it no longer able  to compile):\n\n      if (test.score &gt;\n\n        89) {\n        test.grade = \"A\"\n      } else if (test.score &gt;\n\n        79) {\n        test.grade = \"B\"\n      } else if (test.score &gt;\n\n        69) {\n        test.grade = \"C\"\n      } else if (test.score &gt;\n\n       // and this is just floating data/scripting, a big no-no:\n\n        59) {\n        test.grade = \"D\"\n      } else {\n        test.grade = \"F\"\n      }\n\n  &lt;/attr&gt;\n&lt;/object&gt;\n</code></pre>\n<hr>\n<pre><code>and the 'cdata' tags are also used for telling quest that (for example) the html/xml: '&lt;br&gt;' (line break / carriage return), is to be seen as such, and not as quest's 'creation' code tags:\n\n&lt;object name=\"example_object\"&gt;\n  &lt;attr name=\"example_script_attribute\" type=\"script\"&gt;\n    &lt;![CDATA[\n      msg (\"blah blah blah blah paragraph&lt;br&gt;&lt;br&gt;blah blah blah blah paragraph\")\n    ]]&gt;\n  &lt;/attr&gt;\n&lt;/object&gt;\n\n</code></pre>\n\n",
+      "PostDate": "2017-07-25T14:52:07.3218168Z",
+      "LastEditDate": "2017-07-25T15:03:00.5738715Z",
+      "link": null
+    },
+    {
+      "PostId": "3ff3c9df-e22e-4272-8345-82219983f910",
+      "UserId": 194873,
+      "Username": "ShadowsEdge19",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a24333a42009e96c558cb89dc0c26d30?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Okay, great that's made it a lot clearer, thanks guys!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Okay, great that's made it a lot clearer, thanks guys!</p>\n\n",
+      "PostDate": "2017-07-25T16:04:11.4828755Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "503748cc-04ad-4050-b477-da7b2ffbc8c0",
+      "UserId": 227864,
+      "Username": "Talon",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3b6191c9adc337e83fec8e293e3fc584?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "This is very helpful, I never actually understood what CDATA tags were, now I actually understand why I have had many of my operator problems, and why i fell back often to let the GUI help templating.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>This is very helpful, I never actually understood what CDATA tags were, now I actually understand why I have had many of my operator problems, and why i fell back often to let the GUI help templating.</p>\n\n",
+      "PostDate": "2017-07-29T12:25:06.2712016Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "44029e73-2e7c-4b83-9a72-7a55d74b2653",
+      "UserId": 301690,
+      "Username": "Richard Headkid",
+      "AvatarUrl": "http://i.imgur.com/WUGXS8yb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I once changed \r\n\r\n```\r\n<function name=\"PlaceEnterScript\">\r\n    msg (\"So this is the spot... \")\r\n  </function>\r\n```\r\n\r\nto\r\n\r\n```\r\n<function name=\"PlaceEnterScript\">\r\n    msg (\"So this is the spot... <br />Enter TRAVEL to choose a destination.\")\r\n  </function>\r\n```\r\n![image](https://user-images.githubusercontent.com/27799208/28745288-276ea14e-743b-11e7-8687-aa42e85f441b.png)\r\n\r\nBut CDATA saves the day!\r\n\r\n```\r\n  <function name=\"PlaceEnterScript\">\r\n  <![CDATA[\r\n    msg (\"So this is the place... <br />Enter TRAVEL to choose a destination.\")\r\n  ]]>\r\n  </function>\r\n\r\n```\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I once changed</p>\n<pre><code>&lt;function name=\"PlaceEnterScript\"&gt;\n    msg (\"So this is the spot... \")\n  &lt;/function&gt;\n</code></pre>\n<p>to</p>\n<pre><code>&lt;function name=\"PlaceEnterScript\"&gt;\n    msg (\"So this is the spot... &lt;br /&gt;Enter TRAVEL to choose a destination.\")\n  &lt;/function&gt;\n</code></pre>\n<p><img src=\"https://user-images.githubusercontent.com/27799208/28745288-276ea14e-743b-11e7-8687-aa42e85f441b.png\" alt=\"image\"></p>\n<p>But CDATA saves the day!</p>\n<pre><code>  &lt;function name=\"PlaceEnterScript\"&gt;\n  &lt;![CDATA[\n    msg (\"So this is the place... &lt;br /&gt;Enter TRAVEL to choose a destination.\")\n  ]]&gt;\n  &lt;/function&gt;\n\n</code></pre>\n\n",
+      "PostDate": "2017-07-29T13:57:06.3594657Z",
+      "LastEditDate": "2017-07-29T16:29:06.8725655Z",
+      "link": null
+    }
+  ]
+}

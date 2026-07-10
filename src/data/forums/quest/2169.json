@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "2169",
+    "ForumId": "10",
+    "Title": "Bug in QDK Pro 4.1",
+    "LastUpdated": "2009-08-14T15:49:30+01:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "16905",
+      "UserId": 0,
+      "Username": "wsquires",
+      "UserAvatar": null,
+      "UserGravatar": "a05959621d38181f935e617da51de4b6",
+      "EditableText": "Problem: In some cases, scripts get corrupted when game loaded/saved.\n\nTo Reproduce:\n1) Start a new game with QDK Pro 4.1\n2) Create two rooms (I called mine room1 and room2 since this is just a test)\n3) Select room1 and select the &quot;Exits&quot; tab. Create an exit from room1 -&gt; room2, but do [b:1d56xlli]not[/b:1d56xlli] &quot;automatically create exit in other direction&quot;.\n4) Select room2 and select the &quot;Exits&quot; tab. Create a script for the corresponding exit from room2 -&gt; room1. Edit the script.\n5) Add a conditional that checks to see if a flag is set. Call the flag &quot;player_has_light&quot;. In the &quot;Then&quot; clause, put a print message script and make sure the text is really long. Don't put anything in the &quot;Else&quot; clause. Add another line to the script below the conditional\n6) Make this script also print a long message (something soppy about the player dying.)\n7) Add another line to the script, and select &quot;Game Control | End the game by making the player lose&quot;\n8) Close out the script\n9) Save the &quot;game&quot;.\n10) Exit QDK Pro 4.1\n11) Relaunch QDK Pro 4.1 and load the &quot;game&quot; you just created.\n12) Select room2 and select the &quot;Exits&quot; tab. Now try to look at the script for the exit to room1. Oops!! Only an opening-curly-brace shows up\n13) If - heaven forbid - you actually try to edit this defective script, you get into an infinite loop of dialog boxes reporting an error.\n\nSetup:\nWinXP (SP2) box w/512 MB RAM and 20+ GB HD space.\n32MB Nvidia TNT 64 3D video card\n\nRepeatability:\nalways (for me, anyway - don't have any other machines to test this on.)\n\nWork-around:\nNone - yet.",
+      "EditableFormat": "bbcode",
+      "HTML": "Problem: In some cases, scripts get corrupted when game loaded/saved.<br/><br/>To Reproduce:<br/>1) Start a new game with QDK Pro 4.1<br/>2) Create two rooms (I called mine room1 and room2 since this is just a test)<br/>3) Select room1 and select the &quot;Exits&quot; tab. Create an exit from room1 -&gt; room2, but do <span style=\"font-weight:bold;\">not</span> &quot;automatically create exit in other direction&quot;.<br/>4) Select room2 and select the &quot;Exits&quot; tab. Create a script for the corresponding exit from room2 -&gt; room1. Edit the script.<br/>5) Add a conditional that checks to see if a flag is set. Call the flag &quot;player_has_light&quot;. In the &quot;Then&quot; clause, put a print message script and make sure the text is really long. Don't put anything in the &quot;Else&quot; clause. Add another line to the script below the conditional<br/>6) Make this script also print a long message (something soppy about the player dying.)<br/>7) Add another line to the script, and select &quot;Game Control | End the game by making the player lose&quot;<br/>8) Close out the script<br/>9) Save the &quot;game&quot;.<br/>10) Exit QDK Pro 4.1<br/>11) Relaunch QDK Pro 4.1 and load the &quot;game&quot; you just created.<br/>12) Select room2 and select the &quot;Exits&quot; tab. Now try to look at the script for the exit to room1. Oops!! Only an opening-curly-brace shows up<br/>13) If - heaven forbid - you actually try to edit this defective script, you get into an infinite loop of dialog boxes reporting an error.<br/><br/>Setup:<br/>WinXP (SP2) box w/512 MB RAM and 20+ GB HD space.<br/>32MB Nvidia TNT 64 3D video card<br/><br/>Repeatability:<br/>always (for me, anyway - don't have any other machines to test this on.)<br/><br/>Work-around:<br/>None - yet.",
+      "PostDate": "2009-08-04T16:39:05+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16906",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "Thanks for reporting this, I will take a look into it.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks for reporting this, I will take a look into it.",
+      "PostDate": "2009-08-04T17:03:53+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16927",
+      "UserId": 0,
+      "Username": "wsquires",
+      "UserAvatar": null,
+      "UserGravatar": "a05959621d38181f935e617da51de4b6",
+      "EditableText": "Further information:\n\nIt is [b:1qyk7kvv]not[/b:1qyk7kvv] a problem with file saving. Examining the in-memory ASL and comparing it with the just saved version, reveals that they're identical. I'm guessing the problem is an in-memory bug - some state information is being lost when you exit the program and not being restored simply by reading in the file. This bug appears to only affect scripts tied to exits (so far.) HTH\n\nAlso, it has nothing to do with whether the exit script has a conditional in it.\n\n[b:1qyk7kvv]However[/b:1qyk7kvv] when I quit QDK Pro 4.1 and re-start it and load either Bugtest2.asl or In-memory.asl, then copy the text from the newly-loaded file (in ASL view) with the previously saved file, there are differences:\n\n1) The indentation is different (visually)\n2) viewing the hex version, there's an extra '0x09' (tab) character in several places in the original file which are not there after loading it back in again. Specifically:\n  a) In the original saved file I have (in ASL):\n\n{&lt;tab&gt;&lt;tab&gt;msg &lt;the message goes here...&gt;\n&lt;tab&gt;&lt;tab&gt;playerlose\n&lt;tab&gt;}\nend define\n\n  b) in the newly-loaded file, this part looks like:\n\n{&lt;tab&gt;msg &lt;the message goes here...&gt;\n&lt;tab&gt;playerlose\n&lt;tab&gt;}\nend define\n\nso it seems to be incorrectly setting the indention level.",
+      "EditableFormat": "bbcode",
+      "HTML": "Further information:<br/><br/>It is <span style=\"font-weight:bold;\">not</span> a problem with file saving. Examining the in-memory ASL and comparing it with the just saved version, reveals that they're identical. I'm guessing the problem is an in-memory bug - some state information is being lost when you exit the program and not being restored simply by reading in the file. This bug appears to only affect scripts tied to exits (so far.) HTH<br/><br/>Also, it has nothing to do with whether the exit script has a conditional in it.<br/><br/><span style=\"font-weight:bold;\">However</span> when I quit QDK Pro 4.1 and re-start it and load either Bugtest2.asl or In-memory.asl, then copy the text from the newly-loaded file (in ASL view) with the previously saved file, there are differences:<br/><br/>1) The indentation is different (visually)<br/>2) viewing the hex version, there's an extra '0x09' (tab) character in several places in the original file which are not there after loading it back in again. Specifically:<br/>  a) In the original saved file I have (in ASL):<br/><br/>{&lt;tab&gt;&lt;tab&gt;msg &lt;the message goes here...&gt;<br/>&lt;tab&gt;&lt;tab&gt;playerlose<br/>&lt;tab&gt;}<br/>end define<br/><br/>  b) in the newly-loaded file, this part looks like:<br/><br/>{&lt;tab&gt;msg &lt;the message goes here...&gt;<br/>&lt;tab&gt;playerlose<br/>&lt;tab&gt;}<br/>end define<br/><br/>so it seems to be incorrectly setting the indention level.",
+      "PostDate": "2009-08-13T16:56:19+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "16932",
+      "UserId": 0,
+      "Username": "wsquires",
+      "UserAvatar": null,
+      "UserGravatar": "a05959621d38181f935e617da51de4b6",
+      "EditableText": "Oops, the line:\n\nHowever when I quit QDK Pro 4.1 and re-start it and load either Bugtest2.asl or In-memory.asl, then copy the text from the newly-loaded file (in ASL view) with the previously saved file, there are differences:\n\nshould have read:\n\nHowever when I quit QDK Pro 4.1 and re-start it and load either Bugtest2.asl or In-memory.asl, then [u:7fshra32]compare[/u:7fshra32] the text from the newly-loaded file (in ASL view) with the previously saved file, there are differences:",
+      "EditableFormat": "bbcode",
+      "HTML": "Oops, the line:<br/><br/>However when I quit QDK Pro 4.1 and re-start it and load either Bugtest2.asl or In-memory.asl, then copy the text from the newly-loaded file (in ASL view) with the previously saved file, there are differences:<br/><br/>should have read:<br/><br/>However when I quit QDK Pro 4.1 and re-start it and load either Bugtest2.asl or In-memory.asl, then <span style=\"text-decoration:underline;\">compare</span> the text from the newly-loaded file (in ASL view) with the previously saved file, there are differences:",
+      "PostDate": "2009-08-14T15:49:30+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "Topic": {
+    "TopicId": "9wisunnlruo4iwjbuzjegw",
+    "ForumId": "10",
+    "Title": "How to hide and show status attributes in the middle of the game?",
+    "LastUpdated": "2021-08-29T18:50:28.5280003Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "9080f8b4-91ed-41db-a7ba-267fd5ef561a",
+      "UserId": 554565,
+      "Username": "Local_Redditor",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/d399e24d4df00712ccd605ca2550624d?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Like the title says, I wanna know how to hide or show statuses using scripts, either by entering a room or picking up an object.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Like the title says, I wanna know how to hide or show statuses using scripts, either by entering a room or picking up an object.</p>\n\n",
+      "PostDate": "2021-08-29T18:50:28.5280003Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "fcf11d28-9901-4913-a68a-1bd2b5047268",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "status attributes are stored in one of three possible dictionaries:\r\n* `game.pov.statusattributes` - status attributes which are attributes of the specific player object (so will disappear if the player takes control of a different character). These are edited on the 'Attributes' tab of the player object.\r\n* `game.povstatusattributes` - attributes of the player, regardless of what object the player is (the `health` and `money` features use this one; it is edited on the \"Player\" tab of the game)\r\n* `game.statusattributes` - attributes of the `game` object (the `score` feature uses this. It is edited on the 'Attributes' tab of the game object)\r\n\r\nSo, if you've just found some object that allows you to use magic, you might want to give the player some magic points. You could use a script like:\r\n<pre><code>dictionary add (game.pov.statusattributes, \"<em style=\"color: green\">mp</em>\", \"<em style=\"color: purple\">Magic Points: !</em>\")</code></pre>\r\nThis is assuming that you have already added the `mp` attribute itself, for example by doing:\r\n<pre><code>game.pov.<em style=\"color: green\">mp</em> = 90</code></pre>\r\n\r\nIn thar example, <em style=\"color: green\">mp</em> is the *attribute name* that you use in your code to refer to the attribute, and <em style=\"color: purple\">Magic Points: !</em> is a *format*, the text that will be shown in the Status Attributes pane. Within that format, a `!` will be replaced by the current value.\r\n\r\nTo remove a status attribute again, you would use a line like:\r\n<pre><code>dictionary remove (game.pov.statusattributes, \"<em style=\"color: green\">mp</em>\", \"<em style=\"color: purple\">Magic Points: !</em>\")</code></pre>\r\n\r\nIt might also be better to check if the status attributes dictionary exists, so that it won't cause an error if this is the first status attribute the player has. And check if they have that attribute, so it doesn't cause a bug if they do the event twice. So you would add an attribute by using:\r\n<pre><code>if (not HasAttribute (game.pov, \"statusattributes\")) {\r\n  game.pov.statusattributes = NewStringDictionary()\r\n}\r\nif (not DictionaryContains (game.pov.statusattributes, \"<em style=\"color: green\">mp</em>\")) {\r\n  dictionary add (game.pov.statusattributes, \"<em style=\"color: green\">mp</em>\", \"<em style=\"color: purple\">Magic Points: !</em>\")\r\n}</code></pre>\r\nand remove it using:\r\n<pre><code>if (HasAttribute (game.pov, \"statusattributes\")) {\r\n  if (DictionaryContains (game.pov.statusattributes, \"<em style=\"color: green\">mp</em>\")) {\r\n    dictionary remove (game.pov.statusattributes, \"<em style=\"color: green\">mp</em>\")\r\n  }\r\n}</code></pre>\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>status attributes are stored in one of three possible dictionaries:</p>\n<ul>\n<li><code>game.pov.statusattributes</code> - status attributes which are attributes of the specific player object (so will disappear if the player takes control of a different character). These are edited on the 'Attributes' tab of the player object.</li>\n<li><code>game.povstatusattributes</code> - attributes of the player, regardless of what object the player is (the <code>health</code> and <code>money</code> features use this one; it is edited on the \"Player\" tab of the game)</li>\n<li><code>game.statusattributes</code> - attributes of the <code>game</code> object (the <code>score</code> feature uses this. It is edited on the 'Attributes' tab of the game object)</li>\n</ul>\n<p>So, if you've just found some object that allows you to use magic, you might want to give the player some magic points. You could use a script like:</p>\n<pre><code>dictionary add (game.pov.statusattributes, \"<em style=\"color: green\">mp</em>\", \"<em style=\"color: purple\">Magic Points: !</em>\")</code></pre>\n<p>This is assuming that you have already added the <code>mp</code> attribute itself, for example by doing:</p>\n<pre><code>game.pov.<em style=\"color: green\">mp</em> = 90</code></pre>\n<p>In thar example, <em style=\"color: green\">mp</em> is the <em>attribute name</em> that you use in your code to refer to the attribute, and <em style=\"color: purple\">Magic Points: !</em> is a <em>format</em>, the text that will be shown in the Status Attributes pane. Within that format, a <code>!</code> will be replaced by the current value.</p>\n<p>To remove a status attribute again, you would use a line like:</p>\n<pre><code>dictionary remove (game.pov.statusattributes, \"<em style=\"color: green\">mp</em>\", \"<em style=\"color: purple\">Magic Points: !</em>\")</code></pre>\n<p>It might also be better to check if the status attributes dictionary exists, so that it won't cause an error if this is the first status attribute the player has. And check if they have that attribute, so it doesn't cause a bug if they do the event twice. So you would add an attribute by using:</p>\n<pre><code>if (not HasAttribute (game.pov, \"statusattributes\")) {\n  game.pov.statusattributes = NewStringDictionary()\n}\nif (not DictionaryContains (game.pov.statusattributes, \"<em style=\"color: green\">mp</em>\")) {\n  dictionary add (game.pov.statusattributes, \"<em style=\"color: green\">mp</em>\", \"<em style=\"color: purple\">Magic Points: !</em>\")\n}</code></pre>\n<p>and remove it using:</p>\n<pre><code>if (HasAttribute (game.pov, \"statusattributes\")) {\n  if (DictionaryContains (game.pov.statusattributes, \"<em style=\"color: green\">mp</em>\")) {\n    dictionary remove (game.pov.statusattributes, \"<em style=\"color: green\">mp</em>\")\n  }\n}</code></pre>\n\n",
+      "PostDate": "2021-08-29T19:12:35.2868799Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

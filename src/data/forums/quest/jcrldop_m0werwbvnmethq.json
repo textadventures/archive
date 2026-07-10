@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "jcrldop_m0werwbvnmethq",
+    "ForumId": "10",
+    "Title": "How to handle delivering 2 required objects to complete a quest",
+    "LastUpdated": "2023-08-26T18:46:21.8840103Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "b6a5689c-cda7-4985-ae6f-6f75b64f2dbd",
+      "UserId": 614748,
+      "Username": "Burgric",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/6900329662d740ad246206e33f62bb97?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi there,\r\n\r\nI've found a very convoluted way to resolve this problem, but I'm hopeful there must be a smarter, less time-consuming way to do it.\r\n\r\nLooking at the Quest documentation, I can't find a method that allows me to successfully deliver 2 or more requested objects to a quest giver, so that the quest can be completed.\r\n\r\nI should say that I am using Pixie's 'Conversations' library to resolve the quest in the form of conversation topics which effectively 'hand over' the item(s) to the quest giver.\r\n\r\nCurrently I have 2 conversation topics set up that 'unhide' when the player has the quest objects in their inventory. Each topic can then be selected when in conversation with the quest giver to effectively 'hand over' the object.\r\n\r\nI set up boolean attributes ('qinv') for both objects to switch to 'true' when they are handed over to the quest giver (called Questgiver). Then I put an 'If' script in to ask if the other object also had their 'qinv' boolean set to 'true'. If it does, then the quest completes.\r\n\r\nWhat I don't know is how I would handle a quest that required more than 2 items to be delivered.\r\n\r\nHere's the code for one of the objects' conversation scripts which moves the object (starbloom) from the player to the quest giver, and checks if the other object (cerynol) has also been delivered, then completes if both conditions are met:\r\n\r\n```\r\nmsg (\"Quest giver says thanks, etc.\")\r\nMoveObject (starbloom, Questgiver)\r\nset (starbloom, \"qinv\", true)\r\nif (cerynol.qinv = true) {\r\n  msg (\"'That's everything!'<br/><br/>'Now I can whip up your potion- A TIME POTION!'\")\r\n}\r\n```\r\n\r\nDoes anyone know of a cleaner way to handle writing a script to deliver 2 or more items to complete a quest?\r\n\r\n**I would basically like to learn an efficient method for:\r\nIf (player) has (all required quest objects) in (inventory) then (run complete quest script) on talking to (quest giver).**\r\n\r\nI appreciate any help with this. I'm sure there must be a simpler solution!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi there,</p>\n<p>I've found a very convoluted way to resolve this problem, but I'm hopeful there must be a smarter, less time-consuming way to do it.</p>\n<p>Looking at the Quest documentation, I can't find a method that allows me to successfully deliver 2 or more requested objects to a quest giver, so that the quest can be completed.</p>\n<p>I should say that I am using Pixie's 'Conversations' library to resolve the quest in the form of conversation topics which effectively 'hand over' the item(s) to the quest giver.</p>\n<p>Currently I have 2 conversation topics set up that 'unhide' when the player has the quest objects in their inventory. Each topic can then be selected when in conversation with the quest giver to effectively 'hand over' the object.</p>\n<p>I set up boolean attributes ('qinv') for both objects to switch to 'true' when they are handed over to the quest giver (called Questgiver). Then I put an 'If' script in to ask if the other object also had their 'qinv' boolean set to 'true'. If it does, then the quest completes.</p>\n<p>What I don't know is how I would handle a quest that required more than 2 items to be delivered.</p>\n<p>Here's the code for one of the objects' conversation scripts which moves the object (starbloom) from the player to the quest giver, and checks if the other object (cerynol) has also been delivered, then completes if both conditions are met:</p>\n<pre><code>msg (\"Quest giver says thanks, etc.\")\nMoveObject (starbloom, Questgiver)\nset (starbloom, \"qinv\", true)\nif (cerynol.qinv = true) {\n  msg (\"'That's everything!'&lt;br/&gt;&lt;br/&gt;'Now I can whip up your potion- A TIME POTION!'\")\n}\n</code></pre>\n<p>Does anyone know of a cleaner way to handle writing a script to deliver 2 or more items to complete a quest?</p>\n<p><strong>I would basically like to learn an efficient method for:<br>\nIf (player) has (all required quest objects) in (inventory) then (run complete quest script) on talking to (quest giver).</strong></p>\n<p>I appreciate any help with this. I'm sure there must be a simpler solution!</p>\n\n",
+      "PostDate": "2023-08-26T18:46:21.8840103Z",
+      "LastEditDate": "2023-08-26T19:10:10.7259557Z",
+      "link": null
+    },
+    {
+      "PostId": "2f2735d1-efa2-4f85-a313-feeca6d4221f",
+      "UserId": 643545,
+      "Username": "Ip Man",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3ca198fe75de39041c2e4cd0a8852e3c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I don't know if it's simpler, but maybe you could set the quest objects to up an integer value when given to the NPC?  Or when gotten?   Then the conversation would check for the full integer value?  \r\n\r\nIf player.questobjects = 3 then, move objects to place and complete quest\r\n\r\nSomething like that but in real code?\r\n\r\nActually, I think that Pixie's convoLib lets you set a reaction, so the reaction could be set to your integer value.  Then the NPC would say something like \"oh, i see you found all my x objects!\" and you'd complete the quest.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I don't know if it's simpler, but maybe you could set the quest objects to up an integer value when given to the NPC?  Or when gotten?   Then the conversation would check for the full integer value?</p>\n<p>If player.questobjects = 3 then, move objects to place and complete quest</p>\n<p>Something like that but in real code?</p>\n<p>Actually, I think that Pixie's convoLib lets you set a reaction, so the reaction could be set to your integer value.  Then the NPC would say something like \"oh, i see you found all my x objects!\" and you'd complete the quest.</p>\n\n",
+      "PostDate": "2023-08-27T01:58:28.8552677Z",
+      "LastEditDate": "2023-08-27T02:01:17.6579515Z",
+      "link": null
+    },
+    {
+      "PostId": "77aa13a3-ee3e-4618-9fd3-2da0abbc8b5c",
+      "UserId": 643545,
+      "Username": "Ip Man",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3ca198fe75de39041c2e4cd0a8852e3c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "So I looked it up to be a little more specific.\r\n\r\nI think it would be easy to have in each of the quest object's \"when taken\" script something like.\r\n\r\nplayer.questobjects = player.questobjects +1\r\n\r\nThen, how you do a reaction in ConvLib is (after enabling reactions according to the instructions) in the reactions tab\r\n\r\n@\r\nquest objects all gotten\r\nplayer.questobjects = desired#\r\n'So, you've finally found them all! Are you ready to hand them over?'\r\n\r\nAnd then your conversation checker if the player decides to talk to the character and say yes,  would be something like\r\n\r\nIf player.questobjects = desired# {\r\ncompletequestscript\r\n\r\nOr maybe you could have the \"on entering room\" script check if you've got all the objects and do the moving and quest object giving?  ... but it might display in the wrong order.  \r\n\r\n\"You've completed the quest!\"\r\n\"So, you've finally...\"",
+      "EditableFormat": "markdown",
+      "HTML": "<p>So I looked it up to be a little more specific.</p>\n<p>I think it would be easy to have in each of the quest object's \"when taken\" script something like.</p>\n<p>player.questobjects = player.questobjects +1</p>\n<p>Then, how you do a reaction in ConvLib is (after enabling reactions according to the instructions) in the reactions tab</p>\n<p>@<br>\nquest objects all gotten<br>\nplayer.questobjects = desired#<br>\n'So, you've finally found them all! Are you ready to hand them over?'</p>\n<p>And then your conversation checker if the player decides to talk to the character and say yes,  would be something like</p>\n<p>If player.questobjects = desired# {<br>\ncompletequestscript</p>\n<p>Or maybe you could have the \"on entering room\" script check if you've got all the objects and do the moving and quest object giving?  ... but it might display in the wrong order.</p>\n<p>\"You've completed the quest!\"<br>\n\"So, you've finally...\"</p>\n\n",
+      "PostDate": "2023-08-29T01:20:21.7082912Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "9ecec80d-2ec5-4295-b234-fee3475db908",
+      "UserId": 614748,
+      "Username": "Burgric",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/6900329662d740ad246206e33f62bb97?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Wonderful, thank you! I like the idea of using integers and the reaction feature for convs - hadn't looked into that yet. I'll give it a go on the next quest I put together.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Wonderful, thank you! I like the idea of using integers and the reaction feature for convs - hadn't looked into that yet. I'll give it a go on the next quest I put together.</p>\n\n",
+      "PostDate": "2023-08-30T08:41:00.7820138Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

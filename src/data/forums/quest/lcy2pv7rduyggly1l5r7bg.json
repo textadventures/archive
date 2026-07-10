@@ -1,0 +1,109 @@
+{
+  "Topic": {
+    "TopicId": "lcy2pv7rduyggly1l5r7bg",
+    "ForumId": "10",
+    "Title": "Copy Screen to Object Description",
+    "LastUpdated": "2024-11-20T20:56:18.9442422Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "2a71bdfb-639f-4b3f-88de-cf3b58c8e257",
+      "UserId": 704374,
+      "Username": "Micelia",
+      "AvatarUrl": "https://i.imgur.com/53wIV6tb.jpeg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I have an Object called 'Memories', that I would like to store the Screen to every time the Screen is Cleared.\r\n\r\nUsing 'Memories' should allow me to Read through the entire Record of my Playthough.\r\n\r\n'Memories' should be updated regardless of whether or not I have it in my Inventory, or where it was Dropped, or if it exists inside another Container Object.\r\n\r\nHow would I go about this?\r\nI like having my Screen Cleared every time I Use an Exit but would still like to be able to Read through the Sequence of Events of the Game Session if I have my 'Memories' with me.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I have an Object called 'Memories', that I would like to store the Screen to every time the Screen is Cleared.</p>\n<p>Using 'Memories' should allow me to Read through the entire Record of my Playthough.</p>\n<p>'Memories' should be updated regardless of whether or not I have it in my Inventory, or where it was Dropped, or if it exists inside another Container Object.</p>\n<p>How would I go about this?<br>\nI like having my Screen Cleared every time I Use an Exit but would still like to be able to Read through the Sequence of Events of the Game Session if I have my 'Memories' with me.</p>\n\n",
+      "PostDate": "2024-11-20T20:56:18.9442422Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "73963756-56f6-4bdc-8071-23eb2ce77643",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "There is a transcript included in the game; but that often has stability issues with the online player (because the entire transcript is stored in the web browser, and has to be sent back to the server when you save).\r\n\r\nOne alternative might be… (assuming you're using the desktop editor) to modify two built-in functions, `OutputTextRaw` and `OutputTextRawNoBr`. These are used whenever text is sent to the screen. Which means that you could use them to store a copy of all text you output into a string attribute, which can then be displayed when the player uses the memories object.\r\n\r\nIf you want to put it in the description for the object, your modified functions might look like:\r\n<pre><code>  &lt;function name=\"OutputTextRawNoBr\" parameters=\"text\">\r\n    &lt;![CDATA[\r\n    JS.addText(\"&lt;span style=\\\"\" + GetCurrentTextFormat(\"\") + \"\\\">\" + text + \"&lt;/span>\")\r\n    RequestSpeak (text)\r\n<em style=\"color: blue\">    memories.look = memories.look + text</em>\r\n    ]]>\r\n  &lt;/function>\r\n\r\n  &lt;function name=\"OutputTextRaw\" parameters=\"text\">\r\n    &lt;![CDATA[\r\n    format = GetCurrentTextFormat(\"\")\r\n    JS.addText(\"&lt;span style=\\\"\" + format + \"\\\">\" + text + \"&lt;/span>&lt;br/>\")\r\n    if (GetString(game, \"commandbarformat\") &lt;> format) {\r\n      ResetCommandBarFormat\r\n    }\r\n    RequestSpeak (text)\r\n<em style=\"color: blue\">    memories.look = memories.look + text + \"&lt;br/>&lt;br/>\"</em>\r\n    ]]>\r\n  &lt;/function></code></pre>\r\n\r\nHowever, I would still beware of putting all of the text into a single attribute. It's possible that sending so much text at once could still create issues, especially if the player is on a slow connection.\r\nI wold suggest making a list attribute, and putting each room's text into a new string. That way, the memories object can display a list of \"pages\", and allow the player to display one at a time.\r\n\r\nIf you're interested in this solution, I could probably put some code together for it fairly quickly.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>There is a transcript included in the game; but that often has stability issues with the online player (because the entire transcript is stored in the web browser, and has to be sent back to the server when you save).</p>\n<p>One alternative might be… (assuming you're using the desktop editor) to modify two built-in functions, <code>OutputTextRaw</code> and <code>OutputTextRawNoBr</code>. These are used whenever text is sent to the screen. Which means that you could use them to store a copy of all text you output into a string attribute, which can then be displayed when the player uses the memories object.</p>\n<p>If you want to put it in the description for the object, your modified functions might look like:</p>\n<pre><code>  &lt;function name=\"OutputTextRawNoBr\" parameters=\"text\"&gt;\n    &lt;![CDATA[\n    JS.addText(\"&lt;span style=\\\"\" + GetCurrentTextFormat(\"\") + \"\\\"&gt;\" + text + \"&lt;/span&gt;\")\n    RequestSpeak (text)\n<em style=\"color: blue\">    memories.look = memories.look + text</em>\n    ]]&gt;\n  &lt;/function&gt;\n\n  &lt;function name=\"OutputTextRaw\" parameters=\"text\"&gt;\n    &lt;![CDATA[\n    format = GetCurrentTextFormat(\"\")\n    JS.addText(\"&lt;span style=\\\"\" + format + \"\\\"&gt;\" + text + \"&lt;/span&gt;&lt;br/&gt;\")\n    if (GetString(game, \"commandbarformat\") &lt;&gt; format) {\n      ResetCommandBarFormat\n    }\n    RequestSpeak (text)\n<em style=\"color: blue\">    memories.look = memories.look + text + \"&lt;br/&gt;&lt;br/&gt;\"</em>\n    ]]&gt;\n  &lt;/function&gt;</code></pre>\n<p>However, I would still beware of putting all of the text into a single attribute. It's possible that sending so much text at once could still create issues, especially if the player is on a slow connection.<br>\nI wold suggest making a list attribute, and putting each room's text into a new string. That way, the memories object can display a list of \"pages\", and allow the player to display one at a time.</p>\n<p>If you're interested in this solution, I could probably put some code together for it fairly quickly.</p>\n\n",
+      "PostDate": "2024-11-20T21:14:39.6032079Z",
+      "LastEditDate": "2024-11-20T21:21:16.5573977Z",
+      "link": null
+    },
+    {
+      "PostId": "97861d19-68ae-444a-9c0b-b77cbb8eeb20",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://i.imgur.com/Odr8Efkb.jpeg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Definitely go with mrangel's alternative methods.\r\n\r\nThere are serious issues with the transcript in the desktop player, and different serious issues with it when using the web player. (This will all be fixed in the next release of Quest.)\r\n\r\nAlso, his alternatives would probably just work better for this, anyway.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Definitely go with mrangel's alternative methods.</p>\n<p>There are serious issues with the transcript in the desktop player, and different serious issues with it when using the web player. (This will all be fixed in the next release of Quest.)</p>\n<p>Also, his alternatives would probably just work better for this, anyway.</p>\n\n",
+      "PostDate": "2024-11-20T21:25:38.9413626Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "1a910f68-0c8b-4a25-a48d-e17bf7c4dfd6",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Oh… I notice that looking at memories will cause a copy of the text to be printed to the screen. This would be problematic, because it could make the size of the save file increase exponentially.\r\n\r\nIt might be necessary in this case to give the object a look script which suppresses the recording of new memories before printing the old ones.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Oh… I notice that looking at memories will cause a copy of the text to be printed to the screen. This would be problematic, because it could make the size of the save file increase exponentially.</p>\n<p>It might be necessary in this case to give the object a look script which suppresses the recording of new memories before printing the old ones.</p>\n\n",
+      "PostDate": "2024-11-20T21:39:41.6616793Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "bd4d8bf1-126e-4238-8791-9dd707d48167",
+      "UserId": 704374,
+      "Username": "Micelia",
+      "AvatarUrl": "https://i.imgur.com/53wIV6tb.jpeg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I wold suggest making a list attribute, and putting each room's text into a new string. That way, the memories object can display a list of \"pages\", and allow the player to display one at a time.\r\n\r\nIf you're interested in this solution, I could probably put some code together for it fairly quickly\r\n*** *** ***\r\nIt might be necessary in this case to give the object a look script which suppresses the recording of new memories before printing the old ones.\r\n*** *** ***\r\n\r\nI would appreciate that, thank you. ... If it isn't any trouble.\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I wold suggest making a list attribute, and putting each room's text into a new string. That way, the memories object can display a list of \"pages\", and allow the player to display one at a time.</p>\n<p>If you're interested in this solution, I could probably put some code together for it fairly quickly</p>\n<hr>\n<p>It might be necessary in this case to give the object a look script which suppresses the recording of new memories before printing the old ones.</p>\n<hr>\n<p>I would appreciate that, thank you. ... If it isn't any trouble.</p>\n\n",
+      "PostDate": "2024-11-20T21:45:43.6239009Z",
+      "LastEditDate": "2024-11-20T21:47:57.4408184Z",
+      "link": null
+    },
+    {
+      "PostId": "02451781-0f0f-4da6-b372-057475808e23",
+      "UserId": 704374,
+      "Username": "Micelia",
+      "AvatarUrl": "https://i.imgur.com/53wIV6tb.jpeg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I hardly know anything of what is possible, so please excuse my ignorance (and my lack of ability)...\r\n\r\nEssentially, I wanted the 'Memories' object so that I could scroll back to read what had happened...\r\n\r\nWhen setting up the 'Game' under 'Room Descriptions', I ticked:\r\n'Clear screen when entering a room'\r\n\r\nSimply because it made everything look neater and more pleasing to the eye - aesthetics is very important to me, and this way I can write each room to fit within the space available.\r\n\r\nIs there a way to have a second instance of the Game Running where that option isn't ticked, and looking at 'Memories' opens a separate window containing that Game instance? (Or switches Focus)\r\n\r\nPerhaps I have another object called 'Focus' that switches to the Game Instance where 'Clear Screen when entering a room' is ticked.\r\n\r\n... Using 'Focus' while in this instance does nothing.\r\n... Using 'Memories' while in the other instance does nothing.\r\n\r\nAnd One could play the Game in either instance, with full Memory Recall, or with Full Focus... and it's still the same Game?\r\n\r\nIs this Possible?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I hardly know anything of what is possible, so please excuse my ignorance (and my lack of ability)...</p>\n<p>Essentially, I wanted the 'Memories' object so that I could scroll back to read what had happened...</p>\n<p>When setting up the 'Game' under 'Room Descriptions', I ticked:<br>\n'Clear screen when entering a room'</p>\n<p>Simply because it made everything look neater and more pleasing to the eye - aesthetics is very important to me, and this way I can write each room to fit within the space available.</p>\n<p>Is there a way to have a second instance of the Game Running where that option isn't ticked, and looking at 'Memories' opens a separate window containing that Game instance? (Or switches Focus)</p>\n<p>Perhaps I have another object called 'Focus' that switches to the Game Instance where 'Clear Screen when entering a room' is ticked.</p>\n<p>... Using 'Focus' while in this instance does nothing.<br>\n... Using 'Memories' while in the other instance does nothing.</p>\n<p>And One could play the Game in either instance, with full Memory Recall, or with Full Focus... and it's still the same Game?</p>\n<p>Is this Possible?</p>\n\n",
+      "PostDate": "2024-11-21T07:27:43.526367Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "4524d4e5-8534-4951-ba5f-3591cefc7eb8",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "That's pretty much what the transcript does; it makes clearing the screen hide text rather than deleting it, so that it can be displayed again later. The problem with this method is that because the text is still present but hidden, it needs to be saved whenever a player saves the game. This can become unstable with longer games or players on a slow commection; making loading and saving fail.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>That's pretty much what the transcript does; it makes clearing the screen hide text rather than deleting it, so that it can be displayed again later. The problem with this method is that because the text is still present but hidden, it needs to be saved whenever a player saves the game. This can become unstable with longer games or players on a slow commection; making loading and saving fail.</p>\n\n",
+      "PostDate": "2024-11-21T10:02:46.5364469Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

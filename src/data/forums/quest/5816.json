@@ -1,0 +1,83 @@
+{
+  "Topic": {
+    "TopicId": "5816",
+    "ForumId": "10",
+    "Title": "Using opacity instead of clear screen?",
+    "LastUpdated": "2016-01-06T20:11:57+00:00",
+    "ReplyCount": 5
+  },
+  "Posts": [
+    {
+      "PostId": "40274",
+      "UserId": 0,
+      "Username": "OurJud",
+      "UserAvatar": "7473_1417206896.jpg",
+      "UserGravatar": "7892e1059c02a91b34ffd60deb7402ff",
+      "EditableText": "As some of you know, using the clear screen function causes the online player to undo any CSS rules.\n\nTo try and get around that I thought about using a 0 opacity.\n\nWhat I want to do is have my title image fade-in, wait for a key press, then move the player to the first room after first hiding the title image with opacity.\n\nHere's what I have so far (forget the first two lines of JS - they're for something else):\n\n[code:3bvg0aix]JS&#46;eval (&quot;getCSSRule('a&#46;cmdlink')&#46;style&#46;color='#000000'&quot;)\nJS&#46;setCommandBarStyle (GetCurrentTextFormat(&quot;&quot;) + &quot;;border&#58;&quot; + game&#46;defaultbackground)\nOutputTextNoBr (game&#46;css)\nOutputTextNoBr (&quot;&lt;img src=\\&quot;&quot; + GetFileURL(&quot;aftermath_title&#46;jpg&quot;) + &quot;\\&quot; id=\\&quot;titleimage\\&quot; onload=\\&quot;$(this)&#46;fadeIn(7000);\\&quot;&gt;&quot;)\nwait {\n  if (game&#46;lastoutputsection &gt; 1) {\n    JS&#46;eval (&quot;$('&#46;section&quot;+(game&#46;lastoutputsection-1)+&quot;')&#46;css('opacity', '0');&quot;)\n    MoveObject (player, room)\n  }\n}[/code:3bvg0aix]\n\nI don't get any errors on this, but all that happens after I key press, is that the flashing cursor shows up waiting for a command. The title image doesn't disappear and I don;t get a description for my first room (in fact I don;t think it;s moving me)",
+      "EditableFormat": "bbcode",
+      "HTML": "As some of you know, using the clear screen function causes the online player to undo any CSS rules.<br/><br/>To try and get around that I thought about using a 0 opacity.<br/><br/>What I want to do is have my title image fade-in, wait for a key press, then move the player to the first room after first hiding the title image with opacity.<br/><br/>Here's what I have so far (forget the first two lines of JS - they're for something else):<br/><br/><pre><code>JS&#46;eval (&quot;getCSSRule('a&#46;cmdlink')&#46;style&#46;color='#000000'&quot;)<br/>JS&#46;setCommandBarStyle (GetCurrentTextFormat(&quot;&quot;) + &quot;;border&#58;&quot; + game&#46;defaultbackground)<br/>OutputTextNoBr (game&#46;css)<br/>OutputTextNoBr (&quot;&lt;img src=\\&quot;&quot; + GetFileURL(&quot;aftermath_title&#46;jpg&quot;) + &quot;\\&quot; id=\\&quot;titleimage\\&quot; onload=\\&quot;$(this)&#46;fadeIn(7000);\\&quot;&gt;&quot;)<br/>wait {<br/>  if (game&#46;lastoutputsection &gt; 1) {<br/>    JS&#46;eval (&quot;$('&#46;section&quot;+(game&#46;lastoutputsection-1)+&quot;')&#46;css('opacity', '0');&quot;)<br/>    MoveObject (player, room)<br/>  }<br/>}</code></pre><br/><br/>I don't get any errors on this, but all that happens after I key press, is that the flashing cursor shows up waiting for a command. The title image doesn't disappear and I don;t get a description for my first room (in fact I don;t think it;s moving me)",
+      "PostDate": "2016-01-06T00:02:53+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40278",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "Instead of opacity you could try to use sections, something like this (not tested):\n\n[code:1s12tayx]\nOutputTextNoBr (game&#46;css)\nnewsection = StartNewOutputSection()\nOutputTextNoBr (&quot;&lt;img src=\\&quot;&quot; + GetFileURL(&quot;aftermath_title&#46;jpg&quot;) + &quot;\\&quot; id=\\&quot;titleimage\\&quot; onload=\\&quot;$(this)&#46;fadeIn(7000);\\&quot;&gt;&quot;)\nEndOutputSection (newsection)\nwait {\n  HideOutputSection (newsection)\n  MoveObject(player,room2)\n}\n[/code:1s12tayx]",
+      "EditableFormat": "bbcode",
+      "HTML": "Instead of opacity you could try to use sections, something like this (not tested):<br/><br/><pre><code><br/>OutputTextNoBr (game&#46;css)<br/>newsection = StartNewOutputSection()<br/>OutputTextNoBr (&quot;&lt;img src=\\&quot;&quot; + GetFileURL(&quot;aftermath_title&#46;jpg&quot;) + &quot;\\&quot; id=\\&quot;titleimage\\&quot; onload=\\&quot;$(this)&#46;fadeIn(7000);\\&quot;&gt;&quot;)<br/>EndOutputSection (newsection)<br/>wait {<br/>  HideOutputSection (newsection)<br/>  MoveObject(player,room2)<br/>}<br/></code></pre>",
+      "PostDate": "2016-01-06T07:09:35+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40280",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Instead of this:\n\n[code:3tjd2qih]JS&#46;eval (&quot;$('&#46;section&quot;+(game&#46;lastoutputsection-1)+&quot;')&#46;css('opacity', '0');&quot;)[/code:3tjd2qih]\nyou can also use:\n\n[code:3tjd2qih]JS&#46;eval (&quot;$('#titleimage')&#46;css('opacity', '0');&quot;)[/code:3tjd2qih]\nsince your image has an id. You should also be able to do this:\n\n[code:3tjd2qih]JS&#46;eval (&quot;$('#titleimage')&#46;fadeOut(0);&quot;)[/code:3tjd2qih]\nwhich will not only set its opacity to 0, but (I believe) remove the element altogether. (I'd have to verify that, but it's what I remember.)",
+      "EditableFormat": "bbcode",
+      "HTML": "Instead of this:<br/><br/><pre><code>JS&#46;eval (&quot;$('&#46;section&quot;+(game&#46;lastoutputsection-1)+&quot;')&#46;css('opacity', '0');&quot;)</code></pre><br/>you can also use:<br/><br/><pre><code>JS&#46;eval (&quot;$('#titleimage')&#46;css('opacity', '0');&quot;)</code></pre><br/>since your image has an id. You should also be able to do this:<br/><br/><pre><code>JS&#46;eval (&quot;$('#titleimage')&#46;fadeOut(0);&quot;)</code></pre><br/>which will not only set its opacity to 0, but (I believe) remove the element altogether. (I'd have to verify that, but it's what I remember.)",
+      "PostDate": "2016-01-06T09:04:03+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40282",
+      "UserId": 0,
+      "Username": "OurJud",
+      "UserAvatar": "7473_1417206896.jpg",
+      "UserGravatar": "7892e1059c02a91b34ffd60deb7402ff",
+      "EditableText": "Thank you, both. I must admit I didn't try all of these, but for simplicity I went for J's very last method and it worked like a charm! The room description displays where the title image was, so I think that confirms your suspicion that it removes it altogether.\n\nIt really is very frustrating not understanding JS. I hunted high and low for an answer through google last night, and while there were plenty of 'hide image with javascript' results, I couldn't dig out the code I needed.\n\nThanks again.\n\nIncidently, for the reason I stated in my first sentence about the issue with clear screen, how would I use this as a general alternative to it? What I mean is if I wanted a general clear screen during my game, how might I do that using this method?",
+      "EditableFormat": "bbcode",
+      "HTML": "Thank you, both. I must admit I didn't try all of these, but for simplicity I went for J's very last method and it worked like a charm! The room description displays where the title image was, so I think that confirms your suspicion that it removes it altogether.<br/><br/>It really is very frustrating not understanding JS. I hunted high and low for an answer through google last night, and while there were plenty of 'hide image with javascript' results, I couldn't dig out the code I needed.<br/><br/>Thanks again.<br/><br/>Incidently, for the reason I stated in my first sentence about the issue with clear screen, how would I use this as a general alternative to it? What I mean is if I wanted a general clear screen during my game, how might I do that using this method?",
+      "PostDate": "2016-01-06T15:31:31+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40287",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "That's trickier. It's easy to get rid of a single element that you know about. It's harder to get rid of a whole bunch of other ones but leave the one you want (the CSS div). \n\nWhat I'd do instead is replace the ClearScreen function like so:\n\n[code:3eysaxci]  &lt;function name=&quot;ClearScreen&quot;&gt;\n    request (ClearScreen, &quot;&quot;)\n    OutputTextNoBr (game&#46;css)\n  &lt;/function&gt;[/code:3eysaxci]\nThat does the usual request to clear the screen and then additionally outputs the CSS again. \n\nThen just use ClearScreen as you normally would.",
+      "EditableFormat": "bbcode",
+      "HTML": "That's trickier. It's easy to get rid of a single element that you know about. It's harder to get rid of a whole bunch of other ones but leave the one you want (the CSS div). <br/><br/>What I'd do instead is replace the ClearScreen function like so:<br/><br/><pre><code>  &lt;function name=&quot;ClearScreen&quot;&gt;<br/>    request (ClearScreen, &quot;&quot;)<br/>    OutputTextNoBr (game&#46;css)<br/>  &lt;/function&gt;</code></pre><br/>That does the usual request to clear the screen and then additionally outputs the CSS again. <br/><br/>Then just use ClearScreen as you normally would.",
+      "PostDate": "2016-01-06T19:56:00+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40288",
+      "UserId": 0,
+      "Username": "OurJud",
+      "UserAvatar": "7473_1417206896.jpg",
+      "UserGravatar": "7892e1059c02a91b34ffd60deb7402ff",
+      "EditableText": "Brilliant! This answers another question I had about creating some film-like titles.",
+      "EditableFormat": "bbcode",
+      "HTML": "Brilliant! This answers another question I had about creating some film-like titles.",
+      "PostDate": "2016-01-06T20:11:57+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

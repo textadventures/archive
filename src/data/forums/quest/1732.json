@@ -1,0 +1,119 @@
+{
+  "Topic": {
+    "TopicId": "1732",
+    "ForumId": "10",
+    "Title": "Read Object not working and Object not in room (solved)",
+    "LastUpdated": "2007-08-14T19:56:53+01:00",
+    "ReplyCount": 8
+  },
+  "Posts": [
+    {
+      "PostId": "13640",
+      "UserId": 0,
+      "Username": "witch wyzwurd",
+      "UserAvatar": null,
+      "UserGravatar": "05e3fb359c040589d773db02decd0770",
+      "EditableText": "I've set up two commands in the Game Commands area: &quot;examine #@Object#&quot; and &quot;read #@Object#&quot;.\r\n\r\nWhen a player types in &quot;examine 'object'&quot; a procedure is ran.\r\nWhen a player types in &quot;read 'object'&quot; another procedure runs.\r\n\r\nFor the examine procedure and read procedure, I set a condition that if #quest.lastobject# is not in the current room 'and' the player doesn't have #quest.lastobject# then to print a message.  But the 'standard default message for an object that doesn't exist' prints.  Obviously the object exists, but just not in a room the player is in or in the player's possession.  Why does this message print, and even override my condition?\r\n\r\nI should mention that I've set up other conditions in both procedures that execute correctly; therefore, Quest does know my object exists, but only when it's in the current room or when I have it.",
+      "EditableFormat": "bbcode",
+      "HTML": "I've set up two commands in the Game Commands area: &quot;examine #@Object#&quot; and &quot;read #@Object#&quot;.<br/><br/>When a player types in &quot;examine 'object'&quot; a procedure is ran.<br/>When a player types in &quot;read 'object'&quot; another procedure runs.<br/><br/>For the examine procedure and read procedure, I set a condition that if #quest.lastobject# is not in the current room 'and' the player doesn't have #quest.lastobject# then to print a message.  But the 'standard default message for an object that doesn't exist' prints.  Obviously the object exists, but just not in a room the player is in or in the player's possession.  Why does this message print, and even override my condition?<br/><br/>I should mention that I've set up other conditions in both procedures that execute correctly; therefore, Quest does know my object exists, but only when it's in the current room or when I have it.",
+      "PostDate": "2007-08-11T17:11:09+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "13642",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "you describe what you've done very vaguely.\r\n\r\nWithout any code, all I can think of is that one of your if's are wrong, or a typo or you could be calling an exec &lt;;normal&gt;..",
+      "EditableFormat": "bbcode",
+      "HTML": "you describe what you've done very vaguely.<br/><br/>Without any code, all I can think of is that one of your if's are wrong, or a typo or you could be calling an exec &lt;;normal&gt;..",
+      "PostDate": "2007-08-12T01:08:06+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "13644",
+      "UserId": 0,
+      "Username": "witch wyzwurd",
+      "UserAvatar": null,
+      "UserGravatar": "05e3fb359c040589d773db02decd0770",
+      "EditableText": "As far as [i:2ssjg2t3]exec; normal[/i:2ssjg2t3] goes: I haven't commanded any such script.\r\n\r\nOk, here's the code for each part... conditional between ***'s is inept ASL... obviously I've dumbed up the message areas, flag name, and object name, for quicker viewing... also keep in mind that any other conditions in the Examine_Procedure execute perfectly....\r\n\r\n[code:2ssjg2t3]\n&#40;in Game Command&#41; \ncommand &lt;examine #@Object#&gt; do &lt;Examine_Procedure&gt;\n[/code:2ssjg2t3]\n[code:2ssjg2t3]\n&#40;in Procedure&#41;\ndefine procedure &lt;Examine_Procedure&gt;\n\t***if not here &lt;#quest&#46;lastobject#&gt; and not got &lt;#quest&#46;lastobject#&gt; then msg &lt;Text here!&gt;***\n\tif here &lt;#quest&#46;lastobject#&gt; or got &lt;#quest&#46;lastobject#&gt; then &#123;\n\t\tif &#40; #quest&#46;lastobject# = Object_Name &#41; and not got &lt;Object_Name&gt; then msg &lt;Text here!&gt;\n\t\tif &#40; #quest&#46;lastobject# = Object_Name &#41; and got &lt;Object_Name&gt; and not flag &lt;Flag_Name&gt; then msg &lt;Text here!&gt;\n\t\tif &#40; #quest&#46;lastobject# = Object_Name &#41; and got &lt;Object_Name&gt; and flag &lt;Flag_Name&gt; then msg &lt;Text here!&gt; &#125;\nend define\n[/code:2ssjg2t3]\n\nThe message, which is only used for [i:2ssjg2t3]badthing[/i:2ssjg2t3], I get when I try to examine object that I don't have and is in another room...\n\n[code:2ssjg2t3]\nerror &lt;badthing; Text here!&gt;\n[/code:2ssjg2t3]",
+      "EditableFormat": "bbcode",
+      "HTML": "As far as <span style=\"font-style:italic;\">exec; normal</span> goes: I haven't commanded any such script.<br/><br/>Ok, here's the code for each part... conditional between ***'s is inept ASL... obviously I've dumbed up the message areas, flag name, and object name, for quicker viewing... also keep in mind that any other conditions in the Examine_Procedure execute perfectly....<br/><br/><pre><code><br/>&#40;in Game Command&#41; <br/>command &lt;examine #@Object#&gt; do &lt;Examine_Procedure&gt;<br/></code></pre><br/><pre><code><br/>&#40;in Procedure&#41;<br/>define procedure &lt;Examine_Procedure&gt;<br/>\t***if not here &lt;#quest&#46;lastobject#&gt; and not got &lt;#quest&#46;lastobject#&gt; then msg &lt;Text here!&gt;***<br/>\tif here &lt;#quest&#46;lastobject#&gt; or got &lt;#quest&#46;lastobject#&gt; then &#123;<br/>\t\tif &#40; #quest&#46;lastobject# = Object_Name &#41; and not got &lt;Object_Name&gt; then msg &lt;Text here!&gt;<br/>\t\tif &#40; #quest&#46;lastobject# = Object_Name &#41; and got &lt;Object_Name&gt; and not flag &lt;Flag_Name&gt; then msg &lt;Text here!&gt;<br/>\t\tif &#40; #quest&#46;lastobject# = Object_Name &#41; and got &lt;Object_Name&gt; and flag &lt;Flag_Name&gt; then msg &lt;Text here!&gt; &#125;<br/>end define<br/></code></pre><br/><br/>The message, which is only used for <span style=\"font-style:italic;\">badthing</span>, I get when I try to examine object that I don't have and is in another room...<br/><br/><pre><code><br/>error &lt;badthing; Text here!&gt;<br/></code></pre>",
+      "PostDate": "2007-08-12T02:08:02+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "13646",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "When you set up your command &quot;examine #@Object#&quot;, Quest takes care of processing the player's input and, it's trying to resolve the &quot;object&quot; variable in the same way as the built-in Quest commands - i.e. the object has to be visible and in the current room or inventory.\r\n\r\nIf you want to use some different behaviour, you will need to take care of processing the object name yourself.\r\n\r\nTo do this, remove the &quot;@&quot; symbol from your command. Your script will then need to check whether the contents of the &quot;object&quot; variable correspond to a valid object name.",
+      "EditableFormat": "bbcode",
+      "HTML": "When you set up your command &quot;examine #@Object#&quot;, Quest takes care of processing the player's input and, it's trying to resolve the &quot;object&quot; variable in the same way as the built-in Quest commands - i.e. the object has to be visible and in the current room or inventory.<br/><br/>If you want to use some different behaviour, you will need to take care of processing the object name yourself.<br/><br/>To do this, remove the &quot;@&quot; symbol from your command. Your script will then need to check whether the contents of the &quot;object&quot; variable correspond to a valid object name.",
+      "PostDate": "2007-08-12T10:34:26+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "13648",
+      "UserId": 0,
+      "Username": "witch wyzwurd",
+      "UserAvatar": null,
+      "UserGravatar": "05e3fb359c040589d773db02decd0770",
+      "EditableText": "Ok.  That crossed my mind, but I couldn't find that rule is the Quest Documentation.  Thanks for clearing that up.  I'll move on and figure out how to process the player's command according to what I want done then.\r\n\r\nP.s: The QDK Editor does have a much easier set up than Quest 3.53.",
+      "EditableFormat": "bbcode",
+      "HTML": "Ok.  That crossed my mind, but I couldn't find that rule is the Quest Documentation.  Thanks for clearing that up.  I'll move on and figure out how to process the player's command according to what I want done then.<br/><br/>P.s: The QDK Editor does have a much easier set up than Quest 3.53.",
+      "PostDate": "2007-08-12T13:53:11+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "13650",
+      "UserId": 0,
+      "Username": "witch wyzwurd",
+      "UserAvatar": null,
+      "UserGravatar": "05e3fb359c040589d773db02decd0770",
+      "EditableText": "Hmmmm, I need a hint how to do this.\r\n\r\nI've changed my phrase in the Game Command to &quot;examine #Object_Name#.\r\n\r\nI've looked through built in variables and tried conditionals like &quot;if an object is defined in the game' but this is new territory for me.  And I'm starting to notice the amount of time spent on this is disappointing me.  I'll still be trying, but some more help would be nice.\r\n\r\nStill trying: I'm going to do this for all of my objects, so I don't want to say... if #Object_Name# is equal to &quot;real name&quot; or &quot;alias names&quot;, then... for every object.  I'm guessing there's a way to say if #Object_Name# equals a &quot;game's object (real name and alias names&quot;, then... (but I don't see a conditional command to do this).\r\n\r\nI got my script to execute correctly if I only use the &quot;real name&quot; of the object, but I need to check for aliases... ?",
+      "EditableFormat": "bbcode",
+      "HTML": "Hmmmm, I need a hint how to do this.<br/><br/>I've changed my phrase in the Game Command to &quot;examine #Object_Name#.<br/><br/>I've looked through built in variables and tried conditionals like &quot;if an object is defined in the game' but this is new territory for me.  And I'm starting to notice the amount of time spent on this is disappointing me.  I'll still be trying, but some more help would be nice.<br/><br/>Still trying: I'm going to do this for all of my objects, so I don't want to say... if #Object_Name# is equal to &quot;real name&quot; or &quot;alias names&quot;, then... for every object.  I'm guessing there's a way to say if #Object_Name# equals a &quot;game's object (real name and alias names&quot;, then... (but I don't see a conditional command to do this).<br/><br/>I got my script to execute correctly if I only use the &quot;real name&quot; of the object, but I need to check for aliases... ?",
+      "PostDate": "2007-08-13T03:33:16+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "13652",
+      "UserId": 0,
+      "Username": "witch wyzwurd",
+      "UserAvatar": null,
+      "UserGravatar": "05e3fb359c040589d773db02decd0770",
+      "EditableText": "Ok I got it working one way... I'm not sure if there's an easier way but what I do is...\r\n\r\n1. game-command: examine #Object#\r\n1a. set examine flag on\r\n1b. run object procedure\r\n\r\n2. object procedure:\r\n2a. Set string variable name: start name\r\n2b. If #Object# equals &quot;real name&quot; and &quot;aliases&quot; then change string variable to &quot;this name&quot;\r\n2c. If examine flag on then run examine procedure\r\n\r\n3. examine procedure:\r\n3a. If string variable equals &quot;this name&quot; then (script for certain object)\r\n3b. set examine flag off\r\n\r\nI actually like this method since I'll have full control over the &quot;examine&quot; of all objects and non-objects in one place... if there's a simpler way, please let me know... thanks again!",
+      "EditableFormat": "bbcode",
+      "HTML": "Ok I got it working one way... I'm not sure if there's an easier way but what I do is...<br/><br/>1. game-command: examine #Object#<br/>1a. set examine flag on<br/>1b. run object procedure<br/><br/>2. object procedure:<br/>2a. Set string variable name: start name<br/>2b. If #Object# equals &quot;real name&quot; and &quot;aliases&quot; then change string variable to &quot;this name&quot;<br/>2c. If examine flag on then run examine procedure<br/><br/>3. examine procedure:<br/>3a. If string variable equals &quot;this name&quot; then (script for certain object)<br/>3b. set examine flag off<br/><br/>I actually like this method since I'll have full control over the &quot;examine&quot; of all objects and non-objects in one place... if there's a simpler way, please let me know... thanks again!",
+      "PostDate": "2007-08-14T04:19:49+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "13653",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "Be careful of people typing &quot;examine the object_name&quot; .\r\n\r\nYou should have:\r\ncommand &lt;examine the #object#;examine #object#&gt;",
+      "EditableFormat": "bbcode",
+      "HTML": "Be careful of people typing &quot;examine the object_name&quot; .<br/><br/>You should have:<br/>command &lt;examine the #object#;examine #object#&gt;",
+      "PostDate": "2007-08-14T16:34:44+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "13657",
+      "UserId": 0,
+      "Username": "witch wyzwurd",
+      "UserAvatar": null,
+      "UserGravatar": "05e3fb359c040589d773db02decd0770",
+      "EditableText": "That's a help.  Thanks Tron.",
+      "EditableFormat": "bbcode",
+      "HTML": "That's a help.  Thanks Tron.",
+      "PostDate": "2007-08-14T19:56:53+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

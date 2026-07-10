@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "4n_z00xcfegcyktcr2ip6q",
+    "ForumId": "10",
+    "Title": "How to add a riddle system with consequences in a Quest Game",
+    "LastUpdated": "2021-04-27T16:13:31.0610291Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "8030ee7c-1c24-4332-b536-c32466ce32e5",
+      "UserId": 440062,
+      "Username": "SeedlessMelon",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/b87968f960ae9b0b75cbfd82f04bf397?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I’m making a game where you must answer a riddle to obtain a necessary item, and answering wrong depletes health slightly, How do I set this up?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I’m making a game where you must answer a riddle to obtain a necessary item, and answering wrong depletes health slightly, How do I set this up?</p>\n\n",
+      "PostDate": "2021-04-27T16:13:31.0610291Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "c678ff49-3a50-43e5-873c-84a0870ced7a",
+      "UserId": 440062,
+      "Username": "SeedlessMelon",
+      "AvatarUrl": "https://i.imgur.com/9NASALIb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Correction- How to add non-yes/no questions\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Correction- How to add non-yes/no questions</p>\n\n",
+      "PostDate": "2021-04-27T17:38:26.3731253Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "ff93ed83-e0d3-4a0d-a114-1d329f0748b8",
+      "UserId": 438905,
+      "Username": "Honoriam",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/b865620f96adee94a79fceb9f25fed3d?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I've played with a few different setups for implementing that kind of system.\r\nYou can use menus if you want to give defined answers for the user to choose from (basically a multiple-choice question).\r\n\r\nTo do this, you'd either set up a list as an attribute on an object and call it for the menu options (this lets you dynamically add or remove answers as the player does stuff), or you can use the Split function to create the options straight from the menu. The selected option is then returned as the \"result\" string, which you can use a switch (better for more options) or if statements to resolve. The code block would look something like this... (And you can use an attribute such as Sphinx.answerslist instead of a Split if you prefer that - dictionary lists in particular can make things more elegant, as they show the value and return the key, so you can show a long answer and return only the key afterwards.)\r\n\r\nIf all your incorrect answers do the same thing, you could also define only the correct answer in the cases, and have all the incorrect answers push to the default block.\r\n\r\n```\r\nmsg (\"Enter password... <br/>\")\r\nShowMenu (Split(\"Answer1;Answer2;Answer3;Answer4\")), false) {\r\n  switch (result) {\r\n    case (\"Answer1\") {\r\n      msg(\"Correct!\")\r\n      Sphinx.appeased = True\r\n    }\r\n    case (\"Answer2\") {\r\n      msg(\"Especially Incorrect...\")\r\n      player.health = player.health - 2\r\n    }\r\n    default {\r\n      msg(\"Answers 3 and 4 are also incorrect and push here as they're not defined as cases...\")\r\n      player.health = player.health - 1\r\n    }\r\n  }\r\n}\r\n```\r\n\r\n\r\nYou can also have the user type in an answer if you have the command bar active. For that, you'd use the \"Get input\" block, which saves the user's reply to the \"result\" string. You can then use an if statement to check if they input the correct answer. I'd strongly recommend using the LCase(result) function so that it's case insensitive, unless you care a lot about case in the answer. The code block would look something like this...\r\n\r\n```  msg (\"Enter password... <br/>\")\r\n  get input {\r\n    if (LCase(result) = \"answer\") {\r\n      msg (\"Correct!\")\r\n      Sphinx.appeased = True\r\n    }\r\n    else {\r\n      msg(\"Incorrect...\")\r\n      player.health = player.health - 1\r\n    }\r\n  }\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I've played with a few different setups for implementing that kind of system.<br>\nYou can use menus if you want to give defined answers for the user to choose from (basically a multiple-choice question).</p>\n<p>To do this, you'd either set up a list as an attribute on an object and call it for the menu options (this lets you dynamically add or remove answers as the player does stuff), or you can use the Split function to create the options straight from the menu. The selected option is then returned as the \"result\" string, which you can use a switch (better for more options) or if statements to resolve. The code block would look something like this... (And you can use an attribute such as Sphinx.answerslist instead of a Split if you prefer that - dictionary lists in particular can make things more elegant, as they show the value and return the key, so you can show a long answer and return only the key afterwards.)</p>\n<p>If all your incorrect answers do the same thing, you could also define only the correct answer in the cases, and have all the incorrect answers push to the default block.</p>\n<pre><code>msg (\"Enter password... &lt;br/&gt;\")\nShowMenu (Split(\"Answer1;Answer2;Answer3;Answer4\")), false) {\n  switch (result) {\n    case (\"Answer1\") {\n      msg(\"Correct!\")\n      Sphinx.appeased = True\n    }\n    case (\"Answer2\") {\n      msg(\"Especially Incorrect...\")\n      player.health = player.health - 2\n    }\n    default {\n      msg(\"Answers 3 and 4 are also incorrect and push here as they're not defined as cases...\")\n      player.health = player.health - 1\n    }\n  }\n}\n</code></pre>\n<p>You can also have the user type in an answer if you have the command bar active. For that, you'd use the \"Get input\" block, which saves the user's reply to the \"result\" string. You can then use an if statement to check if they input the correct answer. I'd strongly recommend using the LCase(result) function so that it's case insensitive, unless you care a lot about case in the answer. The code block would look something like this...</p>\n<pre><code>  get input {\n    if (LCase(result) = \"answer\") {\n      msg (\"Correct!\")\n      Sphinx.appeased = True\n    }\n    else {\n      msg(\"Incorrect...\")\n      player.health = player.health - 1\n    }\n  }\n</code></pre>\n\n",
+      "PostDate": "2021-04-28T01:01:10.6719169Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "056fe314-c1fd-4930-af18-dae5bf9024ed",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "This is covered - more or less - in the docs:\r\nhttp://docs.textadventures.co.uk/quest/asking_a_question.html",
+      "EditableFormat": "markdown",
+      "HTML": "<p>This is covered - more or less - in the docs:<br>\nhttp://docs.textadventures.co.uk/quest/asking_a_question.html</p>\n\n",
+      "PostDate": "2021-04-28T06:12:17.17486Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

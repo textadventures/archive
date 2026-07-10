@@ -1,0 +1,35 @@
+{
+  "Topic": {
+    "TopicId": "3966",
+    "ForumId": "10",
+    "Title": "Understanding ProcessTextSection?",
+    "LastUpdated": "2013-10-18T14:19:11+01:00",
+    "ReplyCount": 1
+  },
+  "Posts": [
+    {
+      "PostId": "26608",
+      "UserId": 0,
+      "Username": "george",
+      "UserAvatar": null,
+      "UserGravatar": "dc6fe8e6172303d85249a13c9a49c1ff",
+      "EditableText": "As part of working on modifying the UI so output text can be sent to the command line (see <!-- l --><a class=\"postlink-local\" href=\"http://forum.textadventures.co.uk/viewtopic.php?f=10&amp;t=3961\">viewtopic.php?f=10&amp;t=3961</a><!-- l --> ) I have some questions about the Core function ProcessTextSection (PTS) if anyone's game. \n\nFor reference here's the function:\n[code:xevu065p]\n&lt;function name=&quot;ProcessTextSection&quot; type=&quot;string&quot; parameters=&quot;text, data&quot;&gt;\n    &lt;!&#91;CDATA&#91;\n    \n    containsUnprocessedSection = false\n    \n    open = Instr(text, &quot;{&quot;)\n    \n    if (open &gt; 0) {\n      nestCount = 1\n      searchStart = open + 1\n      finished = false\n      \n      while (not finished) {\n        nextOpen = Instr(searchStart, text, &quot;{&quot;)\n        nextClose = Instr(searchStart, text, &quot;}&quot;)\n      \n        if (nextClose &gt; 0) {\n          if (nextOpen &gt; 0 and nextOpen &lt; nextClose) {\n            nestCount = nestCount + 1\n            searchStart = nextOpen + 1\n          }\n          else {\n            nestCount = nestCount - 1\n            searchStart = nextClose + 1\n            if (nestCount = 0) {\n              close = nextClose\n              containsUnprocessedSection = true\n              finished = true\n            }\n          }\n        }\n        else {\n          finished = true\n        }\n      }\n    }\n    \n    if (containsUnprocessedSection) {\n      section = Mid(text, open + 1, close - open - 1)\n      value = ProcessTextCommand(section, data)\n      text = Left(text, open - 1) + value + ProcessTextSection(Mid(text, close + 1), data)\n    }\n    \n    return (text)\n    &#93;&#93;&gt;\n  &lt;/function&gt;\n[/code:xevu065p]\n\nSo recall that OutputText calls PTS here, \n\n[code:xevu065p]\n  &lt;function name=&quot;OutputText&quot; parameters=&quot;text&quot;&gt;\n    &lt;!&#91;CDATA&#91;\n    data = NewDictionary()\n    dictionary add (data, &quot;fulltext&quot;, text)\n    text = ProcessTextSection(text, data)\n    OutputTextRaw(text)\n    &#93;&#93;&gt;\n  &lt;/function&gt;\n[/code:xevu065p]\n\nAnd from what I understand all msg calls go through OutputText. So my question is pretty basic. Is the purpose of this function to evaluate any expressions (like things in { } ) you've written in your text before they go to output?",
+      "EditableFormat": "bbcode",
+      "HTML": "As part of working on modifying the UI so output text can be sent to the command line (see <!-- l --><a class=\"postlink-local\" href=\"http://forum.textadventures.co.uk/viewtopic.php?f=10&amp;t=3961\">viewtopic.php?f=10&amp;t=3961</a><!-- l --> ) I have some questions about the Core function ProcessTextSection (PTS) if anyone's game. <br/><br/>For reference here's the function:<br/><pre><code><br/>&lt;function name=&quot;ProcessTextSection&quot; type=&quot;string&quot; parameters=&quot;text, data&quot;&gt;<br/>    &lt;!&#91;CDATA&#91;<br/>    <br/>    containsUnprocessedSection = false<br/>    <br/>    open = Instr(text, &quot;{&quot;)<br/>    <br/>    if (open &gt; 0) {<br/>      nestCount = 1<br/>      searchStart = open + 1<br/>      finished = false<br/>      <br/>      while (not finished) {<br/>        nextOpen = Instr(searchStart, text, &quot;{&quot;)<br/>        nextClose = Instr(searchStart, text, &quot;}&quot;)<br/>      <br/>        if (nextClose &gt; 0) {<br/>          if (nextOpen &gt; 0 and nextOpen &lt; nextClose) {<br/>            nestCount = nestCount + 1<br/>            searchStart = nextOpen + 1<br/>          }<br/>          else {<br/>            nestCount = nestCount - 1<br/>            searchStart = nextClose + 1<br/>            if (nestCount = 0) {<br/>              close = nextClose<br/>              containsUnprocessedSection = true<br/>              finished = true<br/>            }<br/>          }<br/>        }<br/>        else {<br/>          finished = true<br/>        }<br/>      }<br/>    }<br/>    <br/>    if (containsUnprocessedSection) {<br/>      section = Mid(text, open + 1, close - open - 1)<br/>      value = ProcessTextCommand(section, data)<br/>      text = Left(text, open - 1) + value + ProcessTextSection(Mid(text, close + 1), data)<br/>    }<br/>    <br/>    return (text)<br/>    &#93;&#93;&gt;<br/>  &lt;/function&gt;<br/></code></pre><br/><br/>So recall that OutputText calls PTS here, <br/><br/><pre><code><br/>  &lt;function name=&quot;OutputText&quot; parameters=&quot;text&quot;&gt;<br/>    &lt;!&#91;CDATA&#91;<br/>    data = NewDictionary()<br/>    dictionary add (data, &quot;fulltext&quot;, text)<br/>    text = ProcessTextSection(text, data)<br/>    OutputTextRaw(text)<br/>    &#93;&#93;&gt;<br/>  &lt;/function&gt;<br/></code></pre><br/><br/>And from what I understand all msg calls go through OutputText. So my question is pretty basic. Is the purpose of this function to evaluate any expressions (like things in { } ) you've written in your text before they go to output?",
+      "PostDate": "2013-10-18T02:11:17+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "26613",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Yes, this function handles any text commands (e.g. {cmd:xxxx}, {object:xxx}, etc). It looks for the special  { } characters and invokes the text processor for each one.",
+      "EditableFormat": "bbcode",
+      "HTML": "Yes, this function handles any text commands (e.g. {cmd:xxxx}, {object:xxx}, etc). It looks for the special  { } characters and invokes the text processor for each one.",
+      "PostDate": "2013-10-18T14:19:11+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

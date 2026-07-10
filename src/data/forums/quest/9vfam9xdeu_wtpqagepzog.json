@@ -1,0 +1,63 @@
+{
+  "Topic": {
+    "TopicId": "9vfam9xdeu_wtpqagepzog",
+    "ForumId": "10",
+    "Title": "How do I make two characters flash at the same time.",
+    "LastUpdated": "2017-02-24T18:35:58.2397795Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "fc998cee-4e25-49b2-a49f-964eff8ae0e6",
+      "UserId": 115910,
+      "Username": "Sebastian2203",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/2c6803847fee75ca6b74e1a846b79bc5?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "\r\nSo basically, I need advice how to write javascript function withouth breaking the Quest.\r\n\r\nThe function needs to be able to flash one character for X amount of time and then another character for X amount of time.\r\n\r\nI looked into playercore.js and I tracked how unscrambleTX and typerwiterTX works so I could try to do it myself but I know I could easily break the whole thing so I would rather ask for advice here.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>So basically, I need advice how to write javascript function withouth breaking the Quest.</p>\n<p>The function needs to be able to flash one character for X amount of time and then another character for X amount of time.</p>\n<p>I looked into playercore.js and I tracked how unscrambleTX and typerwiterTX works so I could try to do it myself but I know I could easily break the whole thing so I would rather ask for advice here.</p>\n\n",
+      "PostDate": "2017-02-24T18:35:58.2397795Z",
+      "LastEditDate": "2017-02-24T18:36:30.8223264Z"
+    },
+    {
+      "PostId": "39a04885-c649-4bef-924d-9f7d4eea51f7",
+      "UserId": 115910,
+      "Username": "Sebastian2203",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/2c6803847fee75ca6b74e1a846b79bc5?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "So I to make my question more clear I will use code, also I have misspelled the names of the functions.\r\nFXtypewriter istead of TX\r\n\r\nSo here is what I am trying to achieve in a gif : http://dwarffortresswiki.org/images/7/74/Icons.gif \r\n\r\nAs you see there are two characters flashing in one space.\r\n\r\nNow here is what I have created in the playercore.js\r\n\r\n```\r\n    };\r\n\t\t$.fn.flashcharacter = function (speed) {\r\n        this.each(function () {\r\n            var $ele = $(this), str = $ele.text(), progress = 0;\r\n            $ele.text('');\r\n            var timer = setInterval(function () {\r\n                $ele.text(str.substring(0, progress++) + ((progress & 1) && progress < str.length ? '_' : ''));\r\n                if (progress >= str.length) setInterval(timer);\r\n            }, speed);\r\n```\r\n\r\nNow the thing is, this is just copypasted from the fn.typewriter because I have NO idea what to change to make it flash two characters after X amount of time. Am I still too vague for anybody to help me with this?\r\n\r\nEDIT: I also should mention that this references many other parts within the playercore.js so this sole section won´t probably explain it very well... \r\n\r\nEDIT!!: I realized this is all a mistake because I cannot edit the playercore.js, simply because it would make it unplayable for anybody else who tries to downloand my game.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>So I to make my question more clear I will use code, also I have misspelled the names of the functions.<br>\nFXtypewriter istead of TX</p>\n<p>So here is what I am trying to achieve in a gif : http://dwarffortresswiki.org/images/7/74/Icons.gif</p>\n<p>As you see there are two characters flashing in one space.</p>\n<p>Now here is what I have created in the playercore.js</p>\n<pre><code>    };\n\t\t$.fn.flashcharacter = function (speed) {\n        this.each(function () {\n            var $ele = $(this), str = $ele.text(), progress = 0;\n            $ele.text('');\n            var timer = setInterval(function () {\n                $ele.text(str.substring(0, progress++) + ((progress &amp; 1) &amp;&amp; progress &lt; str.length ? '_' : ''));\n                if (progress &gt;= str.length) setInterval(timer);\n            }, speed);\n</code></pre>\n<p>Now the thing is, this is just copypasted from the fn.typewriter because I have NO idea what to change to make it flash two characters after X amount of time. Am I still too vague for anybody to help me with this?</p>\n<p>EDIT: I also should mention that this references many other parts within the playercore.js so this sole section won´t probably explain it very well...</p>\n<p>EDIT!!: I realized this is all a mistake because I cannot edit the playercore.js, simply because it would make it unplayable for anybody else who tries to downloand my game.</p>\n\n",
+      "PostDate": "2017-02-25T17:11:31.5631267Z",
+      "LastEditDate": "2017-02-26T19:09:12.7000012Z"
+    },
+    {
+      "PostId": "c2b96caf-0b74-4c84-bac2-7787d38d6477",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Add this to playercore.js (I added it to an attribute, and then output that inside `script` tags):\r\n```\r\n       flashers = [];\r\n       flag = false;\r\n       setInterval(function() {\r\n         for (i = 0; i < flashers.length; i++) { \r\n           $(flashers[i]).css('color', flag ? 'black' : 'white');\r\n         }\r\n         flag = !flag;\r\n      }, 200);\r\n     \r\n     \r\n      function startFlash(elementId) {\r\n        flashers.push (elementId);\r\n      }\r\n\r\n      function stopFlash(elementId) {\r\n        index = flashers.indexOf(elementId);\r\n        $(elementId).css('color', 'black');\r\n        if (index > -1) {\r\n          flashers.splice(index, 1);\r\n        }\r\n      }\r\n```\r\nYou can then do this to start an element with the id \"blink\" flash:\r\n```\r\nJS.startFlash (\"#blink\")\r\n```\r\nAnd this to stop it:\r\n```\r\nJS.stopFlash (\"#blink\")\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Add this to playercore.js (I added it to an attribute, and then output that inside <code>script</code> tags):</p>\n<pre><code>       flashers = [];\n       flag = false;\n       setInterval(function() {\n         for (i = 0; i &lt; flashers.length; i++) { \n           $(flashers[i]).css('color', flag ? 'black' : 'white');\n         }\n         flag = !flag;\n      }, 200);\n     \n     \n      function startFlash(elementId) {\n        flashers.push (elementId);\n      }\n\n      function stopFlash(elementId) {\n        index = flashers.indexOf(elementId);\n        $(elementId).css('color', 'black');\n        if (index &gt; -1) {\n          flashers.splice(index, 1);\n        }\n      }\n</code></pre>\n<p>You can then do this to start an element with the id \"blink\" flash:</p>\n<pre><code>JS.startFlash (\"#blink\")\n</code></pre>\n<p>And this to stop it:</p>\n<pre><code>JS.stopFlash (\"#blink\")\n</code></pre>\n\n",
+      "PostDate": "2017-02-27T10:13:43.0149445Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "f7f394ea-5ee6-4295-bff4-810f7adea1f6",
+      "UserId": 115910,
+      "Username": "Sebastian2203",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/2c6803847fee75ca6b74e1a846b79bc5?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Wow, thanks! I will use it and try to disassemble it on my own to expand my knowledge.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Wow, thanks! I will use it and try to disassemble it on my own to expand my knowledge.</p>\n\n",
+      "PostDate": "2017-02-27T17:52:35.2066828Z",
+      "LastEditDate": null
+    }
+  ]
+}

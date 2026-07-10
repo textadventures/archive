@@ -1,0 +1,39 @@
+{
+  "Topic": {
+    "TopicId": "xazlygzgykyxtyyyyxhdng",
+    "ForumId": "10",
+    "Title": "Combining multiple different variables into one piece of a list.",
+    "LastUpdated": "2022-09-10T16:36:50.2955942Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "22a09c95-7cef-45b3-9b71-5109eff9a49b",
+      "UserId": 516764,
+      "Username": "Malphas",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello, I was trying to see if it's possible to combine multiple variables into a list as one piece so for example the first thing of the list would list all variables together.\r\n\r\n    list add (player.list, {player.one} +{player.two} +  {player.three} +  {player.four} + {player.five})\r\n\r\nAll the variables are defined but when I run this piece of code it reads \"+ {player.two}\" as a function and not a variable.\r\n\r\nAlso might be worth mentioning that the variables are not values that needed to be added up to eachother but just need to appear next to eachother so it also could work with words for example.\r\n\r\nAny help or ideas would be greatly appreciated!\r\n\r\nThanks in advance.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello, I was trying to see if it's possible to combine multiple variables into a list as one piece so for example the first thing of the list would list all variables together.</p>\n<pre><code>list add (player.list, {player.one} +{player.two} +  {player.three} +  {player.four} + {player.five})\n</code></pre>\n<p>All the variables are defined but when I run this piece of code it reads \"+ {player.two}\" as a function and not a variable.</p>\n<p>Also might be worth mentioning that the variables are not values that needed to be added up to eachother but just need to appear next to eachother so it also could work with words for example.</p>\n<p>Any help or ideas would be greatly appreciated!</p>\n<p>Thanks in advance.</p>\n\n",
+      "PostDate": "2022-09-10T16:36:50.2955942Z",
+      "LastEditDate": "2022-09-10T16:47:18.0843799Z",
+      "link": null
+    },
+    {
+      "PostId": "502dd14a-ffe7-4d87-9188-4061f82189cd",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Why have the variable names got `{}` around them? You only need to put {} around a variable name if you're using it in the text processor.\r\n\r\nNot quite sure what your intention is here, so I'll give an answer for each of the possibilities I can see.\r\nFor this example, I'm assuming that the object named `player` has attributes `one`, `two`, and `three` with values \"Red\", \"Green\", and \"Blue\".\r\n\r\n1. If you want to add the string \"RedGreenBlue\" to a list:\r\n    * Using expressions: `list add (player.list, player.one + player.two + player.three)`\r\n    * Using text processor: `list add (player.list, ProcessText (\"{player.one}{player.two}{player.three}\"))`\r\n2. If you want to add the string \"Red + Green + Blue\" to a list:\r\n    * Using expressions: `list add (player.list, player.one + \" + \" + player.two + \" + \" + player.three)`\r\n    * Using text processor: `list add (player.list, ProcessText (\"{player.one} + {player.two} + {player.three}\"))`\r\n3. If you want to add the string \"{player.one} + {player.two} + {player.three}\" to the list (so it will display \"Red + Green + Blue\" when it is printed, but won't actually have that value):\r\n    * `list add (player.list, \"{player.one} + {player.two} + {player.three}\")`\r\n4. If you want to add the three variables to the list separately:\r\n    * `list add (player.list, player.one)`\r\n`list add (player.list, player.two)`\r\n`list add (player.list, player.three)`\r\n    * Or slightly more efficiently:\r\n`foreach (attr, Split(\"one;two;three\")) list add (player.list, GetAttribute (player, attr))`\r\n\r\nIf none of these is what you want, maybe you could give an example of what you want it to do.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Why have the variable names got <code>{}</code> around them? You only need to put {} around a variable name if you're using it in the text processor.</p>\n<p>Not quite sure what your intention is here, so I'll give an answer for each of the possibilities I can see.<br>\nFor this example, I'm assuming that the object named <code>player</code> has attributes <code>one</code>, <code>two</code>, and <code>three</code> with values \"Red\", \"Green\", and \"Blue\".</p>\n<ol>\n<li>If you want to add the string \"RedGreenBlue\" to a list:\n<ul>\n<li>Using expressions: <code>list add (player.list, player.one + player.two + player.three)</code></li>\n<li>Using text processor: <code>list add (player.list, ProcessText (\"{player.one}{player.two}{player.three}\"))</code></li>\n</ul>\n</li>\n<li>If you want to add the string \"Red + Green + Blue\" to a list:\n<ul>\n<li>Using expressions: <code>list add (player.list, player.one + \" + \" + player.two + \" + \" + player.three)</code></li>\n<li>Using text processor: <code>list add (player.list, ProcessText (\"{player.one} + {player.two} + {player.three}\"))</code></li>\n</ul>\n</li>\n<li>If you want to add the string \"{player.one} + {player.two} + {player.three}\" to the list (so it will display \"Red + Green + Blue\" when it is printed, but won't actually have that value):\n<ul>\n<li><code>list add (player.list, \"{player.one} + {player.two} + {player.three}\")</code></li>\n</ul>\n</li>\n<li>If you want to add the three variables to the list separately:\n<ul>\n<li><code>list add (player.list, player.one)</code><br>\n<code>list add (player.list, player.two)</code><br>\n<code>list add (player.list, player.three)</code></li>\n<li>Or slightly more efficiently:<br>\n<code>foreach (attr, Split(\"one;two;three\")) list add (player.list, GetAttribute (player, attr))</code></li>\n</ul>\n</li>\n</ol>\n<p>If none of these is what you want, maybe you could give an example of what you want it to do.</p>\n\n",
+      "PostDate": "2022-09-12T11:57:45.4148648Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

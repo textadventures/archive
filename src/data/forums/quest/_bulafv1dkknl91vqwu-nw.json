@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "_bulafv1dkknl91vqwu-nw",
+    "ForumId": "10",
+    "Title": "HELP ME! MODERATE QUEST EXPERIENCE! UNKNOWN ERROR! (PART 2) [Solved]",
+    "LastUpdated": "2019-05-18T05:08:17.7509283Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "3c923885-cbba-45cf-9b35-67966351c652",
+      "UserId": 413394,
+      "Username": "Sh4dowGaming1234",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/b879ee10f706b25be063033d452d75bc?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi again.\r\n\r\nYou may have seen my post earlier by the same name. \r\nI am using the combat system recommended by the quest documentation _here_.\r\n\r\nhttps://docs.textadventures.co.uk/quest/#Rpg\r\n\r\nIf the player attacks a monster without a weapon equipped, you get this error message:\r\n\r\n```\r\nError running script: Error compiling expression 'Replace(s, \"#Attacker#\", CapFirst(GetDisplayAlias(attacker)))': FunctionCallElement: Could find not function 'Replace(Object, String, String)'\r\n```\r\n\r\nDoes anyone know how to solve this?\r\n\r\nP.S DO NO REFER ME TO THE DOCUMENTATION, I'VE CHECKED IT S MILLION TIMES!!!\r\nP.P.S Whoever helps me solve this will get a special benefit when the game is released sometime next month.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi again.</p>\n<p>You may have seen my post earlier by the same name.<br>\nI am using the combat system recommended by the quest documentation <em>here</em>.</p>\n<p>https://docs.textadventures.co.uk/quest/#Rpg</p>\n<p>If the player attacks a monster without a weapon equipped, you get this error message:</p>\n<pre><code>Error running script: Error compiling expression 'Replace(s, \"#Attacker#\", CapFirst(GetDisplayAlias(attacker)))': FunctionCallElement: Could find not function 'Replace(Object, String, String)'\n</code></pre>\n<p>Does anyone know how to solve this?</p>\n<p>P.S DO NO REFER ME TO THE DOCUMENTATION, I'VE CHECKED IT S MILLION TIMES!!!<br>\nP.P.S Whoever helps me solve this will get a special benefit when the game is released sometime next month.</p>\n\n",
+      "PostDate": "2019-05-18T05:08:17.7509283Z",
+      "LastEditDate": "2019-05-19T01:06:07.8254303Z",
+      "link": null
+    },
+    {
+      "PostId": "88b49113-69b5-4ed2-a9e9-a3207a656efa",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> If the player attacks a monster without a weapon equipped, you get this error message:\r\n\r\nAnswer at the bottom. But I think it makes more sense for me to explain how I go about finding it. That way, you know how to solve similar problems in future.\r\n\r\nOK, the error in this case is that it can't find a function with the signature <code>Replace(<b>Object</b>, String, String)</code>. If you've read the docs, you know that the signature of the Replace function is <code style=\"color: green\">Replace(<b>String</b>, String, String)</code>.\r\n\r\nSo, the first argument passed to Replace is of the wrong type - it's an object, and it should be a string.\r\n90% of the time, if a variable is an object and it shouldn't be, this is because it's the special object `null`.\r\n\r\nThe first parameter in this case is in the variable `s`. So if you search in the library code for that line (it's in the function AttackReport), and scroll up to find where `s` is set, you'll find your problem. In this case, `s` is the first parameter of that function.\r\n\r\nSo, somewhere in your code, the function `AttackReport` is being called with the first parameter being either `null` or another object. So next we search the code for where `AttackReport` is being called from.\r\n\r\n`AttackReport` is called to the function `DoAttack`. Its first parameter is either `weapon.critdesc`, `weapon.attackdesc`, or `weapon.missdesc`.\r\n\r\nThe attributes `attackdesc`, `critdesc`, and `missdesc` should all be strings. It's unlikely that you would have accidentally set one of them to be an object. So the most probably answer is that you have a weapon on which some of the attributes `attackdesc`, `critdesc`, or `missdesc` are missing.\r\n\r\nNow, this happens when the player is unarmed. So what is `weapon` when the player is unarmed? `weapon` is the second parameter to `DoAttack`, se we need to look through the code to find out what the second parameter is when the player is unarmed.\r\nIn the attack command, you have this code:\r\n<pre><code>  if (<b>player.equipped = null</b>) {\r\n    DoAttack (player, <b>player</b>, object)\r\n  }\r\n  else {\r\n    DoAttack (player, player.equipped, object)\r\n  }</code></pre>\r\n\r\nSo, when the player is unarmed, the variable `weapon` is the player object itself.\r\n\r\nMost likely (unless there's some other code interfering with it that I haven't seen), **this error means that your `player` object doesn't have string attributes named `attackdesc`, `critdesc`, and `missdesc`.**",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>If the player attacks a monster without a weapon equipped, you get this error message:</p>\n</blockquote>\n<p>Answer at the bottom. But I think it makes more sense for me to explain how I go about finding it. That way, you know how to solve similar problems in future.</p>\n<p>OK, the error in this case is that it can't find a function with the signature <code>Replace(<b>Object</b>, String, String)</code>. If you've read the docs, you know that the signature of the Replace function is <code style=\"color: green\">Replace(<b>String</b>, String, String)</code>.</p>\n<p>So, the first argument passed to Replace is of the wrong type - it's an object, and it should be a string.<br>\n90% of the time, if a variable is an object and it shouldn't be, this is because it's the special object <code>null</code>.</p>\n<p>The first parameter in this case is in the variable <code>s</code>. So if you search in the library code for that line (it's in the function AttackReport), and scroll up to find where <code>s</code> is set, you'll find your problem. In this case, <code>s</code> is the first parameter of that function.</p>\n<p>So, somewhere in your code, the function <code>AttackReport</code> is being called with the first parameter being either <code>null</code> or another object. So next we search the code for where <code>AttackReport</code> is being called from.</p>\n<p><code>AttackReport</code> is called to the function <code>DoAttack</code>. Its first parameter is either <code>weapon.critdesc</code>, <code>weapon.attackdesc</code>, or <code>weapon.missdesc</code>.</p>\n<p>The attributes <code>attackdesc</code>, <code>critdesc</code>, and <code>missdesc</code> should all be strings. It's unlikely that you would have accidentally set one of them to be an object. So the most probably answer is that you have a weapon on which some of the attributes <code>attackdesc</code>, <code>critdesc</code>, or <code>missdesc</code> are missing.</p>\n<p>Now, this happens when the player is unarmed. So what is <code>weapon</code> when the player is unarmed? <code>weapon</code> is the second parameter to <code>DoAttack</code>, se we need to look through the code to find out what the second parameter is when the player is unarmed.<br>\nIn the attack command, you have this code:</p>\n<pre><code>  if (<b>player.equipped = null</b>) {\n    DoAttack (player, <b>player</b>, object)\n  }\n  else {\n    DoAttack (player, player.equipped, object)\n  }</code></pre>\n<p>So, when the player is unarmed, the variable <code>weapon</code> is the player object itself.</p>\n<p>Most likely (unless there's some other code interfering with it that I haven't seen), <strong>this error means that your <code>player</code> object doesn't have string attributes named <code>attackdesc</code>, <code>critdesc</code>, and <code>missdesc</code>.</strong></p>\n\n",
+      "PostDate": "2019-05-18T11:22:58.7318309Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "94095c5a-2f7b-4d7a-8022-90971697858a",
+      "UserId": 413394,
+      "Username": "Sh4dowGaming1234",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/b879ee10f706b25be063033d452d75bc?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thank you so much mrangel!\r\n\r\nI checked the code, added the ```attackdesc```, ```misdesc```, and ```critdesc``` to the player and it works fine.\r\nThanks for the explanation as well.\r\nMost people on the quest forums don't usually go into that much detail.\r\n\r\nI have read the docs, and I can't believe I missed that.\r\n\r\nAs a result, I will stick to my promise of the benefit.\r\nType this code _once_ to get $2000 worth of in-game currency.\r\n<details>AttackHelpCode1520</details>\r\nType it  exactly like in the spoiler.\r\n\r\nThanks a lot.\r\nSh4dowGaming1234",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thank you so much mrangel!</p>\n<p>I checked the code, added the <code>attackdesc</code>, <code>misdesc</code>, and <code>critdesc</code> to the player and it works fine.<br>\nThanks for the explanation as well.<br>\nMost people on the quest forums don't usually go into that much detail.</p>\n<p>I have read the docs, and I can't believe I missed that.</p>\n<p>As a result, I will stick to my promise of the benefit.<br>\nType this code <em>once</em> to get $2000 worth of in-game currency.</p>\n<details>AttackHelpCode1520</details>\nType it  exactly like in the spoiler.\n<p>Thanks a lot.<br>\nSh4dowGaming1234</p>\n\n",
+      "PostDate": "2019-05-19T01:05:18.8703379Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

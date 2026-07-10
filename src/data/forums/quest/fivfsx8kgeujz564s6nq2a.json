@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "fivfsx8kgeujz564s6nq2a",
+    "ForumId": "10",
+    "Title": "NPC patrols with rudimentary AI",
+    "LastUpdated": "2019-02-18T13:25:37.8546442Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "722fdb78-338a-449e-90fe-60a1dbb97232",
+      "UserId": 363515,
+      "Username": "Kernog",
+      "AvatarUrl": "https://i.imgur.com/sFKILHYb.gif",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello, everyone.\r\n\r\nI'm coding a text game (duh). While I started writing it with Inform7, I am contemplating using Quest instead.\r\nI have a question about a certain script, as I check if everything can be ported from Inform to Quest.\r\n\r\nMy game will have the player/a space-ship travelling on a map composed of rooms representing x,y coordinates.\r\nI want to have another object, representing a pirate ship, patrol the map, moving from room-to-room each turn.\r\n\r\nHowever, compared to the example of http://docs.textadventures.co.uk/quest/patrolling_npcs.html, I want specific conditions/requirements:\r\n* If the player is more than 3 rooms away, the pirate ship chooses a direction semi-randomly, with a weight on heading towards the player, to keep things challenging\r\n* If the player is 3 rooms or less away, the pirate ship \"spots\" the player and moves in their direction every turn\r\n\r\nIn Inform7, there is a _phrase_ called `best route from [thing A] to [thing B]`, which allows me to get the number of rooms separating A from B, and to choose the correct direction for A to get to B.\r\n(http://inform7.com/learn/man/WI_6_14.html)\r\n\r\nMy question is: is there an equivalent of Inform's `best route` in Quest?\r\n\r\nThank you in advance.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello, everyone.</p>\n<p>I'm coding a text game (duh). While I started writing it with Inform7, I am contemplating using Quest instead.<br>\nI have a question about a certain script, as I check if everything can be ported from Inform to Quest.</p>\n<p>My game will have the player/a space-ship travelling on a map composed of rooms representing x,y coordinates.<br>\nI want to have another object, representing a pirate ship, patrol the map, moving from room-to-room each turn.</p>\n<p>However, compared to the example of http://docs.textadventures.co.uk/quest/patrolling_npcs.html, I want specific conditions/requirements:</p>\n<ul>\n<li>If the player is more than 3 rooms away, the pirate ship chooses a direction semi-randomly, with a weight on heading towards the player, to keep things challenging</li>\n<li>If the player is 3 rooms or less away, the pirate ship \"spots\" the player and moves in their direction every turn</li>\n</ul>\n<p>In Inform7, there is a <em>phrase</em> called <code>best route from [thing A] to [thing B]</code>, which allows me to get the number of rooms separating A from B, and to choose the correct direction for A to get to B.<br>\n(http://inform7.com/learn/man/WI_6_14.html)</p>\n<p>My question is: is there an equivalent of Inform's <code>best route</code> in Quest?</p>\n<p>Thank you in advance.</p>\n\n",
+      "PostDate": "2019-02-18T13:25:37.8546442Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "b1762802-6891-4791-9700-038920cfb701",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I don't think there's a built-in pathfinding code, you got to code/script it yourself:\r\n\r\nusing the 'x/y coordinate' Integer Attributes, here's the basic concept of 'seeking' (moving 1 Object towards another Object based upon x/y grid concept/logic) pathfinding:\r\n\r\n(you'll have to code in the stuff for the '3 rooms away and its randomization vs not random' and/or navigating/handling any 'locked/blocked' paths, not going to try to code that in here, too much work and/or possibly difficult)\r\n\r\n```\r\nif (pirate_ship.x_coordinate > player.x_coordinate) {\r\n  pirate_ship.x_coordinate = pirate_ship.x_coordinate - 1\r\n} else if (pirate_ship.x_coordinate < player.x_coordinate) {\r\n  pirate_ship.x_coordinate = pirate_ship.x_coordinate + 1\r\n}\r\n\r\nif (pirate_ship.y_coordinate > player.y_coordinate) {\r\n  pirate_ship.y_coordinate = pirate_ship.y_coordinate - 1\r\n} else if (pirate_ship.y_coordinate < player.y_coordinate) {\r\n  pirate_ship.y_coordinate = pirate_ship.y_coordinate + 1\r\n}\r\n\r\nforeach (object, pirate_ship.parent.adjacent_rooms_list) {\r\n  if (object.x_coordinate = pirate_ship.x_coordinate and object.y_coordinate = pirate_ship.y_coordinate) {\r\n    pirate_ship.parent = object\r\n  }\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I don't think there's a built-in pathfinding code, you got to code/script it yourself:</p>\n<p>using the 'x/y coordinate' Integer Attributes, here's the basic concept of 'seeking' (moving 1 Object towards another Object based upon x/y grid concept/logic) pathfinding:</p>\n<p>(you'll have to code in the stuff for the '3 rooms away and its randomization vs not random' and/or navigating/handling any 'locked/blocked' paths, not going to try to code that in here, too much work and/or possibly difficult)</p>\n<pre><code>if (pirate_ship.x_coordinate &gt; player.x_coordinate) {\n  pirate_ship.x_coordinate = pirate_ship.x_coordinate - 1\n} else if (pirate_ship.x_coordinate &lt; player.x_coordinate) {\n  pirate_ship.x_coordinate = pirate_ship.x_coordinate + 1\n}\n\nif (pirate_ship.y_coordinate &gt; player.y_coordinate) {\n  pirate_ship.y_coordinate = pirate_ship.y_coordinate - 1\n} else if (pirate_ship.y_coordinate &lt; player.y_coordinate) {\n  pirate_ship.y_coordinate = pirate_ship.y_coordinate + 1\n}\n\nforeach (object, pirate_ship.parent.adjacent_rooms_list) {\n  if (object.x_coordinate = pirate_ship.x_coordinate and object.y_coordinate = pirate_ship.y_coordinate) {\n    pirate_ship.parent = object\n  }\n}\n</code></pre>\n\n",
+      "PostDate": "2019-02-18T16:22:37.9239818Z",
+      "LastEditDate": "2019-02-18T16:29:01.7164433Z",
+      "link": null
+    },
+    {
+      "PostId": "377d34c8-5792-4c80-8d07-e3d86f0729ba",
+      "UserId": 304102,
+      "Username": "Doctor Agon",
+      "AvatarUrl": "http://i.imgur.com/Lzd3mOwb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Have a look at the NPC library.\r\n\r\nhttps://github.com/ThePix/quest/wiki/Library:-Independent-NPCs\r\n\r\nFurther reading:\r\nhttp://textadventures.co.uk/forum/samples/topic/1gpwpfattuyocvlg1sievq/controlling-npcs\r\nhttp://docs.textadventures.co.uk/quest/libraries/path_library.html\r\n\r\nhope the information helps",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Have a look at the NPC library.</p>\n<p>https://github.com/ThePix/quest/wiki/Library:-Independent-NPCs</p>\n<p>Further reading:<br>\nhttp://textadventures.co.uk/forum/samples/topic/1gpwpfattuyocvlg1sievq/controlling-npcs<br>\nhttp://docs.textadventures.co.uk/quest/libraries/path_library.html</p>\n<p>hope the information helps</p>\n\n",
+      "PostDate": "2019-02-18T18:59:07.9491511Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "68bfc6c3-ac87-41ab-aadf-ed06ef6d2572",
+      "UserId": 260569,
+      "Username": "DarkLizerd",
+      "AvatarUrl": "https://i.imgur.com/vjdH3t6b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "There could be a way, but you would need to think outside the box for this one...\r\nYou have 4 places where NPC's may want to go:\r\n1=kitchen\r\n2=living room\r\n3=bed room\r\n4=basement\r\nSo, you set a destination variable on the NPC... NPC.ToGo=1\r\nIn each room, you set up 4 variables that tells the direction to each room:\r\nIE: in kitchen, you have:\r\nkitchen=0 (you are here)\r\nliving room=w\r\nbed room=w\r\nbasement=s\r\nYes, living room and bed room is west, because to get to the bed room, you go through the living room.\r\nliving room would have:\r\nkitchen=e\r\nliving room=0 (here)\r\nbed room=n\r\nbasement=e (go through kitchen to get to basement.)\r\n\r\nTo simplify this, (and shorten the coding) use a split(), just keep the room order the same.\r\nkitchen=split(4,0,w,w,s)         (Since Quest counts from 0, and humans count from 1, we need a \"spacer\" here...)\r\nliving room=split(4,e,0,n,e)   (\"4\" works so that we know how many places there is, just incase we need to add one)\r\nbed room=split(4,s,s,0,s)       (we know how many we have...)\r\nbasement=split(4,n,n,n,0)\r\nThen, you could add a room, like a hallway between the bed room and the living room, but since no one just \"goes\" to the hallway, it would not need a destination, so...\r\nhallway=split(4,s,s,n,s)\r\n(north to the bedroom, south to everything else...)\r\nYou could also have the NPC \"goto\" the player the same way:\r\nIf the NPC is in the bed room and the player is in the basement, then by \"telling\" the NPC to go to the player and the NPC \"knows\" the player is in the basement, then the NPC will need to move:\r\nS (to the hall)\r\nS (to the living room)\r\nE (to the kitchen)\r\nthen S (to the basement)\r\nmsg(\"Yes, \" + player.alias + \", you called?\")\r\n\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>There could be a way, but you would need to think outside the box for this one...<br>\nYou have 4 places where NPC's may want to go:<br>\n1=kitchen<br>\n2=living room<br>\n3=bed room<br>\n4=basement<br>\nSo, you set a destination variable on the NPC... NPC.ToGo=1<br>\nIn each room, you set up 4 variables that tells the direction to each room:<br>\nIE: in kitchen, you have:<br>\nkitchen=0 (you are here)<br>\nliving room=w<br>\nbed room=w<br>\nbasement=s<br>\nYes, living room and bed room is west, because to get to the bed room, you go through the living room.<br>\nliving room would have:<br>\nkitchen=e<br>\nliving room=0 (here)<br>\nbed room=n<br>\nbasement=e (go through kitchen to get to basement.)</p>\n<p>To simplify this, (and shorten the coding) use a split(), just keep the room order the same.<br>\nkitchen=split(4,0,w,w,s)         (Since Quest counts from 0, and humans count from 1, we need a \"spacer\" here...)<br>\nliving room=split(4,e,0,n,e)   (\"4\" works so that we know how many places there is, just incase we need to add one)<br>\nbed room=split(4,s,s,0,s)       (we know how many we have...)<br>\nbasement=split(4,n,n,n,0)<br>\nThen, you could add a room, like a hallway between the bed room and the living room, but since no one just \"goes\" to the hallway, it would not need a destination, so...<br>\nhallway=split(4,s,s,n,s)<br>\n(north to the bedroom, south to everything else...)<br>\nYou could also have the NPC \"goto\" the player the same way:<br>\nIf the NPC is in the bed room and the player is in the basement, then by \"telling\" the NPC to go to the player and the NPC \"knows\" the player is in the basement, then the NPC will need to move:<br>\nS (to the hall)<br>\nS (to the living room)<br>\nE (to the kitchen)<br>\nthen S (to the basement)<br>\nmsg(\"Yes, \" + player.alias + \", you called?\")</p>\n\n",
+      "PostDate": "2019-02-18T19:47:48.6421589Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

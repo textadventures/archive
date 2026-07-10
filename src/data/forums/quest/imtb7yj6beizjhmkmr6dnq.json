@@ -1,0 +1,50 @@
+{
+  "Topic": {
+    "TopicId": "imtb7yj6beizjhmkmr6dnq",
+    "ForumId": "10",
+    "Title": "Good way to compare and modify lists with objects?",
+    "LastUpdated": "2016-11-21T20:33:21.4471604Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "61fe4468-1068-4879-9429-9c62d45ddfcc",
+      "UserId": 168877,
+      "Username": "TinFoilMkIV",
+      "AvatarUrl": "http://i.imgur.com/j34jdCvb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Currently I'm trying to compare two lists and build a third list of any non-matching objects. The issue being that some of the objects in the second list are clones so can't be directly compared. Ultimately I need to return back to an object which is where I was running into trouble, since I can convert the lists to aliases to get a match across clones, but not sure how to convert that back into the original object. Or if there's a better method to accomplish this.\r\n\r\n-------\r\n\r\nMore detailed description of the scenario:\r\n-There is a master container outside the game area holding a single copy of each item to be used. \r\n-When an item is obtained it is cloned and given to the character getting it.\r\n-there is a case where I want to pull from a list of items without granting a duplicate\r\n-two lists are created, one of possible items, one of items to not be duplicated\r\n-a 3rd list will be created based on the previous two of all allowed items, which will then be selected from\r\n\r\nCurrent issues:\r\n-due to cloned items, neither the objects or their names can be directly compared\r\n-quest doesn't seem to like removing items from a list inside two 'foreach' cycles in an attempt to manually compare lists\r\n-can convert lists to a comparable string, but not sure how to get back to an object afterwards.\r\n-While there is a finite number of copies that will be allowed to exist in the game at any given time, the ammount would be very unwieldy to generate and handle manually.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Currently I'm trying to compare two lists and build a third list of any non-matching objects. The issue being that some of the objects in the second list are clones so can't be directly compared. Ultimately I need to return back to an object which is where I was running into trouble, since I can convert the lists to aliases to get a match across clones, but not sure how to convert that back into the original object. Or if there's a better method to accomplish this.</p>\n<hr>\n<p>More detailed description of the scenario:<br>\n-There is a master container outside the game area holding a single copy of each item to be used.<br>\n-When an item is obtained it is cloned and given to the character getting it.<br>\n-there is a case where I want to pull from a list of items without granting a duplicate<br>\n-two lists are created, one of possible items, one of items to not be duplicated<br>\n-a 3rd list will be created based on the previous two of all allowed items, which will then be selected from</p>\n<p>Current issues:<br>\n-due to cloned items, neither the objects or their names can be directly compared<br>\n-quest doesn't seem to like removing items from a list inside two 'foreach' cycles in an attempt to manually compare lists<br>\n-can convert lists to a comparable string, but not sure how to get back to an object afterwards.<br>\n-While there is a finite number of copies that will be allowed to exist in the game at any given time, the ammount would be very unwieldy to generate and handle manually.</p>\n\n",
+      "PostDate": "2016-11-21T20:33:21.4471604Z",
+      "LastEditDate": "2016-11-21T20:34:48.9781962Z"
+    },
+    {
+      "PostId": "2dbcf9a0-456b-4d07-a4cd-263715a46d40",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "If you are finding an object by its alias and there are several clones, how will you know if you have the right one?\r\n\r\nIf there is only one or you do not care which, do this inside a function that returns an object:\r\n```\r\nforeach (o, AllObjects()) {\r\n  if (HasString(o, \"alias\")) {\r\n    if (o.alias = search_alias) {\r\n      return (o)\r\n    }\r\n  }\r\n}\r\nreturn (null)\r\n```\r\nYou could adapt that to look in a certain room using a `Scope` function.\r\n\r\nMake sure all the relevant objects have aliases right from the start.\r\n\r\n***\r\n\r\nNot sure if this will quite do, but this will compile a list of objects that is in the object list, but whose alias is not in the second list.\r\n```\r\nresult = NewObjectList()\r\nforeach (o, objectlist) {\r\n   if (not ListContains(aliaslist, o.alias) {\r\n    list add(result, o)\r\n  }\r\n}\r\n```\r\n\r\n***\r\n\r\n> -quest doesn't seem to like removing items from a list inside two 'foreach' cycles in an attempt to manually compare lists\r\n\r\nI do not think it likes you doing that inside _one_.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>If you are finding an object by its alias and there are several clones, how will you know if you have the right one?</p>\n<p>If there is only one or you do not care which, do this inside a function that returns an object:</p>\n<pre><code>foreach (o, AllObjects()) {\n  if (HasString(o, \"alias\")) {\n    if (o.alias = search_alias) {\n      return (o)\n    }\n  }\n}\nreturn (null)\n</code></pre>\n<p>You could adapt that to look in a certain room using a <code>Scope</code> function.</p>\n<p>Make sure all the relevant objects have aliases right from the start.</p>\n<hr>\n<p>Not sure if this will quite do, but this will compile a list of objects that is in the object list, but whose alias is not in the second list.</p>\n<pre><code>result = NewObjectList()\nforeach (o, objectlist) {\n   if (not ListContains(aliaslist, o.alias) {\n    list add(result, o)\n  }\n}\n</code></pre>\n<hr>\n<blockquote>\n<p>-quest doesn't seem to like removing items from a list inside two 'foreach' cycles in an attempt to manually compare lists</p>\n</blockquote>\n<p>I do not think it likes you doing that inside <em>one</em>.</p>\n\n",
+      "PostDate": "2016-11-21T22:51:45.4606452Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "9cc9fd91-9ada-47fc-95f8-5eea8c5fc045",
+      "UserId": 168877,
+      "Username": "TinFoilMkIV",
+      "AvatarUrl": "http://i.imgur.com/j34jdCvb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "In the cases where I need this code there should never be more than one copy of an object being checked, since the original is being pulled from a preset list and being compared to items held by a character. And if the code functions, it shouldn't be possible for that character to obtain more than one clone of an object.\r\n\r\nAt the moment I'm using GetDirectChildren to build the second list and comparing that to the preset one.\r\n\r\nI suspect the solution I'm looking for is in here somewhere, I'll have to do more testing.\r\n\r\nI would have preferred if I could copy my master list and just remove items from the temporary copy if they fail the check, but seems like I'll have to do it in reverse.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>In the cases where I need this code there should never be more than one copy of an object being checked, since the original is being pulled from a preset list and being compared to items held by a character. And if the code functions, it shouldn't be possible for that character to obtain more than one clone of an object.</p>\n<p>At the moment I'm using GetDirectChildren to build the second list and comparing that to the preset one.</p>\n<p>I suspect the solution I'm looking for is in here somewhere, I'll have to do more testing.</p>\n<p>I would have preferred if I could copy my master list and just remove items from the temporary copy if they fail the check, but seems like I'll have to do it in reverse.</p>\n\n",
+      "PostDate": "2016-11-21T23:24:44.4489526Z",
+      "LastEditDate": null
+    }
+  ]
+}

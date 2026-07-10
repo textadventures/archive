@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "pzdvaidf7kqvvjink-bgqw",
+    "ForumId": "10",
+    "Title": "How can I replace an IMG element in a string with its ALT property, if it has one?",
+    "LastUpdated": "2024-09-18T06:57:16.5185856Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "71d2fb49-e045-4847-8caf-d419558f589c",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "```js\r\nvar data = '<img src=\"mycat.png\" alt=\"A picture of an orange cat.\"> and <img src=\"apple.png\" alt=\"An image of a red apple.\">';\r\nvar faker = document.createElement('div');\r\nfaker.innerHTML = data;\r\nfor (var key in Object.keys(faker.getElementsByTagName('img'))){\r\n  var elem = faker.getElementsByTagName('img')[key];\r\n  var altProp = $(faker.getElementsByTagName('img')[key]).attr('alt');\r\n  data = data.replace(elem.outerHTML, altProp);\r\n}\r\nconsole.log(data);\r\n```\r\n\r\n---\r\nOUTPUT: `A picture of an orange cat. and An image of a red apple.`\r\n\r\nThat's what I want it to do, but if the format of the `<img>` div is different in any way at all, this will not work.\r\n\r\nFor instance, this does not work: `\"<img src='mycat.png' alt='A picture of an orange cat'></img>\"`\r\n\r\nAnyone know of a trick to make this work?",
+      "EditableFormat": "markdown",
+      "HTML": "<pre><code>var data = '&lt;img src=\"mycat.png\" alt=\"A picture of an orange cat.\"&gt; and &lt;img src=\"apple.png\" alt=\"An image of a red apple.\"&gt;';\nvar faker = document.createElement('div');\nfaker.innerHTML = data;\nfor (var key in Object.keys(faker.getElementsByTagName('img'))){\n  var elem = faker.getElementsByTagName('img')[key];\n  var altProp = $(faker.getElementsByTagName('img')[key]).attr('alt');\n  data = data.replace(elem.outerHTML, altProp);\n}\nconsole.log(data);\n</code></pre>\n<hr>\n<p>OUTPUT: <code>A picture of an orange cat. and An image of a red apple.</code></p>\n<p>That's what I want it to do, but if the format of the <code>&lt;img&gt;</code> div is different in any way at all, this will not work.</p>\n<p>For instance, this does not work: <code>\"&lt;img src='mycat.png' alt='A picture of an orange cat'&gt;&lt;/img&gt;\"</code></p>\n<p>Anyone know of a trick to make this work?</p>\n\n",
+      "PostDate": "2024-09-18T06:57:16.5185856Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "efaad646-ae68-4eac-8131-ed2147410fde",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I suspect that's because the browser is sanitising your string. I'm mostly guessing, though.\r\n\r\nIf I remember correctly, using single quotes for HTML attribute values is not valid. Must be double quotes, or an unquoted single word.\r\nHowever, some browsers give you a little leeway and guess what you intended; converting your HTML to something valid when you create the element. This means that as soon as the browser parses the string as HTML, it gets corrected.\r\n\r\nI strongly suspect that if you do this:\r\n```\r\nfaker.innerHTML = data;\r\ndata = faker.innerHTML;\r\n```\r\nyou will find that your `data` string has been corrected to valid HTML. Which should then make the rest of your function work.\r\n\r\n(although, to be honest, I would be more inclined to replace the current element with the string within the loop, rather than doing text replacement)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I suspect that's because the browser is sanitising your string. I'm mostly guessing, though.</p>\n<p>If I remember correctly, using single quotes for HTML attribute values is not valid. Must be double quotes, or an unquoted single word.<br>\nHowever, some browsers give you a little leeway and guess what you intended; converting your HTML to something valid when you create the element. This means that as soon as the browser parses the string as HTML, it gets corrected.</p>\n<p>I strongly suspect that if you do this:</p>\n<pre><code>faker.innerHTML = data;\ndata = faker.innerHTML;\n</code></pre>\n<p>you will find that your <code>data</code> string has been corrected to valid HTML. Which should then make the rest of your function work.</p>\n<p>(although, to be honest, I would be more inclined to replace the current element with the string within the loop, rather than doing text replacement)</p>\n\n",
+      "PostDate": "2024-09-18T09:44:15.9687059Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "af711939-fe43-49d4-98f4-d70ec92b6e30",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> I suspect that's because the browser is sanitising your string. I'm mostly guessing, though.\r\n>\r\n>If I remember correctly, using single quotes for HTML attribute values is not valid. Must be double quotes, or an unquoted single word.\r\n>\r\n>However, some browsers give you a little leeway and guess what you intended; converting your HTML to something valid when you create the element. This means that as soon as the browser parses the string as HTML, it gets corrected.\r\n\r\nAha! That has to be what's happening.\r\n\r\n---\r\n>I strongly suspect that if you do this:\r\n>```\r\n>faker.innerHTML = data;\r\n>data = faker.innerHTML;\r\n>```\r\n>you will find that your data string has been corrected to valid HTML. Which should then make the rest of your function work.\r\n\r\nRock on! That works. Brilliant! Thank you!!!\r\n\r\n---\r\n> I would be more inclined to replace the current element with the string within the loop, rather than doing text replacement\r\n\r\nThe only reason I'm not just replacing the element is it isn't an element yet. I'm pulling the string sent to `addText()` and converting it to plain text for the transcript.\r\n\r\nIt seems like pulling any alt properties that someone took the time to add their images would be a good idea.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>I suspect that's because the browser is sanitising your string. I'm mostly guessing, though.</p>\n<p>If I remember correctly, using single quotes for HTML attribute values is not valid. Must be double quotes, or an unquoted single word.</p>\n<p>However, some browsers give you a little leeway and guess what you intended; converting your HTML to something valid when you create the element. This means that as soon as the browser parses the string as HTML, it gets corrected.</p>\n</blockquote>\n<p>Aha! That has to be what's happening.</p>\n<hr>\n<blockquote>\n<p>I strongly suspect that if you do this:</p>\n<pre><code>faker.innerHTML = data;\ndata = faker.innerHTML;\n</code></pre>\n<p>you will find that your data string has been corrected to valid HTML. Which should then make the rest of your function work.</p>\n</blockquote>\n<p>Rock on! That works. Brilliant! Thank you!!!</p>\n<hr>\n<blockquote>\n<p>I would be more inclined to replace the current element with the string within the loop, rather than doing text replacement</p>\n</blockquote>\n<p>The only reason I'm not just replacing the element is it isn't an element yet. I'm pulling the string sent to <code>addText()</code> and converting it to plain text for the transcript.</p>\n<p>It seems like pulling any alt properties that someone took the time to add their images would be a good idea.</p>\n\n",
+      "PostDate": "2024-09-18T16:22:22.5383815Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "5b1c18c8-e3aa-49bd-bd15-88978ea8e3b9",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> The only reason I'm not just replacing the element is it isn't an element yet.\r\n\r\nIt becomes an element as soon as you put it into the fake div's innerHTML. It just isn't attached to the document. Your loop is already treating it as an element; so you could probably replace it with the text there, and then finish by retrieving faker.innerHTML to get the fully processed string. Probably a more robust option if you expect to add any more parsing in future.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>The only reason I'm not just replacing the element is it isn't an element yet.</p>\n</blockquote>\n<p>It becomes an element as soon as you put it into the fake div's innerHTML. It just isn't attached to the document. Your loop is already treating it as an element; so you could probably replace it with the text there, and then finish by retrieving faker.innerHTML to get the fully processed string. Probably a more robust option if you expect to add any more parsing in future.</p>\n\n",
+      "PostDate": "2024-09-21T22:26:34.7423459Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "3d1d5923-628f-4b8c-8831-58e04a7cdbb2",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> It becomes an element as soon as you put it into the fake div's innerHTML. It just isn't attached to the document.\r\n\r\nOh!\r\n\r\n>  Your loop is already treating it as an element; so you could probably replace it with the text there, and then finish by retrieving faker.innerHTML to get the fully processed string. Probably a more robust option if you expect to add any more parsing in future.\r\n\r\nDude, you rock! I'm gonna play with this code this afternoon.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>It becomes an element as soon as you put it into the fake div's innerHTML. It just isn't attached to the document.</p>\n</blockquote>\n<p>Oh!</p>\n<blockquote>\n<p>Your loop is already treating it as an element; so you could probably replace it with the text there, and then finish by retrieving faker.innerHTML to get the fully processed string. Probably a more robust option if you expect to add any more parsing in future.</p>\n</blockquote>\n<p>Dude, you rock! I'm gonna play with this code this afternoon.</p>\n\n",
+      "PostDate": "2024-09-22T15:39:56.0899024Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

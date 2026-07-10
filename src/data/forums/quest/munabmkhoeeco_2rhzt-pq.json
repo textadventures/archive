@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "munabmkhoeeco_2rhzt-pq",
+    "ForumId": "10",
+    "Title": "door problem",
+    "LastUpdated": "2021-03-13T21:24:48.800124Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "7e84da3b-7643-4da5-9c5b-e4912f452953",
+      "UserId": 519460,
+      "Username": "ffkeeoei",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "i start the game and add the items needed to unlock the door when i try to go through it wont let me\r\nbut if i drop one of the items and pick it back up it unlocks\r\nwhy does that happen why cant i just go trough at the start\r\n\r\nstart game\r\nAddToInventory (breast plate1)\r\nAddToInventory (pants1)\r\n\r\nthe locked door\r\nif (Got(breast plate1)) {\r\n  if (Got(pants1)) {\r\n    UnlockExit (lockdoor)\r\n  }\r\n}",
+      "EditableFormat": "markdown",
+      "HTML": "<p>i start the game and add the items needed to unlock the door when i try to go through it wont let me<br>\nbut if i drop one of the items and pick it back up it unlocks<br>\nwhy does that happen why cant i just go trough at the start</p>\n<p>start game<br>\nAddToInventory (breast plate1)<br>\nAddToInventory (pants1)</p>\n<p>the locked door<br>\nif (Got(breast plate1)) {<br>\nif (Got(pants1)) {<br>\nUnlockExit (lockdoor)<br>\n}<br>\n}</p>\n\n",
+      "PostDate": "2021-03-13T21:24:48.800124Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "ad744482-cdf6-495f-b86c-9417f5c35157",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "When are you running the script for the locked door?\r\n\r\nIs the door an object separate from the exit?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>When are you running the script for the locked door?</p>\n<p>Is the door an object separate from the exit?</p>\n\n",
+      "PostDate": "2021-03-14T00:01:50.8041177Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "6f057e43-e589-47aa-9d2e-50d796290a6a",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "If the script that unlocks the door is a turnscript, then you should be aware that turnscripts don't run until the player has done something, so the exit will be locked on the first turn.\r\n\r\nIf the script is on the exit, you should be aware that exit scripts don't run when it's locked. For imposing limitations on when the player can use an exit, you would normally do something like:\r\n```\r\nif (Got(breast plate1) and Got(pants1)) {\r\n  MovePlayer (lockdoor.to)\r\n}\r\nelse {\r\n  msg (lockdoor.lockmessage)\r\n}\r\n```\r\nThis uses the exit script *instead of* the \"locked\" flag.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>If the script that unlocks the door is a turnscript, then you should be aware that turnscripts don't run until the player has done something, so the exit will be locked on the first turn.</p>\n<p>If the script is on the exit, you should be aware that exit scripts don't run when it's locked. For imposing limitations on when the player can use an exit, you would normally do something like:</p>\n<pre><code>if (Got(breast plate1) and Got(pants1)) {\n  MovePlayer (lockdoor.to)\n}\nelse {\n  msg (lockdoor.lockmessage)\n}\n</code></pre>\n<p>This uses the exit script <em>instead of</em> the \"locked\" flag.</p>\n\n",
+      "PostDate": "2021-03-14T00:07:36.3282092Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e95e0081-d8af-4d5c-81e7-bd7fe592f10d",
+      "UserId": 519460,
+      "Username": "ffkeeoei",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "no its a normal exit i got a bunch of different options that the player can put on and i dont want them leavin the room naked",
+      "EditableFormat": "markdown",
+      "HTML": "<p>no its a normal exit i got a bunch of different options that the player can put on and i dont want them leavin the room naked</p>\n\n",
+      "PostDate": "2021-03-15T03:51:29.1971257Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "0516110d-8abd-430d-bd43-7ebff8f906e6",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "If it's an exit, the script will only run if it's already unlocked. You use the script to control whether the player can go through, not the \"locked\" attribute.\r\n\r\nIf there's multiple options, your code will end up getting quite complex, with lots of 'if' statements. But there may be a quicker way. If you are using the default wearables system, you can use the `worn` attribute to get a list of all worn items. So your script might be something like:\r\n```\r\nclothes = FilterByAttribute (ScopeInventory(), \"worn\", true)\r\nif (ListCount (clothes) < 1) {\r\n  msg (\"You can't go out naked.\")\r\n}\r\nelse {\r\n  MovePlayer (this.to)\r\n}\r\n```\r\n\r\nIf you want the player to be wearing multiple garments (shirt and trousers, maybe), you could change the number `1` in that script to something higher, the minimum number of garments. Or if you're using \"slots\" on the wearables tab? If so, you can use the function `GetOuterFor` to check if the player is wearing anything in a particular slot. In that case, the script would be something like:\r\n<pre><code>my naked = NewStringList()\r\nforeach (slot, Split(\"<b style=\"font-family: initial; color: blue;\">chest;legs</b>\")) {\r\n  if (GetOuterFor (game.pov, slot) = null) {\r\n    list add (naked, slot)\r\n  }\r\n}\r\nif (ListCount (naked) = 0) {\r\n  MovePlayer (this.to)\r\n}\r\nelse {\r\n  msg (\"You can't go out naked! You need to cover your \" + FormatList (naked, \", \", \" and \", \"\") + \".\")\r\n}</code></pre>\r\n(`GetOuterFor` returns the outermost garment worn in a slot, or `null` if the player isn't wearing anything there)\r\nThis script is a little more complex, as it lists the slots that are currently empty. You can change the list of slots that the player needs to cover; and change the message based on how you have named your slots.)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>If it's an exit, the script will only run if it's already unlocked. You use the script to control whether the player can go through, not the \"locked\" attribute.</p>\n<p>If there's multiple options, your code will end up getting quite complex, with lots of 'if' statements. But there may be a quicker way. If you are using the default wearables system, you can use the <code>worn</code> attribute to get a list of all worn items. So your script might be something like:</p>\n<pre><code>clothes = FilterByAttribute (ScopeInventory(), \"worn\", true)\nif (ListCount (clothes) &lt; 1) {\n  msg (\"You can't go out naked.\")\n}\nelse {\n  MovePlayer (this.to)\n}\n</code></pre>\n<p>If you want the player to be wearing multiple garments (shirt and trousers, maybe), you could change the number <code>1</code> in that script to something higher, the minimum number of garments. Or if you're using \"slots\" on the wearables tab? If so, you can use the function <code>GetOuterFor</code> to check if the player is wearing anything in a particular slot. In that case, the script would be something like:</p>\n<pre><code>my naked = NewStringList()\nforeach (slot, Split(\"<b style=\"font-family: initial; color: blue\">chest;legs</b>\")) {\n  if (GetOuterFor (game.pov, slot) = null) {\n    list add (naked, slot)\n  }\n}\nif (ListCount (naked) = 0) {\n  MovePlayer (this.to)\n}\nelse {\n  msg (\"You can't go out naked! You need to cover your \" + FormatList (naked, \", \", \" and \", \"\") + \".\")\n}</code></pre>\n<p>(<code>GetOuterFor</code> returns the outermost garment worn in a slot, or <code>null</code> if the player isn't wearing anything there)<br>\nThis script is a little more complex, as it lists the slots that are currently empty. You can change the list of slots that the player needs to cover; and change the message based on how you have named your slots.)</p>\n\n",
+      "PostDate": "2021-03-15T12:21:10.7439338Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

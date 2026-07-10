@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "4347",
+    "ForumId": "10",
+    "Title": "Making the player do things.",
+    "LastUpdated": "2014-05-20T05:39:31+01:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "28837",
+      "UserId": 0,
+      "Username": "Espera",
+      "UserAvatar": null,
+      "UserGravatar": "04bdffe31cdc4e1c0d61f05a2f5a7532",
+      "EditableText": "I'm hoping it's possible in scripts to enter in strings that would be interpreted much like commands from the player? For instance, I could make them 'look' so that they would notice changes in the room more easily, or maybe I could make them use objects in their invnetory involuntarily?  How do I go about this? \n\nKeep in mind, I'm less of a code monkey, and more of a UI user.",
+      "EditableFormat": "bbcode",
+      "HTML": "I'm hoping it's possible in scripts to enter in strings that would be interpreted much like commands from the player? For instance, I could make them 'look' so that they would notice changes in the room more easily, or maybe I could make them use objects in their invnetory involuntarily?  How do I go about this? <br/><br/>Keep in mind, I'm less of a code monkey, and more of a UI user.",
+      "PostDate": "2014-05-19T22:16:50+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "28839",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "you can do like 90% of any~all things with just these two super scripts:\n\n1. in GUI~Editor: 'if' Script&#058; run as script -&gt; add a script -&gt; scripts -&gt; 'if' Script -&gt; [EXPRESSION], or whatever [______] choice\n\n2. in GUI~Editor: 'setting attributes' Script&#058; run as script -&gt; add a script -&gt; variables -&gt; set a variable or attribute -&gt; Attribute: Object.Attribute = Expression_or_Value, or Variable: Attribute = Expression_or_Value\n\nin code:\n\n1.\nif (_______) {\n}\n\n2.\nObject.Attribute = Expression_or_Value\n\n-------\n\nexamples:\n\n(if you only got a single Player Object, than 'game.pov' is the same as, for example, your default 'player' Player Object, you can use either 'game.pov' or 'player', if you like using 'player' than use that, or if you like using 'game.pov' as I do below, then use that. But, there's nuances~differences when you got more than one Player Object, with using 'game.pov' vs a specific Player Object directly)\n\nif (game.pov.alias = &quot;HK&quot;) {\n-&gt; game.pov.strength_integer = 100\n} else if (game.pov.alias = &quot;espera&quot;) {\n-&gt; game.pov.intelligence_integer = 100\n}\n\nif (game.pov.hit_points_integer &lt;= 0)  {\n-&gt; msg (&quot;You died.&quot;)\n-&gt; msg (&quot;GAME OVER&quot;)\n-&gt; finish\n}\n\nif (orc.dead_boolean = false) {\n-&gt; orc.dead = true\n-&gt; msg (&quot;you attack the orc, killing it&quot;)\n} else if (orc.dead = true) {\n-&gt; game.pov.cash = game.pov.cash + orc.cash\n-&gt; orc.cash = 0\n-&gt; msg (&quot;You loot the dead orc's body, finding and taking it's cash&quot;)\n}\n\nif (espera.tiredness &gt;= 50 and espera.tiredness &lt;= 100) {\n-&gt; msg (&quot;She's really tired, her eyes are bloodshot, her hair is a disheavaled mess, and she can barely think straight, moving slugglishly out of bed.&quot;)\n} else if (espera.tiredness &gt;= 0 and espera.tiredness &lt; 50) {\n-&gt; msg (&quot;She got a good night's rest, and is ready to take on the day, her spirit's high and her energy overflowing, she bounds out of bed excitedly.&quot;)\n}\n\n----------\n\nI have a feeling that this isn't what you're asking about... hmm... lol\n\nif you mean, allowing your scripts to act upon something that the user types in during game play, then there's the 'get input' (in GUI~editor: run as script -&gt; add a script -&gt; output -&gt; get input):\n\ngame (Object) -&gt; scripts (tab) -&gt; Start Script -&gt; Add a script -&gt;\n\nmsg (&quot;What is your name?&quot;)\nget input {\n-&gt; game.pov.alias = result\n-&gt; show menu (&quot;What is your gender?&quot;, split (&quot;male;female&quot;, &quot;;&quot;), false) {\n-&gt;-&gt; game.pov.gender_string = result\n-&gt;-&gt; show menu (&quot;What is your race?&quot;, split (&quot;human;dwarf;elf&quot;, &quot;;&quot;), false) {\n-&gt;-&gt;-&gt; game.pov.race_string = result\n-&gt;-&gt;-&gt; show menu (&quot;What is your class?&quot;, split (&quot;warrior;thief;cleric;mage&quot;, &quot;;&quot;), false) {\n-&gt;-&gt;-&gt;-&gt; game.pov.class_string = result\n-&gt;-&gt;-&gt;-&gt; msg (game.pov.alias + &quot; is a &quot; + game.pov.gender_string + &quot; &quot; + game.pov.race_string + &quot; &quot; + game.pov.class_string + &quot;.&quot;)\n-&gt;-&gt;-&gt; }\n-&gt;-&gt; }\n-&gt; }\n}\n// if I chose: HK, male, human, warrior; the output is: HK is a male human warrior.\n// if I chose: Espera, female, elf, mage; the output is: Espera is a female elf mage.\n\nand further (in another script, such as a 'level_up_or_leveling' Script)...\n\nif (game.pov.gender_string = &quot;male&quot;) {\n-&gt; game.pov.strength_integer = game.pov.strength_integer + 1\n} else if (game.pov.gender_string = &quot;female&quot;) {\n-&gt; game.pov.intelligence_integer = game.pov.intelligence_integer + 1\n}\nif (game.pov.race_string = &quot;human&quot;) {\n-&gt; game.pov.strength_integer = game.pov.strength_integer + 1\n-&gt; game.pov.intelligence_integer = game.pov.intelligence_integer + 1\n} else if (game.pov.race_string = &quot;dwarf&quot;) {\n-&gt; game.pov.strength_integer = game.pov.strength_integer + 2\n} else if (game.pov.race_string = &quot;elf&quot;) {\n-&gt; game.pov.intelligence_integer = game.pov.intelligence_integer + 2\n}\nif (game.pov.class_string = &quot;warrior&quot;) {\n// etc",
+      "EditableFormat": "bbcode",
+      "HTML": "you can do like 90% of any~all things with just these two super scripts:<br/><br/>1. in GUI~Editor: 'if' Script&#058; run as script -&gt; add a script -&gt; scripts -&gt; 'if' Script -&gt; [EXPRESSION], or whatever [______] choice<br/><br/>2. in GUI~Editor: 'setting attributes' Script&#058; run as script -&gt; add a script -&gt; variables -&gt; set a variable or attribute -&gt; Attribute: Object.Attribute = Expression_or_Value, or Variable: Attribute = Expression_or_Value<br/><br/>in code:<br/><br/>1.<br/>if (_______) {<br/>}<br/><br/>2.<br/>Object.Attribute = Expression_or_Value<br/><br/>-------<br/><br/>examples:<br/><br/>(if you only got a single Player Object, than 'game.pov' is the same as, for example, your default 'player' Player Object, you can use either 'game.pov' or 'player', if you like using 'player' than use that, or if you like using 'game.pov' as I do below, then use that. But, there's nuances~differences when you got more than one Player Object, with using 'game.pov' vs a specific Player Object directly)<br/><br/>if (game.pov.alias = &quot;HK&quot;) {<br/>-&gt; game.pov.strength_integer = 100<br/>} else if (game.pov.alias = &quot;espera&quot;) {<br/>-&gt; game.pov.intelligence_integer = 100<br/>}<br/><br/>if (game.pov.hit_points_integer &lt;= 0)  {<br/>-&gt; msg (&quot;You died.&quot;)<br/>-&gt; msg (&quot;GAME OVER&quot;)<br/>-&gt; finish<br/>}<br/><br/>if (orc.dead_boolean = false) {<br/>-&gt; orc.dead = true<br/>-&gt; msg (&quot;you attack the orc, killing it&quot;)<br/>} else if (orc.dead = true) {<br/>-&gt; game.pov.cash = game.pov.cash + orc.cash<br/>-&gt; orc.cash = 0<br/>-&gt; msg (&quot;You loot the dead orc's body, finding and taking it's cash&quot;)<br/>}<br/><br/>if (espera.tiredness &gt;= 50 and espera.tiredness &lt;= 100) {<br/>-&gt; msg (&quot;She's really tired, her eyes are bloodshot, her hair is a disheavaled mess, and she can barely think straight, moving slugglishly out of bed.&quot;)<br/>} else if (espera.tiredness &gt;= 0 and espera.tiredness &lt; 50) {<br/>-&gt; msg (&quot;She got a good night's rest, and is ready to take on the day, her spirit's high and her energy overflowing, she bounds out of bed excitedly.&quot;)<br/>}<br/><br/>----------<br/><br/>I have a feeling that this isn't what you're asking about... hmm... lol<br/><br/>if you mean, allowing your scripts to act upon something that the user types in during game play, then there's the 'get input' (in GUI~editor: run as script -&gt; add a script -&gt; output -&gt; get input):<br/><br/>game (Object) -&gt; scripts (tab) -&gt; Start Script -&gt; Add a script -&gt;<br/><br/>msg (&quot;What is your name?&quot;)<br/>get input {<br/>-&gt; game.pov.alias = result<br/>-&gt; show menu (&quot;What is your gender?&quot;, split (&quot;male;female&quot;, &quot;;&quot;), false) {<br/>-&gt;-&gt; game.pov.gender_string = result<br/>-&gt;-&gt; show menu (&quot;What is your race?&quot;, split (&quot;human;dwarf;elf&quot;, &quot;;&quot;), false) {<br/>-&gt;-&gt;-&gt; game.pov.race_string = result<br/>-&gt;-&gt;-&gt; show menu (&quot;What is your class?&quot;, split (&quot;warrior;thief;cleric;mage&quot;, &quot;;&quot;), false) {<br/>-&gt;-&gt;-&gt;-&gt; game.pov.class_string = result<br/>-&gt;-&gt;-&gt;-&gt; msg (game.pov.alias + &quot; is a &quot; + game.pov.gender_string + &quot; &quot; + game.pov.race_string + &quot; &quot; + game.pov.class_string + &quot;.&quot;)<br/>-&gt;-&gt;-&gt; }<br/>-&gt;-&gt; }<br/>-&gt; }<br/>}<br/>// if I chose: HK, male, human, warrior; the output is: HK is a male human warrior.<br/>// if I chose: Espera, female, elf, mage; the output is: Espera is a female elf mage.<br/><br/>and further (in another script, such as a 'level_up_or_leveling' Script)...<br/><br/>if (game.pov.gender_string = &quot;male&quot;) {<br/>-&gt; game.pov.strength_integer = game.pov.strength_integer + 1<br/>} else if (game.pov.gender_string = &quot;female&quot;) {<br/>-&gt; game.pov.intelligence_integer = game.pov.intelligence_integer + 1<br/>}<br/>if (game.pov.race_string = &quot;human&quot;) {<br/>-&gt; game.pov.strength_integer = game.pov.strength_integer + 1<br/>-&gt; game.pov.intelligence_integer = game.pov.intelligence_integer + 1<br/>} else if (game.pov.race_string = &quot;dwarf&quot;) {<br/>-&gt; game.pov.strength_integer = game.pov.strength_integer + 2<br/>} else if (game.pov.race_string = &quot;elf&quot;) {<br/>-&gt; game.pov.intelligence_integer = game.pov.intelligence_integer + 2<br/>}<br/>if (game.pov.class_string = &quot;warrior&quot;) {<br/>// etc",
+      "PostDate": "2014-05-20T01:05:55+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "28841",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Espera, the function &quot;HandleCommand&quot; is what you're looking for. It's what's called whenever you enter a command at the input line. You can just call it yourself from your scripts.\n\nTo add it from the GUI, add a &quot;Call Function&quot; script command. Set the function name to HandleCommand. You then need to add two args.\n\nThe first argument is the command you want to execute. It will be a string, so you need to put it in quotes (e.g. &quot;take apple&quot;).\nThe second argument to add is just null.\n\nIn Code View, it would look like:\n\n[code:34th7zq4]HandleCommand(&quot;take apple&quot;, null)[/code:34th7zq4]\nIt does everything that happens when you input a command, including echoing it to the screen like &quot;&gt; take apple&quot;.\n\nHope that helps!",
+      "EditableFormat": "bbcode",
+      "HTML": "Espera, the function &quot;HandleCommand&quot; is what you're looking for. It's what's called whenever you enter a command at the input line. You can just call it yourself from your scripts.<br/><br/>To add it from the GUI, add a &quot;Call Function&quot; script command. Set the function name to HandleCommand. You then need to add two args.<br/><br/>The first argument is the command you want to execute. It will be a string, so you need to put it in quotes (e.g. &quot;take apple&quot;).<br/>The second argument to add is just null.<br/><br/>In Code View, it would look like:<br/><br/><pre><code>HandleCommand(&quot;take apple&quot;, null)</code></pre><br/>It does everything that happens when you input a command, including echoing it to the screen like &quot;&gt; take apple&quot;.<br/><br/>Hope that helps!",
+      "PostDate": "2014-05-20T01:56:06+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "28842",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "oh wow, that's really cool (useful), thanks Jay and espera for asking the question ~ making the thread, hehe. I just learned something new, and it's something really useful too, awesome!",
+      "EditableFormat": "bbcode",
+      "HTML": "oh wow, that's really cool (useful), thanks Jay and espera for asking the question ~ making the thread, hehe. I just learned something new, and it's something really useful too, awesome!",
+      "PostDate": "2014-05-20T02:00:36+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "28845",
+      "UserId": 0,
+      "Username": "Espera",
+      "UserAvatar": null,
+      "UserGravatar": "04bdffe31cdc4e1c0d61f05a2f5a7532",
+      "EditableText": "Yes, thank you very much, Jay, and glad you could learn along with me, HK.",
+      "EditableFormat": "bbcode",
+      "HTML": "Yes, thank you very much, Jay, and glad you could learn along with me, HK.",
+      "PostDate": "2014-05-20T05:39:31+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

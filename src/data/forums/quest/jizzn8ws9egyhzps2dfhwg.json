@@ -1,0 +1,123 @@
+{
+  "Topic": {
+    "TopicId": "jizzn8ws9egyhzps2dfhwg",
+    "ForumId": "10",
+    "Title": "Command scope for not in specific room",
+    "LastUpdated": "2023-08-28T21:03:04.1737857Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "0d3edc64-09d9-4bed-980a-d8ddf883cf99",
+      "UserId": 579655,
+      "Username": "Jennifer Wren",
+      "AvatarUrl": "https://i.imgur.com/t1XUS1Kb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "When creating a custom command, what do you type into the scope bar for everywhere except one specific room?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>When creating a custom command, what do you type into the scope bar for everywhere except one specific room?</p>\n\n",
+      "PostDate": "2023-08-28T21:03:04.1737857Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "624143d5-a564-4f71-9700-ea3d8afced4e",
+      "UserId": 643545,
+      "Username": "Ip Man",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3ca198fe75de39041c2e4cd0a8852e3c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "hmmm.  Are you trying to make sure the command doesn't work if the player is in a specific room... or \r\nare you trying to make sure the command scopes everything in the game except the objects of a specific room?\r\n\r\nI think if you wanted to make the command simply not work in a specific room, I'd not change the scope, but make the command script include \"if not player.parent=specific room\" or howsoever that's correctly typed.\r\n\r\nIf you're trying to make sure that a room or room's objects are removed from the results of the scope, I think you'd have to do something like finding the list and removing it from the results... \r\n\r\nI'm still pretty beginner at this, so I don't know exactly what to do there, but I'd try browsing \"using lists\" and also maybe this old post from Pixie with examples of useful functions, some of them involve manipulating data from lists: https://textadventures.co.uk/forum/samples/topic/5614/some-useful-functions\r\n\r\nThose are my guesses.  Maybe there is a simple way to remove something from a scope though?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>hmmm.  Are you trying to make sure the command doesn't work if the player is in a specific room... or<br>\nare you trying to make sure the command scopes everything in the game except the objects of a specific room?</p>\n<p>I think if you wanted to make the command simply not work in a specific room, I'd not change the scope, but make the command script include \"if not player.parent=specific room\" or howsoever that's correctly typed.</p>\n<p>If you're trying to make sure that a room or room's objects are removed from the results of the scope, I think you'd have to do something like finding the list and removing it from the results...</p>\n<p>I'm still pretty beginner at this, so I don't know exactly what to do there, but I'd try browsing \"using lists\" and also maybe this old post from Pixie with examples of useful functions, some of them involve manipulating data from lists: https://textadventures.co.uk/forum/samples/topic/5614/some-useful-functions</p>\n<p>Those are my guesses.  Maybe there is a simple way to remove something from a scope though?</p>\n\n",
+      "PostDate": "2023-08-29T01:02:55.6596527Z",
+      "LastEditDate": "2023-08-29T01:03:32.6234826Z",
+      "link": null
+    },
+    {
+      "PostId": "f4c8ebf3-ffa6-4b7d-b3fe-0c57e4a62f6b",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> If you're trying to make sure that a room or room's objects are removed from the results of the scope, I think you'd have to do something like finding the list and removing it from the results...\r\n\r\nIn this case, I would give the command scope `world` (all objects), and then remove the ones you don't want.\r\nYou can do this by giving the command a script attribute named `changecommandscope`, which would contain something like this:\r\n```\r\nforeach (obj, GetAllChildObjects (room_to_exclude)) {\r\n  if (ListContains (items, obj)) {\r\n    list remove (items, obj)\r\n  }\r\n}\r\n```\r\n(the `change commandscope` script gets a special variable `items` listing all the items in scope; which you can modify using `list add` and `list remove`)\r\n\r\nIn case you're interested in other weird scopes, it might be worth knowing that you can put a `changecommandscope` script attribute on any command, or the player, or the room (including rooms containing the current room). It gets passed the following variables so it can decide how to modify the scope:\r\n* `items` - The list to modify\r\n* `command` - The command object\r\n* `variable` - A string like \"object\" or \"object2\", in the case of commands with multiple targets\r\n* `objtype` - The type of object it's trying to get scope for (usually \"object\" or \"exit\")\r\n* `matched` - A dictionary containing objects already matched for this command (so you can make the scope of `object2` depend on which object was chosen for `object1` or similar)",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>If you're trying to make sure that a room or room's objects are removed from the results of the scope, I think you'd have to do something like finding the list and removing it from the results...</p>\n</blockquote>\n<p>In this case, I would give the command scope <code>world</code> (all objects), and then remove the ones you don't want.<br>\nYou can do this by giving the command a script attribute named <code>changecommandscope</code>, which would contain something like this:</p>\n<pre><code>foreach (obj, GetAllChildObjects (room_to_exclude)) {\n  if (ListContains (items, obj)) {\n    list remove (items, obj)\n  }\n}\n</code></pre>\n<p>(the <code>change commandscope</code> script gets a special variable <code>items</code> listing all the items in scope; which you can modify using <code>list add</code> and <code>list remove</code>)</p>\n<p>In case you're interested in other weird scopes, it might be worth knowing that you can put a <code>changecommandscope</code> script attribute on any command, or the player, or the room (including rooms containing the current room). It gets passed the following variables so it can decide how to modify the scope:</p>\n<ul>\n<li><code>items</code> - The list to modify</li>\n<li><code>command</code> - The command object</li>\n<li><code>variable</code> - A string like \"object\" or \"object2\", in the case of commands with multiple targets</li>\n<li><code>objtype</code> - The type of object it's trying to get scope for (usually \"object\" or \"exit\")</li>\n<li><code>matched</code> - A dictionary containing objects already matched for this command (so you can make the scope of <code>object2</code> depend on which object was chosen for <code>object1</code> or similar)</li>\n</ul>\n\n",
+      "PostDate": "2023-08-29T12:36:03.702735Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e9febcc1-785a-4342-9d69-dfcda2789e9f",
+      "UserId": 579655,
+      "Username": "Jennifer Wren",
+      "AvatarUrl": "https://i.imgur.com/t1XUS1Kb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I don't know if I understand change commandscope scripts yet, and I do want to understand those things, but luckily my problem was a lot simpler. I was being allowed to edit everything in the commands except scope. Finally it just started working again, without telling me why. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I don't know if I understand change commandscope scripts yet, and I do want to understand those things, but luckily my problem was a lot simpler. I was being allowed to edit everything in the commands except scope. Finally it just started working again, without telling me why.</p>\n\n",
+      "PostDate": "2023-08-30T04:18:22.5242306Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "03d5057f-4000-4c2f-8d21-3d1acbd5de16",
+      "UserId": 643545,
+      "Username": "Ip Man",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3ca198fe75de39041c2e4cd0a8852e3c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Mr. Angel,  I'd love to learn more about this!\r\n\r\nIs it possible to share an example with these variables labled.  (I'm still not exactly clear on what it means to \"pass\" a variable, but I have a vague sort of sense that it's something we do all the time as we make scripts.  Like inputting parameters by putting them in the parenthesis of a function.\r\n\r\nPlease and thanks for any additional info!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Mr. Angel,  I'd love to learn more about this!</p>\n<p>Is it possible to share an example with these variables labled.  (I'm still not exactly clear on what it means to \"pass\" a variable, but I have a vague sort of sense that it's something we do all the time as we make scripts.  Like inputting parameters by putting them in the parenthesis of a function.</p>\n<p>Please and thanks for any additional info!</p>\n\n",
+      "PostDate": "2023-08-31T21:43:08.8356656Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "b732fd6a-0bc2-4a8e-90be-49ba6f191541",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "If the variables are passed to the script, that just means they can be assumed to exist as local variables to the script. The same as the parameters of a function.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>If the variables are passed to the script, that just means they can be assumed to exist as local variables to the script. The same as the parameters of a function.</p>\n\n",
+      "PostDate": "2023-09-01T11:29:14.6867004Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e4bb37ac-fe8b-4cb2-a96b-232fc0b4ab4b",
+      "UserId": 643545,
+      "Username": "Ip Man",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3ca198fe75de39041c2e4cd0a8852e3c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "and you pass them by putting them in parenthesis?\r\n\r\nor is passing script variables like we do at the top sometimes?\r\n\r\ns = isthisusuallyavariablename?\r\n\r\nI think I'm starting to get it.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>and you pass them by putting them in parenthesis?</p>\n<p>or is passing script variables like we do at the top sometimes?</p>\n<p>s = isthisusuallyavariablename?</p>\n<p>I think I'm starting to get it.</p>\n\n",
+      "PostDate": "2023-09-01T16:46:57.6296317Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "f53c55a9-d7f2-45fc-b271-65889e8a914a",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You pass variables to a script attribute using a dictionary argument to `do`. But in most cases you don't need to; the only context it's normally used in is when the core libraries pass variables to your script (like the variables I mentioned in the scope scripts, `object` in a command, or `result` in a menu response script) - you can just assume that those variables exist.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You pass variables to a script attribute using a dictionary argument to <code>do</code>. But in most cases you don't need to; the only context it's normally used in is when the core libraries pass variables to your script (like the variables I mentioned in the scope scripts, <code>object</code> in a command, or <code>result</code> in a menu response script) - you can just assume that those variables exist.</p>\n\n",
+      "PostDate": "2023-09-01T17:19:41.1029529Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

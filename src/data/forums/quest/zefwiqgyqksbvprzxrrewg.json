@@ -1,0 +1,89 @@
+{
+  "Topic": {
+    "TopicId": "zefwiqgyqksbvprzxrrewg",
+    "ForumId": "10",
+    "Title": "Calling multiple attributes = xyz at a time?",
+    "LastUpdated": "2017-02-11T02:29:49.0087105Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "ff0e3f64-0a6c-46bd-9d72-67f0eccd4c8b",
+      "UserId": 56551,
+      "Username": "XanMag",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4b45a3afd18077f76f6569225c422bdb?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I could solve this by adding a bunch of 'Else If's and swapping out dawn with morning, noon, and afternoon, but I'm sure I will need to have an answer to this eventually so...\r\n\r\nI have seven different parts of the day that get cycled as turns are taken.  I would like to be able to add descriptions to certain objects depending on what period of day it is.  My current code is this:\r\n```\r\nif (twentyfourhours.currenttime = dawn) {\r\n  msg (\"The dozens of villagers here aren't really doing a lot of shopping.  They are milling around, engaged in light-hearted conversation.\")\r\n}\r\n```\r\nWhat can I do to include dawn, morning, noon, and afternoon to this script so I can avoid doing an 'else if' for each scenario?  The printed message is the same for each of those parts of day.  At dusk, evening, and midnight, those descriptions will change and will be placed in an 'else if'.\r\n\r\nThanks in advance!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I could solve this by adding a bunch of 'Else If's and swapping out dawn with morning, noon, and afternoon, but I'm sure I will need to have an answer to this eventually so...</p>\n<p>I have seven different parts of the day that get cycled as turns are taken.  I would like to be able to add descriptions to certain objects depending on what period of day it is.  My current code is this:</p>\n<pre><code>if (twentyfourhours.currenttime = dawn) {\n  msg (\"The dozens of villagers here aren't really doing a lot of shopping.  They are milling around, engaged in light-hearted conversation.\")\n}\n</code></pre>\n<p>What can I do to include dawn, morning, noon, and afternoon to this script so I can avoid doing an 'else if' for each scenario?  The printed message is the same for each of those parts of day.  At dusk, evening, and midnight, those descriptions will change and will be placed in an 'else if'.</p>\n<p>Thanks in advance!</p>\n\n",
+      "PostDate": "2017-02-11T02:29:49.0087105Z",
+      "LastEditDate": "2017-02-11T02:30:13.8288547Z"
+    },
+    {
+      "PostId": "5f7fc91f-e955-497f-b91e-9190eade0ccb",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "One way wouild be to put a flag on those rooms, and then on the game object, in the script that runs when the player enters a room, check if that flag is set, and then do the above code.\r\n\r\nAlternatively, put the code in a function, and have those rooms call the function.\r\n\r\nAs for the code, you could use a `select` command, or text processor commands. Or put the text in a string list, and assign each part of the day a number, 0 to 6, and select from the list based on that (I think that would be my choice). Or have a function that returns a number based on `twentyfourhours.currenttime`, and use that to select from the string list.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>One way wouild be to put a flag on those rooms, and then on the game object, in the script that runs when the player enters a room, check if that flag is set, and then do the above code.</p>\n<p>Alternatively, put the code in a function, and have those rooms call the function.</p>\n<p>As for the code, you could use a <code>select</code> command, or text processor commands. Or put the text in a string list, and assign each part of the day a number, 0 to 6, and select from the list based on that (I think that would be my choice). Or have a function that returns a number based on <code>twentyfourhours.currenttime</code>, and use that to select from the string list.</p>\n\n",
+      "PostDate": "2017-02-11T08:58:53.7181472Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "a17b8933-ea88-40d9-b2c9-0266eb91bd2c",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "there's a few different ways to do this:\r\n\r\n-----------\r\n\r\njust re-arranging your scripting:\r\n\r\n```\r\n(if I understood your post), your 'dusk', 'evening', and 'midnight' don't share the same responses to each other:\r\n\r\nif (twentyfourhours.currenttime = \"dusk\") {\r\n  // blah\r\n} else if (twentyfourhours.currenttime = \"evening\") {\r\n  // blah\r\n} else if (twentyfourhours.currenttime = \"midnight\") {\r\n  // blah\r\n} else { // presuming only 'dawn', 'morning', 'noon', and 'afternoon' remain:\r\n  msg (\"The dozens of villagers here aren't really doing a lot of shopping.  They are milling around, engaged in light-hearted conversation.\")\r\n}\r\n\r\n-------------------------------\r\n\r\n// if your 'dusk', 'evening', and 'midnight' do share the same responses to each other:\r\n\r\nif (twentyfourhours.currenttime = \"dusk\" or twentyfourhours.currenttime = \"evening\" or twentyfourhours.currenttime = \"midnight\") {\r\n  // blah\r\n} else { // presuming only 'dawn', 'morning', 'noon', and 'afternoon' remain:\r\n  msg (\"The dozens of villagers here aren't really doing a lot of shopping.  They are milling around, engaged in light-hearted conversation.\")\r\n}\r\n```\r\n\r\n---------------\r\n\r\nusing Dictionary Attributes (using a String Dictionary for the example):\r\n\r\n(Pixie and Jay, probably know a way of using a VARIABLE to hold your same response (for dawn/morning/noon/afternoon), and apply/incorporate it to/into the dictionary's items of dawn, morning, noon, afternoon. I'm still not capable/understanding of the way that this can be done, so I've got to copy and paste the same response for each of them)\r\n\r\n```\r\n<object name=\"twentyfourhours\">\r\n  <attr name=\"currenttime\" type=\"string\">unknown</attr>\r\n</object>\r\n\r\n<object name=\"hour_data_object\">\r\n  <attr name=\"hour_stringlist_attribute\" type=\"simplestringlist\">dawn; morning; noon; afternoon; dusk; evening; midnight</attr> // I just added this List Attribute out of habit/completeness, as it's usually useful/needed, as something in your game will probably need a list of your hour strings, but this is not needed in any way for this (simple) example (as it stands now)\r\n\r\n  <attr name=\"hour_stringdictionary_attribute\" type=\"simplestringdictionary\">dawn = \"blah for dawn\"; evening = \"blah for evening\"; midnight = \"blah for midnight\"; dusk = \"The dozens of villagers here aren't really doing a lot of shopping.  They are milling around, engaged in light-hearted conversation.\"; morning = \"The dozens of villagers here aren't really doing a lot of shopping.  They are milling around, engaged in light-hearted conversation.\"; noon = \"The dozens of villagers here aren't really doing a lot of shopping.  They are milling around, engaged in light-hearted conversation.\"; afternoon = \"The dozens of villagers here aren't really doing a lot of shopping.  They are milling around, engaged in light-hearted conversation.\"</attr>\r\n</object>\r\n\r\n// scripting:\r\n\r\nstring_variable = StringDictionaryItem (hour_data_object.hour_stringdictionary_attribute, twentyfourhours.currenttime)\r\nmsg (string_variable)\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>there's a few different ways to do this:</p>\n<hr>\n<p>just re-arranging your scripting:</p>\n<pre><code>(if I understood your post), your 'dusk', 'evening', and 'midnight' don't share the same responses to each other:\n\nif (twentyfourhours.currenttime = \"dusk\") {\n  // blah\n} else if (twentyfourhours.currenttime = \"evening\") {\n  // blah\n} else if (twentyfourhours.currenttime = \"midnight\") {\n  // blah\n} else { // presuming only 'dawn', 'morning', 'noon', and 'afternoon' remain:\n  msg (\"The dozens of villagers here aren't really doing a lot of shopping.  They are milling around, engaged in light-hearted conversation.\")\n}\n\n-------------------------------\n\n// if your 'dusk', 'evening', and 'midnight' do share the same responses to each other:\n\nif (twentyfourhours.currenttime = \"dusk\" or twentyfourhours.currenttime = \"evening\" or twentyfourhours.currenttime = \"midnight\") {\n  // blah\n} else { // presuming only 'dawn', 'morning', 'noon', and 'afternoon' remain:\n  msg (\"The dozens of villagers here aren't really doing a lot of shopping.  They are milling around, engaged in light-hearted conversation.\")\n}\n</code></pre>\n<hr>\n<p>using Dictionary Attributes (using a String Dictionary for the example):</p>\n<p>(Pixie and Jay, probably know a way of using a VARIABLE to hold your same response (for dawn/morning/noon/afternoon), and apply/incorporate it to/into the dictionary's items of dawn, morning, noon, afternoon. I'm still not capable/understanding of the way that this can be done, so I've got to copy and paste the same response for each of them)</p>\n<pre><code>&lt;object name=\"twentyfourhours\"&gt;\n  &lt;attr name=\"currenttime\" type=\"string\"&gt;unknown&lt;/attr&gt;\n&lt;/object&gt;\n\n&lt;object name=\"hour_data_object\"&gt;\n  &lt;attr name=\"hour_stringlist_attribute\" type=\"simplestringlist\"&gt;dawn; morning; noon; afternoon; dusk; evening; midnight&lt;/attr&gt; // I just added this List Attribute out of habit/completeness, as it's usually useful/needed, as something in your game will probably need a list of your hour strings, but this is not needed in any way for this (simple) example (as it stands now)\n\n  &lt;attr name=\"hour_stringdictionary_attribute\" type=\"simplestringdictionary\"&gt;dawn = \"blah for dawn\"; evening = \"blah for evening\"; midnight = \"blah for midnight\"; dusk = \"The dozens of villagers here aren't really doing a lot of shopping.  They are milling around, engaged in light-hearted conversation.\"; morning = \"The dozens of villagers here aren't really doing a lot of shopping.  They are milling around, engaged in light-hearted conversation.\"; noon = \"The dozens of villagers here aren't really doing a lot of shopping.  They are milling around, engaged in light-hearted conversation.\"; afternoon = \"The dozens of villagers here aren't really doing a lot of shopping.  They are milling around, engaged in light-hearted conversation.\"&lt;/attr&gt;\n&lt;/object&gt;\n\n// scripting:\n\nstring_variable = StringDictionaryItem (hour_data_object.hour_stringdictionary_attribute, twentyfourhours.currenttime)\nmsg (string_variable)\n</code></pre>\n\n",
+      "PostDate": "2017-02-11T09:00:17.7783263Z",
+      "LastEditDate": "2017-02-11T09:10:44.5206551Z"
+    },
+    {
+      "PostId": "d2469c33-ad16-4b4d-8bf7-ca6a677535a8",
+      "UserId": 260569,
+      "Username": "DarkLizerd",
+      "AvatarUrl": "http://i.imgur.com/BXvaaIub.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Switch is an alternative, and an improvement over if, else if chains...\r\nand may be easer to work with...\r\nStill learning my self...\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Switch is an alternative, and an improvement over if, else if chains...<br>\nand may be easer to work with...<br>\nStill learning my self...</p>\n\n",
+      "PostDate": "2017-03-18T04:57:07.9029216Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "0b68a323-a0cf-400e-ab36-c2368795f5a4",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "'switch/case/default' and 'if/else if/else' blocks/functions are exactly the same functionally (barring me testing just how much expression/scripting the 'switch/case' blocks/functions is programmed to handle/parse compared to that of the 'if/else if' block/function), so it's really just a matter how which design/look you like the best and/or for that type of code design you're doing.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>'switch/case/default' and 'if/else if/else' blocks/functions are exactly the same functionally (barring me testing just how much expression/scripting the 'switch/case' blocks/functions is programmed to handle/parse compared to that of the 'if/else if' block/function), so it's really just a matter how which design/look you like the best and/or for that type of code design you're doing.</p>\n\n",
+      "PostDate": "2017-03-18T10:34:58.4749356Z",
+      "LastEditDate": "2017-03-18T10:36:14.3216182Z"
+    },
+    {
+      "PostId": "24054917-96fe-43b3-a36f-c96fe3380d0e",
+      "UserId": 25543,
+      "Username": "Silver",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/13024be5ccbb463906b024d5bd3cb5e8?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I would set true/false flags for the time of day then use the text processor. \r\n\r\n{if time.morning:it is morning}\r\n{if time.afternoon:it is afternoon}\r\n{if time.evening:it is evening} \r\n\r\nNote: you'll need to create an object called time to handle the coding. \r\n\r\nI have a room in my game that is light or dark. It adds a massive amount of work changing just that one thing - all objects neeed to have variables not just the room description. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I would set true/false flags for the time of day then use the text processor.</p>\n<p>{if time.morning:it is morning}<br>\n{if time.afternoon:it is afternoon}<br>\n{if time.evening:it is evening}</p>\n<p>Note: you'll need to create an object called time to handle the coding.</p>\n<p>I have a room in my game that is light or dark. It adds a massive amount of work changing just that one thing - all objects neeed to have variables not just the room description.</p>\n\n",
+      "PostDate": "2017-03-18T15:24:29.69722Z",
+      "LastEditDate": "2017-03-18T16:34:33.7166929Z"
+    }
+  ]
+}

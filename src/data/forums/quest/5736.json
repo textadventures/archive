@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "5736",
+    "ForumId": "10",
+    "Title": "Torch already on.",
+    "LastUpdated": "2015-12-16T00:09:41+00:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "39614",
+      "UserId": 0,
+      "Username": "OurJud",
+      "UserAvatar": "7473_1417206896.jpg",
+      "UserGravatar": "7892e1059c02a91b34ffd60deb7402ff",
+      "EditableText": "Can anyone see why this isn't working?\n\nI have a command set for 'use torch; switch on torch; etc etc etc'\n\nThen I run this script, which should be checking to see if the torch is on, so that a double command of 'switch on torch' should get &quot;It's already on.&quot;\n\nInstead, it just throws up the room description again.\n\n[code:32g05pmn]if (game&#46;pov&#46;parent = bunker) {\n  msg (&quot;The moist walls glisten in the light from the torch&#46; On the floor, scattered bones are caught in the beam&#46;&lt;br/&gt;&lt;br/&gt;The tunnel continues west&#46; Way out is east&#46;&quot;)\n  SetObjectFlagOn (player, &quot;torchon&quot;)\n}\nelse {\n  if (game&#46;pov&#46;parent = bunker) {\n    ShowRoomDescription\n    SetObjectFlagOn (player, &quot;torchon&quot;)\n  }\n  if (game&#46;pov&#46;parent = bunker tunnel) {\n    ShowRoomDescription\n    SetObjectFlagOn (player, &quot;torchon&quot;)\n  }\n  if (game&#46;pov&#46;parent = bunker room) {\n    ShowRoomDescription\n    SetObjectFlagOn (player, &quot;torchon&quot;)\n  }\n  if (GetBoolean(player, &quot;torchon&quot;)) {\n    msg (&quot;It's already on&#46;&quot;)\n  }\n  else {\n    msg (&quot;No need for a torch here&#46;&quot;)\n  }\n}[/code:32g05pmn]",
+      "EditableFormat": "bbcode",
+      "HTML": "Can anyone see why this isn't working?<br/><br/>I have a command set for 'use torch; switch on torch; etc etc etc'<br/><br/>Then I run this script, which should be checking to see if the torch is on, so that a double command of 'switch on torch' should get &quot;It's already on.&quot;<br/><br/>Instead, it just throws up the room description again.<br/><br/><pre><code>if (game&#46;pov&#46;parent = bunker) {<br/>  msg (&quot;The moist walls glisten in the light from the torch&#46; On the floor, scattered bones are caught in the beam&#46;&lt;br/&gt;&lt;br/&gt;The tunnel continues west&#46; Way out is east&#46;&quot;)<br/>  SetObjectFlagOn (player, &quot;torchon&quot;)<br/>}<br/>else {<br/>  if (game&#46;pov&#46;parent = bunker) {<br/>    ShowRoomDescription<br/>    SetObjectFlagOn (player, &quot;torchon&quot;)<br/>  }<br/>  if (game&#46;pov&#46;parent = bunker tunnel) {<br/>    ShowRoomDescription<br/>    SetObjectFlagOn (player, &quot;torchon&quot;)<br/>  }<br/>  if (game&#46;pov&#46;parent = bunker room) {<br/>    ShowRoomDescription<br/>    SetObjectFlagOn (player, &quot;torchon&quot;)<br/>  }<br/>  if (GetBoolean(player, &quot;torchon&quot;)) {<br/>    msg (&quot;It's already on&#46;&quot;)<br/>  }<br/>  else {<br/>    msg (&quot;No need for a torch here&#46;&quot;)<br/>  }<br/>}</code></pre>",
+      "PostDate": "2015-12-15T16:24:16+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39615",
+      "UserId": 0,
+      "Username": "OurJud",
+      "UserAvatar": "7473_1417206896.jpg",
+      "UserGravatar": "7892e1059c02a91b34ffd60deb7402ff",
+      "EditableText": "Never mind. The [b:ti0llxqx]torch check if [/b:ti0llxqx]needed to go at the top of the list.\n\nThat's just another thing I can't get my head around with these damned ifs... that they have to go in order.",
+      "EditableFormat": "bbcode",
+      "HTML": "Never mind. The <span style=\"font-weight:bold;\">torch check if </span>needed to go at the top of the list.<br/><br/>That's just another thing I can't get my head around with these damned ifs... that they have to go in order.",
+      "PostDate": "2015-12-15T16:32:17+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39620",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "The best way to do something like this is to think of all the times it will NOT work, and test for them.\n\nStart from this:\n\nIf the torch is already turned on\nIf the player does not have the torch\nIf the battery is dead\nIf the room is well lit (name does not start &quot;bunker&quot;)\nOtherwise do it\n\nThen build a series if if/else around that.\n\n[code:2k6uz0q1]if (GetBoolean(player, &quot;torchon&quot;)) {\n  msg (&quot;It's already on&#46;&quot;)\n}\nelse if (not Got(torch)) {\n  msg (&quot;You don't have it&#46;&quot;)\n}\nelse if (torch&#46;dead) {\n  msg (&quot;It's dead&#46;&quot;)\n}\nelse if (not StartsWith(player&#46;name&#46;name, &quot;bunker&quot;)) {\n  msg (&quot;You don't need a torch here&#46;&quot;)\n}\nelse {\n  msg (&quot;You turn the torch on&#46;&quot;)\n  ShowRoomDescription\n  SetObjectFlagOn (player, &quot;torchon&quot;)\n}[/code:2k6uz0q1]",
+      "EditableFormat": "bbcode",
+      "HTML": "The best way to do something like this is to think of all the times it will NOT work, and test for them.<br/><br/>Start from this:<br/><br/>If the torch is already turned on<br/>If the player does not have the torch<br/>If the battery is dead<br/>If the room is well lit (name does not start &quot;bunker&quot;)<br/>Otherwise do it<br/><br/>Then build a series if if/else around that.<br/><br/><pre><code>if (GetBoolean(player, &quot;torchon&quot;)) {<br/>  msg (&quot;It's already on&#46;&quot;)<br/>}<br/>else if (not Got(torch)) {<br/>  msg (&quot;You don't have it&#46;&quot;)<br/>}<br/>else if (torch&#46;dead) {<br/>  msg (&quot;It's dead&#46;&quot;)<br/>}<br/>else if (not StartsWith(player&#46;name&#46;name, &quot;bunker&quot;)) {<br/>  msg (&quot;You don't need a torch here&#46;&quot;)<br/>}<br/>else {<br/>  msg (&quot;You turn the torch on&#46;&quot;)<br/>  ShowRoomDescription<br/>  SetObjectFlagOn (player, &quot;torchon&quot;)<br/>}</code></pre>",
+      "PostDate": "2015-12-15T20:23:07+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39622",
+      "UserId": 0,
+      "Username": "OurJud",
+      "UserAvatar": "7473_1417206896.jpg",
+      "UserGravatar": "7892e1059c02a91b34ffd60deb7402ff",
+      "EditableText": "Thanks, TP - most useful! I shall add this to my ever-growing library of useful scripts.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks, TP - most useful! I shall add this to my ever-growing library of useful scripts.",
+      "PostDate": "2015-12-16T00:09:41+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

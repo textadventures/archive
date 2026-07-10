@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "gme-oopbk0iwszfjefaaug",
+    "ForumId": "10",
+    "Title": "permanently deleting objects from the game.",
+    "LastUpdated": "2024-04-07T17:59:28.7620743Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "f762a2ea-68dd-4a9e-bfb4-e28608ac4d27",
+      "UserId": 428580,
+      "Username": "killalao",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5db8cd09d649161e45eb9efb8ba12e33?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Is there a way to do it so the save file won't eventually clog up with hundreds of extra objects or characters?\r\nthe game I have set up now creates objects by copying a single object with all the attributes an object of that type could possibly need and then assigning attributes based on name \r\nfor ex, if I want an Iron dagger, i can go genweapongen(iron,dagger) which copies a generic weapon,  determines that it is a dagger, asssigns stats based on that and adds more to it based on it being iron or whatever other material if it's defined. the fun part is you could litterally put anything as the first word and you'll get it but the stats will be crap if it's not a particular material. \r\nthere is a similiar process for items and others. items is just itemgen(whatever the item is)\r\nand enemies is enemgen(whatever the enemy is)\r\nanyway, so if I sell the iron dagger at the shop, how would I delete it from the game as it isn't needed anymore?\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Is there a way to do it so the save file won't eventually clog up with hundreds of extra objects or characters?<br>\nthe game I have set up now creates objects by copying a single object with all the attributes an object of that type could possibly need and then assigning attributes based on name<br>\nfor ex, if I want an Iron dagger, i can go genweapongen(iron,dagger) which copies a generic weapon,  determines that it is a dagger, asssigns stats based on that and adds more to it based on it being iron or whatever other material if it's defined. the fun part is you could litterally put anything as the first word and you'll get it but the stats will be crap if it's not a particular material.<br>\nthere is a similiar process for items and others. items is just itemgen(whatever the item is)<br>\nand enemies is enemgen(whatever the enemy is)<br>\nanyway, so if I sell the iron dagger at the shop, how would I delete it from the game as it isn't needed anymore?</p>\n\n",
+      "PostDate": "2024-04-07T17:59:28.7620743Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "f9725c8a-1a6f-4707-96b8-dce07fa6ef8c",
+      "UserId": 643545,
+      "Username": "Ip Man",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3ca198fe75de39041c2e4cd0a8852e3c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I believe it's the \"Destroy\" function that completely deletes an object:\r\n\r\nhttps://docs.textadventures.co.uk/quest/scripts/destroy.html\r\n\r\nP.S.   Your system sounds pretty cool.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I believe it's the \"Destroy\" function that completely deletes an object:</p>\n<p>https://docs.textadventures.co.uk/quest/scripts/destroy.html</p>\n<p>P.S.   Your system sounds pretty cool.</p>\n\n",
+      "PostDate": "2024-04-07T20:55:01.2048076Z",
+      "LastEditDate": "2024-04-07T21:01:32.2678486Z",
+      "link": null
+    },
+    {
+      "PostId": "52c40e45-f628-4bba-9148-0612dc3e01d6",
+      "UserId": 428580,
+      "Username": "killalao",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5db8cd09d649161e45eb9efb8ba12e33?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "If  do that though I get \"Error running script: Error compiling expression 'selitm': RootExpressionElement: Cannot convert type 'Element' to expression result of 'String'\"",
+      "EditableFormat": "markdown",
+      "HTML": "<p>If  do that though I get \"Error running script: Error compiling expression 'selitm': RootExpressionElement: Cannot convert type 'Element' to expression result of 'String'\"</p>\n\n",
+      "PostDate": "2024-04-12T20:27:33.4651382Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "5855f365-68c0-41c6-8515-4836d2573c94",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> If do that though I get \"Error running script: Error compiling expression 'selitm': RootExpressionElement: Cannot convert type 'Element' to expression result of 'String'\"\r\n\r\nThe parameter to `destroy` is the name of the object, not the object itself; because variables pointing to the object become invalid when it is deleted. So you would have something like:\r\n```\r\ndestroy (\"stick95\")\r\n```\r\nor in a command:\r\n```\r\ndestroy (object.name)\r\n```\r\n\r\nHowever, beware of using this with commands that can handle multiple objects; or in places like an object's drop script.\r\nBecause a line like:\r\n```\r\nforeach (obj, some_objectlist) {\r\n```\r\nwill crash the game if an object in `some_objectlist` is destroyed before the loop ends. This is why you can't destroy an object from its drop script – because things like \"drop all\" work, which means that the drop command uses foreach to process a list of objects, even though there's usually only one object in the list.\r\n\r\nSo if you want to destroy objects in a situation like this, you would make a turnscript (let's call it `destruction`) with a script like:\r\n```\r\nif (HasAttribute (game, \"to_destroy\")) {\r\n  foreach (objectname, game.to_destroy) {\r\n    destroy (objectname)\r\n  }\r\n}\r\nthis.enabled = false\r\n```\r\nand when you want to destroy an object, you would do:\r\n```\r\nif (not HasAttribute (game, \"to_destroy\")) {\r\n  game.to_destroy = NewStringList()\r\n}\r\nlist add (game.to_destroy, someobject.name)\r\n```\r\n\r\nHope that all makes sense :D",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>If do that though I get \"Error running script: Error compiling expression 'selitm': RootExpressionElement: Cannot convert type 'Element' to expression result of 'String'\"</p>\n</blockquote>\n<p>The parameter to <code>destroy</code> is the name of the object, not the object itself; because variables pointing to the object become invalid when it is deleted. So you would have something like:</p>\n<pre><code>destroy (\"stick95\")\n</code></pre>\n<p>or in a command:</p>\n<pre><code>destroy (object.name)\n</code></pre>\n<p>However, beware of using this with commands that can handle multiple objects; or in places like an object's drop script.<br>\nBecause a line like:</p>\n<pre><code>foreach (obj, some_objectlist) {\n</code></pre>\n<p>will crash the game if an object in <code>some_objectlist</code> is destroyed before the loop ends. This is why you can't destroy an object from its drop script – because things like \"drop all\" work, which means that the drop command uses foreach to process a list of objects, even though there's usually only one object in the list.</p>\n<p>So if you want to destroy objects in a situation like this, you would make a turnscript (let's call it <code>destruction</code>) with a script like:</p>\n<pre><code>if (HasAttribute (game, \"to_destroy\")) {\n  foreach (objectname, game.to_destroy) {\n    destroy (objectname)\n  }\n}\nthis.enabled = false\n</code></pre>\n<p>and when you want to destroy an object, you would do:</p>\n<pre><code>if (not HasAttribute (game, \"to_destroy\")) {\n  game.to_destroy = NewStringList()\n}\nlist add (game.to_destroy, someobject.name)\n</code></pre>\n<p>Hope that all makes sense :D</p>\n\n",
+      "PostDate": "2024-04-14T08:03:23.8963008Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "f37be4f0-fdef-41b3-8eb6-d5b5e6570aff",
+      "UserId": 643545,
+      "Username": "Ip Man",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/3ca198fe75de39041c2e4cd0a8852e3c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I think I understand most of it.  But I got a little lost because the solution to crashing the game by destroying objects in a list was to create lists to destroy objects from.  \r\n\r\nDoes it mean that it will crash if the object being destroyed is in a list with objects that aren't being destroyed?  So you have to make a special \"destroy\" list?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I think I understand most of it.  But I got a little lost because the solution to crashing the game by destroying objects in a list was to create lists to destroy objects from.</p>\n<p>Does it mean that it will crash if the object being destroyed is in a list with objects that aren't being destroyed?  So you have to make a special \"destroy\" list?</p>\n\n",
+      "PostDate": "2024-04-19T03:05:01.3812568Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "781f1124-b584-4e73-9687-df45d89520a7",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> I think I understand most of it. But I got a little lost because the solution to crashing the game by destroying objects in a list was to create lists to destroy objects from.\r\n\r\nWhen an object is destroyed, all variables pointing to it become empty, and it's removed from all lists that contain it. This is a problem with `foreach`, which requires the list not to change while it's running.\r\n\r\nIf you look, you'll see that the `to_destroy` list is a stringlist, containing the *names* of the objects to destroy. Unlike an objectlist, which can only contain existing objects, a stringlist is allowed to contain strings which are no longer equal to an object's name.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>I think I understand most of it. But I got a little lost because the solution to crashing the game by destroying objects in a list was to create lists to destroy objects from.</p>\n</blockquote>\n<p>When an object is destroyed, all variables pointing to it become empty, and it's removed from all lists that contain it. This is a problem with <code>foreach</code>, which requires the list not to change while it's running.</p>\n<p>If you look, you'll see that the <code>to_destroy</code> list is a stringlist, containing the <em>names</em> of the objects to destroy. Unlike an objectlist, which can only contain existing objects, a stringlist is allowed to contain strings which are no longer equal to an object's name.</p>\n\n",
+      "PostDate": "2024-04-19T05:52:30.4790427Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

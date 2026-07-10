@@ -1,0 +1,107 @@
+{
+  "Topic": {
+    "TopicId": "4835",
+    "ForumId": "15",
+    "Title": "GitHub repository",
+    "LastUpdated": "2014-11-29T16:25:43+00:00",
+    "ReplyCount": 7
+  },
+  "Posts": [
+    {
+      "PostId": "32132",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "I've set up the repository here: <!-- m --><a class=\"postlink\" href=\"https://github.com/textadventures/questkit\">https://github.com/textadventures/questkit</a><!-- m -->\n\nI've checked in the sample file format, together with what the generated JavaScript for that file would be.\n\nNext step, write enough of the JavaScript framework so that small sample game works.\n\nThen, write the converter/&quot;compiler&quot;.\n\nThen flesh out all the rest of the features and it's done. Simple as that <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "I've set up the repository here: <!-- m --><a class=\"postlink\" href=\"https://github.com/textadventures/questkit\">https://github.com/textadventures/questkit</a><!-- m --><br/><br/>I've checked in the sample file format, together with what the generated JavaScript for that file would be.<br/><br/>Next step, write enough of the JavaScript framework so that small sample game works.<br/><br/>Then, write the converter/&quot;compiler&quot;.<br/><br/>Then flesh out all the rest of the features and it's done. Simple as that <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2014-11-28T19:00:36+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32135",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "An initial thought (and I'm sure I'll have more): the goal I had with my response library was to try to unify things, so that you could treat everything the same, whether it be a room description, a command processor, conversation/dialogue or async actions. I realize that the current Quest model is being redone in a JS format, but I'd like to throw in the possibility of doing some unification - assuming I can come up with a reasonable plan.\n\nThings you might like a command to do:\n- run script\n- output text\n- set variables\n- other?\n\nI think a first step would the first two. For example, the sample file starts off with this:\n\n[code:3n2prpul]command&#58;\npattern&#58; say #text#\nscript&#058;\n\tfunction(text) {\n\t\tmsg (&quot;You say '&quot; + text + &quot;', but nobody replies&#46;&quot;);\n\t}\n[/code:3n2prpul]\nThis command really is just outputting some text. It would be great if you could just do something like:\n\n[code:3n2prpul]command&#58;\npattern&#58; say #text#\ntext&#58; You say {text}, but nobody replies&#46;[/code:3n2prpul]\n\nYou might to have both text and script&#058;\n\n[code:3n2prpul]command&#58;\npattern&#58; take #object#\ntext&#58; You take {object}&#46;\nscript&#058;\n\tfunction(object) {\n\t\tsetParent(object,  &quot;player&quot;);\n\t}\n[/code:3n2prpul]\nA room description might want script as well:\n\n[code:3n2prpul]location&#58; lounge\ndescription&#58; \n        text&#58; This is quite a plain lounge with an old beige carpet and peeling wallpaper&#46;\n        script&#058; \n\tfunction(object) {\n\t\t// set some flag or start a timer or something&#46;\n\t}\nsouth&#58; kitchen[/code:3n2prpul]\n\nI realize that there might be a question of order. I know for my code, I just picked one. (e.g. text came first, then scripts, then state setting, etc). But I think if we could incorporate some generalizing ideas into this, where all the game responses (whatever they may be - descriptions, command handling, object descriptions, etc) are all handled the same way, then it could make life easier for people who don't know how to script very well and just want simple things to happen.\n\nIf you wanted to go beyond that, you could pick up some other ideas I had like setting variables, etc. <!-- s;) --><img src=\"{SMILIES_PATH}/icon_wink.gif\" alt=\";)\" title=\"Wink\" /><!-- s;) -->\n\n[code:3n2prpul]command&#58;\npattern&#58; push elevator button\ntext&#58; The elevator button lights up&#46; (Some sort of conditional here?)\nsets&#58; elevator&#46;called[/code:3n2prpul]\n\nAnd then other code would key off of that. Anything to make common things not so &quot;scripty&quot;. lol",
+      "EditableFormat": "bbcode",
+      "HTML": "An initial thought (and I'm sure I'll have more): the goal I had with my response library was to try to unify things, so that you could treat everything the same, whether it be a room description, a command processor, conversation/dialogue or async actions. I realize that the current Quest model is being redone in a JS format, but I'd like to throw in the possibility of doing some unification - assuming I can come up with a reasonable plan.<br/><br/>Things you might like a command to do:<br/>- run script<br/>- output text<br/>- set variables<br/>- other?<br/><br/>I think a first step would the first two. For example, the sample file starts off with this:<br/><br/><pre><code>command&#58;<br/>pattern&#58; say #text#<br/>script&#058;<br/>\tfunction(text) {<br/>\t\tmsg (&quot;You say '&quot; + text + &quot;', but nobody replies&#46;&quot;);<br/>\t}<br/></code></pre><br/>This command really is just outputting some text. It would be great if you could just do something like:<br/><br/><pre><code>command&#58;<br/>pattern&#58; say #text#<br/>text&#58; You say {text}, but nobody replies&#46;</code></pre><br/><br/>You might to have both text and script&#058;<br/><br/><pre><code>command&#58;<br/>pattern&#58; take #object#<br/>text&#58; You take {object}&#46;<br/>script&#058;<br/>\tfunction(object) {<br/>\t\tsetParent(object,  &quot;player&quot;);<br/>\t}<br/></code></pre><br/>A room description might want script as well:<br/><br/><pre><code>location&#58; lounge<br/>description&#58; <br/>        text&#58; This is quite a plain lounge with an old beige carpet and peeling wallpaper&#46;<br/>        script&#058; <br/>\tfunction(object) {<br/>\t\t// set some flag or start a timer or something&#46;<br/>\t}<br/>south&#58; kitchen</code></pre><br/><br/>I realize that there might be a question of order. I know for my code, I just picked one. (e.g. text came first, then scripts, then state setting, etc). But I think if we could incorporate some generalizing ideas into this, where all the game responses (whatever they may be - descriptions, command handling, object descriptions, etc) are all handled the same way, then it could make life easier for people who don't know how to script very well and just want simple things to happen.<br/><br/>If you wanted to go beyond that, you could pick up some other ideas I had like setting variables, etc. <!-- s;) --><img src=\"{SMILIES_PATH}/icon_wink.gif\" alt=\";)\" title=\"Wink\" /><!-- s;) --><br/><br/><pre><code>command&#58;<br/>pattern&#58; push elevator button<br/>text&#58; The elevator button lights up&#46; (Some sort of conditional here?)<br/>sets&#58; elevator&#46;called</code></pre><br/><br/>And then other code would key off of that. Anything to make common things not so &quot;scripty&quot;. lol",
+      "PostDate": "2014-11-28T19:18:04+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32137",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "...although I do have to tell myself that this is the &quot;low-level&quot; code, and people would be seeing a higher level interface (blocky, etc) that could have such macro functions handled in a uniform way.\n\nI wonder if at this level, the &quot;script&quot; blocks could be simplified by having implied parameters and getting rid of the JS preamble and closing brace,...?\n\n[code:b5jfrbmn]command&#58;\npattern&#58; say #text#\nscript&#058;\n    msg (&quot;You say '&quot; + text + &quot;', but nobody replies&#46;&quot;);[/code:b5jfrbmn]",
+      "EditableFormat": "bbcode",
+      "HTML": "...although I do have to tell myself that this is the &quot;low-level&quot; code, and people would be seeing a higher level interface (blocky, etc) that could have such macro functions handled in a uniform way.<br/><br/>I wonder if at this level, the &quot;script&quot; blocks could be simplified by having implied parameters and getting rid of the JS preamble and closing brace,...?<br/><br/><pre><code>command&#58;<br/>pattern&#58; say #text#<br/>script&#058;<br/>    msg (&quot;You say '&quot; + text + &quot;', but nobody replies&#46;&quot;);</code></pre>",
+      "PostDate": "2014-11-28T19:28:22+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32138",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "Just to return to my initial thought, though (sorry for all of this), I would still like to see a consistency across the board: for the room description, I want to &quot;do this&quot;. For a command, I want to &quot;do this&quot;. When the player examines an object, I want to &quot;do this&quot;.\n\nWhere &quot;do this&quot; is the same in all cases, whatever that is (text, script, etc). But done uniformly, so that if a game author wants to start out with text but then move to something more advanced, they're not switching paradigms or suddenly doing something completely different, where all they learned so far needs to be thrown away (as it is now with the text/script switch for descriptions, for example). If that makes sense. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Just to return to my initial thought, though (sorry for all of this), I would still like to see a consistency across the board: for the room description, I want to &quot;do this&quot;. For a command, I want to &quot;do this&quot;. When the player examines an object, I want to &quot;do this&quot;.<br/><br/>Where &quot;do this&quot; is the same in all cases, whatever that is (text, script, etc). But done uniformly, so that if a game author wants to start out with text but then move to something more advanced, they're not switching paradigms or suddenly doing something completely different, where all they learned so far needs to be thrown away (as it is now with the text/script switch for descriptions, for example). If that makes sense. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2014-11-28T19:37:40+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32158",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "I like this idea. At the moment, Quest has attributes which can be [i:3v7w7qns]either[/i:3v7w7qns] text or script - but in QuestKit, scripts aren't attributes, so there's nothing to stop us using both at the same time.",
+      "EditableFormat": "bbcode",
+      "HTML": "I like this idea. At the moment, Quest has attributes which can be <span style=\"font-style:italic;\">either</span> text or script - but in QuestKit, scripts aren't attributes, so there's nothing to stop us using both at the same time.",
+      "PostDate": "2014-11-29T10:17:01+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32178",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "I don't think that it makes sense.\nTake Jays example:\n[code:1dc9z0k2]command&#58;\npattern&#58; take #object#\ntext&#58; You take {object}&#46;\nscript&#058;\n   function(object) {\n      setParent(object,  &quot;player&quot;);\n   }\n[/code:1dc9z0k2]\n\nWhat will you do first ? Printing the text? But in the script you decide not to take the item because it's too heavy. Yes, this all works for simple games and average Quest users, but is this our destination?",
+      "EditableFormat": "bbcode",
+      "HTML": "I don't think that it makes sense.<br/>Take Jays example:<br/><pre><code>command&#58;<br/>pattern&#58; take #object#<br/>text&#58; You take {object}&#46;<br/>script&#058;<br/>   function(object) {<br/>      setParent(object,  &quot;player&quot;);<br/>   }<br/></code></pre><br/><br/>What will you do first ? Printing the text? But in the script you decide not to take the item because it's too heavy. Yes, this all works for simple games and average Quest users, but is this our destination?",
+      "PostDate": "2014-11-29T16:04:38+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32180",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "Then you don't specify any text, and the script handles it all - just the same as now.",
+      "EditableFormat": "bbcode",
+      "HTML": "Then you don't specify any text, and the script handles it all - just the same as now.",
+      "PostDate": "2014-11-29T16:08:49+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "32182",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "Then you could do it completely with script.. and I see that Jay wrote this in his post, too. Sorry",
+      "EditableFormat": "bbcode",
+      "HTML": "Then you could do it completely with script.. and I see that Jay wrote this in his post, too. Sorry",
+      "PostDate": "2014-11-29T16:25:43+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

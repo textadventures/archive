@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "lajcnxaiku28c_0e3dxscw",
+    "ForumId": "10",
+    "Title": "Exclude Irrelevant Objects from Use Menu",
+    "LastUpdated": "2020-05-26T20:09:42.3617049Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "aac5df91-804d-44f5-97c1-c64f48656f40",
+      "UserId": 281669,
+      "Username": "primaltare",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/c367d1a820ae86df4a7cb4b9d378f4bf?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hello! I'm pretty new to Quest and am not very familiar with its coding documentation - so, I was hoping someone could help me modify a built-in function to meet my needs.\r\n\r\nHere's the scenario: I have an object called ```glass_shard```, and ```glass_shard``` can only be used on exactly ONE object in a certain room. Under \"Use this on (other object)\", there is only ```bubblewrap```. There is no other object this will have a meaningful interaction with if it's interacted with, and I purposefully omitted every other object in the room from the list under \"Handle Objects Individually\". The command bar is disabled in my game, so it's absolutely crucial that a list comes up if a player attempts \"Use\" with an object in their inventory.\r\n\r\nHowever, when I check the box for \"Display menu of objects this can be used on\", and I attempt to use ```glass_shard``` in my inventory, an ordered list of EVERY object in the room appears - even if the Use/Give attribute is not turned on. I want to limit this selection to ONLY the objects that `glass_shard` will interact with (only `bubblewrap` in this case). I assume I need to modify the source for CreateUseMenuList(), but I'm not sure how to modify it to exclude objects that will not have meaningful interactions with the selected inventory object. Here is the code for CreateUseMenuList():\r\n\r\n```\r\nobjectlist = NewObjectList()\r\nobjectlist = ScopeReachableInventory()\r\nobjectlist = ListCombine (objectlist, ScopeReachableNotHeld())\r\nexcludelist = NewObjectList()\r\nlist add (excludelist, game.pov)\r\nlist add (excludelist, object)\r\ncandidates = NewObjectList()\r\ncandidates = ListExclude(RemoveSceneryObjects(objectlist), excludelist)\r\nreturn (candidates)\r\n```\r\nHow should I go about modifying this code, so that objects that do not interact with my inventory object will be excluded from the Use List? Basically, I want to add more objects to the excludelist, that meet this point of crtieria. Thanks a lot in advance, and I'd appreciate any advice or further resources!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hello! I'm pretty new to Quest and am not very familiar with its coding documentation - so, I was hoping someone could help me modify a built-in function to meet my needs.</p>\n<p>Here's the scenario: I have an object called <code>glass_shard</code>, and <code>glass_shard</code> can only be used on exactly ONE object in a certain room. Under \"Use this on (other object)\", there is only <code>bubblewrap</code>. There is no other object this will have a meaningful interaction with if it's interacted with, and I purposefully omitted every other object in the room from the list under \"Handle Objects Individually\". The command bar is disabled in my game, so it's absolutely crucial that a list comes up if a player attempts \"Use\" with an object in their inventory.</p>\n<p>However, when I check the box for \"Display menu of objects this can be used on\", and I attempt to use <code>glass_shard</code> in my inventory, an ordered list of EVERY object in the room appears - even if the Use/Give attribute is not turned on. I want to limit this selection to ONLY the objects that <code>glass_shard</code> will interact with (only <code>bubblewrap</code> in this case). I assume I need to modify the source for CreateUseMenuList(), but I'm not sure how to modify it to exclude objects that will not have meaningful interactions with the selected inventory object. Here is the code for CreateUseMenuList():</p>\n<pre><code>objectlist = NewObjectList()\nobjectlist = ScopeReachableInventory()\nobjectlist = ListCombine (objectlist, ScopeReachableNotHeld())\nexcludelist = NewObjectList()\nlist add (excludelist, game.pov)\nlist add (excludelist, object)\ncandidates = NewObjectList()\ncandidates = ListExclude(RemoveSceneryObjects(objectlist), excludelist)\nreturn (candidates)\n</code></pre>\n<p>How should I go about modifying this code, so that objects that do not interact with my inventory object will be excluded from the Use List? Basically, I want to add more objects to the excludelist, that meet this point of crtieria. Thanks a lot in advance, and I'd appreciate any advice or further resources!</p>\n\n",
+      "PostDate": "2020-05-26T20:09:42.3617049Z",
+      "LastEditDate": "2020-05-26T20:11:36.7121234Z",
+      "link": null
+    },
+    {
+      "PostId": "3ee64b61-c7b4-4682-a792-eea9d35a54e3",
+      "UserId": 281669,
+      "Username": "primaltare",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/c367d1a820ae86df4a7cb4b9d378f4bf?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I was able to find a solution by playing with it myself. I basically decided to take the approach of \"instead of excluding things, how about we only include what's actually necessary\". Here is the modified ```CreateUseMenuList()``` code:\r\n\r\n```\r\nobjectlist = NewObjectList()\r\nforeach (key, object.selfuseon) {\r\n  list add (objectlist, GetObject(key))\r\n}\r\nreturn (objectlist)\r\n```\r\n\r\nAny advice or suggestions beyond this are greatly appreciated. This post can be closed by a moderator if desired!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I was able to find a solution by playing with it myself. I basically decided to take the approach of \"instead of excluding things, how about we only include what's actually necessary\". Here is the modified <code>CreateUseMenuList()</code> code:</p>\n<pre><code>objectlist = NewObjectList()\nforeach (key, object.selfuseon) {\n  list add (objectlist, GetObject(key))\n}\nreturn (objectlist)\n</code></pre>\n<p>Any advice or suggestions beyond this are greatly appreciated. This post can be closed by a moderator if desired!</p>\n\n",
+      "PostDate": "2020-05-26T21:40:21.5750628Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "2badbf72-0d23-4c61-b1de-f7edd4746814",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hmm… so any time the player tries to use a shard, it gives them a menu with a single item on it? In that case, wouldn't it be simpler to just give the shard a single 'use' verb that says you use it on the bubble wrap, rather than presenting a menu?\r\n\r\n<hr>\r\n\r\nIf the menu is preferable, I'd suggest not letting the player choose the bubblewrap until they found it. So it would be something like:\r\n```\r\nobjectlist = NewObjectList()\r\nforeach (other_obj, ScopeReachable()) {\r\n  if (DictionaryContains (object.selfuseon, other_obj.name)) {\r\n    list add (objectlist, other_obj)\r\n  }\r\n}\r\nreturn (objectlist)\r\n```\r\nThat way if the player hasn't found the bubble wrap, it will come up with the standard \"there are no objects you can use this on\" message (I forget the exact wording),",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hmm… so any time the player tries to use a shard, it gives them a menu with a single item on it? In that case, wouldn't it be simpler to just give the shard a single 'use' verb that says you use it on the bubble wrap, rather than presenting a menu?</p>\n<hr>\n<p>If the menu is preferable, I'd suggest not letting the player choose the bubblewrap until they found it. So it would be something like:</p>\n<pre><code>objectlist = NewObjectList()\nforeach (other_obj, ScopeReachable()) {\n  if (DictionaryContains (object.selfuseon, other_obj.name)) {\n    list add (objectlist, other_obj)\n  }\n}\nreturn (objectlist)\n</code></pre>\n<p>That way if the player hasn't found the bubble wrap, it will come up with the standard \"there are no objects you can use this on\" message (I forget the exact wording),</p>\n\n",
+      "PostDate": "2020-05-26T22:07:05.9044244Z",
+      "LastEditDate": "2020-05-26T22:07:57.3141889Z",
+      "link": null
+    },
+    {
+      "PostId": "0d7ceabe-0398-4b16-bb2e-18b206edac19",
+      "UserId": 281669,
+      "Username": "primaltare",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/c367d1a820ae86df4a7cb4b9d378f4bf?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "No no, sorry if I was not clear. This was a specific example in the scenario I gave. It would need to list out any object that said inventory object would be capable of interacting with. If you check out my code snippet in the second message, it ends up giving me exactly what I wanted, which should clarify any ambiguity. I ended up solving the issue.\r\n\r\nNote: The idea was that glass_shard can interact with bubble wrap, but not the converse. So, in fact, there's no way to use the glass shard unless the glass shard was already found and in the inventory. The glass shard has the attribute ```useon```, but not the bubble wrap.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>No no, sorry if I was not clear. This was a specific example in the scenario I gave. It would need to list out any object that said inventory object would be capable of interacting with. If you check out my code snippet in the second message, it ends up giving me exactly what I wanted, which should clarify any ambiguity. I ended up solving the issue.</p>\n<p>Note: The idea was that glass_shard can interact with bubble wrap, but not the converse. So, in fact, there's no way to use the glass shard unless the glass shard was already found and in the inventory. The glass shard has the attribute <code>useon</code>, but not the bubble wrap.</p>\n\n",
+      "PostDate": "2020-05-26T22:34:22.0055344Z",
+      "LastEditDate": "2020-05-26T22:36:15.295467Z",
+      "link": null
+    }
+  ]
+}

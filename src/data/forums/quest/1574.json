@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "1574",
+    "ForumId": "10",
+    "Title": "The Synonym Sin",
+    "LastUpdated": "2007-01-26T20:34:11+00:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "12293",
+      "UserId": 0,
+      "Username": "witch wyzwurd",
+      "UserAvatar": null,
+      "UserGravatar": "05e3fb359c040589d773db02decd0770",
+      "EditableText": "Still creating with 3.53....\n\nWhen defining synonyms, I'm allowed only to provide up to two words per synonym, such as: lift off = lift.  But nothing more than two words, like: lift off the = lift.  When I run game, I get my message for &quot;doesn't understand command&quot; when I type in &quot;lift off the cliff&quot; for &quot;lift cliff.&quot;  &quot;Lift cliff&quot; is a player command in a room.  Is there a two word limit per synonym?\n\nAlso, when I provide two synonyms that include the same word under the same source-word: sound; the sound = audio.... or.... under different source-words:\n\nsound = audio\nsound = noise...\n\n...I get my message for &quot;doesn't understand command.&quot;  Can a word be used as a synonym only once?\n\nAnd, if I provide other names for an object, how do I match those other names to the object if the object's name is used in a player command, like:\n\ndefine object &lt;shoe&gt;\nalias &lt;boot&gt;\nalt &lt;hi-top; lo-top&gt;\nend define\n\ncommand &lt;wear shoe&gt;\n\nAs of now, I figure the only option I have is to relist the alternative names for &quot;shoe&quot; as synonyms.  Is there a simpler way?\n\nDoes Quest 4.0 solve any of the aforementioned issues?\n\nThanks",
+      "EditableFormat": "bbcode",
+      "HTML": "Still creating with 3.53....<br/><br/>When defining synonyms, I'm allowed only to provide up to two words per synonym, such as: lift off = lift.  But nothing more than two words, like: lift off the = lift.  When I run game, I get my message for &quot;doesn't understand command&quot; when I type in &quot;lift off the cliff&quot; for &quot;lift cliff.&quot;  &quot;Lift cliff&quot; is a player command in a room.  Is there a two word limit per synonym?<br/><br/>Also, when I provide two synonyms that include the same word under the same source-word: sound; the sound = audio.... or.... under different source-words:<br/><br/>sound = audio<br/>sound = noise...<br/><br/>...I get my message for &quot;doesn't understand command.&quot;  Can a word be used as a synonym only once?<br/><br/>And, if I provide other names for an object, how do I match those other names to the object if the object's name is used in a player command, like:<br/><br/>define object &lt;shoe&gt;<br/>alias &lt;boot&gt;<br/>alt &lt;hi-top; lo-top&gt;<br/>end define<br/><br/>command &lt;wear shoe&gt;<br/><br/>As of now, I figure the only option I have is to relist the alternative names for &quot;shoe&quot; as synonyms.  Is there a simpler way?<br/><br/>Does Quest 4.0 solve any of the aforementioned issues?<br/><br/>Thanks",
+      "PostDate": "2007-01-20T07:35:12+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "12294",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "You can use more than two words in a synonym. Be aware of the order of your synonyms though - it sounds like you have set up this:\n\nlift off = lift\nlift off the = lift\n\nIf the player types &quot;lift off the cliff&quot;, Quest checks the first synonym and finds &quot;lift off = lift&quot;, so it translates the input to &quot;lift the cliff&quot;. The second synonym then doesn't match, so your &quot;lift cliff&quot; command doesn't work.\n\nTo resolve this, put your more detailed synonym first.\n\nA synonym should only be used once. If you set &quot;sound = audio&quot;, then it will translate all occurrences of &quot;sound&quot; into &quot;audio&quot;, so it will never translate it into &quot;noise&quot;.\n\nYour &quot;wear shoe&quot; command is hard coded, so it won't recognise the alternative names for &quot;shoe&quot;. Your command should look more like this:\n\ncommand &lt;wear #@item#&gt; if (#item# = shoe) then ... else msg &lt;You can't wear that.&gt;\n\nThis will allow Quest to recognise &quot;wear shoe&quot;, &quot;wear the shoe&quot;, &quot;wear the hi-top&quot; etc. It will also give a sensible response for &quot;wear hat&quot;, if there's a hat object in the room, and it will say &quot;I can't see that here&quot; if the player tries to wear something that doesn't exist. This is [i:3nrc3nuu]much[/i:3nrc3nuu] better than hard coding your commands.\n\nIt is of course slightly more work, which is why I introduced [b:3nrc3nuu]verbs[/b:3nrc3nuu] in Quest 4.0. You can get the same behaviour I just described by adding a &quot;wear&quot; verb to the shoe object - much much easier.",
+      "EditableFormat": "bbcode",
+      "HTML": "You can use more than two words in a synonym. Be aware of the order of your synonyms though - it sounds like you have set up this:<br/><br/>lift off = lift<br/>lift off the = lift<br/><br/>If the player types &quot;lift off the cliff&quot;, Quest checks the first synonym and finds &quot;lift off = lift&quot;, so it translates the input to &quot;lift the cliff&quot;. The second synonym then doesn't match, so your &quot;lift cliff&quot; command doesn't work.<br/><br/>To resolve this, put your more detailed synonym first.<br/><br/>A synonym should only be used once. If you set &quot;sound = audio&quot;, then it will translate all occurrences of &quot;sound&quot; into &quot;audio&quot;, so it will never translate it into &quot;noise&quot;.<br/><br/>Your &quot;wear shoe&quot; command is hard coded, so it won't recognise the alternative names for &quot;shoe&quot;. Your command should look more like this:<br/><br/>command &lt;wear #@item#&gt; if (#item# = shoe) then ... else msg &lt;You can't wear that.&gt;<br/><br/>This will allow Quest to recognise &quot;wear shoe&quot;, &quot;wear the shoe&quot;, &quot;wear the hi-top&quot; etc. It will also give a sensible response for &quot;wear hat&quot;, if there's a hat object in the room, and it will say &quot;I can't see that here&quot; if the player tries to wear something that doesn't exist. This is <span style=\"font-style:italic;\">much</span> better than hard coding your commands.<br/><br/>It is of course slightly more work, which is why I introduced <span style=\"font-weight:bold;\">verbs</span> in Quest 4.0. You can get the same behaviour I just described by adding a &quot;wear&quot; verb to the shoe object - much much easier.",
+      "PostDate": "2007-01-20T10:38:04+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "12295",
+      "UserId": 0,
+      "Username": "witch wyzwurd",
+      "UserAvatar": null,
+      "UserGravatar": "05e3fb359c040589d773db02decd0770",
+      "EditableText": "Thanks for response Alex:\n\nDoes the synonym rule for &quot;multiple listings not allowed&quot; apply to 4.0 version also?  Is there a way around it?",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks for response Alex:<br/><br/>Does the synonym rule for &quot;multiple listings not allowed&quot; apply to 4.0 version also?  Is there a way around it?",
+      "PostDate": "2007-01-20T12:02:28+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "12296",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "You can't have synonyms translating to multiple things, because otherwise you'd end up with one command translating to multiple possible commands. Quest's command handler only handles one command at a time.\n\nSo in your example, &quot;listen to sound&quot; can only translate to one thing. It can't be both &quot;listen to audio&quot; and &quot;listen to noise&quot;. I wonder if you're setting synonyms up the wrong way round? You can set &quot;audio; noise = sound&quot; and then both these commands would translate to &quot;listen to sound&quot;.",
+      "EditableFormat": "bbcode",
+      "HTML": "You can't have synonyms translating to multiple things, because otherwise you'd end up with one command translating to multiple possible commands. Quest's command handler only handles one command at a time.<br/><br/>So in your example, &quot;listen to sound&quot; can only translate to one thing. It can't be both &quot;listen to audio&quot; and &quot;listen to noise&quot;. I wonder if you're setting synonyms up the wrong way round? You can set &quot;audio; noise = sound&quot; and then both these commands would translate to &quot;listen to sound&quot;.",
+      "PostDate": "2007-01-20T12:33:15+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "12433",
+      "UserId": 0,
+      "Username": "witch wyzwurd",
+      "UserAvatar": null,
+      "UserGravatar": "05e3fb359c040589d773db02decd0770",
+      "EditableText": "Yah, Alex, I wasn't thinking other way around, but I was thinking to code how we think as people.  With the ability to differentiate between two source words for the same synonym.  Before I read your response above, it occured to me that Quest would have no way of knowing which source word to choose from for the same synonym.  i figured how to make my code work though.",
+      "EditableFormat": "bbcode",
+      "HTML": "Yah, Alex, I wasn't thinking other way around, but I was thinking to code how we think as people.  With the ability to differentiate between two source words for the same synonym.  Before I read your response above, it occured to me that Quest would have no way of knowing which source word to choose from for the same synonym.  i figured how to make my code work though.",
+      "PostDate": "2007-01-26T20:34:11+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

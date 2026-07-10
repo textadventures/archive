@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "uydzruvsbuayvgtr6ubxbw",
+    "ForumId": "10",
+    "Title": "What is the best way to set verbs for objects?",
+    "LastUpdated": "2022-01-22T12:46:54.5737111Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "2ca48c2b-a1fb-49ce-82cd-f1206f9d02eb",
+      "UserId": 569662,
+      "Username": "Dongers",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I know that   ```object.displayverbs  = object.displayverbs``` is necessary for any of them to work, but should I use ```object.displaverbs = Split(\"Look at;other option1;orher option2\")``` afterward to have the displayverbs appear/disappear or should I use  ```if (not ListContains (object.displayverbs, \"other option1\")) {\r\n      list add (object.displayverbs, \"other option1\")\r\n    }``` for the individual verbs?\r\nWhat's the better method?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I know that   <code>object.displayverbs = object.displayverbs</code> is necessary for any of them to work, but should I use <code>object.displaverbs = Split(\"Look at;other option1;orher option2\")</code> afterward to have the displayverbs appear/disappear or should I use  <code>if (not ListContains (object.displayverbs, \"other option1\")) { list add (object.displayverbs, \"other option1\") }</code> for the individual verbs?<br>\nWhat's the better method?</p>\n\n",
+      "PostDate": "2022-01-22T12:46:54.5737111Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "6499a8d1-b9c5-458c-b2fb-b8034123fe3e",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "It depends how many things you want to change.\r\n\r\nUsing `Split` is faster (and doesn't require `object.displayverbs = object.displayverbs` first because it's creating a replacement list, rather than modifying the existing one). But it does mean that if you decide to give the object another verb at some point, you'd have to look for all the other places that displayverbs has changed, and make sure they all do it right.\r\n\r\nUsing `Split` also has the advantage that it keeps your list of verbs in the right order; whereas `list add` will always add new items to the end, which could bug some players.\r\n\r\nOne alternative if you're changing them a lot but want to keep them in the right order would be to use a list that checks each verb, and changes it appropriately. For example, you could make a function that does something like this:\r\n```\r\nbob.displayverbs = Split (ProcessText (\"[LookAt];{either bob.health>0:[TalkTo];Fight{if player.class=thief:Pickpocket}:Search;Hide}\"))\r\n```\r\nThis has the result of setting the displayverbs to `Look at;Talk to;Fight` if bob is alive, `Look at;Talk to;Fight;Pickpocket` if the player's `class` attribute is set to `\"thief\"`, and `Look at;Search;Hide` if bob is dead (so you can either loot or hide the corpse).\r\n\r\nThis is less efficient, but can easily be put in one function so that you can just call that function whenever something happens that might change one of those verbs. There are two conditions here that change the verbs, but you know the code that changes one of them won't mess up the verbs for the other.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>It depends how many things you want to change.</p>\n<p>Using <code>Split</code> is faster (and doesn't require <code>object.displayverbs = object.displayverbs</code> first because it's creating a replacement list, rather than modifying the existing one). But it does mean that if you decide to give the object another verb at some point, you'd have to look for all the other places that displayverbs has changed, and make sure they all do it right.</p>\n<p>Using <code>Split</code> also has the advantage that it keeps your list of verbs in the right order; whereas <code>list add</code> will always add new items to the end, which could bug some players.</p>\n<p>One alternative if you're changing them a lot but want to keep them in the right order would be to use a list that checks each verb, and changes it appropriately. For example, you could make a function that does something like this:</p>\n<pre><code>bob.displayverbs = Split (ProcessText (\"[LookAt];{either bob.health&gt;0:[TalkTo];Fight{if player.class=thief:Pickpocket}:Search;Hide}\"))\n</code></pre>\n<p>This has the result of setting the displayverbs to <code>Look at;Talk to;Fight</code> if bob is alive, <code>Look at;Talk to;Fight;Pickpocket</code> if the player's <code>class</code> attribute is set to <code>\"thief\"</code>, and <code>Look at;Search;Hide</code> if bob is dead (so you can either loot or hide the corpse).</p>\n<p>This is less efficient, but can easily be put in one function so that you can just call that function whenever something happens that might change one of those verbs. There are two conditions here that change the verbs, but you know the code that changes one of them won't mess up the verbs for the other.</p>\n\n",
+      "PostDate": "2022-01-22T14:34:04.9001577Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "fbb8a622-869d-4eb3-90e5-ad670c8da060",
+      "UserId": 569662,
+      "Username": "Dongers",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "\"But it does mean that if you decide to give the object another verb at some point, you'd have to look for all the other places that displayverbs has changed, and make sure they all do it right.\"\r\n\r\nWhat exactly does that mean? Will I have problems if I use ```Split``` too many times to set the displayverbs of an object?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>\"But it does mean that if you decide to give the object another verb at some point, you'd have to look for all the other places that displayverbs has changed, and make sure they all do it right.\"</p>\n<p>What exactly does that mean? Will I have problems if I use <code>Split</code> too many times to set the displayverbs of an object?</p>\n\n",
+      "PostDate": "2022-01-22T14:42:11.0342002Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "97cfa202-5eef-4408-a694-fff32f639987",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "It means that if you use `Split` like that, you have to include *all* the object's displayverbs every time.\r\n\r\nLike in your example, you have `Split (\"Look at;other option 1;other option 2\")`.\r\n\r\nImagine you're testing the game, and you realise the object should have a \"Listen to\" verb as well as \"Look at\". (I know, it's a silly example).\r\nIf you're doing the simple method with `Split`, you would have to go back and add 'Listen to' to *all* of those lines. If you miss one, that verb could disappear unexpectedly and confuse the player.\r\n\r\nIf there's just one verb being added and removed, it's not a big problem. But the more places you change the same list, the harder it gets to keep all of them right.\r\n\r\n(I've seen large, popular games with this kind of problem… sometimes a method that's simpler to write will be harder to update if you want to change anything.)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>It means that if you use <code>Split</code> like that, you have to include <em>all</em> the object's displayverbs every time.</p>\n<p>Like in your example, you have <code>Split (\"Look at;other option 1;other option 2\")</code>.</p>\n<p>Imagine you're testing the game, and you realise the object should have a \"Listen to\" verb as well as \"Look at\". (I know, it's a silly example).<br>\nIf you're doing the simple method with <code>Split</code>, you would have to go back and add 'Listen to' to <em>all</em> of those lines. If you miss one, that verb could disappear unexpectedly and confuse the player.</p>\n<p>If there's just one verb being added and removed, it's not a big problem. But the more places you change the same list, the harder it gets to keep all of them right.</p>\n<p>(I've seen large, popular games with this kind of problem… sometimes a method that's simpler to write will be harder to update if you want to change anything.)</p>\n\n",
+      "PostDate": "2022-01-22T17:36:51.2893566Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

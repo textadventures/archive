@@ -1,0 +1,123 @@
+{
+  "Topic": {
+    "TopicId": "jrynnar3aecwtep-dgf1zw",
+    "ForumId": "10",
+    "Title": "Trying to set a random property to an object",
+    "LastUpdated": "2020-03-01T01:28:27.5092119Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "4bd91751-215a-4e46-b8bc-2c9bd7f41fc8",
+      "UserId": 454326,
+      "Username": "Brian5757",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/411c3e8cd4782d4a996f292940a61069?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm trying to set a random size for the paper with this command:\r\nPaper.size = {random:small:medium:large}\r\nmsg(Paper.size)\r\n\r\nBut I get this error:\r\nError running script: Error compiling expression 'random:small:medium:large': SyntaxError: Unexpected character: :Line: 1, Column: 7\r\n\r\nIs there a different format for doing this?\r\n\r\n\r\n\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm trying to set a random size for the paper with this command:<br>\nPaper.size = {random:small:medium:large}<br>\nmsg(Paper.size)</p>\n<p>But I get this error:<br>\nError running script: Error compiling expression 'random:small:medium:large': SyntaxError: Unexpected character: :Line: 1, Column: 7</p>\n<p>Is there a different format for doing this?</p>\n\n",
+      "PostDate": "2020-03-01T01:28:27.5092119Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "b1bf4c4d-ac89-4ab8-93dd-af78ac8588fb",
+      "UserId": 454326,
+      "Username": "Brian5757",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/411c3e8cd4782d4a996f292940a61069?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "It looks like I need:\r\nPaper.size = ProcessText(\"{random:small:medium:large}\")\r\nunless there is a better way.\r\n\r\nI'm thinking that ProcessText must be used when the conditional text is not in the description.\r\n\r\nWould the paper size that was created during the game be saved when the players saves the game he is playing?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>It looks like I need:<br>\nPaper.size = ProcessText(\"{random:small:medium:large}\")<br>\nunless there is a better way.</p>\n<p>I'm thinking that ProcessText must be used when the conditional text is not in the description.</p>\n<p>Would the paper size that was created during the game be saved when the players saves the game he is playing?</p>\n\n",
+      "PostDate": "2020-03-01T07:40:35.4486033Z",
+      "LastEditDate": "2020-03-01T07:44:48.3608781Z",
+      "link": null
+    },
+    {
+      "PostId": "d10fa345-fccd-4ac1-acde-5256511a065e",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "`ProcessText` is called automatically when text is sent to the player (using `msg` or similar commands).\r\n\r\nSo if you do:\r\n```\r\nPaper.size = \"{random:small:medium:large}\"\r\n```\r\nthe `size` attribute will be a string with the value `{random:small:medium:large}` - which will be replaced by an option chosen at random every time it is displayed (it will be different each time)\r\n\r\nbut if you do:\r\n```\r\nPaper.size = ProcessText (\"{random:small:medium:large}\")\r\n```\r\nthen the ext processor will run and replace the command with a randomly chosen string, so `size` will be a string attribute whose value is either `small`, `medium`, or `large`. It will have the same value every time you refer to it, and will continue to have that value when the game is saved.\r\n\r\n<hr />\r\n\r\nI would note, however, that the text processor is quite inefficient, and you probably shouldn't use it without a good reason. In this case, you would probably be better doing:\r\n```\r\nPaper.size = PickOneString (Split (\"small;medium;large\"))\r\n```\r\n(Split turns a string into a stringlist; PickOneString picks one string at random out of a stringlist)\r\n\r\nThe text processor is a useful feature if you have strings that might contain a lot of different text processor commands (or if you want an object's description to be slightly different each time it is looked at), but if you're calling `ProcessText` on a string with just a single text processor command in it, there might be a faster way to do it.",
+      "EditableFormat": "markdown",
+      "HTML": "<p><code>ProcessText</code> is called automatically when text is sent to the player (using <code>msg</code> or similar commands).</p>\n<p>So if you do:</p>\n<pre><code>Paper.size = \"{random:small:medium:large}\"\n</code></pre>\n<p>the <code>size</code> attribute will be a string with the value <code>{random:small:medium:large}</code> - which will be replaced by an option chosen at random every time it is displayed (it will be different each time)</p>\n<p>but if you do:</p>\n<pre><code>Paper.size = ProcessText (\"{random:small:medium:large}\")\n</code></pre>\n<p>then the ext processor will run and replace the command with a randomly chosen string, so <code>size</code> will be a string attribute whose value is either <code>small</code>, <code>medium</code>, or <code>large</code>. It will have the same value every time you refer to it, and will continue to have that value when the game is saved.</p>\n<hr>\n<p>I would note, however, that the text processor is quite inefficient, and you probably shouldn't use it without a good reason. In this case, you would probably be better doing:</p>\n<pre><code>Paper.size = PickOneString (Split (\"small;medium;large\"))\n</code></pre>\n<p>(Split turns a string into a stringlist; PickOneString picks one string at random out of a stringlist)</p>\n<p>The text processor is a useful feature if you have strings that might contain a lot of different text processor commands (or if you want an object's description to be slightly different each time it is looked at), but if you're calling <code>ProcessText</code> on a string with just a single text processor command in it, there might be a faster way to do it.</p>\n\n",
+      "PostDate": "2020-03-01T09:30:54.1165114Z",
+      "LastEditDate": "2020-03-02T09:24:04.0548639Z",
+      "link": null
+    },
+    {
+      "PostId": "1d06b2a5-af88-4df3-8b7b-afeb5b0bf2a0",
+      "UserId": 454326,
+      "Username": "Brian5757",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/411c3e8cd4782d4a996f292940a61069?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks mrangel. Good to know that there is an alternative.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks mrangel. Good to know that there is an alternative.</p>\n\n",
+      "PostDate": "2020-03-01T11:18:20.4123295Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "382f5a8e-8b18-46f8-a5ad-5edb6c4d433f",
+      "UserId": 454326,
+      "Username": "Brian5757",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/411c3e8cd4782d4a996f292940a61069?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi mrangel.\r\n\r\nThere must be something missing in this code you suggested:\r\n Paper.size = PickOneString (Split (\"small:medium:large\"))\r\n      msg (\"The paper is \"+Paper.size)\r\n\r\nAs the result is \"The paper size is small:medium:large\"\r\nMaybe it needs the word random somewhere?\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi mrangel.</p>\n<p>There must be something missing in this code you suggested:<br>\nPaper.size = PickOneString (Split (\"small:medium:large\"))<br>\nmsg (\"The paper is \"+Paper.size)</p>\n<p>As the result is \"The paper size is small:medium:large\"<br>\nMaybe it needs the word random somewhere?</p>\n\n",
+      "PostDate": "2020-03-02T04:15:05.3774844Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "b6e678c5-6205-41a4-8bf1-fb1bd28298e5",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "This is the hazard of typing on mobile; the keyboard is supposed to be \"smart\" at guessing which symbols I meant. Or I accidentally had caps-lock on.\r\n\r\nIn the argument to `Split`, the list elements should separated by a semicolon (`;`). Not a colon (`:`). - unless you explicitly specify the separator.\r\n\r\nSplit turns a string into a list, but in this case it didn't see the separator, so it was returning a list with the single element \"small:medium:large\". Then `PickOneString` picks a random element from that list.\r\n\r\nYou could use `PickOneString (Split (\"small:medium:large\"))`, or `PickOneString (Split (\"small:medium:large\", \":\"))`, or `PickOneString (Split (\"small,medium,large\", \",\"))` if you prefer.\r\n\r\n(have edited the code snippet in the previous post)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>This is the hazard of typing on mobile; the keyboard is supposed to be \"smart\" at guessing which symbols I meant. Or I accidentally had caps-lock on.</p>\n<p>In the argument to <code>Split</code>, the list elements should separated by a semicolon (<code>;</code>). Not a colon (<code>:</code>). - unless you explicitly specify the separator.</p>\n<p>Split turns a string into a list, but in this case it didn't see the separator, so it was returning a list with the single element \"small:medium:large\". Then <code>PickOneString</code> picks a random element from that list.</p>\n<p>You could use <code>PickOneString (Split (\"small:medium:large\"))</code>, or <code>PickOneString (Split (\"small:medium:large\", \":\"))</code>, or <code>PickOneString (Split (\"small,medium,large\", \",\"))</code> if you prefer.</p>\n<p>(have edited the code snippet in the previous post)</p>\n\n",
+      "PostDate": "2020-03-02T09:29:23.2394807Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "b339756b-5c3c-4a97-ac3c-e2a65c4495db",
+      "UserId": 454326,
+      "Username": "Brian5757",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/411c3e8cd4782d4a996f292940a61069?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hi mrangel.\r\n\r\nIt looks like the command 'Split' is not needed as this code will still work\r\nPaper.size = PickOneString (\"small;medium;large\")\r\nmsg (\"The paper is \"+Paper.size)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hi mrangel.</p>\n<p>It looks like the command 'Split' is not needed as this code will still work<br>\nPaper.size = PickOneString (\"small;medium;large\")<br>\nmsg (\"The paper is \"+Paper.size)</p>\n\n",
+      "PostDate": "2020-03-03T00:59:20.7450127Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e59b2e8f-b679-468b-8f5a-36e6c6b3a142",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "That's convenient :)\r\n\r\nI hadn't noticed that; but it looks like PickOneString automatically splits its input if necessary. I guess that's a common enough case, so someone decided to make it easier.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>That's convenient :)</p>\n<p>I hadn't noticed that; but it looks like PickOneString automatically splits its input if necessary. I guess that's a common enough case, so someone decided to make it easier.</p>\n\n",
+      "PostDate": "2020-03-03T08:47:18.2188576Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

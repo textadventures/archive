@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "h3mhohbdge6o7s4bodp99w",
+    "ForumId": "10",
+    "Title": "Abbreviations",
+    "LastUpdated": "2020-11-17T14:08:59.8453852Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "7fdb5eb5-4424-4dfd-a52e-ff2a0314c92b",
+      "UserId": 497177,
+      "Username": "Jonathan O",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/132db8a5bac291ae51f5b4b3f20cbf8c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Is there any way in Quest to specify a minimum abbreviation length for an object?\r\n\r\nTo be more specific: if there will be at some point a match and a matchbox in the same location, saying \"get match\" will result in a message asking you to specify which you mean. Is there any way to say \"the minimum abbreviation for the matchbox is matchb\" so as to avoid this message?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Is there any way in Quest to specify a minimum abbreviation length for an object?</p>\n<p>To be more specific: if there will be at some point a match and a matchbox in the same location, saying \"get match\" will result in a message asking you to specify which you mean. Is there any way to say \"the minimum abbreviation for the matchbox is matchb\" so as to avoid this message?</p>\n\n",
+      "PostDate": "2020-11-17T14:08:59.8453852Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "c5212929-0646-46c0-b595-c3f41b4d3332",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Unfortunately not. But \"get match\" should select the right item, because it only looks for partial matches if there aren't any complete matches.\r\nIf you want to make sure that \"get mat\" and \"get matc\" won't see the matchbox, you could use the `alt` attribute (object's alternate aliases) for the match, and add those names for it. That will cause them to be treated as exact matches, so it again doesn't consider partial matches.\r\n\r\nThis would mean that \"get matc\" could still get the matchbox, but only if the match isn't visible or the player already has it.\r\n\r\n<hr/>\r\n\r\nIf you want to add this behaviour, you could modify the core function `CompareNames` or `ResolveNameFromList` to check for names which are superstrings of existing names.\r\n\r\nI'd probably modify the loop at the start of `ResolveNameFromList`, changing:\r\n```\r\n    foreach (obj, scope) {\r\n      name = LCase(GetDisplayAlias(obj))\r\n      CompareNames (name, value, obj, fullmatches, partialmatches)\r\n      if (obj.alt <> null) {\r\n        foreach (altname, obj.alt) {\r\n          CompareNames (LCase(altname), value, obj, fullmatches, partialmatches)\r\n        }\r\n      }\r\n    }\r\n```\r\nto something like:\r\n```\r\n    matchednames = NewStringList()\r\n    foreach (obj, scope) {\r\n      name = LCase(GetDisplayAlias(obj))\r\n      skip = false\r\n      foreach (found, matchednames) {\r\n        skip = skip or StartsWith (name, found)\r\n      }\r\n      if (not skip) {\r\n        CompareNames (name, value, obj, fullmatches, partialmatches)\r\n        while (ListCount (fullmatches) + ListCount (partialmatches) > ListCount (matchednames)) {\r\n          list add (matchednames, name)\r\n        }\r\n      }\r\n      if (obj.alt <> null) {\r\n        foreach (altname, obj.alt) {\r\n          skip = false\r\n          foreach (found, matchednames) {\r\n            skip = skip or StartsWith (altname, found)\r\n          }\r\n          if (not skip) {\r\n            CompareNames (LCase(altname), value, obj, fullmatches, partialmatches)\r\n            while (ListCount (fullmatches) + ListCount (partialmatches) > ListCount (matchednames)) {\r\n              list add (matchednames, altname)\r\n            }\r\n          }\r\n        }\r\n      }\r\n    }\r\n```\r\nThat's a bit ugly; but causes the parser to skip partial matches whose name starts with the name of an object which has already been found (so you'd have to make sure that the match was higher than the  matchbox in the internal object list; but that shouldn't be too difficult)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Unfortunately not. But \"get match\" should select the right item, because it only looks for partial matches if there aren't any complete matches.<br>\nIf you want to make sure that \"get mat\" and \"get matc\" won't see the matchbox, you could use the <code>alt</code> attribute (object's alternate aliases) for the match, and add those names for it. That will cause them to be treated as exact matches, so it again doesn't consider partial matches.</p>\n<p>This would mean that \"get matc\" could still get the matchbox, but only if the match isn't visible or the player already has it.</p>\n<hr>\n<p>If you want to add this behaviour, you could modify the core function <code>CompareNames</code> or <code>ResolveNameFromList</code> to check for names which are superstrings of existing names.</p>\n<p>I'd probably modify the loop at the start of <code>ResolveNameFromList</code>, changing:</p>\n<pre><code>    foreach (obj, scope) {\n      name = LCase(GetDisplayAlias(obj))\n      CompareNames (name, value, obj, fullmatches, partialmatches)\n      if (obj.alt &lt;&gt; null) {\n        foreach (altname, obj.alt) {\n          CompareNames (LCase(altname), value, obj, fullmatches, partialmatches)\n        }\n      }\n    }\n</code></pre>\n<p>to something like:</p>\n<pre><code>    matchednames = NewStringList()\n    foreach (obj, scope) {\n      name = LCase(GetDisplayAlias(obj))\n      skip = false\n      foreach (found, matchednames) {\n        skip = skip or StartsWith (name, found)\n      }\n      if (not skip) {\n        CompareNames (name, value, obj, fullmatches, partialmatches)\n        while (ListCount (fullmatches) + ListCount (partialmatches) &gt; ListCount (matchednames)) {\n          list add (matchednames, name)\n        }\n      }\n      if (obj.alt &lt;&gt; null) {\n        foreach (altname, obj.alt) {\n          skip = false\n          foreach (found, matchednames) {\n            skip = skip or StartsWith (altname, found)\n          }\n          if (not skip) {\n            CompareNames (LCase(altname), value, obj, fullmatches, partialmatches)\n            while (ListCount (fullmatches) + ListCount (partialmatches) &gt; ListCount (matchednames)) {\n              list add (matchednames, altname)\n            }\n          }\n        }\n      }\n    }\n</code></pre>\n<p>That's a bit ugly; but causes the parser to skip partial matches whose name starts with the name of an object which has already been found (so you'd have to make sure that the match was higher than the  matchbox in the internal object list; but that shouldn't be too difficult)</p>\n\n",
+      "PostDate": "2020-11-17T14:57:25.2845042Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "16d90997-230a-4112-abcb-b16f4fb88050",
+      "UserId": 497177,
+      "Username": "Jonathan O",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/132db8a5bac291ae51f5b4b3f20cbf8c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks - I'll think about that.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks - I'll think about that.</p>\n\n",
+      "PostDate": "2020-11-17T17:26:30.3059101Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

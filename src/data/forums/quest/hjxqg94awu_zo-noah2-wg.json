@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "hjxqg94awu_zo-noah2-wg",
+    "ForumId": "10",
+    "Title": "If Player sees pages... (Gamebook)",
+    "LastUpdated": "2019-11-20T20:12:07.040679Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "b66371ab-291f-4753-bfc8-665489dc5d36",
+      "UserId": 447637,
+      "Username": "calxiyn",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/bbd6fc3f88831b43d9380c0e8ce00a8c?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hey everyone. I need to make an IF game for a university assignment, so I've never done this before and need some help. \r\n\r\nBasically, what I'm trying to do, is that if a player sees 4 specific pages, an option will \"unlock\" on an already established page.  One of my pages is an office with a locked door, and right now I have it set that if the player goes up there they can just go back to the foyer where they came from. But I want an option to appear for them to proceed if they saw all 4 specific pages in any order, which would give them the clue to unlock the door.\r\n\r\nI've been trying to do this through \"functions\", Script, clicking \"if\" and then clicking \"player has seen page\", but for some reason something I'm doing isn't working.\r\n\r\nWhile I'm here, I'm also trying to have this game have multiple ending. I basically want say, if you see pages 3, 5 & 7, but not 2, 4 and 6, you get ending 1. If you see pages 2, 4 and 6, but you don't see 3, 5 and 7 you get ending 2. If you see pages 2-7 you get ending 3. If you DON'T see pages 2-7, but you see pages 8, 9, 10 (the pages I want the player to need to see to just unlock the door as I mentioned already) you'll get ending 4.\r\n\r\nI hope this makes sense. This project is for an English class and so I don't know how to code. I thought Gamebook would be easier, and I've made all the pages I want the player to be able to access already and have been able to \"link\" them properly. But when it comes to how to do the actual endings for the game and getting the player to be able to unlock the door I'm completely lost.\r\n\r\nThanks!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hey everyone. I need to make an IF game for a university assignment, so I've never done this before and need some help.</p>\n<p>Basically, what I'm trying to do, is that if a player sees 4 specific pages, an option will \"unlock\" on an already established page.  One of my pages is an office with a locked door, and right now I have it set that if the player goes up there they can just go back to the foyer where they came from. But I want an option to appear for them to proceed if they saw all 4 specific pages in any order, which would give them the clue to unlock the door.</p>\n<p>I've been trying to do this through \"functions\", Script, clicking \"if\" and then clicking \"player has seen page\", but for some reason something I'm doing isn't working.</p>\n<p>While I'm here, I'm also trying to have this game have multiple ending. I basically want say, if you see pages 3, 5 &amp; 7, but not 2, 4 and 6, you get ending 1. If you see pages 2, 4 and 6, but you don't see 3, 5 and 7 you get ending 2. If you see pages 2-7 you get ending 3. If you DON'T see pages 2-7, but you see pages 8, 9, 10 (the pages I want the player to need to see to just unlock the door as I mentioned already) you'll get ending 4.</p>\n<p>I hope this makes sense. This project is for an English class and so I don't know how to code. I thought Gamebook would be easier, and I've made all the pages I want the player to be able to access already and have been able to \"link\" them properly. But when it comes to how to do the actual endings for the game and getting the player to be able to unlock the door I'm completely lost.</p>\n<p>Thanks!</p>\n\n",
+      "PostDate": "2019-11-20T20:12:07.040679Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "bd98d21f-ecf4-47f5-af61-aba9c3eed258",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm going to use code view for suggesting scripts. You might find it easier to work by clicking things in the script editor GUI, but code view is a lot more efficient when asking for help because it lets you copy and paste code to and from the forums. If you want to see what the code I'm suggesting looks like in the GUI, you can just paste it into code view and then switch back.\r\n\r\n<hr />\r\n\r\n> I've been trying to do this through \"functions\", Script, clicking \"if\" and then clicking \"player has seen page\", but for some reason something I'm doing isn't working.\r\n\r\nYou haven't told us what you're trying, so it's hard to say why it isn't working. Are you creating a function? If so, when are you calling it?\r\n\r\nFor this problem, I would suggest making the room that contains the door a \"Script & text\" type.\r\n\r\nIf the door leads to page8, and you have to have seen pages 4, 5, and 7 to unlock the door, the script would look something like:\r\n```\r\nif (HasSeenPage (page4) and HasSeenPage (page5) and HasSeenPage (page7)) {\r\n  AddPageLink (this, page8, \"Unlock the door\")\r\n}\r\n```\r\n\r\n<hr />\r\n\r\n> I'm also trying to have this game have multiple ending.\r\n\r\nI assume there's a page that all paths lead to which should then send you to the appropriate ending?\r\n\r\nI'd suggest creating a \"Script\" type page for the exit. This page never actually displays, but sends the player to a different page depending which ending they should see.\r\n\r\nIn code view, the script would look something like:\r\n```\r\nif (HasSeenPage (page3) and HasSeenPage (page5) and HasSeenPage (page7) and not HasSeenPage (page2) and not HasSeenPage (page4) and not HasSeenPage (page6)) {\r\n  MovePlayer (ending1)\r\n}\r\nelse if (HasSeenPage (page2) and HasSeenPage (page4) and HasSeenPage (page6) and not HasSeenPage (page3) and not HasSeenPage (page5) and not HasSeenPage (page7)) {\r\n  MovePlayer (ending2)\r\n}\r\nelse if (HasSeenPage (page2) and HasSeenPage (page3) and HasSeenPage (page4) and HasSeenPage (page5) and HasSeenPage (page6) and HasSeenPage (page7)) {\r\n  MovePlayer (ending3)\r\n}\r\nelse if (HasSeenPage (page8) and HasSeenPage (page9) and HasSeenPage (page10)) {\r\n  MovePlayer (ending4)\r\n}\r\n```\r\n\r\nI'm assuming your pages are named `page1`, `page2`, and so on, and that your endings are in pages named `ending1`, `ending2`, `ending3`, and `ending4`. You can change the page names easily enough to match how you named them in your game.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm going to use code view for suggesting scripts. You might find it easier to work by clicking things in the script editor GUI, but code view is a lot more efficient when asking for help because it lets you copy and paste code to and from the forums. If you want to see what the code I'm suggesting looks like in the GUI, you can just paste it into code view and then switch back.</p>\n<hr>\n<blockquote>\n<p>I've been trying to do this through \"functions\", Script, clicking \"if\" and then clicking \"player has seen page\", but for some reason something I'm doing isn't working.</p>\n</blockquote>\n<p>You haven't told us what you're trying, so it's hard to say why it isn't working. Are you creating a function? If so, when are you calling it?</p>\n<p>For this problem, I would suggest making the room that contains the door a \"Script &amp; text\" type.</p>\n<p>If the door leads to page8, and you have to have seen pages 4, 5, and 7 to unlock the door, the script would look something like:</p>\n<pre><code>if (HasSeenPage (page4) and HasSeenPage (page5) and HasSeenPage (page7)) {\n  AddPageLink (this, page8, \"Unlock the door\")\n}\n</code></pre>\n<hr>\n<blockquote>\n<p>I'm also trying to have this game have multiple ending.</p>\n</blockquote>\n<p>I assume there's a page that all paths lead to which should then send you to the appropriate ending?</p>\n<p>I'd suggest creating a \"Script\" type page for the exit. This page never actually displays, but sends the player to a different page depending which ending they should see.</p>\n<p>In code view, the script would look something like:</p>\n<pre><code>if (HasSeenPage (page3) and HasSeenPage (page5) and HasSeenPage (page7) and not HasSeenPage (page2) and not HasSeenPage (page4) and not HasSeenPage (page6)) {\n  MovePlayer (ending1)\n}\nelse if (HasSeenPage (page2) and HasSeenPage (page4) and HasSeenPage (page6) and not HasSeenPage (page3) and not HasSeenPage (page5) and not HasSeenPage (page7)) {\n  MovePlayer (ending2)\n}\nelse if (HasSeenPage (page2) and HasSeenPage (page3) and HasSeenPage (page4) and HasSeenPage (page5) and HasSeenPage (page6) and HasSeenPage (page7)) {\n  MovePlayer (ending3)\n}\nelse if (HasSeenPage (page8) and HasSeenPage (page9) and HasSeenPage (page10)) {\n  MovePlayer (ending4)\n}\n</code></pre>\n<p>I'm assuming your pages are named <code>page1</code>, <code>page2</code>, and so on, and that your endings are in pages named <code>ending1</code>, <code>ending2</code>, <code>ending3</code>, and <code>ending4</code>. You can change the page names easily enough to match how you named them in your game.</p>\n\n",
+      "PostDate": "2019-11-20T21:31:47.4594676Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "52dc3271-19a1-41d8-9214-804489ca9903",
+      "UserId": 267336,
+      "Username": "jmnevil54",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5d73d7ec1dbe20a5cb46f02a6d53f187?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "mrangel's way works.\r\n\r\nThis can work too.\r\n```\r\nPage11.seen = false\r\nPage7.seen = false\r\nPage4.seen = false\r\nPage2.seen = false\r\n```\r\n\r\nThen when a page is turned to, you can set the seen to true.\r\n```\r\nfirsttime {\r\n  Page11.seen = true\r\n}\r\n```\r\nAnd then you can do this.\r\n```\r\nif (Page11.seen = true and Page7.seen = true and Page4.seen = true and Page2.seen = true) {\r\n  msg (\"You have seen all the pages. \")\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>mrangel's way works.</p>\n<p>This can work too.</p>\n<pre><code>Page11.seen = false\nPage7.seen = false\nPage4.seen = false\nPage2.seen = false\n</code></pre>\n<p>Then when a page is turned to, you can set the seen to true.</p>\n<pre><code>firsttime {\n  Page11.seen = true\n}\n</code></pre>\n<p>And then you can do this.</p>\n<pre><code>if (Page11.seen = true and Page7.seen = true and Page4.seen = true and Page2.seen = true) {\n  msg (\"You have seen all the pages. \")\n}\n</code></pre>\n\n",
+      "PostDate": "2019-11-22T11:54:56.6114175Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "2ffebcea-9441-4743-9b84-e09a87706969",
+      "UserId": 447637,
+      "Username": "calxiyn",
+      "AvatarUrl": "https://i.imgur.com/rQLiBpVb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Not sure how to do a reply, but I did it mrangel's way and everything is working now. Thank you so much guys!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Not sure how to do a reply, but I did it mrangel's way and everything is working now. Thank you so much guys!</p>\n\n",
+      "PostDate": "2019-11-22T18:14:15.9335282Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "c9b5a002-4346-45df-a62f-41619ada2a5b",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "hey cal, u same person on utube? (loved your spice and wolf reactions!) (I'm redmoon bloodmoon on utube, commented on your spice and wolf reactions)\r\n\r\nglad to have you here on quest (how did you find us? lol), we got a small community but a very helpful and friendly community here with quest\r\n\r\n(ah, college assignment, hehe)\r\n\r\n(well, if you interested in making games and/or learning to code, quest and its users, can help you with it, I found quest ~7 years ago, knowing ZERO about coding and game-making, and now I'm taking programming classes in college myself, I learned to code/program through quest and its moderators and users, helping me with learning to code)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>hey cal, u same person on utube? (loved your spice and wolf reactions!) (I'm redmoon bloodmoon on utube, commented on your spice and wolf reactions)</p>\n<p>glad to have you here on quest (how did you find us? lol), we got a small community but a very helpful and friendly community here with quest</p>\n<p>(ah, college assignment, hehe)</p>\n<p>(well, if you interested in making games and/or learning to code, quest and its users, can help you with it, I found quest ~7 years ago, knowing ZERO about coding and game-making, and now I'm taking programming classes in college myself, I learned to code/program through quest and its moderators and users, helping me with learning to code)</p>\n\n",
+      "PostDate": "2019-11-23T01:43:56.6475473Z",
+      "LastEditDate": "2019-11-23T01:50:50.0360244Z",
+      "link": null
+    },
+    {
+      "PostId": "828bfc8f-6521-41e2-b1fb-867066ba130b",
+      "UserId": 449961,
+      "Username": "happyspace",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/1770a28703dd77d6bff286e974e6ea4e?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "This new need to learn about this coding for easy accessing <a href=\"https://happywheelspaces.com/\">happy wheels unblocked</a> online\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>This new need to learn about this coding for easy accessing <a href=\"https://happywheelspaces.com/\">happy wheels unblocked</a> online</p>\n\n",
+      "PostDate": "2019-12-03T10:00:16.4870158Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

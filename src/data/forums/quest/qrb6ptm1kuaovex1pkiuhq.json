@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "qrb6ptm1kuaovex1pkiuhq",
+    "ForumId": "10",
+    "Title": "destroy instead of removeobject",
+    "LastUpdated": "2024-05-12T17:15:40.2661236Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "871175ff-d99b-4847-a9be-fcae7062e0c0",
+      "UserId": 652801,
+      "Username": "Gng",
+      "AvatarUrl": "https://i.imgur.com/w0pOzA9b.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "[SOLVED]\r\n\r\nMy game uses a lot of clones for the shop purposes. Everytime the player buys an item, it clones into their inventory. When it's consumed it is RemoveObjected\r\nThis animal can be bought in shops multiple times or can be found in forest multiple times.\r\nThere is an rng for spawning it in forest (related to player.hunterperk. So the more expert the player is the more chance it will spawn). When the player moves to the next area, I want to destroy/Remove the animals.\r\n\r\nDoes having a lot of clones with null parent effect the game? Is it necessary to use destroy function instead?\r\n\r\nThe destroy function is very inconvenient. When I try to remove an object using the ScopeInventory function it gives this error:\r\n```\r\nforeach (x, ScopeInventory ()) {\r\n  destroy (x)\r\n}\r\n```\r\n\"Error running script: Error compiling expression 'x': RootExpressionElement: Cannot convert type 'Element' to expression result of 'String'\"\r\nThis is my main issue with destroy function: It doesn't accept elements or scripts or functions. It has be string and specifically be the object.name I want to remove. \r\nMy second issue is that Quest won't let me set name attribute midgame: \r\n```\r\nforeach (x, ScopeInventory ()) {\r\n obj =  CloneObject (\"blagget main\")\r\n  obj.name = \"blagget\"\r\n}\r\n```\r\n\"Error running script: Cannot change name of element when not in Edit mode\"\r\ndestroy won't take alias either.\r\n\r\nShould I start giving specific names to the clones and how will I know which clone is the one I want to destroy? How can I destroy something if I don't know what its name going to be?\r\n```\r\nif (blagget.spawnnum > 0) {\r\n  foreach (x, ScopeReachableNotHeld ()) {\r\n    y = GetAttribute (x, \"alias\")\r\n    if (y = \"blagget\") {\r\n      destroy (x)\r\n      blagget.spawnnum = blagget.spawnnum - 1\r\n    }\r\n  }\r\n}\r\n```\r\nanother way I tried to do it. Error being not accepting element\r\n\r\nEDIT: I found a solution. destroy doesn't accept elements but it does accept string so you just have to use ToString\r\n```\r\nforeach (x, ScopeInventory ()) {\r\n  x = ToString (x)\r\n  y = Replace(x, \"Object: \", \"\")\r\n  destroy (y)\r\n}\r\n```\r\nI should've paid more attention to the error message. I feel stupid ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>[SOLVED]</p>\n<p>My game uses a lot of clones for the shop purposes. Everytime the player buys an item, it clones into their inventory. When it's consumed it is RemoveObjected<br>\nThis animal can be bought in shops multiple times or can be found in forest multiple times.<br>\nThere is an rng for spawning it in forest (related to player.hunterperk. So the more expert the player is the more chance it will spawn). When the player moves to the next area, I want to destroy/Remove the animals.</p>\n<p>Does having a lot of clones with null parent effect the game? Is it necessary to use destroy function instead?</p>\n<p>The destroy function is very inconvenient. When I try to remove an object using the ScopeInventory function it gives this error:</p>\n<pre><code>foreach (x, ScopeInventory ()) {\n  destroy (x)\n}\n</code></pre>\n<p>\"Error running script: Error compiling expression 'x': RootExpressionElement: Cannot convert type 'Element' to expression result of 'String'\"<br>\nThis is my main issue with destroy function: It doesn't accept elements or scripts or functions. It has be string and specifically be the object.name I want to remove.<br>\nMy second issue is that Quest won't let me set name attribute midgame:</p>\n<pre><code>foreach (x, ScopeInventory ()) {\n obj =  CloneObject (\"blagget main\")\n  obj.name = \"blagget\"\n}\n</code></pre>\n<p>\"Error running script: Cannot change name of element when not in Edit mode\"<br>\ndestroy won't take alias either.</p>\n<p>Should I start giving specific names to the clones and how will I know which clone is the one I want to destroy? How can I destroy something if I don't know what its name going to be?</p>\n<pre><code>if (blagget.spawnnum &gt; 0) {\n  foreach (x, ScopeReachableNotHeld ()) {\n    y = GetAttribute (x, \"alias\")\n    if (y = \"blagget\") {\n      destroy (x)\n      blagget.spawnnum = blagget.spawnnum - 1\n    }\n  }\n}\n</code></pre>\n<p>another way I tried to do it. Error being not accepting element</p>\n<p>EDIT: I found a solution. destroy doesn't accept elements but it does accept string so you just have to use ToString</p>\n<pre><code>foreach (x, ScopeInventory ()) {\n  x = ToString (x)\n  y = Replace(x, \"Object: \", \"\")\n  destroy (y)\n}\n</code></pre>\n<p>I should've paid more attention to the error message. I feel stupid</p>\n\n",
+      "PostDate": "2024-05-12T17:15:40.2661236Z",
+      "LastEditDate": "2024-05-12T17:30:01.5645322Z",
+      "link": null
+    },
+    {
+      "PostId": "cfde2a62-cecf-4700-b0d1-76673abff933",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You start out by saying\r\n\r\n> This is my main issue with destroy function: It doesn't accept elements or scripts or functions. It has be string and specifically be the object.name I want to remove.\r\n\r\nThat pretty much tells you how to get the name of an object - you use its `name` attribute.\r\n\r\nIn your final code, rather than messing about with `ToString` you could just do `y = x.name`. But I'm pretty sure that won't work - because as soon as you destroy the object, `x` becomes an invalid variable, causing the `foreach` to break.\r\n\r\nThe normal way to handle cases like this is to use a `while` loop. So if you wanted to destroy all the objects in a list, you would first go through making a list of their names.\r\n\r\nAlso, if you're trying to delete clones of a specific item, you should use the `prototype` attribute, which points to the original it was cloned from.\r\n\r\nYour blagget-destroying example would then be:\r\n\r\n```\r\nblaggetnames = NewStringList()\r\nif (blagget.spawnnum > 0) {\r\n  foreach (x, ScopeReachableNotHeld ()) {\r\n    if (x.prototype = blagget) {\r\n      list add (blaggetnames, x.name)\r\n      blagget.spawnnum = blagget.spawnnum - 1\r\n    }\r\n  }\r\n}\r\nforeach (n, blaggetnames) {\r\n  destroy (n)\r\n}\r\n```\r\nOr slightly simpler:\r\n```\r\nblaggetnames = NewStringList()\r\nif (blagget.spawnnum > 0) {\r\n  foreach (x, FilterByAttribute (ScopeReachableNotHeld (), \"prototype\", blagget)) {\r\n    list add (blaggetnames, x.name)\r\n    blagget.spawnnum = blagget.spawnnum - 1\r\n  }\r\n}\r\nforeach (n, blaggetnames) {\r\n  destroy (n)\r\n}\r\n```\r\n\r\nOr to avoid making a second list, you can just avoid using `foreach`, like this:\r\n```\r\nblaggets = FilterByAttribute (ScopeReachableNotHeld (), \"prototype\", blagget)\r\nwhile (ListCount (blaggets) > 0) {\r\n  x = PickOneObject (blaggets)\r\n  list remove (blaggets, x)\r\n  destroy (x.name)\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You start out by saying</p>\n<blockquote>\n<p>This is my main issue with destroy function: It doesn't accept elements or scripts or functions. It has be string and specifically be the object.name I want to remove.</p>\n</blockquote>\n<p>That pretty much tells you how to get the name of an object - you use its <code>name</code> attribute.</p>\n<p>In your final code, rather than messing about with <code>ToString</code> you could just do <code>y = x.name</code>. But I'm pretty sure that won't work - because as soon as you destroy the object, <code>x</code> becomes an invalid variable, causing the <code>foreach</code> to break.</p>\n<p>The normal way to handle cases like this is to use a <code>while</code> loop. So if you wanted to destroy all the objects in a list, you would first go through making a list of their names.</p>\n<p>Also, if you're trying to delete clones of a specific item, you should use the <code>prototype</code> attribute, which points to the original it was cloned from.</p>\n<p>Your blagget-destroying example would then be:</p>\n<pre><code>blaggetnames = NewStringList()\nif (blagget.spawnnum &gt; 0) {\n  foreach (x, ScopeReachableNotHeld ()) {\n    if (x.prototype = blagget) {\n      list add (blaggetnames, x.name)\n      blagget.spawnnum = blagget.spawnnum - 1\n    }\n  }\n}\nforeach (n, blaggetnames) {\n  destroy (n)\n}\n</code></pre>\n<p>Or slightly simpler:</p>\n<pre><code>blaggetnames = NewStringList()\nif (blagget.spawnnum &gt; 0) {\n  foreach (x, FilterByAttribute (ScopeReachableNotHeld (), \"prototype\", blagget)) {\n    list add (blaggetnames, x.name)\n    blagget.spawnnum = blagget.spawnnum - 1\n  }\n}\nforeach (n, blaggetnames) {\n  destroy (n)\n}\n</code></pre>\n<p>Or to avoid making a second list, you can just avoid using <code>foreach</code>, like this:</p>\n<pre><code>blaggets = FilterByAttribute (ScopeReachableNotHeld (), \"prototype\", blagget)\nwhile (ListCount (blaggets) &gt; 0) {\n  x = PickOneObject (blaggets)\n  list remove (blaggets, x)\n  destroy (x.name)\n}\n</code></pre>\n\n",
+      "PostDate": "2024-05-12T18:55:13.632274Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "10b328b8-d4a6-46b1-a795-1fa041cb3e88",
+      "UserId": 652801,
+      "Username": "Gng",
+      "AvatarUrl": "https://i.imgur.com/w0pOzA9b.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks for the reply.\r\n\r\nthe y = x.name worked, even for multiple objects.\r\nAnd the rest of your codes worked like a charm; thanks for everything!\r\n\r\nClones are a very tricky subject but slowly I'm getting the hang of it.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks for the reply.</p>\n<p>the y = x.name worked, even for multiple objects.<br>\nAnd the rest of your codes worked like a charm; thanks for everything!</p>\n<p>Clones are a very tricky subject but slowly I'm getting the hang of it.</p>\n\n",
+      "PostDate": "2024-05-13T18:15:35.6629793Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

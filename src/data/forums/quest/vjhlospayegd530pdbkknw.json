@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "vjhlospayegd530pdbkknw",
+    "ForumId": "10",
+    "Title": "Collapsibles in Gamebook mode!",
+    "LastUpdated": "2019-09-09T09:39:39.825081Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "5cd1b83d-47f9-4b20-934b-72968bb90d31",
+      "UserId": 418279,
+      "Username": "Zesc",
+      "AvatarUrl": "https://i.imgur.com/bGcfC7sb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Greetings fellow Quest users!\r\n\r\nI recently attempted (unsucesfully) to transplant the text processor function of parser-games to create collapsibles into my gamebook. Since i am having no clue what i'm doing whilst messing with the libraries, i decided to stop before my PC inexplicably catches fire from my incompetence.\r\n\r\nYet trying to use ```{popup:}``` without any modification, i found it throws up some really odd error messages, transcribed here in full:\r\n```\r\nError running script: Error compiling expression 'JSSafe(s1) + GetRandomInt(0, 999999999)': FunctionCallElement: Could find not function 'JSSafe(String)'\r\n```\r\n\r\nI honestly have lost track of what could possibly cause this (why a Random Integer?) and what i should do.\r\n\r\nI am banging my head against a wall, and the wall is proving sturdier. Any suggestions? Help is as always highly appreciated!\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Greetings fellow Quest users!</p>\n<p>I recently attempted (unsucesfully) to transplant the text processor function of parser-games to create collapsibles into my gamebook. Since i am having no clue what i'm doing whilst messing with the libraries, i decided to stop before my PC inexplicably catches fire from my incompetence.</p>\n<p>Yet trying to use <code>{popup:}</code> without any modification, i found it throws up some really odd error messages, transcribed here in full:</p>\n<pre><code>Error running script: Error compiling expression 'JSSafe(s1) + GetRandomInt(0, 999999999)': FunctionCallElement: Could find not function 'JSSafe(String)'\n</code></pre>\n<p>I honestly have lost track of what could possibly cause this (why a Random Integer?) and what i should do.</p>\n<p>I am banging my head against a wall, and the wall is proving sturdier. Any suggestions? Help is as always highly appreciated!</p>\n\n",
+      "PostDate": "2019-09-09T09:39:39.825081Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "50a05e37-e329-44d1-a005-ea2426fd371b",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "`{popup:` uses random integers to identify each popup, so that the link knows which one to show/hide. This is a pretty weird way of doing it, but shouldn't be a problem.\r\n\r\nThe function `JSSafe` is in `CoreFunctions.aslx`, and it just removes any characters that would be a problem in a javascript identifier. The function used in the Text Adventure mode looks like:\r\n\r\n```\r\n  <function name=\"JSSafe\" parameters=\"s\" type=\"string\"><![CDATA[\r\n    s = Replace(s, \"\\\"\", \"\")\r\n    s = Replace(s, \"\\'\", \"\")\r\n    s = Replace(s, \" \", \"\")\r\n    s = Replace(s, \".\", \"\")\r\n    s = Replace(s, \",\", \"\")\r\n    s = Replace(s, \"!\", \"\")\r\n    s = Replace(s, \"?\", \"\")\r\n    s = Replace(s, \"-\", \"\")\r\n    s = Replace(s, \"/\", \"\")\r\n    s = Replace(s, \"(\", \"\")\r\n    s = Replace(s, \")\", \"\")\r\n    s = Replace(s, \"$\", \"\")\r\n    s = Replace(s, \"%\", \"\")\r\n    s = Replace(s, \"&\", \"\")\r\n    s = Replace(s, \"*\", \"\")\r\n    s = Replace(s, \"@\", \"\")\r\n    return (s)\r\n  ]]></function>\r\n```\r\n\r\nYou should be able to include that function, and your popups will work.\r\nI'm a little curious about that function, though. It seems inefficient to me; I would be more inclined to use something like:\r\n```\r\n  <function name=\"JSSafe\" parameters=\"s\" type=\"string\"><![CDATA[\r\n    output = \"\"\r\n    for (i, 1, LengthOf(s)) {\r\n      c = Mid (s, i, 1)\r\n      if (Instr (\"\\\"\\'\\\\ .,!?-/()$%&*@\", c) = 0) output = output + c\r\n    }\r\n    return (output)\r\n  ]]></function>\r\n```\r\nor even\r\n```\r\n  <function name=\"JSSafe\" parameters=\"s\" type=\"string\"><![CDATA[\r\n    while (IsRegexMatch (\"^(?<before>\\\\w*)\\\\W+(?<after>.*)$\", s)) {\r\n      parts = Populate (\"^(?<before>\\\\w*)\\\\W+(?<after>.*)$\", s)\r\n      s = DictionaryItem(parts, \"before\") + DictionaryItem(parts, \"after\")\r\n    }\r\n    return (s)\r\n  ]]></function>\r\n```\r\n(the regular expression engine is optimised to be very efficient at finding blocks of characters; but I'm not sure if the overhead of Quest's dictionaries would make that slower overall)",
+      "EditableFormat": "markdown",
+      "HTML": "<p><code>{popup:</code> uses random integers to identify each popup, so that the link knows which one to show/hide. This is a pretty weird way of doing it, but shouldn't be a problem.</p>\n<p>The function <code>JSSafe</code> is in <code>CoreFunctions.aslx</code>, and it just removes any characters that would be a problem in a javascript identifier. The function used in the Text Adventure mode looks like:</p>\n<pre><code>  &lt;function name=\"JSSafe\" parameters=\"s\" type=\"string\"&gt;&lt;![CDATA[\n    s = Replace(s, \"\\\"\", \"\")\n    s = Replace(s, \"\\'\", \"\")\n    s = Replace(s, \" \", \"\")\n    s = Replace(s, \".\", \"\")\n    s = Replace(s, \",\", \"\")\n    s = Replace(s, \"!\", \"\")\n    s = Replace(s, \"?\", \"\")\n    s = Replace(s, \"-\", \"\")\n    s = Replace(s, \"/\", \"\")\n    s = Replace(s, \"(\", \"\")\n    s = Replace(s, \")\", \"\")\n    s = Replace(s, \"$\", \"\")\n    s = Replace(s, \"%\", \"\")\n    s = Replace(s, \"&amp;\", \"\")\n    s = Replace(s, \"*\", \"\")\n    s = Replace(s, \"@\", \"\")\n    return (s)\n  ]]&gt;&lt;/function&gt;\n</code></pre>\n<p>You should be able to include that function, and your popups will work.<br>\nI'm a little curious about that function, though. It seems inefficient to me; I would be more inclined to use something like:</p>\n<pre><code>  &lt;function name=\"JSSafe\" parameters=\"s\" type=\"string\"&gt;&lt;![CDATA[\n    output = \"\"\n    for (i, 1, LengthOf(s)) {\n      c = Mid (s, i, 1)\n      if (Instr (\"\\\"\\'\\\\ .,!?-/()$%&amp;*@\", c) = 0) output = output + c\n    }\n    return (output)\n  ]]&gt;&lt;/function&gt;\n</code></pre>\n<p>or even</p>\n<pre><code>  &lt;function name=\"JSSafe\" parameters=\"s\" type=\"string\"&gt;&lt;![CDATA[\n    while (IsRegexMatch (\"^(?&lt;before&gt;\\\\w*)\\\\W+(?&lt;after&gt;.*)$\", s)) {\n      parts = Populate (\"^(?&lt;before&gt;\\\\w*)\\\\W+(?&lt;after&gt;.*)$\", s)\n      s = DictionaryItem(parts, \"before\") + DictionaryItem(parts, \"after\")\n    }\n    return (s)\n  ]]&gt;&lt;/function&gt;\n</code></pre>\n<p>(the regular expression engine is optimised to be very efficient at finding blocks of characters; but I'm not sure if the overhead of Quest's dictionaries would make that slower overall)</p>\n\n",
+      "PostDate": "2019-09-09T10:12:50.7117866Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "b80af71d-b7c2-401e-8dbb-518a3709d53e",
+      "UserId": 418279,
+      "Username": "Zesc",
+      "AvatarUrl": "https://i.imgur.com/bGcfC7sb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "...why would anyone ever do this with random integers?\r\n\r\nAnyway, thanks for your help. In the end, it was really as simple as adding ```CoreFunctions.aslx```, and all my attempts of specifically adding ```{popup:}``` were ludicrously convoluted. Talking about missing the obvious.\r\n\r\n_The random Integer still baffles me._",
+      "EditableFormat": "markdown",
+      "HTML": "<p>...why would anyone ever do this with random integers?</p>\n<p>Anyway, thanks for your help. In the end, it was really as simple as adding <code>CoreFunctions.aslx</code>, and all my attempts of specifically adding <code>{popup:}</code> were ludicrously convoluted. Talking about missing the obvious.</p>\n<p><em>The random Integer still baffles me.</em></p>\n\n",
+      "PostDate": "2019-09-09T20:49:13.230336Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "185713eb-10ef-4ae6-b571-458867cb0642",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> The random Integer still baffles me.\r\n\r\nThe popup needs an ID that isn't shared with any other popup.\r\n\r\nQuest doesn't have a list of the IDs it's already used.\r\n\r\nSticking a large random number on the end of the ID makes it unlikely to collide with anything.\r\n\r\nA better approach might have been using a javascript function to generate the ID; but a lot of the text processor stuff seems to be written with an absolute minimum of JS for no obvious reason.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>The random Integer still baffles me.</p>\n</blockquote>\n<p>The popup needs an ID that isn't shared with any other popup.</p>\n<p>Quest doesn't have a list of the IDs it's already used.</p>\n<p>Sticking a large random number on the end of the ID makes it unlikely to collide with anything.</p>\n<p>A better approach might have been using a javascript function to generate the ID; but a lot of the text processor stuff seems to be written with an absolute minimum of JS for no obvious reason.</p>\n\n",
+      "PostDate": "2019-09-09T21:26:42.4474805Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "7d7b1406-2a48-434f-8b41-0d34d9a900f2",
+      "UserId": 418279,
+      "Username": "Zesc",
+      "AvatarUrl": "https://i.imgur.com/bGcfC7sb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Oh, i get why there is an ID needed. But as a mathematician, i don't see why you would use a random int for this. Picking an element from any finite set has the chance of hitting a previously used one... Especially since we're only talking of a billion here. I haven't done the Gaußian distribution, but if your games uses enough popups, you're in peril.\r\n\r\nHmm, if i ever find the time and motivation (read: never) i might actually look into the code behind ```{popup:}``` and get it working properly (the lack of background transparency annoys me, for example).",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Oh, i get why there is an ID needed. But as a mathematician, i don't see why you would use a random int for this. Picking an element from any finite set has the chance of hitting a previously used one... Especially since we're only talking of a billion here. I haven't done the Gaußian distribution, but if your games uses enough popups, you're in peril.</p>\n<p>Hmm, if i ever find the time and motivation (read: never) i might actually look into the code behind <code>{popup:}</code> and get it working properly (the lack of background transparency annoys me, for example).</p>\n\n",
+      "PostDate": "2019-09-10T20:55:06.8253609Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

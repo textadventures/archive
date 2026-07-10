@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "4405",
+    "ForumId": "10",
+    "Title": "Password with unlimited tries",
+    "LastUpdated": "2014-06-16T11:59:04+01:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "29103",
+      "UserId": 0,
+      "Username": "docacappella",
+      "UserAvatar": null,
+      "UserGravatar": "682505dd1296f4cbe54e43540beb9bbe",
+      "EditableText": "I'm having trouble creating the following in my game:\nA keypad requires a password to unlock it. If the player enters the wrong password, I would like the keypad to ask again immediately, without the player having to look at the keypad all over again. I assume this is some sort of loop, but I am unsure how to create it. I would like the player to have unlimited tries at unlocking the keypad, because this game is for novice players.\n\nI don't have a code to show you my progress, because I am legitimately stuck. Please help. \nThanks",
+      "EditableFormat": "bbcode",
+      "HTML": "I'm having trouble creating the following in my game:<br/>A keypad requires a password to unlock it. If the player enters the wrong password, I would like the keypad to ask again immediately, without the player having to look at the keypad all over again. I assume this is some sort of loop, but I am unsure how to create it. I would like the player to have unlimited tries at unlocking the keypad, because this game is for novice players.<br/><br/>I don't have a code to show you my progress, because I am legitimately stuck. Please help. <br/>Thanks",
+      "PostDate": "2014-06-15T10:11:21+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "29104",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "create a function, put your entire script block in it, and under the script for when you get it wrong, use~add the 'call function' Script, and type in the name of your function (this will do the function over again, aka 'looping' it).\n\nan example (in code, as it's easier and faster for me):\n\n[code:2xbpf46s]&lt;object name=&quot;pass_code_box&quot;&gt;\n  &lt;inherit name=&quot;editor_object&quot; /&gt;\n  &lt;attr name=&quot;input_pass_code_buttons&quot; type=&quot;script&quot;&gt;\n    input_pass_code_buttons_function // calls the function ( 'call function' script )\n  &lt;/attr&gt;\n  &lt;attr name=&quot;displayverbs&quot; type=&quot;listextend&quot;&gt;input_pass_code_buttons&lt;/attr&gt;\n&lt;/object&gt;\n\n&lt;function name=&quot;input_pass_code_buttons_function&quot;&gt;\n  msg (&quot;What is the pass code?&quot;)\n  get input {\n    if (result = &quot;6392&quot;) {\n      // open and~or unlock door scripts\n      msg (&quot;The door opens, you inputted the correct pass code&quot;)\n      ClearScreen\n    } else {\n      msg (&quot;wrong pass code, try again&quot;)\n      ClearScreen\n      input_pass_code_buttons_function // calls the function ( 'call function' script), thus 'looping' the function, if you put in the incorrect input\n    }\n  }\n&lt;/function&gt;[/code:2xbpf46s]\n\n------\n\nthere's also:\n\ninvoke (Object.Script_Attribute)\n\n[code:2xbpf46s]&lt;object name=&quot;pass_code_box&quot;&gt;\n  &lt;inherit name=&quot;editor_object&quot; /&gt;\n  &lt;attr name=&quot;input_pass_code_buttons&quot; type=&quot;script&quot;&gt;\n    msg (&quot;What is the pass code?&quot;)\n    get input {\n      if (result = &quot;6392&quot;) {\n        // open and~or unlock door scripts\n        msg (&quot;The door opens, you inputted the correct pass code&quot;)\n        ClearScreen\n      } else {\n        msg (&quot;wrong pass code, try again&quot;)\n        ClearScreen\n        invoke (pass_code_box&#46;input_pass_code_buttons) // calls (invokes) the script, thus 'looping' the script, if you put in the incorrect input\n      }\n    }\n  &lt;/attr&gt;\n  &lt;attr name=&quot;displayverbs&quot; type=&quot;listextend&quot;&gt;input_pass_code_buttons&lt;/attr&gt;\n&lt;/object&gt;[/code:2xbpf46s]\n\nbut functions are better as they allow for parameters (which you'll use later as you learn more).",
+      "EditableFormat": "bbcode",
+      "HTML": "create a function, put your entire script block in it, and under the script for when you get it wrong, use~add the 'call function' Script, and type in the name of your function (this will do the function over again, aka 'looping' it).<br/><br/>an example (in code, as it's easier and faster for me):<br/><br/><pre><code>&lt;object name=&quot;pass_code_box&quot;&gt;<br/>  &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>  &lt;attr name=&quot;input_pass_code_buttons&quot; type=&quot;script&quot;&gt;<br/>    input_pass_code_buttons_function // calls the function ( 'call function' script )<br/>  &lt;/attr&gt;<br/>  &lt;attr name=&quot;displayverbs&quot; type=&quot;listextend&quot;&gt;input_pass_code_buttons&lt;/attr&gt;<br/>&lt;/object&gt;<br/><br/>&lt;function name=&quot;input_pass_code_buttons_function&quot;&gt;<br/>  msg (&quot;What is the pass code?&quot;)<br/>  get input {<br/>    if (result = &quot;6392&quot;) {<br/>      // open and~or unlock door scripts<br/>      msg (&quot;The door opens, you inputted the correct pass code&quot;)<br/>      ClearScreen<br/>    } else {<br/>      msg (&quot;wrong pass code, try again&quot;)<br/>      ClearScreen<br/>      input_pass_code_buttons_function // calls the function ( 'call function' script), thus 'looping' the function, if you put in the incorrect input<br/>    }<br/>  }<br/>&lt;/function&gt;</code></pre><br/><br/>------<br/><br/>there's also:<br/><br/>invoke (Object.Script_Attribute)<br/><br/><pre><code>&lt;object name=&quot;pass_code_box&quot;&gt;<br/>  &lt;inherit name=&quot;editor_object&quot; /&gt;<br/>  &lt;attr name=&quot;input_pass_code_buttons&quot; type=&quot;script&quot;&gt;<br/>    msg (&quot;What is the pass code?&quot;)<br/>    get input {<br/>      if (result = &quot;6392&quot;) {<br/>        // open and~or unlock door scripts<br/>        msg (&quot;The door opens, you inputted the correct pass code&quot;)<br/>        ClearScreen<br/>      } else {<br/>        msg (&quot;wrong pass code, try again&quot;)<br/>        ClearScreen<br/>        invoke (pass_code_box&#46;input_pass_code_buttons) // calls (invokes) the script, thus 'looping' the script, if you put in the incorrect input<br/>      }<br/>    }<br/>  &lt;/attr&gt;<br/>  &lt;attr name=&quot;displayverbs&quot; type=&quot;listextend&quot;&gt;input_pass_code_buttons&lt;/attr&gt;<br/>&lt;/object&gt;</code></pre><br/><br/>but functions are better as they allow for parameters (which you'll use later as you learn more).",
+      "PostDate": "2014-06-15T11:04:12+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "29105",
+      "UserId": 0,
+      "Username": "docacappella",
+      "UserAvatar": null,
+      "UserGravatar": "682505dd1296f4cbe54e43540beb9bbe",
+      "EditableText": "Thank you!",
+      "EditableFormat": "bbcode",
+      "HTML": "Thank you!",
+      "PostDate": "2014-06-16T02:38:51+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "29106",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "[quote=&quot;docacappella&quot;:1zsie2tf] If the player enters the wrong password, I would like the keypad to ask again immediately, without the player having to look at the keypad all over again. I assume this is some sort of loop,[/quote:1zsie2tf]\n\nIs this really a good idea? If the palyer doesn't know the code or maybe he forget it, then you have an infinite loop",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>docacappella wrote:</cite> If the player enters the wrong password, I would like the keypad to ask again immediately, without the player having to look at the keypad all over again. I assume this is some sort of loop,</blockquote><br/><br/>Is this really a good idea? If the palyer doesn't know the code or maybe he forget it, then you have an infinite loop",
+      "PostDate": "2014-06-16T11:59:04+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

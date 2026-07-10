@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "jrqw11-vneoy4rzidv-rrg",
+    "ForumId": "10",
+    "Title": "Using AND",
+    "LastUpdated": "2020-04-12T16:09:03.8886463Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "7fc18e4f-5e7d-48ae-97ad-fcf1bcbbf0a4",
+      "UserId": 142763,
+      "Username": "Forgewright",
+      "AvatarUrl": "http://i.imgur.com/Ea6HecZb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Can I use more than one ```and``` in a line of code? If so does it change how it is written? I am getting an error and wondering if having three or more variables is wrong.\r\n```\r\nif (player.twohanded = null and player.shield = null and player.onehanded <> null) {\r\n  blah script\r\n}\r\n```\r\n Also, is the ```<>```  the wrong thing to do? Should I use ```not``` somehow?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Can I use more than one <code>and</code> in a line of code? If so does it change how it is written? I am getting an error and wondering if having three or more variables is wrong.</p>\n<pre><code>if (player.twohanded = null and player.shield = null and player.onehanded &lt;&gt; null) {\n  blah script\n}\n</code></pre>\n<p>Also, is the <code>&lt;&gt;</code>  the wrong thing to do? Should I use <code>not</code> somehow?</p>\n\n",
+      "PostDate": "2020-04-12T16:09:03.8886463Z",
+      "LastEditDate": "2020-04-12T16:10:45.2128971Z",
+      "link": null
+    },
+    {
+      "PostId": "6b09d1a8-28ac-4482-bd6c-130daedde864",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "you can have as many (as well as any combinations of) logic operatives ('and' or 'or' or 'not' or '<>' or '>' or '<' or '<=' or '>=' or '=') as you want\r\n\r\nI'm guessing the error is from using the '<>' (not equal) comparison operation/symbol, as if using/doing it via coding, you need to use the 'CDATA' tags to tell quest that the '<' and '>' symbols are NOT to be seen as tags but as expression (comparison) operations/symbols:\r\n\r\n(usually for people new to coding, the error issue is often them not having/using full/proper condition comparison expressions, but this isn't the case for you)\r\n\r\n```\r\n// within your scripting ELEMENT (Verb, Command, Turnscript, Timer, Object's Script Attribute, etc):\r\n\r\n<!CDATA[\r\n\r\n  // all scripting (even if it doesn't use the '<' and/or '>' symbols) must go within this 'CDATA' tag, if you got any scripting that does use the '<' or '>'\r\n\r\n  // example:\r\n  // msg (\"blah\")\r\n  // even though this 'msg' Script doesn't have any '<' or '>' symbols, it still must go within the CDATA tag, as you do have scripting that uses the '<' or '>' symbols, seen below\r\n\r\n  if (player.twohanded = null and player.shield = null and player.onehanded <> null) {\r\n    blah script\r\n  }\r\n\r\n]]>\r\n```\r\n\r\n--------------\r\n\r\n```\r\nquest has two operations/symbols for doing 'not equals':\r\n\r\nif (VARIABLE_1 <> VARIABLE_2) { SCRIPTING }\r\n\r\n// or, alternatively:\r\n\r\nif (not VARIABLE_1 = VARIABLE_2) { SCRIPTING }\r\n// or\r\nif (VARIABLE_1 = not VARIABLE_2) { SCRIPTING }\r\n\r\n// however, as explained above, if using the '<>', and doing the coding, you'll need the 'CDATA' tags, as just like with doing: 'greater than' (>), 'lesser than' (<), 'greater than or equal to' (>=), or 'lesser than or equal to' (<=), you need the 'CDATA' tags to tell quest that the '<' and '>' are to be understood as comparison operations/symbols, and not as tags:\r\n\r\n\r\n\r\nparsing of comparison operations/symbols:\r\n\r\nif (VARIABLE > VARIABLE) { SCRIPTING }\r\nif (VARIABLE < VARIABLE) { SCRIPTING }\r\nif (VARIABLE >= VARIABLE) { SCRIPTING }\r\nif (VARIABLE <= VARIABLE) { SCRIPTING }\r\nif (VARIABLE <> VARIABLE) { SCRIPTING }\r\n\r\nVS, parsing of:\r\n\r\nTags:\r\n\r\n<object name=\"room\">\r\n\r\n  <inherit name=\"editor_room\" />\r\n\r\n  <attr name=\"alias\" type=\"string\">dungeon99</attr>\r\n\r\n</object>\r\n\r\n// ---------------------------\r\n\r\n// example in code of \"everything (multiple use of 'ands', tags, comparison operations, and using the 'cdata' tag):\r\n\r\n<object name=\"room\">\r\n\r\n  <inherit name=\"editor_room\" />\r\n\r\n  <attr name=\"alias\" type=\"string\">dungeon99</attr>\r\n\r\n  <attr name=\"example_script\" type=\"script\">\r\n\r\n    <![CDATA[\r\n\r\n      // NO error as you properly used/have the 'CDATA' tag\r\n\r\n     // the CDATA tag tells the quest parser to read any '<' and/or '>' symbols within it as comparison operations\r\n\r\n      if (10 <> 0 and 10 > 7 and 2 < 4) {\r\n        msg (\"TRUE\")\r\n      } else {\r\n        msg (\"FALSE\")\r\n      }\r\n\r\n    ]]>\r\n\r\n  </attr>\r\n\r\n</object>\r\n\r\n// -------------------\r\n\r\n// VS\r\n\r\n// ----------------\r\n\r\n<object name=\"room\">\r\n\r\n  <inherit name=\"editor_room\" />\r\n\r\n  <attr name=\"alias\" type=\"string\">dungeon99</attr>\r\n\r\n  <attr name=\"example_script\" type=\"script\">\r\n\r\n    // ERROR!!!, as you don't have the 'CDATA' tag\r\n\r\n    // due to not having the scripting below encased within the 'CDATA' tag, quest is reading the '<' and/or '>' symbols as tags, which causes an error as such code lines read as such tags are not proper syntax for tags, lol (the entire code is shifted/skewed/messed-up in terms of how its read, when the parser isn't reading comparison operation symbols as comparison operation symbols)\r\n\r\n    if (10 <> 0 and 10 > 7 and 2 < 4) {\r\n      msg (\"TRUE\")\r\n    } else {\r\n      msg (\"FALSE\")\r\n    }\r\n\r\n  </attr>\r\n\r\n</object>\r\n```\r\n\r\n-------\r\n\r\nfor complex comparison operations, you need to use the parenthesis, as the order of operations matters (just like it does with math):\r\n\r\nan example:\r\n\r\nA = false\r\nB = true\r\nC = true\r\n\r\nif ((A and B) or C)\r\n// (false and true) or true\r\n// (false) or true\r\n// TRUE\r\n\r\nVS\r\n\r\nif (A and (B or C))\r\n// false and (true or true)\r\n// false and (true)\r\n// FALSE\r\n\r\nfor example with math:\r\n\r\n(10 x 2) - 3 = 17\r\nVS\r\n10 x (2 - 3) = -10",
+      "EditableFormat": "markdown",
+      "HTML": "<p>you can have as many (as well as any combinations of) logic operatives ('and' or 'or' or 'not' or '&lt;&gt;' or '&gt;' or '&lt;' or '&lt;=' or '&gt;=' or '=') as you want</p>\n<p>I'm guessing the error is from using the '&lt;&gt;' (not equal) comparison operation/symbol, as if using/doing it via coding, you need to use the 'CDATA' tags to tell quest that the '&lt;' and '&gt;' symbols are NOT to be seen as tags but as expression (comparison) operations/symbols:</p>\n<p>(usually for people new to coding, the error issue is often them not having/using full/proper condition comparison expressions, but this isn't the case for you)</p>\n<pre><code>// within your scripting ELEMENT (Verb, Command, Turnscript, Timer, Object's Script Attribute, etc):\n\n&lt;!CDATA[\n\n  // all scripting (even if it doesn't use the '&lt;' and/or '&gt;' symbols) must go within this 'CDATA' tag, if you got any scripting that does use the '&lt;' or '&gt;'\n\n  // example:\n  // msg (\"blah\")\n  // even though this 'msg' Script doesn't have any '&lt;' or '&gt;' symbols, it still must go within the CDATA tag, as you do have scripting that uses the '&lt;' or '&gt;' symbols, seen below\n\n  if (player.twohanded = null and player.shield = null and player.onehanded &lt;&gt; null) {\n    blah script\n  }\n\n]]&gt;\n</code></pre>\n<hr>\n<pre><code>quest has two operations/symbols for doing 'not equals':\n\nif (VARIABLE_1 &lt;&gt; VARIABLE_2) { SCRIPTING }\n\n// or, alternatively:\n\nif (not VARIABLE_1 = VARIABLE_2) { SCRIPTING }\n// or\nif (VARIABLE_1 = not VARIABLE_2) { SCRIPTING }\n\n// however, as explained above, if using the '&lt;&gt;', and doing the coding, you'll need the 'CDATA' tags, as just like with doing: 'greater than' (&gt;), 'lesser than' (&lt;), 'greater than or equal to' (&gt;=), or 'lesser than or equal to' (&lt;=), you need the 'CDATA' tags to tell quest that the '&lt;' and '&gt;' are to be understood as comparison operations/symbols, and not as tags:\n\n\n\nparsing of comparison operations/symbols:\n\nif (VARIABLE &gt; VARIABLE) { SCRIPTING }\nif (VARIABLE &lt; VARIABLE) { SCRIPTING }\nif (VARIABLE &gt;= VARIABLE) { SCRIPTING }\nif (VARIABLE &lt;= VARIABLE) { SCRIPTING }\nif (VARIABLE &lt;&gt; VARIABLE) { SCRIPTING }\n\nVS, parsing of:\n\nTags:\n\n&lt;object name=\"room\"&gt;\n\n  &lt;inherit name=\"editor_room\" /&gt;\n\n  &lt;attr name=\"alias\" type=\"string\"&gt;dungeon99&lt;/attr&gt;\n\n&lt;/object&gt;\n\n// ---------------------------\n\n// example in code of \"everything (multiple use of 'ands', tags, comparison operations, and using the 'cdata' tag):\n\n&lt;object name=\"room\"&gt;\n\n  &lt;inherit name=\"editor_room\" /&gt;\n\n  &lt;attr name=\"alias\" type=\"string\"&gt;dungeon99&lt;/attr&gt;\n\n  &lt;attr name=\"example_script\" type=\"script\"&gt;\n\n    &lt;![CDATA[\n\n      // NO error as you properly used/have the 'CDATA' tag\n\n     // the CDATA tag tells the quest parser to read any '&lt;' and/or '&gt;' symbols within it as comparison operations\n\n      if (10 &lt;&gt; 0 and 10 &gt; 7 and 2 &lt; 4) {\n        msg (\"TRUE\")\n      } else {\n        msg (\"FALSE\")\n      }\n\n    ]]&gt;\n\n  &lt;/attr&gt;\n\n&lt;/object&gt;\n\n// -------------------\n\n// VS\n\n// ----------------\n\n&lt;object name=\"room\"&gt;\n\n  &lt;inherit name=\"editor_room\" /&gt;\n\n  &lt;attr name=\"alias\" type=\"string\"&gt;dungeon99&lt;/attr&gt;\n\n  &lt;attr name=\"example_script\" type=\"script\"&gt;\n\n    // ERROR!!!, as you don't have the 'CDATA' tag\n\n    // due to not having the scripting below encased within the 'CDATA' tag, quest is reading the '&lt;' and/or '&gt;' symbols as tags, which causes an error as such code lines read as such tags are not proper syntax for tags, lol (the entire code is shifted/skewed/messed-up in terms of how its read, when the parser isn't reading comparison operation symbols as comparison operation symbols)\n\n    if (10 &lt;&gt; 0 and 10 &gt; 7 and 2 &lt; 4) {\n      msg (\"TRUE\")\n    } else {\n      msg (\"FALSE\")\n    }\n\n  &lt;/attr&gt;\n\n&lt;/object&gt;\n</code></pre>\n<hr>\n<p>for complex comparison operations, you need to use the parenthesis, as the order of operations matters (just like it does with math):</p>\n<p>an example:</p>\n<p>A = false<br>\nB = true<br>\nC = true</p>\n<p>if ((A and B) or C)<br>\n// (false and true) or true<br>\n// (false) or true<br>\n// TRUE</p>\n<p>VS</p>\n<p>if (A and (B or C))<br>\n// false and (true or true)<br>\n// false and (true)<br>\n// FALSE</p>\n<p>for example with math:</p>\n<p>(10 x 2) - 3 = 17<br>\nVS<br>\n10 x (2 - 3) = -10</p>\n\n",
+      "PostDate": "2020-04-12T16:44:13.4980879Z",
+      "LastEditDate": "2020-04-12T17:13:41.0051537Z",
+      "link": null
+    },
+    {
+      "PostId": "5646dc10-e760-4abf-b98f-cf01a60a367a",
+      "UserId": 142763,
+      "Username": "Forgewright",
+      "AvatarUrl": "http://i.imgur.com/Ea6HecZb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "@hegemonkhan,\r\nThe documentation page shows two variables being used with AND with no further explanations. \r\nThank you for the information. Clears up a lot of possible questions.\r\n\r\nThe line of code I posted above is for functions I am creating in the Quest program and when I look at the game in code view the```<![CDATA[``` is added automatically.\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>@hegemonkhan,<br>\nThe documentation page shows two variables being used with AND with no further explanations.<br>\nThank you for the information. Clears up a lot of possible questions.</p>\n<p>The line of code I posted above is for functions I am creating in the Quest program and when I look at the game in code view the<code>&lt;![CDATA[</code> is added automatically.</p>\n\n",
+      "PostDate": "2020-04-12T17:35:24.1428939Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "34576234-87ab-4774-bb06-8065fd8bf957",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> I am getting an error\r\n\r\nWhat's the error?\r\nIn most cases, the error message tells you everything you need to diagnose the problem; even if it's not easy to parse.\r\n\r\nThe line as you posted looks like it should work, unless it's one of Quest's frustrating lexing issues. But that's hard to debug without knowing what the actual error message is.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>I am getting an error</p>\n</blockquote>\n<p>What's the error?<br>\nIn most cases, the error message tells you everything you need to diagnose the problem; even if it's not easy to parse.</p>\n<p>The line as you posted looks like it should work, unless it's one of Quest's frustrating lexing issues. But that's hard to debug without knowing what the actual error message is.</p>\n\n",
+      "PostDate": "2020-04-12T19:14:15.6951202Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "b226c9ef-b971-4fbd-a7c9-5551ab514f1b",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I've tested it on one of my own games, and it seems to work exactly as expected. No error message, and the 'else' block is executed.\r\n\r\nMy best guess at this point would be that one of those attributes is set to something other than an object; but in that case the error message will have told you exactly what the problem is, so you'd know it was nothing to do with \"and\"",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I've tested it on one of my own games, and it seems to work exactly as expected. No error message, and the 'else' block is executed.</p>\n<p>My best guess at this point would be that one of those attributes is set to something other than an object; but in that case the error message will have told you exactly what the problem is, so you'd know it was nothing to do with \"and\"</p>\n\n",
+      "PostDate": "2020-04-12T19:23:56.2769579Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "a1a92b58-eed0-4e33-b078-758c71597732",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "truth tables / logic gates: boolean/symbolic algebra/logic\r\n\r\ndefinition/identity (\"duh\", lol) boolean logic:\r\n\r\ntrue = TRUE\r\nfalse = FALSE\r\n\r\n'not' (negation / complement) boolean logic\r\n\r\nnot true = FALSE\r\nnot false = TRUE\r\n\r\n'and' (conjunction) boolean logic:\r\n\r\ntrue and true = TRUE\r\ntrue and false = FALSE\r\nfalse and true = FALSE\r\nfalse and false = FALSE\r\n\r\n'or' (disjunction) boolean logic:\r\n\r\ntrue or true = TRUE\r\ntrue or false = TRUE\r\nfalse or true = TRUE\r\nfalse or false = FALSE\r\n\r\n---------------\r\n\r\nhttps://en.wikipedia.org/wiki/Truth_table\r\n\r\nhttps://en.wikipedia.org/wiki/Boolean_algebra\r\n\r\nhttps://www.electronics-tutorials.ws/boolean/bool_6.html (rules/axioms/identities of boolean algebra, might not be best resource/info, meh)\r\n\r\nhttps://www.youtube.com/watch?v=EPJf4owqwdA (rules/axioms/identities of boolean algebra, likely better resource, along with the actual algebra solving/simplifying of boolean/symbolic expressions/logic-gates too)\r\n\r\nhttps://study.com/academy/lesson/symbolic-logic-definition-examples.html\r\nhttps://philosophy.lander.edu/logic/symbolic.html (I think there's small page buttons at the bottom, there's more pages to read)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>truth tables / logic gates: boolean/symbolic algebra/logic</p>\n<p>definition/identity (\"duh\", lol) boolean logic:</p>\n<p>true = TRUE<br>\nfalse = FALSE</p>\n<p>'not' (negation / complement) boolean logic</p>\n<p>not true = FALSE<br>\nnot false = TRUE</p>\n<p>'and' (conjunction) boolean logic:</p>\n<p>true and true = TRUE<br>\ntrue and false = FALSE<br>\nfalse and true = FALSE<br>\nfalse and false = FALSE</p>\n<p>'or' (disjunction) boolean logic:</p>\n<p>true or true = TRUE<br>\ntrue or false = TRUE<br>\nfalse or true = TRUE<br>\nfalse or false = FALSE</p>\n<hr>\n<p>https://en.wikipedia.org/wiki/Truth_table</p>\n<p>https://en.wikipedia.org/wiki/Boolean_algebra</p>\n<p>https://www.electronics-tutorials.ws/boolean/bool_6.html (rules/axioms/identities of boolean algebra, might not be best resource/info, meh)</p>\n<p>https://www.youtube.com/watch?v=EPJf4owqwdA (rules/axioms/identities of boolean algebra, likely better resource, along with the actual algebra solving/simplifying of boolean/symbolic expressions/logic-gates too)</p>\n<p>https://study.com/academy/lesson/symbolic-logic-definition-examples.html<br>\nhttps://philosophy.lander.edu/logic/symbolic.html (I think there's small page buttons at the bottom, there's more pages to read)</p>\n\n",
+      "PostDate": "2020-04-12T19:48:04.0064321Z",
+      "LastEditDate": "2020-04-12T19:54:58.0337524Z",
+      "link": null
+    }
+  ]
+}

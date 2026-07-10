@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "1535",
+    "ForumId": "10",
+    "Title": "Confused about action and type commands...",
+    "LastUpdated": "2006-12-14T14:47:58+00:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "11954",
+      "UserId": 0,
+      "Username": "MerryCo",
+      "UserAvatar": null,
+      "UserGravatar": "43b01fa25609213b9ca17fba3804cf1a",
+      "EditableText": "If I'm reading it right, I should be able to add a type to an object at runtime (dynamically) using the type command. This should copy all of the properties and actions of type into the object. Thus far I've been unable to get this to work.\n\nAlso, the action command allows me to specify an action for an object at runtime (dynamically). I've not been able to get this to work, either.\n\nThe documentation for both of these commands is really slim. Here's an example of what I'm trying to do for the type command:\n\n[code:1cs33d4b]\ncommand &lt;addflamable #object#&gt; &#123;\n   type &lt;#object#; Flammable&gt;\n&#125;\n\ndefine type &lt;Flammable&gt;\n   Burnrate = 1\nend define\n[/code:1cs33d4b]\n\nNow, this should add the burnrate property to #object#, but it's not. Any ideas? And can anyone better explain the action command to me? Thanks so much!",
+      "EditableFormat": "bbcode",
+      "HTML": "If I'm reading it right, I should be able to add a type to an object at runtime (dynamically) using the type command. This should copy all of the properties and actions of type into the object. Thus far I've been unable to get this to work.<br/><br/>Also, the action command allows me to specify an action for an object at runtime (dynamically). I've not been able to get this to work, either.<br/><br/>The documentation for both of these commands is really slim. Here's an example of what I'm trying to do for the type command:<br/><br/><pre><code><br/>command &lt;addflamable #object#&gt; &#123;<br/>   type &lt;#object#; Flammable&gt;<br/>&#125;<br/><br/>define type &lt;Flammable&gt;<br/>   Burnrate = 1<br/>end define<br/></code></pre><br/><br/>Now, this should add the burnrate property to #object#, but it's not. Any ideas? And can anyone better explain the action command to me? Thanks so much!",
+      "PostDate": "2006-12-13T19:36:40+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11956",
+      "UserId": 0,
+      "Username": "Freak",
+      "UserAvatar": null,
+      "UserGravatar": "325ed9ac125e00c9937be0d3aea0916d",
+      "EditableText": "How exactly is dynamic type changing implemented?  (Geas does not currently allow changing types at runtime; changing it to allow that would greatly complicate the implementation.)",
+      "EditableFormat": "bbcode",
+      "HTML": "How exactly is dynamic type changing implemented?  (Geas does not currently allow changing types at runtime; changing it to allow that would greatly complicate the implementation.)",
+      "PostDate": "2006-12-13T20:54:32+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11958",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "Actually, to allow that sort of switching it shouldn't be too hard.\n.. Out of curiosity, the fact that not only the code is very modular, but very confusing (to me), and it's better to ask the writer than guess etc.. (yeah, long line to prepare a question - I know.)\n\n.. Geas: How does it handle the &quot;set string &lt;blah; 1&gt;&quot; and then the:\n&quot;set numeric &lt;blah2; #blah# * 2&gt;&quot; ??\n\nDoes it convert the string into a numeric and then evaluate it? Does it substitute in ANY values - then parse the string equation? (and I assume you're using a standard string stream for this too).\n\nin relation to the OP:\nHave you tried\n[code:agjw48bp]command &lt;addflamable #@object#&gt; &#123;\n    type &lt;#object#; Flammable&gt;\n&#125;[/code:agjw48bp]\n.. I'm just about to go lookup the help file, but I'm pretty sure this would require the ACTUAL object name - and not any alias you use.",
+      "EditableFormat": "bbcode",
+      "HTML": "Actually, to allow that sort of switching it shouldn't be too hard.<br/>.. Out of curiosity, the fact that not only the code is very modular, but very confusing (to me), and it's better to ask the writer than guess etc.. (yeah, long line to prepare a question - I know.)<br/><br/>.. Geas: How does it handle the &quot;set string &lt;blah; 1&gt;&quot; and then the:<br/>&quot;set numeric &lt;blah2; #blah# * 2&gt;&quot; ??<br/><br/>Does it convert the string into a numeric and then evaluate it? Does it substitute in ANY values - then parse the string equation? (and I assume you're using a standard string stream for this too).<br/><br/>in relation to the OP:<br/>Have you tried<br/><pre><code>command &lt;addflamable #@object#&gt; &#123;<br/>    type &lt;#object#; Flammable&gt;<br/>&#125;</code></pre><br/>.. I'm just about to go lookup the help file, but I'm pretty sure this would require the ACTUAL object name - and not any alias you use.",
+      "PostDate": "2006-12-13T22:43:18+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11962",
+      "UserId": 0,
+      "Username": "Freak",
+      "UserAvatar": null,
+      "UserGravatar": "325ed9ac125e00c9937be0d3aea0916d",
+      "EditableText": "[quote=&quot;Tr0n&quot;:21s6r955]Actually, to allow that sort of switching it shouldn't be too hard.[/quote:21s6r955]\n\nThere are several ways that it can be done; some of them are workable; some violate assumptions I have made.  (Although if that were so, it would probably manifest in games where saving, quitting, then restoring would not reproduce everything correctly.\n\n[quote:21s6r955].. Out of curiosity, the fact that not only the code is very modular, but very confusing (to me), and it's better to ask the writer than guess etc.. (yeah, long line to prepare a question - I know.)[/quote:21s6r955]\n\nI'm confused.\n\n[quote:21s6r955].. Geas: How does it handle the &quot;set string &lt;blah; 1&gt;&quot; and then the:\n&quot;set numeric &lt;blah2; #blah# * 2&gt;&quot; ??\n\nDoes it convert the string into a numeric and then evaluate it? Does it substitute in ANY values - then parse the string equation? (and I assume you're using a standard string stream for this too).[/quote:21s6r955]\n\nGeas will handle just about any parameter that contains hashes (exceptions being commands) as follows:\nFirst it substitutes string / numeric variables\nThen it will evaluate any functions\nIf it is going to be assigned to a numeric variable, then it is then evaluated numerically.\n\nSo in your case, it would:\nSubstitute strings:   &lt;blah2; #blah# * 2&gt;   --&gt;  &lt;blah2; 1 * 2&gt;\nEvaluate functions:  (does nothing)\nEvaluate numerically:  1 * 2 --&gt; 2\n\nAlternately\nset string &lt;blah; 1+2&gt;\nset numeric &lt;blah2;  #blah#1&gt;\nwould set blah2 to 22  (1+21)\n\nset string &lt;blah; 1+2&gt;\nset numeric &lt;blah2; #blah# 1&gt;  (note the space between # and 1)\nwould set blah2 to 3.  (The surplus 1 is ignored.)\n\n(This will give different results if/when I modify it to handle Quest 4.0; Quest 3 only allows one operation per set statement.)",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>Tr0n wrote:</cite>Actually, to allow that sort of switching it shouldn't be too hard.</blockquote><br/><br/>There are several ways that it can be done; some of them are workable; some violate assumptions I have made.  (Although if that were so, it would probably manifest in games where saving, quitting, then restoring would not reproduce everything correctly.<br/><br/><blockquote><p>.. Out of curiosity, the fact that not only the code is very modular, but very confusing (to me), and it's better to ask the writer than guess etc.. (yeah, long line to prepare a question - I know.)</p></blockquote><br/><br/>I'm confused.<br/><br/><blockquote><p>.. Geas: How does it handle the &quot;set string &lt;blah; 1&gt;&quot; and then the:<br/>&quot;set numeric &lt;blah2; #blah# * 2&gt;&quot; ??<br/><br/>Does it convert the string into a numeric and then evaluate it? Does it substitute in ANY values - then parse the string equation? (and I assume you're using a standard string stream for this too).</p></blockquote><br/><br/>Geas will handle just about any parameter that contains hashes (exceptions being commands) as follows:<br/>First it substitutes string / numeric variables<br/>Then it will evaluate any functions<br/>If it is going to be assigned to a numeric variable, then it is then evaluated numerically.<br/><br/>So in your case, it would:<br/>Substitute strings:   &lt;blah2; #blah# * 2&gt;   --&gt;  &lt;blah2; 1 * 2&gt;<br/>Evaluate functions:  (does nothing)<br/>Evaluate numerically:  1 * 2 --&gt; 2<br/><br/>Alternately<br/>set string &lt;blah; 1+2&gt;<br/>set numeric &lt;blah2;  #blah#1&gt;<br/>would set blah2 to 22  (1+21)<br/><br/>set string &lt;blah; 1+2&gt;<br/>set numeric &lt;blah2; #blah# 1&gt;  (note the space between # and 1)<br/>would set blah2 to 3.  (The surplus 1 is ignored.)<br/><br/>(This will give different results if/when I modify it to handle Quest 4.0; Quest 3 only allows one operation per set statement.)",
+      "PostDate": "2006-12-14T01:02:17+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "11970",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "It seems the &quot;type&quot; script command is in fact broken - all the properties and actions within a type will get added to the wrong object (if you're looking for it, you'll find they get added to the last object defined in the game).\n\nI've fixed this for Quest 4.0 Beta 3.\n\nThe &quot;action&quot; script command does work, however. For example, I modified your code like this:\n\n[code:34whjj90]\ndefine room &lt;room&gt;\n\n\tcommand &lt;f #@object#&gt; &#123; \n\t   type &lt;#object#; Flammable&gt;\n\t   action &lt;#object#; eat&gt; msg &lt;You eat the thing&#46;&gt;\n\t&#125; \n\t\n\tcommand &lt;d #@object#&gt; if action &lt;#object#; eat&gt; then doaction &lt;#object#; eat&gt; else msg &lt;No action defined&#46;&gt;\n\t\n\tdefine object &lt;book&gt;\n\tend define\n\t\n\tdefine object &lt;sofa&gt;\n\tend define\n\nend define\n\ndefine type &lt;Flammable&gt; \n   Burnrate = 1 \nend define \n[/code:34whjj90]\n\nHere's some example output:\n\n[quote:34whjj90]\n&gt; d book\nNo action defined.\n\n&gt; f book\n\n&gt; d book\nYou eat the thing.\n[/quote:34whjj90]\n\n\nThe &quot;type&quot; script command works in a fairly simple way - it just reads the type definition, and applies all the included actions and properties to the object, including all those defined by any nested types. If there's any conflict, any existing value is over-written, so if your object already had an &quot;eat&quot; action but the type defines another one, it's the type's &quot;eat&quot; action that will overwrite the earlier one (if you don't like that, just apply the type first, before setting your own actions and properties).",
+      "EditableFormat": "bbcode",
+      "HTML": "It seems the &quot;type&quot; script command is in fact broken - all the properties and actions within a type will get added to the wrong object (if you're looking for it, you'll find they get added to the last object defined in the game).<br/><br/>I've fixed this for Quest 4.0 Beta 3.<br/><br/>The &quot;action&quot; script command does work, however. For example, I modified your code like this:<br/><br/><pre><code><br/>define room &lt;room&gt;<br/><br/>\tcommand &lt;f #@object#&gt; &#123; <br/>\t   type &lt;#object#; Flammable&gt;<br/>\t   action &lt;#object#; eat&gt; msg &lt;You eat the thing&#46;&gt;<br/>\t&#125; <br/>\t<br/>\tcommand &lt;d #@object#&gt; if action &lt;#object#; eat&gt; then doaction &lt;#object#; eat&gt; else msg &lt;No action defined&#46;&gt;<br/>\t<br/>\tdefine object &lt;book&gt;<br/>\tend define<br/>\t<br/>\tdefine object &lt;sofa&gt;<br/>\tend define<br/><br/>end define<br/><br/>define type &lt;Flammable&gt; <br/>   Burnrate = 1 <br/>end define <br/></code></pre><br/><br/>Here's some example output:<br/><br/><blockquote><p><br/>&gt; d book<br/>No action defined.<br/><br/>&gt; f book<br/><br/>&gt; d book<br/>You eat the thing.<br/></p></blockquote><br/><br/><br/>The &quot;type&quot; script command works in a fairly simple way - it just reads the type definition, and applies all the included actions and properties to the object, including all those defined by any nested types. If there's any conflict, any existing value is over-written, so if your object already had an &quot;eat&quot; action but the type defines another one, it's the type's &quot;eat&quot; action that will overwrite the earlier one (if you don't like that, just apply the type first, before setting your own actions and properties).",
+      "PostDate": "2006-12-14T14:47:58+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

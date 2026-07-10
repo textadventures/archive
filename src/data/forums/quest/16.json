@@ -1,0 +1,59 @@
+{
+  "Topic": {
+    "TopicId": "16",
+    "ForumId": "10",
+    "Title": "I'm confused about object properties.",
+    "LastUpdated": "2003-07-17T13:15:15+01:00",
+    "ReplyCount": 3
+  },
+  "Posts": [
+    {
+      "PostId": "38",
+      "UserId": 0,
+      "Username": "Robert",
+      "UserAvatar": null,
+      "UserGravatar": "e4f4ef7964db3b4d0c3067acfb22ad16",
+      "EditableText": "Hello everyone,\n\nI'm confused about object properties.\n\nWhat I'd like is to have is a grate that is initially closed.  You pick up a sword, and use it on the grate.  This opens the grate.  If you look at the grate before or after you use the sword on it, it tells you whether it's open or closed.\n\nMy ASL code is below:\n\ndefine room &lt;Courtyard&gt;\n\n\tdefine object &lt;Grate&gt;\n\t\tlook if property &lt;Grate; prOpen=true&gt; then msg &lt;The grate is open.&gt; else msg &lt;The grate is closed.&gt;\n\t\tproperties &lt;prOpen=false&gt;\n\tend define\n\n\tdefine object &lt;Sword&gt;\n\t\ttake\n\t\tuse on &lt;Grate&gt; {\n\t\t\tproperty &lt;Grate; prOpen=true&gt;\n\t\t\tcreate exit north &lt;Courtyard; Tunnel&gt;\n\t\t}\n\tend define\n\nend define\n\nCan anyone spot what I'm doing wrong please?\n\nThanks for any assistance.\n\nBest regards from Robert.",
+      "EditableFormat": "bbcode",
+      "HTML": "Hello everyone,<br/><br/>I'm confused about object properties.<br/><br/>What I'd like is to have is a grate that is initially closed.  You pick up a sword, and use it on the grate.  This opens the grate.  If you look at the grate before or after you use the sword on it, it tells you whether it's open or closed.<br/><br/>My ASL code is below:<br/><br/>define room &lt;Courtyard&gt;<br/><br/>\tdefine object &lt;Grate&gt;<br/>\t\tlook if property &lt;Grate; prOpen=true&gt; then msg &lt;The grate is open.&gt; else msg &lt;The grate is closed.&gt;<br/>\t\tproperties &lt;prOpen=false&gt;<br/>\tend define<br/><br/>\tdefine object &lt;Sword&gt;<br/>\t\ttake<br/>\t\tuse on &lt;Grate&gt; {<br/>\t\t\tproperty &lt;Grate; prOpen=true&gt;<br/>\t\t\tcreate exit north &lt;Courtyard; Tunnel&gt;<br/>\t\t}<br/>\tend define<br/><br/>end define<br/><br/>Can anyone spot what I'm doing wrong please?<br/><br/>Thanks for any assistance.<br/><br/>Best regards from Robert.",
+      "PostDate": "2003-07-04T09:59:40+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "\"if property\" checks whether a property exists, and the format is \"if property &lt;object name; property name&gt;\", not \"if property &lt;object name; property name = value&gt;\". Properties without values are either on or off; properties with values can be anything.\n\nSo, there are two ways of fixing your problem:\n\n1. Use boolean properties, which are either on or off. So, instead of using \"properties &lt;prOpen = false&gt;\", use \"properties &lt;not prOpen&gt;\". Then instead of \"property &lt;Grate; prOpen = true&gt;\", use \"property &lt;Grate; prOpen&gt;\". Instead of \"if property &lt;Grate; prOpen = true&gt;\", use \"if property &lt;Grate; prOpen&gt;\".\n\n2. OR use the correct syntax for checking whether an object's property has a particular value. This isn't done using \"if property\", as that only checks boolean (on/off) properties, and here you're setting properties to [i:mvunrfxi]values[/i:mvunrfxi] of \"true\" or \"false\". A subtle difference, and one that has been misunderstood in the past - so I will probably add value-checking support for \"if property\" to future versions of Quest. Until then, the proper syntax to use is \"if ( #Grate:prOpen# = true) then ...\" (and this is the best syntax to use even if I do implement \"if property &lt;object name; property = value&gt;\", as you can also use checks other than \"=\" with this syntax, such as greater than &gt;, less than &lt; etc.)\n\nHopefully this makes sense, I seem to have waffled a bit.",
+      "EditableFormat": "bbcode",
+      "HTML": "\"if property\" checks whether a property exists, and the format is \"if property &lt;object name; property name&gt;\", not \"if property &lt;object name; property name = value&gt;\". Properties without values are either on or off; properties with values can be anything.<br/><br/>So, there are two ways of fixing your problem:<br/><br/>1. Use boolean properties, which are either on or off. So, instead of using \"properties &lt;prOpen = false&gt;\", use \"properties &lt;not prOpen&gt;\". Then instead of \"property &lt;Grate; prOpen = true&gt;\", use \"property &lt;Grate; prOpen&gt;\". Instead of \"if property &lt;Grate; prOpen = true&gt;\", use \"if property &lt;Grate; prOpen&gt;\".<br/><br/>2. OR use the correct syntax for checking whether an object's property has a particular value. This isn't done using \"if property\", as that only checks boolean (on/off) properties, and here you're setting properties to <span style=\"font-style:italic;\">values</span> of \"true\" or \"false\". A subtle difference, and one that has been misunderstood in the past - so I will probably add value-checking support for \"if property\" to future versions of Quest. Until then, the proper syntax to use is \"if ( #Grate:prOpen# = true) then ...\" (and this is the best syntax to use even if I do implement \"if property &lt;object name; property = value&gt;\", as you can also use checks other than \"=\" with this syntax, such as greater than &gt;, less than &lt; etc.)<br/><br/>Hopefully this makes sense, I seem to have waffled a bit.",
+      "PostDate": "2003-07-04T10:16:10+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40",
+      "UserId": 0,
+      "Username": "Robert",
+      "UserAvatar": null,
+      "UserGravatar": "e4f4ef7964db3b4d0c3067acfb22ad16",
+      "EditableText": "Thanks a lot for your help Alex; that's fixed my problem.\n- Robert.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thanks a lot for your help Alex; that's fixed my problem.<br/>- Robert.",
+      "PostDate": "2003-07-04T11:48:25+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "94",
+      "UserId": 0,
+      "Username": "Hemo",
+      "UserAvatar": null,
+      "UserGravatar": "f4ecaae849e28efe28895189fbfa205c",
+      "EditableText": "<!-- s:) --><img src=\"{SMILIES_PATH}/icon_e_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> Not to worry Alex. Waffling is a great source of good ideas.",
+      "EditableFormat": "bbcode",
+      "HTML": "<!-- s:) --><img src=\"{SMILIES_PATH}/icon_e_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> Not to worry Alex. Waffling is a great source of good ideas.",
+      "PostDate": "2003-07-17T13:15:15+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

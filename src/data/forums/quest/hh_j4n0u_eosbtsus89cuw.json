@@ -1,0 +1,123 @@
+{
+  "Topic": {
+    "TopicId": "hh_j4n0u_eosbtsus89cuw",
+    "ForumId": "10",
+    "Title": "Creating a status attribute with a script",
+    "LastUpdated": "2021-01-26T20:31:12.9632439Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "4fbf3f24-dc3f-4f73-9d63-bbdb80a9462f",
+      "UserId": 528049,
+      "Username": "Atokrad",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cf78b93345acd10a7319b23dee5e8655?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hey, I'm a first-time poster and I'm trying to make a game that has quests and side quests. For a hidden side quest, I have items a player can collect, since they are hidden I thought it would be a good idea to have a status attribute that shows up once the player starts the quest to show how many are in the area, any ideas?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hey, I'm a first-time poster and I'm trying to make a game that has quests and side quests. For a hidden side quest, I have items a player can collect, since they are hidden I thought it would be a good idea to have a status attribute that shows up once the player starts the quest to show how many are in the area, any ideas?</p>\n\n",
+      "PostDate": "2021-01-26T20:31:12.9632439Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "849c2290-119b-4fc7-97c1-e6c4116cf610",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "There are three places status attributes are stored. They are processed in order, so by deciding which dictionary to put them in, you can decide where in the list they appear.\r\n\r\nThe dictionaries are:\r\n1. `game.statusattributes` (these have their values stored in attributes of the `game` object - this includes score if the feature is enabled)\r\n2. `game.povstatusattributes` (these have their values stored in attributes of the current player object - this includes health and money if they are enabled)\r\n3. `game.pov.statusattributes` (these have their values stored in attributes of the current player object)\r\n\r\nNote that for both of the last two, the attributes are attributes of the player object. The difference between them is that `game.pov.statusattributes` is _also_ an attribute of the player object; so any changes you make to it will no longer be displayed if the player changes to controlling a different character.\r\n\r\nSo when you get the sidequest you could do something like:\r\n```\r\n// First, create the dictionary if it doesn't exist:\r\nif (not HasAttribute (game, \"povstatusattributes\")) {\r\n  game.povstatusattributes = NewStringDictionary()\r\n}\r\n\r\n// set the attribute to a sensible value:\r\ngame.pov.sidequestitems = 0\r\n\r\n// And add it to the status attributes:\r\ndictionary add (game.povstatusattributes, \"sidequestitems\", \"Hidden items found: !/6\")\r\n```\r\n\r\nDoes that help?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>There are three places status attributes are stored. They are processed in order, so by deciding which dictionary to put them in, you can decide where in the list they appear.</p>\n<p>The dictionaries are:</p>\n<ol>\n<li><code>game.statusattributes</code> (these have their values stored in attributes of the <code>game</code> object - this includes score if the feature is enabled)</li>\n<li><code>game.povstatusattributes</code> (these have their values stored in attributes of the current player object - this includes health and money if they are enabled)</li>\n<li><code>game.pov.statusattributes</code> (these have their values stored in attributes of the current player object)</li>\n</ol>\n<p>Note that for both of the last two, the attributes are attributes of the player object. The difference between them is that <code>game.pov.statusattributes</code> is <em>also</em> an attribute of the player object; so any changes you make to it will no longer be displayed if the player changes to controlling a different character.</p>\n<p>So when you get the sidequest you could do something like:</p>\n<pre><code>// First, create the dictionary if it doesn't exist:\nif (not HasAttribute (game, \"povstatusattributes\")) {\n  game.povstatusattributes = NewStringDictionary()\n}\n\n// set the attribute to a sensible value:\ngame.pov.sidequestitems = 0\n\n// And add it to the status attributes:\ndictionary add (game.povstatusattributes, \"sidequestitems\", \"Hidden items found: !/6\")\n</code></pre>\n<p>Does that help?</p>\n\n",
+      "PostDate": "2021-01-26T21:10:34.5830168Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "5b7e7f71-b4a7-47a2-b136-ca1041eb5580",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Oh… when the sidequest is over, you can just do:\r\n```\r\ndictionary remove (game.povstatusattributes, \"sidequestitems\")\r\n```\r\n(not sure if you know that; some people seem to have trouble understanding dictionaries)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Oh… when the sidequest is over, you can just do:</p>\n<pre><code>dictionary remove (game.povstatusattributes, \"sidequestitems\")\n</code></pre>\n<p>(not sure if you know that; some people seem to have trouble understanding dictionaries)</p>\n\n",
+      "PostDate": "2021-01-26T21:13:48.1458521Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e234beed-0b86-4dbe-a937-e6f5211b1728",
+      "UserId": 528049,
+      "Username": "Atokrad",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cf78b93345acd10a7319b23dee5e8655?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Ok, thank you, it works perfectly but how can I change the attribute when you get an item?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Ok, thank you, it works perfectly but how can I change the attribute when you get an item?</p>\n\n",
+      "PostDate": "2021-01-26T21:46:03.7765532Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "5aed46eb-afdc-4784-8be3-af4d49bbda1b",
+      "UserId": 528049,
+      "Username": "Atokrad",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cf78b93345acd10a7319b23dee5e8655?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "What I want is for the number to go up no matter the order you get the items in.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>What I want is for the number to go up no matter the order you get the items in.</p>\n\n",
+      "PostDate": "2021-01-26T21:56:18.0345719Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "becf94bb-4d05-45ce-b348-a2f74d652b64",
+      "UserId": 267336,
+      "Username": "jmnevil54",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5d73d7ec1dbe20a5cb46f02a6d53f187?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Edit: Never mind, disregard this post.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Edit: Never mind, disregard this post.</p>\n\n",
+      "PostDate": "2021-01-27T00:51:22.6933859Z",
+      "LastEditDate": "2021-01-27T01:02:49.7738335Z",
+      "link": null
+    },
+    {
+      "PostId": "0cb801c3-3937-4add-a3ea-b876f0f169f4",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> What I want is for the number to go up no matter the order you get the items in.\r\n\r\nJust add to it. So like:\r\n```\r\ngame.pov.sidequestitems = game.pov.sidequestitems + 1\r\n```\r\neach time you get one. Depending how the player gets them, you might want to put that in a `firsttime` block so that it only happens once for each item.\r\n\r\nOr if you want to check how many of those objects are in the inventory at the same time, you'd have a turnscript to count them. Something like:\r\n```\r\ngame.pov.sidequestitems = 0\r\nforeach (itemname, Split(\"item1;item2;item3;item4;item5\")) {\r\n  if (Got (GetItem (itemname))) {\r\n    game.pov.sidequestitems = game.pov.sidequestitems + 1\r\n  }\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>What I want is for the number to go up no matter the order you get the items in.</p>\n</blockquote>\n<p>Just add to it. So like:</p>\n<pre><code>game.pov.sidequestitems = game.pov.sidequestitems + 1\n</code></pre>\n<p>each time you get one. Depending how the player gets them, you might want to put that in a <code>firsttime</code> block so that it only happens once for each item.</p>\n<p>Or if you want to check how many of those objects are in the inventory at the same time, you'd have a turnscript to count them. Something like:</p>\n<pre><code>game.pov.sidequestitems = 0\nforeach (itemname, Split(\"item1;item2;item3;item4;item5\")) {\n  if (Got (GetItem (itemname))) {\n    game.pov.sidequestitems = game.pov.sidequestitems + 1\n  }\n}\n</code></pre>\n\n",
+      "PostDate": "2021-01-27T01:30:14.0496849Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "59b6660d-852e-4c4b-a8c8-54b347385326",
+      "UserId": 528049,
+      "Username": "Atokrad",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cf78b93345acd10a7319b23dee5e8655?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I was able to figure out a way to make the number go up, thanks for the help!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I was able to figure out a way to make the number go up, thanks for the help!</p>\n\n",
+      "PostDate": "2021-01-27T03:21:06.0251187Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

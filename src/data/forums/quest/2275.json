@@ -1,0 +1,47 @@
+{
+  "Topic": {
+    "TopicId": "2275",
+    "ForumId": "10",
+    "Title": "Commands getting confused",
+    "LastUpdated": "2010-05-15T12:21:55+01:00",
+    "ReplyCount": 2
+  },
+  "Posts": [
+    {
+      "PostId": "17325",
+      "UserId": 0,
+      "Username": "SquirrelUK",
+      "UserAvatar": null,
+      "UserGravatar": "558dda34e2c5d2212d49493b20a462c6",
+      "EditableText": "Hi,\n\nI'm trying to create a simple simulation game where every time the player advances a turn, the player's gold increases according to the tax rate he has set. I have created two separate commands, one for moving to the next turn, the other for setting the tax rate. The problem, is the game only seems to use one command or the other, based on which is the higher up on the list on the Commands menu! ie. if #change tax rate# is first, the game will run the tax rate script whenever the player enters &quot;next turn&quot; and if #next turn# is first, the game will run the &quot;next turn&quot; script when the player enters &quot;change tax rate&quot;.\n\nAny help much appreciated!\n\nMy game code is below:\n\n\n\n' &quot;Sim Government&quot;\n' Created with QDK Lite 4.1.2\n\n!include &lt;stdverbs.lib&gt;\n\ndefine game &lt;Sim Government&gt;\n\tasl-version &lt;410&gt;\n\tstart &lt;Government Room&gt;\n\tgame info &lt;Created with QDK Lite 4.1.2&gt;\n\tcommand &lt;#change tax rate#&gt; {\n\t\tmsg &lt;Please enter a number between 0 and 60 to reflect your preferred percentage income tax.&gt;\n\t\tenter &lt;tax rate&gt;\n\t\tset numeric &lt;tax rate; #tax rate#&gt;\n\t\tif ( #tax rate# &lt; 0 ) or ( #tax rate# &gt; 60 ) then msg &lt;The tax rate must be between 0 and 60.&gt;\n\t}\n\tcommand &lt;#next turn#&gt; inc &lt;turn; 1&gt;\n\tdefine variable &lt;turn&gt;\n\t\ttype numeric\n\t\tvalue &lt;0&gt;\n\t\tdisplay &lt;turn !&gt;\n\t\tonchange {\n\t\t\tset numeric &lt;tax revenue; %tax rate% * 1000&gt;\n\t\t\tset numeric &lt;gold; %gold% + %tax revenue%&gt;\n\t\t}\n\tend define\n\tdefine variable &lt;gold&gt;\n\t\ttype numeric\n\t\tvalue &lt;0&gt;\n\t\tdisplay &lt;gold !&gt;\n\tend define\n\tdefine variable &lt;tax rate&gt;\n\t\ttype numeric\n\t\tvalue &lt;25&gt;\n\t\tdisplay &lt;tax rate !&gt;\n\tend define\nend define\n\ndefine options\n\tdebug on\n\tpanes on\n\tabbreviations on\nend define\n\ndefine menu &lt;Game&gt;\nend define\n\ndefine room &lt;Government Room&gt;\n\tprefix &lt;the&gt;\nend define",
+      "EditableFormat": "bbcode",
+      "HTML": "Hi,<br/><br/>I'm trying to create a simple simulation game where every time the player advances a turn, the player's gold increases according to the tax rate he has set. I have created two separate commands, one for moving to the next turn, the other for setting the tax rate. The problem, is the game only seems to use one command or the other, based on which is the higher up on the list on the Commands menu! ie. if #change tax rate# is first, the game will run the tax rate script whenever the player enters &quot;next turn&quot; and if #next turn# is first, the game will run the &quot;next turn&quot; script when the player enters &quot;change tax rate&quot;.<br/><br/>Any help much appreciated!<br/><br/>My game code is below:<br/><br/><br/><br/>' &quot;Sim Government&quot;<br/>' Created with QDK Lite 4.1.2<br/><br/>!include &lt;stdverbs.lib&gt;<br/><br/>define game &lt;Sim Government&gt;<br/>\tasl-version &lt;410&gt;<br/>\tstart &lt;Government Room&gt;<br/>\tgame info &lt;Created with QDK Lite 4.1.2&gt;<br/>\tcommand &lt;#change tax rate#&gt; {<br/>\t\tmsg &lt;Please enter a number between 0 and 60 to reflect your preferred percentage income tax.&gt;<br/>\t\tenter &lt;tax rate&gt;<br/>\t\tset numeric &lt;tax rate; #tax rate#&gt;<br/>\t\tif ( #tax rate# &lt; 0 ) or ( #tax rate# &gt; 60 ) then msg &lt;The tax rate must be between 0 and 60.&gt;<br/>\t}<br/>\tcommand &lt;#next turn#&gt; inc &lt;turn; 1&gt;<br/>\tdefine variable &lt;turn&gt;<br/>\t\ttype numeric<br/>\t\tvalue &lt;0&gt;<br/>\t\tdisplay &lt;turn !&gt;<br/>\t\tonchange {<br/>\t\t\tset numeric &lt;tax revenue; %tax rate% * 1000&gt;<br/>\t\t\tset numeric &lt;gold; %gold% + %tax revenue%&gt;<br/>\t\t}<br/>\tend define<br/>\tdefine variable &lt;gold&gt;<br/>\t\ttype numeric<br/>\t\tvalue &lt;0&gt;<br/>\t\tdisplay &lt;gold !&gt;<br/>\tend define<br/>\tdefine variable &lt;tax rate&gt;<br/>\t\ttype numeric<br/>\t\tvalue &lt;25&gt;<br/>\t\tdisplay &lt;tax rate !&gt;<br/>\tend define<br/>end define<br/><br/>define options<br/>\tdebug on<br/>\tpanes on<br/>\tabbreviations on<br/>end define<br/><br/>define menu &lt;Game&gt;<br/>end define<br/><br/>define room &lt;Government Room&gt;<br/>\tprefix &lt;the&gt;<br/>end define",
+      "PostDate": "2010-05-14T02:00:02+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "17326",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "The problem is you've entered the commands like this:\n\ncommand &lt;#change tax rate#&gt;\ncommand &lt;#next turn#&gt;\n\nWhen you put # characters around some text, that becomes a variable, which can be any text. It's so you can create commands like &quot;put #object# on #surface#&quot;, which will match &quot;put cup on table&quot;, &quot;put book on shelf&quot; etc.\n\nIn this case both of your commands are entirely variable, so they will both match any text the player ever types. Not a good thing!\n\nAll you need to do is remove the # characters:\n\ncommand &lt;change tax rate&gt;\ncommand &lt;next turn&gt;",
+      "EditableFormat": "bbcode",
+      "HTML": "The problem is you've entered the commands like this:<br/><br/>command &lt;#change tax rate#&gt;<br/>command &lt;#next turn#&gt;<br/><br/>When you put # characters around some text, that becomes a variable, which can be any text. It's so you can create commands like &quot;put #object# on #surface#&quot;, which will match &quot;put cup on table&quot;, &quot;put book on shelf&quot; etc.<br/><br/>In this case both of your commands are entirely variable, so they will both match any text the player ever types. Not a good thing!<br/><br/>All you need to do is remove the # characters:<br/><br/>command &lt;change tax rate&gt;<br/>command &lt;next turn&gt;",
+      "PostDate": "2010-05-15T11:30:50+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "17327",
+      "UserId": 0,
+      "Username": "SquirrelUK",
+      "UserAvatar": null,
+      "UserGravatar": "558dda34e2c5d2212d49493b20a462c6",
+      "EditableText": "&lt;slaps face&gt; How frustrating to think I've spent so long trying to get this to work when the problem was such a simple thing! Oh well.\n\nThanks a million again, Alex.",
+      "EditableFormat": "bbcode",
+      "HTML": "&lt;slaps face&gt; How frustrating to think I've spent so long trying to get this to work when the problem was such a simple thing! Oh well.<br/><br/>Thanks a million again, Alex.",
+      "PostDate": "2010-05-15T12:21:55+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

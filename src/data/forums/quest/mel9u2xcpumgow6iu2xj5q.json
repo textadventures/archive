@@ -1,0 +1,63 @@
+{
+  "Topic": {
+    "TopicId": "mel9u2xcpumgow6iu2xj5q",
+    "ForumId": "10",
+    "Title": "Not sure how to attack mulitple enemies",
+    "LastUpdated": "2017-05-08T00:15:14.0264507Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "e0d30747-8099-4ae6-944c-4eb4f3d1d746",
+      "UserId": 267336,
+      "Username": "jmnevil54",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5d73d7ec1dbe20a5cb46f02a6d53f187?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm trying to make a Pokemon game.\r\nAnyways, the problem is I can't get a good combat system. I tried using spawning objects and object lists, but I don't know how to attack multiple enemies, unless I use ThePixie's code. And they end up staying there anyways. I could try creating the objects and setting the attributes beforehand, but it seems like too much of a hassle, and also I/the player couldn't have the benefit of re-spawning enemies.\r\nDoes anybody have any ideas?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm trying to make a Pokemon game.<br>\nAnyways, the problem is I can't get a good combat system. I tried using spawning objects and object lists, but I don't know how to attack multiple enemies, unless I use ThePixie's code. And they end up staying there anyways. I could try creating the objects and setting the attributes beforehand, but it seems like too much of a hassle, and also I/the player couldn't have the benefit of re-spawning enemies.<br>\nDoes anybody have any ideas?</p>\n\n",
+      "PostDate": "2017-05-08T00:15:14.0264507Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "733dd566-585d-4e52-a998-181c6b31ac8b",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "here's an example:\r\n\r\n```\r\n<object name=\"room\">\r\n</object>\r\n\r\n<object name=\"player\">\r\n  <inherit name=\"playable_character_type\" />\r\n  <attr name=\"parent\" type=\"object\">room</attr>\r\n  <attr name=\"current_life_integer_attribute\" type=\"int\">999</attr>\r\n  <attr name=\"damage_integer_attribute\" type=\"int\">100</attr>\r\n</object>\r\n\r\n<object name=\"orc\">\r\n  <inherit name=\"monster_type\" />\r\n  <attr name=\"parent\" type=\"object\">room</attr>\r\n  <attr name=\"current_life_integer_attribute\" type=\"int\">500</attr>\r\n  <attr name=\"damage_integer_attribute\" type=\"int\">50</attr>\r\n</object>\r\n\r\n<object name=\"ogre\">\r\n  <inherit name=\"monster_type\" />\r\n  <attr name=\"parent\" type=\"object\">room</attr>\r\n  <attr name=\"current_life_integer_attribute\" type=\"int\">750</attr>\r\n   <attr name=\"damage_integer_attribute\" type=\"int\">75</attr>\r\n</object>\r\n\r\n<object name=\"troll\">\r\n  <inherit name=\"monster_type\" />\r\n  <attr name=\"parent\" type=\"object\">room</attr>\r\n  <attr name=\"current_life_integer_attribute\" type=\"int\">250</attr>\r\n  <attr name=\"damage_integer_attribute\" type=\"int\">25</attr>\r\n</object>\r\n\r\n<type name=\"monster_type\">\r\n  <inherit name=\"character_type\" />\r\n</type>\r\n\r\n<type name=\"playable_character_type\">\r\n  <inherit name=\"character_type\" />\r\n</type>\r\n\r\n<type name=\"character_type\">\r\n  <attr name=\"current_life_integer_attribute\" type=\"int\">1</attr>\r\n  <attr name=\"damage_integer_attribute\" type=\"int\">1</attr>\r\n  <attr name=\"condition_string_attribute\" type=\"string\">normal</attr>\r\n</type>\r\n\r\n<function name=\"populate_monster_objectlist_function\">\r\n  game.monster_objectlist_attribute = NewObjectList ()\r\n  foreach (object_variable, GetDirectChildren (game.pov.parent) {\r\n    if (DoesInherit (object_variable, \"monster_type\") and not object_variable.condition_string_attribute = \"dead\") {\r\n      list add (game.monster_objectlist_attribute, object_variable)\r\n    }\r\n  }\r\n</function>\r\n\r\n<function name=\"combat_function\">\r\n  foreach (monster_object_variable, game.monster_objectlist_attribute) {\r\n    // your scripting upon/for each monster, for simple example:\r\n    monster_object_variable.current_life_integer_attribute = monster_object_variable.current_life_integer_attribute - game.pov.damage_integer_attribute\r\n    game.pov.current_life_integer_attribute = game.pov.current_life_integer_attribute - monster_object_variable.damage_integer_attribute\r\n    if (game.pov.current_life_integer_attribute < 1) {\r\n      msg (\"you were killed\")\r\n      msg (\"GAME OVER\")\r\n      finish\r\n    } else if (monster_object_variable.current_life_integer_attribute < 1) {\r\n      monster_object_variable.condition_string_attribute = \"dead\"\r\n      list remove (game.monster_objectlist_attribute, monster_object_variable)\r\n    }\r\n  }\r\n</function>\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>here's an example:</p>\n<pre><code>&lt;object name=\"room\"&gt;\n&lt;/object&gt;\n\n&lt;object name=\"player\"&gt;\n  &lt;inherit name=\"playable_character_type\" /&gt;\n  &lt;attr name=\"parent\" type=\"object\"&gt;room&lt;/attr&gt;\n  &lt;attr name=\"current_life_integer_attribute\" type=\"int\"&gt;999&lt;/attr&gt;\n  &lt;attr name=\"damage_integer_attribute\" type=\"int\"&gt;100&lt;/attr&gt;\n&lt;/object&gt;\n\n&lt;object name=\"orc\"&gt;\n  &lt;inherit name=\"monster_type\" /&gt;\n  &lt;attr name=\"parent\" type=\"object\"&gt;room&lt;/attr&gt;\n  &lt;attr name=\"current_life_integer_attribute\" type=\"int\"&gt;500&lt;/attr&gt;\n  &lt;attr name=\"damage_integer_attribute\" type=\"int\"&gt;50&lt;/attr&gt;\n&lt;/object&gt;\n\n&lt;object name=\"ogre\"&gt;\n  &lt;inherit name=\"monster_type\" /&gt;\n  &lt;attr name=\"parent\" type=\"object\"&gt;room&lt;/attr&gt;\n  &lt;attr name=\"current_life_integer_attribute\" type=\"int\"&gt;750&lt;/attr&gt;\n   &lt;attr name=\"damage_integer_attribute\" type=\"int\"&gt;75&lt;/attr&gt;\n&lt;/object&gt;\n\n&lt;object name=\"troll\"&gt;\n  &lt;inherit name=\"monster_type\" /&gt;\n  &lt;attr name=\"parent\" type=\"object\"&gt;room&lt;/attr&gt;\n  &lt;attr name=\"current_life_integer_attribute\" type=\"int\"&gt;250&lt;/attr&gt;\n  &lt;attr name=\"damage_integer_attribute\" type=\"int\"&gt;25&lt;/attr&gt;\n&lt;/object&gt;\n\n&lt;type name=\"monster_type\"&gt;\n  &lt;inherit name=\"character_type\" /&gt;\n&lt;/type&gt;\n\n&lt;type name=\"playable_character_type\"&gt;\n  &lt;inherit name=\"character_type\" /&gt;\n&lt;/type&gt;\n\n&lt;type name=\"character_type\"&gt;\n  &lt;attr name=\"current_life_integer_attribute\" type=\"int\"&gt;1&lt;/attr&gt;\n  &lt;attr name=\"damage_integer_attribute\" type=\"int\"&gt;1&lt;/attr&gt;\n  &lt;attr name=\"condition_string_attribute\" type=\"string\"&gt;normal&lt;/attr&gt;\n&lt;/type&gt;\n\n&lt;function name=\"populate_monster_objectlist_function\"&gt;\n  game.monster_objectlist_attribute = NewObjectList ()\n  foreach (object_variable, GetDirectChildren (game.pov.parent) {\n    if (DoesInherit (object_variable, \"monster_type\") and not object_variable.condition_string_attribute = \"dead\") {\n      list add (game.monster_objectlist_attribute, object_variable)\n    }\n  }\n&lt;/function&gt;\n\n&lt;function name=\"combat_function\"&gt;\n  foreach (monster_object_variable, game.monster_objectlist_attribute) {\n    // your scripting upon/for each monster, for simple example:\n    monster_object_variable.current_life_integer_attribute = monster_object_variable.current_life_integer_attribute - game.pov.damage_integer_attribute\n    game.pov.current_life_integer_attribute = game.pov.current_life_integer_attribute - monster_object_variable.damage_integer_attribute\n    if (game.pov.current_life_integer_attribute &lt; 1) {\n      msg (\"you were killed\")\n      msg (\"GAME OVER\")\n      finish\n    } else if (monster_object_variable.current_life_integer_attribute &lt; 1) {\n      monster_object_variable.condition_string_attribute = \"dead\"\n      list remove (game.monster_objectlist_attribute, monster_object_variable)\n    }\n  }\n&lt;/function&gt;\n</code></pre>\n\n",
+      "PostDate": "2017-05-08T01:14:11.485052Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "250c8c25-7b50-4668-bce3-2b49f2bad94b",
+      "UserId": 267336,
+      "Username": "jmnevil54",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5d73d7ec1dbe20a5cb46f02a6d53f187?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hey, if I make a game where, trolls, orcs, ogres, etc. are enemies, you won't be mad will you?\r\n\r\nI actually had the exact same idea. Weird that this happened.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hey, if I make a game where, trolls, orcs, ogres, etc. are enemies, you won't be mad will you?</p>\n<p>I actually had the exact same idea. Weird that this happened.</p>\n\n",
+      "PostDate": "2017-05-09T21:26:02.0723654Z",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "296c37ea-e17e-4ad0-9fb5-16b5a26c7ba6",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "lol\r\n\r\norcs, ogres, trolls, etc fantasy/legend/mythos/religious creatures are public domain, laughs.\r\n\r\nif interested for ideas, I've compiled some-various rpg stuff here a long time ago (still a lot more to add):\r\n\r\nhttp://textadventures.co.uk/forum/design/topic/3876/rpg-elements-game-mechanics-and-game-design\r\n\r\nfeel free to use it and/or add to it (though we'd need to make a new thread as it's closed due to inactivity)\r\n\r\n-------\r\n\r\nP.S.\r\n\r\nI thought you were making a pokemon game?\r\n\r\nI've never played pokemon, but I don't think there's orcs, ogres, and trolls in it, lol.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>lol</p>\n<p>orcs, ogres, trolls, etc fantasy/legend/mythos/religious creatures are public domain, laughs.</p>\n<p>if interested for ideas, I've compiled some-various rpg stuff here a long time ago (still a lot more to add):</p>\n<p>http://textadventures.co.uk/forum/design/topic/3876/rpg-elements-game-mechanics-and-game-design</p>\n<p>feel free to use it and/or add to it (though we'd need to make a new thread as it's closed due to inactivity)</p>\n<hr>\n<p>P.S.</p>\n<p>I thought you were making a pokemon game?</p>\n<p>I've never played pokemon, but I don't think there's orcs, ogres, and trolls in it, lol.</p>\n\n",
+      "PostDate": "2017-05-10T04:23:59.9723585Z",
+      "LastEditDate": "2017-05-10T05:12:49.0256809Z"
+    }
+  ]
+}

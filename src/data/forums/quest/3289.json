@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "3289",
+    "ForumId": "10",
+    "Title": "Is there a way to separate the output from the input?",
+    "LastUpdated": "2012-11-16T16:02:24+00:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "21758",
+      "UserId": 0,
+      "Username": "Suwonian",
+      "UserAvatar": null,
+      "UserGravatar": "729b4c40520d8e4e94cbe172a83ccc5c",
+      "EditableText": "I love how Quest separates the input box from the output window but every time an input is executed the &quot;input prompt&quot; and &quot;input&quot; appears in the output window.  This really breaks up the readability of the developing story.  Is there a way to prevent the &quot;input prompt and inputted text&quot; from appearing in the output window?",
+      "EditableFormat": "bbcode",
+      "HTML": "I love how Quest separates the input box from the output window but every time an input is executed the &quot;input prompt&quot; and &quot;input&quot; appears in the output window.  This really breaks up the readability of the developing story.  Is there a way to prevent the &quot;input prompt and inputted text&quot; from appearing in the output window?",
+      "PostDate": "2012-11-13T12:10:27+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21760",
+      "UserId": 0,
+      "Username": "Pertex",
+      "UserAvatar": "5940_1369854251.gif",
+      "UserGravatar": "4cc1e52f99452e841ecf4cbee9eadde9",
+      "EditableText": "Yes, click &quot;Filter&quot; in the left bottom corner and choose &quot;Show library elements&quot;. Then find the function &quot;HandleCommand&quot; and copy it to your game (upper right button). Now remove this command in this function:\n[code:2fapm8dw]Call function msg with parameters &quot;&gt;&quot;+SafeXML(command)[/code:2fapm8dw] from the gui\n\n\nor in codeview:\n[code:2fapm8dw]msg( &quot;&gt;&quot;+SafeXML(command))[/code:2fapm8dw]",
+      "EditableFormat": "bbcode",
+      "HTML": "Yes, click &quot;Filter&quot; in the left bottom corner and choose &quot;Show library elements&quot;. Then find the function &quot;HandleCommand&quot; and copy it to your game (upper right button). Now remove this command in this function:<br/><pre><code>Call function msg with parameters &quot;&gt;&quot;+SafeXML(command)</code></pre> from the gui<br/><br/><br/>or in codeview:<br/><pre><code>msg( &quot;&gt;&quot;+SafeXML(command))</code></pre>",
+      "PostDate": "2012-11-13T13:33:16+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21761",
+      "UserId": 0,
+      "Username": "Suwonian",
+      "UserAvatar": null,
+      "UserGravatar": "729b4c40520d8e4e94cbe172a83ccc5c",
+      "EditableText": "Pertex,\n\nThank you for the quick reply.  It works!",
+      "EditableFormat": "bbcode",
+      "HTML": "Pertex,<br/><br/>Thank you for the quick reply.  It works!",
+      "PostDate": "2012-11-13T17:08:11+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21796",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Here is a slightly better version:\n[code:22ezz5j8]  &lt;function name=&quot;HandleCommand&quot; parameters=&quot;command&quot;&gt;&lt;!&#91;CDATA&#91;\n    msg (&quot;&quot;)\n    if (StartsWith (command, &quot;*&quot;)) {\n      msg (SafeXML (command))\n    }\n    else {\n      if (GetBoolean (game, &quot;hideinput&quot;)) {\n        Hidden (&quot;&gt; &quot; + SafeXML(command))\n      }\n      else {\n        msg (&quot;&gt; &quot; + SafeXML(command))\n      }\n      commands = Split(command, &quot;&#46;&quot;)\n      if (ListCount(commands) = 1) {\n        HandleSingleCommand (Trim(command))\n      }\n      else {\n        player&#46;commandqueue = commands\n        HandleNextCommandQueueItem\n      }\n    }\n  &#93;&#93;&gt;&lt;/function&gt;\n\n  &lt;!--\n  Use this to print hidden text (i&#46;e&#46;, in the background colour)&#46;\n  --&gt;\n  &lt;function name=&quot;Hidden&quot; parameters=&quot;str&quot;&gt;&lt;!&#91;CDATA&#91;\n    if (HasAttribute(game, &quot;defaultbackground&quot;)) {\n      bg = LCase (game&#46;defaultbackground)\n    }\n    else {\n      bg = &quot;white&quot;\n    }\n    msg (&quot;&lt;color color=\\&quot;&quot; + bg + &quot;\\&quot;&gt;&quot; + str + &quot;&lt;/color&gt;&quot;)\n  &#93;&#93;&gt;&lt;/function&gt;[/code:22ezz5j8]\nFirstly, it captures all input starting with * and puts it straight to output without processing it, allowing players to put in comments (this is an improvement on my earlier version as it can handle full stops and not get overridden).\n\nSecondly, all the input goes to the output, the player just cannot see it. This means it will be visible in transcripts (vital for beta-testing), and if the player forgets what he typed, he can drag a mouse across it and see it.\n\nIt can be turned on and off; to turn on set game.hideinput to true.",
+      "EditableFormat": "bbcode",
+      "HTML": "Here is a slightly better version:<br/><pre><code>  &lt;function name=&quot;HandleCommand&quot; parameters=&quot;command&quot;&gt;&lt;!&#91;CDATA&#91;<br/>    msg (&quot;&quot;)<br/>    if (StartsWith (command, &quot;*&quot;)) {<br/>      msg (SafeXML (command))<br/>    }<br/>    else {<br/>      if (GetBoolean (game, &quot;hideinput&quot;)) {<br/>        Hidden (&quot;&gt; &quot; + SafeXML(command))<br/>      }<br/>      else {<br/>        msg (&quot;&gt; &quot; + SafeXML(command))<br/>      }<br/>      commands = Split(command, &quot;&#46;&quot;)<br/>      if (ListCount(commands) = 1) {<br/>        HandleSingleCommand (Trim(command))<br/>      }<br/>      else {<br/>        player&#46;commandqueue = commands<br/>        HandleNextCommandQueueItem<br/>      }<br/>    }<br/>  &#93;&#93;&gt;&lt;/function&gt;<br/><br/>  &lt;!--<br/>  Use this to print hidden text (i&#46;e&#46;, in the background colour)&#46;<br/>  --&gt;<br/>  &lt;function name=&quot;Hidden&quot; parameters=&quot;str&quot;&gt;&lt;!&#91;CDATA&#91;<br/>    if (HasAttribute(game, &quot;defaultbackground&quot;)) {<br/>      bg = LCase (game&#46;defaultbackground)<br/>    }<br/>    else {<br/>      bg = &quot;white&quot;<br/>    }<br/>    msg (&quot;&lt;color color=\\&quot;&quot; + bg + &quot;\\&quot;&gt;&quot; + str + &quot;&lt;/color&gt;&quot;)<br/>  &#93;&#93;&gt;&lt;/function&gt;</code></pre><br/>Firstly, it captures all input starting with * and puts it straight to output without processing it, allowing players to put in comments (this is an improvement on my earlier version as it can handle full stops and not get overridden).<br/><br/>Secondly, all the input goes to the output, the player just cannot see it. This means it will be visible in transcripts (vital for beta-testing), and if the player forgets what he typed, he can drag a mouse across it and see it.<br/><br/>It can be turned on and off; to turn on set game.hideinput to true.",
+      "PostDate": "2012-11-16T14:18:47+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "21797",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Stopping the cruft from a [i:r2qraxz1]show menu[/i:r2qraxz1] command is not straightforward...\n[code:r2qraxz1]    // First grab the foreground and background colours, simple enough\n    if (HasAttribute(game, &quot;defaultbackground&quot;)) {\n      bg = LCase (game&#46;defaultbackground)\n    }\n    else {\n      bg = &quot;white&quot;\n    }\n    if (HasAttribute(game, &quot;defaultforeground&quot;)) {\n      fore = LCase (game&#46;defaultforeground)\n    }\n    else {\n      fore = &quot;black&quot;\n    }\n    // set the foreground to the same as the background\n    SetForegroundColour (bg)\n    // now it gets complicated&#46;&#46;&#46;\n    show menu (&quot;Select one&#58;&quot;, Split (&quot;One;Two;Three&quot;, &quot;;&quot;), true) {\n      s = &quot;Result = &quot; + result\n    }\n    on ready {\n      SetForegroundColour (fore)\n      msg (s)\n    }[/code:r2qraxz1]\nWhen a menu chose is made, Quest shows the question text on one line, and the chosen response on the next. The question response is fine, but if you change the foreground colour inside the block, the response gets displayed in that colur too (I guess quest buffers the output of the block together, but changes the colour straight away).\n\nThus, you have to use on ready to ensure the block is completed, and then change the colour, and only then can you print stuff from the block.",
+      "EditableFormat": "bbcode",
+      "HTML": "Stopping the cruft from a <span style=\"font-style:italic;\">show menu</span> command is not straightforward...<br/><pre><code>    // First grab the foreground and background colours, simple enough<br/>    if (HasAttribute(game, &quot;defaultbackground&quot;)) {<br/>      bg = LCase (game&#46;defaultbackground)<br/>    }<br/>    else {<br/>      bg = &quot;white&quot;<br/>    }<br/>    if (HasAttribute(game, &quot;defaultforeground&quot;)) {<br/>      fore = LCase (game&#46;defaultforeground)<br/>    }<br/>    else {<br/>      fore = &quot;black&quot;<br/>    }<br/>    // set the foreground to the same as the background<br/>    SetForegroundColour (bg)<br/>    // now it gets complicated&#46;&#46;&#46;<br/>    show menu (&quot;Select one&#58;&quot;, Split (&quot;One;Two;Three&quot;, &quot;;&quot;), true) {<br/>      s = &quot;Result = &quot; + result<br/>    }<br/>    on ready {<br/>      SetForegroundColour (fore)<br/>      msg (s)<br/>    }</code></pre><br/>When a menu chose is made, Quest shows the question text on one line, and the chosen response on the next. The question response is fine, but if you change the foreground colour inside the block, the response gets displayed in that colur too (I guess quest buffers the output of the block together, but changes the colour straight away).<br/><br/>Thus, you have to use on ready to ensure the block is completed, and then change the colour, and only then can you print stuff from the block.",
+      "PostDate": "2012-11-16T16:02:24+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

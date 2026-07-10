@@ -1,0 +1,107 @@
+{
+  "Topic": {
+    "TopicId": "5255",
+    "ForumId": "10",
+    "Title": "Moving dropped item to different room?",
+    "LastUpdated": "2015-05-31T21:59:09+01:00",
+    "ReplyCount": 7
+  },
+  "Posts": [
+    {
+      "PostId": "36266",
+      "UserId": 0,
+      "Username": "XanMag",
+      "UserAvatar": "7161_1436827710.jpg",
+      "UserGravatar": "4b45a3afd18077f76f6569225c422bdb",
+      "EditableText": "I'm trying to tidy up a situation in my first game.  There is a point where a player must &quot;drop [correct object] on [location]&quot; from a high vantage point.  The object must be a specific object.  I can get that part correct.  ALL OTHER objects I want to be able to &quot;drop [incorrect object] on [location]&quot;.  The single object is easy because I just used a command where I typed variations of &quot;drop [correct object] on [location]&quot;.  Then, in the script, I just moved [correct object] to [location].\n\nI need a command where I can drop any OTHER object and move that specific object to the location far below.  I've tried things like: drop #text# on #text#, but that overrides the correct object drop.  This is definitely a coder question and I don't know how to resolve it.  I could just add a command for EVERY object in the game but... not even I am that desperate!!\n\nIn short, I have: drop object A on location.  Object A is moved to the location.\n              I need:  drop object B (or object C,D,E,F,H, etc) on location and then moved to that location.  \n\nMake sense?\n\nThanks!",
+      "EditableFormat": "bbcode",
+      "HTML": "I'm trying to tidy up a situation in my first game.  There is a point where a player must &quot;drop [correct object] on [location]&quot; from a high vantage point.  The object must be a specific object.  I can get that part correct.  ALL OTHER objects I want to be able to &quot;drop [incorrect object] on [location]&quot;.  The single object is easy because I just used a command where I typed variations of &quot;drop [correct object] on [location]&quot;.  Then, in the script, I just moved [correct object] to [location].<br/><br/>I need a command where I can drop any OTHER object and move that specific object to the location far below.  I've tried things like: drop #text# on #text#, but that overrides the correct object drop.  This is definitely a coder question and I don't know how to resolve it.  I could just add a command for EVERY object in the game but... not even I am that desperate!!<br/><br/>In short, I have: drop object A on location.  Object A is moved to the location.<br/>              I need:  drop object B (or object C,D,E,F,H, etc) on location and then moved to that location.  <br/><br/>Make sense?<br/><br/>Thanks!",
+      "PostDate": "2015-05-29T03:53:17+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36267",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "[code:1oyjx17w]&lt;command name=&quot;xxx&quot;&gt;\n  &lt;pattern&gt;drop #object1# on #object2#&lt;/pattern&gt;\n  &lt;script&gt;\n    if (object1 = null) {\n      foreach (object_variable, AllObjects () ) {\n        if (object_variable&#46;alias = the_correct_object's_alias'_value) {\n        // or if you want to use that 'alt~alternative names list' of Objects&#58; if (ListContains (object_variable&#46;List_Attribute_name, alternative name 1) or ListContains (object_variable&#46;List_Attribute_name, alternative name 2) or etc etc etc) { script }\n          object1 = object_variable\n        }\n      }\n    }\n    if (object1 = null) {\n      msg (&quot;Wrong input, try again&#46;&quot;)\n    } else {\n      if (object1 = name_of_the_correct_object) {\n        // whatever script for this 'correct action'\n      } else {\n        // whatever script for this 'INcorrect action'\n      }\n    }\n  &lt;/script&gt;\n&lt;/command&gt;[/code:1oyjx17w]\n\nI'm not sure if this is what you wanted... do you want correct and incorrect Objects to be moved~dropped to the same location ??? do you want to check if the inputted location is the correct vs incorrect location ??? etc etc etc",
+      "EditableFormat": "bbcode",
+      "HTML": "<pre><code>&lt;command name=&quot;xxx&quot;&gt;<br/>  &lt;pattern&gt;drop #object1# on #object2#&lt;/pattern&gt;<br/>  &lt;script&gt;<br/>    if (object1 = null) {<br/>      foreach (object_variable, AllObjects () ) {<br/>        if (object_variable&#46;alias = the_correct_object's_alias'_value) {<br/>        // or if you want to use that 'alt~alternative names list' of Objects&#58; if (ListContains (object_variable&#46;List_Attribute_name, alternative name 1) or ListContains (object_variable&#46;List_Attribute_name, alternative name 2) or etc etc etc) { script }<br/>          object1 = object_variable<br/>        }<br/>      }<br/>    }<br/>    if (object1 = null) {<br/>      msg (&quot;Wrong input, try again&#46;&quot;)<br/>    } else {<br/>      if (object1 = name_of_the_correct_object) {<br/>        // whatever script for this 'correct action'<br/>      } else {<br/>        // whatever script for this 'INcorrect action'<br/>      }<br/>    }<br/>  &lt;/script&gt;<br/>&lt;/command&gt;</code></pre><br/><br/>I'm not sure if this is what you wanted... do you want correct and incorrect Objects to be moved~dropped to the same location ??? do you want to check if the inputted location is the correct vs incorrect location ??? etc etc etc",
+      "PostDate": "2015-05-29T04:47:03+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36268",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "What is &quot;location&quot;? Is it a thing in the current room? If it is not, then &quot;drop #object1# on #object2#&quot; will not work, because object2 will not be present (in the current room or inventory). \n\nAssuming it is a thing in the current room, then Quest will put the stated objects in variables object1 and object2, so there is no need to check if they are null, HK. All the script needs to do is check if this is the right object and location:\n\n[code:3bvqjt1n]if (object1 = my_special_object and object2 = my_special_location) {\n  DoSpecialStuff\n}\nelse {\n  // Normal drop\n  object1&#46;parent = player&#46;parent\n  msg(&quot;You drop the &quot; + GetDisplayAlias(object1))\n}[/code:3bvqjt1n]",
+      "EditableFormat": "bbcode",
+      "HTML": "What is &quot;location&quot;? Is it a thing in the current room? If it is not, then &quot;drop #object1# on #object2#&quot; will not work, because object2 will not be present (in the current room or inventory). <br/><br/>Assuming it is a thing in the current room, then Quest will put the stated objects in variables object1 and object2, so there is no need to check if they are null, HK. All the script needs to do is check if this is the right object and location:<br/><br/><pre><code>if (object1 = my_special_object and object2 = my_special_location) {<br/>  DoSpecialStuff<br/>}<br/>else {<br/>  // Normal drop<br/>  object1&#46;parent = player&#46;parent<br/>  msg(&quot;You drop the &quot; + GetDisplayAlias(object1))<br/>}</code></pre>",
+      "PostDate": "2015-05-29T07:53:11+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36271",
+      "UserId": 0,
+      "Username": "XanMag",
+      "UserAvatar": "7161_1436827710.jpg",
+      "UserGravatar": "4b45a3afd18077f76f6569225c422bdb",
+      "EditableText": "Clarification:  &quot;location&quot; is simply a room.  When the incorrect object is dropped, that object ends up in a different room.  The setup is this... The player is at the top of a tree and they look down.  From this high vantage point (4 layers up on the map), they can see a grid with spots on the ground.  So, they need to drop an object on the correct spot to mark it.  &quot;Drop _____ on ____&quot; (2nd blank is one of many visible targets that are only visible from treetop).  Only one object works correctly.  That part I figured out.  The issue I have is if the player chooses to drop any other object to mark the ground below.  So, the location is always the same for any incorrect object being dropped - it's just the ground level 4 layers down.  The correct command triggers an event (that much I get).\n\nThanks.  <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "EditableFormat": "bbcode",
+      "HTML": "Clarification:  &quot;location&quot; is simply a room.  When the incorrect object is dropped, that object ends up in a different room.  The setup is this... The player is at the top of a tree and they look down.  From this high vantage point (4 layers up on the map), they can see a grid with spots on the ground.  So, they need to drop an object on the correct spot to mark it.  &quot;Drop _____ on ____&quot; (2nd blank is one of many visible targets that are only visible from treetop).  Only one object works correctly.  That part I figured out.  The issue I have is if the player chooses to drop any other object to mark the ground below.  So, the location is always the same for any incorrect object being dropped - it's just the ground level 4 layers down.  The correct command triggers an event (that much I get).<br/><br/>Thanks.  <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) -->",
+      "PostDate": "2015-05-29T11:24:16+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36282",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Not sure if I quite understand, but it sounds like &quot;location&quot; is an object in this room from &quot;one of many visible targets that are only visible from treetop&quot;. So you jusat need to modify the above slightly:\n[code:1guju4xq]if (object1 = my_special_object and object2 = my_special_target) {\n  object1&#46;parent = special_room_at_bottom_of_tree\n  msg(&quot;You drop the &quot; + GetDisplayAlias(object1) + &quot; and it falls all the way to the base of the tree just where you want it!&quot;)\n}\nelse {\n  object1&#46;parent = ordinary_room_at_bottom_of_tree\n  msg(&quot;You drop the &quot; + GetDisplayAlias(object1) + &quot; and it falls all the way to the base of the tree&#46;&quot;)\n}[/code:1guju4xq]",
+      "EditableFormat": "bbcode",
+      "HTML": "Not sure if I quite understand, but it sounds like &quot;location&quot; is an object in this room from &quot;one of many visible targets that are only visible from treetop&quot;. So you jusat need to modify the above slightly:<br/><pre><code>if (object1 = my_special_object and object2 = my_special_target) {<br/>  object1&#46;parent = special_room_at_bottom_of_tree<br/>  msg(&quot;You drop the &quot; + GetDisplayAlias(object1) + &quot; and it falls all the way to the base of the tree just where you want it!&quot;)<br/>}<br/>else {<br/>  object1&#46;parent = ordinary_room_at_bottom_of_tree<br/>  msg(&quot;You drop the &quot; + GetDisplayAlias(object1) + &quot; and it falls all the way to the base of the tree&#46;&quot;)<br/>}</code></pre>",
+      "PostDate": "2015-05-29T21:43:14+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36300",
+      "UserId": 0,
+      "Username": "XanMag",
+      "UserAvatar": "7161_1436827710.jpg",
+      "UserGravatar": "4b45a3afd18077f76f6569225c422bdb",
+      "EditableText": "Can I put that code above in the command line under regular expression?  Or do I need to put some lingo in as a command typed by the player and add the 'If' statement to the script?\n\n*SPOILER* for 'Xanadu - the World's Greatest Hope'\n\nThere is a large expanse of ground at layer 0.  There is a huge tree that you can climb up 4 times.  Once at the top, you can look down and see a unique pattern on the ground.  This pattern is 26 possible targets (letters of the alphabet).  The player can only see this spot from the tree top (not the ground below), so the player needs to mark it from the tree top.  If the player drops a specific item (a huge nut) from the top of the tree at the correct target below, it triggers an event to happen.  So, the correct command is: 'drop nut on letter u'.  This solves the riddle.  I also have figured out how to respond if the player types 'drop nut on letter s', or 'b', or 'm', for example.  The player climbs down the tree and finds the nut on the large expanse of ground, but no event has been triggered.  \n\nI need to know how to 'drop plank', or 'drop berry', or 'drop key', or 'drop bowl' on ANY letter, etc, etc, etc... will result in the dropped object being found at the expanse of ground below the tree (regardless of what spot they were aiming for).  Drop plank on spot q, drop berry on spot h, drop key on spot a, drop bowl on spot u... should all simply move whatever object was dropped in an attempt to mark the ground below to the ground below (4 rooms down).\n\nThanks and I apologize if you've already answered this above, but I couldn't figure it out based on the solution you kindly offered.",
+      "EditableFormat": "bbcode",
+      "HTML": "Can I put that code above in the command line under regular expression?  Or do I need to put some lingo in as a command typed by the player and add the 'If' statement to the script?<br/><br/>*SPOILER* for 'Xanadu - the World's Greatest Hope'<br/><br/>There is a large expanse of ground at layer 0.  There is a huge tree that you can climb up 4 times.  Once at the top, you can look down and see a unique pattern on the ground.  This pattern is 26 possible targets (letters of the alphabet).  The player can only see this spot from the tree top (not the ground below), so the player needs to mark it from the tree top.  If the player drops a specific item (a huge nut) from the top of the tree at the correct target below, it triggers an event to happen.  So, the correct command is: 'drop nut on letter u'.  This solves the riddle.  I also have figured out how to respond if the player types 'drop nut on letter s', or 'b', or 'm', for example.  The player climbs down the tree and finds the nut on the large expanse of ground, but no event has been triggered.  <br/><br/>I need to know how to 'drop plank', or 'drop berry', or 'drop key', or 'drop bowl' on ANY letter, etc, etc, etc... will result in the dropped object being found at the expanse of ground below the tree (regardless of what spot they were aiming for).  Drop plank on spot q, drop berry on spot h, drop key on spot a, drop bowl on spot u... should all simply move whatever object was dropped in an attempt to mark the ground below to the ground below (4 rooms down).<br/><br/>Thanks and I apologize if you've already answered this above, but I couldn't figure it out based on the solution you kindly offered.",
+      "PostDate": "2015-05-31T18:02:23+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36302",
+      "UserId": 0,
+      "Username": "HegemonKhan",
+      "UserAvatar": null,
+      "UserGravatar": "a96cf34d8d97c57de38f54ee22b1759b",
+      "EditableText": "I'll let Pixie finish helping you, as he~she is much better at it, more clear and concise help, than mine, hehe.",
+      "EditableFormat": "bbcode",
+      "HTML": "I'll let Pixie finish helping you, as he~she is much better at it, more clear and concise help, than mine, hehe.",
+      "PostDate": "2015-05-31T18:53:47+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "36303",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "Taking a step back, there are three ways I can see to approach this, before getting to the command. You could implement each letter as an object (as scenery probably) present at the top of the tree. The command will match [i:12gevhgl]object2[/i:12gevhgl] to the specific object, letter u or whatever.\n\nThe second approach is a cheat; you just implement two locations, the right one and one that stands for all the wrong one, with a long list of alternative names (see second tab). Again the command will match [i:12gevhgl]object2[/i:12gevhgl] to either the right object or the wrong object. Either way, the above code should work, just drop it in the script box and modify as per your game.\n\nA better way might be to check the text, and not implement letters at all. Change the pattern to this:\n[code:12gevhgl]drop #object# on #text#[/code:12gevhgl]\nAnd the code:\n[code:12gevhgl]// Start by processing the text; make it all lower case\n// and remove &quot;letter&quot; at the start if present\ntext = LCase(text)\nif (StartsWith(text, &quot;letter &quot;)) {\n  text = Replace(text, &quot;letter &quot;)\n}\n// If the text is not a single letter, reject the command as nonsense\nif (not LengthOf(text = 1)) {\n  msg(&quot;You can't see anything like that to drop it on&#46;&quot;)\n}\n// If its the right letter and object, do special stuff\nelse if (object = huge_nut and text = &quot;u&quot;) {\n  object&#46;parent = bottom_of_tree\n  msg(&quot;You drop the &quot; + GetDisplayAlias(object) + &quot; and it lands at the bottom of the tree in a significant place&#46;&quot;)\n  DoSpecialStuff\n}\n// It is not right, so do the dault\nelse {\n  object&#46;parent = bottom_of_tree\n  msg(&quot;You drop the &quot; + GetDisplayAlias(object) + &quot; and it lands at the bottom of the tree&#46;&quot;)\n}[/code:12gevhgl]",
+      "EditableFormat": "bbcode",
+      "HTML": "Taking a step back, there are three ways I can see to approach this, before getting to the command. You could implement each letter as an object (as scenery probably) present at the top of the tree. The command will match <span style=\"font-style:italic;\">object2</span> to the specific object, letter u or whatever.<br/><br/>The second approach is a cheat; you just implement two locations, the right one and one that stands for all the wrong one, with a long list of alternative names (see second tab). Again the command will match <span style=\"font-style:italic;\">object2</span> to either the right object or the wrong object. Either way, the above code should work, just drop it in the script box and modify as per your game.<br/><br/>A better way might be to check the text, and not implement letters at all. Change the pattern to this:<br/><pre><code>drop #object# on #text#</code></pre><br/>And the code:<br/><pre><code>// Start by processing the text; make it all lower case<br/>// and remove &quot;letter&quot; at the start if present<br/>text = LCase(text)<br/>if (StartsWith(text, &quot;letter &quot;)) {<br/>  text = Replace(text, &quot;letter &quot;)<br/>}<br/>// If the text is not a single letter, reject the command as nonsense<br/>if (not LengthOf(text = 1)) {<br/>  msg(&quot;You can't see anything like that to drop it on&#46;&quot;)<br/>}<br/>// If its the right letter and object, do special stuff<br/>else if (object = huge_nut and text = &quot;u&quot;) {<br/>  object&#46;parent = bottom_of_tree<br/>  msg(&quot;You drop the &quot; + GetDisplayAlias(object) + &quot; and it lands at the bottom of the tree in a significant place&#46;&quot;)<br/>  DoSpecialStuff<br/>}<br/>// It is not right, so do the dault<br/>else {<br/>  object&#46;parent = bottom_of_tree<br/>  msg(&quot;You drop the &quot; + GetDisplayAlias(object) + &quot; and it lands at the bottom of the tree&#46;&quot;)<br/>}</code></pre>",
+      "PostDate": "2015-05-31T21:59:09+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

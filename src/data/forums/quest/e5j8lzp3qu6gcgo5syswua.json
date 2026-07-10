@@ -1,0 +1,123 @@
+{
+  "Topic": {
+    "TopicId": "e5j8lzp3qu6gcgo5syswua",
+    "ForumId": "10",
+    "Title": "Page Links Not Appearing (Gamebook)",
+    "LastUpdated": "2019-05-18T19:59:45.9421697Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "77bcc0da-b92f-4aa5-a227-57229e330b1e",
+      "UserId": 419778,
+      "Username": "Anjosustrakr",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "When I first created my Gamebook, the starter links worked fine. Then I renamed the first room \"Intro\" and turned it into a Script page to run this script:\r\n\r\n    msg (\"You kneel before the king, wondering with more than a little trepidation why you, of all people, were summoned to the royal palace on this auspicious day.<br/><br/>\\\"What is your name, peasant?\\\" the king asks in a booming voice that fills your heart with fear.<br/>\")\r\n    GetInput() {\r\n      player.alias = CapFirst(LCase(result))\r\n    msg (\"\\\"\" + player.alias + \", if it p-please Your G-Grace,\\\" you stutter.\")\r\n    msg (\"<br/>\\\"It does not please me. I myself would be ashamed to bear such a name. But you can have it changed at a later \r\n    date. At present, I have a task for you, \" + player.alias + \" the Peasant.\\\"\")\r\n      AddPageLink (Intro, Page3, \"Do Something!\")\r\n    }\r\n\r\nEverything works fine, except the page link never appears. I tried turning the page to Script+Text and adding page links in the details section, but all that did was put a giant blank space in the middle of my message printouts. I also moved the player to the basic Page2 and added a couple of page links there, but they didn't appear either. My link color is Crimson and the background color is white, so they are not simply hard to see... they just aren't appearing for some reason.\r\n\r\nI'm using the online editor.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>When I first created my Gamebook, the starter links worked fine. Then I renamed the first room \"Intro\" and turned it into a Script page to run this script:</p>\n<pre><code>msg (\"You kneel before the king, wondering with more than a little trepidation why you, of all people, were summoned to the royal palace on this auspicious day.&lt;br/&gt;&lt;br/&gt;\\\"What is your name, peasant?\\\" the king asks in a booming voice that fills your heart with fear.&lt;br/&gt;\")\nGetInput() {\n  player.alias = CapFirst(LCase(result))\nmsg (\"\\\"\" + player.alias + \", if it p-please Your G-Grace,\\\" you stutter.\")\nmsg (\"&lt;br/&gt;\\\"It does not please me. I myself would be ashamed to bear such a name. But you can have it changed at a later \ndate. At present, I have a task for you, \" + player.alias + \" the Peasant.\\\"\")\n  AddPageLink (Intro, Page3, \"Do Something!\")\n}\n</code></pre>\n<p>Everything works fine, except the page link never appears. I tried turning the page to Script+Text and adding page links in the details section, but all that did was put a giant blank space in the middle of my message printouts. I also moved the player to the basic Page2 and added a couple of page links there, but they didn't appear either. My link color is Crimson and the background color is white, so they are not simply hard to see... they just aren't appearing for some reason.</p>\n<p>I'm using the online editor.</p>\n\n",
+      "PostDate": "2019-05-18T19:59:45.9421697Z",
+      "LastEditDate": "2019-05-18T20:01:32.0466314Z",
+      "link": null
+    },
+    {
+      "PostId": "37a58ff7-0420-401f-8cc8-e080e89ac397",
+      "UserId": 413394,
+      "Username": "Sh4dowGaming1234",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/b879ee10f706b25be063033d452d75bc?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Okay, I see your problem.\r\n\r\n>Everything works fine, except the page link never appears.\r\n\r\napparently, your code is this:\r\n\r\n```\r\n  AddPageLink (Intro, Page3, \"Do Something!\")\r\n```\r\n\r\nThis would only work if your ```Page2``` and ```Page3``` were still named ```Page2 ```and ```Page3```.\r\n\r\nHope this helps.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Okay, I see your problem.</p>\n<blockquote>\n<p>Everything works fine, except the page link never appears.</p>\n</blockquote>\n<p>apparently, your code is this:</p>\n<pre><code>  AddPageLink (Intro, Page3, \"Do Something!\")\n</code></pre>\n<p>This would only work if your <code>Page2</code> and <code>Page3</code> were still named <code>Page2</code>and <code>Page3</code>.</p>\n<p>Hope this helps.</p>\n\n",
+      "PostDate": "2019-05-19T01:09:16.8970485Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "0542919e-40d6-42cf-b425-cc2ba25d1031",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "(Note: I'm answering just by skim-reading the code, so I could be completely wrong here)\r\n\r\nI think the problem is with the order of execution.\r\n\r\nWhen you visit a page, Quest runs the page's script (if there is one), displays the page's text (if there is one), and displays the page's links (if there are any).\r\n\r\nIn this case, the script displays an input box, and makes a note of another script (the one inside the GetInput block) to run when the player enters something.\r\n\r\nSo the order of events is:\r\n1. Display the first message.\r\n2. Display the input box to ask for the player's name\r\n3. **Display the links currently in that page's dictionary**\r\n4. Wait for the player to input something\r\n5. Display the second message\r\n6. **Add a link to the page's dictionary**\r\n\r\nYour new link is added, but the page's links have already been copied to the screen. So you need to send your link to the screen manually.\r\n\r\nInstead of:\r\n<pre><code style=\"color: brown;\">  AddPageLink (Intro, Page3, \"Do Something!\")</code></pre>\r\nI think you need\r\n<pre><code style=\"color: green;\">  if (not HasString (game, \"optionsoutputsection\")) {\r\n    game.optionsoutputsection = StartNewOutputSection()\r\n    EndOutputSection (game.optionsoutputsection)\r\n  }\r\n  JS.eval (\"$('.\"+game.optionsoutputsection+\"').append('&lt;span>\" + ProcessText(\"{command:Page3:Do Something!}\") + \"&lt;/span>');\")</code></pre>\r\n\r\n\r\n(You would want to use AddPageLink as well if you want the link to still be there when you visit the page in future",
+      "EditableFormat": "markdown",
+      "HTML": "<p>(Note: I'm answering just by skim-reading the code, so I could be completely wrong here)</p>\n<p>I think the problem is with the order of execution.</p>\n<p>When you visit a page, Quest runs the page's script (if there is one), displays the page's text (if there is one), and displays the page's links (if there are any).</p>\n<p>In this case, the script displays an input box, and makes a note of another script (the one inside the GetInput block) to run when the player enters something.</p>\n<p>So the order of events is:</p>\n<ol>\n<li>Display the first message.</li>\n<li>Display the input box to ask for the player's name</li>\n<li><strong>Display the links currently in that page's dictionary</strong></li>\n<li>Wait for the player to input something</li>\n<li>Display the second message</li>\n<li><strong>Add a link to the page's dictionary</strong></li>\n</ol>\n<p>Your new link is added, but the page's links have already been copied to the screen. So you need to send your link to the screen manually.</p>\n<p>Instead of:</p>\n<pre><code style=\"color: brown\">  AddPageLink (Intro, Page3, \"Do Something!\")</code></pre>\n<p>I think you need</p>\n<pre><code style=\"color: green\">  if (not HasString (game, \"optionsoutputsection\")) {\n    game.optionsoutputsection = StartNewOutputSection()\n    EndOutputSection (game.optionsoutputsection)\n  }\n  JS.eval (\"$('.\"+game.optionsoutputsection+\"').append('&lt;span&gt;\" + ProcessText(\"{command:Page3:Do Something!}\") + \"&lt;/span&gt;');\")</code></pre>\n<p>(You would want to use AddPageLink as well if you want the link to still be there when you visit the page in future</p>\n\n",
+      "PostDate": "2019-05-19T10:09:32.0126315Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "75a04b37-889c-4570-9b14-299bcda517fc",
+      "UserId": 419778,
+      "Username": "Anjosustrakr",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "@Sh4dowGaming1234\r\n\r\nPage2 and Page3 are still called that. :(\r\n\r\n\r\n@mrangel\r\n\r\nYour logic makes sense, but where do I put that code? I clicked \"Code View\" and pasted it instead of the AddPageLink, but it just instantly gave me an internal error...",
+      "EditableFormat": "markdown",
+      "HTML": "<p>@Sh4dowGaming1234</p>\n<p>Page2 and Page3 are still called that. :(</p>\n<p>@mrangel</p>\n<p>Your logic makes sense, but where do I put that code? I clicked \"Code View\" and pasted it instead of the AddPageLink, but it just instantly gave me an internal error...</p>\n\n",
+      "PostDate": "2019-05-19T15:41:39.0005155Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "80f34a04-637e-4fdf-a4f1-10829395d6dc",
+      "UserId": 419778,
+      "Username": "Anjosustrakr",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Also, why do the links not appear on Page2 either, when that is an only text page (just the basic Page2 but with a link to Page3).\r\n\r\nEDIT: It's because I didn't write anything in the link text box. [facepalm]",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Also, why do the links not appear on Page2 either, when that is an only text page (just the basic Page2 but with a link to Page3).</p>\n<p>EDIT: It's because I didn't write anything in the link text box. [facepalm]</p>\n\n",
+      "PostDate": "2019-05-19T15:52:46.2779919Z",
+      "LastEditDate": "2019-05-19T17:03:14.9069562Z",
+      "link": null
+    },
+    {
+      "PostId": "84c7d3fc-9785-4de8-a72a-c707bf4d4804",
+      "UserId": 419778,
+      "Username": "Anjosustrakr",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Well, I \"fixed\" it using a workaround. Now I just have the Intro page automatically transport you to the Intro Links page, which is a Text page with links that do appear.\r\n\r\nThis problem is very annoying, though. I would still appreciate it if anyone could tell me how to get AddPageLink to work.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Well, I \"fixed\" it using a workaround. Now I just have the Intro page automatically transport you to the Intro Links page, which is a Text page with links that do appear.</p>\n<p>This problem is very annoying, though. I would still appreciate it if anyone could tell me how to get AddPageLink to work.</p>\n\n",
+      "PostDate": "2019-05-19T17:02:25.5280381Z",
+      "LastEditDate": "2019-05-19T17:03:56.0159561Z",
+      "link": null
+    },
+    {
+      "PostId": "9e4a9794-97f9-4136-8524-16152d98f4c6",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> I clicked \"Code View\" and pasted it instead of the AddPageLink, but it just instantly gave me an internal error...\r\n\r\nThe web editor gives an internal error on leaving code view if the code contains a string with a &lt; character in.\r\n\r\nIf using the web editor, remove the &gt;s, then once it's saved you can re-add them to the string in the GUI view.\r\n(This is one of the most annoying bugs in the web editor if you're doing complex things)\r\n\r\nYou can probably remove the `<span>` tags if you prefer… I just put them in as a placeholder, because there will need to be some HTML there if you want to do this on a page that already contains links and I can't remember what else is there as well as the `<span>`.",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>I clicked \"Code View\" and pasted it instead of the AddPageLink, but it just instantly gave me an internal error...</p>\n</blockquote>\n<p>The web editor gives an internal error on leaving code view if the code contains a string with a &lt; character in.</p>\n<p>If using the web editor, remove the &gt;s, then once it's saved you can re-add them to the string in the GUI view.<br>\n(This is one of the most annoying bugs in the web editor if you're doing complex things)</p>\n<p>You can probably remove the <code>&lt;span&gt;</code> tags if you prefer… I just put them in as a placeholder, because there will need to be some HTML there if you want to do this on a page that already contains links and I can't remember what else is there as well as the <code>&lt;span&gt;</code>.</p>\n\n",
+      "PostDate": "2019-05-19T18:30:34.5874501Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "28beeba0-c45d-4c3a-adbb-3326bd30f481",
+      "UserId": 419778,
+      "Username": "Anjosustrakr",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks, I'll try that!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks, I'll try that!</p>\n\n",
+      "PostDate": "2019-05-20T23:43:20.3073293Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

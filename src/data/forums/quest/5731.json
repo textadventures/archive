@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "5731",
+    "ForumId": "10",
+    "Title": "Inventory list formatting?",
+    "LastUpdated": "2015-12-14T15:29:38+00:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "39549",
+      "UserId": 0,
+      "Username": "OurJud",
+      "UserAvatar": "7473_1417206896.jpg",
+      "UserGravatar": "7892e1059c02a91b34ffd60deb7402ff",
+      "EditableText": "I don't seem to be able to find where in the library the inventory list is formatted.\n\nIt's only a small matter, but currently on 'i' I get:\n\n[quote:csrlg4mc]a rifle and a backpack (containing a crowbar, a can of baked beans, a hooded fleece, a sleeping bag and an empty water bottle).[/quote:csrlg4mc]\nWhen I would prefer:\n\n[quote:csrlg4mc]A rifle and a backpack, containing a crowbar, a can of baked beans, a hooded fleece, a sleeping bag and an empty water bottle.[/quote:csrlg4mc]\nNote capital A and comma instead of brackets.\n\nThanks.",
+      "EditableFormat": "bbcode",
+      "HTML": "I don't seem to be able to find where in the library the inventory list is formatted.<br/><br/>It's only a small matter, but currently on 'i' I get:<br/><br/><blockquote><p>a rifle and a backpack (containing a crowbar, a can of baked beans, a hooded fleece, a sleeping bag and an empty water bottle).</p></blockquote><br/>When I would prefer:<br/><br/><blockquote><p>A rifle and a backpack, containing a crowbar, a can of baked beans, a hooded fleece, a sleeping bag and an empty water bottle.</p></blockquote><br/>Note capital A and comma instead of brackets.<br/><br/>Thanks.",
+      "PostDate": "2015-12-14T12:57:35+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39550",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "You need to over-write FormatObjectList. Try this code; it may need tweaking.\n[code:2u83v6sw]result = &quot;&quot;\ncount = 0\nlist = RemoveSceneryObjects(GetDirectChildren(parent))\nif (CheckDarkness()) {\n  list = RemoveDarkObjects(list)\n}\nlistLength = ListCount(list)\nforeach (item, list) {\n  if (LengthOf(result) = 0) {\n    result = preList + &quot; &quot;\n  }\n  result = result + GetDisplayNameLink(item, &quot;object&quot;)\n  if (CanSeeThrough(item)) {\n    result = result + FormatObjectList(&quot;, &quot; + item&#46;contentsprefix, item, preFinal, &quot;&quot;)\n  }\n  count = count + 1\n  if (count = listLength - 1) {\n    result = result + &quot; &quot; + preFinal + &quot; &quot;\n  }\n  else if (count &lt; listLength) {\n    result = result + &quot;, &quot;\n  }\n  else {\n    result = result + postList\n  }\n}\nreturn (CapFirst(result))[/code:2u83v6sw]",
+      "EditableFormat": "bbcode",
+      "HTML": "You need to over-write FormatObjectList. Try this code; it may need tweaking.<br/><pre><code>result = &quot;&quot;<br/>count = 0<br/>list = RemoveSceneryObjects(GetDirectChildren(parent))<br/>if (CheckDarkness()) {<br/>  list = RemoveDarkObjects(list)<br/>}<br/>listLength = ListCount(list)<br/>foreach (item, list) {<br/>  if (LengthOf(result) = 0) {<br/>    result = preList + &quot; &quot;<br/>  }<br/>  result = result + GetDisplayNameLink(item, &quot;object&quot;)<br/>  if (CanSeeThrough(item)) {<br/>    result = result + FormatObjectList(&quot;, &quot; + item&#46;contentsprefix, item, preFinal, &quot;&quot;)<br/>  }<br/>  count = count + 1<br/>  if (count = listLength - 1) {<br/>    result = result + &quot; &quot; + preFinal + &quot; &quot;<br/>  }<br/>  else if (count &lt; listLength) {<br/>    result = result + &quot;, &quot;<br/>  }<br/>  else {<br/>    result = result + postList<br/>  }<br/>}<br/>return (CapFirst(result))</code></pre>",
+      "PostDate": "2015-12-14T13:26:35+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39551",
+      "UserId": 0,
+      "Username": "OurJud",
+      "UserAvatar": "7473_1417206896.jpg",
+      "UserGravatar": "7892e1059c02a91b34ffd60deb7402ff",
+      "EditableText": "Thank you.\n\nThat replaced the bracket with a comma, but not lowercase A with a capital.",
+      "EditableFormat": "bbcode",
+      "HTML": "Thank you.<br/><br/>That replaced the bracket with a comma, but not lowercase A with a capital.",
+      "PostDate": "2015-12-14T13:39:19+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39557",
+      "UserId": 0,
+      "Username": "The Pixie",
+      "UserAvatar": null,
+      "UserGravatar": "cfa37e927f96177bcf6053ae8f108f77",
+      "EditableText": "How about this?\n[code:bilxq60k]result = &quot;&quot;\ncount = 0\nlist = RemoveSceneryObjects(GetDirectChildren(parent))\nif (CheckDarkness()) {\n  list = RemoveDarkObjects(list)\n}\nlistLength = ListCount(list)\nforeach (item, list) {\n  if (LengthOf(result) = 0) {\n    result = preList + &quot; &quot; + CapFirst(GetDisplayNameLink(item, &quot;object&quot;))\n  }\n  else {\n    result = result + GetDisplayNameLink(item, &quot;object&quot;)\n  }\n  if (CanSeeThrough(item)) {\n    result = result + FormatObjectList(&quot;, &quot; + item&#46;contentsprefix, item, preFinal, &quot;&quot;)\n  }\n  count = count + 1\n  if (count = listLength - 1) {\n    result = result + &quot; &quot; + preFinal + &quot; &quot;\n  }\n  else if (count &lt; listLength) {\n    result = result + &quot;, &quot;\n  }\n  else {\n    result = result + postList\n  }\n}\nreturn (result)[/code:bilxq60k]",
+      "EditableFormat": "bbcode",
+      "HTML": "How about this?<br/><pre><code>result = &quot;&quot;<br/>count = 0<br/>list = RemoveSceneryObjects(GetDirectChildren(parent))<br/>if (CheckDarkness()) {<br/>  list = RemoveDarkObjects(list)<br/>}<br/>listLength = ListCount(list)<br/>foreach (item, list) {<br/>  if (LengthOf(result) = 0) {<br/>    result = preList + &quot; &quot; + CapFirst(GetDisplayNameLink(item, &quot;object&quot;))<br/>  }<br/>  else {<br/>    result = result + GetDisplayNameLink(item, &quot;object&quot;)<br/>  }<br/>  if (CanSeeThrough(item)) {<br/>    result = result + FormatObjectList(&quot;, &quot; + item&#46;contentsprefix, item, preFinal, &quot;&quot;)<br/>  }<br/>  count = count + 1<br/>  if (count = listLength - 1) {<br/>    result = result + &quot; &quot; + preFinal + &quot; &quot;<br/>  }<br/>  else if (count &lt; listLength) {<br/>    result = result + &quot;, &quot;<br/>  }<br/>  else {<br/>    result = result + postList<br/>  }<br/>}<br/>return (result)</code></pre>",
+      "PostDate": "2015-12-14T13:56:24+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "39568",
+      "UserId": 0,
+      "Username": "OurJud",
+      "UserAvatar": "7473_1417206896.jpg",
+      "UserGravatar": "7892e1059c02a91b34ffd60deb7402ff",
+      "EditableText": "Ooh, nearly.\n\nI now get:\n\n[quote:1uzadvhn]A rifle and a backpack, containing A crowbar, a can of baked beans, a hooded fleece, a sleeping bag and an empty water bottle.[/quote:1uzadvhn]\nTrying to figure out myself how to remove the second cap A, but there's only one instance in the code for CapFirst - which I presume dictates the case of the first letter in a new list?",
+      "EditableFormat": "bbcode",
+      "HTML": "Ooh, nearly.<br/><br/>I now get:<br/><br/><blockquote><p>A rifle and a backpack, containing A crowbar, a can of baked beans, a hooded fleece, a sleeping bag and an empty water bottle.</p></blockquote><br/>Trying to figure out myself how to remove the second cap A, but there's only one instance in the code for CapFirst - which I presume dictates the case of the first letter in a new list?",
+      "PostDate": "2015-12-14T15:29:38+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

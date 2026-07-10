@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "1hyumlb6xkypaptgydy0aw",
+    "ForumId": "10",
+    "Title": "Help with alternative command scopes on nested objects.",
+    "LastUpdated": "2021-02-14T04:07:34.6876876Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "0f9862d7-c5ea-49bb-8d10-706c81ccf7a1",
+      "UserId": 529562,
+      "Username": "Mirgyn",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I have a command, corpus, that I want to work only within the object \"overworld,\" and all of its child, grand child, great grand child, etc. nested objects. I've tried following the \"alternative scope\" tutorial, but have currently been completely unsuccessful in my attempts to make what they say should work work. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I have a command, corpus, that I want to work only within the object \"overworld,\" and all of its child, grand child, great grand child, etc. nested objects. I've tried following the \"alternative scope\" tutorial, but have currently been completely unsuccessful in my attempts to make what they say should work work.</p>\n\n",
+      "PostDate": "2021-02-14T04:07:34.6876876Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "b07d7aa8-d14a-4492-8bba-aff2a7fb55d8",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You need to be a little more specific. In what way doesn't it work? Is it failing to match objects that should be in scope, or matching objects that you've removed from scope? Can you show us the code that isn't working?\r\n\r\nOne thing to note is that  the scope only determines which objects are considered natural targets for a command. When the player types the alias of an object, first their input will be compared to the list of objects in scope, and if it doesn't match any of those it will be compared to the list of all objects the player can see. So if the player enters an object that isn't in scope, the command still needs to check and come up with its own error message.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You need to be a little more specific. In what way doesn't it work? Is it failing to match objects that should be in scope, or matching objects that you've removed from scope? Can you show us the code that isn't working?</p>\n<p>One thing to note is that  the scope only determines which objects are considered natural targets for a command. When the player types the alias of an object, first their input will be compared to the list of objects in scope, and if it doesn't match any of those it will be compared to the list of all objects the player can see. So if the player enters an object that isn't in scope, the command still needs to check and come up with its own error message.</p>\n\n",
+      "PostDate": "2021-02-14T10:53:17.9283572Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "fe6ce644-0772-47bc-97ef-61f78d6a6aae",
+      "UserId": 529562,
+      "Username": "Mirgyn",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "It's more like.... I want the player to only be able to access the objects that they can see with this command, but I only want them to be able to _use_ the command within a certain set of rooms... So that's probably my issue then. I want a command to work in some rooms, but not in others. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>It's more like.... I want the player to only be able to access the objects that they can see with this command, but I only want them to be able to <em>use</em> the command within a certain set of rooms... So that's probably my issue then. I want a command to work in some rooms, but not in others.</p>\n\n",
+      "PostDate": "2021-02-14T11:33:43.6296402Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "14505220-2f7d-4fcd-ae24-3c74903d0b58",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "That's not a scope issue.\r\n\r\nControlling where a command can be used is pretty rudimentary. If a command is moved into a room, it can only be used within that room. Elsewhere it will get the generic response as if the game doesn't know what it means.\r\n\r\nA common way to enable or disable commands is to put commands in a box somewhere when they should be disabled. For example, on the `roomenter` script (on the game's \"Scripts\" tab, it is run whenever the player enters a new room) you could so something like:\r\n```\r\nif (Contains (overworld, game.pov)) {\r\n  MoveObjectHere (corpus)\r\n}\r\n```\r\nthis moves the command into the current room whenever the player visits a new room within the overworld.\r\n\r\nHowever, this doesn't provide a good user interface. It can be confusing for a player if the game says that it doesn't understand a command if the command works elsewhere. In most cases, it's probably better to modify the command itself. Something like:\r\n<pre><code>if (Contains (overworld, game.pov)) {\r\n  <em style=\"font-family: initial\">// the rest of the stuff your command does</em>\r\n}\r\nelse {\r\n  msg (\"You can only do that in the overworld.\")\r\n}</code></pre>\r\n\r\nIn this case I've used `game.pov` to refer to the player, which is a good habit to get into.\r\n\r\n(moving the command around is better in some circumstances; such as when you want to override one of the built-in commands in a certain location. If you do that, you can use `MoveObjectHere` on a command to make it work as long as the player stays in the same room, `RemoveObject` to make it work everywhere, or `AddToInventory` to disable a command - somewhat counterintuitive, but those functions work a bit differently when they're applied to commands)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>That's not a scope issue.</p>\n<p>Controlling where a command can be used is pretty rudimentary. If a command is moved into a room, it can only be used within that room. Elsewhere it will get the generic response as if the game doesn't know what it means.</p>\n<p>A common way to enable or disable commands is to put commands in a box somewhere when they should be disabled. For example, on the <code>roomenter</code> script (on the game's \"Scripts\" tab, it is run whenever the player enters a new room) you could so something like:</p>\n<pre><code>if (Contains (overworld, game.pov)) {\n  MoveObjectHere (corpus)\n}\n</code></pre>\n<p>this moves the command into the current room whenever the player visits a new room within the overworld.</p>\n<p>However, this doesn't provide a good user interface. It can be confusing for a player if the game says that it doesn't understand a command if the command works elsewhere. In most cases, it's probably better to modify the command itself. Something like:</p>\n<pre><code>if (Contains (overworld, game.pov)) {\n  <em style=\"font-family: initial\">// the rest of the stuff your command does</em>\n}\nelse {\n  msg (\"You can only do that in the overworld.\")\n}</code></pre>\n<p>In this case I've used <code>game.pov</code> to refer to the player, which is a good habit to get into.</p>\n<p>(moving the command around is better in some circumstances; such as when you want to override one of the built-in commands in a certain location. If you do that, you can use <code>MoveObjectHere</code> on a command to make it work as long as the player stays in the same room, <code>RemoveObject</code> to make it work everywhere, or <code>AddToInventory</code> to disable a command - somewhat counterintuitive, but those functions work a bit differently when they're applied to commands)</p>\n\n",
+      "PostDate": "2021-02-14T12:06:39.9159341Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "d635e93a-1512-4d35-9b49-1306cdece306",
+      "UserId": 529562,
+      "Username": "Mirgyn",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thank you, you've been most helpful. \r\nfor ```game.pov```, why is it a good habit to get into using that instead of, say, ```player```? Is that just in case I change the game.pov to another object that _isn't_ the player?",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thank you, you've been most helpful.<br>\nfor <code>game.pov</code>, why is it a good habit to get into using that instead of, say, <code>player</code>? Is that just in case I change the game.pov to another object that <em>isn't</em> the player?</p>\n\n",
+      "PostDate": "2021-02-14T12:17:21.8578861Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "cee7c47d-0a2e-46d9-ba66-d377a2715654",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "`game.pov` is always the current player object; that's how all the core functions do it.\r\n\r\nThere are only two situations where using `game.pov` is essential:\r\n* If you allow the player to choose between multiple characters, or to take over NPCs at some point, then `game.pov` is always the one they're currently controlling.\r\n* If you're posting code for other people to use – whether on the forums or as part of a library. Because you don't know if the person using it has changed the name of the player object, or allows the player to switch characters.\r\n\r\nEven if you don't need it right now, it's still better to use it. Because if you make another game some time in the future that lets the player switch characters, you couldn't reuse code from older projects without going through and changing every reference to `player`. And if you're used to using `game.pov` by default, you're not going to slip and type `player` without thinking.",
+      "EditableFormat": "markdown",
+      "HTML": "<p><code>game.pov</code> is always the current player object; that's how all the core functions do it.</p>\n<p>There are only two situations where using <code>game.pov</code> is essential:</p>\n<ul>\n<li>If you allow the player to choose between multiple characters, or to take over NPCs at some point, then <code>game.pov</code> is always the one they're currently controlling.</li>\n<li>If you're posting code for other people to use – whether on the forums or as part of a library. Because you don't know if the person using it has changed the name of the player object, or allows the player to switch characters.</li>\n</ul>\n<p>Even if you don't need it right now, it's still better to use it. Because if you make another game some time in the future that lets the player switch characters, you couldn't reuse code from older projects without going through and changing every reference to <code>player</code>. And if you're used to using <code>game.pov</code> by default, you're not going to slip and type <code>player</code> without thinking.</p>\n\n",
+      "PostDate": "2021-02-14T13:54:20.6251723Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

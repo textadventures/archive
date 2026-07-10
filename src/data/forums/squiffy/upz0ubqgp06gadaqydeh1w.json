@@ -1,0 +1,81 @@
+{
+  "Topic": {
+    "TopicId": "upz0ubqgp06gadaqydeh1w",
+    "ForumId": "24",
+    "Title": "Stop and Reset Timeout Function When Button Is Clicked.",
+    "LastUpdated": "2022-04-17T00:25:17.6913287Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "b5355807-4dc9-4088-8e8a-fea1a9f4c282",
+      "UserId": 312695,
+      "Username": "broadwaydude",
+      "AvatarUrl": "https://i.imgur.com/G8UT7sqb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "So, I have a Timeout function that takes from passage A (the one that I am currently in) to passage B. But, if I have a button in passage A to go to passage C, things will get funky. If the button is clicked, it will take me to passage C, but also redirect me to passage B the Timeout function runs out.\r\n\r\nThis will be useful for skipping timed cutscenes and other nifty tricks. Can anyone help me out with this? Thanks :)\r\n\r\nBroadwaydude",
+      "EditableFormat": "markdown",
+      "HTML": "<p>So, I have a Timeout function that takes from passage A (the one that I am currently in) to passage B. But, if I have a button in passage A to go to passage C, things will get funky. If the button is clicked, it will take me to passage C, but also redirect me to passage B the Timeout function runs out.</p>\n<p>This will be useful for skipping timed cutscenes and other nifty tricks. Can anyone help me out with this? Thanks :)</p>\n<p>Broadwaydude</p>\n\n",
+      "PostDate": "2022-04-17T00:25:17.6913287Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "c2e80fd3-0c0b-4fc3-878d-00c2cd2059ab",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Are these sections, or passages?\r\nIf they're sections, you can just have the timeout function check which section the player is in, and do nothing if they've already gone somewhere else.\r\n\r\nIf you're using passages, I don't think there's an easy way to check (as the `_section` attribute only gives the name of the current section).\r\nTo clear a timeout, you need to get the return value of the setTimeout function, which is an ID number. You can pass this number to `clearTimeout` to cancel the timeout.\r\n\r\nFor example:\r\n```\r\n[A]:\r\n    var timer = window.setTimeout(function() { squiffy.story.passage('B'); }, 5000);\r\n    squiffy.set(\"timerID\", timer);\r\n\r\nDo you want to go to [C]?\r\nTimeout with ID {timerID} is running!\r\n\r\n[B]:\r\nFive seconds and you didn't go to [C] yet?\r\n\r\n[C]:\r\n    window.clearTimeout(squiffy.get(\"timerID\"));\r\n\r\nHi! There's no timeout now.\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Are these sections, or passages?<br>\nIf they're sections, you can just have the timeout function check which section the player is in, and do nothing if they've already gone somewhere else.</p>\n<p>If you're using passages, I don't think there's an easy way to check (as the <code>_section</code> attribute only gives the name of the current section).<br>\nTo clear a timeout, you need to get the return value of the setTimeout function, which is an ID number. You can pass this number to <code>clearTimeout</code> to cancel the timeout.</p>\n<p>For example:</p>\n<pre><code>[A]:\n    var timer = window.setTimeout(function() { squiffy.story.passage('B'); }, 5000);\n    squiffy.set(\"timerID\", timer);\n\nDo you want to go to [C]?\nTimeout with ID {timerID} is running!\n\n[B]:\nFive seconds and you didn't go to [C] yet?\n\n[C]:\n    window.clearTimeout(squiffy.get(\"timerID\"));\n\nHi! There's no timeout now.\n</code></pre>\n\n",
+      "PostDate": "2022-04-17T11:41:00.4701017Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "b42d48d8-8045-4d1e-bda6-eb2a120a23e5",
+      "UserId": 312695,
+      "Username": "broadwaydude",
+      "AvatarUrl": "https://i.imgur.com/G8UT7sqb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "@mrangel, a true lifesaver as always.\r\n\r\nCould you show me an example of how to do this with sections as well?\r\n\r\nThank you so much!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>@mrangel, a true lifesaver as always.</p>\n<p>Could you show me an example of how to do this with sections as well?</p>\n<p>Thank you so much!</p>\n\n",
+      "PostDate": "2022-04-18T16:27:38.8424994Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "c047fcb0-afee-4249-a2c7-2aa0b929517d",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "With sections, the simple way:\r\n```\r\n[[A]]:\r\n    window.setTimeout(function() { \r\n        if (squiffy.get('_section') == 'A') {\r\n            squiffy.story.go('B');\r\n        }\r\n    }, 5000);\r\n\r\nDo you want to go to [[C]]?\r\n\r\n[[B]]:\r\nFive seconds and you didn't go to [[C]] yet?\r\n\r\n[[C]]:\r\nHi! You're here!\r\n```\r\n\r\nOr using the same method as the example above:\r\n```\r\n[[A]]:\r\n    var timer = window.setTimeout(function() { squiffy.story.go('B'); }, 5000);\r\n    squiffy.set(\"timerID\", timer);\r\n\r\nDo you want to go to [[C]]?\r\nTimeout with ID {timerID} is running!\r\n\r\n[[B]]:\r\nFive seconds and you didn't go to [[C]] yet?\r\n\r\n[[C]]:\r\n    window.clearTimeout(squiffy.get(\"timerID\"));\r\n\r\nHi! There's no timeout now.\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>With sections, the simple way:</p>\n<pre><code>[[A]]:\n    window.setTimeout(function() { \n        if (squiffy.get('_section') == 'A') {\n            squiffy.story.go('B');\n        }\n    }, 5000);\n\nDo you want to go to [[C]]?\n\n[[B]]:\nFive seconds and you didn't go to [[C]] yet?\n\n[[C]]:\nHi! You're here!\n</code></pre>\n<p>Or using the same method as the example above:</p>\n<pre><code>[[A]]:\n    var timer = window.setTimeout(function() { squiffy.story.go('B'); }, 5000);\n    squiffy.set(\"timerID\", timer);\n\nDo you want to go to [[C]]?\nTimeout with ID {timerID} is running!\n\n[[B]]:\nFive seconds and you didn't go to [[C]] yet?\n\n[[C]]:\n    window.clearTimeout(squiffy.get(\"timerID\"));\n\nHi! There's no timeout now.\n</code></pre>\n\n",
+      "PostDate": "2022-04-18T19:07:19.4667962Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "46fd3760-cdde-4b91-a27f-dcbfdfe3a59e",
+      "UserId": 312695,
+      "Username": "broadwaydude",
+      "AvatarUrl": "https://i.imgur.com/ZtaIo6Yb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Now, if I somehow wind up back in A, how can I disable the timer for the next time I'm in section A?\r\n\r\nLet's say this section is a room. Upon entering I trigger a time bomb. If I disable it, leave the room, and visit the room again, I don't want that time bomb to restart. I already disabled it.\r\n\r\nThank you so much for helping me out!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Now, if I somehow wind up back in A, how can I disable the timer for the next time I'm in section A?</p>\n<p>Let's say this section is a room. Upon entering I trigger a time bomb. If I disable it, leave the room, and visit the room again, I don't want that time bomb to restart. I already disabled it.</p>\n<p>Thank you so much for helping me out!</p>\n\n",
+      "PostDate": "2022-04-19T00:37:45.3176461Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

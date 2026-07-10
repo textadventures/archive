@@ -1,0 +1,119 @@
+{
+  "Topic": {
+    "TopicId": "2984",
+    "ForumId": "10",
+    "Title": "If anybody wants a challenge...",
+    "LastUpdated": "2012-05-30T12:11:35+01:00",
+    "ReplyCount": 8
+  },
+  "Posts": [
+    {
+      "PostId": "20407",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "I've been trying to fix a couple of problems with the WebEditor today - firstly, TinyMCE (the rich text editor used for editing room descriptions etc.) doesn't seem to like being unloaded and reloaded via AJAX, and somehow causes JQueryUI to break. This meant that after going into the web-based Editor, sometimes when you clicked on another room in the game, the tabs wouldn't be initialised properly and any subsequent calls to JQueryUI would fail - no buttons would work etc. The entire UI was broken.\n\nSo I've disabled TinyMCE for now in the WebEditor and it's just a plain textarea instead. So if anybody wants to look into that, that would be nice. If you need any help running WebEditor locally please let me know, but it's quite simple to create the WebEditorSettings.xml file from the defaults and you're good to go.\n\n(Also if you want a consistent reproduction, in GameEdit.js in the initialiseElementEditor function, put the call to .tabs() inside a setTimeout of 100ms - this will mean TinyMCE will always get initialised before the tabs, and the tabs will never get loaded properly).\n\nSecondly (and possibly related?) there's a JavaScript memory leak as you click between items in the tree. I thought this might be because we should be destroying JQueryUI tabs, unbinding events etc., when the new element editor loads, but I added code to do that and it doesn't help.\n\nI doubt that debugging either of these really appeals to anybody, but they're nice meaty issues and are probably a good way of getting an overview of how the WebEditor code works. I'm happy as always to answer questions about the code on this forum or by email.",
+      "EditableFormat": "bbcode",
+      "HTML": "I've been trying to fix a couple of problems with the WebEditor today - firstly, TinyMCE (the rich text editor used for editing room descriptions etc.) doesn't seem to like being unloaded and reloaded via AJAX, and somehow causes JQueryUI to break. This meant that after going into the web-based Editor, sometimes when you clicked on another room in the game, the tabs wouldn't be initialised properly and any subsequent calls to JQueryUI would fail - no buttons would work etc. The entire UI was broken.<br/><br/>So I've disabled TinyMCE for now in the WebEditor and it's just a plain textarea instead. So if anybody wants to look into that, that would be nice. If you need any help running WebEditor locally please let me know, but it's quite simple to create the WebEditorSettings.xml file from the defaults and you're good to go.<br/><br/>(Also if you want a consistent reproduction, in GameEdit.js in the initialiseElementEditor function, put the call to .tabs() inside a setTimeout of 100ms - this will mean TinyMCE will always get initialised before the tabs, and the tabs will never get loaded properly).<br/><br/>Secondly (and possibly related?) there's a JavaScript memory leak as you click between items in the tree. I thought this might be because we should be destroying JQueryUI tabs, unbinding events etc., when the new element editor loads, but I added code to do that and it doesn't help.<br/><br/>I doubt that debugging either of these really appeals to anybody, but they're nice meaty issues and are probably a good way of getting an overview of how the WebEditor code works. I'm happy as always to answer questions about the code on this forum or by email.",
+      "PostDate": "2012-05-26T15:02:56+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "20420",
+      "UserId": 0,
+      "Username": "junichiro",
+      "UserAvatar": null,
+      "UserGravatar": "0b9ae93fb62e1295f04aacb9587b40ab",
+      "EditableText": "how do you get web editor running and open in a browser? And what browsers are affected by the memory leak?",
+      "EditableFormat": "bbcode",
+      "HTML": "how do you get web editor running and open in a browser? And what browsers are affected by the memory leak?",
+      "PostDate": "2012-05-27T13:00:17+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "20423",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "To run WebEditor locally:\n\n- go to WebEditor\\WebEditor\\WebEditorSettings.default.xml and copy it to create a new file WebEditorSettings.xml\n- in the XML file, set LibraryFolder to the path where the Core*.aslx files live - e.g. C:\\Code\\Quest\\WorldModel\\WorldModel\\Core\\\n- set Templates Folder e.g. C:\\Code\\Quest\\WorldModel\\WorldModel\\Core\\Templates\\\n- PlayURL and PublishURL are optional - PlayURL is the URL you want to open when clicking the Play button (should be the URL that WebPlayer opens) and PublishURL is for when you click the Publish button (there's no open source for this as it would depend on the implementation of the site you were running WebEditor on, so just leave this setting as-is)\n- uncomment the two settings at the bottom. This will activate the DebugFileManager plugin - all requests will open the specific game file as specified by the DebugFileManagerFile setting\n\nOnce you've done this, in Visual Studio set the Start-up project to WebEditor. Go to the Properties for this project and select the Web tab. Change the Start Action to &quot;Start URL&quot; and enter the URL <!-- m --><a class=\"postlink\" href=\"http://localhost:50212/Edit/Game/1\">http://localhost:50212/Edit/Game/1</a><!-- m -->\n\nNow when you Run, the DebugFileManager will be asked to load the game with id 1, and will return the ASLX file specified in your config. That game will then be loaded in the WebEditor.\n\nThe memory leak is reproducable using Chrome. You can see the memory usage creep up by pressing F12, go to the Timeline tab and then select Memory in the top-left.",
+      "EditableFormat": "bbcode",
+      "HTML": "To run WebEditor locally:<br/><br/>- go to WebEditor\\WebEditor\\WebEditorSettings.default.xml and copy it to create a new file WebEditorSettings.xml<br/>- in the XML file, set LibraryFolder to the path where the Core*.aslx files live - e.g. C:\\Code\\Quest\\WorldModel\\WorldModel\\Core\\<br/>- set Templates Folder e.g. C:\\Code\\Quest\\WorldModel\\WorldModel\\Core\\Templates\\<br/>- PlayURL and PublishURL are optional - PlayURL is the URL you want to open when clicking the Play button (should be the URL that WebPlayer opens) and PublishURL is for when you click the Publish button (there's no open source for this as it would depend on the implementation of the site you were running WebEditor on, so just leave this setting as-is)<br/>- uncomment the two settings at the bottom. This will activate the DebugFileManager plugin - all requests will open the specific game file as specified by the DebugFileManagerFile setting<br/><br/>Once you've done this, in Visual Studio set the Start-up project to WebEditor. Go to the Properties for this project and select the Web tab. Change the Start Action to &quot;Start URL&quot; and enter the URL <!-- m --><a class=\"postlink\" href=\"http://localhost:50212/Edit/Game/1\">http://localhost:50212/Edit/Game/1</a><!-- m --><br/><br/>Now when you Run, the DebugFileManager will be asked to load the game with id 1, and will return the ASLX file specified in your config. That game will then be loaded in the WebEditor.<br/><br/>The memory leak is reproducable using Chrome. You can see the memory usage creep up by pressing F12, go to the Timeline tab and then select Memory in the top-left.",
+      "PostDate": "2012-05-28T18:32:07+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "20427",
+      "UserId": 0,
+      "Username": "junichiro",
+      "UserAvatar": null,
+      "UserGravatar": "0b9ae93fb62e1295f04aacb9587b40ab",
+      "EditableText": "1. On unresponsive GUI:\n\nOn rare occasions I could reproduce this in Chrome, but now I can't seem to reproduce it al all. using setTimeout on $(&quot;#elementEditorTabs&quot;).tabs doesn't seem to make any difference, even if I try a timeout of 8000ms. If you can easily reproduce you could try putting some console.log statements in the javscript to see where the code fails.\n\n2. On the memory leak:\n\nIn Chrome I can reproduce a pretty severe memory leak, yes! In Firefox it leaks memory for a short while, then reclaims it all again periodically. Actually I think there are multiple leaks, because by commenting out bits of code the leak becomes less severe, but still exists.\n\nCommenting out &quot;initialiseElementEditor&quot; doesn't seem to stop leaking much at all, if anything.\n\nCommenting out:\n\n$(&quot;#elementEditor&quot;).load(<!-- e --><a href=\"mailto:'@Html.Raw\">'@Html.Raw</a><!-- e -->(@Url.Action(&quot;EditElement&quot;, new { id = Model.GameId, key = &quot;KEY&quot;, tab = &quot;TAB&quot; }))'.replace(&quot;KEY&quot;, data.rslt.obj.attr(&quot;data-key&quot;).replace(/ /g, &quot;%20&quot;)).replace(&quot;TAB&quot;, _selectTab), function () ...\n\nmakes the leak quite considerably smaller. So it seems most of the leak comes from inserting ElementEditor.cshtml into the page (or I guess more specfically, probably from not clearing up the memory used by what was previously there). I deleted all of EditorElement.cshtml except for a single div and that too greatly reduced the leak. You could try deleting various parts of ElementEditor.cshtml and see what difference it makes.\n\nI also tried Chrome memory profile by going F12-&gt;profiles-&gt;heap snapshot. This shows huge number of objects created using the array constructor, but can't work out how to make it provide any useful information about where they got initialized.\n\n3. Other:\n\na) Why:\n\nfunction selectTreeNode(node) {\n    $(&quot;#gameTree&quot;).jstree(&quot;deselect_all&quot;);\n    $(&quot;#gameTree&quot;).jstree(&quot;select_node&quot;, &quot;#tree-&quot; + node.replace(/ /g, &quot;-&quot;));\n\nwhen select_limit is 1?\n\nb) click player, then click object in the same room as the player  -&gt; &quot;Sorry, an internal error occurred: The method or operation is not implemented.&quot; I sometimes get this error on other objects, too.\n\nc) F12 in chrome says that at all times the page has two elements with id &quot;form-loading&quot;",
+      "EditableFormat": "bbcode",
+      "HTML": "1. On unresponsive GUI:<br/><br/>On rare occasions I could reproduce this in Chrome, but now I can't seem to reproduce it al all. using setTimeout on $(&quot;#elementEditorTabs&quot;).tabs doesn't seem to make any difference, even if I try a timeout of 8000ms. If you can easily reproduce you could try putting some console.log statements in the javscript to see where the code fails.<br/><br/>2. On the memory leak:<br/><br/>In Chrome I can reproduce a pretty severe memory leak, yes! In Firefox it leaks memory for a short while, then reclaims it all again periodically. Actually I think there are multiple leaks, because by commenting out bits of code the leak becomes less severe, but still exists.<br/><br/>Commenting out &quot;initialiseElementEditor&quot; doesn't seem to stop leaking much at all, if anything.<br/><br/>Commenting out:<br/><br/>$(&quot;#elementEditor&quot;).load(<!-- e --><a href=\"mailto:'@Html.Raw\">'@Html.Raw</a><!-- e -->(@Url.Action(&quot;EditElement&quot;, new { id = Model.GameId, key = &quot;KEY&quot;, tab = &quot;TAB&quot; }))'.replace(&quot;KEY&quot;, data.rslt.obj.attr(&quot;data-key&quot;).replace(/ /g, &quot;%20&quot;)).replace(&quot;TAB&quot;, _selectTab), function () ...<br/><br/>makes the leak quite considerably smaller. So it seems most of the leak comes from inserting ElementEditor.cshtml into the page (or I guess more specfically, probably from not clearing up the memory used by what was previously there). I deleted all of EditorElement.cshtml except for a single div and that too greatly reduced the leak. You could try deleting various parts of ElementEditor.cshtml and see what difference it makes.<br/><br/>I also tried Chrome memory profile by going F12-&gt;profiles-&gt;heap snapshot. This shows huge number of objects created using the array constructor, but can't work out how to make it provide any useful information about where they got initialized.<br/><br/>3. Other:<br/><br/>a) Why:<br/><br/>function selectTreeNode(node) {<br/>    $(&quot;#gameTree&quot;).jstree(&quot;deselect_all&quot;);<br/>    $(&quot;#gameTree&quot;).jstree(&quot;select_node&quot;, &quot;#tree-&quot; + node.replace(/ /g, &quot;-&quot;));<br/><br/>when select_limit is 1?<br/><br/>b) click player, then click object in the same room as the player  -&gt; &quot;Sorry, an internal error occurred: The method or operation is not implemented.&quot; I sometimes get this error on other objects, too.<br/><br/>c) F12 in chrome says that at all times the page has two elements with id &quot;form-loading&quot;",
+      "PostDate": "2012-05-29T07:27:47+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "20442",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "1. Were you clicking on another element? The first call to .tabs() always works, then with the setTimeout applied I was consistently getting broken tabs when clicking on other elements in the tree. When it happens, there's a big callstack of JQueryUI code and JQuery code where an exception occurs, but it's not immediately clear (to me) why.\n\n2. Yes there are probably lots of things contributing to the memory leak - my guess is a load of event bindings which are not released when you click on another element. Yet calling unbind didn't help so maybe it's something else, or I wasn't unbinding the events properly.\n\n3. a) I don't know, maybe that was added before I set select_limit=1.\n3. b) Would be good to know why that's happening. If you set Visual Studio to break on all exceptions it should be clear what exactly is throwing this exception.\n3. c) Definitely sounds like a bug!",
+      "EditableFormat": "bbcode",
+      "HTML": "1. Were you clicking on another element? The first call to .tabs() always works, then with the setTimeout applied I was consistently getting broken tabs when clicking on other elements in the tree. When it happens, there's a big callstack of JQueryUI code and JQuery code where an exception occurs, but it's not immediately clear (to me) why.<br/><br/>2. Yes there are probably lots of things contributing to the memory leak - my guess is a load of event bindings which are not released when you click on another element. Yet calling unbind didn't help so maybe it's something else, or I wasn't unbinding the events properly.<br/><br/>3. a) I don't know, maybe that was added before I set select_limit=1.<br/>3. b) Would be good to know why that's happening. If you set Visual Studio to break on all exceptions it should be clear what exactly is throwing this exception.<br/>3. c) Definitely sounds like a bug!",
+      "PostDate": "2012-05-29T18:55:45+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "20454",
+      "UserId": 0,
+      "Username": "junichiro",
+      "UserAvatar": null,
+      "UserGravatar": "0b9ae93fb62e1295f04aacb9587b40ab",
+      "EditableText": "[quote=&quot;Alex&quot;:2vl5dze7]1. Were you clicking on another element? The first call to .tabs() always works, then with the setTimeout applied I was consistently getting broken tabs when clicking on other elements in the tree. When it happens, there's a big callstack of JQueryUI code and JQuery code where an exception occurs, but it's not immediately clear (to me) why.\n[/quote:2vl5dze7]\n\nYes, I can click around the tree.\n\n[quote=&quot;Alex&quot;:2vl5dze7]2. Yes there are probably lots of things contributing to the memory leak - my guess is a load of event bindings which are not released when you click on another element. Yet calling unbind didn't help so maybe it's something else, or I wasn't unbinding the events properly.[/quote:2vl5dze7]\n\nI'm not sure there are any event bindings in ElementEditor.cshtml? But that file is largely some sort of special ASP.NET language that isn't very familiar to me.\n\n[quote=&quot;Alex&quot;:2vl5dze7]\n3. b) Would be good to know why that's happening. If you set Visual Studio to break on all exceptions it should be clear what exactly is throwing this exception.[/quote:2vl5dze7]\n\nWebEditor.DLL!WebEditor.Services.EditorService.DataChanged(object oldValue = null, object newValue = 0) Line 455",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>Alex wrote:</cite>1. Were you clicking on another element? The first call to .tabs() always works, then with the setTimeout applied I was consistently getting broken tabs when clicking on other elements in the tree. When it happens, there's a big callstack of JQueryUI code and JQuery code where an exception occurs, but it's not immediately clear (to me) why.<br/></blockquote><br/><br/>Yes, I can click around the tree.<br/><br/><blockquote><cite>Alex wrote:</cite>2. Yes there are probably lots of things contributing to the memory leak - my guess is a load of event bindings which are not released when you click on another element. Yet calling unbind didn't help so maybe it's something else, or I wasn't unbinding the events properly.</blockquote><br/><br/>I'm not sure there are any event bindings in ElementEditor.cshtml? But that file is largely some sort of special ASP.NET language that isn't very familiar to me.<br/><br/><blockquote><cite>Alex wrote:</cite><br/>3. b) Would be good to know why that's happening. If you set Visual Studio to break on all exceptions it should be clear what exactly is throwing this exception.</blockquote><br/><br/>WebEditor.DLL!WebEditor.Services.EditorService.DataChanged(object oldValue = null, object newValue = 0) Line 455",
+      "PostDate": "2012-05-30T02:58:44+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "20467",
+      "UserId": 0,
+      "Username": "junichiro",
+      "UserAvatar": null,
+      "UserGravatar": "0b9ae93fb62e1295f04aacb9587b40ab",
+      "EditableText": "Removing everything from between\n\n@using (Ajax.BeginForm(&quot;SaveElement&quot;, new { }, new AjaxOptions { InsertionMode = InsertionMode.Replace, HttpMethod = &quot;POST&quot;, UpdateTargetId = &quot;elementEditor&quot;, OnComplete = &quot;initialiseElementEditor&quot;, OnFailure = &quot;ajaxError&quot;, OnBegin = &quot;beginFormSubmit&quot; }))\n    {\n\nand the closing bracket\n\n}\n\nseems to reduce the leak to about 25% for me.",
+      "EditableFormat": "bbcode",
+      "HTML": "Removing everything from between<br/><br/>@using (Ajax.BeginForm(&quot;SaveElement&quot;, new { }, new AjaxOptions { InsertionMode = InsertionMode.Replace, HttpMethod = &quot;POST&quot;, UpdateTargetId = &quot;elementEditor&quot;, OnComplete = &quot;initialiseElementEditor&quot;, OnFailure = &quot;ajaxError&quot;, OnBegin = &quot;beginFormSubmit&quot; }))<br/>    {<br/><br/>and the closing bracket<br/><br/>}<br/><br/>seems to reduce the leak to about 25% for me.",
+      "PostDate": "2012-05-30T10:09:57+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "20468",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "The event bindings I'm referring to are the JQueryUI bindings in GameEdit.js in initialiseElementEditor.\n\nThe NotImplementedException from DataChanged must be because it's trying to set some attribute to 0 which was previously null - would be good to know what attribute that is, it probably just needs to have a default value set in CoreTypes.aslx. Is this on the stable or default branch?\n\nDoesn't removing the Ajax.BeginForm block break the Editor entirely though? That's how it loads the new element editor as you click on elements in the tree.",
+      "EditableFormat": "bbcode",
+      "HTML": "The event bindings I'm referring to are the JQueryUI bindings in GameEdit.js in initialiseElementEditor.<br/><br/>The NotImplementedException from DataChanged must be because it's trying to set some attribute to 0 which was previously null - would be good to know what attribute that is, it probably just needs to have a default value set in CoreTypes.aslx. Is this on the stable or default branch?<br/><br/>Doesn't removing the Ajax.BeginForm block break the Editor entirely though? That's how it loads the new element editor as you click on elements in the tree.",
+      "PostDate": "2012-05-30T10:13:27+01:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "20476",
+      "UserId": 0,
+      "Username": "junichiro",
+      "UserAvatar": null,
+      "UserGravatar": "0b9ae93fb62e1295f04aacb9587b40ab",
+      "EditableText": "[quote=&quot;Alex&quot;:2ookwroa]The event bindings I'm referring to are the JQueryUI bindings in GameEdit.js in initialiseElementEditor.[/quote:2ookwroa]\n\nas above, entirely commenting out initialiseElementEditor doesn't make much difference\n\n[quote=&quot;Alex&quot;:2ookwroa]The NotImplementedException from DataChanged must be because it's trying to set some attribute to 0 which was previously null - would be good to know what attribute that is, it probably just needs to have a default value set in CoreTypes.aslx. Is this on the stable or default branch?[/quote:2ookwroa]\n\nhow would I know what the attribute is?\n\n[quote=&quot;Alex&quot;:2ookwroa]Doesn't removing the Ajax.BeginForm block break the Editor entirely though? That's how it loads the new element editor as you click on elements in the tree.[/quote:2ookwroa]\n\nYes, certainly it breaks everything, but the fact that it is this which makes a big difference to the memory leak, not initialiseElementEditor, suggests the leak is related not to event bindings but somehow to Ajax.BeginForm, or otherwise the relationship between Ajax.BeginForm and jquery load()",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>Alex wrote:</cite>The event bindings I'm referring to are the JQueryUI bindings in GameEdit.js in initialiseElementEditor.</blockquote><br/><br/>as above, entirely commenting out initialiseElementEditor doesn't make much difference<br/><br/><blockquote><cite>Alex wrote:</cite>The NotImplementedException from DataChanged must be because it's trying to set some attribute to 0 which was previously null - would be good to know what attribute that is, it probably just needs to have a default value set in CoreTypes.aslx. Is this on the stable or default branch?</blockquote><br/><br/>how would I know what the attribute is?<br/><br/><blockquote><cite>Alex wrote:</cite>Doesn't removing the Ajax.BeginForm block break the Editor entirely though? That's how it loads the new element editor as you click on elements in the tree.</blockquote><br/><br/>Yes, certainly it breaks everything, but the fact that it is this which makes a big difference to the memory leak, not initialiseElementEditor, suggests the leak is related not to event bindings but somehow to Ajax.BeginForm, or otherwise the relationship between Ajax.BeginForm and jquery load()",
+      "PostDate": "2012-05-30T12:11:35+01:00",
+      "LastEditDate": null
+    }
+  ]
+}

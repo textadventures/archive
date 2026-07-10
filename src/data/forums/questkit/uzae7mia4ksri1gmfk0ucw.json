@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "uzae7mia4ksri1gmfk0ucw",
+    "ForumId": "15",
+    "Title": "printOrRun or die trying....",
+    "LastUpdated": "2022-04-12T17:03:47.6141425Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "56593798-f49c-4d54-8115-a25ba9b856a7",
+      "UserId": 420406,
+      "Username": "Starrigger",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You are going to hate me by the time I'm done getting this game together...\r\n\r\nOkay.. had to struggle a bit with  \"printOrRun()\" ( https://github.com/ThePix/QuestJS/wiki/Other-Functions ) - but I did get it after doing a search through the site, and various experiments. \r\n```\r\nprintOrRun(char, item, attname, options)\r\n```\r\nBasically the issue for me was that the third variable 'attname' has to be a string if I am referring to an attribute within the 'item' . \r\nI got an error when I made it a reference to the actual attribute.\r\n```\r\nthis bombs:\r\nprintOrRun(player, this, this.eat)\r\n\r\nthis works:\r\nprintOrRun(player, this, 'eat')\r\n```\r\nIf however, I am calling a function defined in code.js for example\r\n```\r\nfunction testFunc() {\r\n\tmsg(\"TEST FUNCTION\")\r\n}\r\n```\r\nthen I can run it like this:\r\n```\r\nprintOrRun(player, this, testFunc())\r\n```\r\nEven though the function is run and the message is printed, I get this error:\r\n```\r\nError: Unsupported type for printOrRun (undefined is a undefined).\r\n    at printOrRun (_util.js:77:11)\r\n    at Object.bite (data.js:285:3)\r\n```\r\nIf I can get some clarification on calling functions this way, that would be great.\r\n\r\nSo, for me, I had two attributes in my Item \"apple\"  that were doing the same thing (this works but I wanted to have \"bite\" run \"eat\" and remove the duplicate code):\r\n```\r\ncreateItem(\"apple\", SURFACE(), EDIBLE(false),{\r\n\tloc:\"refrigerator\",\r\n\tgetTakeMsg:function() { // this is not  working\r\n\t\tmsg(\"doing stuff here...\",{},'rudy-words')\r\n\t\treturn \"\"\r\n\t},\r\n\teat:function() {\r\n\t\tmsg(\"do something in this function\")\r\n\t},\r\n\tbite:function() {\r\n\t\tmsg(\"do same thing as 'eat' in this function\")\r\n\t},\r\n\texamine: \"Print a few words\"\r\n})\r\n```\r\nThis is what I finally  was able to do:\r\n```\r\n\r\n\teat:function() {\r\n\t\tmsg(\"do something in this function\")\r\n\t},\r\n\tbite:function() {\r\n\t\tprintOrRun(player,this,'eat')\r\n\t},\r\n```\r\n<h2> So... After saying all that, in the end..</h2> I just put this in code.js\r\n```\r\ncommands.unshift(new Cmd('eat', {\r\n  regex:/^(?:eat|bite|nibble|chew) (.+)$/,\r\n  objects:[\r\n    {scope:parser.isHeld}\r\n  ],\r\n  defmsg:\"No, I don't want to bite {nm:item:the}... Seriously?\",\r\n }))\r\n```\r\nand yanked 'bite' out of 'apple' all together...",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You are going to hate me by the time I'm done getting this game together...</p>\n<p>Okay.. had to struggle a bit with  \"printOrRun()\" ( https://github.com/ThePix/QuestJS/wiki/Other-Functions ) - but I did get it after doing a search through the site, and various experiments.</p>\n<pre><code>printOrRun(char, item, attname, options)\n</code></pre>\n<p>Basically the issue for me was that the third variable 'attname' has to be a string if I am referring to an attribute within the 'item' .<br>\nI got an error when I made it a reference to the actual attribute.</p>\n<pre><code>this bombs:\nprintOrRun(player, this, this.eat)\n\nthis works:\nprintOrRun(player, this, 'eat')\n</code></pre>\n<p>If however, I am calling a function defined in code.js for example</p>\n<pre><code>function testFunc() {\n\tmsg(\"TEST FUNCTION\")\n}\n</code></pre>\n<p>then I can run it like this:</p>\n<pre><code>printOrRun(player, this, testFunc())\n</code></pre>\n<p>Even though the function is run and the message is printed, I get this error:</p>\n<pre><code>Error: Unsupported type for printOrRun (undefined is a undefined).\n    at printOrRun (_util.js:77:11)\n    at Object.bite (data.js:285:3)\n</code></pre>\n<p>If I can get some clarification on calling functions this way, that would be great.</p>\n<p>So, for me, I had two attributes in my Item \"apple\"  that were doing the same thing (this works but I wanted to have \"bite\" run \"eat\" and remove the duplicate code):</p>\n<pre><code>createItem(\"apple\", SURFACE(), EDIBLE(false),{\n\tloc:\"refrigerator\",\n\tgetTakeMsg:function() { // this is not  working\n\t\tmsg(\"doing stuff here...\",{},'rudy-words')\n\t\treturn \"\"\n\t},\n\teat:function() {\n\t\tmsg(\"do something in this function\")\n\t},\n\tbite:function() {\n\t\tmsg(\"do same thing as 'eat' in this function\")\n\t},\n\texamine: \"Print a few words\"\n})\n</code></pre>\n<p>This is what I finally  was able to do:</p>\n<pre><code>\n\teat:function() {\n\t\tmsg(\"do something in this function\")\n\t},\n\tbite:function() {\n\t\tprintOrRun(player,this,'eat')\n\t},\n</code></pre>\n<p></p><h2> So... After saying all that, in the end..</h2> I just put this in code.js<p></p>\n<pre><code>commands.unshift(new Cmd('eat', {\n  regex:/^(?:eat|bite|nibble|chew) (.+)$/,\n  objects:[\n    {scope:parser.isHeld}\n  ],\n  defmsg:\"No, I don't want to bite {nm:item:the}... Seriously?\",\n }))\n</code></pre>\n<p>and yanked 'bite' out of 'apple' all together...</p>\n\n",
+      "PostDate": "2022-04-12T17:03:47.6141425Z",
+      "LastEditDate": "2022-04-12T19:43:22.8613481Z",
+      "link": null
+    },
+    {
+      "PostId": "3a16d7f2-1211-499c-9413-a179bc1ade63",
+      "UserId": 1346,
+      "Username": "The Pixie",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/cfa37e927f96177bcf6053ae8f108f77?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "> You are going to hate me by the time I'm done getting this game together...\r\n\r\nQuestJS gets incrementally better each time...\r\n\r\nThe `printOrRun` was one of the first bits in QuestJS, and was written for a very specific use. Unfortunatelky the docs did not reflect that, plus the function got updated, so the docs were even more wrong. I have now updated them:\r\n\r\n---\r\nThis function is designed to be used within a command. It is common for a command to relate to an item, and to access an attribute of that item, which might be a string or a function. For examine, the TAKE command accesses the \"take\" attribute of the item.\r\n\r\nWith this in mind, then, the function has these parameters:\r\n\r\n* char: the character doing the command; usually the player, but the player might ask an NPC to take the hat, for example\r\n* item: the item, obviously\r\n* attName: the name of the attribute\r\n* options: an optional dictionary of further options (the function will set \"char\" to the character and \"item\" to the item unless these are already set)\r\n\r\nIf the attribute is a string, the string is printed, using options as text processor parameters. If the attribute is a function, the function is called, using options as the only parameter.\r\n\r\n---\r\n\r\nI have also slightly modified the function so it handles defaults better, but that will not affect you; unless you are using `options` the old version will be fine.\r\n\r\nIn fact, you do not need to use it at all, because you know your \"eat\" attribute is a function. Just do this:\r\n\r\n```\r\n  bite:function() {\r\n    this.eat()\r\n  },\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<blockquote>\n<p>You are going to hate me by the time I'm done getting this game together...</p>\n</blockquote>\n<p>QuestJS gets incrementally better each time...</p>\n<p>The <code>printOrRun</code> was one of the first bits in QuestJS, and was written for a very specific use. Unfortunatelky the docs did not reflect that, plus the function got updated, so the docs were even more wrong. I have now updated them:</p>\n<hr>\n<p>This function is designed to be used within a command. It is common for a command to relate to an item, and to access an attribute of that item, which might be a string or a function. For examine, the TAKE command accesses the \"take\" attribute of the item.</p>\n<p>With this in mind, then, the function has these parameters:</p>\n<ul>\n<li>char: the character doing the command; usually the player, but the player might ask an NPC to take the hat, for example</li>\n<li>item: the item, obviously</li>\n<li>attName: the name of the attribute</li>\n<li>options: an optional dictionary of further options (the function will set \"char\" to the character and \"item\" to the item unless these are already set)</li>\n</ul>\n<p>If the attribute is a string, the string is printed, using options as text processor parameters. If the attribute is a function, the function is called, using options as the only parameter.</p>\n<hr>\n<p>I have also slightly modified the function so it handles defaults better, but that will not affect you; unless you are using <code>options</code> the old version will be fine.</p>\n<p>In fact, you do not need to use it at all, because you know your \"eat\" attribute is a function. Just do this:</p>\n<pre><code>  bite:function() {\n    this.eat()\n  },\n</code></pre>\n\n",
+      "PostDate": "2022-04-13T08:24:34.1531639Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "47d27e40-f313-421f-b3d1-0d8ce237420f",
+      "UserId": 420406,
+      "Username": "Starrigger",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks for the update and clarity.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks for the update and clarity.</p>\n\n",
+      "PostDate": "2022-04-13T15:03:41.4542246Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "adhslaltqkqzt72a2jgnpa",
+    "ForumId": "10",
+    "Title": "I Never Think - Part 1: runCommand VS sendCommand",
+    "LastUpdated": "2024-09-29T20:58:01.0266518Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "b6e4ba67-024e-4a69-b0d9-e4547d8ef933",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "`<button href=\\\"#\\\"  name=\\\"SCRIPT-GENERATED-COMMAND-NAME\\\" onclick=\\\"sendCommand(this.name);\\\" class=\\\"custom-cmd-button\\\">SCRIPT-GENERATED-COMMAND-DISPLAYED-TEXT</button>`\r\n\r\nI have been using `sendCommand(this.name)`, but it looks like I should be doing this:\r\n\r\n```\r\n$('#txtCommand').val(this.name); runCommand();\r\n```\r\n\r\n---\r\nHere are the functions.\r\n\r\nUsing `sendCommand` directly is bypassing lots of good code.\r\n\r\n```\r\nfunction runCommand() {\r\n    var command = $(\"#txtCommand\").val();\r\n    if (command.length > 0 && canSendCommand) {\r\n        numCommands++;\r\n        commandsList[numCommands] = command;\r\n        thisCommand = numCommands + 1;\r\n        sendCommand(command);\r\n        $(\"#txtCommand\").val(\"\");\r\n    }\r\n}\r\n```\r\n\r\n---\r\n```\r\n// FROM desktopplayer.js\r\nfunction sendCommand(text, metadata) {\r\n    markScrollPosition();\r\n    var data = new Object();\r\n    data[\"command\"] = text;\r\n    if (typeof metadata != \"undefined\") {\r\n        data[\"metadata\"] = metadata;\r\n    }\r\n    UIEvent(\"RunCommand\", JSON.stringify(data));\r\n}\r\n\r\n```\r\n\r\n---\r\n```\r\n// FROM \"WebPlayer\\player.js\"\r\nfunction sendCommand(text, metadata) {\r\n    if (_pauseMode || _waitingForSoundToFinish || _waitMode || !canSendCommand) return;\r\n    canSendCommand = false;\r\n    markScrollPosition();\r\n    window.setTimeout(function () {\r\n        $(\"#fldUITickCount\").val(getTickCountAndStopTimer());\r\n        var data = new Object();\r\n        data[\"command\"] = text;\r\n        if (typeof metadata != \"undefined\") {\r\n            data[\"metadata\"] = metadata;\r\n        }\r\n        $(\"#fldUIMsg\").val(\"command \" + JSON.stringify(data));\r\n        $(\"#cmdSubmit\").click();\r\n    }, 100);\r\n    afterSendCommand();\r\n}\r\n```\r\n\r\n---\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p><code>&lt;button href=\\\"#\\\" name=\\\"SCRIPT-GENERATED-COMMAND-NAME\\\" onclick=\\\"sendCommand(this.name);\\\" class=\\\"custom-cmd-button\\\"&gt;SCRIPT-GENERATED-COMMAND-DISPLAYED-TEXT&lt;/button&gt;</code></p>\n<p>I have been using <code>sendCommand(this.name)</code>, but it looks like I should be doing this:</p>\n<pre><code>$('#txtCommand').val(this.name); runCommand();\n</code></pre>\n<hr>\n<p>Here are the functions.</p>\n<p>Using <code>sendCommand</code> directly is bypassing lots of good code.</p>\n<pre><code>function runCommand() {\n    var command = $(\"#txtCommand\").val();\n    if (command.length &gt; 0 &amp;&amp; canSendCommand) {\n        numCommands++;\n        commandsList[numCommands] = command;\n        thisCommand = numCommands + 1;\n        sendCommand(command);\n        $(\"#txtCommand\").val(\"\");\n    }\n}\n</code></pre>\n<hr>\n<pre><code>// FROM desktopplayer.js\nfunction sendCommand(text, metadata) {\n    markScrollPosition();\n    var data = new Object();\n    data[\"command\"] = text;\n    if (typeof metadata != \"undefined\") {\n        data[\"metadata\"] = metadata;\n    }\n    UIEvent(\"RunCommand\", JSON.stringify(data));\n}\n\n</code></pre>\n<hr>\n<pre><code>// FROM \"WebPlayer\\player.js\"\nfunction sendCommand(text, metadata) {\n    if (_pauseMode || _waitingForSoundToFinish || _waitMode || !canSendCommand) return;\n    canSendCommand = false;\n    markScrollPosition();\n    window.setTimeout(function () {\n        $(\"#fldUITickCount\").val(getTickCountAndStopTimer());\n        var data = new Object();\n        data[\"command\"] = text;\n        if (typeof metadata != \"undefined\") {\n            data[\"metadata\"] = metadata;\n        }\n        $(\"#fldUIMsg\").val(\"command \" + JSON.stringify(data));\n        $(\"#cmdSubmit\").click();\n    }, 100);\n    afterSendCommand();\n}\n</code></pre>\n<hr>\n\n",
+      "PostDate": "2024-09-29T20:58:01.0266518Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "5e7be030-cc66-4091-ba76-6c0ab747ddd9",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Or how about this (which wouldn't have to mess with anything in the text input box)?\r\n\r\n```\r\nfunction runClickCommand(command) {\r\n    if (command.length > 0 && canSendCommand) {\r\n        numCommands++;\r\n        commandsList[numCommands] = command;\r\n        thisCommand = numCommands + 1;\r\n        sendCommand(command);\r\n    }\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Or how about this (which wouldn't have to mess with anything in the text input box)?</p>\n<pre><code>function runClickCommand(command) {\n    if (command.length &gt; 0 &amp;&amp; canSendCommand) {\n        numCommands++;\n        commandsList[numCommands] = command;\n        thisCommand = numCommands + 1;\n        sendCommand(command);\n    }\n}\n</code></pre>\n\n",
+      "PostDate": "2024-09-30T01:31:06.3530226Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "7761443d-5252-4fc0-b2ab-ff555057ea43",
+      "UserId": 518866,
+      "Username": "K.V.",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a97688aadc8152436180b511021e94a7?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Now I can't find the code that controls the `onclick` for the verbs menu in the object links in the main text.\r\n\r\nI know I've located it before, but I've been searching for over an hour and finally gave up.\r\n\r\nI have the directional buttons and the panes' verb links adding the commands to the history (for when you use the up arrow to access your entered commands), but I can't find the code for the verbs in the object links. I keep thinking I've found it, but nope.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Now I can't find the code that controls the <code>onclick</code> for the verbs menu in the object links in the main text.</p>\n<p>I know I've located it before, but I've been searching for over an hour and finally gave up.</p>\n<p>I have the directional buttons and the panes' verb links adding the commands to the history (for when you use the up arrow to access your entered commands), but I can't find the code for the verbs in the object links. I keep thinking I've found it, but nope.</p>\n\n",
+      "PostDate": "2024-10-01T04:46:51.30415Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

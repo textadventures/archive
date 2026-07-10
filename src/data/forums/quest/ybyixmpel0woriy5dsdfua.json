@@ -1,0 +1,95 @@
+{
+  "Topic": {
+    "TopicId": "ybyixmpel0woriy5dsdfua",
+    "ForumId": "10",
+    "Title": "How to make a day/night cycle? (Solved, thanks to user Io for the help!)",
+    "LastUpdated": "2019-07-05T22:20:40.0074749Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "e3c7c5e6-8f74-4ea1-835f-dc1120dfe097",
+      "UserId": 302338,
+      "Username": "UnknownCleric2420",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/f2899e5627b26987cbab91c32bf4c912?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Hey, I was making a text-based simulation game and needed a way to track time, with about 6 AM being the start of \"day\" and 6 PM being the start of \"night\" for simplicity. (Ideally night would start at 8 PM, but a 12 hour difference would be easier)\r\n\r\nDoes anyone know of any scripts that may already exist in a library that would do that for me? If so, where should I find it? I'm not very experienced with Quest, or coding in general, so it would mean a lot to me to get some help. ^^\r\n\r\nEDIT: I almost forgot. I'd like the in-game time to pass as the player moves and does different actions, not with real time.\r\n\r\nEDIT 2: Thanks to user Io for helping!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Hey, I was making a text-based simulation game and needed a way to track time, with about 6 AM being the start of \"day\" and 6 PM being the start of \"night\" for simplicity. (Ideally night would start at 8 PM, but a 12 hour difference would be easier)</p>\n<p>Does anyone know of any scripts that may already exist in a library that would do that for me? If so, where should I find it? I'm not very experienced with Quest, or coding in general, so it would mean a lot to me to get some help. ^^</p>\n<p>EDIT: I almost forgot. I'd like the in-game time to pass as the player moves and does different actions, not with real time.</p>\n<p>EDIT 2: Thanks to user Io for helping!</p>\n\n",
+      "PostDate": "2019-07-05T22:20:40.0074749Z",
+      "LastEditDate": "2019-07-05T23:50:21.4572383Z",
+      "link": null
+    },
+    {
+      "PostId": "ad355ce0-61f2-40c5-b125-549394595f32",
+      "UserId": 282833,
+      "Username": "Io",
+      "AvatarUrl": "http://i.imgur.com/XVmdocTb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I don't know about existing scripts/libraries, but here's how I would do it. Also, this got long while I was typing it, but I swear it's not as scary as it looks if you read it one step at a time!\r\n\r\nCreate an object called Clock, and (Optional) stick it in a debugroom never to be seen.\r\n\r\nGive it attribute Minute as a double, and attribute Hour as a double.\r\n\r\nWhen select your Minute attribute, and use that 'plus sign' button to give it a change script. Ie, \"Whenever Clock.Minute changes, do THIS:\"\r\n\r\nHave the change script be, and pardon my psuedocode:\r\n```\r\nif Clock.Minute>59:\r\nClock.Minute=Clock.Minute-60\r\nClock.Hour=Clock.Hour+1\r\n```\r\nThis means, whenever Clock.Minute hits 60, it circles back to 0 and Hour advances by 1. This even handles cases like where you're at Minute 59, then advance 120 minutes to 179; reducing Clock.Minute by 60 calls the changescript again, reducing it by 60 over and over and increasing Hour over and over until you're back below 60.\r\n\r\nThen, simply do something similar with Clock.Hour:\r\n```\r\nif Clock.Hour>23:\r\nClock.Hour=Clock.Hour-24\r\n```\r\nThis will handle a day passing.\r\n\r\nThat's the simplest form. Adding to this, if you want to manually track Day and Night, then add to clock the String Attribute DayNight and change Clock.Hour to something like this:\r\n```\r\nif Clock.Hour>23:\r\nClock.Hour=Clock.Hour-24\r\nelse (aka we're at a possible hour, not hour 37 of the day):\r\nif (Clock.Hour>=6 and Clock.Hour<20):\r\nClock.DayNight=Day (It's between 6AM and 8PM, so it's day)\r\nelse:\r\nClock.DayNight=Night(It's either before 6 or after 8, so it's night)\r\n```\r\n\"But wait!\" you say. \"What if I want to display the actual time, like if I look at a stopwatch it prints out the time?\"\r\n\r\nNot a problem! In the code that prints out the time, instead of simply printing a line, have it run a script similar to this:\r\n```\r\nif Clock.Hour=0: (12AM case)\r\nif Clock.Minute>=10:\r\nprint(\"The time is 12:\"+Clock.Minute+\" AM\")\r\nelse:\r\nprint(\"The time is 12:0+\"Clock.Minute+\"AM\")\r\nelif Clock.Hour<13: (AM hours)\r\nif Clock.Minute>=10:\r\nprint(\"The time is \"+Clock.Hour+\":\"+Clock.Minute+\" AM\")\r\nelse:\r\nprint(\"The time is \"+Clock.Hour+\":0+\"Clock.Minute+\"AM\")\r\nelse: (PM Hours)\r\nif Clock.Minute>=10:\r\nprint(\"The time is \"+(Clock.Hour-12)+\":\"+Clock.Minute+\" AM\")\r\nelse:\r\nprint(\"The time is \"+(Clock.Hour-12)+\":0+\"Clock.Minute+\"AM\")\r\n```\r\nHope this helps!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I don't know about existing scripts/libraries, but here's how I would do it. Also, this got long while I was typing it, but I swear it's not as scary as it looks if you read it one step at a time!</p>\n<p>Create an object called Clock, and (Optional) stick it in a debugroom never to be seen.</p>\n<p>Give it attribute Minute as a double, and attribute Hour as a double.</p>\n<p>When select your Minute attribute, and use that 'plus sign' button to give it a change script. Ie, \"Whenever Clock.Minute changes, do THIS:\"</p>\n<p>Have the change script be, and pardon my psuedocode:</p>\n<pre><code>if Clock.Minute&gt;59:\nClock.Minute=Clock.Minute-60\nClock.Hour=Clock.Hour+1\n</code></pre>\n<p>This means, whenever Clock.Minute hits 60, it circles back to 0 and Hour advances by 1. This even handles cases like where you're at Minute 59, then advance 120 minutes to 179; reducing Clock.Minute by 60 calls the changescript again, reducing it by 60 over and over and increasing Hour over and over until you're back below 60.</p>\n<p>Then, simply do something similar with Clock.Hour:</p>\n<pre><code>if Clock.Hour&gt;23:\nClock.Hour=Clock.Hour-24\n</code></pre>\n<p>This will handle a day passing.</p>\n<p>That's the simplest form. Adding to this, if you want to manually track Day and Night, then add to clock the String Attribute DayNight and change Clock.Hour to something like this:</p>\n<pre><code>if Clock.Hour&gt;23:\nClock.Hour=Clock.Hour-24\nelse (aka we're at a possible hour, not hour 37 of the day):\nif (Clock.Hour&gt;=6 and Clock.Hour&lt;20):\nClock.DayNight=Day (It's between 6AM and 8PM, so it's day)\nelse:\nClock.DayNight=Night(It's either before 6 or after 8, so it's night)\n</code></pre>\n<p>\"But wait!\" you say. \"What if I want to display the actual time, like if I look at a stopwatch it prints out the time?\"</p>\n<p>Not a problem! In the code that prints out the time, instead of simply printing a line, have it run a script similar to this:</p>\n<pre><code>if Clock.Hour=0: (12AM case)\nif Clock.Minute&gt;=10:\nprint(\"The time is 12:\"+Clock.Minute+\" AM\")\nelse:\nprint(\"The time is 12:0+\"Clock.Minute+\"AM\")\nelif Clock.Hour&lt;13: (AM hours)\nif Clock.Minute&gt;=10:\nprint(\"The time is \"+Clock.Hour+\":\"+Clock.Minute+\" AM\")\nelse:\nprint(\"The time is \"+Clock.Hour+\":0+\"Clock.Minute+\"AM\")\nelse: (PM Hours)\nif Clock.Minute&gt;=10:\nprint(\"The time is \"+(Clock.Hour-12)+\":\"+Clock.Minute+\" AM\")\nelse:\nprint(\"The time is \"+(Clock.Hour-12)+\":0+\"Clock.Minute+\"AM\")\n</code></pre>\n<p>Hope this helps!</p>\n\n",
+      "PostDate": "2019-07-05T23:04:51.6250533Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "17033849-9188-431c-a1c2-a8b076945d17",
+      "UserId": 302338,
+      "Username": "UnknownCleric2420",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/f2899e5627b26987cbab91c32bf4c912?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thanks a million, and yeah it helps!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thanks a million, and yeah it helps!</p>\n\n",
+      "PostDate": "2019-07-05T23:50:59.3492713Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "e5962ed5-13dd-4c7c-bc2e-9c92c36909f1",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Pixie has a time-date system in his 'zombie apocalypse' and/or 'deeper' tutorial game/s, and/or in his quest github site or quest doc site documentation, and it's probably/likely built into the quest engine version too\r\n\r\ntime and date can be very complicated or relatively simple, and it's a bit more/extra work having to manage every individual action/event, in how much times passes when doing  that event/action, as well as if you're also applying time passage with movement/traveling (and/or worse: if using different 'distances' as well), so up to you on how complex or simple a system you want\r\n\r\n--------\r\n\r\nusing the modulus operator/operation makes the equation a bit more simple:\r\n\r\nmodulus operation: division but it gets/returns/finds the REMAINDER\r\n\r\nmodulus operator/symbol: %\r\n\r\nclock_object.clock_time_seconds = clock_object.seconds_count % 60\r\n// clock_object.clock_time_seconds = [0 to 59]\r\n\r\nclock_object.clock_time_minutes = clock_object.minutes_count % 60\r\n// clock_object.clock_time_minutes = [0 to 59]\r\n\r\nclock_object.clock_time_military_hour = clock_object.hours_count % 24\r\n// clock_object.clock_time_military_hour = [0 to 23]\r\n\r\nclock_object.clock_time_civilian_hour = clock_object.hours_count % 12\r\n// clock_object.clock_time_civilian_hour = [0 to 11]\r\n\r\n// too lazy to do the format coding to handle whether to put a '0' in front, for proper stop-watch/time displayment\r\n//\r\n// displayment:\r\n// hours:minutes:seconds\r\n//\r\n\r\nclock_object.military_time_display_string = clock_object.clock_time_military_hour + \":\" + clock_object.clock_time_minutes + \":\" + clock_object.clock_time_seconds\r\n\r\nclock_object.civilian_time_display_string = clock_object.clock_time_civilian_hour + \":\" + clock_object.clock_time_minutes + \":\" + clock_object.clock_time_seconds\r\n\r\n---------\r\n\r\nfor the quantity/count/tally/amount/number of days/minutes/seconds, you'd just use normal division as usual:\r\n\r\nquantity_of_seconds = VALUE / 60\r\nquantity_of_minutes = VALUE / 60\r\nquantity_of_days = VALUE / 24\r\n\r\n-----\r\n\r\ncivilian time (and its hours: dawn/sunrise, morning, noon/midday, afternoon, evening/dusk, twilight, night, midnight) (and day/night) (and am/pm), obviously takes a bit more coding to handle it properly (12:00 ---> noon/midday or midnight? am or pm? day/daytime or night/nighttime?, etc etc etc)",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Pixie has a time-date system in his 'zombie apocalypse' and/or 'deeper' tutorial game/s, and/or in his quest github site or quest doc site documentation, and it's probably/likely built into the quest engine version too</p>\n<p>time and date can be very complicated or relatively simple, and it's a bit more/extra work having to manage every individual action/event, in how much times passes when doing  that event/action, as well as if you're also applying time passage with movement/traveling (and/or worse: if using different 'distances' as well), so up to you on how complex or simple a system you want</p>\n<hr>\n<p>using the modulus operator/operation makes the equation a bit more simple:</p>\n<p>modulus operation: division but it gets/returns/finds the REMAINDER</p>\n<p>modulus operator/symbol: %</p>\n<p>clock_object.clock_time_seconds = clock_object.seconds_count % 60<br>\n// clock_object.clock_time_seconds = [0 to 59]</p>\n<p>clock_object.clock_time_minutes = clock_object.minutes_count % 60<br>\n// clock_object.clock_time_minutes = [0 to 59]</p>\n<p>clock_object.clock_time_military_hour = clock_object.hours_count % 24<br>\n// clock_object.clock_time_military_hour = [0 to 23]</p>\n<p>clock_object.clock_time_civilian_hour = clock_object.hours_count % 12<br>\n// clock_object.clock_time_civilian_hour = [0 to 11]</p>\n<p>// too lazy to do the format coding to handle whether to put a '0' in front, for proper stop-watch/time displayment<br>\n//<br>\n// displayment:<br>\n// hours:minutes:seconds<br>\n//</p>\n<p>clock_object.military_time_display_string = clock_object.clock_time_military_hour + \":\" + clock_object.clock_time_minutes + \":\" + clock_object.clock_time_seconds</p>\n<p>clock_object.civilian_time_display_string = clock_object.clock_time_civilian_hour + \":\" + clock_object.clock_time_minutes + \":\" + clock_object.clock_time_seconds</p>\n<hr>\n<p>for the quantity/count/tally/amount/number of days/minutes/seconds, you'd just use normal division as usual:</p>\n<p>quantity_of_seconds = VALUE / 60<br>\nquantity_of_minutes = VALUE / 60<br>\nquantity_of_days = VALUE / 24</p>\n<hr>\n<p>civilian time (and its hours: dawn/sunrise, morning, noon/midday, afternoon, evening/dusk, twilight, night, midnight) (and day/night) (and am/pm), obviously takes a bit more coding to handle it properly (12:00 ---&gt; noon/midday or midnight? am or pm? day/daytime or night/nighttime?, etc etc etc)</p>\n\n",
+      "PostDate": "2019-07-06T01:16:19.8380114Z",
+      "LastEditDate": "2019-07-06T01:18:52.7933209Z",
+      "link": null
+    },
+    {
+      "PostId": "56598e43-295b-4b4e-bfb5-bb17a33f098f",
+      "UserId": 282833,
+      "Username": "Io",
+      "AvatarUrl": "http://i.imgur.com/XVmdocTb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Also, I forgot to add!\r\n\r\nA way to progress time whenever going to new rooms.\r\n\r\nCreate a new Function, and call it something like 'AddTime'. Functions are basically just code you expect to use a lot, so rather than rewrite it all constantly, you write it in one place and then just keep saying \"Use the AddTime code\" over and over.\r\n\r\nUnder AddTime, add a single parameter called TimeProgress. Parameters are basically a slot you can fill in the code; the function will use the name for that as a variable, and ONLY inside that function.\r\n\r\nOnce you have that, have the AddTime code itself be something simple, like:\r\n```\r\nClock.Minute=Clock.Minute+TimeProgress\r\n```\r\nAnd then, in every room where you WANT time to pass when the player enters, under the before/after/ entering room, add a simple:\r\n```\r\nAddTime(1)\r\n```\r\nThis will cause AddTime's code to execute, treating its internal TimeProgress variable as the number 1. Or 5, if you want. Or 1353, whatever.\r\n\r\nI made it sound more complicated than it is, but try it out!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Also, I forgot to add!</p>\n<p>A way to progress time whenever going to new rooms.</p>\n<p>Create a new Function, and call it something like 'AddTime'. Functions are basically just code you expect to use a lot, so rather than rewrite it all constantly, you write it in one place and then just keep saying \"Use the AddTime code\" over and over.</p>\n<p>Under AddTime, add a single parameter called TimeProgress. Parameters are basically a slot you can fill in the code; the function will use the name for that as a variable, and ONLY inside that function.</p>\n<p>Once you have that, have the AddTime code itself be something simple, like:</p>\n<pre><code>Clock.Minute=Clock.Minute+TimeProgress\n</code></pre>\n<p>And then, in every room where you WANT time to pass when the player enters, under the before/after/ entering room, add a simple:</p>\n<pre><code>AddTime(1)\n</code></pre>\n<p>This will cause AddTime's code to execute, treating its internal TimeProgress variable as the number 1. Or 5, if you want. Or 1353, whatever.</p>\n<p>I made it sound more complicated than it is, but try it out!</p>\n\n",
+      "PostDate": "2019-07-06T13:13:33.9162336Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "4264d0a5-c717-4ed8-848c-27207ddfd149",
+      "UserId": 304102,
+      "Username": "Doctor Agon",
+      "AvatarUrl": "http://i.imgur.com/Lzd3mOwb.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "The Pixie also has a library for Date/Time\r\n\r\nhttps://github.com/ThePix/quest/wiki/Library:-Tracking-time\r\n\r\nReally useful, it can track the time of day, month, year. It can also trigger events or actions to be carried out at a specific time.\r\n\r\nFor all of Pixies other libraries and other useful information see below:\r\n\r\nhttps://github.com/ThePix/quest/wiki\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>The Pixie also has a library for Date/Time</p>\n<p>https://github.com/ThePix/quest/wiki/Library:-Tracking-time</p>\n<p>Really useful, it can track the time of day, month, year. It can also trigger events or actions to be carried out at a specific time.</p>\n<p>For all of Pixies other libraries and other useful information see below:</p>\n<p>https://github.com/ThePix/quest/wiki</p>\n\n",
+      "PostDate": "2019-07-06T18:30:36.0197504Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

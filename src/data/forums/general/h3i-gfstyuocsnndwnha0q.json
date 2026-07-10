@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "h3i-gfstyuocsnndwnha0q",
+    "ForumId": "3",
+    "Title": "Need help getting sound to play at the beginning of the game",
+    "LastUpdated": "2019-04-22T21:05:58.0619771Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "1e563c7d-2e80-446c-af1f-37a82d12cfde",
+      "UserId": 415153,
+      "Username": "xxxLionKingxxx",
+      "AvatarUrl": "https://i.imgur.com/NCg6ES5b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I have this sound I want to add when the game starts, and when I do all I can it won't play, is there a way where you can start the game and have sound play without having to do anything first?\r\n",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I have this sound I want to add when the game starts, and when I do all I can it won't play, is there a way where you can start the game and have sound play without having to do anything first?</p>\n\n",
+      "PostDate": "2019-04-22T21:05:58.0619771Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "35934cb9-cd19-4107-b47c-06045e565522",
+      "UserId": 267336,
+      "Username": "jmnevil54",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/5d73d7ec1dbe20a5cb46f02a6d53f187?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "If it's an MP3, Quest is not compatible with .mp3 files. .aslx and other file types work.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>If it's an MP3, Quest is not compatible with .mp3 files. .aslx and other file types work.</p>\n\n",
+      "PostDate": "2019-04-28T23:32:04.2185268Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "18f63131-6ed7-4a60-aad5-9bd0a50ba41a",
+      "UserId": 301690,
+      "Username": "Richard Headkid",
+      "AvatarUrl": "http://i.imgur.com/WUGXS8yb.png",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "You can set it to play in the game's start script.\r\n\r\n...but whether the sound will play on its own or not depends on how the game is being played.\r\n\r\nIf it's being played in the Quest desktop player, the MP3 or WAV format will work when using Quest's default ```play sound``` script.  (You can use HTML to play other audio formats, though.  I will provide a link to the documentation at the end of this post.)\r\n\r\nIf it's being played online, it gets more complicated (and much more frustrating):\r\n\r\n- Most mobile browsers will not play sounds from Quest's default scripts at all.\r\n- Most mobile browsers will not play sounds unless the user manually presses 'Play'.  This means we have to use HTML audio elements and add ```controls``` so the player actually has a 'Play' button to press.\r\n- Also, different browsers won't be able to play certain formats.  Some older browsers might not play the .ogg format, and others might not play .mp3.  The desktop version of Quest will not play an .mp3 from an HTML audio element (as of version 5.7.2), but it will play an .ogg from an HTML audio element. (Remember: the desktop version of Quest <u>will</u> play .mp3 when using the ```play sound``` script, but we can only choose MP3 or WAV in that script.)  On the other hand, most modern browsers will play .ogg files, but Internet Explorer and Edge will not. (I think Safari will play certain types of .ogg files, if you have the proper plugin, but I’m not certain.)\r\n\r\n---\r\nTo further frustrate Quest authors, they keep updating browsers, too!\r\n\r\nAbout a year ago (give or take a month or few), I did some very extensive research on this.  I added audio and video in every format I could use to a test game.  Then, I thoroughly tested everything in all the different browsers on every type of device I could get my hands on: Windows PC, Android device, iPhone, and iPad.\r\n\r\nI recently played the test game on one of the Android phones which I used to test things out the first time, and now things behave differently.  A year ago, my phone's browser would only play **.ogg** audio, but now it will play **.mp3** as well.  This sucks because I added backup formats to my HTML audio elements.  A year or so ago, any given browser would only play one format with that setup, but now some browsers will load BOTH formats -- which means it plays two identical sounds in a row when I have something like this:\r\n```\r\ns = \"<audio autoplay>\"\r\ns = s + \"<source src='\" + GetFileURL(\"snd effect.ogg\") + \"' type='audio/ogg' >\"\r\ns = s + \"<source src='\" + GetFileURL(\"snd effect.mp3\") + \"' type='audio/mp3' >\"\r\ns = s + \"Your browser does not support the audio tag.</audio>\"\r\nmsg (s)\r\n```\r\n\r\nI also found that ```autoplay``` now works on my Samsung Galaxy S5, but it still doesn't work on my Samsung Galaxy S7.  (Frustrating!)\r\n\r\nDo note that there is a little solace to be found with the Quest desktop player.  Because its version of the Chromium browser hasn't been updated in years, it is consistent.  We can play **.mp3** and **.wav** formats with the ```play sound``` script, and we can play **.ogg** and **.wav** files with HTML audio elements, but it won't load **.mp3** files from HTML audio elements.  Also, the author can always choose when a sound plays (with or without the player doing anything) in the Quest desktop player, whether we are using the ```play sound``` script or an HTML audio element.\r\n\r\nAlso note that this is <u>not</u> Quest's fault at all.  This is all about cross-platform (and cross-browser) compatibility.  (In other words, it's all about money.  The **.mp3** and **.mp4** formats are not open source.)\r\n\r\n---\r\nMost of the information here is still true today:\r\nhttp://docs.textadventures.co.uk/quest/adding_sounds.html\r\n\r\nThe information concerning HTML audio elements is no longer completely accurate.  Sometimes ```autoplay``` works now on some mobile devices, and sometimes some browsers will play both sounds when an HTML audio element contains multiple format sources.\r\n\r\nThe information concerning Quest's default ```play sound``` script should still be accurate, just for the record.\r\n\r\n---\r\nI advise anyone adding sound (or video) to make sure everything gets thoroughly tested in the Quest desktop player as well as every browser on every type of device every time you add a sound (or a video).\r\n\r\nIt sounds tiring, I know...  But, as my dear old daddy used to say, \"you gotta feed the monkey if you want to watch him poop.\"",
+      "EditableFormat": "markdown",
+      "HTML": "<p>You can set it to play in the game's start script.</p>\n<p>...but whether the sound will play on its own or not depends on how the game is being played.</p>\n<p>If it's being played in the Quest desktop player, the MP3 or WAV format will work when using Quest's default <code>play sound</code> script.  (You can use HTML to play other audio formats, though.  I will provide a link to the documentation at the end of this post.)</p>\n<p>If it's being played online, it gets more complicated (and much more frustrating):</p>\n<ul>\n<li>Most mobile browsers will not play sounds from Quest's default scripts at all.</li>\n<li>Most mobile browsers will not play sounds unless the user manually presses 'Play'.  This means we have to use HTML audio elements and add <code>controls</code> so the player actually has a 'Play' button to press.</li>\n<li>Also, different browsers won't be able to play certain formats.  Some older browsers might not play the .ogg format, and others might not play .mp3.  The desktop version of Quest will not play an .mp3 from an HTML audio element (as of version 5.7.2), but it will play an .ogg from an HTML audio element. (Remember: the desktop version of Quest <u>will</u> play .mp3 when using the <code>play sound</code> script, but we can only choose MP3 or WAV in that script.)  On the other hand, most modern browsers will play .ogg files, but Internet Explorer and Edge will not. (I think Safari will play certain types of .ogg files, if you have the proper plugin, but I’m not certain.)</li>\n</ul>\n<hr>\n<p>To further frustrate Quest authors, they keep updating browsers, too!</p>\n<p>About a year ago (give or take a month or few), I did some very extensive research on this.  I added audio and video in every format I could use to a test game.  Then, I thoroughly tested everything in all the different browsers on every type of device I could get my hands on: Windows PC, Android device, iPhone, and iPad.</p>\n<p>I recently played the test game on one of the Android phones which I used to test things out the first time, and now things behave differently.  A year ago, my phone's browser would only play <strong>.ogg</strong> audio, but now it will play <strong>.mp3</strong> as well.  This sucks because I added backup formats to my HTML audio elements.  A year or so ago, any given browser would only play one format with that setup, but now some browsers will load BOTH formats -- which means it plays two identical sounds in a row when I have something like this:</p>\n<pre><code>s = \"&lt;audio autoplay&gt;\"\ns = s + \"&lt;source src='\" + GetFileURL(\"snd effect.ogg\") + \"' type='audio/ogg' &gt;\"\ns = s + \"&lt;source src='\" + GetFileURL(\"snd effect.mp3\") + \"' type='audio/mp3' &gt;\"\ns = s + \"Your browser does not support the audio tag.&lt;/audio&gt;\"\nmsg (s)\n</code></pre>\n<p>I also found that <code>autoplay</code> now works on my Samsung Galaxy S5, but it still doesn't work on my Samsung Galaxy S7.  (Frustrating!)</p>\n<p>Do note that there is a little solace to be found with the Quest desktop player.  Because its version of the Chromium browser hasn't been updated in years, it is consistent.  We can play <strong>.mp3</strong> and <strong>.wav</strong> formats with the <code>play sound</code> script, and we can play <strong>.ogg</strong> and <strong>.wav</strong> files with HTML audio elements, but it won't load <strong>.mp3</strong> files from HTML audio elements.  Also, the author can always choose when a sound plays (with or without the player doing anything) in the Quest desktop player, whether we are using the <code>play sound</code> script or an HTML audio element.</p>\n<p>Also note that this is <u>not</u> Quest's fault at all.  This is all about cross-platform (and cross-browser) compatibility.  (In other words, it's all about money.  The <strong>.mp3</strong> and <strong>.mp4</strong> formats are not open source.)</p>\n<hr>\n<p>Most of the information here is still true today:<br>\nhttp://docs.textadventures.co.uk/quest/adding_sounds.html</p>\n<p>The information concerning HTML audio elements is no longer completely accurate.  Sometimes <code>autoplay</code> works now on some mobile devices, and sometimes some browsers will play both sounds when an HTML audio element contains multiple format sources.</p>\n<p>The information concerning Quest's default <code>play sound</code> script should still be accurate, just for the record.</p>\n<hr>\n<p>I advise anyone adding sound (or video) to make sure everything gets thoroughly tested in the Quest desktop player as well as every browser on every type of device every time you add a sound (or a video).</p>\n<p>It sounds tiring, I know...  But, as my dear old daddy used to say, \"you gotta feed the monkey if you want to watch him poop.\"</p>\n\n",
+      "PostDate": "2019-04-29T12:07:48.3838303Z",
+      "LastEditDate": "2019-04-29T12:13:22.5591799Z",
+      "link": null
+    },
+    {
+      "PostId": "c42590a9-5398-4ae1-999e-fd78c62b49b9",
+      "UserId": 415153,
+      "Username": "xxxLionKingxxx",
+      "AvatarUrl": "https://i.imgur.com/NCg6ES5b.jpg",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Thank you for the information I will remember this, before I when and red this I figured it out. I didn't know that certain formats won't play on certain browsers or devices. My game is already published I could go back in and do more with the audio so it works on all but I not going to as it was a test run and a practice. I will be doing another for practice so I will be doing all that, adding in different formats for all the many different browsers and devices. Thank you for replying it really helped my understanding. ",
+      "EditableFormat": "markdown",
+      "HTML": "<p>Thank you for the information I will remember this, before I when and red this I figured it out. I didn't know that certain formats won't play on certain browsers or devices. My game is already published I could go back in and do more with the audio so it works on all but I not going to as it was a test run and a practice. I will be doing another for practice so I will be doing all that, adding in different formats for all the many different browsers and devices. Thank you for replying it really helped my understanding.</p>\n\n",
+      "PostDate": "2019-04-29T21:18:00.2407947Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

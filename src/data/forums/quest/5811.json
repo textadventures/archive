@@ -1,0 +1,83 @@
+{
+  "Topic": {
+    "TopicId": "5811",
+    "ForumId": "10",
+    "Title": "Passwords (the correct way)",
+    "LastUpdated": "2016-01-05T21:58:12+00:00",
+    "ReplyCount": 5
+  },
+  "Posts": [
+    {
+      "PostId": "40246",
+      "UserId": 0,
+      "Username": "OurJud",
+      "UserAvatar": "7473_1417206896.jpg",
+      "UserGravatar": "7892e1059c02a91b34ffd60deb7402ff",
+      "EditableText": "I offered one of my usual hacks today, to a poster who was asking how to gain access to a room by entering a specific command.\n\nAs always, I knew in the back of my mind that I wasn't doing it the 'correct' way, and that my solution didn't cover all possibilities.\n\nThis was my method:\n\n[code:343ezf58]msg (&quot;There is a guard here&#46; He asks you for the password&#46; The locked door is north&#46; East is an unguarded exit&#46;&quot;)\nget input {\n  if (result=&quot;e&quot;) {\n    MoveObject (player, room 3)\n  }\n  else if (result=&quot;1234&quot;) {\n    UnlockExit (locked)\n    msg (&quot;The guard steps aside to allow you access&#46;&quot;)\n  }\n  else {\n    msg (&quot;\\&quot;Wrong password&#46;\\&quot;&quot;)\n    ShowRoomDescription\n  }[/code:343ezf58]\n\nWhich works, but only to a certain extent.\n\nThe problem with this is that the player really only has the option to enter the password, and any other command will return &quot;Wrong password.&quot; which is why I added the extra if for the unlocked exit to the east.\n\nSo, out of interest, and just because it will be a handy script to store, how would this be done correctly?\n\nIdeally, the player would have the freedom to enter any other command (and receive either a positive response or an unresolved one as with any other room), but how would this be achieved?",
+      "EditableFormat": "bbcode",
+      "HTML": "I offered one of my usual hacks today, to a poster who was asking how to gain access to a room by entering a specific command.<br/><br/>As always, I knew in the back of my mind that I wasn't doing it the 'correct' way, and that my solution didn't cover all possibilities.<br/><br/>This was my method:<br/><br/><pre><code>msg (&quot;There is a guard here&#46; He asks you for the password&#46; The locked door is north&#46; East is an unguarded exit&#46;&quot;)<br/>get input {<br/>  if (result=&quot;e&quot;) {<br/>    MoveObject (player, room 3)<br/>  }<br/>  else if (result=&quot;1234&quot;) {<br/>    UnlockExit (locked)<br/>    msg (&quot;The guard steps aside to allow you access&#46;&quot;)<br/>  }<br/>  else {<br/>    msg (&quot;\\&quot;Wrong password&#46;\\&quot;&quot;)<br/>    ShowRoomDescription<br/>  }</code></pre><br/><br/>Which works, but only to a certain extent.<br/><br/>The problem with this is that the player really only has the option to enter the password, and any other command will return &quot;Wrong password.&quot; which is why I added the extra if for the unlocked exit to the east.<br/><br/>So, out of interest, and just because it will be a handy script to store, how would this be done correctly?<br/><br/>Ideally, the player would have the freedom to enter any other command (and receive either a positive response or an unresolved one as with any other room), but how would this be achieved?",
+      "PostDate": "2016-01-05T17:45:52+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40254",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "You can mostly get away with it like this:\n\n[code:3u0xun6u]\tmsg (&quot;There is a guard here&#46; He asks you for the password&#46; The locked door is north&#46; East is an unguarded exit&#46;&quot;)\n\tget input {\n\t  if (result=&quot;1234&quot;) {\n\t    UnlockExit (locked)\n\t    msg (&quot;The guard steps aside to allow you access&#46;&quot;)\n\t  }\n\t  else {\n\t  \tif (not result = &quot;l&quot; and not result = &quot;look&quot;) { \n\t    \tHandleCommand(result, null)\n\t    }\n\t    ShowRoomDescription()\n\t  }\n\t}[/code:3u0xun6u]\nHowever, if this is the room description (which I assume it is, since you show it repeatedly), then it still refers to the looked door and password even once you've unlocked it. That would probably need to change. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> The special case for &quot;l/look&quot; is to prevent a double room description being dumped out if they type those commands, plus a double entry into &quot;get input&quot; which is a no no.",
+      "EditableFormat": "bbcode",
+      "HTML": "You can mostly get away with it like this:<br/><br/><pre><code>\tmsg (&quot;There is a guard here&#46; He asks you for the password&#46; The locked door is north&#46; East is an unguarded exit&#46;&quot;)<br/>\tget input {<br/>\t  if (result=&quot;1234&quot;) {<br/>\t    UnlockExit (locked)<br/>\t    msg (&quot;The guard steps aside to allow you access&#46;&quot;)<br/>\t  }<br/>\t  else {<br/>\t  \tif (not result = &quot;l&quot; and not result = &quot;look&quot;) { <br/>\t    \tHandleCommand(result, null)<br/>\t    }<br/>\t    ShowRoomDescription()<br/>\t  }<br/>\t}</code></pre><br/>However, if this is the room description (which I assume it is, since you show it repeatedly), then it still refers to the looked door and password even once you've unlocked it. That would probably need to change. <!-- s:) --><img src=\"{SMILIES_PATH}/icon_smile.gif\" alt=\":)\" title=\"Smile\" /><!-- s:) --> The special case for &quot;l/look&quot; is to prevent a double room description being dumped out if they type those commands, plus a double entry into &quot;get input&quot; which is a no no.",
+      "PostDate": "2016-01-05T19:40:29+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40257",
+      "UserId": 0,
+      "Username": "XanMag",
+      "UserAvatar": "7161_1436827710.jpg",
+      "UserGravatar": "4b45a3afd18077f76f6569225c422bdb",
+      "EditableText": "Ahem... <!-- s:lol: --><img src=\"{SMILIES_PATH}/icon_lol.gif\" alt=\":lol:\" title=\"Laughing\" /><!-- s:lol: -->  I would force the player to interact with the guard and then run the get input script.  That way, all other input would work until you typed 'talk to guard' at which point you would print a message like [b:1485asxd]&quot;The guard grunts at you, points his club at your skull and says, 'Password please.'&quot;  [i:1485asxd]What will you say?[/i:1485asxd][/b:1485asxd]  Then, I would use the get input script.  \n\nIn some parts of my games, I might even include a closing line like &quot;If you don't want to offer this kind guard a password, you might want to retreat to the east.&quot;  Then in the get input you can use an if/else to accommodate for an exit from the conversation.\n\nI might even include a command for the room something like - tell guard 1234; say 1234 to guard; tell guard 1234; say 1234; etc... with an appropriate response for a correct and incorrect password.  That way the player can address the guard voluntarily or be questioned for the password by talking to him.\n\nAnyway, that is my butchered approach!  There's more than one wrong way to skin a cat!",
+      "EditableFormat": "bbcode",
+      "HTML": "Ahem... <!-- s:lol: --><img src=\"{SMILIES_PATH}/icon_lol.gif\" alt=\":lol:\" title=\"Laughing\" /><!-- s:lol: -->  I would force the player to interact with the guard and then run the get input script.  That way, all other input would work until you typed 'talk to guard' at which point you would print a message like <span style=\"font-weight:bold;\">&quot;The guard grunts at you, points his club at your skull and says, 'Password please.'&quot;  <span style=\"font-style:italic;\">What will you say?</span></span>  Then, I would use the get input script.  <br/><br/>In some parts of my games, I might even include a closing line like &quot;If you don't want to offer this kind guard a password, you might want to retreat to the east.&quot;  Then in the get input you can use an if/else to accommodate for an exit from the conversation.<br/><br/>I might even include a command for the room something like - tell guard 1234; say 1234 to guard; tell guard 1234; say 1234; etc... with an appropriate response for a correct and incorrect password.  That way the player can address the guard voluntarily or be questioned for the password by talking to him.<br/><br/>Anyway, that is my butchered approach!  There's more than one wrong way to skin a cat!",
+      "PostDate": "2016-01-05T20:19:28+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40264",
+      "UserId": 0,
+      "Username": "OurJud",
+      "UserAvatar": "7473_1417206896.jpg",
+      "UserGravatar": "7892e1059c02a91b34ffd60deb7402ff",
+      "EditableText": "[quote=&quot;XanMag&quot;:372s0fdr]\nI might even include a command for the room something like - tell guard 1234; say 1234 to guard; tell guard 1234; say 1234; etc... with an appropriate response for a correct and incorrect password.  That way the player can address the guard voluntarily or be questioned for the password by talking to him.\n\nAnyway, that is my butchered approach!  There's more than one wrong way to skin a cat![/quote:372s0fdr]\nNo, I like this.\n\nJay, what does the [b:372s0fdr](result, null)[/b:372s0fdr] do? I mean what doe the game throw out, just a blank non-response?",
+      "EditableFormat": "bbcode",
+      "HTML": "<blockquote><cite>XanMag wrote:</cite><br/>I might even include a command for the room something like - tell guard 1234; say 1234 to guard; tell guard 1234; say 1234; etc... with an appropriate response for a correct and incorrect password.  That way the player can address the guard voluntarily or be questioned for the password by talking to him.<br/><br/>Anyway, that is my butchered approach!  There's more than one wrong way to skin a cat!</blockquote><br/>No, I like this.<br/><br/>Jay, what does the <span style=\"font-weight:bold;\">(result, null)</span> do? I mean what doe the game throw out, just a blank non-response?",
+      "PostDate": "2016-01-05T21:32:45+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40270",
+      "UserId": 0,
+      "Username": "jaynabonne",
+      "UserAvatar": "6579_1344778256.jpg",
+      "UserGravatar": "379859a7f1952a65399fc63997e68f0b",
+      "EditableText": "HandleCommand(result, null) will process the text in &quot;result&quot; as if the user had typed it in at the command prompt. It's the basic command handling entry point for the Quest parser. So, in a sense, you're taking the input you got and handing it off just as it normally would be if you weren't handling the input yourself. It will process any command just as usual, including movement commands, examining things, &quot;help&quot;, etc.",
+      "EditableFormat": "bbcode",
+      "HTML": "HandleCommand(result, null) will process the text in &quot;result&quot; as if the user had typed it in at the command prompt. It's the basic command handling entry point for the Quest parser. So, in a sense, you're taking the input you got and handing it off just as it normally would be if you weren't handling the input yourself. It will process any command just as usual, including movement commands, examining things, &quot;help&quot;, etc.",
+      "PostDate": "2016-01-05T21:55:33+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "40271",
+      "UserId": 0,
+      "Username": "OurJud",
+      "UserAvatar": "7473_1417206896.jpg",
+      "UserGravatar": "7892e1059c02a91b34ffd60deb7402ff",
+      "EditableText": "Ah, I see. Useful. Thanks.",
+      "EditableFormat": "bbcode",
+      "HTML": "Ah, I see. Useful. Thanks.",
+      "PostDate": "2016-01-05T21:58:12+00:00",
+      "LastEditDate": null
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "Topic": {
+    "TopicId": "e4uf0cqtukemqsspbp6eiw",
+    "ForumId": "10",
+    "Title": "Trouble getting all option of a show menu to work",
+    "LastUpdated": "2018-10-08T01:49:44.5906651Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "03cff640-8cbe-4c87-9821-840a859f8a10",
+      "UserId": 286484,
+      "Username": "Thickar",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/434855216bf750dd1c371f6f5006c8e5?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "So I have done this code many time and it has always worked pefectly, but not it's not. I'm trying to show a menu to ask what gender your character is, but when I select the option of female it doesn't carry out the assigned code, only on the male or first option. Here is the code I used\r\n```\r\noptions = Split(\"Male; Female\", \";\")\r\n      ShowMenu (\"What gender is your character?\", options, false) {\r\n        switch (result) {\r\n          case (\"Male\") {\r\n            msg (\"So your character is a man.\")\r\n            player.sex_type = \"male\"\r\n          }\r\n          case (\"Female\") {\r\n            msg (\"So your character is a women.\")\r\n            player.sex = \"female\"\r\n          }\r\n          }\r\n        }\r\n```\r\nAny ideas why this is? I might be where I placed it in the rest of the code which I can also provide if needed.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>So I have done this code many time and it has always worked pefectly, but not it's not. I'm trying to show a menu to ask what gender your character is, but when I select the option of female it doesn't carry out the assigned code, only on the male or first option. Here is the code I used</p>\n<pre><code>options = Split(\"Male; Female\", \";\")\n      ShowMenu (\"What gender is your character?\", options, false) {\n        switch (result) {\n          case (\"Male\") {\n            msg (\"So your character is a man.\")\n            player.sex_type = \"male\"\n          }\n          case (\"Female\") {\n            msg (\"So your character is a women.\")\n            player.sex = \"female\"\n          }\n          }\n        }\n</code></pre>\n<p>Any ideas why this is? I might be where I placed it in the rest of the code which I can also provide if needed.</p>\n\n",
+      "PostDate": "2018-10-08T01:49:44.5906651Z",
+      "LastEditDate": "2018-10-08T01:50:44.7348345Z",
+      "link": null
+    },
+    {
+      "PostId": "7dfc7f9a-2938-46d1-8b00-f7a0f363f24e",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "the nightmare of spaces...\r\n\r\nnotice in your\r\n\r\n```\r\noptions = Split(\"Male; Female\", \";\")\r\n```\r\n\r\nthere's a space in the 2nd item:\r\n\r\n```\r\noptions = Split(\"Male;[SPACE]Female\", \";\")\r\n```\r\n\r\na space is actually considered/seen as a character/number/symbol, just as 'A' and '1' and '&'are seen/considered as characters/numbers/symbols\r\n\r\nso, quest is seeing the item/value as:\r\n\r\n[SPACE]Female\r\n\r\nand not as:\r\n\r\nFemale\r\n\r\nso, this is why your check of:\r\n\r\n```\r\ncase (\"Female\")\r\n```\r\n\r\nfails, as it's looking for 'Female', but there's no 'Female', only '[SPACE]Female'\r\n\r\namusingly, this will work:\r\n\r\n```\r\ncase (\" Female\")\r\n```\r\n\r\nas now we're checking for a value/item that exists:\r\n\r\n```\r\ncase (\"[SPACE]Female\")\r\n```\r\n\r\nlaughs, but you don't want '[SPACE]Female' as your sex value, lol\r\n\r\n-----------------\r\n\r\nhere's the fixed code:\r\n\r\n```\r\noptions = Split(\"Male;Female\", \";\")\r\nShowMenu (\"What gender is your character?\", options, false) {\r\n  switch (result) {\r\n    case (\"Male\") {\r\n      msg (\"So your character is a man.\")\r\n      player.sex_type = \"male\"\r\n    }\r\n    case (\"Female\") {\r\n      msg (\"So your character is a women.\")\r\n      player.sex = \"female\"\r\n    }\r\n  }\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>the nightmare of spaces...</p>\n<p>notice in your</p>\n<pre><code>options = Split(\"Male; Female\", \";\")\n</code></pre>\n<p>there's a space in the 2nd item:</p>\n<pre><code>options = Split(\"Male;[SPACE]Female\", \";\")\n</code></pre>\n<p>a space is actually considered/seen as a character/number/symbol, just as 'A' and '1' and '&amp;'are seen/considered as characters/numbers/symbols</p>\n<p>so, quest is seeing the item/value as:</p>\n<p>[SPACE]Female</p>\n<p>and not as:</p>\n<p>Female</p>\n<p>so, this is why your check of:</p>\n<pre><code>case (\"Female\")\n</code></pre>\n<p>fails, as it's looking for 'Female', but there's no 'Female', only '[SPACE]Female'</p>\n<p>amusingly, this will work:</p>\n<pre><code>case (\" Female\")\n</code></pre>\n<p>as now we're checking for a value/item that exists:</p>\n<pre><code>case (\"[SPACE]Female\")\n</code></pre>\n<p>laughs, but you don't want '[SPACE]Female' as your sex value, lol</p>\n<hr>\n<p>here's the fixed code:</p>\n<pre><code>options = Split(\"Male;Female\", \";\")\nShowMenu (\"What gender is your character?\", options, false) {\n  switch (result) {\n    case (\"Male\") {\n      msg (\"So your character is a man.\")\n      player.sex_type = \"male\"\n    }\n    case (\"Female\") {\n      msg (\"So your character is a women.\")\n      player.sex = \"female\"\n    }\n  }\n}\n</code></pre>\n\n",
+      "PostDate": "2018-10-08T02:07:31.9533878Z",
+      "LastEditDate": "2018-10-08T02:11:20.6611423Z",
+      "link": null
+    },
+    {
+      "PostId": "ab9dd864-0373-4158-beb6-fbc336c95081",
+      "UserId": 247325,
+      "Username": "hegemonkhan",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/a96cf34d8d97c57de38f54ee22b1759b?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "P.S.\r\n\r\nhere's just improved code (reduced code: removed un-needed code: made it more concise: you don't need the 'switch-case' code) of your code:\r\n\r\n```\r\noptions = Split(\"male;female\", \";\")\r\nShowMenu (\"What gender is your character?\", options, false) {\r\n  msg (\"So your character is a \" + result + \".\")\r\n  player.sex_type = result\r\n}\r\n```\r\n\r\nor, if you really want your list items to be capitolized (and-but not your sex values):\r\n\r\n```\r\noptions = Split(\"Male;Female\", \";\")\r\nShowMenu (\"What gender is your character?\", options, false) {\r\n  result = LCase (result)\r\n  msg (\"So your character is a \" + result + \".\")\r\n  player.sex_type = result\r\n}\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>P.S.</p>\n<p>here's just improved code (reduced code: removed un-needed code: made it more concise: you don't need the 'switch-case' code) of your code:</p>\n<pre><code>options = Split(\"male;female\", \";\")\nShowMenu (\"What gender is your character?\", options, false) {\n  msg (\"So your character is a \" + result + \".\")\n  player.sex_type = result\n}\n</code></pre>\n<p>or, if you really want your list items to be capitolized (and-but not your sex values):</p>\n<pre><code>options = Split(\"Male;Female\", \";\")\nShowMenu (\"What gender is your character?\", options, false) {\n  result = LCase (result)\n  msg (\"So your character is a \" + result + \".\")\n  player.sex_type = result\n}\n</code></pre>\n\n",
+      "PostDate": "2018-10-08T02:17:46.3548546Z",
+      "LastEditDate": "2018-10-08T02:21:31.8703112Z",
+      "link": null
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "Topic": {
+    "TopicId": "c1icsxjcgu2rasbjwvuaug",
+    "ForumId": "10",
+    "Title": "Object attribute not being recognized?",
+    "LastUpdated": "2020-06-07T15:30:33.5810887Z",
+    "ReplyCount": 0
+  },
+  "Posts": [
+    {
+      "PostId": "9d6dd929-e95c-4e65-a698-18a4b8722bcf",
+      "UserId": 450593,
+      "Username": "TheRealAnimeSpot",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4b0c22eb898227090a176cc74b601621?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I'm trying to proc gen a world in Quest. There are region objects and each have coordinates assigned to them. The coordinates are separate x and y integer attributes.\r\n\r\nThere's a specific function where I need to access region.x and region.y but it acts like the attributes don't exist. The attributes show up when I look at the debugger though.\r\n\r\nThis is where the function is first called. I apologize for how the code looks, I couldn't figure out how to format it properly. The min_rainfall / max_rainfall are used when generating each region's rainfall and tile_num determines how many tiles (rooms) are in each region.\r\n<function name=\"generate_regions\" parameters=\"region_list\">\r\n\t\tmin_rainfall = get_min_attr_list(Reference.biome_list, \"min_rainfall\")\r\n\t\tmax_rainfall = get_max_attr_list(Reference.biome_list, \"max_rainfall\")\r\n\t\ttile_num = World.tile_num * World.tile_num\r\n\t\t\r\n\t\tforeach (i, region_list) {\r\n\t\t\tassign_rainfall(i, min_rainfall, max_rainfall)\r\n\t\t\tassign_biome(i)\r\n\t\t\tinitialize_tiles(i, tile_num)\r\n\t\t\tassign_coordinates_tile(i, World.region_num)\r\n\t\t}\r\n\t</function>\r\n\r\nThis is the function itself. Each region has a list of tiles, which are basically the rooms that the player will be moving through. This is supposed to assign each tile's coordinates based on its region coordinates. After this, exits are created based on the tile's coordinates.\r\n<function name=\"assign_coordinates_tile\" parameters=\"region, num\">\r\n\t\tmax_x = (region.x * num) + num\r\n\t\t\r\n\t\tx = region.x * num\r\n\t\ty = region.y * num\r\n\t\t\r\n\t\tforeach (i, region.tiles) {\r\n\t\t\ti.x = x\r\n\t\t\ti.y = y\r\n\t\t\t\r\n\t\t\tx = x + 1\r\n\t\t\tif (x = max_x) {\r\n\t\t\t\ty = y + 1\r\n\t\t\t\tx = region.x * num\r\n\t\t\t}\r\n\t\t}\r\n\t</function>",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I'm trying to proc gen a world in Quest. There are region objects and each have coordinates assigned to them. The coordinates are separate x and y integer attributes.</p>\n<p>There's a specific function where I need to access region.x and region.y but it acts like the attributes don't exist. The attributes show up when I look at the debugger though.</p>\n<p>This is where the function is first called. I apologize for how the code looks, I couldn't figure out how to format it properly. The min_rainfall / max_rainfall are used when generating each region's rainfall and tile_num determines how many tiles (rooms) are in each region.<br>\n</p>\n<pre><code>\tforeach (i, region_list) {\n\t\tassign_rainfall(i, min_rainfall, max_rainfall)\n\t\tassign_biome(i)\n\t\tinitialize_tiles(i, tile_num)\n\t\tassign_coordinates_tile(i, World.region_num)\n\t}\n&lt;/function&gt;\n</code></pre>\n<p>This is the function itself. Each region has a list of tiles, which are basically the rooms that the player will be moving through. This is supposed to assign each tile's coordinates based on its region coordinates. After this, exits are created based on the tile's coordinates.<br>\n</p>\n<pre><code>\tx = region.x * num\n\ty = region.y * num\n\t\n\tforeach (i, region.tiles) {\n\t\ti.x = x\n\t\ti.y = y\n\t\t\n\t\tx = x + 1\n\t\tif (x = max_x) {\n\t\t\ty = y + 1\n\t\t\tx = region.x * num\n\t\t}\n\t}\n&lt;/function&gt;\n</code></pre>\n\n",
+      "PostDate": "2020-06-07T15:30:33.5810887Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "769c9380-8520-4f86-b162-1e6b17abcecd",
+      "UserId": 450593,
+      "Username": "TheRealAnimeSpot",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4b0c22eb898227090a176cc74b601621?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "I figured out how to format the code correctly but the site won't let me update it so I'll just post it here.\r\n\r\nThis where the function is first called.\r\n```\r\n<function name=\"generate_regions\" parameters=\"region_list\">\r\n\t\tmin_rainfall = get_min_attr_list(Reference.biome_list, \"min_rainfall\")\r\n\t\tmax_rainfall = get_max_attr_list(Reference.biome_list, \"max_rainfall\")\r\n\t\ttile_num = World.tile_num * World.tile_num\r\n\t\t\r\n\t\tforeach (i, region_list) {\r\n\t\t\tassign_rainfall(i, min_rainfall, max_rainfall)\r\n\t\t\tassign_biome(i)\r\n\t\t\tinitialize_tiles(i, tile_num)\r\n\t\t\tassign_coordinates_tile(i, World.region_num)\r\n\t\t}\r\n</function>\r\n```\r\n\r\nThis is the actual function.\r\n```\r\n<function name=\"assign_coordinates_tile\" parameters=\"region, num\">\r\n\t\tif (HasAttribute(region,\"x\")) {\r\n\t\t\tmsg(\"Yes!\")\r\n\t\t}\r\n\t\telse {\r\n\t\t\tmsg(\"No!\")\r\n\t\t}\r\n\t\t\r\n\t\tmax_x = (region.x * num) + num\r\n\t\t\r\n\t\tx = region.x * num\r\n\t\ty = region.y * num\r\n\t\t\r\n\t\tforeach (i, region.tiles) {\r\n\t\t\ti.x = x\r\n\t\t\ti.y = y\r\n\t\t\t\r\n\t\t\tx = x + 1\r\n\t\t\tif (x = max_x) {\r\n\t\t\t\ty = y + 1\r\n\t\t\t\tx = region.x * num\r\n\t\t\t}\r\n\t\t}\r\n</function>\r\n```",
+      "EditableFormat": "markdown",
+      "HTML": "<p>I figured out how to format the code correctly but the site won't let me update it so I'll just post it here.</p>\n<p>This where the function is first called.</p>\n<pre><code>&lt;function name=\"generate_regions\" parameters=\"region_list\"&gt;\n\t\tmin_rainfall = get_min_attr_list(Reference.biome_list, \"min_rainfall\")\n\t\tmax_rainfall = get_max_attr_list(Reference.biome_list, \"max_rainfall\")\n\t\ttile_num = World.tile_num * World.tile_num\n\t\t\n\t\tforeach (i, region_list) {\n\t\t\tassign_rainfall(i, min_rainfall, max_rainfall)\n\t\t\tassign_biome(i)\n\t\t\tinitialize_tiles(i, tile_num)\n\t\t\tassign_coordinates_tile(i, World.region_num)\n\t\t}\n&lt;/function&gt;\n</code></pre>\n<p>This is the actual function.</p>\n<pre><code>&lt;function name=\"assign_coordinates_tile\" parameters=\"region, num\"&gt;\n\t\tif (HasAttribute(region,\"x\")) {\n\t\t\tmsg(\"Yes!\")\n\t\t}\n\t\telse {\n\t\t\tmsg(\"No!\")\n\t\t}\n\t\t\n\t\tmax_x = (region.x * num) + num\n\t\t\n\t\tx = region.x * num\n\t\ty = region.y * num\n\t\t\n\t\tforeach (i, region.tiles) {\n\t\t\ti.x = x\n\t\t\ti.y = y\n\t\t\t\n\t\t\tx = x + 1\n\t\t\tif (x = max_x) {\n\t\t\t\ty = y + 1\n\t\t\t\tx = region.x * num\n\t\t\t}\n\t\t}\n&lt;/function&gt;\n</code></pre>\n\n",
+      "PostDate": "2020-06-07T15:40:03.397766Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "03283306-d883-4c98-8ace-fcb4a23e849e",
+      "UserId": 319917,
+      "Username": "mrangel",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "What's the actual error message? Are you sure it's those lines hat are the problem? Are you sure you know which region is causing the error? I'd check to see if one of them has an attribute missing for some reason; or double-check the code that sets those attributes.",
+      "EditableFormat": "markdown",
+      "HTML": "<p>What's the actual error message? Are you sure it's those lines hat are the problem? Are you sure you know which region is causing the error? I'd check to see if one of them has an attribute missing for some reason; or double-check the code that sets those attributes.</p>\n\n",
+      "PostDate": "2020-06-07T15:42:24.5494397Z",
+      "LastEditDate": null,
+      "link": null
+    },
+    {
+      "PostId": "cdb0b838-d96f-4435-8ca2-4f71e04e5d0f",
+      "UserId": 450593,
+      "Username": "TheRealAnimeSpot",
+      "AvatarUrl": "https://secure.gravatar.com/avatar/4b0c22eb898227090a176cc74b601621?d=retro",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "A function was in the wrong place. Thanks for your help!",
+      "EditableFormat": "markdown",
+      "HTML": "<p>A function was in the wrong place. Thanks for your help!</p>\n\n",
+      "PostDate": "2020-06-07T16:23:53.4271182Z",
+      "LastEditDate": null,
+      "link": null
+    }
+  ]
+}

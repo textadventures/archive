@@ -1,0 +1,71 @@
+{
+  "Topic": {
+    "TopicId": "589",
+    "ForumId": "10",
+    "Title": "changing Standard Messages",
+    "LastUpdated": "2004-12-15T20:56:53+00:00",
+    "ReplyCount": 4
+  },
+  "Posts": [
+    {
+      "PostId": "4537",
+      "UserId": 0,
+      "Username": "steve the gaming guy",
+      "UserAvatar": null,
+      "UserGravatar": "6577a0affcb6ea711c75baf052ffd08a",
+      "EditableText": "I've studied the manual and scowered the forums and can't seem to find an answer...\n\nIf you go into the Standard Messages section when working on a game, you can change the messages received when the player does certain actions.  For example, if the player tries to take an object that isn't there, the default message is something like \"I can't see that here.\"\n\nThere are more advanced messages as well.  If a player tries to give an object to an incorrect object, the default message is something like \"#quest.error.pronoun# doesn't want #quest.error.article#\"\nAnd therein, lies my question.  I want a default command for dropping an object that can't be dropped.  I tried every version of this I could think of and I get nowhere.  The main idea is if a player tries to drop an object, \"You might be able to use #quest.object# somewhere else.\"  I've also substituted #@object# and #quest.error.name# and several others.\nEach time, when I try to drop an undroppable item, I get no response.\n\nPLEASE HELP!!!!",
+      "EditableFormat": "bbcode",
+      "HTML": "I've studied the manual and scowered the forums and can't seem to find an answer...<br/><br/>If you go into the Standard Messages section when working on a game, you can change the messages received when the player does certain actions.  For example, if the player tries to take an object that isn't there, the default message is something like \"I can't see that here.\"<br/><br/>There are more advanced messages as well.  If a player tries to give an object to an incorrect object, the default message is something like \"#quest.error.pronoun# doesn't want #quest.error.article#\"<br/>And therein, lies my question.  I want a default command for dropping an object that can't be dropped.  I tried every version of this I could think of and I get nowhere.  The main idea is if a player tries to drop an object, \"You might be able to use #quest.object# somewhere else.\"  I've also substituted #@object# and #quest.error.name# and several others.<br/>Each time, when I try to drop an undroppable item, I get no response.<br/><br/>PLEASE HELP!!!!",
+      "PostDate": "2004-12-12T04:42:06+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "4538",
+      "UserId": 0,
+      "Username": "paul_one",
+      "UserAvatar": null,
+      "UserGravatar": "fef8a1875028f4300bb683f29c432894",
+      "EditableText": "Well, if it's one object then you could change the drop action to simply \"msg &lt;You cann't drop #object#... Sorry&gt;\"\nOr maybe you could make a type, with:\n\"msg &lt;Sorry, but you can not drop $displayname(#quest.lastobject#)$ .&gt; \"\nOr something like that.\n\nThere seems to be no information on standard messages in the help file at all - must be an oversight on Alex's part... I'll have to look into this...\n\nEDIT::\nOh, it's right there... Says:\n\"player tries to drop an undroppable object\"\nYou mean there... But you want a custom #@object# thingy eh!?\ntry either #@quest.lastobject# or $displayname(#quest.lastobject#)$ ... I would try but my QDK won't save (pffttt, I upgraded a few weeks ago - not a whole year ao <!-- s:P --><img src=\"{SMILIES_PATH}/icon_razz.gif\" alt=\":P\" title=\"Razz\" /><!-- s:P --> ).\n\nAhhhh well, I didn't use QDK that often anyway - although it' a second reason to buy...",
+      "EditableFormat": "bbcode",
+      "HTML": "Well, if it's one object then you could change the drop action to simply \"msg &lt;You cann't drop #object#... Sorry&gt;\"<br/>Or maybe you could make a type, with:<br/>\"msg &lt;Sorry, but you can not drop $displayname(#quest.lastobject#)$ .&gt; \"<br/>Or something like that.<br/><br/>There seems to be no information on standard messages in the help file at all - must be an oversight on Alex's part... I'll have to look into this...<br/><br/>EDIT::<br/>Oh, it's right there... Says:<br/>\"player tries to drop an undroppable object\"<br/>You mean there... But you want a custom #@object# thingy eh!?<br/>try either #@quest.lastobject# or $displayname(#quest.lastobject#)$ ... I would try but my QDK won't save (pffttt, I upgraded a few weeks ago - not a whole year ao <!-- s:P --><img src=\"{SMILIES_PATH}/icon_razz.gif\" alt=\":P\" title=\"Razz\" /><!-- s:P --> ).<br/><br/>Ahhhh well, I didn't use QDK that often anyway - although it' a second reason to buy...",
+      "PostDate": "2004-12-12T08:14:11+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "4540",
+      "UserId": 0,
+      "Username": "Alex",
+      "UserAvatar": null,
+      "UserGravatar": "188b72c5e13327f4fde3989dca7d7d53",
+      "EditableText": "This is happening because QDK writes the \"drop\" tag for the object as\n\n[code:2nvw7frd]\ndrop nowhere &lt;&gt;\n[/code:2nvw7frd]\n\nwhich specifies a blank message. In order to get the \"cantdrop\" message to print, which is what you specify in the Standard Messages window, you would need to use\n\n[code:2nvw7frd]\ndrop nowhere\n[/code:2nvw7frd]\n\nHowever, there isn't a way to get QDK to write this to the ASL file. I'd suggest you put the message in manually for each object that can't be dropped. Alternatively you could put a script in to run a procedure to print the message, which would mean you could easily change the message later.\n\nI've logged this as a bug to fix in the next version of QDK - thanks for letting me know.",
+      "EditableFormat": "bbcode",
+      "HTML": "This is happening because QDK writes the \"drop\" tag for the object as<br/><br/><pre><code><br/>drop nowhere &lt;&gt;<br/></code></pre><br/><br/>which specifies a blank message. In order to get the \"cantdrop\" message to print, which is what you specify in the Standard Messages window, you would need to use<br/><br/><pre><code><br/>drop nowhere<br/></code></pre><br/><br/>However, there isn't a way to get QDK to write this to the ASL file. I'd suggest you put the message in manually for each object that can't be dropped. Alternatively you could put a script in to run a procedure to print the message, which would mean you could easily change the message later.<br/><br/>I've logged this as a bug to fix in the next version of QDK - thanks for letting me know.",
+      "PostDate": "2004-12-12T12:17:31+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "4555",
+      "UserId": 0,
+      "Username": "steve the gaming guy",
+      "UserAvatar": null,
+      "UserGravatar": "6577a0affcb6ea711c75baf052ffd08a",
+      "EditableText": "Thank you Alex and Computer Whizz,\n\nI have fixed it using your help.  First, mark your items in QDK as \"drop nowhere\", then go into the ASL file and take out the \"&lt;&gt;\" that appear after \"drop nowhere\"\nFinally, go into the standard messages in QDK and enter whatever you like for your default drop message.  Mine was this:\n\nYou can't go and drop your #@quest.lastobject# just anywhere!!\n\n(which works like a charm)\n\nThanks to Computer Whizz who gave me the idea to use \"#@quest.lastobject#\"",
+      "EditableFormat": "bbcode",
+      "HTML": "Thank you Alex and Computer Whizz,<br/><br/>I have fixed it using your help.  First, mark your items in QDK as \"drop nowhere\", then go into the ASL file and take out the \"&lt;&gt;\" that appear after \"drop nowhere\"<br/>Finally, go into the standard messages in QDK and enter whatever you like for your default drop message.  Mine was this:<br/><br/>You can't go and drop your #@quest.lastobject# just anywhere!!<br/><br/>(which works like a charm)<br/><br/>Thanks to Computer Whizz who gave me the idea to use \"#@quest.lastobject#\"",
+      "PostDate": "2004-12-15T17:00:56+00:00",
+      "LastEditDate": null
+    },
+    {
+      "PostId": "4556",
+      "UserId": 0,
+      "Username": "Anonymous",
+      "UserAvatar": null,
+      "UserGravatar": null,
+      "EditableText": "Steve wrote:\n\n[quote:zpfjj2z5]Thanks to Computer Whizz who gave me the idea to use \"#@quest.lastobject#\"[/quote:zpfjj2z5]\n\nSee Alex, I told you that this string would prove useful to others (not just me) when I asked for it to be implemented way back when...  <!-- s:lol: --><img src=\"{SMILIES_PATH}/icon_lol.gif\" alt=\":lol:\" title=\"Laughing\" /><!-- s:lol: --> \n\nAl (MaDbRiT)",
+      "EditableFormat": "bbcode",
+      "HTML": "Steve wrote:<br/><br/><blockquote><p>Thanks to Computer Whizz who gave me the idea to use \"#@quest.lastobject#\"</p></blockquote><br/><br/>See Alex, I told you that this string would prove useful to others (not just me) when I asked for it to be implemented way back when...  <!-- s:lol: --><img src=\"{SMILIES_PATH}/icon_lol.gif\" alt=\":lol:\" title=\"Laughing\" /><!-- s:lol: --> <br/><br/>Al (MaDbRiT)",
+      "PostDate": "2004-12-15T20:56:53+00:00",
+      "LastEditDate": null
+    }
+  ]
+}
