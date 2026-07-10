@@ -87,6 +87,21 @@ const blog = defineCollection({
   }).passthrough(), // allows extra fields like categories
 });
 
-export const collections = { design, games, general, quest, questkit, samples, site, squiffy, blog };
+const blogComments = defineCollection({
+  loader: glob({ pattern: "**/*.json", base: "./src/data/blog-comments" }),
+  schema: z.object({
+    comments: z.array(z.object({
+      id: z.string(),
+      parentId: z.string(),
+      author: z.string(),
+      authorUrl: z.string().nullable(),
+      avatarHash: z.string().nullable(),
+      date: z.coerce.date(),
+      content: z.string(),
+    })),
+  }),
+});
+
+export const collections = { design, games, general, quest, questkit, samples, site, squiffy, blog, blogComments };
 
 export type Post = z.infer<typeof PostSchema>;
