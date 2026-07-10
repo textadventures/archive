@@ -1,6 +1,7 @@
 ---
 title: "Open-sourcing \"Moquette\""
 date: 2014-10-15
+author: "Alex Warren"
 ---
 
 A year ago, I released my first work of interactive fiction "[Moquette](http://textadventures.co.uk/games/view/zbzfpcnknu_vdjog-cbihw/moquette)" into the [IFComp](http://www.ifcomp.org/comp/2013).

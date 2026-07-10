@@ -1,6 +1,7 @@
 ---
 title: "Quest 4.0 - Beta Testers Wanted!"
 date: 2006-10-28
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

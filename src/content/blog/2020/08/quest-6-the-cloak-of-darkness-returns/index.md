@@ -1,6 +1,7 @@
 ---
 title: "Quest 6: The Cloak of Darkness Returns!"
 date: 2020-08-26
+author: "The Pixie"
 categories: 
   - "quest"
 tags: 

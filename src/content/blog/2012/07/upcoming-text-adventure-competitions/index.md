@@ -1,6 +1,7 @@
 ---
 title: "Upcoming text adventure competitions"
 date: 2012-07-09
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

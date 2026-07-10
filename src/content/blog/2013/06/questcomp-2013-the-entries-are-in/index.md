@@ -1,6 +1,7 @@
 ---
 title: "QuestComp 2013 - the entries are in!"
 date: 2013-06-16
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

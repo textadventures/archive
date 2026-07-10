@@ -1,6 +1,7 @@
 ---
 title: "Verbs, Commands and Templates in Quest 5.0"
 date: 2010-02-03
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

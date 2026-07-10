@@ -1,6 +1,7 @@
 ---
 title: "ActiveLit Launched - interactive fiction for schools and groups"
 date: 2013-10-09
+author: "Alex Warren"
 categories: 
   - "education"
 ---

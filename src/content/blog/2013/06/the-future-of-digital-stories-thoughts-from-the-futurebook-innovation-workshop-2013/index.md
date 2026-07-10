@@ -1,6 +1,7 @@
 ---
 title: "The future of digital stories - thoughts from the Futurebook Innovation Workshop 2013"
 date: 2013-06-03
+author: "Alex Warren"
 categories: 
   - "text-adventures"
 ---

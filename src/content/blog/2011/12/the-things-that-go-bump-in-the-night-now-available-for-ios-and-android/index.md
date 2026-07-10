@@ -1,6 +1,7 @@
 ---
 title: '"The Things That Go Bump In The Night" now available for iOS and Android'
 date: 2011-12-05
+author: "Alex Warren"
 categories: 
   - "quest"
   - "textadventures-co-uk-website"

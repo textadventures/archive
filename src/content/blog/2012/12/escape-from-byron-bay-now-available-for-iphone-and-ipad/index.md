@@ -1,6 +1,7 @@
 ---
 title: '"Escape from Byron Bay" now available for iPhone and iPad'
 date: 2012-12-05
+author: "Alex Warren"
 categories: 
   - "education"
 tags: 

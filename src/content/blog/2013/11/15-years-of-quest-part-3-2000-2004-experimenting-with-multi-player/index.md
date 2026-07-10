@@ -1,6 +1,7 @@
 ---
 title: "15 years of Quest, part 3: 2000-2004 - Experimenting with Multi-Player"
 date: 2013-11-27
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

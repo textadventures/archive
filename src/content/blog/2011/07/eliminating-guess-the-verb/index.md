@@ -1,6 +1,7 @@
 ---
 title: 'Eliminating "Guess the Verb"'
 date: 2011-07-11
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

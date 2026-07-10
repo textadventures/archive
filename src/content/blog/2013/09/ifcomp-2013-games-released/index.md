@@ -1,6 +1,7 @@
 ---
 title: "IFComp 2013 games released"
 date: 2013-09-30
+author: "Alex Warren"
 categories: 
   - "text-adventures"
 ---

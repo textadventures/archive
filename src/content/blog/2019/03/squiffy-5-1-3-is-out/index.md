@@ -1,6 +1,7 @@
 ---
 title: "Squiffy 5.1.3 is out!"
 date: 2019-03-26
+author: "Alex Warren"
 ---
 
 It is a minor update.

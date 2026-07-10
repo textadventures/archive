@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.3 Beta 2"
 date: 2013-01-02
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

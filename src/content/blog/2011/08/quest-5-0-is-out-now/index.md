@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.0 is out now"
 date: 2011-08-30
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

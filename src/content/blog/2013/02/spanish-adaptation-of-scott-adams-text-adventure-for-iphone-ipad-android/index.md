@@ -1,6 +1,7 @@
 ---
 title: "Spanish adaptation of Scott Adams text adventure for iPhone, iPad, Android"
 date: 2013-02-06
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

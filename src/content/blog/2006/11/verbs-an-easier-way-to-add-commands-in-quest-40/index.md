@@ -1,6 +1,7 @@
 ---
 title: "Verbs - an easier way to add commands in Quest 4.0"
 date: 2006-11-02
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

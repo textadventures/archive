@@ -1,6 +1,7 @@
 ---
 title: "Notes from Publish! 2013 - New adventures in innovation"
 date: 2013-09-30
+author: "Alex Warren"
 categories: 
   - "text-adventures"
 ---

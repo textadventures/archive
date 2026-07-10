@@ -1,6 +1,7 @@
 ---
 title: "IFComp 2020"
 date: 2020-10-04
+author: "The Pixie"
 tags: 
   - "ifcomp"
 ---

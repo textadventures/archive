@@ -1,6 +1,7 @@
 ---
 title: 'New "Play Online" beta at textadventures.co.uk'
 date: 2011-02-12
+author: "Alex Warren"
 categories: 
   - "textadventures-co-uk-website"
 ---

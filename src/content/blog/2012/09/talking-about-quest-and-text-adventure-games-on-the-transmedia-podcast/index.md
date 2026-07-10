@@ -1,6 +1,7 @@
 ---
 title: "Talking about Quest and text adventure games on The Transmedia Podcast"
 date: 2012-09-25
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

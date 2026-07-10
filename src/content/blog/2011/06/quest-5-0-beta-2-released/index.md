@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.0 Beta 2 released"
 date: 2011-06-20
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

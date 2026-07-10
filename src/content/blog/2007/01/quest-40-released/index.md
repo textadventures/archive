@@ -1,6 +1,7 @@
 ---
 title: "Quest 4.0 released"
 date: 2007-01-18
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

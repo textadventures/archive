@@ -1,6 +1,7 @@
 ---
 title: "Squiffy 5 - an improved editing experience"
 date: 2015-11-14
+author: "Alex Warren"
 ---
 
 Squiffy 5 is now available - you can use it [in your web browser](http://textadventures.co.uk/squiffy/editor), or download it for [Windows](https://github.com/textadventures/squiffy-editor/releases/download/v5.0/Squiffy.5.0.Windows.exe), [OS X](https://github.com/textadventures/squiffy-editor/releases/download/v5.0/Squiffy.5.0.OS.X.dmg) and [Linux](https://github.com/textadventures/squiffy-editor/releases/download/v5.0/Squiffy.5.0.Linux.zip).

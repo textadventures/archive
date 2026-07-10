@@ -1,6 +1,7 @@
 ---
 title: "AdventureX 2012"
 date: 2012-11-11
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

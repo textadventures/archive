@@ -1,6 +1,7 @@
 ---
 title: "Rebooting textadventures, Quest and Squiffy"
 date: 2024-12-06
+author: "Alex Warren"
 categories: 
   - "quest"
   - "squiffy"

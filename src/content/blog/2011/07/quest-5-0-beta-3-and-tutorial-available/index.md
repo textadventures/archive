@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.0 Beta 3 and Tutorial available"
 date: 2011-07-17
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

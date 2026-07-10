@@ -1,6 +1,7 @@
 ---
 title: "Educating the next generation of software developers"
 date: 2011-09-20
+author: "Alex Warren"
 categories: 
   - "education"
   - "quest"

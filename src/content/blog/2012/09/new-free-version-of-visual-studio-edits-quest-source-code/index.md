@@ -1,6 +1,7 @@
 ---
 title: "New free version of Visual Studio edits Quest source code"
 date: 2012-09-18
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

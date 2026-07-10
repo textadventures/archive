@@ -1,6 +1,7 @@
 ---
 title: "Quest 4.1 is coming soon"
 date: 2009-02-13
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

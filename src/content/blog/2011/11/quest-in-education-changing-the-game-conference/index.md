@@ -1,6 +1,7 @@
 ---
 title: 'Quest in Education - "Changing the Game" conference'
 date: 2011-11-14
+author: "Alex Warren"
 categories: 
   - "education"
 ---

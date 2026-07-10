@@ -1,6 +1,7 @@
 ---
 title: "POV support - multiple player objects in Quest 5.3"
 date: 2012-09-19
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

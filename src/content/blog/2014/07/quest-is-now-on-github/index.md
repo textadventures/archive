@@ -1,6 +1,7 @@
 ---
 title: "Quest is now on GitHub"
 date: 2014-07-06
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

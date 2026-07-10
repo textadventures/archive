@@ -1,6 +1,7 @@
 ---
 title: "Quest workshops at GameCity 7"
 date: 2012-10-15
+author: "Alex Warren"
 categories: 
   - "education"
   - "quest"

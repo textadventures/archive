@@ -1,6 +1,7 @@
 ---
 title: "Teaching with text adventures"
 date: 2011-07-27
+author: "Alex Warren"
 categories: 
   - "education"
   - "quest"

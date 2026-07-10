@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.0 WebPlayer Demos"
 date: 2011-03-19
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

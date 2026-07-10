@@ -1,6 +1,7 @@
 ---
 title: "The Quest 5.0 .aslx game file"
 date: 2010-02-01
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

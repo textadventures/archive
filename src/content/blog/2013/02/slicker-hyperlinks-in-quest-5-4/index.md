@@ -1,6 +1,7 @@
 ---
 title: "Slicker hyperlinks in Quest 5.4"
 date: 2013-02-28
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

@@ -1,6 +1,7 @@
 ---
 title: "Shoot monster with ray gun, burn corpse with incinerator - two-object verbs in Quest 5.2"
 date: 2012-03-20
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

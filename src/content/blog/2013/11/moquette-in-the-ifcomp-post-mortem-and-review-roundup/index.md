@@ -1,6 +1,7 @@
 ---
 title: "Moquette in the IFComp - Post-Mortem and Review Roundup"
 date: 2013-11-19
+author: "Alex Warren"
 categories: 
   - "text-adventures"
 ---

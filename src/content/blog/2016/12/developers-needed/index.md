@@ -1,6 +1,7 @@
 ---
 title: "Developers needed for textadventures.co.uk and Quest"
 date: 2016-12-12
+author: "Alex Warren"
 categories: 
   - "quest"
   - "squiffy"

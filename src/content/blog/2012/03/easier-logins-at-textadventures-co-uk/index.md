@@ -1,6 +1,7 @@
 ---
 title: "Easier logins at textadventures.co.uk"
 date: 2012-03-27
+author: "Alex Warren"
 categories: 
   - "textadventures-co-uk-website"
 ---

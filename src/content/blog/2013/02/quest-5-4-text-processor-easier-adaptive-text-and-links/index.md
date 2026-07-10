@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.4 Text Processor - easier adaptive text and links"
 date: 2013-02-27
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

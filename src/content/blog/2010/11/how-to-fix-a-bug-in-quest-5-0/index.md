@@ -1,6 +1,7 @@
 ---
 title: "How to fix a bug in Quest 5.0"
 date: 2010-11-19
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

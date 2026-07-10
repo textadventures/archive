@@ -1,6 +1,7 @@
 ---
 title: '"Play Online" now supports saving'
 date: 2011-12-02
+author: "Alex Warren"
 categories: 
   - "textadventures-co-uk-website"
 ---

@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.1 Beta"
 date: 2011-12-14
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

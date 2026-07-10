@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.2 is out now"
 date: 2012-05-12
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

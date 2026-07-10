@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.3 is released"
 date: 2013-01-14
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

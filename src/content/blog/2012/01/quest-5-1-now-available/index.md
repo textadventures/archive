@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.1 now available"
 date: 2012-01-11
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

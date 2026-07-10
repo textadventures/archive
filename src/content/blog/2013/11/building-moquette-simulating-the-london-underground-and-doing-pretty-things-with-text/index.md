@@ -1,6 +1,7 @@
 ---
 title: "Building Moquette - Simulating the London Underground and Doing Pretty Things With Text"
 date: 2013-11-26
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

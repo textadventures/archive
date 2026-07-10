@@ -1,6 +1,7 @@
 ---
 title: "More game listings, and an interactive fiction calendar"
 date: 2013-08-21
+author: "Alex Warren"
 categories: 
   - "textadventures-co-uk-website"
 ---

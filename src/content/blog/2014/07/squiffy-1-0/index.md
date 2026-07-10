@@ -1,6 +1,7 @@
 ---
 title: "Squiffy 1.0"
 date: 2014-07-27
+author: "Alex Warren"
 categories: 
   - "squiffy"
 ---

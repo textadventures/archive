@@ -1,6 +1,7 @@
 ---
 title: '"Play online" now works on mobile browsers'
 date: 2012-01-06
+author: "Alex Warren"
 categories: 
   - "textadventures-co-uk-website"
 ---

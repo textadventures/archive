@@ -1,6 +1,7 @@
 ---
 title: "Quest in other languages"
 date: 2010-03-01
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

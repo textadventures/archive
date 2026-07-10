@@ -1,6 +1,7 @@
 ---
 title: '"Undo" support in Quest 5.0'
 date: 2010-02-17
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

@@ -1,6 +1,7 @@
 ---
 title: "The HTML interface in Quest 5.0"
 date: 2010-02-19
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

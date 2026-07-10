@@ -1,6 +1,7 @@
 ---
 title: "Using Quest to create text adventures for iPhone, iPad, Android"
 date: 2011-09-30
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

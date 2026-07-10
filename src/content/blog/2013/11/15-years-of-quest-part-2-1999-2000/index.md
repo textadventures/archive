@@ -1,6 +1,7 @@
 ---
 title: "15 years of Quest, part 2: 1999-2000"
 date: 2013-11-26
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

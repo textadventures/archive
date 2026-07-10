@@ -1,6 +1,7 @@
 ---
 title: "Quest in italiano"
 date: 2012-06-24
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

@@ -1,6 +1,7 @@
 ---
 title: "New Quest and textadventures.co.uk websites"
 date: 2011-04-28
+author: "Alex Warren"
 categories: 
   - "textadventures-co-uk-website"
 ---

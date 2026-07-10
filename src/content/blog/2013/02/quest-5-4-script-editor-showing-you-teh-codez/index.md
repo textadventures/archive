@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.4 Script Editor - showing you teh codez"
 date: 2013-02-25
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

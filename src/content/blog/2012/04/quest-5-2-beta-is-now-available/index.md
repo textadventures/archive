@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.2 Beta is now available"
 date: 2012-04-14
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

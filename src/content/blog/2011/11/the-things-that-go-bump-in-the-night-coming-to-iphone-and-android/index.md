@@ -1,6 +1,7 @@
 ---
 title: '"The Things That Go Bump In The Night" coming to iPhone and Android'
 date: 2011-11-29
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

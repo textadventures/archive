@@ -1,6 +1,7 @@
 ---
 title: "The Cloak of Darkness"
 date: 2018-09-10
+author: "The Pixie"
 ---
 
 The Cloak of Darkness is a specification for an adventure game that has been created in numerous systems, with the purpose of giving prospective authors some idea of what is involved in each system.

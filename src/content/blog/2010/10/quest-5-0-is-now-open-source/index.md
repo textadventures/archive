@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.0 is now open source"
 date: 2010-10-18
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

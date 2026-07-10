@@ -1,6 +1,7 @@
 ---
 title: "A Tutorial For Playing Parser-base Games"
 date: 2020-09-22
+author: "The Pixie"
 ---
 
 _Ever wondered how to play interactive fiction?_

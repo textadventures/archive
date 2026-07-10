@@ -1,6 +1,7 @@
 ---
 title: "Add Quest to Chrome"
 date: 2012-03-17
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

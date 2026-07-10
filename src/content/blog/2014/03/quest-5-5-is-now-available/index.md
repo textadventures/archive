@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.5 is now available"
 date: 2014-03-01
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

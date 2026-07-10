@@ -1,6 +1,7 @@
 ---
 title: "Squiffy 4 - interactive fiction editor for Windows, OS X and Linux"
 date: 2015-07-11
+author: "Alex Warren"
 categories: 
   - "squiffy"
 ---

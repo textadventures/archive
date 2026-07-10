@@ -1,6 +1,7 @@
 ---
 title: "IFComp 2007 - games available for download"
 date: 2007-10-01
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

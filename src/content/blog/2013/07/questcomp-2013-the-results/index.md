@@ -1,6 +1,7 @@
 ---
 title: "QuestComp 2013 - the results"
 date: 2013-07-15
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

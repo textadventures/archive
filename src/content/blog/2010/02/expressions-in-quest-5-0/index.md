@@ -1,6 +1,7 @@
 ---
 title: "Expressions in Quest 5.0"
 date: 2010-02-16
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

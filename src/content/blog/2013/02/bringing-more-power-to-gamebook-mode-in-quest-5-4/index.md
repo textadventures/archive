@@ -1,6 +1,7 @@
 ---
 title: "Bringing more power to gamebook mode in Quest 5.4"
 date: 2013-02-27
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

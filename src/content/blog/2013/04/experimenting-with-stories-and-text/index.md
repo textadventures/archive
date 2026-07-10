@@ -1,6 +1,7 @@
 ---
 title: "Experimenting with stories and text"
 date: 2013-04-07
+author: "Alex Warren"
 categories: 
   - "text-adventures"
 ---

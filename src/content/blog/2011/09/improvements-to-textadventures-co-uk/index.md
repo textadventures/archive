@@ -1,6 +1,7 @@
 ---
 title: "Improvements to textadventures.co.uk"
 date: 2011-09-07
+author: "Alex Warren"
 categories: 
   - "textadventures-co-uk-website"
 ---

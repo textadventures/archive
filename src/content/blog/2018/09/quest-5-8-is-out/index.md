@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.8 is out!"
 date: 2018-09-03
+author: "The Pixie"
 ---
 
 This is my second major release for Quest, and in fact most of it has been done by other people, and in particular KV and SoonGames. Thanks also to the beta-testers and other "helpful helpers": Anonynn, Darryl Huen, DavyB, Dcode, Pertex. Also to Luis for his support with regards to the web site (it has taught me what a pain in the neck that is!).

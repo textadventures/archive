@@ -1,6 +1,7 @@
 ---
 title: "A year of full-time Questing - Part 1"
 date: 2012-04-03
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

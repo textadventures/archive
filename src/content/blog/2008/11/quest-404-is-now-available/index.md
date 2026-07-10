@@ -1,6 +1,7 @@
 ---
 title: "Quest 4.04 is now available"
 date: 2008-11-29
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

@@ -1,6 +1,7 @@
 ---
 title: "An overview of Quest 5.0"
 date: 2010-01-30
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

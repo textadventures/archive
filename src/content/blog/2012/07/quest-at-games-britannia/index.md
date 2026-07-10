@@ -1,6 +1,7 @@
 ---
 title: "Quest at Games Britannia"
 date: 2012-07-04
+author: "Alex Warren"
 categories: 
   - "education"
 ---

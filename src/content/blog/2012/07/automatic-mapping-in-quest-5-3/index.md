@@ -1,6 +1,7 @@
 ---
 title: "Automatic mapping in Quest 5.3"
 date: 2012-07-22
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

@@ -1,6 +1,7 @@
 ---
 title: "Meet the new textadventures.co.uk team"
 date: 2017-01-11
+author: "Alex Warren"
 categories: 
   - "quest"
   - "squiffy"

@@ -1,6 +1,7 @@
 ---
 title: "Text adventures in the classroom - Quest day at Perins School"
 date: 2012-02-24
+author: "Alex Warren"
 categories: 
   - "education"
 ---

@@ -1,6 +1,7 @@
 ---
 title: "Quest 4.03 now available"
 date: 2008-02-09
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

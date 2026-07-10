@@ -1,6 +1,7 @@
 ---
 title: "Looking for a new owner for textadventures.co.uk and Quest"
 date: 2016-12-07
+author: "Alex Warren"
 categories: 
   - "quest"
   - "squiffy"

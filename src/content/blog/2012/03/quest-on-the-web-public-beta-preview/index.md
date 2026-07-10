@@ -1,6 +1,7 @@
 ---
 title: "Quest on the web - public beta preview"
 date: 2012-03-14
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

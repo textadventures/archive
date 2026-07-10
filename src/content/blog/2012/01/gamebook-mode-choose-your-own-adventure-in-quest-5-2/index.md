@@ -1,6 +1,7 @@
 ---
 title: 'Gamebook mode ("Choose Your Own Adventure") in Quest 5.2'
 date: 2012-01-16
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

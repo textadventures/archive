@@ -1,6 +1,7 @@
 ---
 title: "QuestComp 2014"
 date: 2014-03-06
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

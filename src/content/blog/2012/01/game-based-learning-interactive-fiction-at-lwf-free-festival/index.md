@@ -1,6 +1,7 @@
 ---
 title: "Game Based Learning - Interactive Fiction at LWF Free Festival"
 date: 2012-01-23
+author: "Alex Warren"
 categories: 
   - "education"
 ---

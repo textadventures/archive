@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.0 Release Candidate 1"
 date: 2011-08-04
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

@@ -1,6 +1,7 @@
 ---
 title: "Types in Quest 5.0"
 date: 2010-02-18
+author: "Alex Warren"
 categories: 
   - "quest"
 ---
@@ -8,6 +9,8 @@ categories:
 "Types" let you share sets of properties between objects. They work in the same way as Quest 4.x, except slightly more efficiently in that instead of copying the properties to the object, the object just references the underlying the type if it doesn't have its own override for a property.
 
 You can view all the properties of an object using the Debugger, which is accessed via the Tools menu. Properties from an inherited type are shown in grey.
+
+![](/blogimages/2010/02/types-in-quest-5-0/images/debugger.png)
 
 Types are defined using a <type> element, and properties are defined in the same way as for an object. Objects and types can both inherit from other types using an <inherit> tag.
 

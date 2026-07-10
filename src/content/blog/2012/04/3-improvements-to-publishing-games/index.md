@@ -1,6 +1,7 @@
 ---
 title: "3 Improvements to Publishing Games"
 date: 2012-04-12
+author: "Alex Warren"
 categories: 
   - "quest"
   - "textadventures-co-uk-website"

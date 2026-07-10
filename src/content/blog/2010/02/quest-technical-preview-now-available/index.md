@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.0 Technical Preview now available"
 date: 2010-02-13
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

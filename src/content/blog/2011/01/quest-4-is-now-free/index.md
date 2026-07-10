@@ -1,6 +1,7 @@
 ---
 title: "Quest 4 is now free"
 date: 2011-01-03
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

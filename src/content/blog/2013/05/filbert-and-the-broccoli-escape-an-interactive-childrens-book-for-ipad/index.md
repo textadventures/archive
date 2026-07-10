@@ -1,6 +1,7 @@
 ---
 title: "\"Filbert and the Broccoli Escape\" - an interactive children's book for iPad"
 date: 2013-05-19
+author: "Alex Warren"
 categories: 
   - "text-adventures"
 ---

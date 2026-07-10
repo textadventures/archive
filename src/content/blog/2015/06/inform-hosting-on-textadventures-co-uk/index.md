@@ -1,6 +1,7 @@
 ---
 title: "Inform hosting on textadventures.co.uk"
 date: 2015-06-07
+author: "Alex Warren"
 categories: 
   - "textadventures-co-uk-website"
 ---

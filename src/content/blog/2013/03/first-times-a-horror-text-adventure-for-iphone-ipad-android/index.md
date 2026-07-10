@@ -1,6 +1,7 @@
 ---
 title: "\"First Times\" - a horror text adventure for iPhone, iPad, Android"
 date: 2013-03-13
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

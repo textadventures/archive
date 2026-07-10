@@ -1,6 +1,7 @@
 ---
 title: "Squiffy 3 - a new web-based editor for interactive fiction"
 date: 2015-04-25
+author: "Alex Warren"
 categories: 
   - "squiffy"
 ---

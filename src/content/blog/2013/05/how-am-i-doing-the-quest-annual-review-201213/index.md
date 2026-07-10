@@ -1,6 +1,7 @@
 ---
 title: "How am I doing? The Quest \"Annual Review\" 2012/13"
 date: 2013-05-07
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

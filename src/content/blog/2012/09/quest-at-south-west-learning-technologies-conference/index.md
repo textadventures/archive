@@ -1,6 +1,7 @@
 ---
 title: "Quest at South West Learning Technologies Conference"
 date: 2012-09-17
+author: "Alex Warren"
 categories: 
   - "education"
 ---

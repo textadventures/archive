@@ -1,6 +1,7 @@
 ---
 title: "Programming visually - the Script Editor in Quest 5.0 Beta 2"
 date: 2011-06-13
+author: "Alex Warren"
 categories: 
   - "education"
   - "quest"

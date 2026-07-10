@@ -1,6 +1,7 @@
 ---
 title: "Introducing Quest WebEditor - create text adventures online in your browser"
 date: 2012-02-16
+author: "Alex Warren"
 categories: 
   - "quest"
   - "textadventures-co-uk-website"

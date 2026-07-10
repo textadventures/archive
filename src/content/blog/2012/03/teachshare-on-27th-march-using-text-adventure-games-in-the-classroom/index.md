@@ -1,6 +1,7 @@
 ---
 title: "TeachShare on 27th March: Using Text Adventure Games in the Classroom"
 date: 2012-03-22
+author: "Alex Warren"
 categories: 
   - "education"
 ---

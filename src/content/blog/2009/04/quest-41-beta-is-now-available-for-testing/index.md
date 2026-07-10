@@ -1,6 +1,7 @@
 ---
 title: "Quest 4.1 Beta is now available for testing"
 date: 2009-04-26
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

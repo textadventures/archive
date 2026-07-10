@@ -1,6 +1,7 @@
 ---
 title: "Now accepting all kinds of web-based text adventure games"
 date: 2013-06-11
+author: "Alex Warren"
 categories: 
   - "textadventures-co-uk-website"
 ---

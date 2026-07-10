@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.0.1 released"
 date: 2011-10-13
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

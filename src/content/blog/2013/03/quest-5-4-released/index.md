@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.4 released"
 date: 2013-03-28
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

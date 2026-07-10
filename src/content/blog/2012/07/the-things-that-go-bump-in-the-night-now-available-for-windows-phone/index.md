@@ -1,6 +1,7 @@
 ---
 title: '"The Things That Go Bump In The Night" now available for Windows Phone'
 date: 2012-07-29
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

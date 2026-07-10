@@ -1,6 +1,7 @@
 ---
 title: "More advanced ways with verbs"
 date: 2006-11-06
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

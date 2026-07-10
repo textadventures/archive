@@ -1,6 +1,7 @@
 ---
 title: "Starting a new chapter"
 date: 2013-12-16
+author: "Alex Warren"
 ---
 
 I've been building Quest and working on [textadventures.co.uk](http://textadventures.co.uk) full-time for a couple of years now, on and off. Despite my best efforts to turn this into my living, I can no longer continue to work on this basis. As of January, I'll be moving on to work on something else, with interactive fiction becoming a side project once again.

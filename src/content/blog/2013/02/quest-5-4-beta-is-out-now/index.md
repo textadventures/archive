@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.4 Beta is out now"
 date: 2013-02-28
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

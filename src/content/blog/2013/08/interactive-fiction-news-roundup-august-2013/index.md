@@ -1,6 +1,7 @@
 ---
 title: "Interactive Fiction News Roundup, August 2013"
 date: 2013-08-23
+author: "Alex Warren"
 categories: 
   - "text-adventures"
 ---

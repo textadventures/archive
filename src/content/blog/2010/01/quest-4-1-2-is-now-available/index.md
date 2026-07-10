@@ -1,6 +1,7 @@
 ---
 title: "Quest 4.1.2 is now available"
 date: 2010-01-17
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

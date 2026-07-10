@@ -1,6 +1,7 @@
 ---
 title: "Time-limited puzzles"
 date: 2012-02-27
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

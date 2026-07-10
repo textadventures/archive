@@ -1,6 +1,7 @@
 ---
 title: "Creating with Trizbort and Quest"
 date: 2018-03-06
+author: "The Pixie"
 ---
 
 Trizbort is a map-making program specifically designed for text adventures, first developed by genstein, and now maintained by JasonLautzenheiser. It is partly for players to be able to map a game as they play through, but also for designers. It has been around for a few years, but recently the ability to export a map to Quest has been added.

@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.3 Beta is now available"
 date: 2012-12-03
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

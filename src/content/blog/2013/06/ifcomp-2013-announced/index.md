@@ -1,6 +1,7 @@
 ---
 title: "IFComp 2013 announced"
 date: 2013-06-25
+author: "Alex Warren"
 categories: 
   - "text-adventures"
 tags: 

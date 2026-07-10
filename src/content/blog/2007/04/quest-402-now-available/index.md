@@ -1,6 +1,7 @@
 ---
 title: "Quest 4.02 now available"
 date: 2007-04-11
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

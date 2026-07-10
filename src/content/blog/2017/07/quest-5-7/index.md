@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.7"
 date: 2017-07-19
+author: "The Pixie"
 ---
 
 At long last, Quest 5.7 is officially out. It has been on the web server for a couple of days, and beta-testers have had access to the desktop version for some time, but as of now it is officially here!

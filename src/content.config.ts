@@ -83,6 +83,7 @@ const blog = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
+    author: z.string().optional(),
   }).passthrough(), // allows extra fields like categories
 });
 

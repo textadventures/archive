@@ -1,6 +1,7 @@
 ---
 title: "How am I doing? The Quest and textadventures.co.uk Annual Review 2013/14"
 date: 2014-04-10
+author: "Alex Warren"
 categories: 
   - "quest"
   - "text-adventures"

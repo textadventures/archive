@@ -1,6 +1,7 @@
 ---
 title: "Quest Games Online (Beta) - text adventures in your web browser"
 date: 2007-02-02
+author: "Alex Warren"
 categories: 
   - "textadventures-co-uk-website"
 ---

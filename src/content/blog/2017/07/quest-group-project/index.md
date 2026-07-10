@@ -1,6 +1,7 @@
 ---
 title: "Quest Group Project"
 date: 2017-07-26
+author: "The Pixie"
 ---
 
 We are experimenting with creating a large game as a group project. This was started on the forum, and has now moved to Github, where the basic ideas are being thrashed out.

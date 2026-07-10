@@ -1,6 +1,7 @@
 ---
 title: "Text adventure games are still new"
 date: 2013-01-29
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

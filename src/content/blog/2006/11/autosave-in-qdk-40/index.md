@@ -1,6 +1,7 @@
 ---
 title: "AutoSave in QDK 4.0"
 date: 2006-11-15
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

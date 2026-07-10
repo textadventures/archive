@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.0 Beta 4 released - approaching the final release"
 date: 2011-07-28
+author: "Alex Warren"
 categories: 
   - "quest"
 tags: 

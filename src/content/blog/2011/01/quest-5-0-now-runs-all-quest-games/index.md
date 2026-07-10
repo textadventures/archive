@@ -1,6 +1,7 @@
 ---
 title: "Quest 5.0 now runs all Quest games"
 date: 2011-01-15
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

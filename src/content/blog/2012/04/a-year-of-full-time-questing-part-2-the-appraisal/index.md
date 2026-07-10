@@ -1,6 +1,7 @@
 ---
 title: "A year of full-time Questing, Part 2 - the Appraisal"
 date: 2012-04-04
+author: "Alex Warren"
 categories: 
   - "quest"
 ---

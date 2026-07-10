@@ -1,6 +1,7 @@
 ---
 title: "textadventures.co.uk - the new Quest Games Archive"
 date: 2007-02-09
+author: "Alex Warren"
 categories: 
   - "textadventures-co-uk-website"
 ---

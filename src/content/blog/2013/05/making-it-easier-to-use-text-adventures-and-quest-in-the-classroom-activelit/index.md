@@ -1,6 +1,7 @@
 ---
 title: "Making it easier to use text adventures and Quest in the classroom - ActiveLit"
 date: 2013-05-15
+author: "Alex Warren"
 categories: 
   - "education"
 ---
