@@ -1,0 +1,107 @@
+---
+interface CommentNode {
+    id: string;
+    author: string;
+    authorUrl: string | null;
+    avatarHash: string | null;
+    date: Date;
+    content: string;
+    children: CommentNode[];
+}
+
+const { comment } = Astro.props as { comment: CommentNode };
+
+const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+});
+
+const avatarUrl = comment.avatarHash
+    ? `https://www.gravatar.com/avatar/${comment.avatarHash}?d=retro`
+    : "https://www.gravatar.com/avatar/00000000000000000000000000000000000000000000000000000000000000?d=mm&f=y";
+
+function autop(text: string): string {
+    return text
+        .split(/\n\s*\n/)
+        .map((p) => p.trim())
+        .filter(Boolean)
+        .map((p) => `<p>${p.replace(/\n/g, "<br />\n")}</p>`)
+        .join("\n");
+}
+
+const contentHtml = autop(comment.content);
+---
+
+<div class="comment-row" id={`comment-${comment.id}`}>
+    <div class="d-flex">
+        <div class="comment-avatar-column me-3">
+            <img src={avatarUrl} alt="" width="46" height="46" />
+        </div>
+        <div class="flex-grow-1">
+            <div class="d-flex justify-content-between">
+                <strong>
+                    {comment.authorUrl ? <a href={comment.authorUrl}>{comment.author}</a> : comment.author}
+                </strong>
+                <small class="text-muted">
+                    <a href={`#comment-${comment.id}`} class="post-link" title="Link to this comment">
+                        {dateFormatter.format(comment.date)}
+                    </a>
+                </small>
+            </div>
+            <div class="comment-body" set:html={contentHtml} />
+        </div>
+    </div>
+    {comment.children.length > 0 && (
+        <div class="comment-children">
+            {comment.children.map((child: CommentNode) => <Astro.self comment={child} />)}
+        </div>
+    )}
+</div>
+
+<style>
+    .comment-row {
+        margin-top: 1rem;
+    }
+    .comment-avatar-column {
+        flex: 0 0 auto;
+        width: 46px;
+    }
+    .comment-avatar-column img {
+        max-width: 46px;
+        max-height: 46px;
+    }
+    .comment-body {
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+    .comment-body :global(p) {
+        margin-bottom: 0.5rem;
+    }
+    .comment-body :global(p:last-child) {
+        margin-bottom: 0;
+    }
+    .comment-children {
+        margin-left: 2rem;
+        padding-left: 1rem;
+        border-left: 0.25rem solid #e6e6e6;
+    }
+    .post-link {
+        color: inherit;
+        text-decoration: none;
+    }
+    .post-link:hover {
+        color: inherit;
+        text-decoration: underline;
+    }
+    .comment-row:target {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 0.25rem;
+        padding: 0.5rem;
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+    }
+</style>

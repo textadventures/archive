@@ -78,6 +78,30 @@ const samples = getForumCollection("samples");
 const site = getForumCollection("site");
 const squiffy = getForumCollection("squiffy");
 
-export const collections = { design, games, general, quest, questkit, samples, site, squiffy };
+const blog = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/blog" }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    author: z.string().optional(),
+  }).passthrough(), // allows extra fields like categories
+});
+
+const blogComments = defineCollection({
+  loader: glob({ pattern: "**/*.json", base: "./src/data/blog-comments" }),
+  schema: z.object({
+    comments: z.array(z.object({
+      id: z.string(),
+      parentId: z.string(),
+      author: z.string(),
+      authorUrl: z.string().nullable(),
+      avatarHash: z.string().nullable(),
+      date: z.coerce.date(),
+      content: z.string(),
+    })),
+  }),
+});
+
+export const collections = { design, games, general, quest, questkit, samples, site, squiffy, blog, blogComments };
 
 export type Post = z.infer<typeof PostSchema>;

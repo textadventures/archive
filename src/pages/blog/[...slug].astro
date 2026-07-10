@@ -1,0 +1,91 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import BlogComment from "../../components/BlogComment.astro";
+
+export async function getStaticPaths() {
+    const posts = await getCollection('blog');
+    return posts.map((post) => ({
+        params: { slug: post.id },
+        props: { post },
+    }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+});
+
+interface CommentNode {
+    id: string;
+    author: string;
+    authorUrl: string | null;
+    avatarHash: string | null;
+    date: Date;
+    content: string;
+    children: CommentNode[];
+}
+
+const commentsEntry = await getEntry('blogComments', post.id);
+const rawComments = commentsEntry?.data.comments ?? [];
+
+const byId = new Map<string, CommentNode>();
+for (const c of rawComments) byId.set(c.id, { ...c, children: [] });
+const commentTree: CommentNode[] = [];
+for (const c of byId.values()) {
+    const parent = c.parentId !== '0' ? byId.get(c.parentId) : undefined;
+    if (parent) parent.children.push(c);
+    else commentTree.push(c);
+}
+function sortTree(nodes: CommentNode[]) {
+    nodes.sort((a, b) => a.date.valueOf() - b.date.valueOf());
+    nodes.forEach((n) => sortTree(n.children));
+}
+sortTree(commentTree);
+const commentCount = rawComments.length;
+---
+
+<style is:global>
+    .dead-link {
+        text-decoration: line-through;
+        text-decoration-color: rgba(220, 53, 69, 0.5);
+        color: inherit;
+        cursor: help;
+    }
+    .dead-link-marker {
+        color: #dc3545;
+        opacity: 0.75;
+        font-size: 0.8em;
+    }
+</style>
+
+<Layout title={post.data.title}>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Archive</a></li>
+          <li class="breadcrumb-item"><a href="/blog/">Blog</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{post.data.title}</li>
+        </ol>
+    </nav>
+
+    <h2>{post.data.title}</h2>
+    <p class="text-muted">
+        <time datetime={post.data.date.toISOString()}>{dateFormatter.format(post.data.date)}</time>
+        {post.data.author && <>&middot; {post.data.author}</>}
+    </p>
+
+    <div class="content-container my-4">
+        <Content />
+    </div>
+
+    {commentCount > 0 && (
+        <section class="mt-5">
+            <h3>{commentCount} {commentCount === 1 ? 'Comment' : 'Comments'}</h3>
+            {commentTree.map((comment) => <BlogComment comment={comment} />)}
+        </section>
+    )}
+</Layout>
