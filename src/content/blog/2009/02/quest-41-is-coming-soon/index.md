@@ -12,11 +12,19 @@ So far the bulk of the work has been overhauling the internals of QDK (in progr
 
 In fact QDK 4.1 is already using the Microsoft .net framework for some new interface elements - the toolbars have been overhauled with a more modern look, and there is a new rich editor for text, as you can see in the screen shot below. No more weird formatting codes - you now type in a room description just as you would in a word processor:
 
+<!-- missing image: qdk41room-s.png, originally http://www.axeuk.com/blog/images/qdk41room-s.png (thumbnail linking to http://www.axeuk.com/blog/images/qdk41room.png). If recovered, restore as:
+[![](/blogimages/2009/02/quest-41-is-coming-soon/images/qdk41room-s.png "Editing a room in QDK 4.1")](/blogimages/2009/02/quest-41-is-coming-soon/images/qdk41room.png)
+-->
+
 You can also see that the tree view now contains some of the editors that were previously pop-up windows accessed via the menus - the timers, object types, status variable editors etc.
 
 Also there are new web-browser-style "Back" and "Forward" buttons, which should be useful if you're editing a large game.
 
 The rich editor also appears for the "Print a message" command in the Script Editor, which has been cleaned up a little:
+
+<!-- missing image: qdk41script-s.png, originally http://www.axeuk.com/blog/images/qdk41script-s.png (thumbnail linking to http://www.axeuk.com/blog/images/qdk41script.png). If recovered, restore as:
+[![](/blogimages/2009/02/quest-41-is-coming-soon/images/qdk41script-s.png "Editing script in QDK 4.1")](/blogimages/2009/02/quest-41-is-coming-soon/images/qdk41script.png)
+-->
 
 Quest Pro 4.1 will also feature Quest Packager, which is an enhancement to the Quest Compiler. You will now be able to compile your game into a single setup EXE file, so you can give your game to other people, distribute it over the internet, and submit it to software download sites, without having to get your users to download Quest separately.
 

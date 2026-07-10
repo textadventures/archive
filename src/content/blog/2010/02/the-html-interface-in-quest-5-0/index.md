@@ -10,6 +10,10 @@ Previous versions of Quest used a "rich text" control to display text. This is q
 
 At a basic level, it makes it very easy to add something I have wanted to add to Quest for a long time - hyperlinks.
 
+<!-- missing image: htmlinterface.png, originally http://www.axeuk.com/blog/images/htmlinterface.png. If recovered, restore as:
+![](/blogimages/2010/02/the-html-interface-in-quest-5-0/images/htmlinterface.png)
+-->
+
 By default, objects and exits in a room description are hyperlinked, so the player can look at objects and move around the game by clicking the game text. I may add the option to display a short menu of verbs instead, so that the hyperlinks could potentially be used as a complete replacement for the object panes.
 
 Of course, some game authors may not like this, just as some authors don't like Quest's default panes - but you will be able to turn these off. The links are put there as part of the room description code in Core.aslx, so you can override it, and there will be an option to turn it off.
