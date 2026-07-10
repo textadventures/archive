@@ -32,9 +32,13 @@ The Quest 5 WorldModel component itself is used not just when playing games, but
 
 Having the Core library define how the editor looks, and the EditorController exposing that to the user interface, has massively cut down on effort getting the web-based editor to work. There is definitely a tendency towards over-engineering in software development, but in this case creating my own editor forms framework, supporting both desktop and web, has reaped dividends:
 
-\[caption id="attachment\_1305" align="alignleft" width="625"\][![The desktop editor design...](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/editor2.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/04/editor2.png) The desktop editor design...\[/caption\]
+[![The desktop editor design...](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/editor2.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/04/editor2.png)
 
-\[caption id="attachment\_1306" align="alignleft" width="625"\][![..can mirror the web-based editor design](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/editor1.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/04/editor1.png) ..can mirror the web editor design\[/caption\]
+*The desktop editor design...*
+
+[![..can mirror the web-based editor design](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/editor1.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/04/editor1.png)
+
+*..can mirror the web editor design*
 
 New features can be added to the Core library, and to the editor, entirely within ASLX library files - no need to change any C# code, no worries about breaking existing games (when published, game files include all the library code they're using), and both the desktop and web editors instantly handle the new feature.
 
@@ -52,19 +56,27 @@ There is always room for improvement. Although I'm fairly pleased with the Scrip
 
 It's been interesting creating the web version of the Script Editor - somehow, to me it actually feels a bit easier to use than the desktop version, which is a surprise. It just feels cleaner to me - the user interface doesn't get in the way so much, because things like the cut/copy/delete buttons only appear when you've actually selected something. And maybe the web UI idiom of using tickboxes to select things is actually better than the desktop version's "rich listbox" approach?
 
-\[caption id="attachment\_1376" align="aligncenter" width="394"\]![](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/desktop-script.png "Desktop Script Editor") The desktop Script Editor is OK, but...\[/caption\]
+![](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/desktop-script.png "Desktop Script Editor")
 
-\[caption id="attachment\_1377" align="aligncenter" width="602"\]![](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/web-script.png "Web Script Editor") ...the web-based Script Editor feels nicer to me\[/caption\]
+*The desktop Script Editor is OK, but...*
+
+![](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/web-script.png "Web Script Editor")
+
+*...the web-based Script Editor feels nicer to me*
 
 The web editor's psuedo-popup script adder also feels easier than the desktop adder, which often seems "slippery" to me as it expands beyond the bottom of the current scroll area. I also think I prefer how the web editor places the "Add new script" button where the resulting script will actually be added - in comparison, the desktop's adder expander feels a bit more detached from the script you're actually editing. So, maybe one way to improve the desktop Script Editor would be the make it more web-like. I also think it would be nice to have a code view toggle for the Script Editor, so you can quickly dive in to the code without having to reload the entire game - this would also be another step towards pushing the "use Quest to learn to code" side of things.
 
 I do wish I'd been a bit more careful with some of the terminology used with Quest, but it's probably too late to change much of it now. Sometimes things are ambiguous and in at least one case the terminology is just plain wrong. The word "type" has at least four meanings - a class, a data type, "Object" vs "Room", and "Inanimate" vs "Animate". It even appears twice on the same editor screen - on an object editor you have one place to specify "type" as "Object", "Room" or "Object/Room", and then a few lines down you can choose a "type" from "Inanimate object", "Male character", "Female character" etc. The usage of the word "article" is simply incorrect - it should be something like "subject pronoun", as "article" means something entirely different. I would also prefer "Room" to be "Location", as that would be more accurate. I probably won't be able to change any of these until there is such a thing as Quest 6.
 
-\[caption id="attachment\_1365" align="aligncenter" width="277"\]![](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/object.png "Object Editor") Spot the mistakes!\[/caption\]
+![](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/object.png "Object Editor")
+
+*Spot the mistakes!*
 
 Staying on the object editor, there are probably too many tabs here already, and as more features are added, and third-party libraries are created, this could start to become a problem. Most of the tabs are not relevant for most objects though, so the fix will probably be to make certain tabs context-sensitive, only appearing at all for particular object types, which could be specified on the Setup tab maybe.
 
-\[caption id="attachment\_1367" align="aligncenter" width="571"\]![](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/tabs.png "Object Editor tabs") The number of tabs is starting to become a problem\[/caption\]
+![](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/tabs.png "Object Editor tabs")
+
+*The number of tabs is starting to become a problem*
 
 Having the documentation in wiki format means it is reasonably convenient to write and maintain, but it's a pain for anybody who wants an offline version. There are various options for converting a wiki to PDF but they are all complicated - mostly requiring the installation of plugins on the server which need root access. But every wiki page has a "Printable version", so surely it can't be hard to write a little app which can be run externally and just spiders these? There's an idea for someone out there!
 

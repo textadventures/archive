@@ -24,7 +24,9 @@ So, the web version of the player UI has now been brought to the desktop version
 
 Furthermore, the desktop version of Quest is no longer dependent on the version of Internet Explorer that is currently installed. Instead, Quest bundles an embedded version of the Chromium browser. This is the browser that underpins Google Chrome, and is based on WebKit (which is also behind Safari and the default Android browser). This means you now get access to the Chrome Developer Tools directly within Quest - so you can play around and see the effects of tweaking HTML while a game is running.
 
-\[caption id="attachment\_1651" align="aligncenter" width="682"\]![](/blogimages/2012/12/quest-5-3-beta-is-now-available/images/html.png "Chrome Developer Tools in Quest") Chrome Developer Tools in Quest\[/caption\]
+![](/blogimages/2012/12/quest-5-3-beta-is-now-available/images/html.png "Chrome Developer Tools in Quest")
+
+*Chrome Developer Tools in Quest*
 
 Quest 5.3 starts us down the road towards doing more innovative and exciting things within a predominately text-based medium. Of course we're not fully where I want to be yet, and one of my focuses for Quest 5.4 is to extend the customisability of the UI even more, to make it even easier to try out interesting ideas. Keep on eye on [the blog](http://www.textadventures.co.uk/blog/), as I'll be documenting any experiments there, and please do [contact me](http://www.textadventures.co.uk/help/contact-us/ "Contact us") if you have any ideas!
 
@@ -32,19 +34,24 @@ Other new improvements to look and feel include:
 
 - **Grid-based map** (sponsored by Phillip Zolla) - as detailed in [this separate blog post](http://www.textadventures.co.uk/blog/2012/07/22/automatic-mapping-in-quest-5-3/ "Automatic mapping in Quest 5.3"). This is an initial release of mapping functionality, so it's fairly basic at the moment. Future releases will add support for images in the map, and a visual map editor.
 
-\[caption id="attachment\_1651" align="aligncenter" width="453"\]![](/blogimages/2012/12/quest-5-3-beta-is-now-available/images/grid2.png "Grid map - castle")  
-Grid-based map example\[/caption\]
+![](/blogimages/2012/12/quest-5-3-beta-is-now-available/images/grid2.png "Grid map - castle")
+
+*Grid-based map example*
 
 - **Google Web Fonts**. You can now choose from over [600 different fonts](http://www.google.com/webfonts), and they will be downloaded on demand.
 - **Cover art**. You can now add cover art to your game from within the editor, and some game authors have kindly provided cover art for their existing published games. This is currently displayed in the game browser, and will soon be shown on the website too. Hopefully this will be a nice way of attracting more people to your game, and maybe provide something of an idea of the game's feel and atmosphere.
 
-\[caption id="attachment\_1641" align="aligncenter" width="610"\]![](/blogimages/2012/12/quest-5-3-beta-is-now-available/images/coverart.png "Cover art") Displaying cover art in the game browser\[/caption\]
+![](/blogimages/2012/12/quest-5-3-beta-is-now-available/images/coverart.png "Cover art")
+
+*Displaying cover art in the game browser*
 
 - **Text effects**. There are new "typewriter" and "unscramble" text effects available from the new "Effects" category in the script editor. They are pretty basic JavaScript effects and work best with a monospaced font. It would be nice to expand this to a more fully featured library in the future as this is really the tip of the iceberg for the kinds of things that I think JavaScript could bring to text adventure games.
 - **Background images**. You can now specify a background image as well as a background colour, and you can also set the opacity for the section of background image that appears behind the game text. You could try the [Subtle Patterns](http://subtlepatterns.com/) website for some nice backgrounds.
 - **Redisplay hyperlinks in commands**. When using object hyperlinks, the command output now has the same hyperlink in it so the player doesn't have to scroll up again to do other things to the same object. As with most things, as a game author you can turn this off if you don't like it (indeed you can turn off hyperlinks entirely if you want).
 
-\[caption id="attachment\_1646" align="aligncenter" width="242"\]![](/blogimages/2012/12/quest-5-3-beta-is-now-available/images/hyperlinks.png "Redisplaying hyperlinks") Showing hyperlinks for a command that has been entered\[/caption\]
+![](/blogimages/2012/12/quest-5-3-beta-is-now-available/images/hyperlinks.png "Redisplaying hyperlinks")
+
+*Showing hyperlinks for a command that has been entered*
 
 - **And more**. Customisable object link colour (sponsored by Phillip Zolla), more room description options (by James Gregory), choose a different alias to display on the "Inventory" and "Places and Objects" panes (sponsored by Phillip Zolla), use "ul", "ol" and "li" tags to show numbered and unnumbered lists (sponsored by Phillip Zolla), background sounds for gamebook pages (by Pertex).
 

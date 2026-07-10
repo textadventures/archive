@@ -28,7 +28,9 @@ By July 2010 I'd got fed up with my job, and quickly found a job with another co
 
 Alongside the demo of the regular "play online" interface was a [split-screen demo](http://play.textadventures.co.uk/v5/Play.aspx?file=twohalves/twohalves.quest), showing off the flexibility of the new system - I think this kind of customisability of the Quest 5 interface is an area which still hasn't really been fully explored yet, which shows the potential of Quest which still remains untapped.
 
-\[caption id="attachment\_1309" align="alignleft" width="625"\][![Split-screen text adventure prototype](/blogimages/2012/04/a-year-of-full-time-questing-part-1/images/splitscreen.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/04/splitscreen.png) Split-screen text adventure prototype\[/caption\]
+[![Split-screen text adventure prototype](/blogimages/2012/04/a-year-of-full-time-questing-part-1/images/splitscreen.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/04/splitscreen.png)
+
+*Split-screen text adventure prototype*
 
 **The year in review**
 
@@ -36,11 +38,15 @@ So we finally reach the start of the year. It was the start of April 2011 and I
 
 One of my first tasks was to [redesign the website](http://www.textadventures.co.uk/blog/2011/04/28/new-quest-and-textadventures-co-uk-websites/ "New Quest and textadventures.co.uk websites"), moving the main Quest site from the old axeuk.com domain to bring it together with the games at textadventures.co.uk. This was light relief from the meatier task of working on the Quest 5 Editor, the bare skeleton of which was already in place, but most of the editor controls and functionality had not yet been implemented.
 
-\[caption id="attachment\_1303" align="aligncenter" width="600"\]![](/blogimages/2012/04/a-year-of-full-time-questing-part-1/images/ta-website.png "textadventures.co.uk website") textadventures.co.uk website, old and new\[/caption\]
+![](/blogimages/2012/04/a-year-of-full-time-questing-part-1/images/ta-website.png "textadventures.co.uk website")
+
+*textadventures.co.uk website, old and new*
 
 In May, I carried on working mostly on the Editor, culminating in the release of the [first beta](http://www.textadventures.co.uk/blog/2011/05/24/quest-5-0-beta-1-now-available/ "Quest 5.0 Beta 1 now available") near the end of the month. The Script Editor looked a bit different in this Beta compared to later versions:
 
-\[caption id="" align="aligncenter" width="409"\]![](/blogimages/2012/04/a-year-of-full-time-questing-part-1/images/scriptcommand.png "Beta 1 Script Editor") The Script Editor from Quest 5.0 Beta 1\[/caption\]
+![](/blogimages/2012/04/a-year-of-full-time-questing-part-1/images/scriptcommand.png "Beta 1 Script Editor")
+
+*The Script Editor from Quest 5.0 Beta 1*
 
 This Editor was written using [Windows Forms](http://en.wikipedia.org/wiki/Windows_Forms), and although it mostly worked, it could be quite glitchy. Screen elements would often not draw correctly, and I was also not entirely happy with the design - in the screenshot above, you have a list of script commands, and the editor for the selected command appears below the list. This was similar to the design of the Script Editor in Quest 4, but it looked harder to use than it could be. Wouldn't it be better if the "Hello world" in the list was directly editable in-place?
 
@@ -48,7 +54,9 @@ Windows Forms was clearly never going to be up to the job - [WPF](http://en.wiki
 
 So, in June, I sat down and taught myself WPF. In total it only took about two weeks to redevelop the WinForms code. It felt painful at the time to do two weeks of work and essentially stand still, but it was well worth it. All the weird layout glitches went away, and I was able to implement the design I wanted for the Script Editor:
 
-\[caption id="attachment\_1320" align="aligncenter" width="385"\][![](/blogimages/2012/04/a-year-of-full-time-questing-part-1/images/scripteditor.png "Beta 2 Script Editor")](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/04/scripteditor.png) The Script Editor in Quest 5.0 Beta 2 (and now)\[/caption\]
+[![](/blogimages/2012/04/a-year-of-full-time-questing-part-1/images/scripteditor.png "Beta 2 Script Editor")](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/04/scripteditor.png)
+
+*The Script Editor in Quest 5.0 Beta 2 (and now)*
 
 I released [beta 2](http://www.textadventures.co.uk/blog/2011/06/20/quest-5-0-beta-2-released/ "Quest 5.0 Beta 2 released"), and by now was eyeing the final release of version 5.0. A lot of the "nice to have" features logged on the Issue Tracker were moved to later versions - it was much more important for Quest 5 to be "out there" than perfect. Over July 2011, I released [beta 3](http://www.textadventures.co.uk/blog/2011/07/17/quest-5-0-beta-3-and-tutorial-available/ "Quest 5.0 Beta 3 and Tutorial available") and [beta 4](http://www.textadventures.co.uk/blog/2011/07/28/quest-5-0-beta-4-released-approaching-the-final-release/ "Quest 5.0 Beta 4 released – approaching the final release"), and worked on getting the documentation done, in particular the [tutorial](http://quest5.net/wiki/Tutorial). I decided that it was time to stop adding things, and declared that beta 4 was feature complete - after a few months of working on Quest it was time to tie up everything and release a production quality version.
 
