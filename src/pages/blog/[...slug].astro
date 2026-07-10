@@ -1,0 +1,40 @@
+---
+import { getCollection, render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+    const posts = await getCollection('blog');
+    return posts.map((post) => ({
+        params: { slug: post.id },
+        props: { post },
+    }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+});
+---
+
+<Layout title={post.data.title}>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Archive</a></li>
+          <li class="breadcrumb-item"><a href="/blog/">Blog</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{post.data.title}</li>
+        </ol>
+    </nav>
+
+    <h2>{post.data.title}</h2>
+    <p class="text-muted">
+        <time datetime={post.data.date.toISOString()}>{dateFormatter.format(post.data.date)}</time>
+    </p>
+
+    <div class="content-container my-4">
+        <Content />
+    </div>
+</Layout>
