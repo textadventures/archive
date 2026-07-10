@@ -16,11 +16,11 @@ Quest 5.4 features what I call **live hyperlinks**. Now, as you move through the
 
 Let's see it in action. Here's a room with a newspaper that the player can pick up, as well as some other objects:
 
-[![Object links 1](/blogimages/2013/02/slicker-hyperlinks-in-quest-5-4/images/livelinks1.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/02/livelinks1.png)
+[![Object links 1](/blogimages/2013/02/slicker-hyperlinks-in-quest-5-4/images/livelinks1.png)](/blogimages/2013/02/slicker-hyperlinks-in-quest-5-4/images/livelinks1.png)
 
 Now if the player takes the newspaper and moves east, the other hyperlinks are deactivated. The player can still click the "old" newspaper link though, and interact with it using the current set of inventory verbs:
 
-[![Object links 2](/blogimages/2013/02/slicker-hyperlinks-in-quest-5-4/images/livelinks2.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/02/livelinks2.png)
+[![Object links 2](/blogimages/2013/02/slicker-hyperlinks-in-quest-5-4/images/livelinks2.png)](/blogimages/2013/02/slicker-hyperlinks-in-quest-5-4/images/livelinks2.png)
 
 Notice also that the exit hyperlinks "east" and "west" are also activated or deactivated according to whether they're available.
 
@@ -30,10 +30,10 @@ Previously, this disambiguation menu was a modal pop-up. Now, I think modal pop-
 
 So, in Quest 5.4 I have changed menus so they are shown in-line with the rest of the game text. Like this:
 
-[![New menu](/blogimages/2013/02/slicker-hyperlinks-in-quest-5-4/images/menu1.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/02/menu1.png)
+[![New menu](/blogimages/2013/02/slicker-hyperlinks-in-quest-5-4/images/menu1.png)](/blogimages/2013/02/slicker-hyperlinks-in-quest-5-4/images/menu1.png)
 
 The player can now click the link or type "1" or "2" to make a selection. The menu uses a simple jQuery animation to slide away, and the game continues.
 
-[![New menu 2](/blogimages/2013/02/slicker-hyperlinks-in-quest-5-4/images/menu2.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/02/menu2.png)
+[![New menu 2](/blogimages/2013/02/slicker-hyperlinks-in-quest-5-4/images/menu2.png)](/blogimages/2013/02/slicker-hyperlinks-in-quest-5-4/images/menu2.png)
 
 Alternatively, the player could just do something else - if they type another command or interact with a different object, the menu slides away and the game continues.

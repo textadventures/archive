@@ -10,7 +10,7 @@ tags:
 
 Quest is 15 years old today! I posted the [announcement of Quest 1.0](https://groups.google.com/d/msg/rec.arts.int-fiction/EP4N9x3fBs4/iznybxPCt4sJ) on the rec.arts.int-fiction newsgroup on Saturday 7th November 1998. (And the original link in that post still gets you to the right place today, eventually)
 
-[![Quest 1.0](/blogimages/2013/11/quest-is-15/images/quest1.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/10/quest1.png)
+[![Quest 1.0](/blogimages/2013/11/quest-is-15/images/quest1.png)](/blogimages/2013/11/quest-is-15/images/quest1.png)
 
 So Quest is itself now almost as old as I was when I started writing it. But what got me started on it in the first place?
 
@@ -20,7 +20,7 @@ Well, no. That's not how it happened. I never played any of those. In fact, I wa
 
 But then, they were before my time. I was just a bit too young. I first dabbled with a computer in, oh, about 1990 or so. We had an [Acorn Electron](http://en.wikipedia.org/wiki/Acorn_Electron) in our house. We _did_ have a couple of text adventures for that - we had a copy of [Acornsoft](http://en.wikipedia.org/wiki/Acornsoft)'s [Sphinx Adventure](http://www.acornelectron.co.uk/info/acornsoft/i-sphi.html) (never really played it, couldn't get anywhere, found it boring) and my dad had typed in the listing of a game called [Necromancer](http://solutionarchive.com/game/id,2310/) from [Electron User](http://www.acornelectron.co.uk/mags/eu/top_lvl.html) magazine. Which never quite worked properly, as something had been mis-typed somewhere along the line.
 
-[![Necromancer](/blogimages/2013/11/quest-is-15/images/necromancer.gif)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/necromancer.gif)
+[![Necromancer](/blogimages/2013/11/quest-is-15/images/necromancer.gif)](/blogimages/2013/11/quest-is-15/images/necromancer.gif)
 
 So I was just never that interested in text adventures. I was more into playing whatever shareware games had found their way onto my PC - _Commander Keen_, _Wolfenstein_, _Doom_ and so on. But what I was much more interested in was creating my own. I probably spent more time in front of [QBasic](http://en.wikipedia.org/wiki/QBasic) than any game. And that is where it all begins, really.
 
@@ -32,11 +32,11 @@ After my schoolfriend Martyn moved house and went to a different school, we kep
 
 I still have a copy, in a heavily nested folder full of archives of archives, and I can still run it today using [QB64](https://www.qb64.com/). It looks like this:
 
-[![Sid Snibble and the Curse of the Curry Stain](/blogimages/2013/11/quest-is-15/images/sid.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/10/sid.png)
+[![Sid Snibble and the Curse of the Curry Stain](/blogimages/2013/11/quest-is-15/images/sid.png)](/blogimages/2013/11/quest-is-15/images/sid.png)
 
 It was a text adventure, but even this had a graphical element to it - you didn't walk around the game by typing NORTH, SOUTH etc., you moved an ASCII face around with the arrow keys. When you entered a location, you could look at things, speak to characters, pick up items and so on - all in an attempt to solve the mystery of what happened the night before, and why you woke up in the middle of the road in a strange town with a large curry stain down your shirt.
 
-[![SID.BAS](/blogimages/2013/11/quest-is-15/images/sidbas.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/10/sidbas.png)
+[![SID.BAS](/blogimages/2013/11/quest-is-15/images/sidbas.png)](/blogimages/2013/11/quest-is-15/images/sidbas.png)
 
 This looked fun. I could write something like this. It would be hilarious! And so I set to work, doing what I'd always done - copying Martyn's ideas, but doing them a lot worse.
 
@@ -64,7 +64,7 @@ It turned out that I was actually far more interested in creating the engine tha
 
 I released Quest 1.0, and it looked like this:
 
-[![Quest 1.0 Start Screen](/blogimages/2013/11/quest-is-15/images/quest.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/quest.png)
+[![Quest 1.0 Start Screen](/blogimages/2013/11/quest-is-15/images/quest.png)](/blogimages/2013/11/quest-is-15/images/quest.png)
 
 (Those two globes were animated and bounced back and forth between the edges of the screen. For some reason.)
 
@@ -108,7 +108,7 @@ This file format lasted a long time. It was used right up until Quest 4.x, the l
 
 The empty template looks like this when loaded in Quest 1.0:
 
-[![Quest 1.0 running a game](/blogimages/2013/11/quest-is-15/images/quest-main.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/quest-main.png)
+[![Quest 1.0 running a game](/blogimages/2013/11/quest-is-15/images/quest-main.png)](/blogimages/2013/11/quest-is-15/images/quest-main.png)
 
 The user interface is still very similar to what Quest offers now - in fact, after it was rearranged in Quest 2.1 it has effectively remained an identical layout. There is the game text of course, a command box, a space to show what items you're carrying, and a list of things you can see in the current location (which would show "Look at" and "Take" buttons if something was selected). There are also the compass buttons for easier navigation.
 

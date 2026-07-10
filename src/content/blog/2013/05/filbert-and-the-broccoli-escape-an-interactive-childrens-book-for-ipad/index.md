@@ -26,4 +26,4 @@ If you have young children and an iPad, please [download it](http://itunes.apple
 
 It would be really helpful to get your feedback of reading this interactive story - there are more books in the "Filbert" series, so any comments will really help with making the sequels as good as they can be.
 
-[![iOS Simulator Screen shot 14 May 2013 18.35.46](/blogimages/2013/05/filbert-and-the-broccoli-escape-an-interactive-childrens-book-for-ipad/images/ios-simulator-screen-shot-14-may-2013-18-35-46.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/05/ios-simulator-screen-shot-14-may-2013-18-35-46.png)
+[![iOS Simulator Screen shot 14 May 2013 18.35.46](/blogimages/2013/05/filbert-and-the-broccoli-escape-an-interactive-childrens-book-for-ipad/images/ios-simulator-screen-shot-14-may-2013-18-35-46.png)](/blogimages/2013/05/filbert-and-the-broccoli-escape-an-interactive-childrens-book-for-ipad/images/ios-simulator-screen-shot-14-may-2013-18-35-46.png)

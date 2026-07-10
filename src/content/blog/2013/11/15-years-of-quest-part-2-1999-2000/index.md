@@ -20,19 +20,19 @@ It was all a nice break from working on my A-levels and filling in my UCAS form
 
 Quest 2.0 was released in August 1999, and for the first time included a beta version of a new visual Quest game editor called "QDK" - meaning finally you no longer had to code games using a text editor. (I would have called the editor "QED" but there was already a Quake editor of that name).
 
-[![QDK 1.0](/blogimages/2013/11/15-years-of-quest-part-2-1999-2000/images/qdkmain.gif)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/qdkmain.gif)
+[![QDK 1.0](/blogimages/2013/11/15-years-of-quest-part-2-1999-2000/images/qdkmain.gif)](/blogimages/2013/11/15-years-of-quest-part-2-1999-2000/images/qdkmain.gif)
 
-[![Editing a room in QDK 1.0](/blogimages/2013/11/15-years-of-quest-part-2-1999-2000/images/room.gif)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/room.gif)
+[![Editing a room in QDK 1.0](/blogimages/2013/11/15-years-of-quest-part-2-1999-2000/images/room.gif)](/blogimages/2013/11/15-years-of-quest-part-2-1999-2000/images/room.gif)
 
-[![Editing an object in QDK 1.0](/blogimages/2013/11/15-years-of-quest-part-2-1999-2000/images/objedit.gif)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/objedit.gif)
+[![Editing an object in QDK 1.0](/blogimages/2013/11/15-years-of-quest-part-2-1999-2000/images/objedit.gif)](/blogimages/2013/11/15-years-of-quest-part-2-1999-2000/images/objedit.gif)
 
 The script editor was very basic:
 
-[![Editing a script in QDK 1.0](/blogimages/2013/11/15-years-of-quest-part-2-1999-2000/images/script.gif)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/script.gif)
+[![Editing a script in QDK 1.0](/blogimages/2013/11/15-years-of-quest-part-2-1999-2000/images/script.gif)](/blogimages/2013/11/15-years-of-quest-part-2-1999-2000/images/script.gif)
 
 The main player interface for Quest 2.0 still looked pretty much exactly the same as v1.0 - which is to say, hideous. This was finally rectified in November 1999 with the release of Quest 2.1, which has a layout which is awfully similar even to the current version of Quest:
 
-[![Quest 2.1](/blogimages/2013/11/15-years-of-quest-part-2-1999-2000/images/quest21.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/quest21.png)
+[![Quest 2.1](/blogimages/2013/11/15-years-of-quest-part-2-1999-2000/images/quest21.png)](/blogimages/2013/11/15-years-of-quest-part-2-1999-2000/images/quest21.png)
 
 Quest 2.0 is the first version for which at least one actual game was made - and it's still on textadventures.co.uk, and it still works today, whether you download it or use the web-based player - [The Adventures of Koww the Magician](http://textadventures.co.uk/games/view/nalydifu9eqbcgy0pcyceq/the-adventures-of-koww-the-magician).
 

@@ -28,7 +28,7 @@ By July 2010 I'd got fed up with my job, and quickly found a job with another co
 
 Alongside the demo of the regular "play online" interface was a [split-screen demo](http://play.textadventures.co.uk/v5/Play.aspx?file=twohalves/twohalves.quest), showing off the flexibility of the new system - I think this kind of customisability of the Quest 5 interface is an area which still hasn't really been fully explored yet, which shows the potential of Quest which still remains untapped.
 
-[![Split-screen text adventure prototype](/blogimages/2012/04/a-year-of-full-time-questing-part-1/images/splitscreen.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/04/splitscreen.png)
+[![Split-screen text adventure prototype](/blogimages/2012/04/a-year-of-full-time-questing-part-1/images/splitscreen.png)](/blogimages/2012/04/a-year-of-full-time-questing-part-1/images/splitscreen.png)
 
 *Split-screen text adventure prototype*
 
@@ -54,7 +54,7 @@ Windows Forms was clearly never going to be up to the job - [WPF](http://en.wiki
 
 So, in June, I sat down and taught myself WPF. In total it only took about two weeks to redevelop the WinForms code. It felt painful at the time to do two weeks of work and essentially stand still, but it was well worth it. All the weird layout glitches went away, and I was able to implement the design I wanted for the Script Editor:
 
-[![](/blogimages/2012/04/a-year-of-full-time-questing-part-1/images/scripteditor.png "Beta 2 Script Editor")](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/04/scripteditor.png)
+[![](/blogimages/2012/04/a-year-of-full-time-questing-part-1/images/scripteditor.png "Beta 2 Script Editor")](/blogimages/2012/04/a-year-of-full-time-questing-part-1/images/scripteditor.png)
 
 *The Script Editor in Quest 5.0 Beta 2 (and now)*
 

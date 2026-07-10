@@ -11,7 +11,7 @@ tags:
 
 The first Quest-powered smartphone app will be released soon. It is an updated version of Tim Hamilton's [The Things That Go Bump In The Night](http://www.textadventures.co.uk/review/346/), currently one of the top-rated games on [textadventures.co.uk](http://www.textadventures.co.uk/ "Home"), and will be available for both iPhone/iPod Touch and Android devices.
 
-[![bump-300x194](/blogimages/2011/11/the-things-that-go-bump-in-the-night-coming-to-iphone-and-android/images/bump-300x194.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/12/bump-300x194.png)
+[![bump-300x194](/blogimages/2011/11/the-things-that-go-bump-in-the-night-coming-to-iphone-and-android/images/bump-300x194.png)](/blogimages/2011/11/the-things-that-go-bump-in-the-night-coming-to-iphone-and-android/images/bump-300x194.png)
 
 This is the first time that a Quest game has been converted into a native application. As I've explained in a [previous blog post](/blog/2011/09/using-quest-to-create-text-adventures-for-iphone-ipad-android "Using Quest to create text adventures for iPhone, iPad, Android"), the way it works is by using a tool which I've built to convert Quest games into pure Javascript. Using [Phonegap](http://www.phonegap.com), this HTML/JS is then wrapped into a cross-platform app.
 
@@ -35,7 +35,7 @@ The main difficulty has been threading. Javascript is single-threaded, which mea
 
 Being unable to block the thread to display a menu meant that I had to rewrite the parser, as this often needs to display menus to resolve the typed-in object names. I drew myself the diagram below and almost descended into insanity in the process:
 
-[![](/blogimages/2011/11/the-things-that-go-bump-in-the-night-coming-to-iphone-and-android/images/photo.jpg "Parser diagram")](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/11/photo.jpg)So, that was annoying, but it's actually a better design for the future (especially when playing a game via the web, as the server will no longer need to keep a thread hanging around if it's waiting for the user to respond to a menu).
+[![](/blogimages/2011/11/the-things-that-go-bump-in-the-night-coming-to-iphone-and-android/images/photo.jpg "Parser diagram")](/blogimages/2011/11/the-things-that-go-bump-in-the-night-coming-to-iphone-and-android/images/photo.jpg)So, that was annoying, but it's actually a better design for the future (especially when playing a game via the web, as the server will no longer need to keep a thread hanging around if it's waiting for the user to respond to a menu).
 
 Eventually I had a pure HTML/JS version of the game which could be played in any web browser. I implemented the walkthrough feature to verify the game was working correctly, and again I sent it to Tim so he could check for any "off-walkthrough" problems.
 

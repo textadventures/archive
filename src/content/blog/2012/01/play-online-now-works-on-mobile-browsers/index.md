@@ -10,11 +10,11 @@ All games on [textadventures.co.uk](http://www.textadventures.co.uk/) can now be
 
 Although the main website isn't particularly mobile-optimised (just yet!), if you click the "Play online" link for a game and are using a mobile browser, you'll see the new mobile-friendly version of the player.
 
-[![Mobile WebPlayer](/blogimages/2012/01/play-online-now-works-on-mobile-browsers/images/photo-2.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/01/photo-2.png)
+[![Mobile WebPlayer](/blogimages/2012/01/play-online-now-works-on-mobile-browsers/images/photo-2.png)](/blogimages/2012/01/play-online-now-works-on-mobile-browsers/images/photo-2.png)
 
 The inventory, compass etc. are moved off onto separate screens, which you can access by tapping the "+" button next to the input box.
 
-[![Mobile WebPlayer Location tab](/blogimages/2012/01/play-online-now-works-on-mobile-browsers/images/photo-1.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/01/photo-1.png)
+[![Mobile WebPlayer Location tab](/blogimages/2012/01/play-online-now-works-on-mobile-browsers/images/photo-1.png)](/blogimages/2012/01/play-online-now-works-on-mobile-browsers/images/photo-1.png)
 
 This means the experience of playing a game via a mobile web browser is similar to what you get with a stand-alone Quest game app. So that's (currently) 356 games which are now playable through a mobile web browser - plenty of choice for gaming on the move, as long as you have an internet connection.
 
@@ -26,6 +26,6 @@ The mobile player will automatically adjust to the resolution of your device, so
 
 The desktop browser player now also has a fresher look:
 
-[![Desktop WebPlayer](/blogimages/2012/01/play-online-now-works-on-mobile-browsers/images/desktop.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/01/desktop.png)
+[![Desktop WebPlayer](/blogimages/2012/01/play-online-now-works-on-mobile-browsers/images/desktop.png)](/blogimages/2012/01/play-online-now-works-on-mobile-browsers/images/desktop.png)
 
 I hope you enjoy the experience of playing text adventures on your smartphone - don't forget about the [stand-alone smartphone apps](http://www.textadventures.co.uk/apps/ "Apps") as well, allowing you to play on your phone even without an internet connection. I hope to release more games as apps in the near future, and if you're interested in having your game converted into an app, please [get in touch](http://www.textadventures.co.uk/help/contact-us/ "Contact us").

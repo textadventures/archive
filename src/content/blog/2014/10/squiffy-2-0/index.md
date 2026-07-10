@@ -8,7 +8,7 @@ categories:
 
 Squiffy 2.0 is now available. Just like Apple's "Snow Leopard" release of OS X a few years ago, this release of Squiffy boasts an amazing **0 new features**.
 
-[![0 new features](/blogimages/2014/10/squiffy-2-0/images/snow-leopard-0-new-features.jpg)](https://textadventuresblog.wordpress.com/wp-content/uploads/2014/10/snow-leopard-0-new-features.jpg)
+[![0 new features](/blogimages/2014/10/squiffy-2-0/images/snow-leopard-0-new-features.jpg)](/blogimages/2014/10/squiffy-2-0/images/snow-leopard-0-new-features.jpg)
 
 Why no new features? Because Squiffy releases should only [do one thing at a time](http://docs.textadventures.co.uk/squiffy/roadmap.html), and this release is all about rewriting the compiler to use Node.js instead of Python.
 

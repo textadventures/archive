@@ -15,7 +15,7 @@ Let me take you on a tour!
 
 First, you'll need to log in to [textadventures.co.uk](http://www.textadventures.co.uk/). You'll then be able to access the "Create" page, which looks like this:
 
-[![01 create](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/01-create.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/02/01-create.png)
+[![01 create](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/01-create.png)](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/01-create.png)
 
 Enter a name for your game (you can always change it later), and choose a language.
 
@@ -23,7 +23,7 @@ Enter a name for your game (you can always change it later), and choose a langua
 
 Hit the Create button, and your game will be created. This is what it looks like in the editor:
 
-[![03 blank game](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/03-blank-game.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/02/03-blank-game.png)
+[![03 blank game](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/03-blank-game.png)](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/03-blank-game.png)
 
 This is a similar layout to the desktop software, and the full range of functionality is available - including cut/copy/paste and undo/redo.
 
@@ -33,15 +33,15 @@ The Settings button lets you turn on Simple Mode - as in the desktop software, t
 
 I've renamed the initial "room" to "lounge", and I've clicked the "+ Room" button to add another location to the game, a kitchen. Now, with the lounge selected, I can add an exit to the kitchen from the Exits tab:
 
-[![05 create exit](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/05-create-exit.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/02/05-create-exit.png)
+[![05 create exit](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/05-create-exit.png)](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/05-create-exit.png)
 
 I can add an object by clicking the "+ Object" button. Here I've added a sofa, and entered a text description:
 
-[![06 add object](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/06-add-object.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/02/06-add-object.png)
+[![06 add object](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/06-add-object.png)](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/06-add-object.png)
 
 I can try the game by clicking the Play button. It appears in a new tab, using the same "play online" interface as the published games on the site.
 
-[![07 play game](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/07-play-game.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/02/07-play-game.png)
+[![07 play game](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/07-play-game.png)](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/07-play-game.png)
 
 I can interact with the game just like all Quest games. There's no need to force your players to type commands - the hyperlinks allow you to make a game which can be played with a click of the mouse, or a touch of the screen:
 
@@ -49,7 +49,7 @@ I can interact with the game just like all Quest games. There's no need to force
 
 Here's the game output after looking at the sofa, and moving east into the kitchen.
 
-[![09 game](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/09-game.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/02/09-game.png)
+[![09 game](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/09-game.png)](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/09-game.png)
 
 The real power of Quest comes from _scripts_, which let you control anything in the game - move the player, change responses according to what the player has done before, set up puzzles, show pictures and more. Back in the editor, let's change the description of the sofa so that it runs a script instead of just displaying text:
 
@@ -57,7 +57,7 @@ The real power of Quest comes from _scripts_, which let you control anything in 
 
 Now we can click the "Add new script" button to choose from various options. This is the Simple Mode list - there is a much bigger list if we turn this off:
 
-[![11 add script](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/11-add-script.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/02/11-add-script.png)
+[![11 add script](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/11-add-script.png)](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/11-add-script.png)
 
 Let's play a YouTube video when the player looks at sofa. I choose "Play YouTube video" from the "Add New Script" dialog, and then I can enter a video ID. I found a clip of a TV sofa advert:
 
@@ -65,7 +65,7 @@ Let's play a YouTube video when the player looks at sofa. I choose "Play YouTube
 
 And here's what the game looks like if we run it now:
 
-[![13 play youtube](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/13-play-youtube.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/02/13-play-youtube.png)
+[![13 play youtube](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/13-play-youtube.png)](/blogimages/2012/02/introducing-quest-webeditor-create-text-adventures-online-in-your-browser/images/13-play-youtube.png)
 
 So there you have it!
 

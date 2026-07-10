@@ -8,7 +8,7 @@ categories:
   - "textadventures-co-uk-website"
 ---
 
-[![](/blogimages/2024/12/rebooting-textadventures-quest-and-squiffy/images/image.png)](https://textadventuresblog.wordpress.com/wp-content/uploads/2024/12/image.png)
+[![](/blogimages/2024/12/rebooting-textadventures-quest-and-squiffy/images/image.png)](/blogimages/2024/12/rebooting-textadventures-quest-and-squiffy/images/image.png)
 
 I am back.
 

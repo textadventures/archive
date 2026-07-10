@@ -14,11 +14,11 @@ This is a relatively small update, with a focus on refining the player interface
 
 This version features some enhancements to make it easier to create games that look a little more elegant. The location bar and screen border can be toggled off, and you can set a custom display width and padding. There are new display themes, so you can easily change from the Quest Standard theme:
 
-[![Quest Standard Theme](/blogimages/2013/12/quest-5-5-beta-is-now-available/images/standard.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/12/standard.png)
+[![Quest Standard Theme](/blogimages/2013/12/quest-5-5-beta-is-now-available/images/standard.png)](/blogimages/2013/12/quest-5-5-beta-is-now-available/images/standard.png)
 
 to the simpler "Novella" theme:
 
-[![Quest Novella Theme](/blogimages/2013/12/quest-5-5-beta-is-now-available/images/novella.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/12/novella.png)
+[![Quest Novella Theme](/blogimages/2013/12/quest-5-5-beta-is-now-available/images/novella.png)](/blogimages/2013/12/quest-5-5-beta-is-now-available/images/novella.png)
 
 And there are a few more fun bonus themes too.
 

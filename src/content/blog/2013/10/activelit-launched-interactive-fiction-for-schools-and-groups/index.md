@@ -14,7 +14,7 @@ To get started, [sign up and request an account](http://activelit.com/home/signu
 
 When we process your request, you'll receive an email with instructions for logging in to your admin area.
 
-[![ActiveLit Admin](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/admin.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/09/admin.png)
+[![ActiveLit Admin](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/admin.png)](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/admin.png)
 
 The admin area lets you add members to your site. It also shows you the web address where they can log in - it will be something like activelit.com/yourschool. It's quick to add users, and passwords can be generated automatically, but if you have a large number of users to set up, email us and we'll import them for you.
 
@@ -22,33 +22,33 @@ The admin area lets you add members to your site. It also shows you the web addr
 
 Choose the games you want to display to your group. You can choose any game from [textadventures.co.uk](http://textadventures.co.uk). It is easy to search, and you can also browse by category.
 
-[![Choosing games for ActiveLit](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/choose1.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/09/choose1.png)
+[![Choosing games for ActiveLit](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/choose1.png)](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/choose1.png)
 
 Clicking the game name shows you the description of that game, where you can play it and also jump to the listing at textadventures.co.uk to see the reviews and comments.
 
-[![Viewing game information](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/choose2.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/09/choose2.png)
+[![Viewing game information](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/choose2.png)](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/choose2.png)
 
 Once you have chosen the games you want to display, you can customise how they are shown.
 
-[![Customising the games list](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/customise1.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/09/customise1.png)
+[![Customising the games list](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/customise1.png)](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/customise1.png)
 
 You can choose which order they appear in, and you can also give them your own description - for example, to set a particular game as homework.
 
-[![Customising a game description](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/customise2.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/09/customise2.png)
+[![Customising a game description](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/customise2.png)](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/customise2.png)
 
 When group members log in to the area, they will see the list of games you have selected.
 
-[![An ActiveLit area](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/area1.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/09/area1.png)
+[![An ActiveLit area](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/area1.png)](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/area1.png)
 
 They can click on the game to view your description, and play the game in their browser.
 
-[![Customised game description](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/area2.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/09/area2.png)
+[![Customised game description](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/area2.png)](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/area2.png)
 
 After playing a game online, as the group administrator you'll be able to see session transcripts in the Reports area.
 
-[![ActiveLit Reports list](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/reports.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/09/reports.png)
+[![ActiveLit Reports list](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/reports.png)](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/reports.png)
 
-[![An ActiveLit report](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/report.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/09/report.png)
+[![An ActiveLit report](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/report.png)](/blogimages/2013/10/activelit-launched-interactive-fiction-for-schools-and-groups/images/report.png)
 
 **Creating Games**
 

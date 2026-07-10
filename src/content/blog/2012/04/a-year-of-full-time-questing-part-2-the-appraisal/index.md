@@ -32,11 +32,11 @@ The Quest 5 WorldModel component itself is used not just when playing games, but
 
 Having the Core library define how the editor looks, and the EditorController exposing that to the user interface, has massively cut down on effort getting the web-based editor to work. There is definitely a tendency towards over-engineering in software development, but in this case creating my own editor forms framework, supporting both desktop and web, has reaped dividends:
 
-[![The desktop editor design...](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/editor2.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/04/editor2.png)
+[![The desktop editor design...](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/editor2.png)](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/editor2.png)
 
 *The desktop editor design...*
 
-[![..can mirror the web-based editor design](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/editor1.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/04/editor1.png)
+[![..can mirror the web-based editor design](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/editor1.png)](/blogimages/2012/04/a-year-of-full-time-questing-part-2-the-appraisal/images/editor1.png)
 
 *..can mirror the web editor design*
 

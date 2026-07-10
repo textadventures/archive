@@ -61,7 +61,7 @@ I've used the power of Quest's ASL programming language to model the tube networ
 
 I wanted to show that even with a minimalistic UI, you could create an explorable world, and you could do it more subtly than continually asking binary choice questions like "do you want to speak to the woman, or change to the Northern line?". In Moquette, choosing one option often doesn't rule out exploring other options too, and it's easy to keep track of what you've done - the screen doesn't clear between choices, but irrelevant links are deactivated so you always know exactly what options are available to explore.
 
-[![Moquette](/blogimages/2013/11/moquette-in-the-ifcomp-post-mortem-and-review-roundup/images/moquette.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/moquette.png)
+[![Moquette](/blogimages/2013/11/moquette-in-the-ifcomp-post-mortem-and-review-roundup/images/moquette.png)](/blogimages/2013/11/moquette-in-the-ifcomp-post-mortem-and-review-roundup/images/moquette.png)
 
 **Experiment 2 - The nature of choice**
 
@@ -89,7 +89,7 @@ Maybe this aspect of the game isn't really that experimental - certainly none of
 
 **Experiment 5 - Special effects**
 
-[![Text Effect](/blogimages/2013/11/moquette-in-the-ifcomp-post-mortem-and-review-roundup/images/effect.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/effect.png)
+[![Text Effect](/blogimages/2013/11/moquette-in-the-ifcomp-post-mortem-and-review-roundup/images/effect.png)](/blogimages/2013/11/moquette-in-the-ifcomp-post-mortem-and-review-roundup/images/effect.png)
 
 There are various screen transitions throughout the game - I liked the idea of it having something of a graphical feel, even though it was only using text.
 

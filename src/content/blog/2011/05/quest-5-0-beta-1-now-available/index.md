@@ -31,7 +31,7 @@ I left my job a couple of months ago to work full time on Quest. There's just so
 
 Open-source site Ohloh have just improved their code analysis graphs, and Quest's graph is [pretty interesting](http://www.ohloh.net/p/quest) - it has grown 50% since the end of March. (You can see one other big jump in December 2010 when I checked in the port of LegacyASL to handle older Quest games)
 
-[![Code Analysis from Ohloh](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/codeanalysis.png "Code Analysis from Ohloh")](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/05/codeanalysis.png)
+[![Code Analysis from Ohloh](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/codeanalysis.png "Code Analysis from Ohloh")](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/codeanalysis.png)
 
 I've been working hard to get to the point where Quest 5.0 is now of "initial beta" quality. There are still quite a lot of outstanding tasks, but it's now at least possible to load Quest, create a new game from scratch, add things to it and play it. The foundations for all features are at last in place, and we have a solid base from which to build.
 
@@ -41,7 +41,7 @@ So, what's new since the last technical preview?
 
 Quest now features an integrated download manager. You don't need to go to a website, download a game, find it on your hard disk and then open it - instead, as soon as you open Quest, it will grab a list of games from textadventures.co.uk, which you can download within the program and play immediately.
 
-[![Game Browser](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/gamebrowser.png "Game Browser")](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/05/gamebrowser.png)
+[![Game Browser](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/gamebrowser.png "Game Browser")](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/gamebrowser.png)
 
 ## Editing games
 
@@ -51,13 +51,13 @@ The Editor has been the main thing I've worked on over the last few weeks. You c
 
 Every kind of thing in Quest is an element - an object, a verb, an exit, a function... they're all elements, and they're all displayed in the tree on the left hand side of the Editor window. It will be familiar to Quest 4 users, but it's even better in Quest 5 - if you have objects inside objects inside other objects, you can see the full hierarchical relationship within the tree, and you can click and drag to move elements around. It also has a search feature.
 
-[![Editor tree](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/tree.png "Editor tree")](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/05/tree.png)
+[![Editor tree](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/tree.png "Editor tree")](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/tree.png)
 
 Element Editors
 
 When you select an element from the tree, you'll see the relevant editor, such as the one below for an object:
 
-[![Object editor](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/objecteditor.png "Object editor")](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/05/objecteditor.png)
+[![Object editor](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/objecteditor.png "Object editor")](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/objecteditor.png)
 
 The element editors have been designed from the outset to be completely extensible. Every element editor is in fact loaded from the Core library, which means that it's easy to add functionality such as a new checkbox for a particular object feature. The Core library therefore defines not just the standard game behaviour, but the standard game editors. This means that:
 
@@ -74,11 +74,11 @@ The general aim is to make it possible for you to edit complex scripts, just a c
 
 **Step 1. Choose a command...**
 
-[![Script command tree](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/scripttree.png "Script command tree")](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/05/scripttree.png)
+[![Script command tree](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/scripttree.png "Script command tree")](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/scripttree.png)
 
 **Step 2. Click "Add", then fill in the blanks...**
 
-[![Editing a script command](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/scriptcommand.png "Editing a script command")](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/05/scriptcommand.png)
+[![Editing a script command](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/scriptcommand.png "Editing a script command")](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/scriptcommand.png)
 
 **Step 3. Lather, rinse, repeat if desired.**
 
@@ -88,7 +88,7 @@ I think the current design is far more user-friendly than the Script Editor in Q
 
 You don't need to scour the list to find the script command you need - you can quickly search for it. For example, search for "picture" to find any commands relating to pictures:
 
-[![Script Editor showing a command search](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/scripteditor.png "Script Editor")](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/05/scripteditor.png)
+[![Script Editor showing a command search](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/scripteditor.png "Script Editor")](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/scripteditor.png)
 
 There's still some way to go with the Script Editor, though. A major part of the complexity of a script is in creating expressions - calling functions etc. The current beta doesn't give you _any_ help with that. Eventually I want there to be drop-down lists of functions, but for now you'll have to type in expressions yourself.
 
@@ -100,7 +100,7 @@ The Editor supports unlimited undo and redo. Didn't mean to delete that object? 
 
 You can cut, copy and paste any element. In QDK 4 you were limited to objects - now you can copy and paste everything.
 
-[![Quest Editor toolbar](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/toolbar.png "Quest Editor toolbar")](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/05/toolbar.png)
+[![Quest Editor toolbar](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/toolbar.png "Quest Editor toolbar")](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/toolbar.png)
 
 As both the Player and the Editor are the same program, when you click Run you'll be able to play your game in the same window. Typing "quit", pressing Ctrl+F4 or choosing "Stop Game" from the File menu brings you back to the Editor.
 
@@ -108,7 +108,7 @@ As both the Player and the Editor are the same program, when you click Run you'l
 
 QDK 4 had an ASL viewer which wasn't too useful - now you can quickly drop into the code viewer and edit by hand. Useful for those comfortable getting their hands dirty with code. You get XML syntax highlighting too.
 
-[![Code Editor](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/codeeditor.png "Code Editor")](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/05/codeeditor.png)
+[![Code Editor](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/codeeditor.png "Code Editor")](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/codeeditor.png)
 
 If you reference any JavaScript in your game to customise your interface, you can also edit that within the Editor, again with syntax highlighting.
 
@@ -118,7 +118,7 @@ Most of the standard game functionality comes from the Core library, and the Cor
 
 For example, the default implementation of the "take" command is defined in the Core library, and here it is in the Editor:
 
-[![Editing a library element](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/library.png "Editing a library element")](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/05/library.png)
+[![Editing a library element](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/library.png "Editing a library element")](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/library.png)
 
 ### Attribute Editor
 
@@ -126,7 +126,7 @@ The "Attributes" tab on elements allows you to enter your own arbitrary attribut
 
 If an attribute is greyed out, it's because it's inherited from a type instead of being defined on the element itself. You can still edit them though - they'll be copied to your element if you do so, which will mean you're overriding the default value from the type.
 
-[![Attribute Editor](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/attribute.png "Attribute Editor")](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/05/attribute.png)
+[![Attribute Editor](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/attribute.png "Attribute Editor")](/blogimages/2011/05/quest-5-0-beta-1-now-available/images/attribute.png)
 
 ## Translations
 

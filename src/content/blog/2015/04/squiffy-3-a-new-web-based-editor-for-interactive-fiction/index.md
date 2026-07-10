@@ -12,7 +12,7 @@ Previously, the only way to use Squiffy was by creating a file in a text editor 
 
 In-keeping with the philosophy of trying not to do too many new things in any one release, this first iteration of the editor is intentionally very simple. It's pretty much a text editor in the cloud, with a few Squiffy-specific bells and whistles to make editing a game easier.
 
-[![Squiffy Editor](/blogimages/2015/04/squiffy-3-a-new-web-based-editor-for-interactive-fiction/images/screen-shot-2015-04-25-at-19-26-06.png)](https://textadventuresblog.wordpress.com/wp-content/uploads/2015/04/screen-shot-2015-04-25-at-19-26-06.png)
+[![Squiffy Editor](/blogimages/2015/04/squiffy-3-a-new-web-based-editor-for-interactive-fiction/images/screen-shot-2015-04-25-at-19-26-06.png)](/blogimages/2015/04/squiffy-3-a-new-web-based-editor-for-interactive-fiction/images/screen-shot-2015-04-25-at-19-26-06.png)
 
 You can use the editor without logging in, in which case all changes are automatically saved to your browser (and are automatically re-loaded the next time you come back). Or if you're logged in, you can hit the Save button to sync your game to your account, so you can access it from anywhere.
 

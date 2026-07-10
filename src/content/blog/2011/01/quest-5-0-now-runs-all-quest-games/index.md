@@ -16,7 +16,7 @@ One thing I've found is that the new .NET code is significantly faster than the 
 
 So please download the new Technical Preview version at [http://quest5.net](http://quest5.net) and let me know if you encounter any problems.
 
-[![Quest 5.0 playing a Quest 4.x game](/blogimages/2011/01/quest-5-0-now-runs-all-quest-games/images/quest5.png "Quest 5.0 playing a Quest 4.x game")](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/01/quest5.png)
+[![Quest 5.0 playing a Quest 4.x game](/blogimages/2011/01/quest-5-0-now-runs-all-quest-games/images/quest5.png "Quest 5.0 playing a Quest 4.x game")](/blogimages/2011/01/quest-5-0-now-runs-all-quest-games/images/quest5.png)
 
 ## Editor Preview
 
@@ -30,4 +30,4 @@ Some features that _do_ work:
 - The Script Editor lets you add and delete commands. I've refined the design from Quest 4.x - there are no pop-out windows at all, although you can click the "Pop out" button if it all gets a bit crowded. The "If" editor is a work in progress, so you will probably crash the application quite quickly if you start playing with it.
 - You can change the Filter at the bottom of the treeview to see elements that are loaded from libraries such as Core.aslx.
 
-[![](/blogimages/2011/01/quest-5-0-now-runs-all-quest-games/images/quest5editor.png "Quest 5.0 Editor Preview")](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/01/quest5editor.png)
+[![](/blogimages/2011/01/quest-5-0-now-runs-all-quest-games/images/quest5editor.png "Quest 5.0 Editor Preview")](/blogimages/2011/01/quest-5-0-now-runs-all-quest-games/images/quest5editor.png)

@@ -14,17 +14,17 @@ The gamebook mode is fundamentally a simple alternative Core library, built on t
 
 To create a gamebook, the "New Game" dialog has been updated with a new "Game type" option:
 
-[![](/blogimages/2012/01/gamebook-mode-choose-your-own-adventure-in-quest-5-2/images/gamebook1.png "Creating a new gamebook")](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/01/gamebook1.png)
+[![](/blogimages/2012/01/gamebook-mode-choose-your-own-adventure-in-quest-5-2/images/gamebook1.png "Creating a new gamebook")](/blogimages/2012/01/gamebook-mode-choose-your-own-adventure-in-quest-5-2/images/gamebook1.png)
 
 The Editor for Gamebooks is simple - each game comprises a number of pages. Each page has some descriptive text, and links to other pages.
 
-[![](/blogimages/2012/01/gamebook-mode-choose-your-own-adventure-in-quest-5-2/images/gamebook2.png "Editing a gamebook")](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/01/gamebook2.png)
+[![](/blogimages/2012/01/gamebook-mode-choose-your-own-adventure-in-quest-5-2/images/gamebook2.png "Editing a gamebook")](/blogimages/2012/01/gamebook-mode-choose-your-own-adventure-in-quest-5-2/images/gamebook2.png)
 
 Pages automatically default to names Page1, Page2 etc., but you can call a page any name you like.
 
 This is what a new gamebook (as shown in the Editor above) looks like when you play it:
 
-[![](/blogimages/2012/01/gamebook-mode-choose-your-own-adventure-in-quest-5-2/images/gamebook3.png "Playing a gamebook")](http://textadventuresblog.wordpress.com/wp-content/uploads/2012/01/gamebook3.png)
+[![](/blogimages/2012/01/gamebook-mode-choose-your-own-adventure-in-quest-5-2/images/gamebook3.png "Playing a gamebook")](/blogimages/2012/01/gamebook-mode-choose-your-own-adventure-in-quest-5-2/images/gamebook3.png)
 
 That's all there is to it - pretty simple stuff really, at least for this first version. There is definitely potential for adding functionality in the future - because gamebooks are not fundamentally any different from ordinary Quest games, the full power of Quest's scripting engine is available. This means that different behaviour could be triggered based on the player's previous choices, random elements could be added, YouTube or Vimeo videos embedded, and a whole lot more.
 

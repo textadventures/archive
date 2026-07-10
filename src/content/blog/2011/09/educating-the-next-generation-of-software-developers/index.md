@@ -25,7 +25,7 @@ To answer that, we need to know what makes someone become a developer. Many peop
 
 Fast forward to today, and we've lost that. The vast majority of computer users will never go anywhere near anything resembling a programming language, so they won't even poke around out of curiosity. Even if they wanted to, it is much harder to get started now. Where do you begin? You started up an Electron and you were presented with a very simple screen that threw you straight into programming, and there was even a book in the box called "Start Programming with the Acorn Electron". You almost couldn't stop yourself from programming on one of those. But today, how can you get started on a PC? You can download [Visual Studio Express](http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-basic-express) for free - but check out what Microsoft thinks is a [friendly introduction](http://msdn.microsoft.com/en-gb/ff380143). Just go to that page and ask yourself what somebody who has never attempted programming before is likely to make of it.
 
-[![programming](/blogimages/2011/09/educating-the-next-generation-of-software-developers/images/programming.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/09/programming.png)
+[![programming](/blogimages/2011/09/educating-the-next-generation-of-software-developers/images/programming.png)](/blogimages/2011/09/educating-the-next-generation-of-software-developers/images/programming.png)
 
 **One of these is easier to get started with than the other**
 

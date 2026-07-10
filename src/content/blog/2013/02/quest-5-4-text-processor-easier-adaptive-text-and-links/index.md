@@ -18,13 +18,13 @@ Quest 5.4 addresses these issues with a new feature, the **text processor**. Thi
 
 For example, here's how we might write a description of a hungry mouse:
 
-[![Text Processor - editing](/blogimages/2013/02/quest-5-4-text-processor-easier-adaptive-text-and-links/images/textproc1.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/02/textproc1.png)
+[![Text Processor - editing](/blogimages/2013/02/quest-5-4-text-processor-easier-adaptive-text-and-links/images/textproc1.png)](/blogimages/2013/02/quest-5-4-text-processor-easier-adaptive-text-and-links/images/textproc1.png)
 
 We're just using a text description here, not a script. The editor provides some helpful buttons so we don't have to remember the available codes, and we can also easily add object links by clicking the "Object link" button - we can choose an object from the list that appears.
 
 When we run the game, here's what we see. The "Aaargh, a mouse!" text only appears the first time:
 
-[![Text Processor - output](/blogimages/2013/02/quest-5-4-text-processor-easier-adaptive-text-and-links/images/textproc2.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/02/textproc2.png)
+[![Text Processor - output](/blogimages/2013/02/quest-5-4-text-processor-easier-adaptive-text-and-links/images/textproc2.png)](/blogimages/2013/02/quest-5-4-text-processor-easier-adaptive-text-and-links/images/textproc2.png)
 
 We can easily include conditional text using the {if} code, which allows us to check the value of game or object attributes. For example, if we're looking at an apple and the player's health is low, we might write:
 

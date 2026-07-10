@@ -17,11 +17,11 @@ The latest Quest-powered app "Aventura Pirata" is now available from the App Sto
 
 Aventura Pirata is a version of Scott Adams's 1978 game [Pirate Adventure](http://en.wikipedia.org/wiki/Pirate_Adventure), translated into Spanish and adapted for the Quest platform by Mauricio Díaz García.
 
-[![Screenshot](/blogimages/2013/02/spanish-adaptation-of-scott-adams-text-adventure-for-iphone-ipad-android/images/photo.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/02/photo.png)
+[![Screenshot](/blogimages/2013/02/spanish-adaptation-of-scott-adams-text-adventure-for-iphone-ipad-android/images/photo.png)](/blogimages/2013/02/spanish-adaptation-of-scott-adams-text-adventure-for-iphone-ipad-android/images/photo.png)
 
 The game supports the usual hyperlinks and tabs to reduce typing. Selecting an object produces a list of verbs, and exits are visible on the Exits tab (Salidas).
 
-[![Screenshot](/blogimages/2013/02/spanish-adaptation-of-scott-adams-text-adventure-for-iphone-ipad-android/images/photo-1.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/02/photo-1.png)
+[![Screenshot](/blogimages/2013/02/spanish-adaptation-of-scott-adams-text-adventure-for-iphone-ipad-android/images/photo-1.png)](/blogimages/2013/02/spanish-adaptation-of-scott-adams-text-adventure-for-iphone-ipad-android/images/photo-1.png)
 
 I think this game would be a useful and fun aid for anybody teaching or learning Spanish - it would be great to hear from anybody using it in this way.
 

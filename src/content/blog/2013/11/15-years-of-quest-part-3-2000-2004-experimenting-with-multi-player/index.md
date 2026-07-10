@@ -18,11 +18,11 @@ The idea was that the game ran entirely on the server, and players would connect
 
 You can get some idea of how it worked by looking at some screenshots for the basic "Arena" demo. Multiple players would appear in the same room, and they could pick up objects, give them to each other, and even hit each other. For example, here's what Bob might see if he joins Alex in the room:
 
-[![Multi-player Quest game - 1](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/quest3-multiplayer2.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/quest3-multiplayer2.png)
+[![Multi-player Quest game - 1](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/quest3-multiplayer2.png)](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/quest3-multiplayer2.png)
 
 And here's what Alex sees while this is happening:
 
-[![Multi-player Quest game - 2](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/quest3-multiplayer.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/quest3-multiplayer.png)
+[![Multi-player Quest game - 2](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/quest3-multiplayer.png)](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/quest3-multiplayer.png)
 
 I thought this was rather nifty, myself, and although it got a reasonable amount of interest from Quest users, it ultimately failed to really get anywhere. I've come across a [forum post from 2002 by MaDbRiT](http://www.axeuk.com/ubb/Forum3/HTML/000030.html) which sums it up:
 
@@ -42,17 +42,17 @@ In March 2001, Quest 3.0 reached its first beta release. This added support for 
 
 The new-look start screen allowed you to load a game file, or connect to a multi-player network game:
 
-[![Quest 3.0 Start Screen](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/quest3-start.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/quest3-start.png)
+[![Quest 3.0 Start Screen](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/quest3-start.png)](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/quest3-start.png)
 
-The main player interface was relatively unchanged from Quest 2.1, although you could now toggle the panes off: [![Quest 3.0](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/quest3-main.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/quest3-main.png)
+The main player interface was relatively unchanged from Quest 2.1, although you could now toggle the panes off: [![Quest 3.0](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/quest3-main.png)](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/quest3-main.png)
 
-QDK was still looking rather plain:[![QDK 3.0](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/qdk3-main.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/qdk3-main.png)
+QDK was still looking rather plain:[![QDK 3.0](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/qdk3-main.png)](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/qdk3-main.png)
 
-The Room and Object editors were now grouped into tabs:[![QDK 3.0 Room Editor](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/qdk3-room.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/qdk3-room.png)
+The Room and Object editors were now grouped into tabs:[![QDK 3.0 Room Editor](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/qdk3-room.png)](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/qdk3-room.png)
 
-[![QDK 3.0 Object Editor](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/qdk3-object.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/qdk3-object.png)
+[![QDK 3.0 Object Editor](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/qdk3-object.png)](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/qdk3-object.png)
 
-The new Script Editor presented a plain English way of editing scripts. It's not dissimilar to Quest 5's script editor, although it did involve opening a pop-up window every time you wanted to edit any individual command, which some people found a bit tiring:[![QDK 3.0 Script Editor](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/qdk3-scripteditor.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/11/qdk3-scripteditor.png)
+The new Script Editor presented a plain English way of editing scripts. It's not dissimilar to Quest 5's script editor, although it did involve opening a pop-up window every time you wanted to edit any individual command, which some people found a bit tiring:[![QDK 3.0 Script Editor](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/qdk3-scripteditor.png)](/blogimages/2013/11/15-years-of-quest-part-3-2000-2004-experimenting-with-multi-player/images/qdk3-scripteditor.png)
 
 A few bug-fix releases followed very shortly afterwards, and then I started working on v3.1. This added support for [MOD music files](http://en.wikipedia.org/wiki/Module_file) - something I was into creating myself, but a feature I think was never actually used by anybody. There were various other tweaks, including improvements to the parser. Libraries gained the ability to add panes to QDK (here again is an example of a feature that was added which is now a core part of how Quest works - as of v5.0, all panes in Quest's editor are defined by libraries). Quest 3.1 was released in June 2002.
 

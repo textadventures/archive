@@ -32,11 +32,11 @@ I've added functions to generate an integer in a range (say, from 1 to 10) and t
 
 - When adding an "if" script, you can choose "random chance" from the dropdown. You can then enter a percentage between 0 and 100, and that script will then have X% chance of running.
 
-[![](/blogimages/2011/06/quest-5-0-beta-2-released/images/random1.png "random1")](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/06/random1.png)
+[![](/blogimages/2011/06/quest-5-0-beta-2-released/images/random1.png "random1")](/blogimages/2011/06/quest-5-0-beta-2-released/images/random1.png)
 
 - When setting a variable value, it's very easy to say you want to choose a random number:
 
-[![](/blogimages/2011/06/quest-5-0-beta-2-released/images/random2.png "random2")](http://textadventuresblog.wordpress.com/wp-content/uploads/2011/06/random2.png)
+[![](/blogimages/2011/06/quest-5-0-beta-2-released/images/random2.png "random2")](/blogimages/2011/06/quest-5-0-beta-2-released/images/random2.png)
 
 **Packaging games**
 

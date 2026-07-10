@@ -12,7 +12,7 @@ tags:
 
 The horror text adventure [First Times](http://www.textadventures.co.uk/review/511/), by Hero Robb, is now available as a free app.
 
-[![FirstTimes-Ballpoint](/blogimages/2013/03/first-times-a-horror-text-adventure-for-iphone-ipad-android/images/firsttimes-ballpoint.jpg)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/03/firsttimes-ballpoint.jpg)
+[![FirstTimes-Ballpoint](/blogimages/2013/03/first-times-a-horror-text-adventure-for-iphone-ipad-android/images/firsttimes-ballpoint.jpg)](/blogimages/2013/03/first-times-a-horror-text-adventure-for-iphone-ipad-android/images/firsttimes-ballpoint.jpg)
 
 - [iOS version for iPhone, iPad, iPod Touch - App Store](http://itunes.apple.com/app/id609611434)
 - [Android version - Google Play](https://play.google.com/store/apps/details?id=uk.co.textadventures.android.firsttimes)

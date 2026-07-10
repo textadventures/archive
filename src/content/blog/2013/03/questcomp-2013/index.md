@@ -6,7 +6,7 @@ categories:
   - "quest"
 ---
 
-[![questcomp-2013](/blogimages/2013/03/questcomp-2013/images/questcomp-20131.png)](http://textadventuresblog.wordpress.com/wp-content/uploads/2013/03/questcomp-20131.png)
+[![questcomp-2013](/blogimages/2013/03/questcomp-2013/images/questcomp-20131.png)](/blogimages/2013/03/questcomp-2013/images/questcomp-20131.png)
 
 **Update 18th March - now with prize money!**
 
