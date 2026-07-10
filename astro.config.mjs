@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { unified } from '@astrojs/markdown-remark';
 
 import pagefind from "astro-pagefind";
 import rehypeDeadLinks from "./src/lib/rehype-dead-links.mjs";
@@ -10,6 +11,8 @@ export default defineConfig({
   },
   integrations: [pagefind()],
   markdown: {
-    rehypePlugins: [rehypeDeadLinks],
+    processor: unified({
+      rehypePlugins: [rehypeDeadLinks],
+    }),
   },
 });

@@ -1,12 +1,16 @@
 ---
 const { href, text, current } = Astro.props;
 
+// build.format "file" keeps a .html suffix on Astro.url.pathname for
+// statically-generated pages, so it needs stripping before comparison.
+const normalized = current.replace(/\.html$/, "").replace(/\/$/, "") + "/";
+
 let isCurrent = false;
 
 if (href === "/") {
-    isCurrent = current === href;
+    isCurrent = normalized === "/";
 } else {
-    isCurrent = current.startsWith(href);
+    isCurrent = normalized.startsWith(href);
 }
 
 ---
