@@ -1,7 +1,7 @@
 ---
 title: "Text Adventure Games and Interactive History: Educational Questing"
 date: 2013-11-11
-author: "Alex Warren"
+author: "Tara Fickle"
 categories: 
   - "education"
   - "quest"
