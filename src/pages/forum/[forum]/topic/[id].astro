@@ -47,6 +47,13 @@ function getAvatarUrl(post: Post) {
     }
     return "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y";
 }
+
+function nofollowLinks(html: string) {
+    return html.replace(/<a\s+([^>]*?)>/gi, (_match, attrs) => {
+        const cleaned = attrs.replace(/\s*rel\s*=\s*(".*?"|'.*?'|\S+)/gi, "").trim();
+        return `<a ${cleaned} rel="nofollow ugc">`;
+    });
+}
 ---
 
 <style is:global>
@@ -130,6 +137,11 @@ function getAvatarUrl(post: Post) {
                     return true;
                 }
             });
+            for (const a of element.getElementsByTagName("a")) {
+                if (!a.hasAttribute("rel")) {
+                    a.setAttribute("rel", "nofollow ugc");
+                }
+            }
         }
     });
 </script>
@@ -165,7 +177,7 @@ function getAvatarUrl(post: Post) {
                                 )}</a>
                             </small>
                         </div>
-                        <div class="content-container mt-2" set:html={post.HTML.replaceAll("{SMILIES_PATH}", "/phpbb-smilies") } />
+                        <div class="content-container mt-2" set:html={nofollowLinks(post.HTML.replaceAll("{SMILIES_PATH}", "/phpbb-smilies")) } />
                     </div>
                 </div>
                 <hr/>
